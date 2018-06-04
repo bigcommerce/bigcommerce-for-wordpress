@@ -1,0 +1,76 @@
+/**
+ * @module
+ * @exports ready
+ * @description The core dispatcher for the dom ready event javascript.
+ */
+
+import _ from 'lodash';
+import { on, ready } from 'utils/events';
+import applyBrowserClasses from 'utils/dom/apply-browser-classes';
+
+// you MUST do this in every module you use lodash in.
+// A custom bundle of only the lodash you use will be built by babel.
+
+import resize from './resize';
+import plugins from './plugins';
+import viewportDims from './viewport-dims';
+import gallery from '../gallery/index';
+import buttons from '../buttons/index';
+import cart from '../cart/index';
+import loop from '../loop/index';
+import page from '../page/index';
+import product from '../product/index';
+
+/**
+ * @function bindEvents
+ * @description Bind global event listeners here,
+ */
+
+const bindEvents = () => {
+	on(window, 'resize', _.debounce(resize, 200, false));
+};
+
+/**
+ * @function init
+ * @description The core dispatcher for init across the codebase.
+ */
+
+const init = () => {
+	// apply browser classes
+
+	applyBrowserClasses();
+
+	// init external plugins
+
+	plugins();
+
+	// set initial states
+
+	viewportDims();
+
+	// initialize global events
+
+	bindEvents();
+
+	// initialize the main scripts
+	buttons();
+	gallery();
+	cart();
+	loop();
+	page();
+	product();
+
+	console.info('Big Commerce FE: Initialized all javascript that targeted document ready.');
+};
+
+/**
+ * @function domReady
+ * @description Export our dom ready enabled init.
+ */
+
+const domReady = () => {
+	ready(init);
+};
+
+export default domReady;
+

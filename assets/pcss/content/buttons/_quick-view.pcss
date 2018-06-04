@@ -1,0 +1,45 @@
+.bc-quickview-trigger,
+button.bc-quickview-trigger {
+	position: relative;
+	background: transparent;
+	color: inherit;
+	text-transform: none;
+	text-align: left;
+	padding: 0;
+
+	&:hover,
+	&:focus {
+		background: transparent;
+		transition: var(--transition-opacity);
+
+		.bc-quickview-trigger--hover {
+			opacity: 1;
+		}
+	}
+}
+
+.bc-quickview-trigger--hover {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+	background-color: rgba(224, 227, 233, 0.72);
+	transition: var(--transition-opacity);
+}
+
+.bc-quickview-trigger--hover-label {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate3d(-50%, -50%, 0);
+	width: 70%;
+	padding: 12px 14px;
+	background-color: var(--color-white);
+	color: var(--color-bc-black);
+	font-weight: normal;
+	font-size: 14px;
+	border-radius: 20px;
+	text-align: center;
+}

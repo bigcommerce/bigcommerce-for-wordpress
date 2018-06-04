@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for src/utils/tools.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">All files</a> / <a href="index.html">src/utils</a> tools.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">96.43% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>54/56</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">54.84% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>17/31</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">76.92% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>10/13</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">96.3% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>52/54</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
+ * @module
+ * @description Some vanilla js cross browser utils
+ */
+&nbsp;
+/**
+ * Add a class to a dom element or exit safely if not set
+ *
+ * @param el Node
+ * @param className Class string
+ * @returns {*} Node or false
+ */
+&nbsp;
+export const addClass = (el, className = <span class="branch-0 cbranch-no" title="branch not covered" >'')</span> =&gt; {
+	const element = el;
+	if (!element) {
+		return false;
+	}
+&nbsp;
+	element.classList.add(className);
+	return element;
+};
+&nbsp;
+/**
+ *
+ * Get immediate child nodes and return an array of them
+ *
+ * @param el
+ * @returns {Array} Iterable array of dom nodes
+ */
+&nbsp;
+export const getChildren = (el) =&gt; {
+	const children = [];
+	let i = el.children.length;
+	for (i; i--;) { // eslint-disable-line
+		<span class="missing-if-branch" title="else path not taken" >E</span>if (el.children[i].nodeType !== 8) {
+			children.unshift(el.children[i]);
+		}
+	}
+&nbsp;
+	return children;
+};
+&nbsp;
+/**
+ *
+ * Test if a dom node has a class or returns false if el not defined
+ *
+ * @param el
+ * @param className
+ * @returns {boolean}
+ */
+&nbsp;
+export const hasClass = (el, className = <span class="branch-0 cbranch-no" title="branch not covered" >'')</span> =&gt; {
+	if (!el) {
+		return false;
+	}
+&nbsp;
+	return el.classList.contains(className);
+};
+&nbsp;
+/**
+ * Removes a class from the dom node
+ *
+ * @param el
+ * @param className
+ * @returns {*} returns false or el if passed
+ */
+&nbsp;
+export const removeClass = (el, className) =&gt; {
+	const element = el;
+	if (!element) {
+		return false;
+	}
+&nbsp;
+	element.classList.remove(className);
+	return element;
+};
+&nbsp;
+/**
+ * Remove a class from an element that contains a string
+ *
+ * @param el
+ * @param string
+ */
+&nbsp;
+export const removeClassThatContains = <span class="fstat-no" title="function not covered" >(e</span>l, string = <span class="branch-0 cbranch-no" title="branch not covered" >'')</span> =&gt; {
+<span class="cstat-no" title="statement not covered" >	for (let i = 0; i &lt; el.classList.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >		if (el.classList.item(i).indexOf(string) !== -1) {</span>
+			el.classList.remove(el.classList.item(i));
+		}
+	}
+};
+&nbsp;
+/**
+ * Compares an els classList against an array of strings to see if any match
+ * @param el the element to check against
+ * @param arr The array of classes as strings to test against
+ * @param prefix optional prefix string applied to all test strings
+ * @param suffix optional suffix string
+ */
+&nbsp;
+export const hasClassFromArray = <span class="fstat-no" title="function not covered" >(e</span>l, arr = <span class="branch-0 cbranch-no" title="branch not covered" >[],</span> prefix = <span class="branch-0 cbranch-no" title="branch not covered" >'',</span> suffix = <span class="branch-0 cbranch-no" title="branch not covered" >'')</span> =&gt; arr.some(<span class="fstat-no" title="function not covered" >c </span>=&gt; el.classList.contains(`${prefix}${c}${suffix}`));
+&nbsp;
+/**
+ * Highly efficient function to convert a nodelist into a standard array. Allows you to run Array.forEach
+ *
+ * @param {Element|NodeList} elements to convert
+ * @returns {Array} Of converted elements
+ */
+&nbsp;
+export const convertElements = (elements = <span class="branch-0 cbranch-no" title="branch not covered" >[])</span> =&gt; {
+	const converted = [];
+	let i = elements.length;
+	for (i; i--; converted.unshift(elements[i])); // eslint-disable-line
+&nbsp;
+	return converted;
+};
+&nbsp;
+/**
+ * Should be used at all times for getting nodes throughout our app. Please use the data-js attribute whenever possible
+ *
+ * @param selector The selector string to search for. If arg 4 is false (default) then we search for [data-js="selector"]
+ * @param convert Convert the NodeList to an array? Then we can Array.forEach directly. Uses convertElements from above
+ * @param node Parent node to search from. Defaults to document
+ * @param custom Is this a custom selector where we don't want to use the data-js attribute?
+ * @returns {NodeList}
+ */
+&nbsp;
+export const getNodes = (selector = <span class="branch-0 cbranch-no" title="branch not covered" >'',</span> convert = <span class="branch-0 cbranch-no" title="branch not covered" >false,</span> node = <span class="branch-0 cbranch-no" title="branch not covered" >document,</span> custom = false) =&gt; {
+	const selectorString = custom ? selector : `[data-js="${selector}"]`;
+	let nodes = node.querySelectorAll(selectorString);
+	if (convert) {
+		nodes = convertElements(nodes);
+	}
+	return nodes;
+};
+&nbsp;
+/**
+ * Gets the closest ancestor that matches a selector string
+ *
+ * @param el
+ * @param selector
+ * @returns {*}
+ */
+&nbsp;
+export const closest = (el, selector) =&gt; {
+	let matchesFn;
+	let parent;
+&nbsp;
+	['matches', 'webkitMatchesSelector', 'mozMatchesSelector', 'msMatchesSelector', 'oMatchesSelector'].some((fn) =&gt; {
+		<span class="missing-if-branch" title="else path not taken" >E</span>if (typeof document.body[fn] === 'function') {
+			matchesFn = fn;
+			return true;
+		}
+		/* istanbul ignore next */
+		return false;
+	});
+&nbsp;
+	while (el) {
+		parent = el.parentElement;
+		if (parent &amp;&amp; parent[matchesFn](selector)) {
+			return parent;
+		}
+&nbsp;
+		el = parent; // eslint-disable-line
+	}
+&nbsp;
+	return null;
+};
+&nbsp;
+/**
+ * Insert a node after another node
+ *
+ * @param newNode {Element|NodeList}
+ * @param referenceNode {Element|NodeList}
+ */
+export const insertAfter = (newNode, referenceNode) =&gt; {
+	referenceNode.parentNode.insertBefore(newNode, referenceNode.nextElementSibling);
+};
+&nbsp;
+/**
+ * Insert a node before another node
+ *
+ * @param newNode {Element|NodeList}
+ * @param referenceNode {Element|NodeList}
+ */
+&nbsp;
+export const insertBefore = (newNode, referenceNode) =&gt; {
+	referenceNode.parentNode.insertBefore(newNode, referenceNode);
+};
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Nov 09 2017 15:19:10 GMT-0600 (CST)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<?php
+
+
+namespace BigCommerce\Import\Runner;
+
+
+class Status {
+	const NOT_STARTED              = 'not_started';
+	const STARTED                  = 'started';
+	const FETCHING_PRODUCT_IDS     = 'fetching_product_ids';
+	const FETCHED_PRODUCT_IDS      = 'fetched_product_ids';
+	const MARKING_DELETED_PRODUCTS = 'marking_deleted_products';
+	const MARKED_DELETED_PRODUCTS  = 'marked_deleted_products';
+	const PROCESSING_QUEUE         = 'processing_queue';
+	const PROCESSED_QUEUE          = 'processed_queue';
+	const FETCHING_STORE           = 'fetching_store';
+	const FETCHED_STORE            = 'fetched_store';
+	const CLEANING                 = 'cleaning';
+	const COMPLETED                = 'completed';
+	const FAILED                   = 'failed';
+
+	const CURRENT_LOG  = 'bigcommerce_current_import_status_log';
+	const PREVIOUS_LOG = 'bigcommerce_previous_import_status_log';
+
+	/**
+	 * @return array The `timestamp` and `status` of the last update to the current import
+	 */
+	public function current_status() {
+		return $this->get_status( self::CURRENT_LOG );
+	}
+
+	/**
+	 * @return array The `timestamp` and `status` of the last update to the previous import
+	 */
+	public function previous_status() {
+		return $this->get_status( self::PREVIOUS_LOG );
+	}
+
+	/**
+	 * Add a status to the log for the current import. The status will be
+	 * appended to the log, even if it is the same as the current status.
+	 *
+	 * @param string $status
+	 *
+	 * @return void
+	 */
+	public function set_status( $status ) {
+		$log = $this->current_log();
+
+		// cast timestamp to string to preservce microtime
+		$log[ (string) microtime( true ) ] = $status;
+		update_option( self::CURRENT_LOG, $log, false );
+		do_action( 'bigcommerce/import/set_status', $status );
+	}
+
+	/**
+	 * Overwrite the previous log with the current log and empty the current log
+	 *
+	 * @return void
+	 */
+	public function rotate_logs() {
+		$log = $this->current_log();
+		/**
+		 * Rotate out the current log into the previous log slot
+		 *
+		 * @param array $log The current log
+		 */
+		do_action( 'bigcommerce/import/logs/rotate', $log );
+		update_option( self::PREVIOUS_LOG, $log, false );
+		update_option( self::CURRENT_LOG, [], false );
+	}
+
+	/**
+	 * @return array
+	 */
+	private function current_log() {
+		return $this->get_log( self::CURRENT_LOG );
+	}
+
+	/**
+	 * @return array
+	 */
+	private function previous_log() {
+		return $this->get_log( self::PREVIOUS_LOG );
+	}
+
+
+	/**
+	 * @param string $which Log to get the status from
+	 *
+	 * @return array The `timestamp` and `status` of the last update
+	 *               to the indicated log
+	 */
+	private function get_status( $which ) {
+		$log = $this->get_log( $which );
+		if ( empty( $log ) ) {
+			return [
+				'timestamp' => 0,
+				'status'    => self::NOT_STARTED,
+			];
+		}
+		$status    = end( $log );
+		$timestamp = key( $log );
+
+		return [
+			'timestamp' => floatval( $timestamp ),
+			'status'    => $status,
+		];
+	}
+
+	/**
+	 * @param string $which The name of the option storing the log.
+	 *
+	 * @return array
+	 */
+	private function get_log( $which ) {
+		$log = get_option( $which, [] );
+		if ( ! is_array( $log ) ) {
+			$log = [];
+		}
+		ksort( $log );
+
+		return $log;
+	}
+}

@@ -1,0 +1,43 @@
+.bc-product-gallery__images {
+	position: relative;
+	width: 100%;
+	max-width: 370px;
+	margin: 60px auto;
+
+	@media (--viewport-medium) {
+		margin: 0;
+	}
+}
+
+.bc-product-gallery__image-slide {
+
+	img {
+		display: block;
+	}
+}
+
+.bc-product-gallery--has-carousel {
+	margin-bottom: 10px;
+}
+
+/* Thumbnail Carousel */
+
+/* CASE: thumb controller only works with centered slides. This moves that container back to flush left. */
+.swiper-container[data-js="bc-gallery-thumbs"] .swiper-wrapper {
+	transform: translateX(0) !important;
+}
+
+.bc-product-gallery__thumb-slide {
+	width: 25%;
+	padding: 0;
+	border: 0;
+	background: none;
+	opacity: 0.8;
+	transition: var(--transition);
+
+	&:hover,
+	&:focus,
+	&.swiper-slide-active {
+		opacity: 1;
+	}
+}

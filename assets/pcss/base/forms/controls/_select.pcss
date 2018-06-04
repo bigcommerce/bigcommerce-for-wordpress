@@ -1,0 +1,14 @@
+select {
+	@mixin form-control;
+
+	padding-right: 0;
+	cursor: pointer;
+
+	/* CASE: multiple */
+	&[multiple] {
+		font-size: var(--form-control-font-size);
+		height: var(--form-control-select-multiple-height);
+		padding: var(--form-control-select-multiple-padding);
+	}
+}
+

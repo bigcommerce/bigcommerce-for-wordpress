@@ -1,0 +1,41 @@
+.bc-product-card {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+
+	.bc-quickview-trigger {
+		flex: 0 0 auto;
+		display: flex;
+	}
+
+	.bc-product__actions {
+		align-self: flex-end;
+		width: 100%;
+		flex: 0 0 auto;
+	}
+
+	.bc-btn,
+	a.bc-btn,
+	button.bc-btn {
+		max-width: 100%;
+	}
+}
+
+.bc-product-card__featured-image {
+	position: relative;
+	width: 100%;
+
+	img {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+}
+
+.bc-product__meta {
+	padding: 25px 0 50px;
+	width: 100%;
+	word-wrap: break-word;
+	hyphens: auto;
+	flex: 1 1 auto;
+}

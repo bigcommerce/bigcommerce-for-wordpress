@@ -1,0 +1,34 @@
+/*
+ * WordPress admin CSS
+ *
+ * This css files includes are loaded globally in the admin. Use this for all other admin css.
+ *
+ */
+
+/* Admin UI Base */
+@import "../utilities/variables/colors";
+@import "../utilities/variables/media-queries";
+@import "../utilities/variables/paths";
+@import "../utilities/variables/transitions";
+@import "../utilities/variables/typography";
+@import "../utilities/variables/_icons.pcss";
+@import "../base/icons";
+
+/* Vendor: Choices.js */
+@import "choices/all";
+
+/* Admin Plugin Settings */
+@import './settings/menu';
+@import './settings/plugin-settings';
+
+/* Admin UI Styles */
+@import './shortcode-ui/shortcode-dialog';
+@import './shortcode-ui/query-builder';
+@import './shortcode-ui/searchform';
+@import './shortcode-ui/product-results';
+@import './shortcode-ui/selected-products';
+
+/* Post Editor Styles */
+@import './posts/edit-post';
+@import './posts/quick-edit';
+

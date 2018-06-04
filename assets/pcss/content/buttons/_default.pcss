@@ -1,0 +1,64 @@
+.bc-btn,
+button.bc-btn,
+a.bc-btn,
+.entry-content .bc-btn,
+.entry-content button.bc-btn,
+.entry-content a.bc-btn,
+.bc-account-login__form input[type="submit"] {
+	display: inline-block;
+	font-family: sans-serif;
+	width: 100%;
+	padding: 15px 20px;
+	border-radius: 0;
+	font-weight: var(--font-weight-semibold);
+	line-height: 20px;
+	font-size: 13px;
+	text-transform: uppercase;
+	text-align: center;
+	text-decoration: none;
+	box-shadow: none;
+	opacity: 1;
+	transition: var(--transition);
+
+	@media (--viewport-full) {
+		max-width: 270px;
+	}
+
+	&:hover,
+	&:focus {
+		opacity: 0.9;
+		text-decoration: none;
+		box-shadow: none;
+	}
+
+	&[disabled] {
+		background-color: var(--color-bc-grey-medium);
+		color: var(--color-white);
+		padding: 15px 20px;
+		line-height: 20px;
+		font-family: sans-serif;
+		opacity: 0.6;
+		cursor: not-allowed;
+
+		&:hover,
+		&:focus {
+			background-color: var(--color-bc-grey-medium);
+			color: var(--color-white);
+			padding: 15px 20px;
+			line-height: 20px;
+			font-family: sans-serif;
+			opacity: 0.6;
+		}
+	}
+
+	&--small {
+		padding: 8px 16px;
+	}
+
+	&--inverse {
+		padding: 11px 20px;
+		box-sizing: border-box;
+		background-color: transparent;
+		border: 4px solid;
+	}
+}

@@ -1,0 +1,65 @@
+.bc-account-login {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	width: 100%;
+}
+
+.bc-account-login__form,
+.bc-account-login__register {
+	margin-bottom: 40px;
+	width: 100%;
+
+	@media (--viewport-medium) {
+		width: 50%;
+		margin-bottom: 0;
+	}
+}
+
+.bc-account-login__form-inner,
+.bc-account-login__form form {
+	@media (--viewport-medium) {
+		max-width: 370px;
+	}
+}
+
+.bc-account-login__form {
+
+	p.login-username,
+	p.login-password,
+	p.login-remember {
+		box-sizing: border-box;
+		margin-bottom: 30px;
+
+		@media (--viewport-medium) {
+			margin-bottom: 14px;
+			padding-right: 28px;
+		}
+	}
+
+	label {
+		display: block;
+		margin-bottom: 6px;
+	}
+}
+
+.bc-account-login__register {
+	@media (--viewport-medium) {
+		border-left: 1px solid var(--color-bc-light-grey);
+		display: flex;
+		justify-content: center;
+
+		&-inner {
+			margin-left: 28px;
+			max-width: 370px;
+		}
+	}
+}
+
+.bc-account-login__register-title {
+	margin-top: 0;
+}
+
+.bc-account-login__register-list {
+	margin-left: 20px;
+}

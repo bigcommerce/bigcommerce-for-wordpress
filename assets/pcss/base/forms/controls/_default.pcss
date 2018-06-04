@@ -1,0 +1,52 @@
+/* -----------------------------------------------------------------------------
+ *
+ * Form: Control / Widget
+ *
+ * Note: applies by default to textarea, type="file", & select
+ *
+ * Example:
+ * <input name="text" class="form-control-bc" type="text" />
+ *
+ * ----------------------------------------------------------------------------- */
+
+.form-control-bc {
+	@mixin form-control;
+}
+
+/* -----------------------------------------------------------------------------
+ *
+ * Form: Control Icon
+ *
+ * Example:
+ * <div class="form-field-group">
+ *   <label class="form-control-label" for="textFieldExample">Label</label>
+ *   <div class="form-control-bc-icon bc-icon icon-phone">
+ *	   <input id="textFieldExample" class="form-control" name="textFieldExample" aria-describedby="textFieldExampleHelper" type="text" />
+ *   </div>
+ *   <p id="textFieldExampleHelper" class="form-control-helper">Helper text</p>
+ * </div>
+ *
+ * ----------------------------------------------------------------------------- */
+
+.form-control-bc-icon {
+	@mixin form-control-icon;
+}
+
+.bc-form__control {
+
+	input[type="text"],
+	input[type="email"],
+	input[type="url"],
+	input[type="password"],
+	input[type="tel"],
+	input[type="number"] {
+		border: 1px solid var(--color-bc-light-grey);
+		box-sizing: border-box;
+		font-size: 16px;
+		line-height: 1.5;
+		height: 45px;
+		padding-left: 10px;
+		padding-right: 10px;
+		width: 100%;
+	}
+}
