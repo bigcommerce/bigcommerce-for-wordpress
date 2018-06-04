@@ -1,0 +1,49 @@
+/* -----------------------------------------------------------------------------
+ *
+ * Product Flags
+ *
+ * ----------------------------------------------------------------------------- */
+
+.bc-product-flag--sale {
+	display: block;
+	position: absolute;
+	right: -20px;
+	top: -20px;
+	width: 50px;
+	height: 50px;
+	line-height: 50px;
+	border-radius: 50%;
+	background-color: var(--color-bc-green);
+	font-size: 12px;
+	font-weight: var(--font-weight-bold);
+	text-transform: uppercase;
+	text-align: center;
+	z-index: 2;
+}
+
+.bc-product-flag--grey {
+	display: inline-block;
+	vertical-align: middle;
+	padding: 7px 8px;
+	background-color: var(--color-bc-light-grey);
+	font-size: 12px;
+	line-height: var(--line-height-even);
+	font-weight: var(--font-weight-semibold);
+}
+
+.bc-product-single,
+.bc-product-card--single {
+
+	.bc-product-flag--sale {
+		width: 60px;
+		height: 60px;
+		line-height: 60px;
+		font-size: 16px;
+		font-weight: var(--font-weight-semibold);
+	}
+
+	.bc-product-flag--grey {
+		margin-bottom: 5px;
+	}
+}
+

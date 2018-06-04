@@ -1,0 +1,182 @@
+<?php
+
+
+namespace BigCommerce\Customizer\Sections;
+
+use BigCommerce\Customizer\Controls\Multiple_Checkboxes;
+use BigCommerce\Customizer\Panels;
+use BigCommerce\Taxonomies\Brand\Brand;
+use BigCommerce\Taxonomies\Product_Category\Product_Category;
+
+class Product_Archive {
+	const NAME = 'bigcommerce_product_archive';
+
+	const ARCHIVE_TITLE       = 'bigcommerce_product_archive_title';
+	const ARCHIVE_SLUG        = 'bigcommerce_product_archive_slug';
+	const ARCHIVE_DESCRIPTION = 'bigcommerce_product_archive_description';
+	const SORT_OPTIONS        = 'bigcommerce_product_archive_sort_options';
+	const FILTER_OPTIONS      = 'bigcommerce_product_archive_filter_options';
+
+	const SORT_FEATURED   = 'featured';
+	const SORT_DATE       = 'date';
+	const SORT_SALES      = 'sales';
+	const SORT_TITLE_ASC  = 'title_asc';
+	const SORT_TITLE_DESC = 'title_desc';
+	const SORT_REVIEWS    = 'reviews';
+	const SORT_PRICE_ASC  = 'price_asc';
+	const SORT_PRICE_DESC = 'price_desc';
+
+	const FILTER_CATEGORY = Product_Category::NAME;
+	const FILTER_BRAND    = Brand::NAME;
+
+	/**
+	 * @param \WP_Customize_Manager $wp_customize
+	 *
+	 * @return void
+	 */
+	public function register( $wp_customize ) {
+		$wp_customize->add_section( new \WP_Customize_Section( $wp_customize, self::NAME, [
+			'title' => __( 'Product Archive', 'bigcommerce' ),
+			'panel' => Panels\Primary::NAME,
+		] ) );
+
+		$this->title( $wp_customize );
+		$this->slug( $wp_customize );
+		$this->description( $wp_customize );
+		$this->sorting( $wp_customize );
+		$this->filtering( $wp_customize );
+	}
+
+	private function title( \WP_Customize_Manager $wp_customize ) {
+		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::ARCHIVE_TITLE, [
+			'type'              => 'option',
+			'default'           => __( 'All Products', 'bigcommerce' ),
+			'transport'         => 'refresh',
+			'sanitize_callback' => 'sanitize_text_field',
+		] ) );
+		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, self::ARCHIVE_TITLE, [
+			'section' => self::NAME,
+			'label'   => __( 'Catalog Page Title', 'bigcommerce' ),
+		] ) );
+	}
+
+	private function slug( \WP_Customize_Manager $wp_customize ) {
+		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::ARCHIVE_SLUG, [
+			'type'              => 'option',
+			'default'           => _x( 'products', 'default product post type archive slug', 'bigcommerce' ),
+			'transport'         => 'refresh',
+			'sanitize_callback' => 'sanitize_text_field',
+		] ) );
+		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, self::ARCHIVE_SLUG, [
+			'section' => self::NAME,
+			'label'   => __( 'Catalog Page Slug', 'bigcommerce' ),
+		] ) );
+	}
+
+	private function description( \WP_Customize_Manager $wp_customize ) {
+		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::ARCHIVE_DESCRIPTION, [
+			'type'              => 'option',
+			'default'           => '',
+			'transport'         => 'refresh',
+			'sanitize_callback' => 'sanitize_text_field',
+		] ) );
+		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, self::ARCHIVE_DESCRIPTION, [
+			'section' => self::NAME,
+			'label'   => __( 'Catalog Page Description', 'bigcommerce' ),
+		] ) );
+	}
+
+	private function sorting( \WP_Customize_Manager $wp_customize ) {
+		$choices = $this->sort_choices();
+		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::SORT_OPTIONS, [
+			'type'              => 'option',
+			'default'           => implode( ',', array_keys( $choices ) ),
+			'transport'         => 'refresh',
+			'sanitize_callback' => [ $this, 'sanitize_sort' ],
+		] ) );
+		$wp_customize->add_control( new Multiple_Checkboxes( $wp_customize, self::SORT_OPTIONS, [
+			'section' => self::NAME,
+			'label'   => __( 'Sorting', 'bigcommerce' ),
+			'choices' => $choices,
+		] ) );
+	}
+
+	public static function sort_choices() {
+		$choices = [
+			self::SORT_FEATURED   => __( 'Featured', 'bigcomerce' ),
+			self::SORT_DATE       => __( 'Newest', 'bigcommerce' ),
+			self::SORT_SALES      => __( 'Best Selling', 'bigcommerce' ),
+			self::SORT_TITLE_ASC  => __( 'Product Title A–Z', 'bigcommerce' ),
+			self::SORT_TITLE_DESC => __( 'Product Title Z–A', 'bigcommerce' ),
+			self::SORT_REVIEWS    => __( 'Reviews', 'bigcommerce' ),
+			self::SORT_PRICE_ASC  => __( 'Price (low to high)', 'bigcommerce' ),
+			self::SORT_PRICE_DESC => __( 'Price (high to low)', 'bigcommerce' ),
+		];
+
+		/**
+		 * Filter the sorting options available in the BigCommerce catalog
+		 *
+		 * @param array $choices The sorting options to use
+		 */
+		return apply_filters( 'bigcommerce/product/archive/sort_options', $choices );
+	}
+
+	public function sanitize_sort( $values ) {
+		if ( empty( $values ) ) {
+			return $values;
+		}
+		if ( ! is_array( $values ) ) {
+			$values = explode( ',', $values );
+		}
+		$choices = $this->sort_choices();
+		$values  = array_filter( $values, function ( $value ) use ( $choices ) {
+			return isset( $choices[ $value ] );
+		} );
+
+		return $values;
+	}
+
+	private function filtering( \WP_Customize_Manager $wp_customize ) {
+		$choices = $this->filter_choices();
+		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::FILTER_OPTIONS, [
+			'type'              => 'option',
+			'default'           => implode( ',', array_keys( $choices ) ),
+			'transport'         => 'refresh',
+			'sanitize_callback' => [ $this, 'sanitize_filter' ],
+		] ) );
+		$wp_customize->add_control( new Multiple_Checkboxes( $wp_customize, self::FILTER_OPTIONS, [
+			'section' => self::NAME,
+			'label'   => __( 'Filters', 'bigcommerce' ),
+			'choices' => $choices,
+		] ) );
+	}
+
+	public static function filter_choices() {
+		$choices = [
+			self::FILTER_CATEGORY => __( 'Categories', 'bigcomerce' ),
+			self::FILTER_BRAND    => __( 'Brands', 'bigcommerce' ),
+		];
+
+		/**
+		 * Filter the filtering options available in the BigCommerce catalog
+		 *
+		 * @param array $choices The filtering options to use
+		 */
+		return apply_filters( 'bigcommerce/product/archive/filter_options', $choices );
+	}
+
+	public function sanitize_filter( $values ) {
+		if ( empty( $values ) ) {
+			return $values;
+		}
+		if ( ! is_array( $values ) ) {
+			$values = explode( ',', $values );
+		}
+		$choices = $this->filter_choices();
+		$values  = array_filter( $values, function ( $value ) use ( $choices ) {
+			return isset( $choices[ $value ] );
+		} );
+
+		return $values;
+	}
+}

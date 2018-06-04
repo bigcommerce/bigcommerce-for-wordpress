@@ -1,0 +1,292 @@
+
+/* -----------------------------------------------------------------------------
+ *
+ * Form: Control Group / Wrapper, radio & checkbox specific
+ *
+ * ----------------------------------------------------------------------------- */
+
+@define-mixin form-control-group-radio-checkbox {
+	padding-top: var(--form-control-group-radio-checkbox-padding-top);
+	padding-bottom: var(--form-control-group-radio-checkbox-padding-bottom);
+}
+
+/* -----------------------------------------------------------------------------
+ *
+ * Form Helper
+ *
+ * ----------------------------------------------------------------------------- */
+
+@define-mixin form-control-helper {
+	margin-top: var(--form-control-helper-margin-top);
+	padding: var(--form-control-helper-padding);
+	color: var(--form-control-helper-color);
+	letter-spacing: var(--form-control-helper-letter-spacing);
+	text-transform: var(--form-control-helper-text-transform);
+	font: var(--form-control-helper-font-style) var(--form-control-helper-font-weight) var(--form-control-helper-font-size) / var(--form-control-helper-font-line-height) var(--form-control-helper-font-family);
+}
+
+/* -----------------------------------------------------------------------------
+ *
+ * Required Fields
+ *
+ * ----------------------------------------------------------------------------- */
+
+@define-mixin required {
+	padding-left: 4px;
+	color: var(--form-state-color-required);
+}
+
+/* -----------------------------------------------------------------------------
+ *
+ * Form Placeholders
+ *
+ * ----------------------------------------------------------------------------- */
+
+@define-mixin form-control-placeholder {
+
+	::-webkit-input-placeholder {
+		@mixin-content;
+	}
+
+	:-moz-placeholder {
+		@mixin-content;
+	}
+
+	::-moz-placeholder {
+		@mixin-content;
+	}
+
+	:-ms-input-placeholder {
+		@mixin-content;
+	}
+}
+
+/* -----------------------------------------------------------------------------
+ *
+ * Form Widgets/Controls
+ *
+ * ----------------------------------------------------------------------------- */
+
+@define-mixin form-control {
+	transition: var(--transition);
+	padding: var(--form-control-padding);
+	border: var(--form-control-border-size) solid var(--form-control-border-color);
+	border-radius: var(--form-control-border-radius);
+	background-color: var(--form-control-bgd-color);
+	display: block;
+	width: 100%;
+	height: var(--form-control-height);
+	color: var(--form-control-color);
+	letter-spacing: var(--form-control-letter-spacing);
+	text-transform: var(--form-control-text-transform);
+	font: var(--form-control-font-style) var(--form-control-font-weight) var(--form-control-font-size) / var(--form-control-font-line-height) var(--form-control-font-family);
+}
+
+/* -----------------------------------------------------------------------------
+ *
+ * Form Control: Select
+ *
+ * ----------------------------------------------------------------------------- */
+
+@define-mixin form-control-select {
+	cursor: pointer;
+	position: relative;
+
+	&:hover,
+	&:focus,
+	&:active {
+
+		&:after {
+			background-color: var(--form-control-select-ui-bgd-color-hover);
+		}
+	}
+
+	&:after {
+		@mixin icon;
+
+		display: block;
+		transition: var(--transition);
+		content: var(--form-control-select-ui-icon);
+		text-align: center;
+		height: var(--form-control-select-ui-height);
+		width: var(--form-control-select-ui-width);
+		line-height: var(--form-control-select-ui-line-height);
+		background-color: var(--form-control-select-ui-bgd-color);
+		color: var(--form-control-select-ui-color);
+		position: absolute;
+		font-size: var(--form-control-select-ui-font-size);
+		right: var(--form-control-select-ui-position-right);
+		top: var(--form-control-select-ui-position-top);
+		pointer-events: none;
+		border-top-right-radius: var(--form-control-select-ui-border-radius-top-right);
+		border-bottom-right-radius: var(--form-control-select-ui-border-radius-bottom-right);
+	}
+
+	select {
+		appearance: none;
+		padding-right: var(--form-control-select-padding-right);
+	}
+
+	select::-ms-expand {
+		display: none;
+	}
+}
+
+/* -----------------------------------------------------------------------------
+ *
+ * Form Control: Radio & Checkbox, custom styled
+ *
+ * ----------------------------------------------------------------------------- */
+
+@define-mixin form-control-radio-checkbox-base {
+	display: block;
+
+	input[type="radio"],
+	input[type="checkbox"] {
+		height: auto;
+		width: auto;
+		display: inline-block;
+		line-height: normal;
+		padding: 0;
+	}
+
+	label {
+		color: var(--form-control-radio-checkbox-label-color);
+		cursor: pointer;
+		margin-bottom: 0;
+		display: inline-block;
+		letter-spacing: var(--form-control-radio-checkbox-label-letter-spacing);
+		text-transform: var(--form-control-radio-checkbox-label-text-transform);
+		font: var(--form-control-radio-checkbox-label-font-style) var(--form-control-radio-checkbox-label-font-weight) var(--form-control-radio-checkbox-label-font-size) / var(--form-control-radio-checkbox-label-font-line-height) var(--form-control-radio-checkbox-label-font-family);
+	}
+}
+
+@define-mixin form-control-radio-checkbox {
+	transition: var(--transition);
+	position: relative;
+	padding-left: var(--form-control-radio-checkbox-ui-push-label-right);
+
+	input[type="radio"],
+	input[type="checkbox"] {
+		position: absolute;
+		left: var(--form-control-radio-checkbox-hide-browser-ui-position-left);
+		top: var(--form-control-radio-checkbox-hide-browser-ui-position-top);
+		font-size: var(--form-control-radio-checkbox-hide-browser-ui-font-size);
+	}
+
+	label {
+		max-width: var(--form-control-radio-checkbox-label-max-width);
+
+		&:before,
+		&:after {
+			transition: var(--transition);
+			content: '';
+			position: absolute;
+		}
+
+		&:before {
+			background-color: var(--form-control-radio-checkbox-ui-bgd-color);
+			width: var(--form-control-radio-checkbox-ui-width);
+			height: var(--form-control-radio-checkbox-ui-height);
+			top: var(--form-control-radio-checkbox-ui-position-top);
+			left: var(--form-control-radio-checkbox-ui-position-left);
+			border: var(--form-control-radio-checkbox-ui-border-size) solid var(--form-control-radio-checkbox-ui-border-color);
+		}
+
+		&:after {
+			opacity: 0;
+		}
+	}
+
+	input:focus + label:before {
+		border-color: var(--form-control-radio-checkbox-ui-border-color-focus);
+		box-shadow: 0 0 0 var(--form-control-radio-checkbox-ui-border-size-focus) var(--form-control-radio-checkbox-ui-border-color-focus);
+	}
+
+	input:checked + label {
+		color: var(--form-control-radio-checkbox-label-color-checked);
+
+		&:after {
+			opacity: 1;
+		}
+	}
+}
+
+/* -----------------------------------------------------------------------------
+ *
+ * Form Control: Checkbox, custom styled
+ *
+ * ----------------------------------------------------------------------------- */
+
+@define-mixin form-control-checkbox {
+
+	label {
+
+		&:before {
+			border-radius: var(--form-control-checkbox-ui-border-radius);
+		}
+
+		&:after {
+			left: var(--form-control-checkbox-ui-position-left);
+			top: var(--form-control-checkbox-ui-position-top);
+			width: var(--form-control-checkbox-ui-width);
+			height: var(--form-control-checkbox-ui-height);
+			border: var(--form-control-checkbox-ui-border-size) solid var(--form-control-radio-checkbox-ui-color);
+			border-top: none;
+			border-right: none;
+			transform: rotate(-50deg);
+		}
+	}
+}
+
+/* -----------------------------------------------------------------------------
+ *
+ * Form Control: Radio, custom styled
+ *
+ * ----------------------------------------------------------------------------- */
+
+@define-mixin form-control-radio {
+
+	label {
+
+		&:before,
+		&:after {
+			border-radius: 50%;
+		}
+
+		&:after {
+			left: var(--form-control-radio-ui-position-left);
+			top: var(--form-control-radio-ui-position-top);
+			width: var(--form-control-radio-ui-width);
+			height: var(--form-control-radio-ui-height);
+			background-color: var(--form-control-radio-checkbox-ui-color);
+		}
+	}
+}
+
+/* -----------------------------------------------------------------------------
+ *
+ * Form Control: Icons
+ *
+ * ----------------------------------------------------------------------------- */
+
+@define-mixin form-control-icon {
+	position: relative;
+
+	input {
+		padding-right: var(--form-control-icon-padding-right);
+	}
+
+	&:before {
+		position: absolute;
+		right: var(--form-control-icon-position-right);
+		top: var(--form-control-icon-position-top);
+		color: var(--form-control-icon-color);
+		height: 100%;
+		width: var(--form-control-icon-width);
+		line-height: var(--form-control-icon-line-height);
+		text-align: center;
+		z-index: 1;
+		font-size: var(--form-control-icon-font-size);
+	}
+}

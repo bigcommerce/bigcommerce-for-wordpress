@@ -1,0 +1,137 @@
+.bc-order-card__body {
+	display: flex;
+	flex-direction: column-reverse;
+
+	@media (--viewport-medium) {
+		flex-direction: row;
+		flex-wrap: nowrap;
+	}
+}
+
+.bc-order-card__featured-image {
+	flex: 0 0 100px;
+	position: relative;
+	max-width: 100px;
+
+	@media (--viewport-medium) {
+		margin-right: 20px;
+	}
+
+	img {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+
+	.bc-order-card__featured-image-link {
+		box-shadow: none;
+		display: block;
+		opacity: 1;
+		transition: var(--transition);
+
+		&:hover,
+		&:focus {
+			opacity: 0.8;
+		}
+	}
+}
+
+.bc-order-card__meta {
+	flex: 1 1 auto;
+
+	&-inner {
+		@media (--viewport-medium) {
+			margin-right: 20px;
+			max-width: 550px;
+		}
+	}
+}
+
+.bc-order-card__title {
+	margin-bottom: 12px;
+
+	.bc-order-card__order-title {
+		font-size: 20px;
+		line-height: 24px;
+		margin: 0;
+
+		@media (--viewport-full) {
+			font-size: 24px;
+			line-height: 32px;
+		}
+
+		@media (--viewport-large) {
+			font-size: 24px;
+			line-height: 32px;
+		}
+	}
+}
+
+.bc-order-card__order-title {
+
+	.bc-order-card__title-link {
+		text-decoration: none;
+		box-shadow: none;
+		color: currentColor;
+		opacity: 1;
+		transition: var(--transition);
+
+		&:hover,
+		&:focus {
+			color: currentColor;
+			opacity: 0.8;
+		}
+	}
+}
+
+.bc-order-card__total {
+	font-size: 16px;
+	font-weight: var(--font-weight-bold);
+	line-height: 22px;
+	margin-bottom: 26px;
+
+	@media (--viewport-medium) {
+		font-size: 20px;
+		margin-bottom: 20px;
+	}
+}
+
+.bc-order-card-meta__list {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	margin-bottom: 6px;
+
+	@media (--viewport-medium) {
+		margin-bottom: 20px;
+	}
+}
+
+.bc-order-card-meta__list-item {
+	width: 50%;
+	margin-bottom: 16px;
+
+	@media (--viewport-medium) {
+		margin-bottom: 0;
+		width: auto;
+
+		+ .bc-order-card-meta__list-item {
+			margin-left: 30px;
+		}
+	}
+}
+
+.bc-order-card__status {
+	font-size: 16px;
+	font-weight: var(--font-weight-bold);
+	line-height: 22px;
+	margin-bottom: 12px;
+
+	@media (--viewport-medium) {
+		align-self: center;
+		flex: 0 0 150px;
+		font-size: 20px;
+		line-height: 24px;
+		margin: 0 0 0 auto;
+	}
+}

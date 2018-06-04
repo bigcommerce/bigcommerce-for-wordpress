@@ -1,0 +1,32 @@
+
+/* -----------------------------------------------------------------------------
+ *
+ * Clearfix
+ *
+ * ----------------------------------------------------------------------------- */
+
+@define-mixin clearfix {
+
+	&:after {
+		content: '';
+		display: table;
+		clear: both;
+	}
+}
+
+/* -----------------------------------------------------------------------------
+ *
+ * Touch & Pointer Bug Fix
+ *
+ * + Disable text select on clickable elements for pointer & touch events
+ *
+ * NOTE:
+ * This should be utilized for elements that have a JS
+ * touchstart or pointerdown event bound to them
+ *
+ * ----------------------------------------------------------------------------- */
+
+@define-mixin touch {
+	-webkit-touch-callout: none;
+	user-select: none;
+}

@@ -1,0 +1,37 @@
+.bc-alert {
+	background-color: var(--alert-bg-default);
+	color: var(--alert-color);
+	font-size: 16px;
+	line-height: 1.5;
+	padding: 12px 16px;
+	margin-bottom: 40px;
+
+	@media (--viewport-medium) {
+		margin-bottom: 60px;
+	}
+
+	&--success {
+		background-color: var(--alert-success);
+	}
+
+	&--error {
+		background-color: var(--alert-error);
+	}
+}
+
+.bc-alert-group {
+
+	.bc-alert:not(:last-child) {
+		margin-bottom: 10px;
+	}
+
+	&--info {
+		background-color: var(--alert-bg-info);
+		color: var(--color-bc-black);
+		font-size: 14px;
+
+		.bc-product-form & {
+			margin-bottom: 0;
+		}
+	}
+}

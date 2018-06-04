@@ -1,0 +1,89 @@
+.bc-shortcode-ui__logo {
+	background: url("var(--path-images)/admin/big-commerce-logo.png") no-repeat top center;
+	background-size: contain;
+	width: 132px;
+	height: 30px;
+	display: block;
+	margin: 4px auto 30px;
+}
+
+.bc-shortcode-ui__query-builder-list {
+	margin: 0;
+}
+
+.bc-shortcode-ui__query-builder-child-list {
+	padding-left: 20px;
+	max-height: 0;
+	opacity: 0;
+	overflow: hidden;
+}
+
+.bc-shortcode-ui__query-builder-list-item {
+	border-bottom: 1px solid #ccc;
+	padding: 12px 0;
+	display: block;
+	width: 100%;
+	margin-bottom: 0;
+
+	.bc-shortcode-ui__query-builder-child-list & {
+		border-bottom: 0;
+		margin-bottom: 0;
+		padding: 0;
+	}
+}
+
+.bc-shortcode-ui__query-builder-anchor,
+.bc-shortcode-ui__query-builder-toggle {
+	display: inline-block;
+	text-decoration: none;
+	color: var(--color-bc-grey-medium);
+	font-weight: var(--font-weight-bold);
+	transition: var(--transition);
+	padding: 4px 0;
+	position: relative;
+
+	&:hover,
+	&:focus {
+		color: var(--color-bc-black);
+	}
+
+	&.bcqb-item-selected {
+		color: var(--color-bc-blue-turquoise);
+	}
+}
+
+.bc-shortcode-ui__query-builder-anchor {
+
+	.bc-shortcode-ui__query-builder-child-list & {
+		font-weight: var(--font-weight-regular);
+
+		&.bcqb-item-selected {
+			color: var(--color-bc-black);
+
+			&:before {
+				content: '';
+				width: 10px;
+				height: 10px;
+				border-radius: 10px;
+				position: absolute;
+				top: 50%;
+				margin-top: -5px;
+				left: -20px;
+				background-color: var(--color-bc-blue-turquoise);
+			}
+		}
+	}
+}
+
+.bc-shortcode-ui__query-builder-toggle {
+	display: block;
+	width: 100%;
+	background: transparent;
+	border: 0;
+	cursor: pointer;
+	text-align: left;
+
+	.icon {
+		float: right;
+	}
+}

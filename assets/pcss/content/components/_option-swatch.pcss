@@ -1,0 +1,21 @@
+.bc-product-form__control--swatch {
+
+	input.bc-product-variant__radio--hidden {
+
+		&:checked + .bc-product-variant__label .bc-product-variant__label--swatch {
+			border: 0 solid var(--color-white);
+			box-shadow: 0 0 1px var(--color-bc-blue-light);
+			transition: var(--transition-border);
+		}
+	}
+}
+
+.bc-product-variant__label--swatch {
+	display: block;
+	width: 36px;
+	height: 36px;
+	border: 5px solid var(--color-white);
+	box-shadow: 0 0 1px var(--color-bc-grey);
+	cursor: pointer;
+	transition: var(--transition-border);
+}

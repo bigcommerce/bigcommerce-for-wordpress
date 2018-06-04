@@ -1,0 +1,26 @@
+.bc-product-form__control--pick-list {
+
+	input.bc-product-variant__radio--hidden {
+
+		&:checked + .bc-product-variant__label .bc-product-variant__label--pick-list {
+			border: 1px solid var(--color-bc-blue-light);
+			transition: var(--transition-border);
+		}
+	}
+}
+
+.bc-product-variant__label--pick-list {
+	display: flex;
+	align-items: center;
+	padding: 5px;
+	border: 1px solid var(--color-bc-light-grey);
+	cursor: pointer;
+}
+
+.bc-product-variant__label--img {
+	flex: 0;
+	margin-right: 6px;
+	width: 100%;
+	max-width: 50px;
+	height: auto;
+}

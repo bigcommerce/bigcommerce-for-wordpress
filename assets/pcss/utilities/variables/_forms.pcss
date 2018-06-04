@@ -1,0 +1,57 @@
+:root {
+	/* -----------------------------------------------------------------------------
+	 * Borders
+	 * ----------------------------------------------------------------------------- */
+
+	--form-border-color: lightgrey;
+	--form-border-color-focus: darken(var(--form-border-color), 0.25);
+	--form-border-size: 1px;
+	--form-border-size-focus: var(--form-border-size);
+	--form-border-radius: 0;
+
+	/* -----------------------------------------------------------------------------
+	 * Colors
+	 * ----------------------------------------------------------------------------- */
+
+	--form-color: var(--color-text);
+	--form-color-secondary: var(--color-grey-light);
+	--form-color-error: lighten(red, 0.1);
+	--form-color-required: var(--form-color-error);
+	--form-color-success: lighten(green, 0.1);
+	--form-color-placeholder: grey;
+
+	/* -----------------------------------------------------------------------------
+	 * UI
+	 * ----------------------------------------------------------------------------- */
+
+	--form-ui-icon-color: lightgrey; /* Control icons */
+	--form-ui-icon-font-size: 20px; /* Control icons */
+	--form-ui-color: var(--color-grey-dark); /* Select icon */
+	--form-ui-bgd-color: var(--form-border-color);  /* Select, Checkbox, & Radio */
+	--form-ui-bgd-color-focus: var(--form-border-color-focus);  /* Select */
+	--form-ui-icon-select: '\e900'; /* Select */
+	--form-ui-icon-select-font-size: 25px; /* Select */
+
+	/* -----------------------------------------------------------------------------
+	 * Fonts
+	 * ----------------------------------------------------------------------------- */
+
+	--form-font-family: var(--font-family-base);
+	--form-font-size: 16px;
+	--form-font-size-secondary: 14px; /* Label */
+	--form-font-weight-secondary: var(--font-weight-bold); /* Label */
+	--form-font-size-tertiary: 13px; /* Helper Text & Descriptions */
+	--form-font-weight-tertiary: var(--font-weight-semibold); /* Helper Text & Descriptions */
+	--form-letter-spacing: normal;
+	--form-text-transform: none;
+	--form-control-height: 45px;
+
+	/* -----------------------------------------------------------------------------
+	 * Spacing
+	 * ----------------------------------------------------------------------------- */
+
+	--form-margin: 28px;
+	--form-margin-small: var(--spacer-xs);
+	--form-padding-horizontal: 20px;
+	--form-padding-vertical: 20px;
+}

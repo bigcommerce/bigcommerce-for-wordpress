@@ -1,0 +1,39 @@
+.bc-account-tabs__list {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+
+	@media (--viewport-small) {
+		flex-direction: row;
+	}
+}
+
+.bc-account-tabs__list-item {
+	margin-bottom: 20px;
+	padding: 0;
+
+	@media (--viewport-small) {
+
+		+ .bc-account-tabs__list-item {
+			margin-left: 30px;
+		}
+	}
+
+	@media (--viewport-medium) {
+		margin-bottom: 40px;
+	}
+}
+
+.bc-account-tabs__link {
+	cursor: pointer;
+	margin: 0;
+	padding: 0;
+	text-decoration: none;
+}
+
+.bc-account-tabs__list-item--current .bc-account-tabs__link {
+	color: currentColor;
+}

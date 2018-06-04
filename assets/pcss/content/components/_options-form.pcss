@@ -1,0 +1,57 @@
+/* -----------------------------------------------------------------------------
+ * Forms
+ * ----------------------------------------------------------------------------- */
+
+.bc-product-form__control {
+	margin-bottom: 20px;
+}
+
+.bc-product-form__option-label {
+	display: block;
+	margin-bottom: 10px;
+	font-size: 16px;
+	font-weight: var(--font-weight-bold);
+}
+
+.bc-product-form__option-variants {
+	margin-top: 10px;
+}
+
+.bc-product-variant__label {
+	display: block;
+	margin-bottom: 10px;
+}
+
+.bc-product-form__option-variants--inline {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: flex-start;
+
+	.bc-product-variant__label {
+		margin-right: 10px;
+
+		&:last-of-type {
+			margin-right: 0;
+		}
+	}
+}
+
+.bc-product-variant__label--title {
+	flex: 1;
+	color: var(--color-bc-grey);
+}
+
+input.bc-product-variant__radio--hidden {
+	margin: 0;
+}
+
+.bc-product-form__product-message {
+	padding: 0;
+}
+
+.bc-product-form__message {
+	display: block;
+	padding: 12px 16px;
+	font-size: 12px;
+}

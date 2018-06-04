@@ -1,0 +1,24 @@
+.bc-product-form__control--rectangle {
+
+	input.bc-product-variant__radio--hidden {
+
+		&:checked + .bc-product-variant__label .bc-product-variant__label--rectangle {
+			border: 1px solid var(--color-bc-blue-light);
+			color: var(--color-bc-blue-light);
+			font-weight: var(--font-weight-bold);
+			transition: var(--transition-border), var(--transition-color-fast);
+		}
+	}
+}
+
+.bc-product-variant__label--rectangle {
+	display: block;
+	height: 36px;
+	line-height: 24px;
+	padding: 5px 10px;
+	text-align: center;
+	border: 1px solid var(--color-bc-concrete);
+	color: var(--color-bc-grey);
+	transition: var(--transition-border), var(--transition-color-fast);
+	cursor: pointer;
+}

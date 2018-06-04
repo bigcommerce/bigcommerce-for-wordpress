@@ -1,0 +1,128 @@
+.bigcommerce_product_page_bigcommerce {
+
+	.form-table {
+		margin-bottom: 50px;
+		margin-top: 0;
+	}
+
+	form,
+	.form-table th,
+	.form-wrap label {
+		color: var(--color-bc-black);
+	}
+
+	.form-table th,
+	.form-wrap label {
+		font-size: 15px;
+	}
+
+	p {
+		font-size: 14px;
+	}
+
+	.form-table th {
+		width: 170px;
+	}
+
+	h2 {
+		position: relative;
+		margin: 50px auto 10px;
+		padding-top: 50px;
+		font-size: 20px;
+		line-height: 24px;
+
+		&:before {
+			content: '';
+			position: absolute;
+			width: 100%;
+			height: 1px;
+			left: 0;
+			top: 0;
+			background-color: var(--color-bc-grey);
+		}
+
+		&:after {
+			content: '';
+			display: inline-block;
+		}
+	}
+
+	.regular-text {
+		max-width: 30em;
+		width: 100%;
+	}
+
+	.button {
+		text-shadow: none;
+		font-size: 16px;
+		padding: 8px 12px;
+		height: auto;
+		transition: var(--transition);
+	}
+
+	.secondary {
+		border-radius: 6px;
+
+		&:hover,
+		&:focus {
+			background-color: #fdfdfd;
+		}
+	}
+
+	.button-primary {
+		box-shadow: -1px 1px 2px var(--color-black-a-40);
+	}
+
+	select,
+	input {
+		border: 1px solid #ccc;
+		box-shadow: none;
+	}
+
+	select {
+		padding: 12px;
+		height: 45px;
+		line-height: 45px;
+		border-radius: 0;
+
+		&[name="bigcommerce_import_frequency"] {
+			width: auto;
+		}
+	}
+
+	input[type=text],
+	input[type=password],
+	input[type=url],
+	input[type=number] {
+		height: 40px;
+		line-height: 40px;
+	}
+
+	input[type=checkbox] {
+		width: auto;
+		width: 20px;
+		height: 20px;
+
+		&:before {
+			margin: -1px 0 0 -3px;
+			width: 20px;
+			height: 20px;
+		}
+	}
+
+	.bigcommerce-connection-status__message {
+		display: inline-block;
+		color: var(--color-bc-success);
+		font-size: 14px;
+		font-weight: 500;
+	}
+
+	.bigcommerce-connection-status__message-failed {
+		color: var(--color-bc-red);
+	}
+
+	select[name="bigcommerce_import_frequency"] {
+		float: left;
+		margin-right: 14px;
+	}
+}

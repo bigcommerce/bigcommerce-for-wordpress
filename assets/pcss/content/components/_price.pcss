@@ -1,0 +1,45 @@
+.bc-product__pricing {
+	margin-bottom: 0;
+	font-weight: normal;
+}
+
+.bc-product__price {
+	font-size: 16px;
+}
+
+.bc-product__original-price {
+	text-decoration: line-through;
+	margin-right: 12px;
+	margin-bottom: 12px;
+	display: inline-block;
+	font-style: italic;
+	color: var(--color-bc-grey);
+}
+
+.bc-product__price--sale {
+	font-weight: var(--font-weight-bold);
+	color: var(--color-bc-green);
+}
+
+.bc-product-card--single {
+
+	.bc-product__pricing {
+		margin-bottom: 30px;
+
+		@media (--viewport-full) {
+			margin-bottom: 40px;
+		}
+
+		@media (--viewport-large) {
+			margin-bottom: 50px;
+		}
+	}
+}
+
+.bc-product-card--single,
+.bc-product-single {
+
+	.bc-product__original-price {
+		margin-right: 20px;
+	}
+}

@@ -1,0 +1,125 @@
+.bc-order-product-row {
+	display: flex;
+	flex-direction: column;
+
+	@media (--viewport-medium) {
+		flex-direction: row;
+		flex-wrap: nowrap;
+	}
+}
+
+.bc-order-product-row__image {
+	flex: 0 0 100px;
+	position: relative;
+	margin-bottom: 12px;
+	max-width: 100px;
+
+	@media (--viewport-medium) {
+		margin: 0 20px 0 0;
+	}
+
+	img {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+}
+
+.bc-order-product-row__body {
+	flex: 1 1 auto;
+	margin-bottom: 12px;
+
+	@media (--viewport-medium) {
+		margin: 0 20px 0 0;
+		max-width: 550px;
+	}
+}
+
+.bc-order-product-row__header {
+
+	.bc-order-product-row__title {
+		font-size: 20px;
+		line-height: 24px;
+		margin: 0 10px 0 0;
+
+		@media (--viewport-full) {
+			font-size: 24px;
+			line-height: 32px;
+		}
+	}
+
+	.bc-product-flag--grey {
+		margin-bottom: 5px;
+	}
+}
+
+.bc-order-product-row__brand,
+.bc-order-product-row__unit-price,
+.bc-order-product-row__option {
+	font-size: 16px;
+	line-height: 22px;
+	margin-bottom: 4px;
+}
+
+.bc-order-product-row__brand {
+	font-weight: var(--font-weight-bold);
+}
+
+.bc-order-product-row__options-list,
+.bc-order-product-row__option {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.bc-order-product-row__options-list {
+	margin-top: 8px;
+}
+
+.bc-order-product-row__option {
+	color: var(--color-bc-grey);
+	font-size: 12px;
+	line-height: 18px;
+}
+
+.bc-order-product-row__status {
+	font-size: 16px;
+	font-weight: var(--font-weight-bold);
+	line-height: 22px;
+	margin-bottom: 12px;
+
+	@media (--viewport-medium) {
+		align-self: center;
+		flex: 0 0 150px;
+		font-size: 20px;
+		line-height: 24px;
+		margin: 0 0 0 auto;
+	}
+}
+
+.bc-order-product-row__quantity {
+	font-size: 12px;
+	font-weight: var(--font-weight-bold);
+	line-height: 18px;
+	margin-bottom: 12px;
+
+	@media (--viewport-medium) {
+		flex: 0 0 100px;
+		margin-bottom: 0;
+		margin-left: auto;
+	}
+}
+
+.bc-order-product-row__total {
+	font-size: 16px;
+	font-weight: var(--font-weight-bold);
+	line-height: 22px;
+	margin-bottom: 26px;
+
+	@media (--viewport-medium) {
+		flex: 0 0 150px;
+		font-size: 20px;
+		text-align: right;
+		margin-bottom: 0;
+	}
+}

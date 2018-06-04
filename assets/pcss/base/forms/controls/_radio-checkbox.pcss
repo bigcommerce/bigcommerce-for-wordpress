@@ -1,0 +1,32 @@
+input {
+	@mixin form-control-radio-checkbox-base;
+
+	&[type="radio"],
+	&[type="checkbox"] {
+		margin-bottom: 0;
+		margin-right: var(--form-control-radio-checkbox-push-label-right);
+
+		&.form-control-custom-bc-style {
+			@mixin form-control-radio-checkbox;
+		}
+	}
+
+	&[type="radio"] ~ input[type="radio"],
+	&[type="checkbox"] ~ input[type="checkbox"] {
+		margin-top: var(--form-control-radio-checkbox-margin-top);
+	}
+
+	&[type="checkbox"] {
+		/* CASE: Custom Styled */
+		&.form-control-custom-bc-style {
+			@mixin form-control-checkbox;
+		}
+	}
+
+	&[type="radio"] {
+		/* CASE: Custom Styled */
+		&.form-control-custom-bc-style {
+			@mixin form-control-radio;
+		}
+	}
+}

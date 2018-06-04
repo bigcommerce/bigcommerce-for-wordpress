@@ -1,0 +1,19 @@
+.bigcommerce-cart__item-count {
+	display: inline-block;
+	background-color: var(--color-primary);
+	color: var(--color-white);
+	font-weight: var(--font-weight-bold);
+	border-radius: 15px;
+	width: 25px;
+	height: 25px;
+	font-size: 12px;
+	line-height: 25px;
+	vertical-align: middle;
+	text-align: center;
+	transform: scale(0);
+	transition: transform 0.15s var(--ease-in-out-cubic);
+
+	&.full {
+		transform: scale(1);
+	}
+}
