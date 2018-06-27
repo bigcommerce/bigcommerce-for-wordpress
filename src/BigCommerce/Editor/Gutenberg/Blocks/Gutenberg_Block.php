@@ -28,11 +28,15 @@ abstract class Gutenberg_Block {
 	 * @action init
 	 */
 	public function register() {
-		register_block_type( static::NAME, [
+		register_block_type( static::NAME, $this->registration_args() );
+	}
+
+	protected function registration_args() {
+		return [
 			'render_callback' => [ $this, 'render' ],
 			'editor_script'   => 'bigcommerce-gutenberg-scripts',
 			'attributes'      => $this->attributes(),
-		] );
+		];
 	}
 
 	/**

@@ -80,6 +80,7 @@ class Products_Controller extends Rest_Controller {
 			'per_page' => 'posts_per_page',
 			'order'    => 'order',
 			'search'   => 's',
+			'bcid'     => 'bigcommerce_id__in',
 		];
 
 		/*
@@ -190,6 +191,15 @@ class Products_Controller extends Rest_Controller {
 			'type'        => 'string',
 			'default'     => 'asc',
 			'enum'        => [ 'asc', 'desc' ],
+		];
+
+		$query_params[ 'bcid' ] = [
+			'description' => __( 'BigCommerce product IDs', 'bigcommerce' ),
+			'type'        => 'array',
+			'items'       => [
+				'type' => 'integer',
+			],
+			'default'     => [],
 		];
 
 		$query_params[ 'recent' ] = [

@@ -7,7 +7,7 @@ import { trigger } from '../../../../utils/events';
 import shortcodeState from '../../../config/shortcode-state';
 
 const { Component } = wp.element;
-const { InspectorControls } = wp.blocks;
+const { InspectorControls } = wp.editor;
 const { PanelRow, PanelBody, Button } = wp.components;
 
 export default class Inspector extends Component {
@@ -19,19 +19,14 @@ export default class Inspector extends Component {
 
 	triggerDialog(e) {
 		const { target } = e;
+		const queryParams = this.props.attributes.queryParams;
 		shortcodeState.isGutenberg = true;
 		shortcodeState.insertCallback = this.props.handleInsert;
 
-		// TODO: update shortcode dialog UI to match values from
-		// this.props.attributes.queryParams
-
-		trigger({ event: 'bigcommerce/init_shortcode_ui', data: { target }, native: false });
-		trigger({ event: 'bigcommerce/reset_shortcode_ui', native: false });
+		trigger({ event: 'bigcommerce/init_shortcode_ui', data: { target, queryParams }, native: false });
 	}
 
 	render() {
-		const { setAttributes } = this.props;
-
 		return (
 			<InspectorControls>
 				<PanelBody

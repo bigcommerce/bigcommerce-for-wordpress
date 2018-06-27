@@ -11,6 +11,7 @@ import { productTemplate } from './product-template';
 import { I18N } from '../config/i18n';
 import { wpAPIProductLookup } from '../../utils/ajax';
 import { ADMIN_ICONS } from '../config/wp-settings';
+import { on } from '../../utils/events';
 
 const el = {};
 
@@ -159,6 +160,7 @@ const cacheElements = () => {
 
 const bindEvents = () => {
 	delegate(el.searchForm, '[data-js="bcqb-submit"]', 'click', wpAPIGetRequest);
+	on(document, 'bigcommerce/shortcode_ui_state_ready', wpAPIGetRequest);
 };
 
 const init = () => {

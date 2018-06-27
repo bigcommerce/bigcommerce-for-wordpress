@@ -12,7 +12,7 @@ import productSelection from './product-selection';
 import createShortcode from './create-shortcode';
 import ajaxQuery from './ajax-query';
 import shortcodeState from '../config/shortcode-state';
-import { on } from '../../utils/events';
+import { on, trigger } from '../../utils/events';
 
 const el = {
 	container: tools.getNodes('bc-shortcode-ui')[0],
@@ -32,26 +32,36 @@ const showDialog = () => {
 	instances.dialog.show();
 };
 
+const setQueryParams = (params = {}) => {
+	if (!params) {
+		return;
+	}
+
+	trigger({ event: 'bigcommerce/set_shortcode_ui_state', data: { params }, native: false });
+};
+
 /**
  * @function dialogPostRender
  * @description create a new A11yDialog and set dialog state functions after dialog renders.
  */
 const initShortcodeUIDialog = (event) => {
+	const target = event.detail.target;
+	const params = event.detail.queryParams;
+
 	if (state.rendered && event.detail.hide) {
 		hideDialog();
 		return;
 	}
 
 	if (state.rendered) {
+		setQueryParams(params);
 		showDialog();
 		return;
 	}
 
-	const trigger = event.detail.target;
-
 	const options = {
 		appendTarget: '#wpwrap',
-		trigger,
+		trigger: target,
 		bodyLock: true,
 		effect: 'fade',
 		effectSpeed: 200,
@@ -72,6 +82,7 @@ const initShortcodeUIDialog = (event) => {
 			ajaxQuery();
 			productSelection();
 			createShortcode();
+			setQueryParams(params);
 		}, 50);
 
 		if (!e) {

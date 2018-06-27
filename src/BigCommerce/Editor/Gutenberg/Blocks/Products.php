@@ -32,7 +32,6 @@ class Products extends Gutenberg_Block {
 		return [
 			'name'                   => $this->name(),
 			'title'                  => __( 'BigCommerce Products', 'bigcommerce' ),
-			'icon'                   => 'dashicons-bigcommerce', // TODO: path to SVG.
 			'category'               => 'common',
 			'keywords'               => [
 				__( 'ecommerce', 'bigcommerce' ),

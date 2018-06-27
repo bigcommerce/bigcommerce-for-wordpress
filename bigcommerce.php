@@ -1,13 +1,18 @@
 <?php
 /*
-Plugin Name: BigCommerce for WordPress
-Description: BigCommerce for WordPress
-Author:      Modern Tribe
-Version:     0.7.2
-Author URI:  http://www.tri.be
+Plugin Name:  BigCommerce for WordPress
+Description:  BigCommerce for WordPress
+Author:       Modern Tribe
+Version:      0.8.0
+Author URI:   http://www.tri.be
+Requires PHP: 5.6
+Text Domain:  bigcommerce
+License:      GPL3
 */
 
-require_once __DIR__ . '/vendor/autoload.php';
+if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+	require_once __DIR__ . '/vendor/autoload.php';
+}
 
 
 // Start the plugin

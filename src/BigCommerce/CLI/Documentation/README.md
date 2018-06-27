@@ -45,6 +45,24 @@ git clone git@github.com:moderntribe/bigcommerce-documentation.git wp-content/th
 wp theme activate bigcommerce-documentation
 ```
 
+Set up the following content:
+
+* Home Page: should use the "Home" template
+* Reference Page: should use the "Reference" template and have the slug "reference"
+
+Create the primary nav menu and add links to the post type archives for the reference post types.
+
+And change the following settings:
+
+* Settings -> Reading
+  * Set the home page to display a static page
+  * Select the home page you created above as the home page
+* Settings -> Discussion
+  * Check the "Comment must be manually approved" box
+  * Check the "Users must be registered and logged in to comment" box
+* Settings -> Permalinks
+  * Set the permalink structure to anything other than "Plain"
+
 ## Building
 
 ```

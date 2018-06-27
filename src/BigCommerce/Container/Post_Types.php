@@ -54,6 +54,11 @@ class Post_Types extends Provider {
 			return $container[ self::PRODUCT_QUERY ]->add_query_vars( $vars );
 		} ), 10, 1 );
 
+
+		add_filter( 'wp_insert_post_data', $this->create_callback( 'prevent_title_changes', function ( $data, $submitted ) use ( $container ) {
+			return $container[ self::PRODUCT_ADMIN ]->prevent_title_changes( $data, $submitted );
+		} ), 10, 2 );
+
 		/**
 		 * Only load the post admin hooks when on the post admin page to avoid interfering where we're not welcome
 		 */
@@ -61,10 +66,6 @@ class Post_Types extends Provider {
 			add_action( 'edit_form_before_permalink', $this->create_callback( 'insert_static_title', function ( \WP_Post $post ) use ( $container ) {
 				$container[ self::PRODUCT_ADMIN ]->insert_static_title( $post );
 			} ), 10, 1 );
-
-			add_filter( 'wp_insert_post_data', $this->create_callback( 'prevent_title_changes', function ( $data, $submitted ) use ( $container ) {
-				return $container[ self::PRODUCT_ADMIN ]->prevent_title_changes( $data, $submitted );
-			} ), 10, 2 );
 
 			add_action( 'add_meta_boxes_' . Product\Product::NAME, $this->create_callback( 'remove_featured_image_meta_box', function ( \WP_Post $post ) use ( $container ) {
 				$container[ self::PRODUCT_ADMIN ]->remove_featured_image_meta_box( $post );
@@ -92,6 +93,9 @@ class Post_Types extends Provider {
 		} ), 10, 2 );
 		add_filter( 'post_submitbox_misc_actions', $this->create_callback( 'submitbox_link', function ( $post ) use ( $container ) {
 			$container[ self::STORE_LINKS ]->add_submitbox_link( $post );
+		} ), 10, 1 );
+		add_filter( 'bigcommerce/gutenberg/js_config', $this->create_callback( 'gutenberg_link', function ( $data ) use ( $container ) {
+			return $container[ self::STORE_LINKS ]->add_link_to_gutenberg_config( $data );
 		} ), 10, 1 );
 	}
 }

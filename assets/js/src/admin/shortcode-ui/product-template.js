@@ -35,7 +35,7 @@ export const selectedProduct = productData => (
 		<li class="bc-shortcode-ui__selected-product" data-product="${productData.bcid}" data-postid="${productData.id}">
 			<h5 class="bc-shortcode-ui__selected-product-title">${productData.title} ${productData.price}</h5>
 			<span class="bc-shortcode-ui__selected-product-id" data-bcid="${productData.bcid}">${I18N.text.id_prefix} ${productData.bcid}</span>
-			<button type="button" class="bc-shortcode-ui__remove-selected" data-js="remove-product" data-bcid="${productData.bcid}">${I18N.buttons.remove_selected}</button>
+			<button type="button" class="bc-shortcode-ui__remove-selected" data-js="remove-product" data-bcid="${productData.bcid}" data-postid="${productData.id}">${I18N.buttons.remove_selected}</button>
 		</li>
 	`
 );

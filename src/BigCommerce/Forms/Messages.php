@@ -58,18 +58,24 @@ class Messages {
 		if ( $data[ 'user_id' ] != get_current_user_id() ) {
 			return '';
 		}
-		if ( ! is_wp_error( $data[ 'error' ] ) || count( $data[ 'error' ]->get_error_messages() ) < 1 ) {
+		/** @var \WP_Error $error */
+		$error = $data[ 'error' ];
+		if ( ! is_wp_error( $error ) || count( $error->get_error_messages() ) < 1 ) {
 			return '';
 		}
 
-		$messages = array_map( function ( $content ) {
-			$template = new Message( [
-				Message::CONTENT => $content,
-				Message::TYPE    => Message::ERROR,
-			] );
+		$messages = [];
 
-			return $template->render();
-		}, $data[ 'error' ]->get_error_messages() );
+		foreach ( $error->get_error_codes() as $code ) {
+			foreach ( $error->get_error_messages( $code ) as $content ) {
+				$template = new Message( [
+					Message::CONTENT => $content,
+					Message::KEY     => $code,
+					Message::TYPE    => Message::ERROR,
+				] );
+				$messages[] = $template->render();
+			}
+		}
 
 		$controller = new Message_Group( [
 			Message_Group::MESSAGES => $messages,

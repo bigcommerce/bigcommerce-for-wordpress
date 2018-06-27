@@ -4,7 +4,7 @@
 namespace BigCommerce;
 
 class Plugin {
-	const VERSION = '0.7.2';
+	const VERSION = '0.8.0';
 
 	protected static $_instance;
 
@@ -64,6 +64,7 @@ class Plugin {
 		$this->providers[ 'shortcodes' ] = new Container\Shortcodes();
 		$this->providers[ 'taxonomies' ] = new Container\Taxonomies();
 		$this->providers[ 'templates' ]  = new Container\Templates();
+		$this->providers[ 'widgets' ]    = new Container\Widgets();
 		$this->providers[ 'editor' ]     = new Container\Editor();
 
 		/**

@@ -65,6 +65,33 @@ class Store_Links {
 	}
 
 	/**
+	 * @param array $data
+	 *
+	 * @return array
+	 * @filter bigcommerce/gutenberg/js_config
+	 */
+	public function add_link_to_gutenberg_config( $data ) {
+		$data[ 'store_link' ] = [
+			'url'   => '',
+			'label' => __( 'Open in BigCommerce', 'bigcommerce' ),
+		];
+		$screen               = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		if ( ! $screen ) {
+			return $data;
+		}
+		if ( $screen->id !== Product::NAME ) {
+			return $data;
+		}
+		$post = get_post();
+		if ( ! current_user_can( 'edit_post', $post->ID ) ) {
+			return $data;
+		}
+		$data[ 'store_link' ][ 'url' ] = $this->get_bigcommerce_post_url( $post );
+
+		return $data;
+	}
+
+	/**
 	 * Get the URL to edit a post in the BigCommerce admin
 	 *
 	 * @param \WP_Post $post

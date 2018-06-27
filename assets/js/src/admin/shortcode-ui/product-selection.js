@@ -3,29 +3,16 @@
  * @description handle product results interactions.
  */
 
+import _ from 'lodash';
 import delegate from 'delegate';
 import * as tools from '../../utils/tools';
 import { selectedProduct } from './product-template';
 import { I18N } from '../config/i18n';
-import shortCodestate from '../config/shortcode-state';
-import { on } from '../../utils/events';
+import shortcodeState from '../config/shortcode-state';
+import { on, trigger } from '../../utils/events';
+import { wpAPIProductLookup } from '../../utils/ajax';
 
 const el = {};
-
-/**
- * @function renderProductTemplate
- * @param product json product object
- */
-const renderProductTemplate = (product = {}) => {
-	const productData = {
-		id: product.dataset.postid,
-		bcid: product.dataset.bcid,
-		title: product.dataset.title,
-		price: product.dataset.price,
-	};
-
-	return selectedProduct(productData);
-};
 
 /**
  * @function addProduct
@@ -35,11 +22,17 @@ const renderProductTemplate = (product = {}) => {
 const addProduct = (e) => {
 	const product = e.delegateTarget;
 	const resultsProduct = tools.getNodes(`[data-product="${e.delegateTarget.dataset.bcid}"]`, false, el.resultsContainer, true)[0];
+	const productData = {
+		id: product.dataset.postid,
+		bcid: product.dataset.bcid,
+		title: product.dataset.title,
+		price: product.dataset.price,
+	};
 
-	el.productList.insertAdjacentHTML('beforeend', renderProductTemplate(product));
+	el.productList.insertAdjacentHTML('beforeend', selectedProduct(productData));
 	resultsProduct.classList.add('bc-shortcode-ui__selected-result');
 	resultsProduct.querySelector('.bc-shortcode-ui__product-anchor-status').innerHTML = I18N.buttons.remove_product;
-	shortCodestate.selectedProducts.post_id.push(e.delegateTarget.dataset.postid);
+	shortcodeState.selectedProducts.post_id.push(e.delegateTarget.dataset.postid);
 };
 
 /**
@@ -52,12 +45,15 @@ const removeProduct = (e) => {
 	const productBCID = e.delegateTarget.dataset.bcid;
 	const product = tools.getNodes(`[data-product="${productBCID}"]`, false, el.productList, true)[0];
 	const resultsProduct = tools.getNodes(`[data-product="${productBCID}"]`, false, el.resultsContainer, true)[0];
-	const valIndex = shortCodestate.selectedProducts.post_id.indexOf(productID);
+	const valIndex = shortcodeState.selectedProducts.post_id.indexOf(productID);
+
+	if (resultsProduct) {
+		resultsProduct.classList.remove('bc-shortcode-ui__selected-result');
+		resultsProduct.querySelector('.bc-shortcode-ui__product-anchor-status').innerHTML = I18N.buttons.add_product;
+	}
 
 	el.productList.removeChild(product);
-	resultsProduct.classList.remove('bc-shortcode-ui__selected-result');
-	resultsProduct.querySelector('.bc-shortcode-ui__product-anchor-status').innerHTML = I18N.buttons.add_product;
-	shortCodestate.selectedProducts.post_id.splice(valIndex, 1);
+	shortcodeState.selectedProducts.post_id.splice(valIndex, 1);
 };
 
 /**
@@ -78,17 +74,75 @@ const addRemoveProduct = (e) => {
 };
 
 /**
- * @function resetProducts
- * @description clear and reset all product selections in the Shortcode UI.
+ * @function resetProductList
+ * @description clear the product list selections and state when triggering the bigcommerce/set_shortcode_ui_state event.
  */
-const resetProducts = () => {
-	shortCodestate.selectedProducts.post_id = [];
+const resetProductsList = () => {
+	shortcodeState.selectedProducts.post_id = [];
 
 	tools.getNodes('.bc-shortcode-ui__selected-result', true, el.resultsContainer, true).forEach((product) => {
 		tools.removeClass(product, 'bc-shortcode-ui__selected-result');
 	});
 
 	el.productList.innerHTML = '';
+};
+
+/**
+ * @function populateSavedUIProductList
+ * @description Add saved UI products to the products list.
+ * @param e
+ */
+const populateSavedUIProductList = (e) => {
+	const currentBlockBCIDs = e.detail.params.id;
+
+	if (!currentBlockBCIDs || currentBlockBCIDs.length <= 0) {
+		return;
+	}
+
+	const k = encodeURIComponent('bcid');
+	const v = encodeURIComponent(currentBlockBCIDs);
+	const str = [];
+	str.push(`${k}=${v}`);
+	const queryString = str ? str.join(I18N.operations.query_string_separator) : '';
+
+	wpAPIProductLookup(queryString)
+		.end((err, res) => {
+			shortcodeState.isFetching = false;
+
+			if (err) {
+				// TODO: get debug status and only display if true.
+				console.error(err);
+				return;
+			}
+
+			res.body.forEach((product) => {
+				const productData = {
+					id: product.post_id,
+					bcid: product.bigcommerce_id,
+					title: product.title,
+					price: product.price_range,
+				};
+
+				el.productList.insertAdjacentHTML('beforeend', selectedProduct(productData));
+				shortcodeState.selectedProducts.post_id.push(product.post_id.toString());
+				_.delay(() => trigger({ event: 'bigcommerce/shortcode_ui_state_ready', native: false }), 100);
+			});
+		});
+};
+
+/**
+ * @function handleSavedUIProductList
+ * @description When a user opens or reopens the UI, reset the UI and check for a saved state.
+ * @param e
+ */
+const handleSavedUIProductList = (e) => {
+	resetProductsList();
+
+	if (!e) {
+		return;
+	}
+
+	populateSavedUIProductList(e);
 };
 
 const cacheElements = () => {
@@ -98,10 +152,9 @@ const cacheElements = () => {
 };
 
 const bindEvents = () => {
-	delegate(el.resultsContainer, '[data-js="add-product"]', 'click', addProduct);
 	delegate(el.resultsContainer, '[data-js="add-remove-product"]', 'click', addRemoveProduct);
 	delegate(el.selectedContainer, '[data-js="remove-product"]', 'click', removeProduct);
-	on(document, 'bigcommerce/reset_shortcode_ui', resetProducts);
+	on(document, 'bigcommerce/set_shortcode_ui_state', handleSavedUIProductList);
 };
 
 const init = () => {

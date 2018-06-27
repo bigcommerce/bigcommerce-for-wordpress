@@ -39,6 +39,7 @@ class Config extends Post_Type_Config {
 				'with_front' => false,
 			],
 			'labels'          => $this->get_labels(),
+			'show_in_rest'    => true,
 		];
 	}
 

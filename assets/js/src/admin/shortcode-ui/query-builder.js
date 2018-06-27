@@ -3,13 +3,14 @@
  * @description Using the links list, and direct text entry, add query vars to the search field.
  */
 
+import _ from 'lodash';
 import delegate from 'delegate';
 import Choices from 'choices.js';
 import * as tools from '../../utils/tools';
 import * as slide from '../../utils/dom/slide';
 import { setAccActiveAttributes, setAccInactiveAttributes } from '../../utils/dom/accessibility';
 import shortCodestate from '../config/shortcode-state';
-import { on } from '../../utils/events';
+import { on, trigger } from '../../utils/events';
 
 const el = {};
 
@@ -180,6 +181,72 @@ const clearSearch = () => {
 	});
 };
 
+/**
+ * @function addSavedUICustomChoices
+ * @description Add custom search/query terms to the search field before running the query.
+ * @param choices
+ */
+const addSavedUICustomChoices = (choices) => {
+	choices.forEach(choice => addChoice(choice, choice));
+};
+
+/**
+ * @function initLinkListClicks
+ * @description If a saved term exists, fire a click event on that item to add it to the search bar and state object.
+ * @param terms
+ * TODO: @vinny This needs to be removed and replaced with new login in handleLinks that allows for events AND state changes.
+ */
+const initLinkListClicks = (terms) => {
+	if (!terms) {
+		return;
+	}
+
+	terms.forEach((slug) => {
+		const listLink = tools.getNodes(`[data-slug="${slug}"]`, false, el.linkList, true)[0];
+		const listParent = tools.closest(listLink, '[data-js="bcqb-parent-list-item"]:not(.active)');
+
+		listLink.click();
+
+		if (slug[0] && listParent) {
+			_.delay(() => tools.getNodes('bcqb-has-child-list', false, listParent)[0].click(), 100);
+		}
+	});
+};
+
+/**
+ * @function setShortcodeState
+ * @description When the UI dialog is triggered, reset the UI and, if applicable, populate it with saved state data.
+ * @param event
+ */
+const setShortcodeState = (event) => {
+	clearSearch();
+
+	const currentBlockParams = event.detail.params;
+
+	if (!currentBlockParams || currentBlockParams.length <= 0) {
+		return;
+	}
+
+	Object.entries(currentBlockParams).forEach(([key, value]) => {
+		// TODO: Maybe change this to a switch function?
+		if (key === 'brand' || key === 'category') {
+			const termIDs = [...value.split(',')];
+
+			initLinkListClicks(termIDs);
+		}
+
+		if (key === 'search') {
+			addSavedUICustomChoices([...value.split(',')]);
+		}
+
+		if (key === 'featured' || key === 'sale' || key === 'recent') {
+			initLinkListClicks([key]);
+		}
+	});
+
+	_.delay(() => trigger({ event: 'bigcommerce/shortcode_ui_state_ready', native: false }), 100);
+};
+
 const cacheElements = () => {
 	el.dialog = tools.getNodes('bc-shortcode-ui-products', false, document, false)[0];
 	el.linkList = tools.getNodes('bcqb-list')[0];
@@ -196,7 +263,7 @@ const bindEvents = () => {
 	el.searchInput.passedElement.addEventListener('removeItem', handleChoiceRemoval);
 	el.searchInput.passedElement.addEventListener('addItem', handleChoiceAddition);
 	delegate('[data-js="bcqb-clear"]', 'click', clearSearch);
-	on(document, 'bigcommerce/reset_shortcode_ui', clearSearch);
+	on(document, 'bigcommerce/set_shortcode_ui_state', setShortcodeState);
 };
 
 const init = () => {

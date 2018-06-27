@@ -7,6 +7,7 @@ namespace BigCommerce\Templates;
 class Message extends Controller {
 	const CONTENT = 'content';
 	const TYPE    = 'type';
+	const KEY     = 'key';
 
 	const NOTICE  = 'notice';
 	const ERROR   = 'error';
@@ -19,6 +20,7 @@ class Message extends Controller {
 		$defaults = [
 			self::CONTENT => '',
 			self::TYPE    => self::NOTICE,
+			self::KEY     => '',
 		];
 
 		return wp_parse_args( $options, $defaults );
@@ -28,6 +30,7 @@ class Message extends Controller {
 		return [
 			self::CONTENT => $this->sanitize_content( $this->options[ self::CONTENT ] ),
 			self::TYPE    => $this->options[ self::TYPE ],
+			self::KEY     => $this->options[ self::KEY ],
 		];
 	}
 

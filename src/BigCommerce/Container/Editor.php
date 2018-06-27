@@ -14,10 +14,11 @@ use BigCommerce\Customizer\Styles;
  * Load behavior relevant to the admin post editor
  */
 class Editor extends Provider {
-	const SHORTCODE_BUTTON = 'admin.shortcode_button';
-	const UI_DIALOG        = 'admin.ui_dialog';
-	const GUTENBERG_BLOCKS = 'gutenberg.blocks';
-	const STYLES = 'gutenberg.styles';
+	const SHORTCODE_BUTTON  = 'admin.shortcode_button';
+	const UI_DIALOG         = 'admin.ui_dialog';
+	const GUTENBERG_BLOCKS  = 'gutenberg.blocks';
+	const GUTENBERG_MIGRATE = 'gutenberg.migrate';
+	const STYLES            = 'gutenberg.styles';
 
 	public function register( Container $container ) {
 		$this->render_button( $container );
@@ -57,6 +58,12 @@ class Editor extends Provider {
 		$container[ self::GUTENBERG_BLOCKS ] = function ( Container $container ) {
 			return [
 				new Gutenberg\Blocks\Products( $container[ Rest::SHORTCODE ] ),
+				new Gutenberg\Blocks\Cart(),
+				new Gutenberg\Blocks\Account_Profile(),
+				new Gutenberg\Blocks\Address_List(),
+				new Gutenberg\Blocks\Order_History(),
+				new Gutenberg\Blocks\Login_Form(),
+				new Gutenberg\Blocks\Registration_Form(),
 			];
 		};
 
@@ -93,5 +100,18 @@ class Editor extends Provider {
 		add_action( 'admin_head', $this->create_callback( 'customizer_styles', function () use ( $container ) {
 			$container[ self::STYLES ]->print_styles();
 		} ), 10, 0 );
+
+		$container[ self::GUTENBERG_MIGRATE ] = function ( Container $container ) {
+
+			return new Gutenberg\Migrate_Blocks();
+		};
+
+		add_filter( 'replace_editor', $this->create_callback( 'check_for_gutenberg', function ( $passthrough, $post ) use ( $container ) {
+			return $container[ self::GUTENBERG_MIGRATE ]->check_if_gutenberg_editor( $passthrough, $post );
+		} ), 9, 2 );
+
+		add_filter( 'replace_editor', $this->create_callback( 'check_for_classic', function ( $passthrough, $post ) use ( $container ) {
+			return $container[ self::GUTENBERG_MIGRATE ]->check_if_classic_editor( $passthrough, $post );
+		} ), 11, 2 );
 	}
 }

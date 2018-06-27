@@ -2,6 +2,8 @@
 
 ## Plugin Setup
 
+Download the latest plugin version: https://goo.gl/NxaSXv
+
 As with any WordPress plugin, upload the plugin ZIP file to the
 `plugins` directory and activate via the WordPress admin or WP-CLI.
 
@@ -280,6 +282,10 @@ TODO: A comprehensive list of hooks is available in the code reference.
 
 ## GPL License
 
-BigCommerce for WordPress is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+BigCommerce for WordPress is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software Foundation,
+either version 3 of the License, or (at your option) any later version.
 
-BigCommerce for WordPress is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+BigCommerce for WordPress is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
