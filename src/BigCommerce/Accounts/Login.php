@@ -248,7 +248,7 @@ class Login {
 			 *
 			 * @param string $url The account profile page URL
 			 */
-			$url          = apply_filters( 'bigcommerce/account/profile/permalink', $url );
+			$url = apply_filters( 'bigcommerce/account/profile/permalink', $url );
 			wp_safe_redirect( esc_url_raw( $url ) );
 			exit();
 		}
@@ -338,7 +338,7 @@ class Login {
 	 * @filter check_password
 	 */
 	public function check_password_for_linked_accounts( $match, $password, $hash, $user_id ) {
-		$customer = new Customer( $user_id );
+		$customer    = new Customer( $user_id );
 		$customer_id = $customer->get_customer_id();
 		if ( ! $customer_id ) {
 			return $match;
@@ -351,9 +351,30 @@ class Login {
 		$api = $this->api_factory->customer();
 		try {
 			return $api->validatePassword( $customer_id, $password );
+		} catch ( \InvalidArgumentException $e ) {
+			// The user no longer exists in BigCommerce. Delete it.
+			$this->delete_user( $user_id, $customer_id );
+
+			return false;
 		} catch ( \Exception $e ) {
 			return false;
 		}
+	}
+
+	private function delete_user( $user_id, $customer_id ) {
+		/**
+		 * Filter whether to delete WordPress users tied to BigCommerce
+		 * customer accounts that no longer exist.
+		 *
+		 * @param bool $delete      Whether to delete the user. Default: true
+		 * @param int  $user_id     The ID of the user that will be deleted
+		 * @param int  $customer_id The former customer ID of the user
+		 */
+		if ( ! apply_filters( 'bigcommerce/accounts/login/delete_missing_user', true, $user_id, $customer_id ) ) {
+			return;
+		}
+		require_once( ABSPATH . 'wp-admin/includes/user.php' );
+		wp_delete_user( $user_id );
 	}
 
 }

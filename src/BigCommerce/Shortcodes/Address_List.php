@@ -14,6 +14,10 @@ class Address_List implements Shortcode {
 	}
 
 	public function render( $attr, $instance ) {
+		if ( ! is_user_logged_in() ) {
+			return '';
+		}
+
 		$controller = new Templates\Address_List();
 
 		return $controller->render();

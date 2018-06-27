@@ -117,6 +117,7 @@ const registerBlock = () => {
 				data.query_params.preview = 1;
 				data.query_params.paged = 0;
 
+
 				setAttributes({
 					shortcode: data.shortcode,
 					queryParams: {...data.query_params},
@@ -140,7 +141,8 @@ const registerBlock = () => {
 		 * @return {Element} Element to render.
 		 */
 		save: (props) => {
-			const { shortcode } = props.attributes;
+			const { shortcode, queryParams } = props.attributes;
+
 
 			return (
 				createElement('div', { className: props.className }, shortcode)

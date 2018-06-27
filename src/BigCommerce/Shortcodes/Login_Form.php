@@ -14,6 +14,10 @@ class Login_Form implements Shortcode {
 	}
 
 	public function render( $attr, $instance ) {
+		if ( is_user_logged_in() ) {
+			return '';
+		}
+
 		$action = isset( $_GET[ 'action' ] ) ? $_GET[ 'action' ] : '';
 
 		switch ( $action ) {

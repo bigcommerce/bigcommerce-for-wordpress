@@ -21,6 +21,7 @@ class Product {
 	const SOURCE_DATA_META_KEY      = 'bigcommerce_source_data';
 	const MODIFIER_DATA_META_KEY    = 'bigcommerce_modifier_data';
 	const OPTIONS_DATA_META_KEY     = 'bigcommerce_options_data';
+	const CUSTOM_FIELDS_META_KEY    = 'bigcommerce_custom_fields';
 	const REQUIRES_REFRESH_META_KEY = 'bigcommerce_force_refresh';
 	const IMPORTER_VERSION_META_KEY = 'bigcommerce_importer_version';
 	const GALLERY_META_KEY          = 'bigcommerce_gallery';
@@ -230,6 +231,23 @@ class Product {
 		$data = $this->json_encode_maybe_from_api( $data );
 		$data = wp_slash( $data ); // WP is going to unslash it before reslashing to add to the DB
 		update_post_meta( $this->post_id, self::OPTIONS_DATA_META_KEY, $data );
+	}
+
+	public function update_custom_field_data( $data ) {
+		update_post_meta( $this->post_id, self::CUSTOM_FIELDS_META_KEY, $data );
+	}
+
+	/**
+	 * Get custom fields for this Product
+	 *
+	 * @return array[] An array of associative arrays, with the properties:
+	 *               - name: the name to display for the field
+	 *               - value: the value to display for the field
+	 */
+	public function get_custom_fields() {
+		$data = get_post_meta( $this->post_id, self::CUSTOM_FIELDS_META_KEY, true );
+
+		return is_array( $data ) ? $data : [];
 	}
 
 	private function json_encode_maybe_from_api( $data ) {

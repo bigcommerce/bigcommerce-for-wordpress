@@ -53,6 +53,13 @@ class Product_Specs extends Controller {
 			$specs[ __( 'Height:', 'bigcommerce' ) ] = sprintf( _x( '%s %s', 'height and unit', 'bigcommerce' ), $height, $length_unit );
 		}
 
+		foreach ( $product->get_custom_fields() as $field ) {
+			$label = sprintf( _x( '%s:', 'product specification field label', 'bigcommerce' ), $field[ 'name' ] );
+			
+			$specs[ $label ] = $field[ 'value' ];
+		}
+
+
 		return apply_filters( 'bigcommerce/product/specs', $specs, $product );
 	}
 

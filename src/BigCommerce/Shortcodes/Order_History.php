@@ -32,6 +32,9 @@ class Order_History implements Shortcode {
 	}
 
 	public function render( $attr, $instance ) {
+		if ( ! is_user_logged_in() ) {
+			return '';
+		}
 
 		$attr               = shortcode_atts( self::default_attributes(), $attr, self::NAME );
 		$attr[ 'per_page' ] = $attr[ 'per_page' ] ?: $this->per_page_default();
@@ -59,7 +62,7 @@ class Order_History implements Shortcode {
 
 	private function render_order_details( $attr, $order_id ) {
 		$customer = new Customer( get_current_user_id() );
-		$order = $customer->get_order_details( $order_id );
+		$order    = $customer->get_order_details( $order_id );
 		if ( empty( $order ) ) {
 			$controller = new Templates\Order_Not_Found( [] );
 

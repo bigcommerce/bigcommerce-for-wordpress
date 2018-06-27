@@ -86,12 +86,6 @@ class Editor_Dialog_Template {
 		] );
 	}
 
-	public function product_card( $data, $plugin_file ) {
-		$data[ 'placeholder_image' ] = plugins_url( 'assets/img/admin/icons/placeholder.svg', $plugin_file );
-
-		return $this->render_template( 'product-card.php', $data );
-	}
-
 	private function render_template( $filename, $vars ) {
 		$path = $this->template_dir . $filename;
 		extract( $vars );
