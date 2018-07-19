@@ -20,6 +20,8 @@ class Product_Single extends Controller {
 	const FORM        = 'form';
 	const SPECS       = 'specs';
 	const RELATED     = 'related';
+	const REVIEWS     = 'reviews';
+	const MESSAGES    = 'messages';
 
 	protected $template = 'components/product-single.php';
 
@@ -47,6 +49,8 @@ class Product_Single extends Controller {
 			self::FORM        => $this->get_form( $product ),
 			self::SPECS       => $this->get_specs( $product ),
 			self::RELATED     => $this->get_related( $product ),
+			self::REVIEWS     => $this->get_reviews( $product ),
+			self::MESSAGES    => $this->get_messages(),
 		];
 	}
 
@@ -78,6 +82,7 @@ class Product_Single extends Controller {
 	protected function get_rating( Product $product ) {
 		$component = new Product_Rating( [
 			Product_Rating::PRODUCT => $product,
+			Product_Rating::LINK    => get_the_permalink( $product->post_id() ) . '#bc-single-product__reviews',
 		] );
 
 		return $component->render();
@@ -142,6 +147,39 @@ class Product_Single extends Controller {
 		] );
 
 		return $component->render();
+	}
+
+	protected function get_reviews( Product $product ) {
+		/**
+		 * Filter whether to show product reviews for a product.
+		 *
+		 * @param bool $show    Whether to show reviews. Defaults to true (i.e., reviews are displayed)
+		 * @param int  $post_id The ID of the product post
+		 */
+		if ( ! apply_filters( 'bigcommerce/product/reviews/show_reviews', true, $product->post_id() ) ) {
+			return '';
+		}
+
+		$reviews = $product->get_reviews();
+
+		$reviews = array_map( function ( $review ) use ( $product ) {
+			$controller = new Review_Single( array_merge( [
+				Review_Single::PRODUCT => $product,
+			], $review ) );
+
+			return $controller->render();
+		}, $reviews );
+
+		$controller = new Product_Reviews( [
+			Product_Reviews::PRODUCT => $product,
+			Product_Reviews::REVIEWS => $reviews,
+		] );
+
+		return $controller->render();
+	}
+
+	protected function get_messages() {
+		return apply_filters( 'bigcommerce/forms/messages', '' );
 	}
 
 }

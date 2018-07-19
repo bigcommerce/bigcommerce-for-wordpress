@@ -3,7 +3,16 @@
 
 namespace BigCommerce\Api;
 
-
+/**
+ * Class v2ApiAdapter
+ *
+ * @method array getCollection( $path, $resource = 'Resource' )
+ * @method Resource getResource( $path, $resource = 'Resource' )
+ * @method mixed createResource( $path, $object )
+ * @method mixed updateResource( $path, $object )
+ * @method mixed deleteResource( $path )
+ * @method Connection getConnection()
+ */
 class v2ApiAdapter {
 	protected $apiClient;
 	protected $client_class = '\Bigcommerce\Api\Client';
@@ -25,8 +34,8 @@ class v2ApiAdapter {
 	}
 
 	protected function get_store_hash() {
-		$config    = $this->apiClient->getConfig();
-		$host      = $config->getHost();
+		$config = $this->apiClient->getConfig();
+		$host   = $config->getHost();
 		preg_match( '#stores/([^\/]+)/#', $host, $matches );
 		if ( empty( $matches[ 1 ] ) ) {
 			return '';

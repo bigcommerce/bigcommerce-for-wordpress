@@ -436,4 +436,45 @@ class Product {
 
 		return get_posts( $args );
 	}
+
+	/**
+	 * Get the reviews associated with this product
+	 *
+	 * @param array $args An array of query parameters
+	 *
+	 * @return array
+	 */
+	public function get_reviews( array $args = [] ) {
+		/** @var \wpdb $wpdb */
+		global $wpdb;
+
+		$args = wp_parse_args( $args, [
+			'per_page' => 12,
+			'page'     => 1,
+			'status'   => 'approved',
+			'orderby'  => 'date_reviewed',
+			'order'    => 'DESC',
+		] );
+
+		$per_page = absint( $args[ 'per_page' ] ) ?: 12;
+		$offset = ( absint( $args[ 'page' ] ) - 1 ) * $per_page;
+
+		$args[ 'order' ]   = ( strtoupper( $args[ 'order' ] ) === 'DESC' ? 'DESC' : 'ASC' );
+		$args[ 'orderby' ] = in_array( $args[ 'orderby' ], [
+			'date_reviewed',
+			'date_created',
+			'date_modified',
+			'author_name',
+			'title',
+			'rating',
+		] ) ? sanitize_key( $args[ 'orderby' ] ) : 'date_reviewed';
+
+		$orderby = sprintf( "ORDER BY %s %s", $args[ 'orderby' ], $args[ 'order' ] );
+		$limit = sprintf( "LIMIT %d, %d", $offset, $per_page );
+
+		$sql = "SELECT * FROM {$wpdb->bc_reviews} WHERE post_id=%d AND status=%s $orderby $limit";
+		$sql = $wpdb->prepare( $sql, $this->post_id, $args[ 'status' ] );
+		$results = $wpdb->get_results( $sql, ARRAY_A );
+		return $results ?: [];
+	}
 }

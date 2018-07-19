@@ -1,0 +1,18 @@
+.choices[data-type*="select-multiple"] .choices__button,
+.choices[data-type*="text"] .choices__button {
+	background-size: 9px;
+	border-color: darken(var(--color-bc-blue-light), 0.3);
+}
+
+.choices__list--multiple .choices__item {
+	border-radius: 4px;
+	padding: 4px 2px 4px 10px;
+	line-height: 20px;
+	background-color: var(--color-bc-blue-light);
+	border: 0;
+}
+
+.choices__list--multiple .choices__item.is-highlighted {
+	background-color: lighten(var(--color-bc-blue-light), 0.1);
+	border: 0;
+}

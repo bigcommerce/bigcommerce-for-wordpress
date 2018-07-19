@@ -59,6 +59,7 @@ class ItemGiftCertificate implements ArrayAccess
         'theme' => 'string',
         'amount' => 'float',
         'is_taxable' => 'bool',
+        'quantity' => 'int',
         'sender' => '\BigCommerce\Api\v3\Model\ContactEntity',
         'recipient' => '\BigCommerce\Api\v3\Model\ContactEntity',
         'message' => 'string'
@@ -74,6 +75,7 @@ class ItemGiftCertificate implements ArrayAccess
         'theme' => null,
         'amount' => null,
         'is_taxable' => null,
+        'quantity' => null,
         'sender' => null,
         'recipient' => null,
         'message' => null
@@ -99,6 +101,7 @@ class ItemGiftCertificate implements ArrayAccess
         'theme' => 'theme',
         'amount' => 'amount',
         'is_taxable' => 'is_taxable',
+        'quantity' => 'quantity',
         'sender' => 'sender',
         'recipient' => 'recipient',
         'message' => 'message'
@@ -115,6 +118,7 @@ class ItemGiftCertificate implements ArrayAccess
         'theme' => 'setTheme',
         'amount' => 'setAmount',
         'is_taxable' => 'setIsTaxable',
+        'quantity' => 'setQuantity',
         'sender' => 'setSender',
         'recipient' => 'setRecipient',
         'message' => 'setMessage'
@@ -131,6 +135,7 @@ class ItemGiftCertificate implements ArrayAccess
         'theme' => 'getTheme',
         'amount' => 'getAmount',
         'is_taxable' => 'getIsTaxable',
+        'quantity' => 'getQuantity',
         'sender' => 'getSender',
         'recipient' => 'getRecipient',
         'message' => 'getMessage'
@@ -172,6 +177,7 @@ class ItemGiftCertificate implements ArrayAccess
         $this->container['theme'] = isset($data['theme']) ? $data['theme'] : null;
         $this->container['amount'] = isset($data['amount']) ? $data['amount'] : null;
         $this->container['is_taxable'] = isset($data['is_taxable']) ? $data['is_taxable'] : null;
+        $this->container['quantity'] = isset($data['quantity']) ? $data['quantity'] : null;
         $this->container['sender'] = isset($data['sender']) ? $data['sender'] : null;
         $this->container['recipient'] = isset($data['recipient']) ? $data['recipient'] : null;
         $this->container['message'] = isset($data['message']) ? $data['message'] : null;
@@ -327,6 +333,27 @@ class ItemGiftCertificate implements ArrayAccess
     public function setIsTaxable($is_taxable)
     {
         $this->container['is_taxable'] = $is_taxable;
+
+        return $this;
+    }
+
+    /**
+     * Gets quantity
+     * @return bool
+     */
+    public function getQuantity()
+    {
+        return $this->container['quantity'];
+    }
+
+    /**
+     * Sets quantity
+     * @param int $quantity
+     * @return $this
+     */
+    public function setQuantity($quantity)
+    {
+        $this->container['quantity'] = $quantity;
 
         return $this;
     }

@@ -15,12 +15,14 @@ class Product_Card extends Controller {
 	const IMAGE      = 'image';
 	const FORM       = 'form';
 	const QUICK_VIEW = 'quick_view';
+	const ATTRIBUTES = 'attributes';
 
 	protected $template = 'components/product-card.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [
-			self::PRODUCT => null,
+			self::PRODUCT    => null,
+			self::ATTRIBUTES => [],
 		];
 
 		return wp_parse_args( $options, $defaults );
@@ -38,6 +40,7 @@ class Product_Card extends Controller {
 			self::IMAGE      => $this->get_featured_image( $product ),
 			self::FORM       => $this->get_form( $product ),
 			self::QUICK_VIEW => $this->get_popup_template( $product ),
+			self::ATTRIBUTES => $this->build_attribute_string( $this->options[ self::ATTRIBUTES ] ),
 		];
 	}
 
@@ -80,7 +83,7 @@ class Product_Card extends Controller {
 		if ( $product->has_options() ) {
 			$component = new View_Product_Button( [
 				View_Product_Button::PRODUCT => $product,
-				View_Product_Button::LABEL => get_option( Buttons::CHOOSE_OPTIONS, __( 'Choose Options', 'bigcommerce' ) ),
+				View_Product_Button::LABEL   => get_option( Buttons::CHOOSE_OPTIONS, __( 'Choose Options', 'bigcommerce' ) ),
 			] );
 		} else {
 			$component = new Product_Form( [

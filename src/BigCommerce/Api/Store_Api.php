@@ -9,9 +9,9 @@ use Firebase\JWT\JWT;
 class Store_Api extends v2ApiAdapter {
 
 	public function getCustomerLoginToken( $id, $redirectUrl = '', $requestIp = '' ) {
-		$config    = $this->apiClient->getConfig();
-		$client_id = $config->getClientId();
-		$secret    = $config->getClientSecret();
+		$config     = $this->apiClient->getConfig();
+		$client_id  = $config->getClientId();
+		$secret     = $config->getClientSecret();
 		$store_hash = $this->get_store_hash();
 		if ( empty( $secret ) ) {
 			throw new \Exception( 'Cannot sign customer login tokens without a client secret' );
@@ -57,6 +57,33 @@ class Store_Api extends v2ApiAdapter {
 		set_transient( 'bigcommerce_time_offset', $offset, HOUR_IN_SECONDS );
 
 		return $offset;
+	}
+
+	public function get_analytics_settings() {
+		try {
+			$settings = $this->getCollection( '/settings/analytics' );
+			$settings = array_map( function ( Resource $resource ) {
+				return get_object_vars( $resource->getUpdateFields() );
+			}, $settings );
+		} catch ( \Exception $e ) {
+			$settings = [];
+		}
+
+		return $settings ?: [];
+	}
+
+	public function update_analytics_settings( $id, array $settings ) {
+		try {
+			unset( $settings[ 'id' ] );
+			unset( $settings[ 'name' ] );
+			// not going to listen for success
+			$this->updateResource( sprintf( '/settings/analytics/%d', $id ), $settings );
+
+			return true;
+		} catch ( \Exception $e ) {
+			// ¯\_(ツ)_/¯
+			return false;
+		}
 	}
 
 }

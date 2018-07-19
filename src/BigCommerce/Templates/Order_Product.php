@@ -40,13 +40,13 @@ class Order_Product extends Controller {
 
 	public function get_data() {
 		$product = $this->options[ self::PRODUCT ];
-		$post_id = $this->get_product_post( $product[ 'product_id' ] );
+		$post_id = $product[ 'product_id' ] ? $this->get_product_post( $product[ 'product_id' ] ) : 0;
 
-		$image_id = $this->get_image_id( $post_id );
+		$image_id = $post_id ? $this->get_image_id( $post_id ) : 0;
 		$image    = $image_id ? wp_get_attachment_image( $image_id, $this->options[ self::THUMBNAIL_SIZE ] ) : '';
 
 		$data = [
-			self::TITLE            => get_the_title( $post_id ),
+			self::TITLE            => $product[ 'name' ],
 			self::IMAGE_ID         => $image_id,
 			self::IMAGE            => $image,
 			Brand::NAME            => $this->get_terms( $post_id, Brand::NAME ),

@@ -6,6 +6,7 @@ namespace BigCommerce\Shortcodes;
 
 use BigCommerce\Customizer\Sections\Catalog;
 use BigCommerce\Post_Types\Product\Product;
+use BigCommerce\Post_Types\Product\Query_Mapper;
 use BigCommerce\Rest\Shortcode_Controller;
 use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Flag\Flag;
@@ -17,7 +18,7 @@ use BigCommerce\Templates\Product_Shortcode_Single;
 use BigCommerce\Templates\Product_Shortcode_Single_Preview;
 
 class Products implements Shortcode {
-	const NAME             = 'bigcommerce_product';
+	const NAME = 'bigcommerce_product';
 
 	/**
 	 * @var Shortcode_Controller
@@ -51,8 +52,13 @@ class Products implements Shortcode {
 	public function render( $attr, $instance ) {
 		$attr = shortcode_atts( self::default_attributes(), $attr, self::NAME );
 
+		$mapper     = new Query_Mapper();
+		$query_args = $mapper->map_shortcode_args_to_query( $attr );
 
-		$query_args = $this->attributes_to_query_args( $attr );
+		$current_post = get_the_ID();
+		if ( $current_post ) {
+			$query_args[ 'post__not_in' ] = [ $current_post ];
+		}
 
 		$query   = new \WP_Query( $query_args );
 		$results = $query->posts;
@@ -75,7 +81,7 @@ class Products implements Shortcode {
 				} else {
 					$card = new Product_Card_Preview( [
 						Product_Card::PRODUCT => $product,
-					]);
+					] );
 				}
 
 				return $card->render();
@@ -102,106 +108,6 @@ class Products implements Shortcode {
 		}
 	}
 
-	/**
-	 * @param array $attr
-	 *
-	 * @return array Args to pass to a WP Query based on the shortcode attributes
-	 */
-	private function attributes_to_query_args( array $attr ) {
-		$query_args = [
-			'post_type'      => Product::NAME,
-			'post_status'    => 'publish',
-			'fields'         => 'ids',
-			'order'          => strtoupper( $attr[ 'order' ] ) === 'DESC' ? 'DESC' : 'ASC',
-			'orderby'        => $attr[ 'orderby' ],
-			'posts_per_page' => ( absint( $attr[ 'per_page' ] ) == 0 ) ? $this->per_page_default() : absint( $attr[ 'per_page' ] ),
-		];
-
-		if ( ! empty( $attr[ 'post_id' ] ) ) {
-			$post_ids = array_filter( array_map( 'absint', explode( ',', $attr[ 'post_id' ] ) ) );
-			if ( ! empty( $post_ids ) ) {
-				$query_args[ 'post__in' ] = $post_ids;
-			}
-		}
-
-		if ( ! empty( $attr[ 'id' ] ) ) {
-			$bc_ids = array_filter( array_map( 'absint', explode( ',', $attr[ 'id' ] ) ) );
-			if ( ! empty( $bc_ids ) ) {
-				$query_args[ 'bigcommerce_id__in' ] = $bc_ids;
-			}
-		}
-
-		if ( ! empty( $attr[ 'sku' ] ) ) {
-			$skus = array_filter( explode( ',', $attr[ 'sku' ] ) );
-			if ( ! empty( $skus ) ) {
-				$query_args[ 'bigcommerce_sku__in' ] = $skus;
-			}
-		}
-
-		if ( ! empty( $attr[ 'category' ] ) ) {
-			$categories = array_filter( explode( ',', $attr[ 'category' ] ) );
-			if ( ! empty( $categories ) ) {
-				$query_args[ 'tax_query' ][] = [
-					'taxonomy'         => Product_Category::NAME,
-					'field'            => 'slug',
-					'terms'            => $categories,
-					'include_children' => false,
-					'operator'         => 'IN',
-				];
-			}
-		}
-
-		if ( ! empty( $attr[ 'brand' ] ) ) {
-			$brands = array_filter( explode( ',', $attr[ 'brand' ] ) );
-			if ( ! empty( $brands ) ) {
-				$query_args[ 'tax_query' ][] = [
-					'taxonomy'         => Brand::NAME,
-					'field'            => 'slug',
-					'terms'            => $brands,
-					'include_children' => false,
-					'operator'         => 'IN',
-				];
-			}
-		}
-
-		$flags = [];
-		if ( ! empty( $attr[ 'featured' ] ) ) {
-			$flags[] = Flag::FEATURED;
-		}
-		if ( ! empty( $attr[ 'sale' ] ) ) {
-			$flags[] = Flag::SALE;
-		}
-		if ( ! empty( $flags ) ) {
-			$query_args[ 'tax_query' ][] = [
-				'taxonomy' => Flag::NAME,
-				'field'    => 'slug',
-				'terms'    => $flags,
-				'operator' => 'AND',
-			];
-		}
-
-		if ( ! empty( $attr[ 'search' ] ) ) {
-			$query_args[ 's' ] = $attr[ 'search' ];
-		}
-
-		if ( ! empty( $attr[ 'recent' ] ) ) {
-			$query_args[ 'date_query' ] = [
-				/**
-				 * This filter is documented in src/BigCommerce/Rest/Products_Controller.php
-				 */
-				'after'     => sprintf( '%d days ago', apply_filters( 'bigcommerce/query/recent_days', 2 ) ),
-				'column'    => 'post_modified',
-				'inclusive' => true,
-			];
-		}
-
-		if ( ! empty( $attr[ 'paged' ] ) ) {
-			$query_args[ 'paged' ] = (int) $attr[ 'paged' ];
-		}
-
-		return apply_filters( 'bigcommerce/shortcode/products/query_args', $query_args, $attr );
-	}
-
 	private function next_page_url( array $attr, $max_pages ) {
 		if ( empty( $attr[ 'paged' ] ) ) {
 			return '';
@@ -217,10 +123,5 @@ class Products implements Shortcode {
 		$attr[ 'ajax' ]  = 1;
 
 		return add_query_arg( array_filter( $attr ), $base_url );
-	}
-
-	private function per_page_default() {
-		$default = get_option( Catalog::PER_PAGE, Catalog::PER_PAGE_DEFAULT );
-		return absint( $default ) ?: Catalog::PER_PAGE_DEFAULT;
 	}
 }

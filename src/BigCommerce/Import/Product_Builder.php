@@ -15,7 +15,7 @@ use BigCommerce\Taxonomies\Flag\Flag;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
 use BigCommerce\Taxonomies\Product_Type\Product_Type;
 
-class Product_Builder {
+class Product_Builder extends Record_Builder {
 	private $data;
 	private $api;
 
@@ -28,13 +28,21 @@ class Product_Builder {
 		$created = $this->data[ 'date_created' ];
 		$data    = [
 			'post_type'    => Product::NAME,
-			'post_title'   => $this->data[ 'name' ], // TODO: wp_kses
-			'post_content' => $this->data[ 'description' ], // TODO: wp_kses
+			'post_title'   => $this->santitize_title( $this->data[ 'name' ] ),
+			'post_content' => $this->sanitize_content( $this->data[ 'description' ] ),
 			'post_date'    => get_date_from_gmt( $created->format( 'Y-m-d H:i:s' ) ),
 			'post_status'  => $this->get_post_status(),
 		];
 
 		return $data;
+	}
+
+	private function santitize_title( $title ) {
+		return wp_strip_all_tags( $title );
+	}
+
+	private function sanitize_content( $content ) {
+		return wp_kses_post( $content );
 	}
 
 	private function get_post_status() {
@@ -264,37 +272,5 @@ class Product_Builder {
 		}
 
 		return $sum / $count;
-	}
-
-	private function sanitize_int( $value ) {
-		if ( is_scalar( $value ) ) {
-			return intval( $value );
-		}
-
-		return 0;
-	}
-
-	private function sanitize_double( $value ) {
-		if ( is_scalar( $value ) ) {
-			return doubleval( $value );
-		}
-
-		return (double) 0;
-	}
-
-	private function sanitize_string( $value ) {
-		if ( is_scalar( $value ) ) {
-			return (string) $value;
-		}
-
-		return '';
-	}
-
-	private function sanitize_bool( $value ) {
-		if ( is_scalar( $value ) ) {
-			return boolval( $value );
-		}
-
-		return false;
 	}
 }

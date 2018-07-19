@@ -35,19 +35,35 @@ class Messages {
 			return $content;
 		}
 
+		/**
+		 * Filter the feedback messages that will be rendered.
+		 *
+		 * @param string $messages The rendered messages
+		 */
+		$messages = apply_filters( 'bigcommerce/forms/messages', '' );
+
+		return $messages . $content;
+	}
+
+	/**
+	 * Render form messages
+	 *
+	 * @return string
+	 */
+	public function render_messages() {
 		if ( ! empty( $_REQUEST[ Error_Handler::PARAM ] ) ) {
 			$message = $this->get_error_message( $_REQUEST[ Error_Handler::PARAM ] );
 
-			return $message . $content;
+			return $message;
 		}
 
 		if ( ! empty( $_REQUEST[ Success_Handler::PARAM ] ) ) {
 			$message = $this->get_success_message( $_REQUEST[ Success_Handler::PARAM ] );
 
-			return $message . $content;
+			return $message;
 		}
 
-		return $content;
+		return '';
 	}
 
 	private function get_error_message( $key ) {
@@ -64,11 +80,22 @@ class Messages {
 			return '';
 		}
 
+		/**
+		 * Filter whether to show error messages above forms. If disabled,
+		 * the theme or plugin should show them elsewhere.
+		 *
+		 * @param bool  $show true to show messages, false to disable them
+		 * @param array $data Data for the error messages
+		 */
+		if ( ! apply_filters( 'bigcommerce/forms/show_error_messages', true, $data ) ) {
+			return '';
+		}
+
 		$messages = [];
 
 		foreach ( $error->get_error_codes() as $code ) {
 			foreach ( $error->get_error_messages( $code ) as $content ) {
-				$template = new Message( [
+				$template   = new Message( [
 					Message::CONTENT => $content,
 					Message::KEY     => $code,
 					Message::TYPE    => Message::ERROR,
@@ -95,10 +122,33 @@ class Messages {
 			return '';
 		}
 
-		$template = new Message( [
-			Message::CONTENT => $data[ 'message' ],
-			Message::TYPE    => Message::SUCCESS,
-		] );
+		/**
+		 * Filter whether to show success messages above forms. If disabled,
+		 * the theme or plugin should show them elsewhere.
+		 *
+		 * @param bool  $show true to show messages, false to disable them
+		 * @param array $data Data for the success message
+		 */
+		if ( ! apply_filters( 'bigcommerce/forms/show_success_messages', true, $data ) ) {
+			return '';
+		}
+
+		$args = [
+			Message::CONTENT    => $data[ 'message' ],
+			Message::TYPE       => Message::SUCCESS,
+			Message::KEY        => empty( $data[ 'data' ][ 'key' ] ) ? '' : $data[ 'data' ][ 'key' ],
+			Message::ATTRIBUTES => [],
+		];
+
+		/**
+		 * Filter the arguments passed to the success message template
+		 *
+		 * @param array $args The arguments that will be passed
+		 * @param array $data The data that was stored with the message
+		 */
+		$args = apply_filters( 'bigcommerce/messages/success/arguments', $args, $data );
+
+		$template = new Message( $args );
 
 		$controller = new Message_Group( [
 			Message_Group::MESSAGES => [ $template->render() ],

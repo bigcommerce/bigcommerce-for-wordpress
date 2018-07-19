@@ -7,7 +7,7 @@ namespace BigCommerce\Accounts;
 use BigCommerce\Pages\Account_Page;
 use BigCommerce\Pages\Address_Page;
 use BigCommerce\Pages\Orders_Page;
-use BigCommerce\Templates\Account_Tabs;
+use BigCommerce\Templates\Sub_Nav_Links;
 
 class Sub_Nav {
 	/**
@@ -45,8 +45,8 @@ class Sub_Nav {
 	}
 
 	private function get_subnav() {
-		$component = new Account_Tabs( [
-			Account_Tabs::LINKS => $this->get_links(),
+		$component = new Sub_Nav_Links( [
+			Sub_Nav_Links::LINKS => $this->get_links(),
 		] );
 
 		return $component->render();

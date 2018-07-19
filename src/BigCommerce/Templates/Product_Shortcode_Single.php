@@ -102,6 +102,7 @@ class Product_Shortcode_Single extends Controller {
 	protected function get_rating( Product $product ) {
 		$component = new Product_Rating( [
 			Product_Rating::PRODUCT => $product,
+			Product_Rating::LINK    => get_the_permalink( $product->post_id() ) . '#bc-single-product__reviews',
 		] );
 
 		return $component->render();

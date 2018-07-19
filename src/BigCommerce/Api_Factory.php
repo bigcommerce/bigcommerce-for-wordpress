@@ -5,6 +5,7 @@ namespace BigCommerce;
 
 
 use BigCommerce\Api\Customer_Api;
+use BigCommerce\Api\Marketing_Api;
 use BigCommerce\Api\Store_Api;
 use BigCommerce\Api\v3\ApiClient;
 use BigCommerce\Api\v3\CartApi;
@@ -105,6 +106,13 @@ class Api_Factory {
 	 */
 	public function store() {
 		return new Store_Api( $this->api_client );
+	}
+
+	/**
+	 * @return Marketing_Api
+	 */
+	public function marketing() {
+		return new Marketing_Api( $this->api_client );
 	}
 
 	/**

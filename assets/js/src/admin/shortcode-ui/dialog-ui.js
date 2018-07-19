@@ -9,6 +9,7 @@ import * as tools from '../../utils/tools';
 
 import queryBuilder from './query-builder';
 import productSelection from './product-selection';
+import displaySettings from './display-settings';
 import createShortcode from './create-shortcode';
 import ajaxQuery from './ajax-query';
 import shortcodeState from '../config/shortcode-state';
@@ -78,9 +79,10 @@ const initShortcodeUIDialog = (event) => {
 
 	instances.dialog.on('render', (dialogEl, e) => {
 		_.delay(() => {
+			productSelection();
+			displaySettings();
 			queryBuilder();
 			ajaxQuery();
-			productSelection();
 			createShortcode();
 			setQueryParams(params);
 		}, 50);

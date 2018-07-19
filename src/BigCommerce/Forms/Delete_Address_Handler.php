@@ -27,7 +27,7 @@ class Delete_Address_Handler implements Form_Handler {
 		$customer->delete_address( $address_id );
 
 
-		do_action( 'bigcommerce/form/success', __( 'Address deleted.', 'bigcommerce' ), null );
+		do_action( 'bigcommerce/form/success', __( 'Address deleted.', 'bigcommerce' ), $submission, null, [ 'key' => 'address_deleted' ] );
 	}
 
 	private function should_handle_request( $submission ) {

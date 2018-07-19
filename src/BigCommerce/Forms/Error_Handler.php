@@ -32,4 +32,33 @@ class Error_Handler {
 
 		do_action( 'bigcommerce/form/redirect', $url );
 	}
+
+	/**
+	 * @param \WP_Error|null $data
+	 *
+	 * @return \WP_Error|null
+	 * @filter bigcommerce/form/messages/error
+	 */
+	public function get_errors( $data ) {
+		if ( $data ) {
+			return $data; // don't override if already set
+		}
+
+		if ( empty( $_REQUEST[ 'bc-error' ] ) ) {
+			return $data;
+		}
+
+		$stored_data = get_transient( $_REQUEST[ 'bc-error' ] );
+		if ( empty( $stored_data[ 'error' ] ) || ! array_key_exists( 'user_id', $stored_data ) ) {
+			return $data;
+		}
+		if ( $stored_data[ 'user_id' ] != get_current_user_id() ) {
+			return $data;
+		}
+		if ( ! is_wp_error( $stored_data[ 'error' ] ) || count( $stored_data[ 'error' ]->get_error_codes() ) < 1 ) {
+			return $data;
+		}
+
+		return $stored_data;
+	}
 }

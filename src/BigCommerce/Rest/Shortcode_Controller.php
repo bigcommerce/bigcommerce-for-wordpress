@@ -165,7 +165,7 @@ class Shortcode_Controller extends Products_Controller {
 	 * @return string[]
 	 */
 	protected function build_selection_shortcode_args( $request ) {
-		$args  = [];
+		$query_args  = $this->build_query_shortcode_args( $request );
 		$bcids = array_map( function ( $post_id ) {
 			$product = new Product( $post_id );
 
@@ -176,6 +176,11 @@ class Shortcode_Controller extends Products_Controller {
 			$args = [
 				'id' => $ids,
 			];
+		}
+		foreach ( $query_args as $key => $value ) {
+			if ( in_array( $key, [ 'order', 'orderby', 'per_page' ] ) ) {
+				$args[ $key ] = $value;
+			}
 		}
 
 		return apply_filters( 'bigcommerce/rest/shortcode/selection', $args, $request );
@@ -226,6 +231,10 @@ class Shortcode_Controller extends Products_Controller {
 			$args[ 'order' ] = 'DESC';
 		} else {
 			$args[ 'order' ] = 'ASC';
+		}
+
+		if ( ! empty( $request[ 'orderby' ] ) ) {
+			$args[ 'orderby' ] = $request[ 'orderby' ];
 		}
 
 		if ( ! empty( $request[ 'recent' ] ) ) {

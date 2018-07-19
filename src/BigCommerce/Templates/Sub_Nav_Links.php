@@ -4,10 +4,10 @@
 namespace BigCommerce\Templates;
 
 
-class Account_Tabs extends Controller {
+class Sub_Nav_Links extends Controller {
 	const LINKS = 'links';
 
-	protected $template = 'components/account-tabs.php';
+	protected $template = 'components/sub-nav-links.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [
