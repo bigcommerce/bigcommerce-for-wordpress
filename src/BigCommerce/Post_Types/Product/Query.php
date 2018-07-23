@@ -292,6 +292,26 @@ class Query {
 		return $return;
 	}
 
+	private function is_product_query( \WP_Query $query ) {
+		$post_type = $query->get( 'post_type' );
+		if ( ! empty( $post_type ) ) {
+			if ( is_array( $post_type ) ) {
+				if ( count( $post_type ) > 1 ) {
+					return false;
+				}
+				$post_type = reset( $post_type );
+			}
+
+			return $post_type == Product::NAME;
+		}
+
+		if ( $query->is_tax( [ Brand::NAME, Product_Category::NAME ] ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
 	/**
 	 * Product search should match title, BigCommerce ID, or SKU
 	 *
