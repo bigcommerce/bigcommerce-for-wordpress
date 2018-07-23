@@ -277,36 +277,19 @@ class Query {
 	 * @return bool
 	 */
 	private function is_product_search( \WP_Query $query ) {
+
+		$return = true;
+
 		$search_phrase = $query->get( 's' );
 		if ( empty( $search_phrase ) ) {
-			return false;
+			$return = false;
 		}
 		$search_terms = explode( ' ', $search_phrase );
 		if ( count( $search_terms ) !== 1 ) {
-			return false;
+			$return = false;
 		}
 
-		return $this->is_product_query( $query );
-	}
-
-	private function is_product_query( \WP_Query $query ) {
-		$post_type = $query->get( 'post_type' );
-		if ( ! empty( $post_type ) ) {
-			if ( is_array( $post_type ) ) {
-				if ( count( $post_type ) > 1 ) {
-					return false;
-				}
-				$post_type = reset( $post_type );
-			}
-
-			return $post_type == Product::NAME;
-		}
-
-		if ( $query->is_tax( [ Brand::NAME, Product_Category::NAME ] ) ) {
-			return true;
-		}
-
-		return false;
+		return $return;
 	}
 
 	/**
