@@ -33,6 +33,7 @@ const addProduct = (e) => {
 	resultsProduct.classList.add('bc-shortcode-ui__selected-result');
 	resultsProduct.querySelector('.bc-shortcode-ui__product-anchor-status').innerHTML = I18N.buttons.remove_product;
 	shortcodeState.selectedProducts.post_id.push(e.delegateTarget.dataset.postid);
+	trigger({ event: 'bigcommerce/shortcode_product_list_event', native: false });
 };
 
 /**
@@ -54,6 +55,7 @@ const removeProduct = (e) => {
 
 	el.productList.removeChild(product);
 	shortcodeState.selectedProducts.post_id.splice(valIndex, 1);
+	trigger({ event: 'bigcommerce/shortcode_product_list_event', native: false });
 };
 
 /**
@@ -125,7 +127,10 @@ const populateSavedUIProductList = (e) => {
 
 				el.productList.insertAdjacentHTML('beforeend', selectedProduct(productData));
 				shortcodeState.selectedProducts.post_id.push(product.post_id.toString());
-				_.delay(() => trigger({ event: 'bigcommerce/shortcode_ui_state_ready', native: false }), 100);
+				_.delay(() => {
+					trigger({ event: 'bigcommerce/shortcode_ui_state_ready', native: false });
+					trigger({ event: 'bigcommerce/shortcode_product_list_event', native: false });
+				}, 100);
 			});
 		});
 };

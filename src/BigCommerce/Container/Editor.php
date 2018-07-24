@@ -7,6 +7,8 @@ use Pimple\Container;
 use BigCommerce\Editor\Add_Products_Button;
 use BigCommerce\Editor\Editor_Dialog_Template;
 use BigCommerce\Customizer\Styles;
+use BigCommerce\Settings\Cart as Cart_Settings;
+use BigCommerce\Settings\Gift_Certificates as Gift_Certificate_Settings;
 
 /**
  * Class Editor
@@ -56,15 +58,24 @@ class Editor extends Provider {
 
 	private function gutenberg( Container $container ) {
 		$container[ self::GUTENBERG_BLOCKS ] = function ( Container $container ) {
-			return [
+			$blocks = [
 				new Gutenberg\Blocks\Products( $container[ Rest::SHORTCODE ] ),
-				new Gutenberg\Blocks\Cart(),
 				new Gutenberg\Blocks\Account_Profile(),
 				new Gutenberg\Blocks\Address_List(),
 				new Gutenberg\Blocks\Order_History(),
 				new Gutenberg\Blocks\Login_Form(),
-				new Gutenberg\Blocks\Registration_Form(),
 			];
+			if ( ( (bool) get_option( Cart_Settings::OPTION_ENABLE_CART, true ) ) === true ) {
+				$blocks[] = new Gutenberg\Blocks\Cart();
+			}
+			if ( ( (bool) get_option( Gift_Certificate_Settings::OPTION_ENABLE, true ) ) === true ) {
+				$blocks[] = new Gutenberg\Blocks\Gift_Certificate_Form();
+				$blocks[] = new Gutenberg\Blocks\Gift_Certificate_Balance();
+			}
+			if ( get_option( 'users_can_register' ) ) {
+				$blocks[] = new Gutenberg\Blocks\Registration_Form();
+			}
+			return $blocks;
 		};
 
 		add_action( 'init', $this->create_callback( 'register_gutenberg_blocks', function () use ( $container ) {

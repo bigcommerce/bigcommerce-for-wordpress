@@ -40,6 +40,15 @@ const shortcodeObjectToString = () => {
 		});
 	}
 
+	Object.entries(shortcodeState.wpAPIDisplaySettings).forEach(([key, value]) => {
+		if (value.length <= 0) {
+			return;
+		}
+		const k = encodeURIComponent(key);
+		const v = encodeURIComponent(value);
+		str.push(`${k}=${v}`);
+	});
+
 	return str.length ? str.join(I18N.operations.query_string_separator) : '';
 };
 

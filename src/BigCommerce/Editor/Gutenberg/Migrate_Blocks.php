@@ -134,12 +134,14 @@ class Migrate_Blocks {
 		$content = preg_replace_callback( $search, [ $this, 'product_shortcode_to_block' ], $content );
 
 		$shortcode_map = [
-			Shortcodes\Account_Profile::NAME   => Blocks\Account_Profile::NAME,
-			Shortcodes\Address_List::NAME      => Blocks\Address_List::NAME,
-			Shortcodes\Cart::NAME              => Blocks\Cart::NAME,
-			Shortcodes\Login_Form::NAME        => Blocks\Login_Form::NAME,
-			Shortcodes\Order_History::NAME     => Blocks\Order_History::NAME,
-			Shortcodes\Registration_Form::NAME => Blocks\Registration_Form::NAME,
+			Shortcodes\Account_Profile::NAME          => Blocks\Account_Profile::NAME,
+			Shortcodes\Address_List::NAME             => Blocks\Address_List::NAME,
+			Shortcodes\Cart::NAME                     => Blocks\Cart::NAME,
+			Shortcodes\Login_Form::NAME               => Blocks\Login_Form::NAME,
+			Shortcodes\Order_History::NAME            => Blocks\Order_History::NAME,
+			Shortcodes\Registration_Form::NAME        => Blocks\Registration_Form::NAME,
+			Shortcodes\Gift_Certificate_Form::NAME    => Blocks\Gift_Certificate_Form::NAME,
+			Shortcodes\Gift_Certificate_Balance::NAME => Blocks\Gift_Certificate_Balance::NAME,
 		];
 
 		foreach ( $shortcode_map as $shortcode_id => $block_id ) {

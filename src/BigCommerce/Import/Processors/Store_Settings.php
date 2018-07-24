@@ -25,7 +25,8 @@ class Store_Settings implements Import_Processor {
 		$status->set_status( Status::FETCHING_STORE );
 
 		try {
-			$store = $this->store_api->getStore();
+			$store     = $this->store_api->getStore();
+			$analytics = $this->store_api->get_analytics_settings();
 
 			if ( empty( $store ) ) { // v2 api client doesn't throw proper errors
 				throw new ApiException( __( 'Unable to retrieve store information', 'bigcommerce' ) );
@@ -39,6 +40,9 @@ class Store_Settings implements Import_Processor {
 
 				Settings\Units::MASS   => $this->sanitize_mass_unit( $store->weight_units ),
 				Settings\Units::LENGTH => $this->sanitize_length_unit( $store->dimension_units ),
+
+				Settings\Analytics::FACEBOOK_PIXEL   => $this->extract_facebook_pixel_id( $analytics ),
+				Settings\Analytics::GOOGLE_ANALYTICS => $this->extract_google_analytics_id( $analytics ),
 			];
 
 			foreach ( $settings as $key => $value ) {
@@ -91,6 +95,33 @@ class Store_Settings implements Import_Processor {
 			default:
 				return false;
 		}
+	}
+
+	private function extract_facebook_pixel_id( $settings ) {
+		return $this->extract_analytics_code( $settings, 'Facebook Pixel' );
+	}
+
+	private function extract_google_analytics_id( $settings ) {
+		$code = $this->extract_analytics_code( $settings, 'Google Analytics' );
+		// extract the analytics ID from the tracking code
+		if ( ! preg_match( '/ua-\d{4,9}-\d{1,4}/i', $code, $matches ) ) {
+			return '';
+		}
+
+		return $matches[ 0 ];
+	}
+
+	private function extract_analytics_code( $settings, $name ) {
+		if ( empty( $settings ) || ! is_array( $settings ) ) {
+			return '';
+		}
+		foreach ( $settings as $account ) {
+			if ( $account[ 'name' ] == $name ) {
+				return $account[ 'code' ];
+			}
+		}
+
+		return '';
 	}
 
 }

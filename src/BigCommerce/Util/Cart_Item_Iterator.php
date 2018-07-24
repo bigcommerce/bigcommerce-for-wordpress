@@ -19,5 +19,8 @@ class Cart_Item_Iterator {
 		foreach ( $cart->getLineItems()->getDigitalItems() as $item ) {
 			yield $item->getId() => $item;
 		}
+		foreach ( $cart->getLineItems()->getGiftCertificates() as $item ) {
+			yield $item->getId() => $item;
+		}
 	}
 }

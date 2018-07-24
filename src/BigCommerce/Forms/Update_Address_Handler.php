@@ -29,9 +29,9 @@ class Update_Address_Handler implements Form_Handler {
 		$address    = $this->get_address( $submission[ 'bc-address' ] );
 
 		if ( empty( $address_id ) ) {
-			$success   = $customer->add_address( $address );
+			$success = $customer->add_address( $address );
 		} else {
-			$success   = $customer->update_address( $address_id, $address );
+			$success = $customer->update_address( $address_id, $address );
 		}
 
 		if ( ! $success ) {
@@ -41,12 +41,12 @@ class Update_Address_Handler implements Form_Handler {
 			return;
 		}
 
-		if ( empty( $address_id) ) {
+		if ( empty( $address_id ) ) {
 			$message = apply_filters( 'bigcommerce/form/address/created_message', __( 'Address created.', 'bigcommerce' ) );
-			do_action( 'bigcommerce/form/success', $message, null );
+			do_action( 'bigcommerce/form/success', $message, $submission, null, [ 'key' => 'address_created' ] );
 		} else {
 			$message = apply_filters( 'bigcommerce/form/address/updated_message', __( 'Address saved.', 'bigcommerce' ) );
-			do_action( 'bigcommerce/form/success', $message, null );
+			do_action( 'bigcommerce/form/success', $message, $submission, null, [ 'key' => 'address_saved' ] );
 		}
 	}
 

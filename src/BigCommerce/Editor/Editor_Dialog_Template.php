@@ -3,6 +3,8 @@
 namespace BigCommerce\Editor;
 
 
+use BigCommerce\Customizer\Sections\Catalog;
+use BigCommerce\Customizer\Sections\Product_Archive;
 use BigCommerce\Rest\Products_Controller;
 use BigCommerce\Rest\Shortcode_Controller;
 use BigCommerce\Taxonomies\Brand\Brand;
@@ -29,7 +31,7 @@ class Editor_Dialog_Template {
 	 * @filter bigcommerce/admin/js_config
 	 */
 	public function js_config( $config, Products_Controller $products_controller, Shortcode_Controller $shortcode_controller ) {
-		$config[ 'editor_dialog' ] = [
+		$config['editor_dialog'] = [
 			'product_api_url'   => $products_controller->get_base_url(),
 			'shortcode_api_url' => $shortcode_controller->get_base_url(),
 		];
@@ -58,6 +60,7 @@ class Editor_Dialog_Template {
 	public function render_dialog() {
 		return $this->render_template( 'admin-dialog.php', [
 			'query_builder_sidebar' => $this->query_builder(),
+			'query_settings_sidebar'      => $this->query_settings(),
 		] );
 	}
 
@@ -84,6 +87,12 @@ class Editor_Dialog_Template {
 			'brands'     => $brands,
 			'categories' => $categories,
 		] );
+	}
+
+	private function query_settings() {
+		return $this->render_template( 'query-settings.php', [
+			'posts_per_page' => absint( get_option( Catalog::PER_PAGE, Catalog::PER_PAGE_DEFAULT ) ),
+		]);
 	}
 
 	private function render_template( $filename, $vars ) {

@@ -4,7 +4,7 @@
 namespace BigCommerce;
 
 class Plugin {
-	const VERSION = '0.8.0';
+	const VERSION = '0.9.0';
 
 	protected static $_instance;
 
@@ -44,28 +44,30 @@ class Plugin {
 	}
 
 	private function load_service_providers() {
-		$this->providers[ 'accounts' ]   = new Container\Accounts();
-		$this->providers[ 'api' ]        = new Container\Api();
-		$this->providers[ 'assets' ]     = new Container\Assets();
-		$this->providers[ 'cart' ]       = new Container\Cart();
-		$this->providers[ 'cli' ]        = new Container\Cli();
-		$this->providers[ 'compat' ]     = new Container\Theme_Compatibility();
-		$this->providers[ 'currency' ]   = new Container\Currency();
-		$this->providers[ 'customizer' ] = new Container\Theme_Customizer();
-		$this->providers[ 'forms' ]      = new Container\Forms();
-		$this->providers[ 'import' ]     = new Container\Import();
-		$this->providers[ 'pages' ]      = new Container\Pages();
-		$this->providers[ 'post_types' ] = new Container\Post_Types();
-		$this->providers[ 'post_meta' ]  = new Container\Post_Meta();
-		$this->providers[ 'rest' ]       = new Container\Rest();
-		$this->providers[ 'rewrites' ]   = new Container\Rewrites();
-		$this->providers[ 'schema' ]     = new Container\Schema();
-		$this->providers[ 'settings' ]   = new Container\Settings();
-		$this->providers[ 'shortcodes' ] = new Container\Shortcodes();
-		$this->providers[ 'taxonomies' ] = new Container\Taxonomies();
-		$this->providers[ 'templates' ]  = new Container\Templates();
-		$this->providers[ 'widgets' ]    = new Container\Widgets();
-		$this->providers[ 'editor' ]     = new Container\Editor();
+		$this->providers[ 'accounts' ]          = new Container\Accounts();
+		$this->providers[ 'analytics' ]         = new Container\Analytics();
+		$this->providers[ 'api' ]               = new Container\Api();
+		$this->providers[ 'assets' ]            = new Container\Assets();
+		$this->providers[ 'cart' ]              = new Container\Cart();
+		$this->providers[ 'cli' ]               = new Container\Cli();
+		$this->providers[ 'compat' ]            = new Container\Theme_Compatibility();
+		$this->providers[ 'currency' ]          = new Container\Currency();
+		$this->providers[ 'customizer' ]        = new Container\Theme_Customizer();
+		$this->providers[ 'forms' ]             = new Container\Forms();
+		$this->providers[ 'gift_certificates' ] = new Container\Gift_Certificates();
+		$this->providers[ 'import' ]            = new Container\Import();
+		$this->providers[ 'pages' ]             = new Container\Pages();
+		$this->providers[ 'post_types' ]        = new Container\Post_Types();
+		$this->providers[ 'post_meta' ]         = new Container\Post_Meta();
+		$this->providers[ 'rest' ]              = new Container\Rest();
+		$this->providers[ 'rewrites' ]          = new Container\Rewrites();
+		$this->providers[ 'schema' ]            = new Container\Schema();
+		$this->providers[ 'settings' ]          = new Container\Settings();
+		$this->providers[ 'shortcodes' ]        = new Container\Shortcodes();
+		$this->providers[ 'taxonomies' ]        = new Container\Taxonomies();
+		$this->providers[ 'templates' ]         = new Container\Templates();
+		$this->providers[ 'widgets' ]           = new Container\Widgets();
+		$this->providers[ 'editor' ]            = new Container\Editor();
 
 		/**
 		 * Filter the service providers the power the plugin

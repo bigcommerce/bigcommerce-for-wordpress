@@ -10,6 +10,8 @@ import address from './blocks/address-list/address-list';
 import orders from './blocks/order-history/order-history';
 import login from './blocks/login-form/login-form';
 import register from './blocks/registration-form/registration-form';
+import giftForm from './blocks/gift-certificate-form/gift-certificate-form';
+import giftBalance from './blocks/gift-certificate-balance/gift-certificate-balance';
 import dialog from '../shortcode-ui/dialog-ui';
 import storeLink from './plugins/store-link';
 
@@ -22,6 +24,8 @@ const initBlocks = () => {
 	orders();
 	login();
 	register();
+	giftForm();
+	giftBalance();
 
 	console.info('Big Commerce: Initialized Gutenberg block scripts.');
 };

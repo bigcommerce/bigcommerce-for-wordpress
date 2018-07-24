@@ -7,11 +7,14 @@ namespace BigCommerce\Container;
 use BigCommerce\Pages\Account_Page;
 use BigCommerce\Pages\Address_Page;
 use BigCommerce\Pages\Cart_Page;
+use BigCommerce\Pages\Check_Balance_Page;
+use BigCommerce\Pages\Gift_Certificate_Page;
 use BigCommerce\Pages\Login_Page;
 use BigCommerce\Pages\Orders_Page;
 use BigCommerce\Pages\Registration_Page;
 use BigCommerce\Pages\Required_Page;
 use BigCommerce\Settings\Cart as Cart_Settings;
+use BigCommerce\Settings\Gift_Certificates as Gift_Certificate_Settings;
 use Pimple\Container;
 
 class Pages extends Provider {
@@ -23,6 +26,8 @@ class Pages extends Provider {
 	const ACCOUNT_PAGE      = 'pages.account';
 	const ADDRESS_PAGE      = 'pages.address';
 	const ORDERS_PAGE       = 'pages.orders';
+	const GIFT_PURCHACE     = 'pages.gift_certificate.purchase';
+	const GIFT_BALANCE      = 'pages.gift_certificate.balance';
 
 	public function register( Container $container ) {
 		$container[ self::REQUIRED_PAGES ] = function ( Container $container ) {
@@ -34,6 +39,10 @@ class Pages extends Provider {
 			];
 			if ( ( (bool) get_option( Cart_Settings::OPTION_ENABLE_CART, true ) ) === true ) {
 				$pages[] = $container[ self::CART_PAGE ];
+			}
+			if ( ( (bool) get_option( Gift_Certificate_Settings::OPTION_ENABLE, true ) ) === true ) {
+				$pages[] = $container[ self::GIFT_PURCHACE ];
+				$pages[] = $container[ self::GIFT_BALANCE ];
 			}
 			if ( get_option( 'users_can_register' ) ) {
 				$pages[] = $container[ self::REGISTRATION_PAGE ];
@@ -64,6 +73,14 @@ class Pages extends Provider {
 
 		$container[ self::ORDERS_PAGE ] = function ( Container $container ) {
 			return new Orders_Page();
+		};
+
+		$container[ self::GIFT_PURCHACE ] = function ( Container $container ) {
+			return new Gift_Certificate_Page();
+		};
+
+		$container[ self::GIFT_BALANCE ] = function ( Container $container ) {
+			return new Check_Balance_Page();
 		};
 
 		add_action( 'admin_init', $this->create_callback( 'create_pages', function () use ( $container ) {

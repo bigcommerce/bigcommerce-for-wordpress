@@ -4,6 +4,8 @@
 namespace BigCommerce\Rest;
 
 use BigCommerce\Post_Types\Product\Product;
+use BigCommerce\Post_Types\Product\Query_Mapper;
+use BigCommerce\Shortcodes;
 use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Flag\Flag;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
@@ -65,76 +67,21 @@ class Products_Controller extends Rest_Controller {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_items( $request ) {
-		// Retrieve the list of registered collection query parameters.
-		$registered = $this->get_collection_params();
-		$args       = [];
-
-		/*
-		 * This array defines mappings between public API query parameters whose
-		 * values are accepted as-passed, and their internal WP_Query parameter
-		 * name equivalents (some are the same). Only values which are also
-		 * present in $registered will be set.
-		 */
-		$parameter_mappings = [
-			'page'     => 'paged',
-			'per_page' => 'posts_per_page',
-			'order'    => 'order',
-			'search'   => 's',
-			'bcid'     => 'bigcommerce_id__in',
-		];
-
-		/*
-		 * For each known parameter which is both registered and present in the request,
-		 * set the parameter's value on the query $args.
-		 */
-		foreach ( $parameter_mappings as $api_param => $wp_param ) {
-			if ( isset( $registered[ $api_param ], $request[ $api_param ] ) ) {
-				$args[ $wp_param ] = $request[ $api_param ];
-			}
-		}
-
-		foreach ( $this->taxonomy_params() as $taxonomy ) {
-			if ( ! empty( $request[ $taxonomy ] ) ) {
-				$operator = 'IN';
-				if ( $taxonomy == Flag::NAME ) {
-					$operator = 'AND';
-				}
-				$args[ 'tax_query' ][] = [
-					'taxonomy'         => $taxonomy,
-					'field'            => 'term_id',
-					'terms'            => $request[ $taxonomy ],
-					'include_children' => false,
-					'operator'         => $operator,
-				];
-			}
-		}
-
-		if ( ! empty( $request[ 'recent' ] ) ) {
-			$args[ 'date_query' ] = [
-				/**
-				 * Filter how long a product is considered recent
-				 *
-				 * @param int $days How long a product is recent, in days
-				 */
-				'after'     => sprintf( '%d days ago', apply_filters( 'bigcommerce/query/recent_days', 2 ) ),
-				'column'    => 'post_modified',
-				'inclusive' => true,
-			];
-		}
+		$mapper = new Query_Mapper();
+		$args   = $mapper->map_rest_args_to_query( $request->get_params() );
 
 		$query_args = apply_filters( 'bigcommerce/rest/products_query', $args, $request );
 
 		$query_args[ 'post_type' ]   = Product::NAME;
 		$query_args[ 'post_status' ] = 'publish';
-		$query_args[ 'orderby' ]     = 'title';
 
 		$posts_query  = new \WP_Query();
 		$query_result = $posts_query->query( $query_args );
 
 		$posts = [];
 
-		foreach ( $query_result as $post ) {
-			$data    = $this->prepare_item_for_response( $post, $request );
+		foreach ( $query_result as $post_id ) {
+			$data    = $this->prepare_item_for_response( get_post( $post_id ), $request );
 			$posts[] = $this->prepare_response_for_collection( $data );
 		}
 
@@ -185,7 +132,14 @@ class Products_Controller extends Rest_Controller {
 	}
 
 	public function get_collection_params() {
-		$query_params            = parent::get_collection_params();
+		$query_params = parent::get_collection_params();
+		foreach ( Shortcodes\Products::default_attributes() as $key => $default ) {
+			$params[ $key ] = [
+				'type'    => is_int( $default ) ? 'integer' : 'string',
+				'default' => $default,
+			];
+		}
+
 		$query_params[ 'order' ] = [
 			'description' => __( 'Direction to sort results', 'bigcommerce' ),
 			'type'        => 'string',
@@ -244,6 +198,7 @@ class Products_Controller extends Rest_Controller {
 	 * @return \WP_REST_Response Response object.
 	 */
 	public function prepare_item_for_response( $post, $request ) {
+		$backup_post       = isset( $GLOBALS[ 'post' ] ) ? $GLOBALS[ 'post' ] : null;
 		$product           = new Product( $post->ID );
 		$GLOBALS[ 'post' ] = $post;
 
@@ -263,6 +218,9 @@ class Products_Controller extends Rest_Controller {
 		$context = ! empty( $request[ 'context' ] ) ? $request[ 'context' ] : 'view';
 		$data    = $this->add_additional_fields_to_object( $data, $request );
 		$data    = $this->filter_response_by_context( $data, $context );
+
+		$GLOBALS[ 'post' ] = $backup_post;
+		wp_reset_postdata();
 
 		// Wrap the data in a response object.
 		$response = rest_ensure_response( $data );

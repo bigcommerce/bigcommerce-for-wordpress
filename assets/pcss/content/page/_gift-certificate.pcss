@@ -1,0 +1,108 @@
+.bc-gift-page {
+	border-top: 1px solid var(--color-bc-light-grey);
+	border-bottom: 1px solid var(--color-bc-light-grey);
+	padding: 40px 0;
+
+	@media (--viewport-medium) {
+		padding: 60px 0 68px;
+	}
+}
+
+.bc-gift-purchase {
+
+	.bc-form__row {
+		@media (--viewport-medium) {
+			position: relative;
+		}
+	}
+
+	.bc-form__col {
+		flex: 0 1 50%;
+
+		&:first-child {
+			@media (--viewport-medium) {
+				border-right: 1px solid var(--color-bc-light-grey);
+				padding-right: 40px;
+			}
+		}
+
+		&:last-child {
+			@media (--viewport-medium) {
+				padding-left: 40px;
+			}
+		}
+	}
+}
+
+.bc-gift-instructions {
+	margin-top: 40px;
+
+	@media (--viewport-medium) {
+		margin-top: 75px;
+	}
+
+	ol > li + li {
+		margin-top: 16px;
+	}
+}
+
+.bc-gift-balance {
+	@media (--viewport-medium) {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+	}
+}
+
+.bc-gift-balance__form,
+.bc-gift-balance__response {
+	@media (--viewport-medium) {
+		flex: 0 1 50%;
+	}
+}
+
+.bc-gift-balance__response {
+
+	> * {
+		@media (--viewport-medium) {
+			margin-left: 80px;
+		}
+	}
+}
+
+.bc-gift-balance__container {
+	background-color: var(--color-bc-light-grey);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	margin-top: 40px;
+	padding: 74px 20px 72px;
+
+	@media (--viewport-medium) {
+		margin-top: 0;
+	}
+}
+
+.bc-gift-balance__title,
+.bc-gift-balance__amount,
+.bc-gift-balance__code {
+	display: block;
+	font-weight: var(--font-weight-bold);
+	line-height: 1;
+}
+
+.bc-gift-balance__title {
+	font-size: 16px;
+	margin-bottom: 34px;
+}
+
+.bc-gift-balance__amount {
+	font-size: 48px;
+	margin-bottom: 34px;
+}
+
+.bc-gift-balance__code {
+	font-size: 16px;
+	text-transform: uppercase;
+}

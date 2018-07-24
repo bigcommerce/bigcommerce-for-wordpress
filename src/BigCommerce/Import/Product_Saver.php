@@ -4,6 +4,7 @@ namespace BigCommerce\Import;
 
 use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api\v3\CatalogApi;
+use BigCommerce\Api\v3\Model\ProductReview;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Taxonomies\Availability\Availability;
 use BigCommerce\Taxonomies\Brand\Brand;
@@ -50,6 +51,8 @@ abstract class Product_Saver implements Post_Import_Strategy {
 
 		$this->save_terms( $builder );
 		$this->save_images( $builder );
+
+		$this->save_reviews();
 
 		$this->send_notifications();
 
@@ -200,6 +203,42 @@ abstract class Product_Saver implements Post_Import_Strategy {
 		} else {
 			delete_post_meta( $this->post_id, Product::GALLERY_META_KEY );
 		}
+	}
+
+	/**
+	 * Save product reviews for the product
+	 *
+	 *
+	 * @return void
+	 */
+	protected function save_reviews() {
+		/** @var \wpdb $wpdb */
+		global $wpdb;
+
+		$fetch   = new Review_Fetcher( $this->api, $this->data[ 'id' ] );
+		$reviews = array_map( function ( ProductReview $review ) {
+			$builder = new Review_Builder( $review );
+
+			return $builder->build_review_array( $this->post_id, $this->data[ 'id' ] );
+		}, $fetch->fetch() );
+
+		$existing_reviews = array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT review_id FROM {$wpdb->bc_reviews} WHERE post_id=%d", $this->post_id ) ) );
+		$valid_review_ids = array_map( 'intval', wp_list_pluck( $reviews, 'review_id' ) );
+
+		$to_remove = array_diff( $existing_reviews, $valid_review_ids );
+
+		foreach ( $to_remove as $review_id ) {
+			$wpdb->delete( $wpdb->bc_reviews, [ 'review_id' => $review_id ], [ '%d' ] );
+		}
+
+		foreach ( $reviews as $review ) {
+			if ( in_array( $review[ 'review_id' ], $existing_reviews ) ) {
+				$wpdb->update( $wpdb->bc_reviews, $review, [ 'review_id' => $review[ 'review_id' ] ] );
+			} else {
+				$wpdb->insert( $wpdb->bc_reviews, $review );
+			}
+		}
+
 	}
 
 	/**

@@ -138,4 +138,22 @@ abstract class Controller {
 		 */
 		return apply_filters( 'bigcommerce/currency/format', sprintf( '¤%0.2f', $value ), $value );
 	}
+
+	/**
+	 * Build a string of HTML attributes that can safely be
+	 * injected into a template out of a list of key/value pairs
+	 *
+	 * @param array $attributes
+	 *
+	 * @return string
+	 */
+	protected function build_attribute_string( $attributes ) {
+		$rendered = [];
+		foreach ( $attributes as $attr => $value ) {
+			$attr = sanitize_title_with_dashes( $attr );
+			$value = esc_attr( $value );
+			$rendered[] = sprintf( '%s="%s"', $attr, $value );
+		}
+		return implode( ' ', $rendered );
+	}
 }

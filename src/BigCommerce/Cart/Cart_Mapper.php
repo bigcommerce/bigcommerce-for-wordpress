@@ -3,7 +3,9 @@
 
 namespace BigCommerce\Cart;
 
+use BigCommerce\Api\v3\Model\BaseItem;
 use BigCommerce\Api\v3\Model\Cart;
+use BigCommerce\Api\v3\Model\ItemGiftCertificate;
 use BigCommerce\Customizer\Sections\Colors;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Taxonomies\Availability\Availability;
@@ -61,83 +63,20 @@ class Cart_Mapper {
 	}
 
 	/**
-	 * @param \BigCommerce\Api\v3\Model\BaseItem $item
+	 * @param \BigCommerce\Api\v3\Model\BaseItem|\BigCommerce\Api\v3\Model\ItemGiftCertificate $item
 	 *
 	 * @return array
 	 *
 	 * @todo Details of selected options for the variant
 	 */
 	private function prepare_line_item( $item ) {
-		$data = [
-			'id'                   => $item->getId(),
-			'variant_id'           => $item->getVariantId(),
-			'product_id'           => $item->getProductId(),
-			'name'                 => $item->getName(),
-			'quantity'             => $item->getQuantity(),
-			'list_price'           => [
-				'raw'       => $item->getListPrice(),
-				'formatted' => $this->format_currency( $item->getListPrice() ),
-			],
-			'sale_price'           => [
-				'raw'       => $item->getSalePrice(),
-				'formatted' => $this->format_currency( $item->getSalePrice() ),
-			],
-			'total_list_price'     => [
-				'raw'       => $item->getExtendedListPrice(),
-				'formatted' => $this->format_currency( $item->getExtendedListPrice() ),
-			],
-			'total_sale_price'     => [
-				'raw'       => $item->getExtendedSalePrice(),
-				'formatted' => $this->format_currency( $item->getExtendedSalePrice() ),
-			],
-			'post_id'              => 0,
-			'thumbnail_id'         => 0,
-			'is_featured'          => false,
-			'on_sale'              => false,
-			'sku'                  => [
-				'product' => '',
-				'variant' => '',
-			],
-			'options'              => [],
-			'minimum_quantity'     => 0,
-			'maximum_quantity'     => 0,
-			'inventory_level'      => - 1,
-			Availability::NAME     => [],
-			Condition::NAME        => [],
-			Product_Type::NAME     => [],
-			Brand::NAME            => [],
-			Product_Category::NAME => [],
-		];
-		try {
-			$product                    = $this->get_product( $item );
-			$data[ 'post_id' ]          = $product->post_id();
-			$data[ 'thumbnail_id' ]     = get_post_thumbnail_id( $data[ 'post_id' ] );
-			$data[ 'is_featured' ]      = is_object_in_term( $data[ 'post_id' ], Flag::NAME, Flag::FEATURED );
-			$data[ 'on_sale' ]          = is_object_in_term( $data[ 'post_id' ], Flag::NAME, Flag::SALE );
-			$data[ 'sku' ]              = [
-				'product' => $product->sku(),
-				'variant' => $this->get_variant_sku( $data[ 'variant_id' ], $product ),
-			];
-			$data[ 'options' ]          = $this->get_options( $data[ 'variant_id' ], $product );
-			$data[ 'inventory_level' ]  = (int) $product->get_inventory_level( $data[ 'variant_id' ] );
-			$data[ 'minimum_quantity' ] = (int) $product->order_quantity_minimum;
-			$data[ 'maximum_quantity' ] = $this->get_max_quantity( (int) $product->order_quantity_maximum, $data[ 'inventory_level' ] );
-
-			$taxonomies = [
-				Availability::NAME,
-				Condition::NAME,
-				Product_Type::NAME,
-				Brand::NAME,
-				Product_Category::NAME,
-			];
-			foreach ( $taxonomies as $tax ) {
-				$data[ $tax ] = $this->get_terms( $data[ 'post_id' ], $tax );
-			}
-		} catch ( \RuntimeException $e ) {
-			// leave empty
+		if ( $item instanceof BaseItem ) {
+			return $this->prepare_base_item( $item );
+		} elseif ( $item instanceof ItemGiftCertificate ) {
+			return $this->prepare_gift_certificate_item( $item );
+		} else {
+			return [];
 		}
-
-		return $data;
 	}
 
 	/**
@@ -258,5 +197,135 @@ class Cart_Mapper {
 		 * This filter is documented in src/BigCommerce/Templates/Controller.php
 		 */
 		return apply_filters( 'bigcommerce/currency/format', sprintf( '¤%0.2f', $value ), $value );
+	}
+
+	/**
+	 * @param BaseItem $item
+	 *
+	 * @return array
+	 */
+	private function prepare_base_item( BaseItem $item ) {
+		$data = [
+			'id'                   => $item->getId(),
+			'variant_id'           => $item->getVariantId(),
+			'product_id'           => $item->getProductId(),
+			'name'                 => $item->getName(),
+			'quantity'             => $item->getQuantity(),
+			'list_price'           => [
+				'raw'       => $item->getListPrice(),
+				'formatted' => $this->format_currency( $item->getListPrice() ),
+			],
+			'sale_price'           => [
+				'raw'       => $item->getSalePrice(),
+				'formatted' => $this->format_currency( $item->getSalePrice() ),
+			],
+			'total_list_price'     => [
+				'raw'       => $item->getExtendedListPrice(),
+				'formatted' => $this->format_currency( $item->getExtendedListPrice() ),
+			],
+			'total_sale_price'     => [
+				'raw'       => $item->getExtendedSalePrice(),
+				'formatted' => $this->format_currency( $item->getExtendedSalePrice() ),
+			],
+			'post_id'              => 0,
+			'thumbnail_id'         => 0,
+			'is_featured'          => false,
+			'on_sale'              => false,
+			'sku'                  => [
+				'product' => '',
+				'variant' => '',
+			],
+			'options'              => [],
+			'minimum_quantity'     => 0,
+			'maximum_quantity'     => 0,
+			'inventory_level'      => - 1,
+			Availability::NAME     => [],
+			Condition::NAME        => [],
+			Product_Type::NAME     => [],
+			Brand::NAME            => [],
+			Product_Category::NAME => [],
+		];
+		try {
+			$product                    = $this->get_product( $item );
+			$data[ 'post_id' ]          = $product->post_id();
+			$data[ 'thumbnail_id' ]     = get_post_thumbnail_id( $data[ 'post_id' ] );
+			$data[ 'is_featured' ]      = is_object_in_term( $data[ 'post_id' ], Flag::NAME, Flag::FEATURED );
+			$data[ 'on_sale' ]          = is_object_in_term( $data[ 'post_id' ], Flag::NAME, Flag::SALE );
+			$data[ 'sku' ]              = [
+				'product' => $product->sku(),
+				'variant' => $this->get_variant_sku( $data[ 'variant_id' ], $product ),
+			];
+			$data[ 'options' ]          = $this->get_options( $data[ 'variant_id' ], $product );
+			$data[ 'inventory_level' ]  = (int) $product->get_inventory_level( $data[ 'variant_id' ] );
+			$data[ 'minimum_quantity' ] = (int) $product->order_quantity_minimum;
+			$data[ 'maximum_quantity' ] = $this->get_max_quantity( (int) $product->order_quantity_maximum, $data[ 'inventory_level' ] );
+
+			$taxonomies = [
+				Availability::NAME,
+				Condition::NAME,
+				Product_Type::NAME,
+				Brand::NAME,
+				Product_Category::NAME,
+			];
+			foreach ( $taxonomies as $tax ) {
+				$data[ $tax ] = $this->get_terms( $data[ 'post_id' ], $tax );
+			}
+		} catch ( \RuntimeException $e ) {
+			// leave empty
+		}
+
+		return $data;
+	}
+
+	private function prepare_gift_certificate_item( ItemGiftCertificate $item ) {
+		$amount = $item->getAmount();
+		// TODO: name always comes back empty from the API, even if we set it
+		$name = $item->getName() ?: sprintf(
+			__( '%s Gift Certificate', 'bigcommerce' ),
+			apply_filters( 'bigcommerce/currency/format', sprintf( '¤%0.2f', $amount ), $amount )
+		);
+		$quantity = $item->getQuantity() ?: 1;
+		$data = [
+			'id'                   => $item->getId(),
+			'variant_id'           => 0,
+			'product_id'           => 0,
+			'name'                 => $name,
+			'quantity'             => $quantity,
+			'list_price'           => [
+				'raw'       => $amount,
+				'formatted' => $this->format_currency( $amount ),
+			],
+			'sale_price'           => [
+				'raw'       => $amount,
+				'formatted' => $this->format_currency( $amount ),
+			],
+			'total_list_price'     => [
+				'raw'       => $amount * $quantity,
+				'formatted' => $this->format_currency( $amount * $quantity ),
+			],
+			'total_sale_price'     => [
+				'raw'       => $amount * $quantity,
+				'formatted' => $this->format_currency( $amount * $quantity ),
+			],
+			'post_id'              => 0,
+			'thumbnail_id'         => 0,
+			'is_featured'          => false,
+			'on_sale'              => false,
+			'sku'                  => [
+				'product' => '',
+				'variant' => '',
+			],
+			'options'              => [],
+			'minimum_quantity'     => $quantity,
+			'maximum_quantity'     => $quantity,
+			'inventory_level'      => $quantity,
+			Availability::NAME     => [],
+			Condition::NAME        => [],
+			Product_Type::NAME     => [],
+			Brand::NAME            => [],
+			Product_Category::NAME => [],
+		];
+
+		return $data;
 	}
 }

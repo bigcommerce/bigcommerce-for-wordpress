@@ -151,8 +151,8 @@ class Customer {
 		$data = $this->flatten_resource( $order );
 		$data[ 'products' ] = $this->get_order_products( $order_id );
 		$data[ 'shipping_addresses' ] = $this->get_order_shipping_addresses( $order_id );
-		$data[ 'shipments' ] = $order->shipments();
-		$data[ 'coupons' ] = $order->coupons();
+		$data[ 'shipments' ] = $order->shipments() ?: [];
+		$data[ 'coupons' ] = $order->coupons() ?: [];
 
 		return $data;
 	}
@@ -164,7 +164,7 @@ class Customer {
 	}
 
 	private function get_order_shipping_addresses( $order_id ) {
-		$addresses = Client::getOrderShippingAddresses( $order_id );
+		$addresses = Client::getOrderShippingAddresses( $order_id ) ?: [];
 		$addresses = array_map( [ $this, 'flatten_resource' ], $addresses );
 		return apply_filters( 'bigcommerce/order/shipping_addresses', $addresses, $order_id, $this );
 	}

@@ -15,26 +15,27 @@ class Order_Summary extends Controller {
 	const THUMBNAIL_SIZE = 'thumbnail_size';
 	const DATE_FORMAT    = 'date_format';
 
-	const ORDER_ID       = 'order_id';
-	const DESCRIPTION    = 'description';
-	const SHIPPING       = 'shipping';
-	const TAX            = 'tax';
-	const DISCOUNT       = 'discount_amount';
-	const COUPON         = 'coupon_amount';
-	const SUBTOTAL       = 'subtotal';
-	const TOTAL_EX_TAX   = 'total_ex_tax';
-	const TOTAL          = 'total';
-	const COUNT          = 'item_count';
-	const PAYMENT_METHOD = 'payment_method';
-	const STORE_CREDIT   = 'store_credit';
-	const CREATED        = 'created_date';
-	const UPDATED        = 'updated_date';
-	const SHIPPED        = 'shipped_date';
-	const IMAGE_ID       = 'image_id';
-	const IMAGE          = 'image';
-	const STATUS         = 'status';
-	const DETAILS_URL    = 'details_url';
-	const SUPPORT_EMAIL  = 'support_email';
+	const ORDER_ID         = 'order_id';
+	const DESCRIPTION      = 'description';
+	const SHIPPING         = 'shipping';
+	const TAX              = 'tax';
+	const DISCOUNT         = 'discount_amount';
+	const COUPON           = 'coupon_amount';
+	const SUBTOTAL         = 'subtotal';
+	const TOTAL_EX_TAX     = 'total_ex_tax';
+	const TOTAL            = 'total';
+	const COUNT            = 'item_count';
+	const PAYMENT_METHOD   = 'payment_method';
+	const STORE_CREDIT     = 'store_credit';
+	const GIFT_CERTIFICATE = 'gift_certificate';
+	const CREATED          = 'created_date';
+	const UPDATED          = 'updated_date';
+	const SHIPPED          = 'shipped_date';
+	const IMAGE_ID         = 'image_id';
+	const IMAGE            = 'image';
+	const STATUS           = 'status';
+	const DETAILS_URL      = 'details_url';
+	const SUPPORT_EMAIL    = 'support_email';
 
 	protected $template = 'components/order-summary.php';
 
@@ -63,26 +64,27 @@ class Order_Summary extends Controller {
 		$image    = $image_id ? wp_get_attachment_image( $image_id, $this->options[ self::THUMBNAIL_SIZE ] ) : '';
 
 		return [
-			self::ORDER_ID       => $order[ 'id' ],
-			self::SHIPPING       => $this->format_currency( $order[ 'base_shipping_cost' ], false ),
-			self::TAX            => $this->format_currency( $order[ 'total_tax' ], false ),
-			self::DISCOUNT       => $this->format_currency( $order[ 'discount_amount' ], false ),
-			self::COUPON         => $this->format_currency( $order[ 'coupon_discount' ], false ),
-			self::SUBTOTAL       => $this->format_currency( $order[ 'subtotal_inc_tax' ] ),
-			self::TOTAL_EX_TAX   => $this->format_currency( $order[ 'total_ex_tax' ] ),
-			self::TOTAL          => $this->format_currency( $order[ 'total_inc_tax' ] ),
-			self::COUNT          => $order[ 'items_total' ],
-			self::PAYMENT_METHOD => $this->get_payment_method( $order[ 'payment_method' ] ),
-			self::CREATED        => $this->format_gmt_date( $order[ 'date_created' ] ),
-			self::UPDATED        => $this->format_gmt_date( $order[ 'date_modified' ] ),
-			self::SHIPPED        => $this->format_gmt_date( $order[ 'date_shipped' ] ),
-			self::STATUS         => $order[ 'custom_status' ],
-			self::IMAGE_ID       => $image_id,
-			self::IMAGE          => $image,
-			self::DESCRIPTION    => $this->options[ self::DESCRIPTION ] ?: $this->build_description( $order[ 'products' ], $order[ 'items_total' ] ),
-			self::DETAILS_URL    => $this->order_details_url( $order[ 'id' ] ),
-			self::STORE_CREDIT   => $this->format_currency( $order[ 'store_credit_amount' ], false ),
-			self::SUPPORT_EMAIL  => $this->get_support_email(),
+			self::ORDER_ID         => $order[ 'id' ],
+			self::SHIPPING         => $this->format_currency( $order[ 'base_shipping_cost' ], false ),
+			self::TAX              => $this->format_currency( $order[ 'total_tax' ], false ),
+			self::DISCOUNT         => $this->format_currency( $order[ 'discount_amount' ], false ),
+			self::COUPON           => $this->format_currency( $order[ 'coupon_discount' ], false ),
+			self::SUBTOTAL         => $this->format_currency( $order[ 'subtotal_inc_tax' ] ),
+			self::TOTAL_EX_TAX     => $this->format_currency( $order[ 'total_ex_tax' ] ),
+			self::TOTAL            => $this->format_currency( $order[ 'total_inc_tax' ] ),
+			self::COUNT            => $order[ 'items_total' ],
+			self::PAYMENT_METHOD   => $this->get_payment_method( $order[ 'payment_method' ] ),
+			self::CREATED          => $this->format_gmt_date( $order[ 'date_created' ] ),
+			self::UPDATED          => $this->format_gmt_date( $order[ 'date_modified' ] ),
+			self::SHIPPED          => $this->format_gmt_date( $order[ 'date_shipped' ] ),
+			self::STATUS           => $order[ 'custom_status' ],
+			self::IMAGE_ID         => $image_id,
+			self::IMAGE            => $image,
+			self::DESCRIPTION      => $this->options[ self::DESCRIPTION ] ?: $this->build_description( $order[ 'products' ], $order[ 'items_total' ] ),
+			self::DETAILS_URL      => $this->order_details_url( $order[ 'id' ] ),
+			self::STORE_CREDIT     => $this->format_currency( $order[ 'store_credit_amount' ], false ),
+			self::GIFT_CERTIFICATE => $this->format_currency( $order[ 'gift_certificate_amount' ], false ),
+			self::SUPPORT_EMAIL    => $this->get_support_email(),
 		];
 	}
 

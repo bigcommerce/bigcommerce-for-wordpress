@@ -13,6 +13,9 @@
  * @var int      $item_count
  * @var string   $payment_method
  * @var string   $store_credit
+ * @var string   $discount_amount
+ * @var string   $coupon_amount
+ * @var string   $gift_certificate
  * @var string   $created_date
  * @var string   $updated_date
  * @var int      $image_id
@@ -106,6 +109,12 @@
 					<div class="bc-order-detail-totals__list-item">
 						<dt class="bc-order-detail-totals__label"><?php esc_html_e( 'Store Credit Applied', 'bigcommerce' ); ?>: </dt>
 						<dd class="bc-order-detail-totals__value">-<?php echo esc_html( $store_credit ); ?></dd>
+					</div>
+				<?php } ?>
+				<?php if ( $gift_certificate ) { ?>
+					<div class="bc-order-detail-totals__list-item">
+						<dt class="bc-order-detail-totals__label"><?php esc_html_e( 'Gift Certificate', 'bigcommerce' ); ?>: </dt>
+						<dd class="bc-order-detail-totals__value">-<?php echo esc_html( $gift_certificate ); ?></dd>
 					</div>
 				<?php } ?>
 				<?php if ( $tax ) { ?>

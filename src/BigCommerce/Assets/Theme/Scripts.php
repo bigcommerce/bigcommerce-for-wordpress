@@ -49,7 +49,7 @@ class Scripts {
 		$plugin_src   = $this->directory . 'js/dist/' . $plugin_scripts;
 
 		wp_register_script( 'bigcommerce-manifest', $manifest_src, [], $this->version, true );
-		wp_register_script( 'bigcommerce-vendors', $vendor_src, [ 'bigcommerce-manifest' ], $this->version, true );
+		wp_register_script( 'bigcommerce-vendors', $vendor_src, [ 'bigcommerce-manifest', 'jquery' ], $this->version, true );
 		wp_register_script( 'bigcommerce-scripts', $plugin_src, [ 'bigcommerce-vendors' ], $this->version, true );
 
 		wp_localize_script( 'bigcommerce-scripts', 'bigcommerce_config', $this->config->get_data() );

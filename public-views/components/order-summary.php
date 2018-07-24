@@ -2,18 +2,21 @@
 /**
  * Template for a single order on the order history page
  *
- * @var int $order_id
+ * @var int    $order_id
  * @var string $description
  * @var string $shipping
  * @var string $tax
  * @var string $subtotal
  * @var string $total
- * @var int $item_count
+ * @var int    $item_count
  * @var string $payment_method
  * @var string $store_credit
+ * @var string $discount_amount
+ * @var string $coupon_amount
+ * @var string $gift_certificate
  * @var string $created_date
  * @var string $updated_date
- * @var int $image_id
+ * @var int    $image_id
  * @var string $image
  * @var string $status
  * @var string $details_url
@@ -35,7 +38,8 @@
 
 	<div class="bc-order-card__body">
 		<div class="bc-order-card__featured-image">
-			<a class="bc-order-card__featured-image-link" href="<?php echo esc_url( $details_url ); ?>"><?php echo $image; ?></a>
+			<a class="bc-order-card__featured-image-link"
+				 href="<?php echo esc_url( $details_url ); ?>"><?php echo $image; ?></a>
 		</div>
 
 		<div class="bc-order-card__meta">
@@ -43,7 +47,8 @@
 
 				<div class="bc-order-card__title">
 					<h3 class="bc-order-card__order-title">
-						<a class="bc-order-card__title-link" href="<?php echo esc_url( $details_url ); ?>"><?php echo $description; ?></a>
+						<a class="bc-order-card__title-link"
+							 href="<?php echo esc_url( $details_url ); ?>"><?php echo $description; ?></a>
 					</h3>
 				</div>
 

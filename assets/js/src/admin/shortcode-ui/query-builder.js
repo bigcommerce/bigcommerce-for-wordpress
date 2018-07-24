@@ -9,7 +9,7 @@ import Choices from 'choices.js';
 import * as tools from '../../utils/tools';
 import * as slide from '../../utils/dom/slide';
 import { setAccActiveAttributes, setAccInactiveAttributes } from '../../utils/dom/accessibility';
-import shortCodestate from '../config/shortcode-state';
+import shortcodeState from '../config/shortcode-state';
 import { on, trigger } from '../../utils/events';
 
 const el = {};
@@ -58,11 +58,11 @@ const toggleChildMenu = (e) => {
  */
 const buildQueryObject = (key = '', value) => {
 	if (!key) {
-		shortCodestate.wpAPIQueryObj.search.push(value);
+		shortcodeState.wpAPIQueryObj.search.push(value);
 		return;
 	}
 
-	shortCodestate.wpAPIQueryObj[key].push(value);
+	shortcodeState.wpAPIQueryObj[key].push(value);
 };
 
 /**
@@ -75,13 +75,13 @@ const reduceQueryObject = (key, value) => {
 	let valIndex = '';
 
 	if (!key) {
-		valIndex = shortCodestate.wpAPIQueryObj.search.indexOf(value);
-		shortCodestate.wpAPIQueryObj.search.splice(valIndex, 1);
+		valIndex = shortcodeState.wpAPIQueryObj.search.indexOf(value);
+		shortcodeState.wpAPIQueryObj.search.splice(valIndex, 1);
 		return;
 	}
 
-	valIndex = shortCodestate.wpAPIQueryObj[key].indexOf(value);
-	shortCodestate.wpAPIQueryObj[key].splice(valIndex, 1);
+	valIndex = shortcodeState.wpAPIQueryObj[key].indexOf(value);
+	shortcodeState.wpAPIQueryObj[key].splice(valIndex, 1);
 };
 
 /**
@@ -95,6 +95,8 @@ const addChoice = (value, label) => {
 			label,
 		},
 	]);
+
+	trigger({ event: 'bigcommerce/shortcode_query_term_added', data: { value, label }, native: false });
 };
 
 /**
@@ -103,6 +105,7 @@ const addChoice = (value, label) => {
  */
 const removeChoice = (value) => {
 	el.searchInput.removeItemsByValue(value);
+	trigger({ event: 'bigcommerce/shortcode_query_term_removed', data: { value }, native: false });
 };
 
 /**
@@ -113,6 +116,7 @@ const removeChoice = (value) => {
 const handleChoiceAddition = (e) => {
 	if (e.detail.value === e.detail.label) {
 		buildQueryObject('', e.detail.value);
+		trigger({ event: 'bigcommerce/shortcode_query_term_added', data: { value: e.detail.value, label: e.detail.label }, native: false });
 	}
 };
 
@@ -124,6 +128,11 @@ const handleChoiceAddition = (e) => {
 const handleChoiceRemoval = (e) => {
 	const value = e.detail.value;
 	const link = tools.getNodes(`[data-value="${value}"]`, false, el.linkList, true)[0];
+	trigger({ event: 'bigcommerce/shortcode_query_term_removed', data: { value }, native: false });
+
+	if (e.detail.fromSettings) {
+		removeChoice(value);
+	}
 
 	if (!link) {
 		reduceQueryObject('', value);
@@ -168,7 +177,7 @@ const handleLinks = (e) => {
  */
 const clearSearch = () => {
 	el.searchInput.clearStore();
-	shortCodestate.wpAPIQueryObj = {
+	shortcodeState.wpAPIQueryObj = {
 		bigcommerce_flag: [],
 		bigcommerce_brand: [],
 		bigcommerce_category: [],
@@ -194,7 +203,7 @@ const addSavedUICustomChoices = (choices) => {
  * @function initLinkListClicks
  * @description If a saved term exists, fire a click event on that item to add it to the search bar and state object.
  * @param terms
- * TODO: @vinny This needs to be removed and replaced with new login in handleLinks that allows for events AND state changes.
+ * TODO: @vinny This needs to be removed and replaced with new logic in handleLinks that allows for events AND state changes.
  */
 const initLinkListClicks = (terms) => {
 	if (!terms) {
@@ -256,6 +265,7 @@ const cacheElements = () => {
 const bindEvents = () => {
 	el.searchInput = new Choices('.bc-shortcode-ui__search-input', {
 		removeItemButton: true,
+		duplicateItems: false,
 	});
 
 	delegate(el.linkList, '[data-js="bcqb-has-child-list"]', 'click', toggleChildMenu);
@@ -264,6 +274,7 @@ const bindEvents = () => {
 	el.searchInput.passedElement.addEventListener('addItem', handleChoiceAddition);
 	delegate('[data-js="bcqb-clear"]', 'click', clearSearch);
 	on(document, 'bigcommerce/set_shortcode_ui_state', setShortcodeState);
+	on(document, 'bigcommerce/remove_query_term', handleChoiceRemoval);
 };
 
 const init = () => {

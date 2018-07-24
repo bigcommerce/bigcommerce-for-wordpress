@@ -5,10 +5,12 @@
 
 import quickViewDialog from './quick-view-dialog';
 import pagination from './pagination';
+import analytics from './analytics';
 
 const init = () => {
 	quickViewDialog();
 	pagination();
+	analytics();
 };
 
 export default init;

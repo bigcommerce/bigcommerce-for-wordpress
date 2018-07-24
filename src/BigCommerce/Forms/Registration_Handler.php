@@ -122,9 +122,11 @@ class Registration_Handler implements Form_Handler {
 		 * Triggered when a form is successfully processed.
 		 *
 		 * @param string $message The message that will display to the user
+		 * @param array  $submission The data submitted with the form
 		 * @param string $url     The URL to redirect the user to
+		 * @param array  $data    Optional data about the submission
 		 */
-		do_action( 'bigcommerce/form/success', $message, $url );
+		do_action( 'bigcommerce/form/success', $message, $submission, $url, [ 'key' => 'account_created' ] );
 	}
 
 	private function should_handle_request( $submission ) {
@@ -145,10 +147,6 @@ class Registration_Handler implements Form_Handler {
 	}
 
 	private function validate_submission( $submission ) {
-		if ( ! wp_verify_nonce( $submission[ '_wpnonce' ], self::ACTION ) ) {
-			return false;
-		}
-
 		$errors = new \WP_Error();
 
 		if ( ! wp_verify_nonce( $submission[ '_wpnonce' ], self::ACTION ) ) {

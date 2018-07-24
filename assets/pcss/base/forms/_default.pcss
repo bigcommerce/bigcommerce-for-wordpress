@@ -1,3 +1,23 @@
+.bc-form__row {
+	@media (--viewport-medium) {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		margin-bottom: 56px;
+		width: 100%;
+	}
+}
+
+.bc-form__col {
+	@media (--viewport-medium) {
+		flex: 1 1 auto;
+
+		.bc-form__control:last-child {
+			margin-bottom: 0;
+		}
+	}
+}
+
 &.bc-form-2col {
 	display: flex;
 	flex-direction: row;
@@ -10,6 +30,18 @@
 
 	button.bc-btn--form-submit {
 		margin: 0;
+	}
+}
+
+.bc-form__field-group {
+	border: unset;
+	margin: 0;
+	padding: 0;
+
+	+ .bc-form__field-group {
+		@media (--viewport-medium) {
+			margin-top: 60px;
+		}
 	}
 }
 
@@ -40,6 +72,7 @@
 
 .bc-form__control {
 	box-sizing: border-box;
+	display: block;
 	margin-bottom: 30px;
 
 	@media (--viewport-medium) {
@@ -63,10 +96,33 @@
 	}
 }
 
-.bc-form__control--error {
+.bc-form-terms {
+	background-color: var(--color-bc-light-grey);
+	margin-bottom: 14px;
+	padding: 12px 16px 11px;
+
+	.bc-form__control--checkbox {
+		align-items: center;
+		display: flex;
+		flex-wrap: wrap;
+		margin-bottom: 0;
+
+		> * {
+			margin-bottom: 0;
+		}
+	}
 
 	.bc-form__label {
-		color: var(--alert-error);
+		margin-right: auto;
+
+		&.bc-form-control-required:after {
+			content: '';
+			padding: 0;
+		}
+	}
+
+	.bc-form__error-message {
+		margin-right: 22px;
 	}
 }
 
@@ -79,5 +135,9 @@
 	@media (--viewport-medium) {
 		justify-content: center;
 		margin-top: 46px;
+	}
+
+	&--left {
+		justify-content: flex-start;
 	}
 }

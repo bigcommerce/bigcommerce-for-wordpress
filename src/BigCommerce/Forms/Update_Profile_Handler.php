@@ -48,7 +48,7 @@ class Update_Profile_Handler implements Form_Handler {
 		if ( $update_user ) {
 			$updated = wp_update_user( $user );
 			if ( is_wp_error( $updated ) ) {
-				switch( $updated->get_error_code() ) {
+				switch ( $updated->get_error_code() ) {
 					case 'existing_user_email':
 					case 'empty_user_login':
 					case 'user_login_too_long':
@@ -75,7 +75,7 @@ class Update_Profile_Handler implements Form_Handler {
 		}
 
 		$message = apply_filters( 'bigcommerce/form/profile/success_message', __( 'Profile updated.', 'bigcommerce' ) );
-		do_action( 'bigcommerce/form/success', $message, null );
+		do_action( 'bigcommerce/form/success', $message, $submission, null, [ 'key' => 'profile_updated' ] );
 	}
 
 	private function should_handle_request( $submission ) {
