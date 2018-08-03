@@ -9,10 +9,16 @@ class Option_Swatch extends Option_Type {
 
 	protected function get_options() {
 		return array_map( function ( $option ) {
-			if ( ! empty( $option[ 'value_data' ][ 'colors' ] ) ) {
-				$option[ 'color' ] = sanitize_hex_color( reset( $option[ 'value_data' ][ 'colors' ] ) );
+			if ( ! empty( $option[ 'value_data' ][ 'image_url' ] ) ) {
+				$option[ 'type' ] = 'image';
+				$option[ 'src' ]  = $option[ 'value_data' ][ 'image_url' ];
+			} elseif ( ! empty( $option[ 'value_data' ][ 'colors' ] ) ) {
+				$colors             = $option[ 'value_data' ][ 'colors' ];
+				$option[ 'type' ]   = sprintf( '%d-color', count( $colors ) );
+				$option[ 'colors' ] = array_map( 'sanitize_hex_color', $colors );
 			} else {
-				$option[ 'color' ] = '#999999';
+				$option[ 'type' ]   = '1-color';
+				$option[ 'colors' ] = [ '#999999' ];
 			}
 
 			return $option;

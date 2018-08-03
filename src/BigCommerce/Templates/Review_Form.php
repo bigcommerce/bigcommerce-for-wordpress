@@ -7,6 +7,7 @@ class Review_Form extends Controller {
 	const ERRORS   = 'errors';
 	const DEFAULTS = 'defaults';
 	const OPTIONS  = 'options';
+	const MESSAGES = 'messages';
 
 	protected $template = 'components/review-form.php';
 
@@ -23,12 +24,13 @@ class Review_Form extends Controller {
 			self::PRODUCT  => $this->options[ self::PRODUCT ],
 			self::DEFAULTS => $this->get_form_defaults(),
 			self::OPTIONS  => $this->get_rating_options(),
+			self::MESSAGES => $this->get_messages(),
 		];
 
 		$error_data           = $this->get_error_data();
-		$data[ self::ERRORS ] = $error_data ? $error_data[ 'error' ]->get_error_codes() : [];
+		$data[ self::ERRORS ] = $error_data ? $error_data['error']->get_error_codes() : [];
 		if ( $error_data && array_key_exists( 'submission', $error_data ) ) {
-			$data[ self::DEFAULTS ] = $this->restore_submission( $data[ self::DEFAULTS ], $error_data[ 'submission' ] );
+			$data[ self::DEFAULTS ] = $this->restore_submission( $data[ self::DEFAULTS ], $error_data['submission'] );
 		}
 
 		return $data;
@@ -45,18 +47,18 @@ class Review_Form extends Controller {
 	}
 
 	private function get_error_data() {
-		if ( empty( $_REQUEST[ 'bc-error' ] ) ) {
+		if ( empty( $_REQUEST['bc-error'] ) ) {
 			return false;
 		}
 
-		$data = get_transient( $_REQUEST[ 'bc-error' ] );
-		if ( empty( $data[ 'error' ] ) || ! array_key_exists( 'user_id', $data ) ) {
+		$data = get_transient( $_REQUEST['bc-error'] );
+		if ( empty( $data['error'] ) || ! array_key_exists( 'user_id', $data ) ) {
 			return false;
 		}
-		if ( $data[ 'user_id' ] != get_current_user_id() ) {
+		if ( $data['user_id'] != get_current_user_id() ) {
 			return false;
 		}
-		if ( ! is_wp_error( $data[ 'error' ] ) || count( $data[ 'error' ]->get_error_codes() ) < 1 ) {
+		if ( ! is_wp_error( $data['error'] ) || count( $data['error']->get_error_codes() ) < 1 ) {
 			return false;
 		}
 
@@ -73,7 +75,7 @@ class Review_Form extends Controller {
 	 * @return array
 	 */
 	private function restore_submission( $data, $submission ) {
-		$submission = array_key_exists( 'bc-review', $submission ) ? $submission[ 'bc-review' ] : [];
+		$submission = array_key_exists( 'bc-review', $submission ) ? $submission['bc-review'] : [];
 		$submission = array_intersect_key( $submission, $data ); // only keep keys that we already know about
 
 		return array_merge( $data, $submission );
@@ -87,6 +89,10 @@ class Review_Form extends Controller {
 			4 => __( '4 stars', 'bigcommerce' ),
 			5 => __( '5 stars (best)', 'bigcommerce' ),
 		];
+	}
+
+	protected function get_messages() {
+		return apply_filters( 'bigcommerce/forms/messages', '' );
 	}
 
 }

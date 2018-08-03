@@ -6,6 +6,7 @@ use BigCommerce\Post_Types\Product\Product;
  * @var Product  $product  The product the review is for
  * @var string[] $options  Key/Value pairs for the rating drop-down
  * @var array    $defaults Default values to use to populate the form
+ * @var string   $messages Rendered form feedback messages
  */
 
 $error_class = 'bc-form__control--error';
@@ -17,6 +18,8 @@ $error_class = 'bc-form__control--error';
 	<button class="bc-link bc-product-review__write-btn" data-js="bc-product-review-write">
 		<?php echo esc_html( __( 'Write a Review', 'bigcommerce' ) ); ?>
 	</button>
+
+	<?php echo $messages; ?>
 
 	<div class="bc-product-review-form">
 		<h3 class="h1 bc-product-review-form__title"> <?php echo esc_html( 'Write A Review', 'bigcommerce' ); ?></h3>

@@ -7,16 +7,18 @@ use BigCommerce\Post_Types\Product\Product;
 class Product_Reviews extends Controller {
 	const PRODUCT = 'product';
 
-	const HEADER   = 'header';
-	const FORM     = 'form';
-	const REVIEWS  = 'reviews';
+	const HEADER        = 'header';
+	const FORM          = 'form';
+	const REVIEWS       = 'reviews';
+	const NEXT_PAGE_URL = 'next_page_url';
 
 	protected $template = 'components/product-reviews.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [
-			self::PRODUCT => null,
-			self::REVIEWS => [],
+			self::PRODUCT       => null,
+			self::REVIEWS       => [],
+			self::NEXT_PAGE_URL => '',
 		];
 
 		return wp_parse_args( $options, $defaults );
@@ -24,12 +26,22 @@ class Product_Reviews extends Controller {
 
 	public function get_data() {
 		$data = [
-			self::REVIEWS => $this->options[ self::REVIEWS ],
+			self::REVIEWS => $this->get_reviews( $this->options[ self::REVIEWS ], $this->options[ self::PRODUCT ], $this->options[ self::NEXT_PAGE_URL ] ),
 			self::HEADER  => $this->get_header( $this->options[ self::PRODUCT ] ),
 			self::FORM    => $this->get_form( $this->options[ self::PRODUCT ] ),
 		];
 
 		return $data;
+	}
+
+	protected function get_reviews( $reviews, Product $product, $next_page ) {
+		$component = new Review_List( [
+			Review_List::PRODUCT       => $product,
+			Review_List::REVIEWS       => $reviews,
+			Review_List::NEXT_PAGE_URL => $next_page,
+		] );
+
+		return $component->render();
 	}
 
 	protected function get_header( Product $product ) {
@@ -56,10 +68,6 @@ class Product_Reviews extends Controller {
 		], 'components/review-form.php' );
 
 		return $component->render();
-	}
-
-	protected function get_messages() {
-		return apply_filters( 'bigcommerce/forms/messages', '' );
 	}
 
 }

@@ -5,6 +5,7 @@
  */
 
 import { GUTENBERG_ADDRESS as BLOCK } from '../../config/gutenberg-settings';
+import { ADMIN_IMAGES } from '../../../config/wp-settings';
 import { bigCommerceIcon } from '../products/icon'; // TODO: cart icon
 
 const { createElement } = wp.element;
@@ -49,7 +50,12 @@ const registerBlock = () => {
 		/**
 		 * Attributes used to save and edit our block.
 		 */
-		attributes: {},
+		attributes: {
+			shortcode: {
+				type: 'string',
+				default: '',
+			},
+		},
 
 
 		/**
@@ -61,7 +67,17 @@ const registerBlock = () => {
 		 * @return {Element}        Element to render.
 		 */
 		edit: (props) => {
-			return BLOCK.shortcode;
+			const { setAttributes } = props;
+			const blockImage = `${ADMIN_IMAGES}Gutenberg-Block_Addresses.png`;
+
+			setAttributes({
+				shortcode: BLOCK.shortcode,
+			});
+
+			return [
+				createElement('h2', { className: props.className, key: 'address-list-shortcode-title'}, [__('My Addresses', 'bigcommerce')] ),
+				createElement('img', { className: props.className, key: 'address-list-shortcode-preview', src: blockImage} ),
+			];
 		},
 
 		/**
@@ -73,7 +89,12 @@ const registerBlock = () => {
 		 * @return {Element} Element to render.
 		 */
 		save: (props) => {
-			return BLOCK.shortcode;
+			const { shortcode } = props.attributes;
+
+
+			return (
+				createElement('div', { className: props.className }, shortcode)
+			);
 		}
 	});
 };

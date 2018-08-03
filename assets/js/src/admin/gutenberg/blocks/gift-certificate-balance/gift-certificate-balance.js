@@ -5,8 +5,11 @@
  */
 
 import { GUTENBERG_GIFT_CERTIFICATE_BALANCE as BLOCK } from '../../config/gutenberg-settings';
+import { ADMIN_IMAGES } from '../../../config/wp-settings';
 
+const { createElement } = wp.element;
 const { registerBlockType } = wp.blocks;
+const { __ } = wp.i18n;
 
 /**
  * @function registerBlock
@@ -46,7 +49,12 @@ const registerBlock = () => {
 		/**
 		 * Attributes used to save and edit our block.
 		 */
-		attributes: {},
+		attributes: {
+			shortcode: {
+				type: 'string',
+				default: '',
+			},
+		},
 
 
 		/**
@@ -58,7 +66,17 @@ const registerBlock = () => {
 		 * @return {Element}        Element to render.
 		 */
 		edit: (props) => {
-			return BLOCK.shortcode;
+			const { setAttributes } = props;
+			const blockImage = `${ADMIN_IMAGES}Gutenberg-Block_Gift-Cert-Balance.png`;
+
+			setAttributes({
+				shortcode: BLOCK.shortcode,
+			});
+
+			return [
+				createElement('h2', { className: props.className, key: 'address-list-shortcode-title'}, [__('Gift Certificate Balance', 'bigcommerce')] ),
+				createElement('img', { className: props.className, key: 'address-list-shortcode-preview', src: blockImage} ),
+			];
 		},
 
 		/**
@@ -70,7 +88,12 @@ const registerBlock = () => {
 		 * @return {Element} Element to render.
 		 */
 		save: (props) => {
-			return BLOCK.shortcode;
+			const { shortcode } = props.attributes;
+
+
+			return (
+				createElement('div', { className: props.className }, shortcode)
+			);
 		}
 	});
 };

@@ -19,24 +19,10 @@ class Product_Remover {
 
 	public function remove() {
 		$post_id = $this->get_post_id();
-		$this->remove_variants();
-		$this->remove_product();
 		if ( ! empty( $post_id ) ) {
 			$this->remove_images( $post_id );
 			$this->remove_post( $post_id );
 		}
-	}
-
-	private function remove_variants() {
-		/** @var \wpdb $wpdb */
-		global $wpdb;
-		$wpdb->delete( $wpdb->bc_variants, [ 'bc_id' => $this->product_id ], [ '%d' ] );
-	}
-
-	private function remove_product() {
-		/** @var \wpdb $wpdb */
-		global $wpdb;
-		$wpdb->delete( $wpdb->bc_products, [ 'bc_id' => $this->product_id ], [ '%d' ] );
 	}
 
 	private function get_post_id() {

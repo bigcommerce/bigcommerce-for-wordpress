@@ -9,7 +9,7 @@ import { bigCommerceIcon } from './icon';
 import Inspector from './inspector';
 import shortcodeState from '../../../config/shortcode-state';
 import * as tools from '../../../../utils/tools';
-import { wpAPIProductsPreview } from '../../../../utils/ajax';
+import { wpAPIProductsPreview, wpAPIShortcodeBuilder } from '../../../../utils/ajax';
 
 const { createElement } = wp.element;
 const { registerBlockType } = wp.blocks;
@@ -77,7 +77,7 @@ const registerBlock = () => {
 		 * @return {Element}        Element to render.
 		 */
 		edit: (props) => {
-			const {attributes: {queryParams}, setAttributes} = props;
+			const {attributes: {queryParams, shortcode}, setAttributes} = props;
 			const spinner = createElement('span', {className: 'spinner is-active', key: 'spinner'});
 			const previewEl = createElement('div', {className: 'bigcommerce-product-preview', key: 'preview-shortcode'}, [spinner]);
 			const state = {
@@ -123,6 +123,28 @@ const registerBlock = () => {
 					queryParams: {...data.query_params},
 				});
 			};
+
+			if(shortcode.length <=0) {
+				wpAPIShortcodeBuilder(queryParams)
+					.end((err, response) => {
+						shortcodeState.isFetching = false;
+
+						if (err) {
+							console.error(err);
+						}
+
+						const data = {
+							query_params: { ...response.body.attributes },
+						};
+						data.query_params.preview = 1;
+						data.query_params.paged = 0;
+
+						setAttributes({
+							shortcode: response.body.shortcode,
+							queryParams: {...data.query_params},
+						})
+					});
+			}
 
 			getResponse(queryParams);
 

@@ -19,7 +19,7 @@ use Pimple\Container;
 class Forms extends Provider {
 	const DELETE_ADDRESS   = 'forms.delete_address';
 	const REGISTER         = 'forms.register';
-	const REVIEW         = 'forms.review';
+	const REVIEW           = 'forms.review';
 	const UPDATE_ADDRESS   = 'forms.udpate_address';
 	const UPDATE_PROFILE   = 'forms.update_profile';
 	const GIFT_CERTIFICATE = 'forms.purchase_gift_certificate';
@@ -87,10 +87,13 @@ class Forms extends Provider {
 			return new Product_Review_Handler( $container[ Api::FACTORY ]->catalog() );
 		};
 		add_action( 'bigcommerce/form/action=' . Product_Review_Handler::ACTION, $this->create_callback( 'product_review', function ( $submission ) use ( $container ) {
-			return $container[ self::REVIEW ]->handle_request( $submission );
+			$container[ self::REVIEW ]->handle_request( $submission );
 		} ), 10, 1 );
 		add_filter( 'bigcommerce/forms/show_messages', $this->create_callback( 'review_form_messages', function ( $show, $post_id ) use ( $container ) {
 			return $container[ self::REVIEW ]->remove_form_messages_from_post_content( $show, $post_id );
+		} ), 10, 2 );
+		add_filter( 'bigcommerce/product/reviews/show_form', $this->create_callback( 'toggle_review_form', function ( $enabled, $post_id ) use ( $container ) {
+			return $container[ self::REVIEW ]->disable_reviews_if_comments_disabled( $enabled, $post_id );
 		} ), 10, 2 );
 	}
 

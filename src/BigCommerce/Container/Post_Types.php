@@ -12,6 +12,7 @@ class Post_Types extends Provider {
 	const PRODUCT_QUERY       = 'post_type.product.query';
 	const PRODUCT_ADMIN       = 'post_type.product.admin';
 	const PRODUCT_UNSUPPORTED = 'post_type.product.unsupported';
+	const PRODUCT_DELETION    = 'post_type.product.deletion';
 	const STORE_LINKS         = 'post_type.product.store_links';
 
 	const CART_INDICATOR = 'post_type.page.cart_indicator';
@@ -40,6 +41,10 @@ class Post_Types extends Provider {
 
 		$container[ self::PRODUCT_UNSUPPORTED ] = function ( Container $container ) {
 			return new Product\Unsupported_Products();
+		};
+
+		$container[ self::PRODUCT_DELETION ] = function ( Container $container ) {
+			return new Product\Deletion();
 		};
 
 		add_action( 'pre_get_posts', $this->create_callback( 'product_pre_get_posts', function ( \WP_Query $query ) use ( $container ) {
@@ -101,6 +106,10 @@ class Post_Types extends Provider {
 		} ), 10, 1 );
 		add_filter( 'bigcommerce/gutenberg/js_config', $this->create_callback( 'gutenberg_link', function ( $data ) use ( $container ) {
 			return $container[ self::STORE_LINKS ]->add_link_to_gutenberg_config( $data );
+		} ), 10, 1 );
+
+		add_action( 'before_delete_post', $this->create_callback( 'delete_product', function ( $post_id ) use ( $container ) {
+			$container[ self::PRODUCT_DELETION ]->delete_product_data( $post_id );
 		} ), 10, 1 );
 	}
 }

@@ -31,6 +31,10 @@ class JS_Localization {
 				'confirm_delete_address' => __( 'Confirm', 'bigcommerce' ),
 				'cancel_delete_address'  => __( 'Cancel', 'bigcommerce' ),
 			],
+			'errors'     => [
+				'pagination_error'         => __( 'There was an error processing your request. Please try again.', 'bigcommerce' ),
+				'pagination_timeout_error' => __( 'The server took too long to complete this request. Please try again.', 'bigcommerce' ),
+			],
 		];
 
 		return apply_filters( 'bigcommerce/js_localization', $js_i18n_array );

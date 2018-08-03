@@ -28,7 +28,10 @@ const scrollToOptions = {
  * @description animate the page scroll position to the reviews section.
  */
 const scrollToReviews = (e) => {
-	e.preventDefault();
+	if (e) {
+		e.preventDefault();
+	}
+
 	scrollToOptions.$target = $('.bc-single-product__reviews');
 	scrollToOptions.offset = -30;
 	scrollTo(scrollToOptions);
@@ -75,10 +78,10 @@ const disableProductReviewForm = (e) => {
 
 /**
  * @function handleFormAlert
- * @description on page load, if we have an alert from the form submission, determine its type and show the user the state.
+ * @description on page load, if we have an alert from the form submission, determine its type and scroll to the message.
  */
 const handleFormAlert = () => {
-	const alert = tools.getNodes('.bc-alert-group--error', false, el.productWrapper, true)[0];
+	const alert = tools.getNodes('.bc-alert-group', false, el.reviewsWrapper, true)[0];
 
 	if (!alert) {
 		return;
@@ -94,6 +97,7 @@ const handleFormAlert = () => {
 };
 
 const cacheElements  = () => {
+	el.reviewsWrapper = tools.getNodes('#bc-single-product__reviews', false, document, true)[0];
 	el.formWrapper = tools.getNodes('bc-product-review-form-wrapper')[0];
 };
 

@@ -102,7 +102,7 @@ class Product_Review_Handler implements Form_Handler {
 		if ( empty( $submission[ 'bc-review' ][ 'email' ] ) ) {
 			$errors->add( 'email', __( 'Email Address is required.', 'bigcommerce' ) );
 		} elseif ( ! is_email( $submission[ 'bc-review' ][ 'email' ] ) ) {
-			$errors->add( 'email', __( 'Please verify that you have submitted a valid email address', 'bigcommerce' ) );
+			$errors->add( 'email', __( 'Please verify that you have submitted a valid email address.', 'bigcommerce' ) );
 		}
 		if ( empty( $submission[ 'bc-review' ][ 'subject' ] ) ) {
 			$errors->add( 'subject', __( 'Please give your review a subject.', 'bigcommerce' ) );
@@ -120,8 +120,8 @@ class Product_Review_Handler implements Form_Handler {
 	 * Do not show product review form error/success messages above
 	 * the post content. They will be rendered with the form.
 	 *
-	 * @param bool  $show
-	 * @param int $post_id
+	 * @param bool $show
+	 * @param int  $post_id
 	 *
 	 * @return bool
 	 *
@@ -143,5 +143,22 @@ class Product_Review_Handler implements Form_Handler {
 		}
 
 		return $show;
+	}
+
+	/**
+	 * If comments are disabled for a product, disable the review form
+	 *
+	 * @param bool $enabled
+	 * @param int  $post_id
+	 *
+	 * @return bool
+	 * @filter bigcommerce/product/reviews/show_form
+	 */
+	public function disable_reviews_if_comments_disabled( $enabled, $post_id ) {
+		if ( ! $enabled ) {
+			return $enabled; // don't enable it
+		}
+
+		return comments_open( $post_id );
 	}
 }

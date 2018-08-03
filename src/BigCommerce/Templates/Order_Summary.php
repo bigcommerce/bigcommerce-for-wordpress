@@ -5,6 +5,7 @@ namespace BigCommerce\Templates;
 
 
 use BigCommerce\Assets\Theme\Image_Sizes;
+use BigCommerce\Customizer\Sections;
 use BigCommerce\Pages\Orders_Page;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Settings\Account_Settings;
@@ -61,7 +62,7 @@ class Order_Summary extends Controller {
 	public function get_data() {
 		$order    = $this->options[ 'order' ];
 		$image_id = $this->get_image_id( $order[ 'products' ] );
-		$image    = $image_id ? wp_get_attachment_image( $image_id, $this->options[ self::THUMBNAIL_SIZE ] ) : '';
+		$image    = $image_id ? wp_get_attachment_image( $image_id, $this->options[ self::THUMBNAIL_SIZE ] ) : $this->get_fallback_image( $this->options[ self::THUMBNAIL_SIZE ] );
 
 		return [
 			self::ORDER_ID         => $order[ 'id' ],
@@ -185,6 +186,17 @@ class Order_Summary extends Controller {
 		 * @param string $email_address The email address to display, defaults to the value set on the BigCommerce setting screen
 		 */
 		return apply_filters( 'bigcommerce/order/support_email', get_option( Account_Settings::SUPPORT_EMAIL, '' ) );
+	}
+
+	protected function get_fallback_image( $size ) {
+		$default = get_option( Sections\Product_Single::DEFAULT_IMAGE, 0 );
+		if ( empty( $default ) ) {
+			$component = new Fallback_Image( [] );
+
+			return $component->render();
+		}
+
+		return wp_get_attachment_image( $default, $size );
 	}
 
 }
