@@ -12,6 +12,7 @@ use BigCommerce\Settings\Gift_Certificates as Gift_Ceritifcate_Settings;
 use BigCommerce\Settings\Import as Import_Settings;
 use BigCommerce\Settings\Import_Now;
 use BigCommerce\Settings\Import_Status;
+use BigCommerce\Settings\Reviews;
 use BigCommerce\Settings\Settings_Screen;
 use Pimple\Container;
 
@@ -25,6 +26,7 @@ class Settings extends Provider {
 	const IMPORT_SECTION           = 'settings.import';
 	const ACCOUNTS_SECTION         = 'settings.accounts';
 	const ANALYTICS_SECTION        = 'settings.analytics';
+	const REVIEWS_SECTION          = 'settings.reviews';
 	const IMPORT_NOW               = 'settings.import_now';
 	const IMPORT_STATUS            = 'settings.import_status';
 
@@ -38,6 +40,7 @@ class Settings extends Provider {
 		$this->currency( $container );
 		$this->accounts( $container );
 		$this->analytics( $container );
+		$this->reviews( $container );
 	}
 
 	private function settings_screen( Container $container ) {
@@ -150,6 +153,7 @@ class Settings extends Provider {
 				$container[ Pages::ACCOUNT_PAGE ],
 				$container[ Pages::ORDERS_PAGE ],
 				$container[ Pages::ADDRESS_PAGE ],
+				$container[ Pages::SHIPPING_PAGE ],
 			];
 
 			return new Account_Settings( $pages );
@@ -172,5 +176,15 @@ class Settings extends Provider {
 		add_action( 'update_option_' . Analytics::FACEBOOK_PIXEL, $this->create_callback( 'update_pixel_id', function ( $old_value, $new_value ) use ( $container ) {
 			$container[ self::ANALYTICS_SECTION ]->update_pixel_option( $old_value, $new_value );
 		} ), 10, 2 );
+	}
+
+	private function reviews( Container $container ) {
+		$container[ self::REVIEWS_SECTION ] = function( Container $container ) {
+			return new Reviews( $container[ Api::FACTORY ] );
+		};
+
+		add_action( 'bigcommerce/settings/register', $this->create_callback( 'review_settings_register', function () use ( $container ) {
+			$container[ self::REVIEWS_SECTION ]->register_settings_section();
+		} ), 60, 0 );
 	}
 }

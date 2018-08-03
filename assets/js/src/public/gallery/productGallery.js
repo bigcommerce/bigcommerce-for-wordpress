@@ -29,7 +29,6 @@ const galleryOptions = {
 		a11y: true,
 		slidesPerView: 'auto',
 		touchRatio: 0.2,
-		spaceBetween: 10,
 		centeredSlides: true,
 		slideToClickedSlide: true,
 	}),

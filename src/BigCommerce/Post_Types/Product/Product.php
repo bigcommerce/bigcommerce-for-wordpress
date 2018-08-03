@@ -457,7 +457,7 @@ class Product {
 		] );
 
 		$per_page = absint( $args[ 'per_page' ] ) ?: 12;
-		$offset = ( absint( $args[ 'page' ] ) - 1 ) * $per_page;
+		$offset   = ( absint( $args[ 'page' ] ) - 1 ) * $per_page;
 
 		$args[ 'order' ]   = ( strtoupper( $args[ 'order' ] ) === 'DESC' ? 'DESC' : 'ASC' );
 		$args[ 'orderby' ] = in_array( $args[ 'orderby' ], [
@@ -470,11 +470,30 @@ class Product {
 		] ) ? sanitize_key( $args[ 'orderby' ] ) : 'date_reviewed';
 
 		$orderby = sprintf( "ORDER BY %s %s", $args[ 'orderby' ], $args[ 'order' ] );
-		$limit = sprintf( "LIMIT %d, %d", $offset, $per_page );
+		$limit   = sprintf( "LIMIT %d, %d", $offset, $per_page );
 
-		$sql = "SELECT * FROM {$wpdb->bc_reviews} WHERE post_id=%d AND status=%s $orderby $limit";
-		$sql = $wpdb->prepare( $sql, $this->post_id, $args[ 'status' ] );
+		$sql     = "SELECT * FROM {$wpdb->bc_reviews} WHERE post_id=%d AND status=%s $orderby $limit";
+		$sql     = $wpdb->prepare( $sql, $this->post_id, $args[ 'status' ] );
 		$results = $wpdb->get_results( $sql, ARRAY_A );
+
 		return $results ?: [];
+	}
+
+	/**
+	 * Get the total number of reviews for the product
+	 *
+	 * @param string $status
+	 *
+	 * @return int
+	 */
+	public function get_review_count( $status = 'approved' ) {
+		/** @var \wpdb $wpdb */
+		global $wpdb;
+
+		$sql   = "SELECT COUNT(*) FROM {$wpdb->bc_reviews} WHERE post_id=%d AND status=%s";
+		$sql   = $wpdb->prepare( $sql, $this->post_id, $status );
+		$count = $wpdb->get_var( $sql );
+
+		return intval( $count );
 	}
 }

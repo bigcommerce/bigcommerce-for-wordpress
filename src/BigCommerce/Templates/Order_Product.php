@@ -4,6 +4,7 @@
 namespace BigCommerce\Templates;
 
 use BigCommerce\Assets\Theme\Image_Sizes;
+use BigCommerce\Customizer\Sections;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Condition\Condition;
@@ -21,6 +22,7 @@ class Order_Product extends Controller {
 	const TOTAL_PRICE      = 'total_price';
 	const SKU              = 'sku';
 	const OPTIONS          = 'options';
+	const PERMALINK        = 'permalink';
 
 	protected $template = 'components/order-product.php';
 
@@ -40,23 +42,24 @@ class Order_Product extends Controller {
 
 	public function get_data() {
 		$product = $this->options[ self::PRODUCT ];
-		$post_id = $product[ 'product_id' ] ? $this->get_product_post( $product[ 'product_id' ] ) : 0;
+		$post_id = $product['product_id'] ? $this->get_product_post( $product['product_id'] ) : 0;
 
 		$image_id = $post_id ? $this->get_image_id( $post_id ) : 0;
-		$image    = $image_id ? wp_get_attachment_image( $image_id, $this->options[ self::THUMBNAIL_SIZE ] ) : '';
+		$image    = $image_id ? wp_get_attachment_image( $image_id, $this->options[ self::THUMBNAIL_SIZE ] ) : $this->get_fallback_image( $this->options[ self::THUMBNAIL_SIZE ] );
 
 		$data = [
-			self::TITLE            => $product[ 'name' ],
+			self::TITLE            => $product['name'],
 			self::IMAGE_ID         => $image_id,
 			self::IMAGE            => $image,
 			Brand::NAME            => $this->get_terms( $post_id, Brand::NAME ),
 			Condition::NAME        => $this->get_terms( $post_id, Condition::NAME ),
-			self::QUANTITY_ORDERED => $product[ 'quantity' ],
-			self::QUANTITY_SHIPPED => $product[ 'quantity_shipped' ],
-			self::UNIT_PRICE       => $this->format_currency( $product[ 'base_price' ] ),
-			self::TOTAL_PRICE      => $this->format_currency( $product[ 'base_total' ] ),
-			self::SKU              => $product[ 'sku' ],
+			self::QUANTITY_ORDERED => $product['quantity'],
+			self::QUANTITY_SHIPPED => $product['quantity_shipped'],
+			self::UNIT_PRICE       => $this->format_currency( $product['base_price'] ),
+			self::TOTAL_PRICE      => $this->format_currency( $product['base_total'] ),
+			self::SKU              => $product['sku'],
 			self::OPTIONS          => $this->get_options( $product ),
+			self::PERMALINK        => $post_id ? get_the_permalink( $post_id ) : '',
 		];
 
 		return $data;
@@ -114,7 +117,7 @@ class Order_Product extends Controller {
 	}
 
 	private function get_options( $product ) {
-		if ( empty( $product[ 'product_options' ] ) ) {
+		if ( empty( $product['product_options'] ) ) {
 			return [];
 		}
 
@@ -123,7 +126,18 @@ class Order_Product extends Controller {
 				'label' => $option->display_name,
 				'value' => $option->display_value,
 			];
-		}, $product[ 'product_options' ] );
+		}, $product['product_options'] );
+	}
+
+	protected function get_fallback_image( $size ) {
+		$default = get_option( Sections\Product_Single::DEFAULT_IMAGE, 0 );
+		if ( empty( $default ) ) {
+			$component = new Fallback_Image( [] );
+
+			return $component->render();
+		}
+
+		return wp_get_attachment_image( $default, $size );
 	}
 
 }

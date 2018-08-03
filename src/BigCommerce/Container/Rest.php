@@ -7,6 +7,7 @@ namespace BigCommerce\Container;
 use BigCommerce\Rest\Cart_Controller;
 use BigCommerce\Rest\Orders_Shortcode_Controller;
 use BigCommerce\Rest\Products_Controller;
+use BigCommerce\Rest\Reviews_Listing_Controller;
 use BigCommerce\Rest\Shortcode_Controller;
 use Pimple\Container;
 
@@ -25,6 +26,9 @@ class Rest extends Provider {
 
 	const ORDERS_SHORTCODE_BASE = 'rest.orders_shortcode_base';
 	const ORDERS_SHORTCODE      = 'rest.orders_shortcode';
+
+	const REVIEW_LIST_BASE = 'rest.review_list_base';
+	const REVIEW_LIST      = 'rest.review_list';
 
 	private $version = 1;
 
@@ -69,11 +73,24 @@ class Rest extends Provider {
 			return new Orders_Shortcode_Controller( $container[ self::NAMESPACE_BASE ], $container[ self::VERSION ], $container[ self::ORDERS_SHORTCODE_BASE ] );
 		};
 
+		$container[ self::REVIEW_LIST_BASE ] = function ( Container $container ) {
+			return apply_filters( 'bigcommerce/rest/review_list_base', 'product-reviews' );
+		};
+
+		$container[ self::REVIEW_LIST ] = function ( Container $container ) {
+			return new Reviews_Listing_Controller( $container[ self::NAMESPACE_BASE ], $container[ self::VERSION ], $container[ self::REVIEW_LIST_BASE ] );
+		};
+
 		add_action( 'rest_api_init', $this->create_callback( 'rest_init', function () use ( $container ) {
 			$container[ self::PRODUCTS ]->register_routes();
 			$container[ self::SHORTCODE ]->register_routes();
 			$container[ self::ORDERS_SHORTCODE ]->register_routes();
 			$container[ self::CART ]->register_routes();
+			$container[ self::REVIEW_LIST ]->register_routes();
 		} ), 10, 0 );
+
+		add_filter( 'bigcommerce/product/reviews/rest_url', $this->create_callback( 'review_list_rest_url', function ( $url, $post_id ) use ( $container ) {
+			return $container[ self::REVIEW_LIST ]->product_reviews_url( $post_id );
+		} ), 10, 2 );
 	}
 }

@@ -11,6 +11,8 @@ import { Spinner } from 'spin.js/spin';
 import * as tools from '../../utils/tools';
 import shortcodeState from '../../admin/config/shortcode-state';
 import quickViewDialog from './quick-view-dialog';
+import { NLS } from '../config/i18n';
+import { paginationError } from '../templates/errors';
 
 const el = {
 	container: tools.getNodes('load-items-trigger', true, document, false),
@@ -66,13 +68,7 @@ const initializeItems = (itemContainer = '') => {
  * @param itemContainer
  */
 const loadNextPageItems = (items = {}, itemContainer = '') => {
-	const gridWrapper = tools.closest(itemContainer, '.bc-load-items');
-	const loader = tools.getNodes('.bc-load-items__loader', false, gridWrapper, true)[0];
-
-	tools.addClass(loader, 'active');
-
 	_.delay(() => {
-		tools.removeClass(loader, 'active');
 		itemContainer.insertAdjacentHTML('beforeend', items.rendered);
 	}, options.delay);
 
@@ -118,6 +114,46 @@ const handleItemsLoading = (target = '', items = {}) => {
 };
 
 /**
+ * @function handleSpinnerState
+ * @description Show or hid the display of the spinner when fetching data.
+ * @param target
+ */
+const handleSpinnerState = (target = '') => {
+	const gridWrapper = tools.closest(target, '.bc-load-items');
+	const loader = tools.getNodes('.bc-load-items__loader', false, gridWrapper, true)[0];
+
+	if (shortcodeState.isFetching) {
+		tools.addClass(loader, 'active');
+		return;
+	}
+
+	tools.removeClass(loader, 'active');
+};
+
+/**
+ * @function handleRequestError
+ * @description if there is a pagination request error, display the message inline.
+ * @param err
+ * @param target
+ */
+const handleRequestError = (err = {}, target = '') => {
+	if (!target && !err) {
+		return;
+	}
+
+	const message = err.timeout ? NLS.errors.pagination_timeout_error : NLS.errors.pagination_error;
+	const loadMoreWrapper = tools.closest(target, '.bc-load-items__trigger');
+	const currentErrorMessage = tools.getNodes('.bc-pagination__error-message', false, loadMoreWrapper, true)[0];
+
+	if (currentErrorMessage) {
+		currentErrorMessage.parentNode.removeChild(currentErrorMessage);
+	}
+
+	target.removeAttribute('disabled');
+	loadMoreWrapper.insertAdjacentHTML('beforeend', paginationError(message));
+};
+
+/**
  * @function getNextPageItems
  * @description Ajax query to get the next set of items in a paged shortcode container.
  * @param e
@@ -132,14 +168,21 @@ const getNextPageItems = (e) => {
 	}
 
 	shortcodeState.isFetching = true;
+	handleSpinnerState(e.delegateTarget);
 
 	request
 		.get(itemsURL)
+		.timeout({
+			response: 5000, // 5 seconds to hear back from the server.
+			deadline: 30000, // 30 seconds to finish the request process.
+		})
 		.end((err, res) => {
 			shortcodeState.isFetching = false;
+			handleSpinnerState(e.delegateTarget);
 
 			if (err) {
-				console.error(err);
+				handleRequestError(err, e.delegateTarget);
+				return;
 			}
 
 			handleItemsLoading(e.delegateTarget, res.body);
@@ -162,7 +205,7 @@ const bindEvents = () => {
 	el.itemContainer.forEach((itemContainer) => {
 		createSpinLoader(itemContainer);
 		initializeItems(itemContainer);
-		delegate(itemContainer, '[data-js="load-items-trigger-btn"]', 'click', getNextPageItems);
+		delegate(document, '[data-js="load-items-trigger-btn"]', 'click', getNextPageItems);
 	});
 };
 

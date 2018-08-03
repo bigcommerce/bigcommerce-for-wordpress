@@ -2,11 +2,28 @@
 
 namespace BigCommerce\Import;
 
+use BigCommerce\Post_Types\Product\Product;
+
 class Product_Creator extends Product_Saver {
 
 	protected function save_wp_post( Product_Builder $builder ) {
 		$postarr       = $this->get_post_array( $builder );
 		$this->post_id = wp_insert_post( $postarr );
+	}
+
+	/**
+	 * Get the data that will be saved to the WordPress post
+	 *
+	 * @param Product_Builder $builder
+	 *
+	 * @return array
+	 */
+	protected function get_post_array( Product_Builder $builder ) {
+		$postarr = parent::get_post_array( $builder );
+		if ( ! array_key_exists( 'comment_status', $postarr ) ) {
+			$postarr[ 'comment_status' ] = get_default_comment_status( Product::NAME );
+		}
+		return $postarr;
 	}
 
 	protected function save_product_record( Product_Builder $builder ) {

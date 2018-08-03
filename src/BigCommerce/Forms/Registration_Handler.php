@@ -59,7 +59,7 @@ class Registration_Handler implements Form_Handler {
 				case 'empty_user_login':
 				case 'user_login_too_long':
 				case 'invalid_username':
-					$errors->add( 'email', __( 'Please verify that you have submitted a valid email address', 'bigcommerce' ) );
+					$errors->add( 'email', __( 'Please verify that you have submitted a valid email address.', 'bigcommerce' ) );
 					break;
 				default:
 					$errors->add( $user_id->get_error_code(), $user_id->get_error_message() );
@@ -163,7 +163,7 @@ class Registration_Handler implements Form_Handler {
 		if ( empty( $submission[ 'bc-register' ][ 'email' ] ) ) {
 			$errors->add( 'email', __( 'Email Address is required.', 'bigcommerce' ) );
 		} elseif ( ! is_email( $submission[ 'bc-register' ][ 'email' ] ) ) {
-			$errors->add( 'email', __( 'Please verify that you have submitted a valid email address', 'bigcommerce' ) );
+			$errors->add( 'email', __( 'Please verify that you have submitted a valid email address.', 'bigcommerce' ) );
 		}
 		if ( empty( $submission[ 'bc-register' ][ 'new_password' ] ) ) {
 			$errors->add( 'new_password', __( 'Please set your password.', 'bigcommerce' ) );

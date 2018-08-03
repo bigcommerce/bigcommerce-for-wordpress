@@ -22,7 +22,7 @@ class Config extends Post_Type_Config {
 			'hierarchical'    => false,
 			'menu_icon'       => 'dashicons-bigcommerce',
 			'map_meta_cap'    => true,
-			'supports'        => [ 'title', 'editor', 'thumbnail', 'revisions', ],
+			'supports'        => [ 'title', 'editor', 'thumbnail', 'revisions', 'comments', ],
 			/**
 			 * Filter the default capability type for editing Product posts.
 			 *
@@ -44,12 +44,13 @@ class Config extends Post_Type_Config {
 	}
 
 	private function get_slug() {
-		$slug = _x( 'products', 'post type rewrite slug', 'bigcommerce' );
+		$slug    = _x( 'products', 'post type rewrite slug', 'bigcommerce' );
 		$setting = get_option( Product_Archive::ARCHIVE_SLUG, $slug );
 		if ( ! empty( $setting ) ) {
 			$slug = $setting;
 		}
-		return sanitize_title( trim( $slug, '/') );
+
+		return sanitize_title( trim( $slug, '/' ) );
 	}
 
 

@@ -21,7 +21,6 @@ class Product_Single extends Controller {
 	const SPECS       = 'specs';
 	const RELATED     = 'related';
 	const REVIEWS     = 'reviews';
-	const MESSAGES    = 'messages';
 
 	protected $template = 'components/product-single.php';
 
@@ -50,7 +49,6 @@ class Product_Single extends Controller {
 			self::SPECS       => $this->get_specs( $product ),
 			self::RELATED     => $this->get_related( $product ),
 			self::REVIEWS     => $this->get_reviews( $product ),
-			self::MESSAGES    => $this->get_messages(),
 		];
 	}
 
@@ -160,7 +158,24 @@ class Product_Single extends Controller {
 			return '';
 		}
 
-		$reviews = $product->get_reviews();
+		/**
+		 * Filter the number of product reviews to show per page.
+		 *
+		 * @param int $per_page The number of reviews to show per page
+		 * @param int $post_id  The ID of the product post
+		 */
+		$per_page = absint( apply_filters( 'bigcommerce/products/reviews/per_page', 12, $product->post_id() ) );
+
+		if ( empty( $per_page ) ) {
+			return '';
+		}
+
+		$reviews       = $product->get_reviews( [
+			'per_page' => $per_page,
+		] );
+		$total_reviews = $product->get_review_count();
+		$total_pages   = empty( $total_reviews ) ? 0 : ceil( $total_reviews / $per_page );
+		$next_page_url = $this->next_page_url( $product->post_id(), $per_page, 1, $total_pages );
 
 		$reviews = array_map( function ( $review ) use ( $product ) {
 			$controller = new Review_Single( array_merge( [
@@ -171,15 +186,31 @@ class Product_Single extends Controller {
 		}, $reviews );
 
 		$controller = new Product_Reviews( [
-			Product_Reviews::PRODUCT => $product,
-			Product_Reviews::REVIEWS => $reviews,
+			Product_Reviews::PRODUCT       => $product,
+			Product_Reviews::REVIEWS       => $reviews,
+			Product_Reviews::NEXT_PAGE_URL => $next_page_url,
 		] );
 
 		return $controller->render();
 	}
 
-	protected function get_messages() {
-		return apply_filters( 'bigcommerce/forms/messages', '' );
+	private function next_page_url( $post_id, $per_page, $current_page, $max_pages ) {
+		if ( $current_page >= $max_pages ) {
+			return '';
+		}
+
+		$base_url = apply_filters( 'bigcommerce/product/reviews/rest_url', '', $post_id );
+
+		$attr = [
+			'per_page' => $per_page,
+			'paged' => $current_page + 1,
+			'ajax'  => 1,
+		];
+
+		$url = add_query_arg( $attr, $base_url );
+		$url = wp_nonce_url( $url, 'wp_rest' );
+
+		return $url;
 	}
 
 }

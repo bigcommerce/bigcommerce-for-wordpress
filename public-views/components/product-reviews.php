@@ -3,7 +3,7 @@
 /**
  * @var string   $header   Rendered summary header
  * @var string   $form     Rendered product review form. May be empty if reviewing is disabled.
- * @var string[] $reviews  Rendered product reviews
+ * @var string   $reviews  Rendered product reviews
  */
 
 ?>
@@ -13,11 +13,5 @@
 
 	<?php echo $form; ?>
 
-	<?php if ( $reviews ) { ?>
-		<div class="bc-product-review-list">
-			<?php foreach ( $reviews as $review ) { ?>
-				<?php echo $review; ?>
-			<?php } ?>
-		</div>
-	<?php } ?>
+	<?php echo $reviews; ?>
 </section>

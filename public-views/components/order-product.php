@@ -13,23 +13,42 @@
  * @var array[]  $options
  * @var string[] $bigcommerce_brand
  * @var string[] $bigcommerce_condition
+ * @var string   $permalink
  */
 
 ?>
 
 <div class="bc-order-product-row">
 	<?php if ( $image ) { ?>
-		<div class="bc-order-product-row__image"><?php echo $image; ?></div>
+			<div class="bc-order-product-row__image">
+				<?php if ( $permalink ) { ?>
+					<a href="<?php echo esc_url( $permalink ); ?>" class="bc-product__thumbnail-link">
+				<?php } ?>
+
+				<?php echo $image; ?>
+
+				<?php if ( $permalink ) { ?>
+					</a>
+				<?php } ?>
+			</div>
 	<?php } ?>
 
 	<div class="bc-order-product-row__body">
 		<div class="bc-order-product-row__header">
 			<h3 class="bc-order-product-row__title">
+				<?php if ( $permalink ) { ?>
+					<a href="<?php echo esc_url( $permalink ); ?>" class="bc-product__title-link">
+				<?php } ?>
+
 				<?php echo esc_html( $title ); ?>
 				<?php if ( $bigcommerce_condition ) { ?>
 					<?php foreach ( $bigcommerce_condition as $condition ) { ?>
 						<span class="bc-product-flag--grey"><?php echo esc_html( $condition ); ?></span>
 					<?php } ?>
+				<?php } ?>
+
+				<?php if ( $permalink ) { ?>
+					</a>
 				<?php } ?>
 			</h3>
 		</div>

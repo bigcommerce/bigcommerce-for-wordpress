@@ -10,7 +10,7 @@
 	<section class="bc-load-items__trigger bc-load-items__trigger--posts" data-js="load-items-trigger">
 		<button type="button" class="bc-load-items__trigger-btn bc-load-items__trigger-btn--posts" data-js="load-items-trigger-btn"
 		        data-href="<?php echo esc_url( $next_page_url ); ?>">
-			<?php echo esc_html( apply_filters( 'bigcommerce/shortcode/load_more_text', __( 'Load More Products', 'bigcomerce' ) ) ); ?>
+			<?php echo esc_html( apply_filters( 'bigcommerce/shortcode/load_more_text', __( 'Load More Products', 'bigcommerce' ) ) ); ?>
 			<i class="bc-icon icon-bc-chevron-down"></i>
 		</button>
 	</section>

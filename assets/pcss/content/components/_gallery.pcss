@@ -27,8 +27,18 @@
 	transform: translateX(0) !important;
 }
 
+.bc-product-gallery__thumbs {
+	flex-wrap: wrap;
+	align-items: flex-start;
+
+	.bc-product-gallery__thumb-slide {
+		box-shadow: unset;
+	}
+}
+
 .bc-product-gallery__thumb-slide {
-	width: 25%;
+	width: calc(25% - 10px);
+	margin: 0 10px 10px 0;
 	padding: 0;
 	border: 0;
 	background: none;

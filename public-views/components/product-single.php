@@ -11,12 +11,9 @@
  * @var string $specs
  * @var string $related
  * @var string $reviews
- * @var string $messages Rendered form feedback messages
  */
 ?>
 <div class="bc-product-single">
-	<?php echo $messages; ?>
-
 	<section class="bc-product-single__top">
 		<?php echo $images; ?>
 

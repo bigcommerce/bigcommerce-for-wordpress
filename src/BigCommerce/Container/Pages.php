@@ -13,6 +13,7 @@ use BigCommerce\Pages\Login_Page;
 use BigCommerce\Pages\Orders_Page;
 use BigCommerce\Pages\Registration_Page;
 use BigCommerce\Pages\Required_Page;
+use BigCommerce\Pages\Shipping_Returns_Page;
 use BigCommerce\Settings\Cart as Cart_Settings;
 use BigCommerce\Settings\Gift_Certificates as Gift_Certificate_Settings;
 use Pimple\Container;
@@ -28,6 +29,7 @@ class Pages extends Provider {
 	const ORDERS_PAGE       = 'pages.orders';
 	const GIFT_PURCHACE     = 'pages.gift_certificate.purchase';
 	const GIFT_BALANCE      = 'pages.gift_certificate.balance';
+	const SHIPPING_PAGE     = 'pages.shipping_returns';
 
 	public function register( Container $container ) {
 		$container[ self::REQUIRED_PAGES ] = function ( Container $container ) {
@@ -36,6 +38,7 @@ class Pages extends Provider {
 				$container[ self::ACCOUNT_PAGE ],
 				$container[ self::ADDRESS_PAGE ],
 				$container[ self::ORDERS_PAGE ],
+				$container[ self::SHIPPING_PAGE ],
 			];
 			if ( ( (bool) get_option( Cart_Settings::OPTION_ENABLE_CART, true ) ) === true ) {
 				$pages[] = $container[ self::CART_PAGE ];
@@ -81,6 +84,10 @@ class Pages extends Provider {
 
 		$container[ self::GIFT_BALANCE ] = function ( Container $container ) {
 			return new Check_Balance_Page();
+		};
+
+		$container[ self::SHIPPING_PAGE ] = function( Container $container ) {
+			return new Shipping_Returns_Page();
 		};
 
 		add_action( 'admin_init', $this->create_callback( 'create_pages', function () use ( $container ) {

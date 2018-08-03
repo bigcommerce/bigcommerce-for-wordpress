@@ -36,7 +36,7 @@ $gallery_classes = count( $image_ids ) > 1 ? 'swiper-container bc-product-galler
 
 		<?php if ( count( $image_ids ) > 1 ) { ?>
 			<div class="swiper-container" data-js="bc-gallery-thumbs">
-				<div class="swiper-wrapper">
+				<div class="swiper-wrapper bc-product-gallery__thumbs">
 					<?php foreach ( $image_ids as $index => $image_id ) { ?>
 						<a class="swiper-slide bc-product-gallery__thumb-slide" data-js="bc-gallery-thumb-trigger"
 						   data-index="<?php echo (int) $index; ?>">
