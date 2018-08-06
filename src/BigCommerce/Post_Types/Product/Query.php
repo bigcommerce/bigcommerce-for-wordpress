@@ -277,16 +277,19 @@ class Query {
 	 * @return bool
 	 */
 	private function is_product_search( \WP_Query $query ) {
+
+		$return = true;
+
 		$search_phrase = $query->get( 's' );
 		if ( empty( $search_phrase ) ) {
-			return false;
+			$return = false;
 		}
 		$search_terms = explode( ' ', $search_phrase );
 		if ( count( $search_terms ) !== 1 ) {
-			return false;
+			$return = false;
 		}
 
-		return $this->is_product_query( $query );
+		return $return;
 	}
 
 	private function is_product_query( \WP_Query $query ) {
