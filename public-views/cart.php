@@ -45,7 +45,7 @@ use BigCommerce\Taxonomies\Product_Category\Product_Category;
 						<?php esc_html_e( '(Remove)', 'bigcommerce' ); ?>
 					</button>
 				</div>
-				<div class="bc-cart-item-title">
+				<div class="bc-cart-item-meta">
 					<h3 class="bc-cart-item__product-title">
 						<?php if ( ! empty( $item['post_id'] ) ) { ?>
 							<a href="<?php echo esc_url( get_the_permalink( $item['post_id'] ) ); ?>" class="bc-product__title-link">
@@ -67,11 +67,15 @@ use BigCommerce\Taxonomies\Product_Category\Product_Category;
 						<span class="bc-cart-item__product-brand"><?php echo esc_html( sprintf( _n( '%s', '%s', count( $item[ Brand::NAME ] ) ), $brands ) ); ?></span>
 					<?php } ?>
 
-					<?php foreach ( $item['options'] as $option ) { ?>
-						<span class="bc-cart-item__product-option">
-							<span class="bc-cart-item__product-option-label"><?php echo esc_html( sprintf( _x( '%s: ', 'product option label', 'bigcommerce' ), $option['label'] ) ); ?></span>
-							<span class="bc-cart-item__product-option-value"><?php echo esc_html( sprintf( _x( '%s', 'product option value', 'bigcommerce' ), $option['value'] ) ); ?></span>
-						</span>
+					<?php if ( ! empty( $item['options'] ) ) { ?>
+						<div class="bc-cart-item__product-options">
+							<?php foreach ( $item['options'] as $option ) { ?>
+								<span class="bc-cart-item__product-option">
+									<span class="bc-cart-item__product-option-label"><?php echo esc_html( sprintf( _x( '%s: ', 'product option label', 'bigcommerce' ), $option['label'] ) ); ?></span>
+									<span class="bc-cart-item__product-option-value"><?php echo esc_html( sprintf( _x( '%s', 'product option value', 'bigcommerce' ), $option['value'] ) ); ?></span>
+								</span>
+							<?php } ?>
+						</div>
 					<?php } ?>
 				</div>
 

@@ -4,7 +4,7 @@
 namespace BigCommerce\Import\Processors;
 
 
-use BigCommerce\Api\v3\CatalogApi;
+use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Import\Product_Importer;
 use BigCommerce\Import\Product_Remover;
 use BigCommerce\Import\Runner\Status;

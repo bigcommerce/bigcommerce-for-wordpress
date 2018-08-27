@@ -6,11 +6,12 @@ namespace BigCommerce\Cart;
 
 use BigCommerce\Accounts\Login;
 use BigCommerce\Api\v3\ApiException;
-use BigCommerce\Api\v3\CartApi;
+use BigCommerce\Api\v3\Api\CartApi;
 use BigCommerce\Api\v3\Model\BaseItem;
 use BigCommerce\Api\v3\Model\CartRequestData;
 use BigCommerce\Api\v3\Model\LineItemGiftCertificateRequestData;
 use BigCommerce\Api\v3\Model\LineItemRequestData;
+use BigCommerce\Api\v3\Model\ProductOptionSelection;
 use BigCommerce\Settings;
 use BigCommerce\Util\Cart_Item_Iterator;
 
@@ -58,19 +59,35 @@ class Cart {
 	}
 
 	/**
-	 * @param int $product_id
-	 * @param int $variant_id
-	 * @param int $quantity
+	 * @param int   $product_id
+	 * @param array $options
+	 * @param int   $quantity
+	 * @param array $modifiers
 	 *
 	 * @return \BigCommerce\Api\v3\Model\Cart|null
 	 */
-	public function add_line_item( $product_id, $variant_id, $quantity = 1 ) {
-		$request_data = new CartRequestData();
+	public function add_line_item( $product_id, $options = [], $quantity = 1, $modifiers = [] ) {
+		$request_data      = new CartRequestData();
+		$option_selections = [];
+
+		foreach ( $options as $option_key => $option_value ) {
+			$option_selections[] = new ProductOptionSelection( [
+				'option_id'    => $option_key,
+				'option_value' => $option_value,
+			] );
+		}
+
+		foreach ( $modifiers as $modifier_key => $modifier_value ) {
+			$option_selections[] = new ProductOptionSelection( [
+				'option_id'    => $modifier_key,
+				'option_value' => $modifier_value,
+			] );
+		}
 		$request_data->setLineItems( [
 			new LineItemRequestData( [
-				'quantity'   => $quantity,
-				'product_id' => $product_id,
-				'variant_id' => $variant_id,
+				'quantity'          => $quantity,
+				'product_id'        => $product_id,
+				'option_selections' => $option_selections,
 			] ),
 		] );
 		$request_data->setGiftCertificates( [] );
@@ -164,6 +181,9 @@ class Cart {
 		$count  = array_reduce(
 			iterator_to_array( Cart_Item_Iterator::factory( $cart ) ),
 			function ( $count, $item ) {
+				if ( method_exists( $item, 'getParentId' ) && $item->getParentId() ) {
+					return $count; // it's a child item, so don't count it
+				}
 				if ( method_exists( $item, 'getQuantity' ) ) {
 					$count += $item->getQuantity();
 				} else {

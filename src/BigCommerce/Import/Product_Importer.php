@@ -5,7 +5,7 @@ namespace BigCommerce\Import;
 
 
 use BigCommerce\Api\v3\ApiException;
-use BigCommerce\Api\v3\CatalogApi;
+use BigCommerce\Api\v3\Api\CatalogApi;
 
 class Product_Importer {
 	/**
@@ -34,9 +34,10 @@ class Product_Importer {
 	 */
 	public function import() {
 		try {
-			$response = $this->catalog_api->getProductById( $this->product_id, [
-				'include' => [ 'variants', 'custom_fields', 'images', 'bulk_pricing_rules' ],
-			] );
+			$response = $this->catalog_api->getProductById(
+				$this->product_id, // $id
+				[ 'variants', 'custom_fields', 'images', 'bulk_pricing_rules' ] // $include
+			);
 		} catch ( ApiException $e ) {
 			do_action( 'bigcommerce/import/product/error', $this->product_id, $this->catalog_api, $e );
 

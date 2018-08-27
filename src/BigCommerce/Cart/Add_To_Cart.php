@@ -3,7 +3,7 @@
 
 namespace BigCommerce\Cart;
 
-use BigCommerce\Api\v3\CartApi;
+use BigCommerce\Api\v3\Api\CartApi;
 use BigCommerce\Post_Types\Product\Product;
 
 /**
@@ -32,9 +32,19 @@ class Add_To_Cart {
 		$product    = new Product( $post_id );
 		$product_id = $product->bc_id();
 		$variant_id = $this->get_variant_id( $product, $_POST );
+		$options    = empty( $_POST[ 'option' ] ) ? [] : (array) $_POST[ 'option' ];
+		$modifiers  = empty( $_POST[ 'modifier' ] ) ? [] : (array) $_POST[ 'modifier' ];
+
+		$modifier_config = $product->modifiers();
+		foreach ( $modifier_config as $config ) {
+			if ( $config[ 'type' ] === 'date' && isset( $modifiers[ $config[ 'id' ] ] ) ) {
+				$modifiers[ $config[ 'id' ] ] = strtotime( $modifiers[ $config[ 'id' ] ] );
+			}
+		}
+		$quantity = array_key_exists( 'quantity', $_POST ) ? absint( $_POST[ 'quantity' ] ) : 1;
 
 		$cart     = new Cart( $cart_api );
-		$response = $cart->add_line_item( $product_id, $variant_id, 1 );
+		$response = $cart->add_line_item( $product_id, $options, $quantity, $modifiers );
 
 		$this->handle_response( $response, $cart, $post_id, $product_id, $variant_id );
 	}

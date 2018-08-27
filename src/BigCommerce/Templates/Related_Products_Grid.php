@@ -4,7 +4,7 @@
 namespace BigCommerce\Templates;
 
 
-use BigCommerce\Customizer\Sections\Catalog;
+use BigCommerce\Customizer\Sections\Product_Archive;
 
 class Related_Products_Grid extends Controller {
 
@@ -16,7 +16,7 @@ class Related_Products_Grid extends Controller {
 	protected function parse_options( array $options ) {
 		$defaults = [
 			self::PRODUCTS => [], // An array of rendered related products
-			self::COLUMNS  => absint( get_option( Catalog::GRID_COLUMNS, 4 ) ),
+			self::COLUMNS  => absint( get_option( Product_Archive::GRID_COLUMNS, 4 ) ),
 		];
 
 		return wp_parse_args( $options, $defaults );

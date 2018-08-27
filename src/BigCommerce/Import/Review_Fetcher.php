@@ -5,7 +5,7 @@ namespace BigCommerce\Import;
 
 
 use BigCommerce\Api\v3\ApiException;
-use BigCommerce\Api\v3\CatalogApi;
+use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Api\v3\Model\ProductReview;
 
 class Review_Fetcher {

@@ -5,7 +5,7 @@ namespace BigCommerce\Cart;
 
 use BigCommerce\Accounts\Login;
 use Bigcommerce\Api\Client;
-use BigCommerce\Api\v3\CartApi;
+use BigCommerce\Api\v3\Api\CartApi;
 use BigCommerce\Api_Factory;
 
 /**

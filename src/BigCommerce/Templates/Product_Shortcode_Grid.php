@@ -4,7 +4,7 @@
 namespace BigCommerce\Templates;
 
 
-use BigCommerce\Customizer\Sections\Catalog;
+use BigCommerce\Customizer\Sections\Product_Archive;
 
 class Product_Shortcode_Grid extends Controller {
 	const CARDS         = 'cards';
@@ -20,7 +20,7 @@ class Product_Shortcode_Grid extends Controller {
 			self::CARDS         => [],
 			self::NEXT_PAGE_URL => '',
 			self::WRAP          => true,
-			self::COLUMNS       => absint( get_option( Catalog::GRID_COLUMNS, 4 ) ),
+			self::COLUMNS       => absint( get_option( Product_Archive::GRID_COLUMNS, 4 ) ),
 		];
 
 		return wp_parse_args( $options, $defaults );

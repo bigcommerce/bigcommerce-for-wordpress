@@ -6,6 +6,7 @@ namespace BigCommerce\Container;
 
 use BigCommerce\Import\Processors;
 use BigCommerce\Import\Runner;
+use BigCommerce\Settings\Import as Import_Settings;
 use Pimple\Container;
 
 class Import extends Provider {
@@ -51,6 +52,16 @@ class Import extends Provider {
 				$container[ self::CRON_MONITOR ]->check_for_scheduled_crons();
 			}
 		} ), 10, 0 );
+
+		add_action( 'update_option_' . Import_Settings::OPTION_FREQUENCY, $this->create_callback( 'cron_schedule_update', function ( $old_value, $new_value ) use ( $container ) {
+			if ( $container[ Api::CONFIG_COMPLETE ] ) {
+				$container[ self::CRON_MONITOR ]->listen_for_changed_schedule( $old_value, $new_value );
+			}
+		} ), 10, 2 );
+
+		add_action( 'bigcommerce/import/run/status=' . Runner\Status::STARTED, $this->create_callback( 'cron_unschedule_start', function () use ( $container ) {
+			$container[ self::CRON_MONITOR ]->listen_for_import_start();
+		} ), 9, 1 );
 
 		add_action( Runner\Cron_Runner::START_CRON, $this->create_callback( 'cron_start', function () use ( $container ) {
 			if ( $container[ Api::CONFIG_COMPLETE ] ) {

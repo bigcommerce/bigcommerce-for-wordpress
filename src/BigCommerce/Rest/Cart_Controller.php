@@ -6,7 +6,7 @@ namespace BigCommerce\Rest;
 
 use BigCommerce\Accounts\Login;
 use BigCommerce\Api\v3\ApiException;
-use BigCommerce\Api\v3\CartApi;
+use BigCommerce\Api\v3\Api\CartApi;
 use BigCommerce\Api\v3\Model\CartRequestData;
 use BigCommerce\Api\v3\Model\CartResponse;
 use BigCommerce\Api\v3\Model\CartUpdateRequest;
@@ -433,7 +433,12 @@ class Cart_Controller extends Rest_Controller {
 	 * @throws ApiException
 	 */
 	protected function get_cart_data( $cart_id ) {
-		return $this->cart_api->cartsCartIdGet( $cart_id )->getData();
+		$include = [
+			'line_items.physical_items.options',
+			'line_items.digital_items.options',
+			'redirect_urls',
+		];
+		return $this->cart_api->cartsCartIdGet( $cart_id, $include )->getData();
 	}
 
 	/**

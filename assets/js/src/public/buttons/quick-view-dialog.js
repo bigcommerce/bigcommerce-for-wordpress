@@ -8,10 +8,16 @@ import _ from 'lodash';
 import * as tools from '../../utils/tools';
 import gallery from '../gallery/productGallery';
 import variants from '../product/variants';
+import modifiers from '../product/modifiers';
 
 const container = tools.getNodes('bc-product-loop-card');
+
 const instances = {
 	dialogs: {},
+};
+
+const state = {
+	delay: 150,
 };
 
 const getOptions = dialogID => ({
@@ -40,8 +46,9 @@ const initDialogs = () => {
 		instances.dialogs[dialogID] = new A11yDialog(getOptions(dialogID));
 
 		instances.dialogs[dialogID].on('render', () => {
-			_.delay(gallery, 50);
-			_.delay(variants, 150);
+			_.delay(() => gallery(dialog), state.delay);
+			_.delay(() => variants(dialog), state.delay);
+			_.delay(() => modifiers(dialog), state.delay);
 		});
 	});
 };

@@ -4,13 +4,9 @@
 namespace BigCommerce\Shortcodes;
 
 
-use BigCommerce\Customizer\Sections\Catalog;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Post_Types\Product\Query_Mapper;
 use BigCommerce\Rest\Shortcode_Controller;
-use BigCommerce\Taxonomies\Brand\Brand;
-use BigCommerce\Taxonomies\Flag\Flag;
-use BigCommerce\Taxonomies\Product_Category\Product_Category;
 use BigCommerce\Templates\Product_Card;
 use BigCommerce\Templates\Product_Card_Preview;
 use BigCommerce\Templates\Product_Shortcode_Grid;

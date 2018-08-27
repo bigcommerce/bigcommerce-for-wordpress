@@ -15,11 +15,11 @@ namespace BigCommerce\Api;
  * occurs.
  */
 class Caching_Client extends Base_Client {
-	/** @var string  */
-	private $cache_group    = 'bigcommerce_api';
-	/** @var int  */
-	private $cache_ttl      = 60;
-	/** @var string  */
+	/** @var string */
+	private $cache_group = 'bigcommerce_api';
+	/** @var int */
+	private $cache_ttl = 60;
+	/** @var string */
 	private $generation_key = '';
 
 	/**
@@ -31,16 +31,17 @@ class Caching_Client extends Base_Client {
 	 * @param array  $postData     parameters to be placed in POST body
 	 * @param array  $headerParams parameters to be place in request header
 	 * @param string $responseType expected response type of the endpoint
+	 * @param string $endpointPath path to method endpoint before expanding parameters
 	 *
 	 * @throws \BigCommerce\Api\v3\ApiException on a non 2xx response
 	 * @return array
 	 */
-	public function callApi( $resourcePath, $method, $queryParams, $postData, $headerParams, $responseType = null ) {
+	public function callApi( $resourcePath, $method, $queryParams, $postData, $headerParams, $responseType = null, $endpointPath = null ) {
 		if ( ! in_array( $method, $this->cacheable_methods() ) ) {
 			// any write operation increments the cache key
 			$this->update_generation_key();
 
-			return parent::callApi( $resourcePath, $method, $queryParams, $postData, $headerParams, $responseType );
+			return parent::callApi( $resourcePath, $method, $queryParams, $postData, $headerParams, $responseType, $endpointPath );
 		}
 
 		try {
@@ -50,10 +51,10 @@ class Caching_Client extends Base_Client {
 				return $cached;
 			}
 		} catch ( \Exception $e ) {
-			return parent::callApi( $resourcePath, $method, $queryParams, $postData, $headerParams, $responseType );
+			return parent::callApi( $resourcePath, $method, $queryParams, $postData, $headerParams, $responseType, $endpointPath );
 		}
 
-		$result = parent::callApi( $resourcePath, $method, $queryParams, $postData, $headerParams, $responseType );
+		$result = parent::callApi( $resourcePath, $method, $queryParams, $postData, $headerParams, $responseType, $endpointPath );
 
 		wp_cache_set( $cache_key, $result, $this->cache_group, $this->cache_ttl );
 

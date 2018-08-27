@@ -4,19 +4,19 @@
 namespace BigCommerce;
 
 
+use BigCommerce\Api\Base_Client;
 use BigCommerce\Api\Customer_Api;
 use BigCommerce\Api\Marketing_Api;
 use BigCommerce\Api\Store_Api;
-use BigCommerce\Api\v3\ApiClient;
-use BigCommerce\Api\v3\CartApi;
-use BigCommerce\Api\v3\CatalogApi;
-use BigCommerce\Api\v3\CustomersApi;
-use BigCommerce\Api\v3\OrdersApi;
-use BigCommerce\Api\v3\PlacementApi;
-use BigCommerce\Api\v3\ThemeRegionsApi;
-use BigCommerce\Api\v3\ThemesApi;
-use BigCommerce\Api\v3\WidgetApi;
-use BigCommerce\Api\v3\WidgetTemplateApi;
+use BigCommerce\Api\v3\Api\CartApi;
+use BigCommerce\Api\v3\Api\CatalogApi;
+use BigCommerce\Api\v3\Api\CustomersApi;
+use BigCommerce\Api\v3\Api\OrdersApi;
+use BigCommerce\Api\v3\Api\PlacementApi;
+use BigCommerce\Api\v3\Api\ThemeRegionsApi;
+use BigCommerce\Api\v3\Api\ThemesApi;
+use BigCommerce\Api\v3\Api\WidgetApi;
+use BigCommerce\Api\v3\Api\WidgetTemplateApi;
 use BigCommerce\Container\Api;
 
 class Api_Factory {
@@ -25,9 +25,9 @@ class Api_Factory {
 	/**
 	 * Api_Factory constructor.
 	 *
-	 * @param ApiClient $client
+	 * @param Base_Client $client
 	 */
-	public function __construct( ApiClient $client ) {
+	public function __construct( Base_Client $client ) {
 		$this->api_client = $client;
 	}
 

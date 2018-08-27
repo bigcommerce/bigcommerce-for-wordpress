@@ -5,7 +5,7 @@ namespace BigCommerce\Shortcodes;
 
 
 use BigCommerce\Api\v3\ApiException;
-use BigCommerce\Api\v3\CartApi;
+use BigCommerce\Api\v3\Api\CartApi;
 use BigCommerce\Cart\Add_To_Cart;
 use BigCommerce\Cart\Cart_Mapper;
 use BigCommerce\Templates;
@@ -50,7 +50,12 @@ class Cart implements Shortcode {
 			return $this->get_empty_cart();
 		}
 		try {
-			$cart   = $this->cart_api->cartsCartIdGet( $cart_id )->getData();
+			$include = [
+				'line_items.physical_items.options',
+				'line_items.digital_items.options',
+				'redirect_urls',
+			];
+			$cart   = $this->cart_api->cartsCartIdGet( $cart_id, $include )->getData();
 			$mapper = new Cart_Mapper( $cart );
 
 			return $mapper->map();

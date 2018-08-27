@@ -4,7 +4,7 @@
 namespace BigCommerce\CLI;
 
 
-use BigCommerce\Api\v3\CatalogApi;
+use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Import\Runner\CLI_Runner;
 use BigCommerce\Import\Runner\Lock;
 
