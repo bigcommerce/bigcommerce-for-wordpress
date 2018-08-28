@@ -42,32 +42,32 @@ class Product_Options extends Controller {
 		$options = array_map( function ( $option ) {
 			switch ( $option[ 'type' ] ) {
 				case 'dropdown':
-					$class = Option_Dropdown::class;
+					$class = Option_Types\Option_Dropdown::class;
 					break;
 				case 'radio_buttons':
-					$class = Option_Radios::class;
+					$class = Option_Types\Option_Radios::class;
 					break;
 				case 'rectangles':
-					$class = Option_Rectangles::class;
+					$class = Option_Types\Option_Rectangles::class;
 					break;
 				case 'swatch':
-					$class = Option_Swatch::class;
+					$class = Option_Types\Option_Swatch::class;
 					break;
 				case 'product_list':
-					$class = Option_Radios::class;
+					$class = Option_Types\Option_Radios::class;
 					break;
 				case 'product_list_with_images':
-					$class = Option_Product_List_With_Images::class;
+					$class = Option_Types\Option_Product_List_With_Images::class;
 					break;
 				default:
 					return '';
 			}
 			if ( $class ) {
-				/** @var Option_Type $component */
+				/** @var Option_Types\Option_Type $component */
 				$component = new $class( [
-					Option_Type::ID      => $option[ 'id' ],
-					Option_Type::LABEL   => $option[ 'display_name' ],
-					Option_Type::OPTIONS => $option[ 'option_values' ],
+					Option_Types\Option_Type::ID      => $option[ 'id' ],
+					Option_Types\Option_Type::LABEL   => $option[ 'display_name' ],
+					Option_Types\Option_Type::OPTIONS => $option[ 'option_values' ],
 				] );
 
 				return $component->render();

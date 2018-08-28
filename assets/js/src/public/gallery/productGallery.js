@@ -9,10 +9,6 @@ import Swiper from 'swiper';
 
 import * as tools from 'utils/tools';
 
-const el = {
-	galleries: tools.getNodes('bc-product-gallery'),
-};
-
 const instances = {
 	swipers: {},
 };
@@ -94,8 +90,8 @@ const initGalleries = () => {
 	});
 };
 
-const init = () => {
-	if (!el.galleries) {
+const init = (container) => {
+	if (container) {
 		return;
 	}
 

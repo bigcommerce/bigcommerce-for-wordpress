@@ -31,10 +31,6 @@ class Theme_Customizer extends Provider {
 			return new Sections\Colors();
 		};
 
-		$container[ self::SECTION_CATALOG ] = function ( Container $container ) {
-			return new Sections\Catalog();
-		};
-
 		$container[ self::SECTION_PRODUCT_SINGLE ] = function ( Container $container ) {
 			return new Sections\Product_Single();
 		};
@@ -53,7 +49,6 @@ class Theme_Customizer extends Provider {
 			$container[ self::PANEL_PRIMARY ]->register( $wp_customize );
 			$container[ self::SECTION_BUTTONS ]->register( $wp_customize );
 			$container[ self::SECTION_COLORS ]->register( $wp_customize );
-			$container[ self::SECTION_CATALOG ]->register( $wp_customize );
 			$container[ self::SECTION_PRODUCT_SINGLE ]->register( $wp_customize );
 			$container[ self::SECTION_PRODUCT_ARCHIVE ]->register( $wp_customize );
 		} ), 10, 1 );

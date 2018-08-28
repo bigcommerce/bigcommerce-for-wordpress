@@ -5,7 +5,8 @@ namespace BigCommerce\Import;
 
 
 use BigCommerce\Api\v3\ApiException;
-use BigCommerce\Api\v3\CatalogApi;
+use BigCommerce\Api\v3\Api\CatalogApi;
+use BigCommerce\Api\v3\Model\Modifier;
 use BigCommerce\Api\v3\Model\ProductImage;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Taxonomies\Availability\Availability;
@@ -49,8 +50,13 @@ class Product_Builder extends Record_Builder {
 		try {
 			$modifier_response = $this->api->getModifiers( $this->data[ 'id' ] );
 			$modifiers         = $modifier_response->getData();
-			if ( is_array( $modifiers ) && count( $modifiers ) > 0 ) {
-				return 'draft'; // all modifiers are unsupported for now
+			if ( is_array( $modifiers ) ) {
+				$unsupported = array_filter( $modifiers, function( Modifier $modifier ) {
+					return $modifier->getType() == 'file';
+				});
+				if ( count( $unsupported ) > 0 ) {
+					return 'draft';
+				}
 			}
 		} catch ( ApiException $e ) {
 			// presume that there are no modifiers

@@ -3,7 +3,6 @@
 namespace BigCommerce\Editor;
 
 
-use BigCommerce\Customizer\Sections\Catalog;
 use BigCommerce\Customizer\Sections\Product_Archive;
 use BigCommerce\Rest\Products_Controller;
 use BigCommerce\Rest\Shortcode_Controller;
@@ -91,7 +90,7 @@ class Editor_Dialog_Template {
 
 	private function query_settings() {
 		return $this->render_template( 'query-settings.php', [
-			'posts_per_page' => absint( get_option( Catalog::PER_PAGE, Catalog::PER_PAGE_DEFAULT ) ),
+			'posts_per_page' => absint( get_option( Product_Archive::PER_PAGE, Product_Archive::PER_PAGE_DEFAULT ) ),
 		]);
 	}
 

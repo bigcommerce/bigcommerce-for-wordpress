@@ -6,8 +6,6 @@ namespace BigCommerce\Post_Types\Product;
 
 use BigCommerce\Api\v3\ObjectSerializer;
 use BigCommerce\Customizer\Sections\Buttons;
-use BigCommerce\Customizer\Sections\Catalog;
-use BigCommerce\Customizer\Sections\Colors;
 use BigCommerce\Customizer\Sections\Product_Single;
 use BigCommerce\Settings\Cart;
 use BigCommerce\Taxonomies\Brand\Brand;
@@ -213,6 +211,28 @@ class Product {
 		$data = $this->get_source_data();
 
 		return count( $data->variants ) > 1;
+	}
+
+
+	public function modifiers() {
+		$data = json_decode( get_post_meta( $this->post_id(), self::MODIFIER_DATA_META_KEY, true ), true );
+		if ( empty( $data ) || ! is_array( $data ) ) {
+			return [];
+		}
+
+		// ensure we have all the fields we expect for each option
+		$data = array_map( function ( $option ) {
+			return wp_parse_args( $option, [
+				'id'            => 0,
+				'display_name'  => '',
+				'type'          => '',
+				'required'      => false,
+				'config'        => [],
+				'option_values' => [],
+			] );
+		}, $data );
+
+		return $data;
 	}
 
 	public function update_source_data( $data ) {

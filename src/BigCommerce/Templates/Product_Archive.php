@@ -8,7 +8,6 @@ use BigCommerce\Customizer;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
-use BigCommerce\Customizer\Sections\Catalog;
 
 class Product_Archive extends Controller {
 	const QUERY = 'query';
@@ -26,7 +25,7 @@ class Product_Archive extends Controller {
 	protected function parse_options( array $options ) {
 		$defaults = [
 			self::QUERY   => null, // \WP_Query
-			self::COLUMNS => absint( get_option( Catalog::GRID_COLUMNS, 4 ) ),
+			self::COLUMNS => absint( get_option( Customizer\Sections\Product_Archive::GRID_COLUMNS, 4 ) ),
 		];
 
 		return wp_parse_args( $options, $defaults );

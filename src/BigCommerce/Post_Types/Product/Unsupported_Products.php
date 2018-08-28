@@ -77,8 +77,11 @@ class Unsupported_Products {
 			return false;
 		}
 		$decoded = json_decode( $encoded );
-		if ( is_array( $decoded ) && count( $decoded ) > 0 ) {
-			return true;
+		if ( is_array( $decoded ) ) {
+			$unsupported = array_filter( $decoded, function( $modifier ) {
+				return $modifier->type == 'file';
+			});
+			return count( $unsupported ) > 0;
 		}
 
 		// all others are supported

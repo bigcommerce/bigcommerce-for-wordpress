@@ -5,7 +5,7 @@ namespace BigCommerce\Import;
 
 
 use BigCommerce\Api\v3\ApiException;
-use BigCommerce\Api\v3\CatalogApi;
+use BigCommerce\Api\v3\Api\CatalogApi;
 
 abstract class Term_Mapper {
 	/**

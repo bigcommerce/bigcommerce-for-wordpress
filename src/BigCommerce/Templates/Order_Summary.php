@@ -81,7 +81,7 @@ class Order_Summary extends Controller {
 			self::STATUS           => $order[ 'custom_status' ],
 			self::IMAGE_ID         => $image_id,
 			self::IMAGE            => $image,
-			self::DESCRIPTION      => $this->options[ self::DESCRIPTION ] ?: $this->build_description( $order[ 'products' ], $order[ 'items_total' ] ),
+			self::DESCRIPTION      => $this->options[ self::DESCRIPTION ] ?: $this->build_description( $order[ 'products' ] ),
 			self::DETAILS_URL      => $this->order_details_url( $order[ 'id' ] ),
 			self::STORE_CREDIT     => $this->format_currency( $order[ 'store_credit_amount' ], false ),
 			self::GIFT_CERTIFICATE => $this->format_currency( $order[ 'gift_certificate_amount' ], false ),
@@ -129,7 +129,8 @@ class Order_Summary extends Controller {
 		return 0;
 	}
 
-	private function build_description( $products, $count ) {
+	private function build_description( $products ) {
+		$count = count( $products );
 		$names = array_filter( wp_list_pluck( $products, 'name' ) );
 		if ( empty( $names ) ) {
 			return sprintf( _n( '%d item', '%d items', $count, 'bigcommerce' ), $count );

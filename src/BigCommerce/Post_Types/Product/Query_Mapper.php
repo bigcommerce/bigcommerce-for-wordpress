@@ -4,7 +4,7 @@
 namespace BigCommerce\Post_Types\Product;
 
 
-use BigCommerce\Customizer\Sections\Catalog;
+use BigCommerce\Customizer\Sections\Product_Archive;
 use BigCommerce\Shortcodes;
 use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Flag\Flag;
@@ -140,9 +140,9 @@ class Query_Mapper {
 	}
 
 	private function per_page_default() {
-		$default = get_option( Catalog::PER_PAGE, Catalog::PER_PAGE_DEFAULT );
+		$default = get_option( Product_Archive::PER_PAGE, Product_Archive::PER_PAGE_DEFAULT );
 
-		return absint( $default ) ?: Catalog::PER_PAGE_DEFAULT;
+		return absint( $default ) ?: Product_Archive::PER_PAGE_DEFAULT;
 	}
 
 	public function map_rest_args_to_query( $args ) {

@@ -6,7 +6,7 @@ namespace BigCommerce\Settings;
 
 use BigCommerce\Api\ConfigurationRequiredException;
 use BigCommerce\Api\v3\ApiException;
-use BigCommerce\Api\v3\CatalogApi;
+use BigCommerce\Api\v3\Api\CatalogApi;
 
 class Connection_Status {
 	const STATUS_CACHE     = 'bigcommerce_connection_status';

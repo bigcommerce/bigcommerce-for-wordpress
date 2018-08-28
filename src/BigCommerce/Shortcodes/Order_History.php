@@ -4,8 +4,7 @@
 namespace BigCommerce\Shortcodes;
 
 use BigCommerce\Accounts\Customer;
-use Bigcommerce\Api\Client;
-use BigCommerce\Customizer\Sections\Catalog;
+use BigCommerce\Customizer\Sections\Product_Archive;
 use BigCommerce\Rest\Orders_Shortcode_Controller;
 use BigCommerce\Templates;
 use BigCommerce\Templates\Order_Summary;
@@ -112,9 +111,9 @@ class Order_History implements Shortcode {
 	}
 
 	private function per_page_default() {
-		$default = get_option( Catalog::PER_PAGE, Catalog::PER_PAGE_DEFAULT );
+		$default = get_option( Product_Archive::PER_PAGE, Product_Archive::PER_PAGE_DEFAULT );
 
-		return absint( $default ) ?: Catalog::PER_PAGE_DEFAULT;
+		return absint( $default ) ?: Product_Archive::PER_PAGE_DEFAULT;
 	}
 
 }

@@ -47,7 +47,7 @@ class Status {
 	public function set_status( $status ) {
 		$log = $this->current_log();
 
-		// cast timestamp to string to preservce microtime
+		// cast timestamp to string to preserve microtime
 		$log[ (string) microtime( true ) ] = $status;
 		update_option( self::CURRENT_LOG, $log, false );
 		do_action( 'bigcommerce/import/set_status', $status );
@@ -68,6 +68,12 @@ class Status {
 		do_action( 'bigcommerce/import/logs/rotate', $log );
 		update_option( self::PREVIOUS_LOG, $log, false );
 		update_option( self::CURRENT_LOG, [], false );
+		/**
+		 * Logs have been rotated
+		 *
+		 * @param array $log The previous log
+		 */
+		do_action( 'bigcommerce/import/logs/rotated', $log );
 	}
 
 	/**

@@ -5,7 +5,7 @@ namespace BigCommerce\Import\Processors;
 
 
 use BigCommerce\Api\v3\ApiException;
-use BigCommerce\Api\v3\CatalogApi;
+use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Api\v3\Model\Product;
 use BigCommerce\Import\Runner\Status;
 
@@ -39,11 +39,39 @@ class Product_ID_Fetcher implements Import_Processor {
 
 		$page = $this->get_page();
 		try {
-			$response = $this->api->getProducts( [
-				'include_fields' => [ 'id', 'date_modified' ],
-				'limit'          => $this->limit,
-				'page'           => $page,
-			] );
+			$response = $this->api->getProducts(
+				null, // $id
+				null, // $name
+				null, // $sku
+				null, // $upc
+				null, // $price
+				null, // $weight
+				null, // $condition
+				null, // $brand_id
+				null, // $date_modified
+				null, // $date_last_imported
+				null, // $is_visible
+				null, // $is_featured
+				null, // $is_free_shipping
+				null, // $inventory_level
+				null, // $inventory_low
+				null, // $out_of_stock
+				null, // $total_sold
+				null, // $type
+				null, // $categories
+				null, // $keyword
+				null, // $keyword_context
+				null, // $status
+				null, // $include
+				[ 'id', 'date_modified' ], // $include_fields
+				null, // $exclude_fields
+				null, // $availability
+				null, // $price_list_id
+				$page, // $page
+				$this->limit, // $limit
+				null, // $direction
+				null  // $sort
+			);
 		} catch ( ApiException $e ) {
 			do_action( 'bigcommerce/import/error', $e->getMessage() );
 

@@ -159,6 +159,10 @@ class Customer {
 
 	private function get_order_products( $order_id ) {
 		$products = Client::getOrderProducts( $order_id ) ?: [];
+		$products = array_filter( $products, function( OrderProduct $product ) {
+			$parent_product = $product->parent_order_product_id;
+			return empty( $parent_product );
+		});
 		$products = array_map( [ $this, 'flatten_resource' ], $products );
 		return apply_filters( 'bigcommerce/order/products', $products, $order_id, $this );
 	}

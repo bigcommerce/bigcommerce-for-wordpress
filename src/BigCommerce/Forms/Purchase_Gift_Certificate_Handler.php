@@ -3,7 +3,7 @@
 
 namespace BigCommerce\Forms;
 
-use BigCommerce\Api\v3\CartApi;
+use BigCommerce\Api\v3\Api\CartApi;
 use BigCommerce\Cart\Cart;
 use BigCommerce\Pages;
 use BigCommerce\Settings;

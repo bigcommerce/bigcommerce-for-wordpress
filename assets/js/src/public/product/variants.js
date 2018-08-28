@@ -9,10 +9,6 @@ import * as tools from '../../utils/tools';
 import { PRODUCT_MESSAGES } from '../config/wp-settings';
 import { productMessage } from '../templates/product-message';
 
-const el = {
-	container: tools.getNodes('product-options', true),
-};
-
 const instances = {
 	product: [],
 	selections: [],
@@ -262,8 +258,8 @@ const initOptionsPickers = () => {
 	});
 };
 
-const init = () => {
-	if (!el.container) {
+const init = (container) => {
+	if (!container) {
 		return;
 	}
 

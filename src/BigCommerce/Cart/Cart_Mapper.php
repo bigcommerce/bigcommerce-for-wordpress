@@ -6,6 +6,7 @@ namespace BigCommerce\Cart;
 use BigCommerce\Api\v3\Model\BaseItem;
 use BigCommerce\Api\v3\Model\Cart;
 use BigCommerce\Api\v3\Model\ItemGiftCertificate;
+use BigCommerce\Api\v3\Model\ProductOption;
 use BigCommerce\Customizer\Sections\Colors;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Taxonomies\Availability\Availability;
@@ -56,18 +57,16 @@ class Cart_Mapper {
 	}
 
 	private function cart_items() {
-		return array_map( [
+		return array_filter( array_map( [
 			$this,
 			'prepare_line_item',
-		], iterator_to_array( Cart_Item_Iterator::factory( $this->cart ) ) );
+		], iterator_to_array( Cart_Item_Iterator::factory( $this->cart ) ) ) );
 	}
 
 	/**
 	 * @param \BigCommerce\Api\v3\Model\BaseItem|\BigCommerce\Api\v3\Model\ItemGiftCertificate $item
 	 *
 	 * @return array
-	 *
-	 * @todo Details of selected options for the variant
 	 */
 	private function prepare_line_item( $item ) {
 		if ( $item instanceof BaseItem ) {
@@ -133,26 +132,19 @@ class Cart_Mapper {
 	}
 
 	/**
-	 * @param int     $variant_id
-	 * @param Product $product
+	 * @param BaseItem $item
 	 *
 	 * @return array
 	 */
-	private function get_options( $variant_id, $product ) {
-		$variant = $this->get_variant( $variant_id, $product );
-		if ( ! $variant || empty( $variant->option_values ) ) {
-			return [];
-		}
-		$options = [];
-		foreach ( $variant->option_values as $value ) {
-			$options[] = [
-				'label' => $value->option_display_name,
-				'key'   => $value->option_id,
-				'value' => $value->label,
+	private function get_options( BaseItem $item ) {
+		return array_map( function( ProductOption $option ) {
+			return [
+				'label' => $option->getName(),
+				'key' => $option->getNameId(),
+				'value' => $option->getValue(),
+				'value_id' => $option->getValueId(),
 			];
-		}
-
-		return $options;
+		}, $item->getOptions() );
 	}
 
 	/**
@@ -205,6 +197,9 @@ class Cart_Mapper {
 	 * @return array
 	 */
 	private function prepare_base_item( BaseItem $item ) {
+		if ( $item->getParentId() ) {
+			return []; // the item should not show in the cart, it's an add-on to another item
+		}
 		$data = [
 			'id'                   => $item->getId(),
 			'variant_id'           => $item->getVariantId(),
@@ -255,7 +250,7 @@ class Cart_Mapper {
 				'product' => $product->sku(),
 				'variant' => $this->get_variant_sku( $data[ 'variant_id' ], $product ),
 			];
-			$data[ 'options' ]          = $this->get_options( $data[ 'variant_id' ], $product );
+			$data[ 'options' ]          = $this->get_options( $item );
 			$data[ 'inventory_level' ]  = (int) $product->get_inventory_level( $data[ 'variant_id' ] );
 			$data[ 'minimum_quantity' ] = (int) $product->order_quantity_minimum;
 			$data[ 'maximum_quantity' ] = $this->get_max_quantity( (int) $product->order_quantity_maximum, $data[ 'inventory_level' ] );

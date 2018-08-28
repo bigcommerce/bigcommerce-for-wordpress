@@ -4,7 +4,6 @@
 namespace BigCommerce\Post_Types\Product;
 
 
-use BigCommerce\Customizer\Sections\Catalog;
 use BigCommerce\Customizer\Sections\Product_Archive;
 use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Flag\Flag;
@@ -20,7 +19,7 @@ class Query {
 	 */
 	public function filter_queries( \WP_Query $query ) {
 		if ( ! $query->get( 'posts_per_page' ) && $this->is_product_query( $query ) ) {
-			$per_page = get_option( Catalog::PER_PAGE, Catalog::PER_PAGE_DEFAULT );
+			$per_page = get_option( Product_Archive::PER_PAGE, Product_Archive::PER_PAGE_DEFAULT );
 			if ( $per_page ) {
 				$query->set( 'posts_per_page', $per_page );
 			}

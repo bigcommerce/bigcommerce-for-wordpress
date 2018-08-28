@@ -4,7 +4,7 @@
 namespace BigCommerce;
 
 class Plugin {
-	const VERSION = '0.10.0';
+	const VERSION = '0.11.0';
 
 	protected static $_instance;
 
@@ -50,7 +50,7 @@ class Plugin {
 		$this->providers[ 'assets' ]            = new Container\Assets();
 		$this->providers[ 'cart' ]              = new Container\Cart();
 		$this->providers[ 'cli' ]               = new Container\Cli();
-		$this->providers[ 'compat' ]            = new Container\Theme_Compatibility();
+		$this->providers[ 'compat' ]            = new Container\Compatibility();
 		$this->providers[ 'currency' ]          = new Container\Currency();
 		$this->providers[ 'customizer' ]        = new Container\Theme_Customizer();
 		$this->providers[ 'forms' ]             = new Container\Forms();

@@ -67,7 +67,8 @@
 			<ul class="bc-order-product-row__options-list">
 				<?php foreach ( $options as $option ) { ?>
 					<li class="bc-order-product-row__option">
-						<?php echo esc_html( sprintf( __( '%s: %s', 'bigcommerce' ), $option[ 'label' ], $option[ 'value' ] ) ); ?>
+						<span class="bc-order-product-row__option-label"><?php echo esc_html( sprintf( _x( '%s: ', 'product option label', 'bigcommerce' ), $option['label'] ) ); ?></span>
+						<span class="bc-order-product-row__option-value"><?php echo esc_html( sprintf( _x( '%s', 'product option value', 'bigcommerce' ), $option['value'] ) ); ?></span>
 					</li>
 				<?php } ?>
 			</ul>
