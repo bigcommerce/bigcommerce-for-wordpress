@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.11.1] - 2018-08-28
+### Fixed
+- Remove reference to `Id` from the Gutenberg blocks `props` Object which was deprecated in version 3.3. Replaced with new key `clientId`.
+
 ## [0.11.0] - 2018-08-27
 ### Added
 - Changelog
@@ -20,15 +24,9 @@
 - When running an import via CLI, reschedule the next cron import after
   the CLI import completes.
 
-### Deprecated
-
 ### Removed
 - The class `BigCommerce\Customizer\Sections\Catalog` is gone. Its constants
   have moved to `BigCommerce\Customizer\Sections\Product_Archive`.
-
-### Fixed
-
-### Security
 
 ## [0.10.0] - 2018-08-03
 ### Added
