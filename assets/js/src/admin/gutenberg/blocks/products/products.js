@@ -81,7 +81,7 @@ const registerBlock = () => {
 			const spinner = createElement('span', {className: 'spinner is-active', key: 'spinner'});
 			const previewEl = createElement('div', {className: 'bigcommerce-product-preview', key: 'preview-shortcode'}, [spinner]);
 			const state = {
-				currentBlock: props.id,
+				currentBlock: props.clientId,
 			};
 
 			const getResponse = (queryObj) => {
