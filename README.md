@@ -79,12 +79,14 @@ enabled for your site.
 
 #### Currency Settings
 
-The store's currency code will be imported from the BigCommerce API as part of the product
+The store's default currency code will be imported from the BigCommerce API as part of the product
 import process.
 
 If the PHP intl extension is available on your server, there is nothing else to configure.
 If it is not available, you will be presented with additional fields to control
 currency formatting. These will also be populated automatically from the API.
+
+**Important Note:** Currency format settings are for display only and will not affect price conversion. Prices will be imported according to the default currency (the currency in which prices were entered).
 
 Currency formatting can be filtered using the `bigcommerce/currency/format` filter.
 
