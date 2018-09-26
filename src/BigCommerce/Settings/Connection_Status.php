@@ -77,21 +77,25 @@ class Connection_Status {
 	/**
 	 * Display a notice if all required credentials are not set.
 	 *
-	 * @param Settings_Screen $settings_page
+	 * @param Abstract_Screen   $target_screen    Settings screen the link will point to
+	 * @param Abstract_Screen[] $excluded_screens Settings screens that should not show the notice
 	 *
 	 * @return void
 	 */
-	public function credentials_required_notice( Settings_Screen $settings_page ) {
+	public function credentials_required_notice( Abstract_Screen $target_screen, $excluded_screens = [] ) {
 		if ( $this->configured ) {
 			return;
 		}
-		$message = __( 'Please connect to your BigCommerce account to start using products.', 'bigcommerce' );
 		if ( function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
-			if ( $screen && $screen->id !== $settings_page->get_hook_suffix() ) {
-				$message .= sprintf( ' <a href="%s">%s</a>', $settings_page->get_url(), __( 'Get Started →', 'bigcommerce' ) );
+			foreach ( $excluded_screens as $settings_screen ) {
+				if ( $screen && $screen->id === $settings_screen->get_hook_suffix() ) {
+					return;
+				}
 			}
 		}
+		$message = __( 'Please connect to your BigCommerce account to start using products.', 'bigcommerce' );
+		$message .= sprintf( ' <a href="%s">%s</a>', $target_screen->get_url(), __( 'Get Started →', 'bigcommerce' ) );
 		printf( '<div class="notice notice-info"><p>%s</p></div>', $message );
 	}
 

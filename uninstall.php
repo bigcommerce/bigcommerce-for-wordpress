@@ -135,6 +135,7 @@ function delete_options() {
 		Settings\Account_Settings::SUPPORT_EMAIL,
 		Settings\Analytics::FACEBOOK_PIXEL,
 		Settings\Analytics::GOOGLE_ANALYTICS,
+		Settings\Analytics::SEGMENT,
 		Settings\Currency::CURRENCY_CODE,
 		Settings\Currency::CURRENCY_SYMBOL,
 		Settings\Currency::CURRENCY_SYMBOL_POSITION,

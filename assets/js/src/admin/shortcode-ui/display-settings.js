@@ -20,8 +20,8 @@ const setPostsPerPageIndicator = (value) => {
 		return;
 	}
 
-	el.postsPerPageIndicator.innerHTML = '';
-	el.postsPerPageIndicator.innerHTML = value;
+	el.postsPerPageIndicator.textContent = '';
+	el.postsPerPageIndicator.textContent = value;
 };
 
 const setPostsPerPageResetValue = (value) => {
@@ -71,13 +71,15 @@ const setOrderParam = (event, params = {}) => {
 		return;
 	}
 
-	if (!params.order) {
+	const orderParam = params.order ? params.order.toLowerCase() : 'asc';
+	const field = tools.getNodes(`#bc-shortcode-ui__product-order--${orderParam}`, false, el.displaySettings, true);
+
+	if (field.length === 0) {
 		return;
 	}
 
-	const orderParam = params.order.toLowerCase();
 	shortcodeState.wpAPIDisplaySettings.order = orderParam;
-	tools.getNodes(`#bc-shortcode-ui__product-order--${orderParam}`, false, el.displaySettings, true)[0].checked = true;
+	field[0].checked = true;
 };
 
 const setOrderbyParam = (event, params = {}) => {
@@ -86,17 +88,14 @@ const setOrderbyParam = (event, params = {}) => {
 		return;
 	}
 
-	if (!params.orderby) {
+	const orderByParam = params.orderby ? params.orderby.toLowerCase() : 'date';
+	const field = tools.getNodes(`#bc-shortcode-ui__product-orderby--${orderByParam}`, false, el.displaySettings, true);
+
+	if (field.length === 0) {
 		return;
 	}
 
-	const field = tools.getNodes(`#bc-shortcode-ui__product-orderby--${params.orderby}`, false, el.displaySettings, true);
-
-	if (field.length < 1) {
-		return;
-	}
-
-	shortcodeState.wpAPIDisplaySettings.orderby = params.orderby;
+	shortcodeState.wpAPIDisplaySettings.orderby = orderByParam;
 	field[0].checked = true;
 };
 
@@ -198,17 +197,13 @@ const resetDisplaySettings = () => {
 	shortcodeState.wpAPIDisplaySettings.per_page = '';
 	shortcodeState.wpAPIDisplaySettings.orderby = '';
 	shortcodeState.wpAPIDisplaySettings.order = '';
-	el.termsList.innerHTML = '';
+	el.termsList.textContent = '';
 };
 
 const handleSavedUIDisplaySettings = (event) => {
-	resetDisplaySettings();
-
 	const params = event.detail.params;
-	if (!params) {
-		return;
-	}
 
+	resetDisplaySettings();
 	setOrderbyParam(null, params);
 	setOrderParam(null, params);
 	setPostsPerPage(null, params);

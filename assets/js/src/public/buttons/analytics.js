@@ -7,8 +7,7 @@ import delegate from 'delegate';
 import * as tools from '../../utils/tools';
 
 const el = {
-	fbpixel: tools.getNodes('bc-facebook-pixel')[0],
-	ga: tools.getNodes('bc-ga-tracker')[0],
+	segment: tools.getNodes('bc-segment-tracker')[0],
 };
 
 const handleAddToCartTracker = () => {
@@ -19,22 +18,14 @@ const handleAddToCartTracker = () => {
 	}
 
 	const analyticsData = cartTrigger.dataset.trackingData;
-	const jsonData = JSON.stringify(analyticsData);
+	const jsonData = JSON.parse(analyticsData);
 
-	if (el.ga) {
-		gtag('event', 'add_to_cart', {
-			jsonData,
-		});
-		console.info(`An event occurred that sent tracking data to your Google Analytics account for a product added to the users cart: ${analyticsData}`);
-	}
-
-	if (el.fbpixel) {
-		fbq('track', 'AddToCart', {
-			jsonData,
-		});
-
-		console.info(`An event occurred that sent tracking data to your facebook pixel for a product added to the users cart: ${analyticsData}`);
-	}
+	analytics.track('Product Added', {
+		cart_id: jsonData.cart_id,
+		product_id: jsonData.product_id,
+		variant: jsonData.variant_id,
+	});
+	console.info(`Segment has sent the following cart tracking data to your analytics account(s): ${analyticsData}`);
 };
 
 const handleClickTracker = (e) => {
@@ -44,22 +35,13 @@ const handleClickTracker = (e) => {
 		return;
 	}
 
-	const jsonData = JSON.stringify(analyticsData);
+	const jsonData = JSON.parse(analyticsData);
 
-	if (el.ga) {
-		gtag('event', 'view_item', {
-			jsonData,
-		});
-		console.info(`An event occurred that sent tracking data to your Google Analytics account: ${analyticsData}`);
-	}
-
-	if (el.fbpixel) {
-		fbq('track', 'ViewContent', {
-			jsonData,
-		});
-
-		console.info(`An event occurred that sent tracking data to your facebook pixel: ${analyticsData}`);
-	}
+	analytics.track('Product Viewed', {
+		product_id: jsonData.product_id,
+		name: jsonData.name,
+	});
+	console.info(`Segment has sent the following tracking data to your analytics account(s): ${analyticsData}`);
 };
 
 const bindEvents = () => {
@@ -74,7 +56,7 @@ const bindEvents = () => {
 };
 
 const init = () => {
-	if (!el.fbpixel && !el.ga) {
+	if (!el.segment) {
 		return;
 	}
 

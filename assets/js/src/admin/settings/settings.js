@@ -6,8 +6,16 @@
 import delegate from 'delegate';
 import * as tools from '../../utils/tools';
 
-const el = {};
+const el = {
+	container: tools.getNodes('.bigcommerce_product_page_bigcommerce', false, document, true)[0],
+};
 
+/**
+ * @function toggleSiblingOptions
+ * @description toggle table elements display on settings pages.
+ *
+ * @param field
+ */
 const toggleSiblingOptions = (field) => {
 	const tableRow = tools.closest(field, 'tr');
 	const table = tools.closest(field, 'table');
@@ -51,12 +59,11 @@ const bindEvents = () => {
 	delegate(el.container, 'input[name="bigcommerce_enable_gift_certificates"]', 'change', toggleGiftCertificateOption);
 };
 
-const init = (container) => {
-	if (!container) {
+const init = () => {
+	if (!el.container) {
 		return;
 	}
 
-	el.container = container;
 	cacheElements();
 	toggleCartOption();
 	toggleGiftCertificateOption();

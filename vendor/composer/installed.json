@@ -105,17 +105,17 @@
     },
     {
         "name": "moderntribe/bigcommerce-api-php-v3",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
+        "version": "0.11.1",
+        "version_normalized": "0.11.1.0",
         "source": {
             "type": "git",
             "url": "git@github.com:moderntribe/bigcommerce-api-php-v3.git",
-            "reference": "27ab4320b0161e58f9fed34f608fc95b24f44e26"
+            "reference": "10017e9ed12e1b802fe9656ebedbc248687a73db"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/moderntribe/bigcommerce-api-php-v3/zipball/27ab4320b0161e58f9fed34f608fc95b24f44e26",
-            "reference": "27ab4320b0161e58f9fed34f608fc95b24f44e26",
+            "url": "https://api.github.com/repos/moderntribe/bigcommerce-api-php-v3/zipball/10017e9ed12e1b802fe9656ebedbc248687a73db",
+            "reference": "10017e9ed12e1b802fe9656ebedbc248687a73db",
             "shasum": ""
         },
         "require": {
@@ -129,7 +129,7 @@
             "satooshi/php-coveralls": "~1.0",
             "squizlabs/php_codesniffer": "~2.6"
         },
-        "time": "2018-08-13T19:00:08+00:00",
+        "time": "2018-09-23T22:32:38+00:00",
         "type": "library",
         "installation-source": "source",
         "autoload": {

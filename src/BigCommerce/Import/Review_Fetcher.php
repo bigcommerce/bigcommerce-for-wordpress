@@ -39,10 +39,7 @@ class Review_Fetcher {
 		try {
 			do {
 				$page ++;
-				$response  = $this->api->getProductReviews( $this->product_id, [
-					'page'           => $page,
-					'limit'          => $this->per_page,
-				] );
+				$response  = $this->api->getProductReviews( $this->product_id, null, null, $page, $this->per_page );
 				$reviews   = array_merge( $reviews, $response->getData() );
 				$max_pages = $response->getMeta()->getPagination()->getTotalPages();
 			} while ( $page < $max_pages );

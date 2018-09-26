@@ -11,6 +11,7 @@ class Analytics extends Settings_Section {
 
 	const FACEBOOK_PIXEL   = 'bigcommerce_facebook_pixel_id';
 	const GOOGLE_ANALYTICS = 'bigcommerce_google_analytics_id';
+	const SEGMENT          = 'bigcommerce_segment_key';
 
 	/**
 	 * @var Store_Api
@@ -23,7 +24,7 @@ class Analytics extends Settings_Section {
 
 	/**
 	 * @return void
-	 * @action bigcommerce/settings/register
+	 * @action bigcommerce/settings/register/screen= . Settings_Screen::NAME
 	 */
 	public function register_settings_section() {
 		add_settings_section(

@@ -16,8 +16,9 @@ import applyBrowserClasses from '../../utils/dom/apply-browser-classes';
 
 import { on, ready } from '../../utils/events';
 import shortcodeUI from '../shortcode-ui/index';
-import shortcodeSettings from '../shortcode-settings/index';
+import settings from '../settings/index';
 import customizer from '../customizer/index';
+import postTypes from '../post-type/index';
 
 /**
  * @function bindEvents
@@ -53,7 +54,8 @@ const init = () => {
 	// initialize the main scripts
 
 	shortcodeUI();
-	shortcodeSettings();
+	settings();
+	postTypes();
 
 	// initialize theme customizer scripts
 

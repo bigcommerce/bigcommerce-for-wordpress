@@ -43,3 +43,38 @@
 		background-color: var(--color-grey-dark);
 	}
 }
+
+/* -----------------------------------------------------------------------------
+ *
+ * Button Pill
+ *
+ * ----------------------------------------------------------------------------- */
+
+@define-mixin button-pill {
+	background: var(--color-bc-doger-blue);
+	border: 1px solid var(--color-bc-doger-blue);
+	border-radius: 19px;
+	box-sizing: border-box;
+	box-shadow: unset;
+	cursor: pointer;
+	color: var(--color-white);
+	display: inline-block;
+	padding: 13px 20px 12px;
+	font-size: 12px;
+	font-weight: var(--font-weight-medium);
+	letter-spacing: 1px;
+	line-height: 12px;
+	text-decoration: none;
+	text-shadow: none;
+	text-transform: uppercase;
+	transition: var(--transition);
+	-webkit-appearance: none;
+	white-space: nowrap;
+
+	&:hover,
+	&:focus,
+	&:active {
+		background-color: var(--color-bc-blue-turquoise);
+		border-color: var(--color-bc-blue-turquoise);
+	}
+}

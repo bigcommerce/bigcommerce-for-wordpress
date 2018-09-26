@@ -18,7 +18,7 @@ use BigCommerce\Post_Types\Product\Product;
 	        data-js="bc-product-quick-view-dialog-trigger"
 	        data-content=""
 	        data-productid="<?php echo $product->post_id(); ?>"
-	        <?php echo esc_attr( $attributes );?>
+	        <?php echo $attributes;?>
 	>
 		<?php echo $image; ?>
 		<?php if ( $quick_view ) { ?>

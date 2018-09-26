@@ -60,7 +60,7 @@ class Cart implements ArrayAccess
         'customer_id' => 'int',
         'email' => 'string',
         'currency' => '\BigCommerce\Api\v3\Model\Currency',
-        'is_tax_included' => 'bool',
+        'tax_included' => 'bool',
         'base_amount' => 'float',
         'discount_amount' => 'float',
         'cart_amount' => 'float',
@@ -85,7 +85,7 @@ class Cart implements ArrayAccess
         'customer_id' => 'customer_id',
         'email' => 'email',
         'currency' => 'currency',
-        'is_tax_included' => 'is_tax_included',
+        'tax_included' => 'tax_included',
         'base_amount' => 'base_amount',
         'discount_amount' => 'discount_amount',
         'cart_amount' => 'cart_amount',
@@ -106,7 +106,7 @@ class Cart implements ArrayAccess
         'customer_id' => 'setCustomerId',
         'email' => 'setEmail',
         'currency' => 'setCurrency',
-        'is_tax_included' => 'setIsTaxIncluded',
+        'tax_included' => 'setTaxIncluded',
         'base_amount' => 'setBaseAmount',
         'discount_amount' => 'setDiscountAmount',
         'cart_amount' => 'setCartAmount',
@@ -127,7 +127,7 @@ class Cart implements ArrayAccess
         'customer_id' => 'getCustomerId',
         'email' => 'getEmail',
         'currency' => 'getCurrency',
-        'is_tax_included' => 'getIsTaxIncluded',
+        'tax_included' => 'getTaxIncluded',
         'base_amount' => 'getBaseAmount',
         'discount_amount' => 'getDiscountAmount',
         'cart_amount' => 'getCartAmount',
@@ -173,7 +173,7 @@ class Cart implements ArrayAccess
         $this->container['customer_id'] = isset($data['customer_id']) ? $data['customer_id'] : null;
         $this->container['email'] = isset($data['email']) ? $data['email'] : null;
         $this->container['currency'] = isset($data['currency']) ? $data['currency'] : null;
-        $this->container['is_tax_included'] = isset($data['is_tax_included']) ? $data['is_tax_included'] : null;
+        $this->container['tax_included'] = isset($data['tax_included']) ? $data['tax_included'] : null;
         $this->container['base_amount'] = isset($data['base_amount']) ? $data['base_amount'] : null;
         $this->container['discount_amount'] = isset($data['discount_amount']) ? $data['discount_amount'] : null;
         $this->container['cart_amount'] = isset($data['cart_amount']) ? $data['cart_amount'] : null;
@@ -292,22 +292,22 @@ class Cart implements ArrayAccess
     }
 
     /**
-     * Gets is_tax_included
+     * Gets tax_included
      * @return bool
      */
-    public function getIsTaxIncluded()
+    public function getTaxIncluded()
     {
-        return $this->container['is_tax_included'];
+        return $this->container['tax_included'];
     }
 
     /**
-     * Sets is_tax_included
-     * @param bool $is_tax_included
+     * Sets tax_included
+     * @param bool $tax_included
      * @return $this
      */
-    public function setIsTaxIncluded($is_tax_included)
+    public function setTaxIncluded($tax_included)
     {
-        $this->container['is_tax_included'] = $is_tax_included;
+        $this->container['tax_included'] = $tax_included;
 
         return $this;
     }

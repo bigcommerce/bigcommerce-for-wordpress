@@ -23,14 +23,17 @@ class Address_List extends Gutenberg_Block {
 
 	public function js_config() {
 		return [
-			'name'      => $this->name(),
-			'title'     => __( 'BigCommerce Address List', 'bigcommerce' ),
-			'category'  => 'widgets',
-			'keywords'  => [
+			'name'       => $this->name(),
+			'title'      => __( 'BigCommerce Address List', 'bigcommerce' ),
+			'category'   => 'widgets',
+			'keywords'   => [
 				__( 'checkout', 'bigcommerce' ),
 				__( 'shipping', 'bigcommerce' ),
 			],
-			'shortcode' => sprintf( '[%s]', Shortcodes\Address_List::NAME ),
+			'shortcode'  => sprintf( '[%s]', Shortcodes\Address_List::NAME ),
+			'block_html' => [
+				'title' => __( 'My Addresses', 'bigcommerce' ),
+			],
 		];
 	}
 }

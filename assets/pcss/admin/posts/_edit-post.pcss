@@ -1,20 +1,64 @@
-.post-php.post-type-bigcommerce_product {
+.post-type-bigcommerce_product {
 
-	#titlewrap {
-		display: none;
+	&.post-php {
+
+		#titlewrap {
+			display: none;
+		}
+
+		#titlediv .product-title {
+			padding: 5px 10px;
+			font-size: 1.7em;
+			font-weight: normal;
+			margin: 0 0 3px;
+		}
+
+		.misc-pub-bigcommerce .dashicons {
+			position: relative;
+			top: -3px;
+			padding-right: 3px;
+			color: #82878c;
+		}
 	}
 
-	#titlediv .product-title {
-		padding: 5px 10px;
-		font-size: 1.7em;
-		font-weight: normal;
-		margin: 0 0 3px;
-	}
+	&.edit-php {
 
-	.misc-pub-bigcommerce .dashicons {
-		position: relative;
-		top: -3px;
-		padding-right: 3px;
-		color: #82878c;
+		.bc-settings-header__cta-btn {
+			display: none;
+			margin-top: 0;
+			margin-left: 0;
+
+			&--active {
+				display: inline-block;
+				margin-left: 20px;
+				vertical-align: bottom;
+				margin-bottom: 2px;
+			}
+
+			.bc-admin-btn {
+				font-size: 10px;
+				line-height: 12px;
+				text-decoration: none;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+				color: var(--color-bc-doger-blue);
+				opacity: 1;
+				transition: var(--transition-opacity);
+
+				.bc-icon {
+					font-size: 14px;
+					line-height: 12px;
+					vertical-align: text-top;
+					margin-right: 6px;
+					border-left: 1px solid var(--color-bc-concrete);
+					padding-left: 15px;
+				}
+
+				&:hover,
+				&:focus {
+					opacity: 0.8;
+				}
+			}
+		}
 	}
 }

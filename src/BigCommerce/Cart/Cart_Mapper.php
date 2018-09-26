@@ -7,7 +7,6 @@ use BigCommerce\Api\v3\Model\BaseItem;
 use BigCommerce\Api\v3\Model\Cart;
 use BigCommerce\Api\v3\Model\ItemGiftCertificate;
 use BigCommerce\Api\v3\Model\ProductOption;
-use BigCommerce\Customizer\Sections\Colors;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Taxonomies\Availability\Availability;
 use BigCommerce\Taxonomies\Brand\Brand;
@@ -38,7 +37,7 @@ class Cart_Mapper {
 	 * @return array
 	 */
 	public function map() {
-		return [
+		$cart = [
 			'cart_id'         => $this->cart->getId(),
 			'base_amount'     => [
 				'raw'       => $this->cart->getBaseAmount(),
@@ -52,8 +51,29 @@ class Cart_Mapper {
 				'raw'       => $this->cart->getCartAmount(),
 				'formatted' => $this->format_currency( $this->cart->getCartAmount() ),
 			],
+			'tax_included'    => (bool) $this->cart->getTaxIncluded(),
 			'items'           => $this->cart_items(),
 		];
+
+		$tax_amount = $this->calculate_total_tax( $cart[ 'cart_amount' ][ 'raw' ], $cart[ 'discount_amount' ][ 'raw' ], $cart[ 'items' ] );
+
+		$cart[ 'tax_amount' ] = [
+			'raw'       => $tax_amount,
+			'formatted' => $this->format_currency( $tax_amount ),
+		];
+
+		if ( $cart[ 'tax_included' ] ) {
+			$subtotal = $cart[ 'cart_amount' ][ 'raw' ];
+		} else {
+			$subtotal = $cart[ 'cart_amount' ][ 'raw' ] - $tax_amount;
+		}
+
+		$cart[ 'subtotal' ] = [
+			'raw'       => $subtotal,
+			'formatted' => $this->format_currency( $subtotal ),
+		];
+
+		return $cart;
 	}
 
 	private function cart_items() {
@@ -137,14 +157,14 @@ class Cart_Mapper {
 	 * @return array
 	 */
 	private function get_options( BaseItem $item ) {
-		return array_map( function( ProductOption $option ) {
+		return array_map( function ( ProductOption $option ) {
 			return [
-				'label' => $option->getName(),
-				'key' => $option->getNameId(),
-				'value' => $option->getValue(),
+				'label'    => $option->getName(),
+				'key'      => $option->getNameId(),
+				'value'    => $option->getValue(),
 				'value_id' => $option->getValueId(),
 			];
-		}, $item->getOptions() );
+		}, array_filter( (array) $item->getOptions() ) );
 	}
 
 	/**
@@ -275,12 +295,12 @@ class Cart_Mapper {
 	private function prepare_gift_certificate_item( ItemGiftCertificate $item ) {
 		$amount = $item->getAmount();
 		// TODO: name always comes back empty from the API, even if we set it
-		$name = $item->getName() ?: sprintf(
+		$name     = $item->getName() ?: sprintf(
 			__( '%s Gift Certificate', 'bigcommerce' ),
 			apply_filters( 'bigcommerce/currency/format', sprintf( '¤%0.2f', $amount ), $amount )
 		);
 		$quantity = $item->getQuantity() ?: 1;
-		$data = [
+		$data     = [
 			'id'                   => $item->getId(),
 			'variant_id'           => 0,
 			'product_id'           => 0,
@@ -322,5 +342,20 @@ class Cart_Mapper {
 		];
 
 		return $data;
+	}
+
+	/**
+	 * @param float $cart_amount     The `cart_amount` value for the cart
+	 * @param float $discount_amount The `discount_amount` value for the cart
+	 * @param array $items           The items in the cart
+	 *
+	 * @return float
+	 */
+	private function calculate_total_tax( $cart_amount, $discount_amount, $items ) {
+		$item_sum = array_sum( array_map( function ( $item ) {
+			return isset( $item[ 'total_list_price' ][ 'raw' ] ) ? $item[ 'total_list_price' ][ 'raw' ] : 0;
+		}, $items ) );
+
+		return $cart_amount + $discount_amount - $item_sum;
 	}
 }

@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.12.0]
+### Added
+- Added the Product Sync feature to Product List page.
+- Added Welcome screen and Connect Account screen.
+ 
+### Changed
+- Refactored JS code in Gutenberg modules to use ES6 React syntax (removes usage of `wp` global React wrapper).
+- Refactored other JS modules for extendability and moved i18n strings to PHP JS_Config.
+- Reorganized JS modules and structure for easier readability.
+- Added a new indicator in the Gutenberg products block to let the user know if they chose filters that produce no results.
+- Added support for displaying estimated tax amounts in the cart.
+- Refactored Analytics data tags to utilize Segment Analtyics.js script.
+- Improved focus pointer UX elements when editing the product block.
+- Rendered redesigned panels in Settings UI.
+- Refactored settings screen registration and rendering.
+- Prevented editing API credential settings if they are set using constants or environment variables.
+
+### Removed
+- Replaced GA/Pixel controller with Segment controller.
+
+### Fixed
+- Fixed a bug with the Gutenberg editor where the Featured filter was not showing up when reopening a saved block.
+- Fixed a bug with the cart template where product removal was canceled by a missing template node.
+- Fixed a bug with the cart where updating product qty was updating the remote cart but the API response changed causing an ajax error.
+- Fixed a bug with product pages where  product review body text was not showing. Existing products should be re-imported to show reviews.
+- Fixed an issue with the admin Products UI where default settings were not being applied when using the classic editor.
+
 ## [0.11.1] - 2018-08-28
 ### Fixed
 - Remove reference to `Id` from the Gutenberg blocks `props` Object which was deprecated in version 3.3. Replaced with new key `clientId`.
@@ -70,6 +97,8 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[0.12.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/0.11.1...0.12.0
+[0.11.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/0.11.0...0.11.1
 [0.11.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/0.10.0...0.11.0
 [0.10.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/0.9.0...0.10.0
 [0.9.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/0.8.0...0.9.0

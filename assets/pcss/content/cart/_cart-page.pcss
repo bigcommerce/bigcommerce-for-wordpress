@@ -232,15 +232,21 @@
 	width: 100%;
 }
 
-.bc-cart-subtotal {
+.bc-cart-subtotal,
+.bc-cart-tax {
 	text-align: right;
-	padding: 25px 0;
+	padding: 25px 0 0;
 	display: flex;
 	flex-direction: row;
 	align-items: flex-end;
 }
 
-.bc-cart-subtotal__label {
+.bc-cart-tax {
+	padding-top: 0;
+}
+
+.bc-cart-subtotal__label,
+.bc-cart-tax__label {
 	font-size: 13px;
 	margin-right: 14px;
 	text-align: right;
@@ -248,7 +254,8 @@
 	flex: 1 1 auto;
 }
 
-.bc-cart-subtotal__amount {
+.bc-cart-subtotal__amount,
+.bc-cart-tax__amount {
 	font-weight: var(--font-weight-bold);
 	text-align: left;
 	flex: 0 0 70px;
@@ -259,9 +266,13 @@
 	}
 }
 
+.bc-cart-tax__amount {
+	font-size: 16px;
+}
+
 .bc-cart-actions {
 	text-align: right;
-	padding-top: 10px;
+	margin-top: 30px;
 }
 
 .bc-cart-error {

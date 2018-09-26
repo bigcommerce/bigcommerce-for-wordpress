@@ -24,7 +24,7 @@ class Account_Settings extends Settings_Section {
 
 	/**
 	 * @return void
-	 * @action bigcommerce/settings/register
+	 * @action bigcommerce/settings/register/screen= . Settings_Screen::NAME
 	 */
 	public function register_settings_section() {
 		add_settings_section(

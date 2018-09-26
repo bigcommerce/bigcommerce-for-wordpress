@@ -23,6 +23,7 @@ const instances = {};
 
 const state = {
 	rendered: false,
+	delaySpeed: 50,
 };
 
 const hideDialog = () => {
@@ -31,10 +32,15 @@ const hideDialog = () => {
 
 const showDialog = () => {
 	instances.dialog.show();
+
+	if (!shortcodeState.isGutenberg) {
+		_.delay(() => trigger({ event: 'bigcommerce/shortcode_ui_state_ready', native: false }), state.delaySpeed);
+	}
 };
 
-const setQueryParams = (params = {}) => {
+const setQueryParams = (params) => {
 	if (!params) {
+		trigger({ event: 'bigcommerce/set_shortcode_ui_state', native: false });
 		return;
 	}
 
@@ -42,24 +48,11 @@ const setQueryParams = (params = {}) => {
 };
 
 /**
- * @function dialogPostRender
- * @description create a new A11yDialog and set dialog state functions after dialog renders.
+ * @function initDialogUI
+ * @description initialize the dialog box.
+ * @param target
  */
-const initShortcodeUIDialog = (event) => {
-	const target = event.detail.target;
-	const params = event.detail.queryParams;
-
-	if (state.rendered && event.detail.hide) {
-		hideDialog();
-		return;
-	}
-
-	if (state.rendered) {
-		setQueryParams(params);
-		showDialog();
-		return;
-	}
-
+const initDialogUI = (target, params) => {
 	const options = {
 		appendTarget: '#wpwrap',
 		trigger: target,
@@ -85,28 +78,44 @@ const initShortcodeUIDialog = (event) => {
 			ajaxQuery();
 			createShortcode();
 			setQueryParams(params);
-		}, 50);
+		}, state.delaySpeed);
 
-		if (!e) {
-			return;
-		}
-
-		shortcodeState.currentEditor = tools.closest(e.target, '.wp-editor-wrap');
+		const button = !e ? target : e.target;
+		shortcodeState.currentEditor = tools.closest(button, '.wp-editor-wrap');
 	});
 
 	instances.dialog.on('show', (dialogEl, e) => {
-		if (!e) {
-			return;
-		}
-
-		shortcodeState.currentEditor = tools.closest(e.target, '.wp-editor-wrap');
+		const button = !e ? target : e.target;
+		shortcodeState.currentEditor = tools.closest(button, '.wp-editor-wrap');
 	});
 
 	instances.dialog.on('hide', () => {
 		shortcodeState.currentEditor = '';
 	});
 
-	instances.dialog.show();
+	showDialog();
+};
+
+/**
+ * @function dialogPostRender
+ * @description create a new A11yDialog and set dialog state functions after dialog renders.
+ */
+const toggleShortcodeUIDialog = (event) => {
+	const target = event.detail.target;
+	const params = event.detail.queryParams;
+
+	if (state.rendered && event.detail.hide) {
+		hideDialog();
+		return;
+	}
+
+	if (state.rendered) {
+		setQueryParams(params);
+		showDialog();
+		return;
+	}
+
+	initDialogUI(target, params);
 };
 
 const init = () => {
@@ -114,7 +123,7 @@ const init = () => {
 		return;
 	}
 
-	on(document, 'bigcommerce/init_shortcode_ui', initShortcodeUIDialog);
+	on(document, 'bigcommerce/init_shortcode_ui', toggleShortcodeUIDialog);
 };
 
 export default init;

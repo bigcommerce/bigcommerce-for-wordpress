@@ -85,6 +85,10 @@ class Post_Types extends Provider {
 		add_action( 'load-edit.php', $load_post_admin_hooks, 10, 0 );
 		add_action( 'rest_api_init', $load_post_admin_hooks, 10, 0 );
 
+		add_filter( 'views_edit-' . Product\Product::NAME, $this->create_callback( 'list_table_import_status', function ( $views ) use ( $container ) {
+			return $container[ self::PRODUCT_ADMIN ]->list_table_import_status( $views );
+		} ), 10, 1 );
+
 		add_filter( 'map_meta_cap', $this->create_callback( 'unsupported_meta_caps', function ( $caps, $cap, $user_id, $args ) use ( $container ) {
 			return $container[ self::PRODUCT_UNSUPPORTED ]->disallow_publication( $caps, $cap, $user_id, $args );
 		} ), 10, 4 );

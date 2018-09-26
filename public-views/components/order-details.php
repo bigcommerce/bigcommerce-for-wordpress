@@ -84,7 +84,7 @@
 		<div class="bc-order-detail__col bc-order-detail__totals bc-order-detail-totals">
 			<dl class="bc-order-detail-totals__list">
 				<div class="bc-order-detail-totals__list-item">
-					<dt class="bc-order-detail-totals__label"><?php esc_html_e( 'Item(s) Subtotal', 'bigcommerce' ); ?>: </dt>
+					<dt class="bc-order-detail-totals__label"><?php echo esc_html( _n( 'Item Subtotal', 'Items Subtotal', $item_count, 'bigcommerce' ) ); ?>: </dt>
 					<dd class="bc-order-detail-totals__value"><?php echo esc_html( $subtotal ); ?></dd>
 				</div>
 				<?php if ( $shipping ) { ?>
@@ -96,7 +96,7 @@
 				<?php if ( $discount_amount ) { ?>
 					<div class="bc-order-detail-totals__list-item">
 						<dt class="bc-order-detail-totals__label"><?php esc_html_e( 'Promotion Applied', 'bigcommerce' ); ?>: </dt>
-						<dd class="bc-order-detail-totals__value">-<?php echo esc_html( $discount ); ?></dd>
+						<dd class="bc-order-detail-totals__value">-<?php echo esc_html( $discount_amount ); ?></dd>
 					</div>
 				<?php } ?>
 				<?php if ( $coupon_amount ) { ?>

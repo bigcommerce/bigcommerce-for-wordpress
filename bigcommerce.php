@@ -3,7 +3,7 @@
 Plugin Name:  BigCommerce for WordPress
 Description:  BigCommerce for WordPress
 Author:       Modern Tribe
-Version:      0.11.1
+Version:      0.12.0
 Author URI:   http://www.tri.be
 Requires PHP: 5.6
 Text Domain:  bigcommerce

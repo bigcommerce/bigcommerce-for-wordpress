@@ -1,0 +1,49 @@
+.bc-settings-bigcommerce_connect {
+	display: flex;
+	flex-direction: column;
+	lost-utility: clearfix;
+}
+
+.bc-connect__header,
+.bc-settings-form--bigcommerce_connect {
+	@media (--viewport-medium) {
+		lost-column: 11/12;
+	}
+
+	@media (--viewport-large) {
+		lost-offset: 1/12;
+	}
+}
+
+.bc-settings-form--bigcommerce_connect {
+	@media (--viewport-large) {
+		lost-column: 9/12;
+	}
+}
+
+.bc-connect__header {
+	margin: 10px 0 30px;
+
+	@media (--viewport-medium) {
+		lost-column: 9/12;
+		margin: 30px 0 50px;
+		max-width: 620px;
+	}
+
+	@media (--viewport-large) {
+		margin-top: 60px;
+	}
+}
+
+.bc-settings-bigcommerce_connect .bc-settings-connect__title {
+	color: var(--color-bc-black);
+	font-size: 32px;
+	font-weight: var(--font-weight-regular);
+	line-height: 40px;
+	margin: 18px 0 0;
+
+	@media (--viewport-medium) {
+		font-size: 48px;
+		line-height: 52px;
+	}
+}

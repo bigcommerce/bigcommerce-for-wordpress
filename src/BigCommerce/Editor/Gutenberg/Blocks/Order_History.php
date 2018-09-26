@@ -22,13 +22,16 @@ class Order_History extends Gutenberg_Block {
 
 	public function js_config() {
 		return [
-			'name'      => $this->name(),
-			'title'     => __( 'BigCommerce Order History', 'bigcommerce' ),
-			'category'  => 'widgets',
-			'keywords'  => [
+			'name'       => $this->name(),
+			'title'      => __( 'BigCommerce Order History', 'bigcommerce' ),
+			'category'   => 'widgets',
+			'keywords'   => [
 				__( 'checkout', 'bigcommerce' ),
 			],
-			'shortcode' => sprintf( '[%s]', Shortcodes\Order_History::NAME ),
+			'shortcode'  => sprintf( '[%s]', Shortcodes\Order_History::NAME ),
+			'block_html' => [
+				'title' => __( 'Order History', 'bigcommerce' ),
+			],
 		];
 	}
 }

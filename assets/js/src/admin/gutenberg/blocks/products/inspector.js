@@ -1,4 +1,3 @@
-/* eslint-disable */
 /**
  * @module Products Block Inspector
  */
@@ -12,15 +11,14 @@ const { PanelRow, PanelBody, Button } = wp.components;
 
 export default class Inspector extends Component {
 
-	constructor() {
-		super( ...arguments );
+	constructor(...args) {
+		super(...args);
 		this.triggerDialog = this.triggerDialog.bind(this);
 	}
 
 	triggerDialog(e) {
 		const { target } = e;
 		const queryParams = this.props.attributes.queryParams;
-		shortcodeState.isGutenberg = true;
 		shortcodeState.insertCallback = this.props.handleInsert;
 
 		trigger({ event: 'bigcommerce/init_shortcode_ui', data: { target, queryParams }, native: false });
@@ -31,11 +29,11 @@ export default class Inspector extends Component {
 			<InspectorControls>
 				<PanelBody
 					title={GUTENBERG_PRODUCTS.inspector_title}
-					initialOpen={true}
+					initialOpen
 				>
 					<PanelRow>
 						<Button
-							isPrimary={true}
+							isPrimary
 							type="button"
 							className="button bc-add-products"
 							data-js="bc-add-products"

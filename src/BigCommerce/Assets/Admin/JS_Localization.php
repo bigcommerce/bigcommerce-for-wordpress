@@ -20,8 +20,9 @@ class JS_Localization {
 				'remove_selected' => __( '(Remove)', 'bigcommerce' ),
 			],
 			'messages'   => [
-				'ajax_error' => __( 'There was and error submitting your request. Please try again.', 'bigcommerce' ),
-				'no_results' => __( 'We could not find any products that matched your search. Please try a different keyword.', 'bigcommerce' ),
+				'ajax_error'  => __( 'There was and error submitting or retrieving your request. Please try again.', 'bigcommerce' ),
+				'no_results'  => __( 'We could not find any products that matched your query. Please clear your search and try again.', 'bigcommerce' ),
+				'no_products' => __( 'We could not find any products that matched your query. Please edit this block and try again.', 'bigcommerce' ),
 			],
 			'operations' => [
 				'query_string_separator' => __( '&', 'bigcommerce' ),
