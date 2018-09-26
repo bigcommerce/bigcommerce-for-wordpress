@@ -1,128 +1,263 @@
+
+.bc-settings-header {
+	color: var(--color-bc-black);
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: column;
+	lost-utility: clearfix;
+	margin-bottom: 28px;
+	padding: 0 0 40px;
+	position: relative;
+
+	@media (--viewport-medium) {
+		flex-direction: row;
+		justify-content: flex-start;
+		align-items: center;
+	}
+
+	&:before {
+		background-color: var(--color-bc-light-grey);
+		content: '';
+		position: absolute;
+		bottom: 0;
+		right: -20px;
+		height: 1px;
+		width: calc(100% + 42px);
+	}
+
+	&:after {
+		background: transparent url("../img/admin/bc-bg-geometric.svg") no-repeat bottom right/contain;
+		content: '';
+		position: absolute;
+		height: 220px;
+		width: 75%;
+		bottom: 1px;
+		right: -20px;
+		z-index: 1;
+
+		@media (--viewport-medium) {
+			height: 220px;
+			width: 50%;
+		}
+	}
+
+	.notice {
+		box-sizing: border-box;
+		lost-column: 12/12;
+	}
+}
+
+.bc-settings-header__welcome {
+	@media (--viewport-large) {
+		lost-offset: 0.5/12;
+	}
+}
+
+.bc-settings-header__welcome,
+.bc-settings-header__cta {
+	position: relative;
+	z-index: 2;
+
+	@media (--viewport-medium) {
+		lost-column: 5/12;
+		max-width: 460px;
+	}
+}
+
+.bc-settings-header__cta {
+	background-color: var(--color-off-white);
+	margin-top: 30px;
+	padding: 20px;
+
+	@media (--viewport-medium) {
+		margin-top: 0;
+		padding: 40px;
+	}
+}
+
 .bigcommerce_product_page_bigcommerce {
 
-	.form-table {
-		margin-bottom: 50px;
-		margin-top: 0;
-	}
-
-	form,
-	.form-table th,
-	.form-wrap label {
+	.bc-settings-header__welcome-title {
 		color: var(--color-bc-black);
-	}
+		font-size: 32px;
+		line-height: 1.01;
+		margin-bottom: 18px;
 
-	.form-table th,
-	.form-wrap label {
-		font-size: 15px;
-	}
-
-	p {
-		font-size: 14px;
-	}
-
-	.form-table th {
-		width: 170px;
-	}
-
-	h2 {
-		position: relative;
-		margin: 50px auto 10px;
-		padding-top: 50px;
-		font-size: 20px;
-		line-height: 24px;
-
-		&:before {
-			content: '';
-			position: absolute;
-			width: 100%;
-			height: 1px;
-			left: 0;
-			top: 0;
-			background-color: var(--color-bc-grey);
-		}
-
-		&:after {
-			content: '';
-			display: inline-block;
+		@media (--viewport-medium) {
+			font-size: 48px;
 		}
 	}
+}
 
-	.regular-text {
-		max-width: 30em;
-		width: 100%;
-	}
+.bc-settings-header__welcome-text {
+	font-size: 18px;
+}
 
-	.button {
-		text-shadow: none;
-		font-size: 16px;
-		padding: 8px 12px;
-		height: auto;
-		transition: var(--transition);
-	}
+.bc-settings-header__cta-title {
+	font-size: 22px;
+	line-height: 22px;
+	margin: 0 0 14px;
+}
 
-	.secondary {
-		border-radius: 6px;
+.bc-settings-header__cta-text {
+	font-size: 16px;
+	margin: 0;
+}
 
-		&:hover,
-		&:focus {
-			background-color: #fdfdfd;
-		}
-	}
+.bc-settings-header__cta-btn {
+	margin-top: 20px;
+}
 
-	.button-primary {
-		box-shadow: -1px 1px 2px var(--color-black-a-40);
-	}
-
-	select,
-	input {
-		border: 1px solid #ccc;
-		box-shadow: none;
-	}
-
-	select {
-		padding: 12px;
-		height: 45px;
-		line-height: 45px;
-		border-radius: 0;
-
-		&[name="bigcommerce_import_frequency"] {
-			width: auto;
-		}
-	}
-
-	input[type=text],
-	input[type=password],
-	input[type=url],
-	input[type=number] {
-		height: 40px;
-		line-height: 40px;
-	}
-
-	input[type=checkbox] {
-		width: auto;
-		width: 20px;
-		height: 20px;
-
-		&:before {
-			margin: -1px 0 0 -3px;
-			width: 20px;
-			height: 20px;
-		}
-	}
-
-	.bigcommerce-connection-status__message {
-		display: inline-block;
-		color: var(--color-bc-success);
-		font-size: 14px;
-		font-weight: 500;
-	}
-
-	.bigcommerce-connection-status__message-failed {
-		color: var(--color-bc-red);
-	}
+.bigcommerce_product_page_bigcommerce {
 
 	select[name="bigcommerce_import_frequency"] {
 		float: left;
 		margin-right: 14px;
+		width: auto;
+	}
+}
+
+.bc-settings-section {
+
+	+ .bc-settings-section {
+		margin-top: 20px;
+	}
+}
+
+.bc-settings-section__header {
+	background-color: var(--color-white);
+	border: 1px solid var(--color-bc-light-grey);
+	cursor: pointer;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: center;
+	justify-content: flex-start;
+	padding: 20px;
+	position: relative;
+
+	.icon-bc-arrow-solid {
+		font-size: 20px;
+		color: #888;
+		margin-left: auto;
+	}
+
+	.bc-icon--settings {
+		color: var(--color-bc-doger-blue);
+		font-size: 17px;
+		position: absolute;
+	}
+
+	.icon-bc-import {
+		font-size: 10px;
+	}
+
+	.bc-settings-section--open & {
+		background-color: var(--color-bgd-panel-active);
+		border-color: var(--color-bgd-panel-active);
+		box-shadow: 0 3px 0 0 #eef0f2;
+		color: var(--color-white);
+	}
+
+	.bc-settings-section--open & .icon-bc-arrow-solid {
+		transform: rotate(180deg);
+	}
+
+	.bc-settings-section--open & .bc-icon--settings {
+		color: var(--color-white);
+	}
+}
+
+.bc-settings-section__title {
+	font-size: 20px;
+	font-weight: var(--font-weight-regular);
+	line-height: 26px;
+	margin: 0 0 0 30px;
+
+	@media (--viewport-large) {
+		margin-left: calc(4.16667% - 16px);
+	}
+
+	.bc-settings-section--open & {
+		color: var(--color-white);
+	}
+}
+
+.bc-settings-section__target {
+	border: 1px solid var(--color-bc-light-grey);
+	border-top: 0;
+	max-height: 0;
+	opacity: 0;
+	overflow: hidden;
+}
+
+.bc-settings-section__body {
+	background-color: var(--color-white);
+	color: var(--color-bc-black);
+	font-size: 14px;
+	line-height: 18px;
+	padding: 20px 20px 40px;
+
+	> p:first-child {
+		margin-top: 18px;
+		padding-top: 0;
+	}
+
+	.form-table {
+
+		p.description {
+			color: var(--color-grey-dark);
+			font-size: 12px;
+			font-style: italic;
+		}
+	}
+}
+
+.bc-settings-form--bigcommerce {
+
+	.bc-settings-save {
+		background: var(--color-white);
+		box-sizing: border-box;
+		margin-top: 30px;
+
+		@media (--viewport-wpadmin) {
+			box-shadow: 0 3px 0 0 #eef0f2;
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
+			margin-top: 0;
+			position: fixed;
+			top: 31px;
+			right: 0;
+			padding: 10px 20px;
+			width: calc(100% - 36px);
+			z-index: 3;
+		}
+
+		@media (--viewport-full) {
+			width: calc(100% - 160px);
+		}
+	}
+
+	.bc-settings-save__logo {
+		display: none;
+
+		@media (--viewport-wpadmin) {
+			display: block;
+		}
+	}
+
+	p.submit {
+		padding: 0;
+		margin: 0;
+	}
+}
+
+.bigcommerce_product_page_bigcommerce #wpbody-content {
+	margin-top: 10px;
+
+	@media (--viewport-wpadmin) {
+		margin-top: 86px;
 	}
 }

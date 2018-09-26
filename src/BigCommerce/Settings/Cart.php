@@ -19,7 +19,7 @@ class Cart extends Settings_Section {
 
 	/**
 	 * @return void
-	 * @action bigcommerce/settings/register
+	 * @action bigcommerce/settings/register/screen= . Settings_Screen::NAME
 	 */
 	public function register_settings_section() {
 		add_settings_section(
@@ -80,7 +80,7 @@ class Cart extends Settings_Section {
 			array_unshift( $options, sprintf( '<option value="0">&mdash; %s &mdash;</option>', __( 'Select Cart Page', 'bigcommerce' ) ) );
 		}
 
-		printf( '<select name="%s" class="regular-text">%s</select>', esc_attr( self::OPTION_CART_PAGE_ID ), implode( "\n", $options ) );
+		printf( '<select name="%s" class="regular-text bc-field-choices">%s</select>', esc_attr( self::OPTION_CART_PAGE_ID ), implode( "\n", $options ) );
 		if ( ! empty( $description ) ) {
 			printf( '<p class="description">%s</p>', $description );
 		}

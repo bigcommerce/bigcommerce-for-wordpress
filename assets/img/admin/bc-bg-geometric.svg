@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="359px" height="216px" viewBox="0 0 359 216" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 2</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="BigCommerce-Onboarding" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="BC---003---Product-Sync" transform="translate(-921.000000, -155.000000)" fill-rule="nonzero">
+            <g id="Welcome" transform="translate(160.000000, 132.000000)">
+                <g id="decoration_home_right" transform="translate(976.500000, 131.000000) rotate(90.000000) translate(-976.500000, -131.000000) translate(868.500000, -84.500000)">
+                    <g id="Group-2" transform="translate(0.000000, 72.000000)">
+                        <polygon id="Shape" fill="#DFE3E9" points="0 72 72 72 72 0"></polygon>
+                        <polygon id="Shape" fill="#34313E" points="144 144 216 144 216 72"></polygon>
+                        <path d="M144,0 L144,72 L216,72 L144,0 Z M144,359 L216,359 L216,287 L144,359 Z" id="Shape" fill="#4E19BD"></path>
+                        <polygon id="Shape" fill="#4E75F9" points="144 72 144 0 72 0"></polygon>
+                        <polygon id="Shape" fill="#73B7EC" points="144 216 144 144 72 144"></polygon>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

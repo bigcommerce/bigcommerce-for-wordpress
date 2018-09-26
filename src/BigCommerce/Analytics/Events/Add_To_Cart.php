@@ -19,8 +19,8 @@ class Add_To_Cart {
 		if ( ! array_key_exists( 'data', $data ) ) {
 			return $args;
 		}
-		$data = $data[ 'data' ];
-		if ( array_key_exists( 'key', $data ) && $data[ 'key' ] == 'add_to_cart' ) {
+		$data = $data['data'];
+		if ( array_key_exists( 'key', $data ) && $data['key'] == 'add_to_cart' ) {
 			$data = wp_parse_args( $data, [
 				'cart_id'    => '',
 				'post_id'    => 0,
@@ -32,10 +32,11 @@ class Add_To_Cart {
 				'data-tracking-trigger' => 'ready',
 				'data-tracking-event'   => 'add_to_cart',
 				'data-tracking-data'    => json_encode( [
-					'cart_id'    => $data[ 'cart_id' ],
-					'post_id'    => $data[ 'post_id' ],
-					'product_id' => $data[ 'product_id' ],
-					'variant_id' => $data[ 'variant_id' ],
+					'cart_id'    => $data['cart_id'],
+					'post_id'    => $data['post_id'],
+					'product_id' => $data['product_id'],
+					'variant_id' => $data['variant_id'],
+					'name'       => get_the_title( $data[ 'post_id' ] ),
 				] ),
 			] );
 		}

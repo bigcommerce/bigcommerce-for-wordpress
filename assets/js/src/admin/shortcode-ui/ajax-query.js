@@ -113,10 +113,12 @@ const handleAjaxResponse = (res) => {
 
 	shortcodeState.isFetching = false;
 	dimTheHouseLights();
-	el.productGrid.innerHTML = '';
 
 	if (res.length <= 0) {
-		el.productGrid.insertAdjacentHTML('afterbegin', `<h2 class="bc-shortcode-ui__no-results">${I18N.messages.no_results}</h2>`);
+		const message = document.createElement('h2');
+		tools.addClass(message, 'bc-shortcode-ui__no-results');
+		message.textContent = I18N.messages.no_results;
+		el.productGrid.appendChild(message);
 		return;
 	}
 
@@ -132,6 +134,7 @@ const handleAjaxResponse = (res) => {
 const wpAPIGetRequest = () => {
 	shortcodeState.isFetching = true;
 	dimTheHouseLights();
+	el.productGrid.textContent = '';
 
 	const queryString = queryObjectToString();
 
@@ -167,7 +170,6 @@ const init = () => {
 	cacheElements();
 	createSpinLoader();
 	bindEvents();
-	wpAPIGetRequest();
 };
 
 export default init;

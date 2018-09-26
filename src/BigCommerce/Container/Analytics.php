@@ -7,11 +7,13 @@ namespace BigCommerce\Container;
 use BigCommerce\Analytics\Events;
 use BigCommerce\Analytics\Facebook_Pixel;
 use BigCommerce\Analytics\Google_Analytics;
+use BigCommerce\Analytics\Segment;
 use Pimple\Container;
 
 class Analytics extends Provider {
 	const FACEBOOK_PIXEL   = 'analytics.facebook';
 	const GOOGLE_ANALYTICS = 'analytics.google';
+	const SEGMENT          = 'analytics.segment';
 
 	const ADD_TO_CART  = 'analytics.events.add_to_cart';
 	const VIEW_PRODUCT = 'analytics.events.view_product';
@@ -33,16 +35,24 @@ class Analytics extends Provider {
 			return new Facebook_Pixel();
 		};
 
-		add_action( 'wp_head', $this->create_callback( 'facebook_pixel', function () use ( $container ) {
+		/*add_action( 'wp_head', $this->create_callback( 'facebook_pixel', function () use ( $container ) {
 			$container[ self::FACEBOOK_PIXEL ]->render_tracking_code();
-		} ), 10, 0 );
+		} ), 10, 0 );*/
 
 		$container[ self::GOOGLE_ANALYTICS ] = function ( Container $container ) {
 			return new Google_Analytics();
 		};
 
-		add_action( 'wp_head', $this->create_callback( 'google_analytics', function () use ( $container ) {
+		/*add_action( 'wp_head', $this->create_callback( 'google_analytics', function () use ( $container ) {
 			$container[ self::GOOGLE_ANALYTICS ]->render_tracking_code();
+		} ), 10, 0 );*/
+
+		$container[ self::SEGMENT ] = function ( Container $container ) {
+			return new Segment();
+		};
+
+		add_action( 'wp_head', $this->create_callback( 'segment', function () use ( $container ) {
+			$container[ self::SEGMENT ]->render_tracking_code();
 		} ), 10, 0 );
 	}
 

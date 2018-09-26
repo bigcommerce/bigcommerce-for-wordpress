@@ -23,15 +23,18 @@ class Login_Form extends Gutenberg_Block {
 
 	public function js_config() {
 		return [
-			'name'      => $this->name(),
-			'title'     => __( 'BigCommerce Login Form', 'bigcommerce' ),
-			'category'  => 'widgets',
-			'keywords'  => [
+			'name'       => $this->name(),
+			'title'      => __( 'BigCommerce Login Form', 'bigcommerce' ),
+			'category'   => 'widgets',
+			'keywords'   => [
 				__( 'users', 'bigcommerce' ),
 				__( 'login', 'bigcommerce' ),
 				__( 'account', 'bigcommerce' ),
 			],
-			'shortcode' => sprintf( '[%s]', Shortcodes\Login_Form::NAME ),
+			'shortcode'  => sprintf( '[%s]', Shortcodes\Login_Form::NAME ),
+			'block_html' => [
+				'title' => __( 'Login Form', 'bigcommerce' ),
+			],
 		];
 	}
 }

@@ -379,7 +379,13 @@ class Cart_Controller extends Rest_Controller {
 		] );
 
 		try {
-			$cart = $this->cart_api->cartsCartIdItemsItemIdPut( $cart_id, $item_id, $request_data )->getData();
+			$this->cart_api->cartsCartIdItemsItemIdPut( $cart_id, $item_id, $request_data );
+			$include = [
+				'line_items.physical_items.options',
+				'line_items.digital_items.options',
+				'redirect_urls',
+			];
+			$cart = $this->cart_api->cartsCartIdGet( $cart_id, $include )->getData();
 		} catch ( ApiException $e ) {
 			return new \WP_Error( 'rest_cannot_update', __( 'Cannot update cart', 'bigcommerce' ), [ 'status' => 502 ] );
 		}

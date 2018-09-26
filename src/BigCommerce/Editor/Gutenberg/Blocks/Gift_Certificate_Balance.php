@@ -23,13 +23,16 @@ class Gift_Certificate_Balance extends Gutenberg_Block {
 
 	public function js_config() {
 		return [
-			'name'      => $this->name(),
-			'title'     => __( 'BigCommerce Gift Certificate Balance', 'bigcommerce' ),
-			'category'  => 'widgets',
-			'keywords'  => [
+			'name'       => $this->name(),
+			'title'      => __( 'BigCommerce Gift Certificate Balance', 'bigcommerce' ),
+			'category'   => 'widgets',
+			'keywords'   => [
 				__( 'checkout', 'bigcommerce' ),
 			],
-			'shortcode' => sprintf( '[%s]', Shortcodes\Gift_Certificate_Balance::NAME ),
+			'shortcode'  => sprintf( '[%s]', Shortcodes\Gift_Certificate_Balance::NAME ),
+			'block_html' => [
+				'title' => __( 'Gift Certificate Balance', 'bigcommerce' ),
+			],
 		];
 	}
 }

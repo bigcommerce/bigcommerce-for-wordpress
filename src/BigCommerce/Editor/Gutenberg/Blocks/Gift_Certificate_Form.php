@@ -23,13 +23,16 @@ class Gift_Certificate_Form extends Gutenberg_Block {
 
 	public function js_config() {
 		return [
-			'name'      => $this->name(),
-			'title'     => __( 'BigCommerce Gift Certificates', 'bigcommerce' ),
-			'category'  => 'widgets',
-			'keywords'  => [
+			'name'       => $this->name(),
+			'title'      => __( 'BigCommerce Gift Certificates', 'bigcommerce' ),
+			'category'   => 'widgets',
+			'keywords'   => [
 				__( 'checkout', 'bigcommerce' ),
 			],
-			'shortcode' => sprintf( '[%s]', Shortcodes\Gift_Certificate_Form::NAME ),
+			'shortcode'  => sprintf( '[%s]', Shortcodes\Gift_Certificate_Form::NAME ),
+			'block_html' => [
+				'title' => __( 'Gift Certificates', 'bigcommerce' ),
+			],
 		];
 	}
 }

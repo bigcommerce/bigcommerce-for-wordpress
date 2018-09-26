@@ -29,7 +29,7 @@ trait WithPages {
 			array_unshift( $options, sprintf( '<option value="0">&mdash; %s &mdash;</option>', sprintf( __( 'Select %s', 'bigcommerce' ), $page->get_post_state_label() ) ) );
 		}
 
-		printf( '<select name="%s" class="regular-text">%s</select>', esc_attr( $option ), implode( "\n", $options ) );
+		printf( '<select name="%s" class="regular-text bc-field-choices">%s</select>', esc_attr( $option ), implode( "\n", $options ) );
 		if ( ! empty( $description ) ) {
 			printf( '<p class="description">%s</p>', $description );
 		}

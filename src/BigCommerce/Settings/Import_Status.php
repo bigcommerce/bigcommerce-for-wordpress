@@ -18,25 +18,35 @@ class Import_Status {
 	 * @action bigcommerce/settings/render/frequency
 	 */
 	public function render_status() {
+		$this->current_status_notice();
 
-		$current  = $this->current_status();
 		$previous = $this->previous_status();
 		$next     = $this->next_status();
 
-		if ( $current[ 'message' ] ) {
-			printf( '<div class="notice notice-info"><p class="import-status import-status-current">%s</p></div>', $current[ 'message' ] );
-		}
 		if ( $previous[ 'message' ] ) {
-			$previous_output = sprintf( '<p class="import-status import-status-previous">%s</p>', $previous[ 'message' ] );
+			$previous_output = sprintf( '<span class="import-status import-status-previous">%s</span>', $previous[ 'message' ] );
 			if ( $previous[ 'status' ] === Status::FAILED ) {
 				$previous_output = sprintf( '<div class="notice notice-error">%s</div>', $previous_output );
 			}
 			echo $previous_output;
 		}
 		if ( $next[ 'message' ] ) {
-			printf( '<p class="import-status import-status-next">%s</p>', $next[ 'message' ] );
+			printf( ' <span class="import-status import-status-next">%s</span>', $next[ 'message' ] );
 		}
 
+	}
+
+	/**
+	 * Render a notice for the status of a currently running import
+	 *
+	 * @return void
+	 * @action bigcommerce/settings/import/product_list_table_notice
+	 */
+	public function current_status_notice() {
+		$current = $this->current_status();
+		if ( $current[ 'message' ] ) {
+			printf( '<div class="notice notice-info"><p class="import-status import-status-current">%s</p></div>', $current[ 'message' ] );
+		}
 	}
 
 	/**
@@ -98,10 +108,10 @@ class Import_Status {
 		$time      = date_i18n( get_option( 'time_format', 'H:i' ), $timestamp, false );
 		switch ( $previous[ 'status' ] ) {
 			case Status::COMPLETED:
-				$status_string = sprintf( __( 'Last import completed on %s at %s', 'bigcommerce' ), $date, $time );
+				$status_string = sprintf( __( 'Last import completed on <strong>%s at %s</strong>.', 'bigcommerce' ), $date, $time );
 				break;
 			case Status::FAILED:
-				$status_string = sprintf( __( 'Last import failed on %s at %s', 'bigcommerce' ), $date, $time );
+				$status_string = sprintf( __( 'Last import failed on <strong>%s at %s</strong>.', 'bigcommerce' ), $date, $time );
 				break;
 			case Status::NOT_STARTED:
 				$status_string = '';
@@ -127,7 +137,7 @@ class Import_Status {
 			$timestamp     = strtotime( get_date_from_gmt( date( 'Y-m-d H:i:s', (int) $next ) ) );
 			$date          = date_i18n( get_option( 'date_format', 'Y-m-d' ), $timestamp, false );
 			$time          = date_i18n( get_option( 'time_format', 'H:i' ), $timestamp, false );
-			$status_string = sprintf( __( 'Next import scheduled to start on %s at %s', 'bigcommerce' ), $date, $time );
+			$status_string = sprintf( __( 'Your next import is scheduled to start on <strong>%s at %s</strong>.', 'bigcommerce' ), $date, $time );
 		} else {
 			$status_string = ''; // an import is probably in progress
 		}

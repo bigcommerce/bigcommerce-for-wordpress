@@ -23,15 +23,18 @@ class Registration_Form extends Gutenberg_Block {
 
 	public function js_config() {
 		return [
-			'name'      => $this->name(),
-			'title'     => __( 'BigCommerce Registration Form', 'bigcommerce' ),
-			'category'  => 'widgets',
-			'keywords'  => [
+			'name'       => $this->name(),
+			'title'      => __( 'BigCommerce Registration Form', 'bigcommerce' ),
+			'category'   => 'widgets',
+			'keywords'   => [
 				__( 'users', 'bigcommerce' ),
 				__( 'registration', 'bigcommerce' ),
 				__( 'account', 'bigcommerce' ),
 			],
-			'shortcode' => sprintf( '[%s]', Shortcodes\Registration_Form::NAME ),
+			'shortcode'  => sprintf( '[%s]', Shortcodes\Registration_Form::NAME ),
+			'block_html' => [
+				'title' => __( 'Registration Form', 'bigcommerce' ),
+			],
 		];
 	}
 }

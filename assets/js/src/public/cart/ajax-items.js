@@ -102,10 +102,13 @@ const updateCartItems = (data = {}) => {
  * @param data
  */
 const updatedCartTotals = (data = {}) => {
-	const baseAmount = data.base_amount.formatted;
+	const baseAmount = data.subtotal.formatted;
 	const subTotal = tools.getNodes('.bc-cart-subtotal__amount', false, el.container, true)[0];
+	const taxAmount = data.tax_amount.formatted;
+	const taxTotal = tools.getNodes('.bc-cart-tax__amount', false, el.container, true)[0];
 
-	subTotal.innerHTML = baseAmount;
+	subTotal.textContent = baseAmount;
+	taxTotal.textContent = taxAmount;
 };
 
 /**
@@ -124,6 +127,10 @@ const cartItemQtyUpdated = (data = {}) => {
 };
 
 const bcAPICodeResponseHandler = (data = {}) => {
+	if (!el.APIErrorNotification) {
+		return;
+	}
+
 	if (data.statusCode === 502) {
 		el.APIErrorNotification.innerHTML = NLS.cart.cart_error_502;
 		tools.closest(el.APIErrorNotification, '.bc-cart-error').classList.add('message-active');

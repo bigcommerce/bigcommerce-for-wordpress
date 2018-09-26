@@ -4,7 +4,7 @@
 namespace BigCommerce\Settings;
 
 
-class Import {
+class Import extends Settings_Section {
 	const NAME                     = 'import';
 	const OPTION_FREQUENCY         = 'bigcommerce_import_frequency';
 	const OPTION_DISABLE_OVERWRITE = 'bigcommerce_import_overwrite';
@@ -20,50 +20,40 @@ class Import {
 
 	/**
 	 * @return void
-	 * @action bigcommerce/settings/register
+	 * @action bigcommerce/settings/register/screen= . Settings_Screen::NAME
 	 */
 	public function register_settings_section() {
 		add_settings_section(
 			self::NAME,
 			__( 'Product Sync', 'bigcommerce' ),
-			[ $this, 'render_section' ],
+			false,
 			Settings_Screen::NAME
+		);
+
+		add_action( 'bigcommerce/settings/section/before_callback/id=' . self::NAME, [ $this, 'section_description' ], 10, 0 );
+
+		add_settings_field(
+			self::OPTION_FREQUENCY,
+			__( 'Sync Frequency', 'bigcommerce' ),
+			[ $this, 'frequency_select' ],
+			Settings_Screen::NAME,
+			self::NAME
 		);
 
 		register_setting(
 			Settings_Screen::NAME,
 			self::OPTION_FREQUENCY
 		);
-
-//		add_settings_field(
-//			self::OPTION_DISABLE_OVERWRITE,
-//			__( 'Do not update products on import', 'bigcommerce' ),
-//			[ $this, 'render_overwrite_checkbox' ],
-//			Settings_Screen::NAME,
-//			self::NAME
-//		);
-
-		register_setting(
-			Settings_Screen::NAME,
-			self::OPTION_DISABLE_OVERWRITE
-		);
 	}
 
-	/**
-	 * @param array $section
-	 *
-	 * @return void
-	 */
-	public function render_section( $section ) {
-		printf( '<p>%s</p>', esc_html__( 'We will check for new products and updates to existing products and import them for you automatically every:', 'bigcommerce' ) );
-		echo $this->frequency_select();
-		do_action( 'bigcommerce/settings/render/frequency', $section );
+	public function section_description() {
+		printf( '<p class="description">%s</p>', esc_html__( 'We will check for new products and updates to existing products and import them for you automatically.', 'bigcommerce' ) );
 	}
 
 	/**
 	 * @return string
 	 */
-	private function frequency_select() {
+	public function frequency_select() {
 		$current = get_option( self::OPTION_FREQUENCY, self::DEFAULT_FREQUENCY );
 		$options = [
 			self::FREQUENCY_FIVE    => __( 'Five Minutes', 'bigcommerce' ),
@@ -74,13 +64,13 @@ class Import {
 			self::FREQUENCY_MONTHLY => __( 'Month', 'bigcommerce' ),
 		];
 
-		$select = sprintf( '<select name="%s" class="regular-text">', esc_attr( self::OPTION_FREQUENCY ) );
+		$select = sprintf( '<select name="%s" class="regular-text bc-field-choices">', esc_attr( self::OPTION_FREQUENCY ) );
 		foreach ( $options as $key => $label ) {
 			$select .= sprintf( '<option value="%s" %s>%s</option>', esc_attr( $key ), selected( $current, $key, false ), esc_html( $label ) );
 		}
 		$select .= '</select>';
 
-		return $select;
+		echo $select;
 	}
 
 	public function render_overwrite_checkbox() {

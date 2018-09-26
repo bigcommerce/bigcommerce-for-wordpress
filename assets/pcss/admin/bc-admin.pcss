@@ -6,12 +6,14 @@
  */
 
 /* Admin UI Base */
+@import "../utilities/mixins/buttons";
 @import "../utilities/variables/colors";
 @import "../utilities/variables/media-queries";
 @import "../utilities/variables/paths";
 @import "../utilities/variables/transitions";
 @import "../utilities/variables/typography";
-@import "../utilities/variables/_icons.pcss";
+@import "../utilities/variables/_icons";
+@import "../utilities/settings/grid";
 @import "../base/icons";
 
 /* Vendor: Choices.js */
@@ -19,7 +21,10 @@
 
 /* Admin Plugin Settings */
 @import './settings/menu';
+@import './settings/plugin-settings-pages';
 @import './settings/plugin-settings';
+@import './settings/plugin-welcome';
+@import './settings/plugin-connect';
 
 /* Admin UI Styles */
 @import './shortcode-ui/shortcode-dialog';
@@ -29,6 +34,7 @@
 @import './shortcode-ui/selected-products';
 
 /* Post Editor Styles */
+@import './posts/posts-list';
 @import './posts/edit-post';
 @import './posts/quick-edit';
 

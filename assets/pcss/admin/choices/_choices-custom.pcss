@@ -16,3 +16,39 @@
 	background-color: lighten(var(--color-bc-blue-light), 0.1);
 	border: 0;
 }
+
+.bc-choices {
+
+	&[data-type*="select-one"]:after {
+		border-color: #888 transparent transparent;
+		border-width: 4px;
+		right: 16px;
+	}
+
+	.bc-settings-section__body &[data-type*="select-one"] {
+		max-width: 540px;
+	}
+
+	.choices__inner {
+		background-color: var(--color-white);
+		border-color: var(--color-border-form-field);
+		border-radius: 0;
+		box-sizing: border-box;
+		min-height: 20px;
+		padding: 11px 10px 10px;
+	}
+
+	&[data-type*="select-one"] .choices__inner {
+		padding-bottom: 9px;
+	}
+
+	.choices__list--single {
+		box-sizing: border-box;
+		padding: 0 20px 0 0;
+	}
+
+	.choices__list--dropdown {
+		border-color: var(--color-border-form-field);
+		box-sizing: border-box;
+	}
+}

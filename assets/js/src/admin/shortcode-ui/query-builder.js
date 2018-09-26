@@ -14,6 +14,11 @@ import { on, trigger } from '../../utils/events';
 
 const el = {};
 
+const state = {
+	slideSpeed: 150,
+	delaySpeed: 100,
+};
+
 /**
  * @function openChildMenu
  * @description Toggle the accordion open
@@ -21,7 +26,7 @@ const el = {};
 const openChildMenu = (header, content) => {
 	tools.addClass(header.parentNode, 'active');
 	setAccActiveAttributes(header, content);
-	slide.down(content, 150);
+	slide.down(content, state.slideSpeed);
 };
 
 /**
@@ -31,7 +36,7 @@ const openChildMenu = (header, content) => {
 const closeChildMenu = (header, content) => {
 	tools.removeClass(header.parentNode, 'active');
 	setAccInactiveAttributes(header, content);
-	slide.up(content, 150);
+	slide.up(content, state.slideSpeed);
 };
 
 /**
@@ -153,20 +158,21 @@ const handleChoiceRemoval = (e) => {
  * @param e event
  */
 const handleLinks = (e) => {
-	const key = e.delegateTarget.dataset.key;
-	const value = e.delegateTarget.dataset.value;
-	const label = e.delegateTarget.text;
+	const element = e.delegateTarget ? e.delegateTarget : e;
+	const key = e.delegateTarget ? e.delegateTarget.dataset.key : e.dataset.key;
+	const value = e.delegateTarget ? e.delegateTarget.dataset.value : e.dataset.value;
+	const label = e.delegateTarget ? e.delegateTarget.text : e.text;
 
-	e.delegateTarget.classList.toggle('bcqb-item-selected');
+	element.classList.toggle('bcqb-item-selected');
 
-	if (e.delegateTarget.classList.contains('bcqb-item-selected')) {
+	if (element.classList.contains('bcqb-item-selected')) {
 		addChoice(value, label);
 		buildQueryObject(key, value);
-		e.delegateTarget.setAttribute('aria-selected', 'true');
+		element.setAttribute('aria-selected', 'true');
 		return;
 	}
 
-	e.delegateTarget.setAttribute('aria-selected', 'false');
+	element.setAttribute('aria-selected', 'false');
 	removeChoice(value);
 	reduceQueryObject(key, value);
 };
@@ -200,12 +206,11 @@ const addSavedUICustomChoices = (choices) => {
 };
 
 /**
- * @function initLinkListClicks
+ * @function initQueryParamSelections
  * @description If a saved term exists, fire a click event on that item to add it to the search bar and state object.
  * @param terms
- * TODO: @vinny This needs to be removed and replaced with new logic in handleLinks that allows for events AND state changes.
  */
-const initLinkListClicks = (terms) => {
+const initQueryParamSelections = (terms) => {
 	if (!terms) {
 		return;
 	}
@@ -214,10 +219,12 @@ const initLinkListClicks = (terms) => {
 		const listLink = tools.getNodes(`[data-slug="${slug}"]`, false, el.linkList, true)[0];
 		const listParent = tools.closest(listLink, '[data-js="bcqb-parent-list-item"]:not(.active)');
 
-		listLink.click();
+		handleLinks(listLink);
 
 		if (slug[0] && listParent) {
-			_.delay(() => tools.getNodes('bcqb-has-child-list', false, listParent)[0].click(), 100);
+			const header = tools.getNodes('bcqb-has-child-list', false, listParent)[0];
+			const content = header.nextElementSibling;
+			_.delay(() => openChildMenu(header, content), state.delaySpeed);
 		}
 	});
 };
@@ -228,32 +235,34 @@ const initLinkListClicks = (terms) => {
  * @param event
  */
 const setShortcodeState = (event) => {
-	clearSearch();
-
-	const currentBlockParams = event.detail.params;
-
-	if (!currentBlockParams || currentBlockParams.length <= 0) {
+	if (!event.detail.params) {
 		return;
 	}
 
+	const currentBlockParams = event.detail.params;
+
+	clearSearch();
+
 	Object.entries(currentBlockParams).forEach(([key, value]) => {
-		// TODO: Maybe change this to a switch function?
-		if (key === 'brand' || key === 'category') {
-			const termIDs = [...value.split(',')];
-
-			initLinkListClicks(termIDs);
-		}
-
-		if (key === 'search') {
+		switch (key) {
+		case 'brand':
+		case 'category':
+			initQueryParamSelections([...value.split(',')]);
+			break;
+		case 'featured':
+		case 'sale':
+		case 'recent':
+			initQueryParamSelections([key]);
+			break;
+		case 'search':
 			addSavedUICustomChoices([...value.split(',')]);
-		}
-
-		if (key === 'featured' || key === 'sale' || key === 'recent') {
-			initLinkListClicks([key]);
+			break;
+		default:
+			break;
 		}
 	});
 
-	_.delay(() => trigger({ event: 'bigcommerce/shortcode_ui_state_ready', native: false }), 100);
+	_.delay(() => trigger({ event: 'bigcommerce/shortcode_ui_state_ready', native: false }), state.delaySpeed);
 };
 
 const cacheElements = () => {

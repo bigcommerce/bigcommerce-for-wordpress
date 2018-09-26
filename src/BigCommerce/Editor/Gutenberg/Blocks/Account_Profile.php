@@ -23,14 +23,17 @@ class Account_Profile extends Gutenberg_Block {
 
 	public function js_config() {
 		return [
-			'name'      => $this->name(),
-			'title'     => __( 'BigCommerce Account Profile', 'bigcommerce' ),
-			'category'  => 'widgets',
-			'keywords'  => [
+			'name'       => $this->name(),
+			'title'      => __( 'BigCommerce Account Profile', 'bigcommerce' ),
+			'category'   => 'widgets',
+			'keywords'   => [
 				__( 'user', 'bigcommerce' ),
 				__( 'account', 'bigcommerce' ),
 			],
-			'shortcode' => sprintf( '[%s]', Shortcodes\Account_Profile::NAME ),
+			'shortcode'  => sprintf( '[%s]', Shortcodes\Account_Profile::NAME ),
+			'block_html' => [
+				'title' => __( 'My Account', 'bigcommerce' ),
+			],
 		];
 	}
 }

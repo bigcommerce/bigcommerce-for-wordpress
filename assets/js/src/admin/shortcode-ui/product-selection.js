@@ -31,7 +31,7 @@ const addProduct = (e) => {
 
 	el.productList.insertAdjacentHTML('beforeend', selectedProduct(productData));
 	resultsProduct.classList.add('bc-shortcode-ui__selected-result');
-	resultsProduct.querySelector('.bc-shortcode-ui__product-anchor-status').innerHTML = I18N.buttons.remove_product;
+	resultsProduct.querySelector('.bc-shortcode-ui__product-anchor-status').textContent = I18N.buttons.remove_product;
 	shortcodeState.selectedProducts.post_id.push(e.delegateTarget.dataset.postid);
 	trigger({ event: 'bigcommerce/shortcode_product_list_event', native: false });
 };
@@ -50,7 +50,7 @@ const removeProduct = (e) => {
 
 	if (resultsProduct) {
 		resultsProduct.classList.remove('bc-shortcode-ui__selected-result');
-		resultsProduct.querySelector('.bc-shortcode-ui__product-anchor-status').innerHTML = I18N.buttons.add_product;
+		resultsProduct.querySelector('.bc-shortcode-ui__product-anchor-status').textContent = I18N.buttons.add_product;
 	}
 
 	el.productList.removeChild(product);
@@ -86,7 +86,7 @@ const resetProductsList = () => {
 		tools.removeClass(product, 'bc-shortcode-ui__selected-result');
 	});
 
-	el.productList.innerHTML = '';
+	el.productList.textContent = '';
 };
 
 /**
@@ -95,6 +95,10 @@ const resetProductsList = () => {
  * @param e
  */
 const populateSavedUIProductList = (e) => {
+	if (!e.detail.params) {
+		return;
+	}
+
 	const currentBlockBCIDs = e.detail.params.id;
 
 	if (!currentBlockBCIDs || currentBlockBCIDs.length <= 0) {
@@ -106,6 +110,9 @@ const populateSavedUIProductList = (e) => {
 	const str = [];
 	str.push(`${k}=${v}`);
 	const queryString = str ? str.join(I18N.operations.query_string_separator) : '';
+	let selectedProductsNodes = '';
+
+	shortcodeState.isFetching = true;
 
 	wpAPIProductLookup(queryString)
 		.end((err, res) => {
@@ -125,13 +132,13 @@ const populateSavedUIProductList = (e) => {
 					price: product.price_range,
 				};
 
-				el.productList.insertAdjacentHTML('beforeend', selectedProduct(productData));
+				selectedProductsNodes += selectedProduct(productData);
 				shortcodeState.selectedProducts.post_id.push(product.post_id.toString());
-				_.delay(() => {
-					trigger({ event: 'bigcommerce/shortcode_ui_state_ready', native: false });
-					trigger({ event: 'bigcommerce/shortcode_product_list_event', native: false });
-				}, 100);
 			});
+
+			el.productList.insertAdjacentHTML('beforeend', selectedProductsNodes);
+
+			_.delay(() => trigger({ event: 'bigcommerce/shortcode_product_list_event', native: false }), 100);
 		});
 };
 
@@ -142,11 +149,6 @@ const populateSavedUIProductList = (e) => {
  */
 const handleSavedUIProductList = (e) => {
 	resetProductsList();
-
-	if (!e) {
-		return;
-	}
-
 	populateSavedUIProductList(e);
 };
 

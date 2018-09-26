@@ -32,6 +32,9 @@ class Cart extends Gutenberg_Block {
 				__( 'checkout', 'bigcommerce' ),
 			],
 			'shortcode' => sprintf( '[%s]', Shortcodes\Cart::NAME ),
+			'block_html' => [
+				'title' => __( 'Cart', 'bigcommerce' ),
+			],
 		];
 	}
 }

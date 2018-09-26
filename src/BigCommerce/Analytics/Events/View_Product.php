@@ -33,6 +33,7 @@ class View_Product {
 			'data-tracking-data'    => json_encode( [
 				'post_id'    => $product->post_id(),
 				'product_id' => $product->bc_id(),
+				'name'       => get_the_title( $product->post_id() ),
 			] ),
 		] );
 
@@ -63,6 +64,7 @@ class View_Product {
 			'data-tracking-data'    => json_encode( [
 				'post_id'    => $product->post_id(),
 				'product_id' => $product->bc_id(),
+				'name'       => get_the_title( $product->post_id() ),
 			] ),
 		] );
 

@@ -1,0 +1,121 @@
+.bc-welcome {
+	display: flex;
+	flex-direction: column;
+	lost-utility: clearfix;
+	margin-top: 10px;
+
+	@media (--viewport-medium) {
+		flex-direction: row;
+		justify-content: flex-start;
+		margin-top: 30px;
+	}
+
+	@media (--viewport-large) {
+		margin-top: 110px;
+	}
+}
+
+.bc-welcome__content,
+.bc-welcome__notices {
+	@media (--viewport-medium) {
+		lost-column: 6/12;
+	}
+
+	@media (--viewport-large) {
+		lost-column: 5/12;
+	}
+}
+
+.bc-welcome__content {
+	@media (--viewport-large) {
+		lost-offset: 1/12;
+	}
+}
+
+.bc-welcome__content-wrap {
+	@media (--viewport-large) {
+		margin-right: 12.5%;
+		max-width: 410px;
+	}
+}
+
+.bc-welcome__content {
+
+	&-title {
+		color: var(--color-bc-black);
+		font-size: 32px;
+		font-weight: var(--font-weight-regular);
+		line-height: 40px;
+		margin: 18px 0 22px;
+
+		@media (--viewport-medium) {
+			font-size: 48px;
+			line-height: 52px;
+		}
+	}
+
+	p {
+		font-size: 15px;
+		line-height: 1.44;
+		margin: 0;
+
+		@media (--viewport-medium) {
+			font-size: 18px;
+		}
+	}
+}
+
+.bc-welcome__btn-group {
+	display: flex;
+	flex-wrap: wrap;
+
+	.bc-admin-btn {
+		margin-bottom: 20px;
+
+		&:not(:last-child) {
+			margin-right: 20px;
+		}
+	}
+
+	.bc-welcome__content-wrap + & {
+		margin-top: 40px;
+	}
+
+	.bigcommerce_product_page_bigcommerce_welcome & .bc-admin-btn--outline {
+		background-color: var(--color-white);
+
+		&:hover,
+		&:focus {
+			background-color: var(--color-bc-doger-blue);
+		}
+	}
+}
+
+.bc-welcome__notice {
+	background-color: var(--color-off-white);
+	margin-bottom: 20px;
+	padding: 36px 30px;
+
+	@media (--viewport-large) {
+		padding-right: 12.5%;
+	}
+}
+
+.bc-welcome__notice {
+
+	&-title {
+		font-size: 22px;
+		font-weight: var(--font-weight-medium);
+		line-height: 29px;
+		margin: 0;
+
+		+ p {
+			margin-top: 2px;
+		}
+	}
+
+	p {
+		font-size: 16px;
+		line-height: 24px;
+	}
+}

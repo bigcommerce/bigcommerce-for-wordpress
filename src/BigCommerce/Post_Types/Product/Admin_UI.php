@@ -4,6 +4,8 @@
 namespace BigCommerce\Post_Types\Product;
 
 
+use BigCommerce\Import\Runner\Status;
+
 class Admin_UI {
 	/**
 	 * Print the product title as static HTML to replace
@@ -37,7 +39,7 @@ class Admin_UI {
 			return $post_data;
 		}
 
-		$original_title = wp_slash( get_post_field( 'post_title', $submitted_data[ 'ID' ] ) );
+		$original_title            = wp_slash( get_post_field( 'post_title', $submitted_data[ 'ID' ] ) );
 		$post_data[ 'post_title' ] = $original_title;
 
 		return $post_data;
@@ -52,5 +54,46 @@ class Admin_UI {
 	 */
 	public function remove_featured_image_meta_box( \WP_Post $post ) {
 		remove_meta_box( 'postimagediv', get_current_screen(), 'side' );
+	}
+
+	/**
+	 * Add the last import date at the end of the views above the products
+	 * list table. While not exactly a view, it's a reasonable place
+	 * to inject the status into the UI.
+	 *
+	 * @param array $views
+	 *
+	 * @return array
+	 * @filter views_edit-bigcommerce_product
+	 */
+	public function list_table_import_status( $views = [] ) {
+		$last_import = $this->last_import_date();
+
+		if ( $last_import ) {
+			$views[ 'bc-import-status' ] = sprintf(
+				__( 'Last Import %s', 'bigcommerce' ),
+				$last_import
+			);
+		}
+
+		return $views;
+	}
+
+	/**
+	 * @return string The date of the last import. Empty if not available.
+	 */
+	public function last_import_date() {
+		$status    = new Status();
+		$previous  = $status->previous_status();
+		$timestamp = strtotime( get_date_from_gmt( date( 'Y-m-d H:i:s', (int) $previous[ 'timestamp' ] ) ) );
+		$date      = date_i18n( get_option( 'date_format', 'Y-m-d' ), $timestamp, false );
+		switch ( $previous[ 'status' ] ) {
+			case Status::COMPLETED:
+			case Status::FAILED:
+				return $date;
+			case Status::NOT_STARTED:
+			default:
+				return '';
+		}
 	}
 }
