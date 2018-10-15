@@ -29,6 +29,9 @@ class Colors {
 	const CONDITION_COLOR    = 'bigcommerce_condition_color';
 	const CONDITION_TEXT     = 'bigcommerce_condition_text_color';
 
+	const CHECKOUT_BACKGROUND_COLOUR = 'bigcommerce_checkout_background_color';
+	const CHECKOUT_TEXT_COLOUR = 'bigcommerce_checkout_text_color';
+
 	/**
 	 * @param \WP_Customize_Manager $wp_customize
 	 *
@@ -45,6 +48,32 @@ class Colors {
 		$this->sale( $wp_customize );
 		$this->availability( $wp_customize );
 		$this->condition( $wp_customize );
+		$this->checkout( $wp_customize );
+	}
+
+	private function checkout( \WP_Customize_Manager $wp_customize ) {
+		// TODO: Support all the styling properties provided by Embedded Checkout.
+		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::CHECKOUT_BACKGROUND_COLOUR, [
+			'type'              => 'theme_mod',
+			'default'           => self::COLOR_BC_LIGHT_GREY,
+			'transport'         => 'refresh',
+			'sanitize_callback' => 'sanitize_hex_color',
+		] ) );
+		$wp_customize->add_control( new \WP_Customize_Color_Control( $wp_customize, self::CHECKOUT_BACKGROUND_COLOUR, [
+			'section' => self::NAME,
+			'label'   => __( 'Checkout Background', 'bigcommerce' ),
+		] ) );
+
+		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::CHECKOUT_TEXT_COLOUR, [
+			'type'              => 'theme_mod',
+			'default'           => self::COLOR_BC_BLACK,
+			'transport'         => 'refresh',
+			'sanitize_callback' => 'sanitize_hex_color',
+		] ) );
+		$wp_customize->add_control( new \WP_Customize_Color_Control( $wp_customize, self::CHECKOUT_TEXT_COLOUR, [
+			'section' => self::NAME,
+			'label'   => __( 'Checkout Text', 'bigcommerce' ),
+		] ) );
 	}
 
 	private function css( \WP_Customize_Manager $wp_customize ) {

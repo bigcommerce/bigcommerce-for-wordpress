@@ -52,6 +52,15 @@ class Styles {
 		}
 	}
 
+	public function get_checkout_styles() {
+		return [
+			'body' => [
+				'backgroundColor' => sanitize_hex_color( get_theme_mod( Colors::CHECKOUT_BACKGROUND_COLOUR ) ),
+				'color' => sanitize_hex_color( get_theme_mod( Colors::CHECKOUT_TEXT_COLOUR ) ),
+			],
+		];
+	}
+
 	/**
 	 * @return bool
 	 */

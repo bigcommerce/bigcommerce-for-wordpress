@@ -119,6 +119,13 @@ use BigCommerce\Taxonomies\Product_Category\Product_Category;
 			<form action="<?php echo esc_url( home_url( '/bigcommerce/checkout/' . $cart['cart_id'] ) ); ?>" method="post" enctype="multipart/form-data">
 				<button type="submit" class="bc-btn bc-cart-actions__checkout-button" data-js="proceed-to-checkout"><?php esc_html_e( 'Proceed to Checkout', 'bigcommerce' ); ?></button>
 			</form>
+
+			<br>
+
+			<!-- TODO: Render this button conditionally. Only render it if Embedded Checkout is enabled. Otherwise, render the regular redirect button. -->
+			<a href="<?php echo esc_url( home_url( '/checkout/' ) ); ?>" class="bc-btn">
+				<?php esc_html_e( 'Proceed to Embedded Checkout', 'bigcommerce' ); ?>
+			</a>
 		</div>
 	</footer>
 </section>
