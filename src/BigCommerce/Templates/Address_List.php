@@ -12,7 +12,7 @@ class Address_List extends Controller {
 	const ADDRESSES   = 'addresses';
 	const NEW_ADDRESS = 'new_address';
 
-	protected $template = 'components/address-list.php';
+	protected $template = 'components/accounts/address-list.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [
@@ -33,8 +33,8 @@ class Address_List extends Controller {
 		$addresses = [];
 		$customer  = new Customer( $this->options[ self::USER_ID ] );
 		foreach ( $customer->get_addresses() as $address ) {
-			$formatted   = new Address_Formatted( $address );
-			$actions     = new Address_Actions( [
+			$formatted   = Address_Formatted::factory( $address );
+			$actions     = Address_Actions::factory( [
 				Address_Actions::ADDRESS => $address,
 			] );
 			$addresses[] = [
@@ -47,7 +47,7 @@ class Address_List extends Controller {
 	}
 
 	private function get_new_address() {
-		$new = new Address_New( [] );
+		$new = Address_New::factory( [] );
 
 		return $new->render();
 	}

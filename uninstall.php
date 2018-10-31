@@ -3,8 +3,11 @@
 namespace BigCommerce\Uninstall;
 
 use BigCommerce\Customizer;
+use BigCommerce\Import\Processors\Channel_Initializer;
+use BigCommerce\Import\Processors\Product_ID_Fetcher;
 use BigCommerce\Import\Runner\Lock;
 use BigCommerce\Import\Runner\Status;
+use BigCommerce\Merchant;
 use BigCommerce\Pages;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Schema;
@@ -124,25 +127,28 @@ function delete_tables() {
 
 function delete_options() {
 	$options = [
-		Settings\Api_Credentials::OPTION_ACCESS_TOKEN,
-		Settings\Api_Credentials::OPTION_CLIENT_ID,
-		Settings\Api_Credentials::OPTION_CLIENT_SECRET,
-		Settings\Api_Credentials::OPTION_STORE_URL,
-		Settings\Cart::OPTION_ENABLE_CART,
-		Settings\Cart::OPTION_CART_PAGE_ID,
-		Settings\Import::OPTION_FREQUENCY,
-		Settings\Import::OPTION_DISABLE_OVERWRITE,
-		Settings\Account_Settings::SUPPORT_EMAIL,
-		Settings\Analytics::FACEBOOK_PIXEL,
-		Settings\Analytics::GOOGLE_ANALYTICS,
-		Settings\Analytics::SEGMENT,
-		Settings\Currency::CURRENCY_CODE,
-		Settings\Currency::CURRENCY_SYMBOL,
-		Settings\Currency::CURRENCY_SYMBOL_POSITION,
-		Settings\Currency::DECIMAL_UNITS,
-		Settings\Gift_Certificates::OPTION_ENABLE,
-		Settings\Units::MASS,
-		Settings\Units::LENGTH,
+		Settings\Sections\Api_Credentials::OPTION_ACCESS_TOKEN,
+		Settings\Sections\Api_Credentials::OPTION_CLIENT_ID,
+		Settings\Sections\Api_Credentials::OPTION_CLIENT_SECRET,
+		Settings\Sections\Api_Credentials::OPTION_STORE_URL,
+		Settings\Sections\Channels::CHANNEL_ID,
+		Settings\Sections\Channels::CHANNEL_NAME,
+		Settings\Sections\New_Account_Section::STORE_INFO,
+		Settings\Screens\Create_Account_Screen::SUBMITTED_DATA,
+		Settings\Sections\Cart::OPTION_ENABLE_CART,
+		Settings\Sections\Cart::OPTION_CART_PAGE_ID,
+		Settings\Sections\Import::OPTION_FREQUENCY,
+		Settings\Sections\Account_Settings::SUPPORT_EMAIL,
+		Settings\Sections\Analytics::FACEBOOK_PIXEL,
+		Settings\Sections\Analytics::GOOGLE_ANALYTICS,
+		Settings\Sections\Analytics::SEGMENT,
+		Settings\Sections\Currency::CURRENCY_CODE,
+		Settings\Sections\Currency::CURRENCY_SYMBOL,
+		Settings\Sections\Currency::CURRENCY_SYMBOL_POSITION,
+		Settings\Sections\Currency::DECIMAL_UNITS,
+		Settings\Sections\Gift_Certificates::OPTION_ENABLE,
+		Settings\Sections\Units::MASS,
+		Settings\Sections\Units::LENGTH,
 		'schema-' . Schema\Products_Table::class,
 		'schema-' . Schema\Variants_Table::class,
 		'schema-' . Schema\Reviews_Table::class,
@@ -151,6 +157,11 @@ function delete_options() {
 		Status::CURRENT_LOG,
 		Status::PREVIOUS_LOG,
 		Lock::OPTION,
+		Channel_Initializer::STATE_OPTION,
+		Product_ID_Fetcher::STATE_OPTION,
+		Merchant\Onboarding_Api::ACCOUNT_ID,
+		Merchant\Onboarding_Api::STORE_ID,
+		Merchant\Onboarding_Api::AUTH_KEY,
 		Customizer\Sections\Buttons::ADD_TO_CART,
 		Customizer\Sections\Buttons::BUY_NOW,
 		Customizer\Sections\Buttons::CHOOSE_OPTIONS,

@@ -11,7 +11,7 @@ class Related_Products_Grid extends Controller {
 	const PRODUCTS = 'products';
 	const COLUMNS  = 'columns';
 
-	protected $template = 'components/related-products-grid.php';
+	protected $template = 'components/products/related-products-grid.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [

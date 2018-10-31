@@ -49,10 +49,13 @@
 }
 
 .bigcommerce_product_page_bigcommerce_welcome,
-.bigcommerce_product_page_bigcommerce_connect {
+.bigcommerce_product_page_bigcommerce_connect,
+.bigcommerce_product_page_bigcommerce_new_account,
+.bigcommerce_product_page_bigcommerce_pending_account {
 
 	#wpwrap {
 		position: relative;
+		padding-bottom: 210px;
 
 		&:after {
 			background: transparent url("../img/admin/bc-bg-geometric.svg") no-repeat bottom right/contain;
@@ -93,6 +96,10 @@
 		border-top: 1px solid var(--color-bc-light-grey);
 		z-index: 2;
 	}
+}
+
+.bigcommerce_product_page_bigcommerce_pending_account #wpwrap {
+	padding-bottom: 0;
 }
 
 .bc-settings-form {
@@ -177,4 +184,10 @@
 	.button-primary {
 		box-shadow: -1px 1px 2px var(--color-black-a-40);
 	}
+}
+
+.bc-settings-field--required {
+	display: inline-block;
+	color: var(--color-bc-red);
+	margin-left: 4px;
 }

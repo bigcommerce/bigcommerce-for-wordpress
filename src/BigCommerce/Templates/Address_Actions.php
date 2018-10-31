@@ -10,7 +10,7 @@ class Address_Actions extends Controller {
 	const DELETE_FORM = 'delete_form';
 	const ADDRESS     = 'address';
 
-	protected $template = 'components/address-actions.php';
+	protected $template = 'components/accounts/address-actions.php';
 
 
 	protected function parse_options( array $options ) {
@@ -31,7 +31,7 @@ class Address_Actions extends Controller {
 	}
 
 	protected function get_form() {
-		$form = new Address_Form( $this->options[ self::ADDRESS ] );
+		$form = Address_Form::factory( $this->options[ self::ADDRESS ] );
 
 		return $form->render();
 	}
@@ -41,7 +41,7 @@ class Address_Actions extends Controller {
 		if ( empty( $id ) ) {
 			return '';
 		}
-		$form = new Address_Delete( [
+		$form = Address_Delete::factory( [
 			Address_Delete::ADDRESS_ID => $this->options[ self::ADDRESS ][ 'id' ],
 		] );
 

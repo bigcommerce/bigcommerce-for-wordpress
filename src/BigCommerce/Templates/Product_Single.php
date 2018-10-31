@@ -22,7 +22,7 @@ class Product_Single extends Controller {
 	const RELATED     = 'related';
 	const REVIEWS     = 'reviews';
 
-	protected $template = 'components/product-single.php';
+	protected $template = 'components/products/product-single.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [
@@ -53,7 +53,7 @@ class Product_Single extends Controller {
 	}
 
 	protected function get_title( Product $product ) {
-		$component = new Product_Title( [
+		$component = Product_Title::factory( [
 			Product_Title::PRODUCT       => $product,
 			Product_Title::USE_PERMALINK => false,
 		] );
@@ -62,7 +62,7 @@ class Product_Single extends Controller {
 	}
 
 	protected function get_images( Product $product ) {
-		$component = new Product_Gallery( [
+		$component = Product_Gallery::factory( [
 			Product_Gallery::PRODUCT => $product,
 		] );
 
@@ -70,7 +70,7 @@ class Product_Single extends Controller {
 	}
 
 	protected function get_price( Product $product ) {
-		$component = new Product_Price( [
+		$component = Product_Price::factory( [
 			Product_Price::PRODUCT => $product,
 		] );
 
@@ -78,7 +78,7 @@ class Product_Single extends Controller {
 	}
 
 	protected function get_rating( Product $product ) {
-		$component = new Product_Rating( [
+		$component = Product_Rating::factory( [
 			Product_Rating::PRODUCT => $product,
 			Product_Rating::LINK    => get_the_permalink( $product->post_id() ) . '#bc-single-product__reviews',
 		] );
@@ -87,7 +87,7 @@ class Product_Single extends Controller {
 	}
 
 	protected function get_brand( Product $product ) {
-		$component = new Product_Brand( [
+		$component = Product_Brand::factory( [
 			Product_Brand::PRODUCT => $product,
 		] );
 
@@ -95,7 +95,7 @@ class Product_Single extends Controller {
 	}
 
 	protected function get_description( Product $product ) {
-		$component = new Product_Description( [
+		$component = Product_Description::factory( [
 			Product_Description::PRODUCT => $product,
 		] );
 
@@ -103,7 +103,7 @@ class Product_Single extends Controller {
 	}
 
 	protected function get_form( Product $product ) {
-		$component = new Product_Form( [
+		$component = Product_Form::factory( [
 			Product_Form::PRODUCT => $product,
 		] );
 
@@ -111,7 +111,7 @@ class Product_Single extends Controller {
 	}
 
 	protected function get_specs( Product $product ) {
-		$component = new Product_Specs( [
+		$component = Product_Specs::factory( [
 			Product_Specs::PRODUCT => $product,
 		] );
 
@@ -133,14 +133,14 @@ class Product_Single extends Controller {
 		}
 
 		$related = array_map( function ( $post_id ) {
-			$component = new Related_Product( [
+			$component = Related_Product::factory( [
 				Related_Product::PRODUCT => new Product( $post_id ),
 			] );
 
 			return $component->render();
 		}, $related_ids );
 
-		$component = new Related_Products_Grid( [
+		$component = Related_Products_Grid::factory( [
 			Related_Products_Grid::PRODUCTS => $related,
 		] );
 
@@ -178,14 +178,14 @@ class Product_Single extends Controller {
 		$next_page_url = $this->next_page_url( $product->post_id(), $per_page, 1, $total_pages );
 
 		$reviews = array_map( function ( $review ) use ( $product ) {
-			$controller = new Review_Single( array_merge( [
+			$controller = Review_Single::factory( array_merge( [
 				Review_Single::PRODUCT => $product,
 			], $review ) );
 
 			return $controller->render();
 		}, $reviews );
 
-		$controller = new Product_Reviews( [
+		$controller = Product_Reviews::factory( [
 			Product_Reviews::PRODUCT       => $product,
 			Product_Reviews::REVIEWS       => $reviews,
 			Product_Reviews::NEXT_PAGE_URL => $next_page_url,

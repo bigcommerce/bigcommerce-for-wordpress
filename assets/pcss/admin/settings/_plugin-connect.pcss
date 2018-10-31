@@ -1,11 +1,16 @@
-.bc-settings-bigcommerce_connect {
+.bc-settings-bigcommerce_connect,
+.bc-settings-bigcommerce_new_account {
 	display: flex;
 	flex-direction: column;
 	lost-utility: clearfix;
 }
 
 .bc-connect__header,
-.bc-settings-form--bigcommerce_connect {
+.bc-new-account__header,
+.bc-settings-form--bigcommerce_connect,
+.bc-settings-form--bigcommerce_new_account,
+.bc-welcome__account-connection,
+.bc-settings-form--bigcommerce_channel {
 	@media (--viewport-medium) {
 		lost-column: 11/12;
 	}
@@ -15,13 +20,17 @@
 	}
 }
 
-.bc-settings-form--bigcommerce_connect {
+.bc-settings-form--bigcommerce_connect,
+.bc-settings-form--bigcommerce_new_account,
+.bc-welcome__account-connection,
+.bc-settings-form--bigcommerce_channel {
 	@media (--viewport-large) {
 		lost-column: 9/12;
 	}
 }
 
-.bc-connect__header {
+.bc-connect__header,
+.bc-new-account__header {
 	margin: 10px 0 30px;
 
 	@media (--viewport-medium) {
@@ -35,7 +44,7 @@
 	}
 }
 
-.bc-settings-bigcommerce_connect .bc-settings-connect__title {
+.bc-settings .bc-settings-connect__title {
 	color: var(--color-bc-black);
 	font-size: 32px;
 	font-weight: var(--font-weight-regular);
@@ -46,4 +55,40 @@
 		font-size: 48px;
 		line-height: 52px;
 	}
+}
+
+.bc-connect-spinner {
+	float: none;
+	visibility: visible;
+	margin: 0 10px 0 0;
+}
+
+.bc-account-connection-response {
+	padding: 20px;
+	font-size: 15px;
+	border: 1px solid var(--color-bc-light-grey);
+	border-left: 10px solid var(--color-bc-blue-light);
+
+	&--error {
+		border-left-color: var(--color-bc-red);
+	}
+}
+
+.bc-account-connection__error-title {
+	margin-top: 0;
+}
+
+.bc-account-connection__error-code {
+	font-size: 16px;
+	font-weight: var(--font-weight-bold);
+
+	code {
+		font-weight: normal;
+	}
+}
+
+.bc-account-connection__error-message {
+	display: block;
+	margin-top: 4px;
+	font-size: 15px;
 }

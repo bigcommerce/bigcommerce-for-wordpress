@@ -10,7 +10,7 @@ Class No_Results extends Controller {
 	const RESET_BUTTON_LABEL        = 'reset_button_label';
 	const PRODUCT_ARCHIVE_PERMALINK = 'product_archive_permalink';
 
-	protected $template = 'components/no-results.php';
+	protected $template = 'components/catalog/no-results.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [

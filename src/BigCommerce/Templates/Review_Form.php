@@ -9,7 +9,7 @@ class Review_Form extends Controller {
 	const OPTIONS  = 'options';
 	const MESSAGES = 'messages';
 
-	protected $template = 'components/review-form.php';
+	protected $template = 'components/reviews/review-form.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [

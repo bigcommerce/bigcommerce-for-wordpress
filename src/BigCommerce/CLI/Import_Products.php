@@ -97,9 +97,12 @@ class Import_Products extends Command {
 			\WP_CLI::log( __( 'Unable to fetch store settings', 'bigcommerce' ) );
 		}, 10, 0 );
 
-		add_action( 'bigcommerce/import/error', function ( $message = '' ) {
+		add_action( 'bigcommerce/import/error', function ( $message = '', $data = [] ) {
+			if ( $data ) {
+				\WP_CLI::debug( print_r( $data, true ) );
+			}
 			\WP_CLI::error( sprintf( __( 'Import failed with message: %s', 'bigcommerce' ), $message ) ?: __( 'Import failed.', 'bigcommerce' ), false );
-		}, 10, 1 );
+		}, 10, 2 );
 
 		add_action( 'bigcommerce/import/product/error', function ( $product_id, CatalogApi $catalog_api, \Exception $exception ) {
 			\WP_CLI::warning( sprintf( __( 'Failed to import product with ID %d. Error: %s', 'bigcommerce' ), $product_id, $exception->getMessage() ) );

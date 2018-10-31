@@ -7,7 +7,7 @@ namespace BigCommerce\Templates;
 class Inventory_Level extends Controller {
 	const PRODUCT = 'product';
 
-	protected $template = 'components/inventory-level.php';
+	protected $template = 'components/products/inventory-level.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [

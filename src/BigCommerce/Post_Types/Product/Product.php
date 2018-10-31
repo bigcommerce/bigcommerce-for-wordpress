@@ -7,7 +7,7 @@ namespace BigCommerce\Post_Types\Product;
 use BigCommerce\Api\v3\ObjectSerializer;
 use BigCommerce\Customizer\Sections\Buttons;
 use BigCommerce\Customizer\Sections\Product_Single;
-use BigCommerce\Settings\Cart;
+use BigCommerce\Settings\Sections\Cart;
 use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Condition\Condition;
 use BigCommerce\Taxonomies\Flag\Flag;
@@ -17,6 +17,7 @@ class Product {
 	const NAME = 'bigcommerce_product';
 
 	const SOURCE_DATA_META_KEY      = 'bigcommerce_source_data';
+	const LISTING_DATA_META_KEY     = 'bigcommerce_listing_data';
 	const MODIFIER_DATA_META_KEY    = 'bigcommerce_modifier_data';
 	const OPTIONS_DATA_META_KEY     = 'bigcommerce_options_data';
 	const CUSTOM_FIELDS_META_KEY    = 'bigcommerce_custom_fields';
@@ -187,6 +188,11 @@ class Product {
 		return $data;
 	}
 
+	/**
+	 * Get the product source data cached for this product
+	 *
+	 * @return object
+	 */
 	public function get_source_data() {
 		if ( isset( $this->source_cache ) ) {
 			return $this->source_cache;
@@ -194,12 +200,26 @@ class Product {
 
 		$data = get_post_meta( $this->post_id, self::SOURCE_DATA_META_KEY, true );
 		if ( empty( $data ) ) {
-			return [];
+			return new \stdClass();
 		}
 
 		$this->source_cache = json_decode( $data );
 
 		return $this->source_cache;
+	}
+
+	/**
+	 * Get the channel listing data cached for this product
+	 *
+	 * @return object
+	 */
+	public function get_listing_data() {
+		$data = get_post_meta( $this->post_id, self::LISTING_DATA_META_KEY, true );
+		if ( empty( $data ) ) {
+			return new \stdClass();
+		}
+
+		return json_decode( $data );
 	}
 
 	/**
@@ -239,6 +259,12 @@ class Product {
 		$data = $this->json_encode_maybe_from_api( $data );
 		$data = wp_slash( $data ); // WP is going to unslash it before reslashing to add to the DB
 		update_post_meta( $this->post_id, self::SOURCE_DATA_META_KEY, $data );
+	}
+
+	public function update_listing_data( $data ) {
+		$data = $this->json_encode_maybe_from_api( $data );
+		$data = wp_slash( $data ); // WP is going to unslash it before reslashing to add to the DB
+		update_post_meta( $this->post_id, self::LISTING_DATA_META_KEY, $data );
 	}
 
 	public function update_modifier_data( $data ) {

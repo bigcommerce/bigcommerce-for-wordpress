@@ -17,10 +17,10 @@ class Templates extends Provider {
 
 
 		/**
-		 * Look for plugin templates in [plugin]/public-views
+		 * Look for plugin templates in [plugin]/templates/public
 		 */
 		add_filter( 'bigcommerce/template/directory/plugin', $this->create_callback( 'plugin_directory', function ( $directory ) use ( $container ) {
-			return $directory ?: plugin_dir_path( $container[ 'plugin_file' ] ) . 'public-views';
+			return $directory ?: plugin_dir_path( $container[ 'plugin_file' ] ) . 'templates/public';
 		} ), 20, 1 );
 
 		/**

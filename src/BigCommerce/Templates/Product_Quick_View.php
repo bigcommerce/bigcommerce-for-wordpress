@@ -12,7 +12,7 @@ class Product_Quick_View extends Product_Shortcode_Single {
 
 	const PERMALINK = 'permalink';
 
-	protected $template = 'components/product-quick-view.php';
+	protected $template = 'components/products/product-quick-view.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [
@@ -37,7 +37,7 @@ class Product_Quick_View extends Product_Shortcode_Single {
 			return '';
 		}
 
-		$component = new Product_Form( [
+		$component = Product_Form::factory( [
 			Product_Form::PRODUCT      => $product,
 			Product_Form::SHOW_OPTIONS => true,
 		] );
@@ -46,7 +46,7 @@ class Product_Quick_View extends Product_Shortcode_Single {
 	}
 
 	protected function get_permalink_button( Product $product ) {
-		$component = new View_Product_Button( [
+		$component = View_Product_Button::factory( [
 			View_Product_Button::PRODUCT => $product,
 			View_Product_Button::LABEL   => $product->has_options()
 				? get_option( Buttons::CHOOSE_OPTIONS, __( 'Choose Options', 'bigcommerce' ) )
@@ -57,7 +57,7 @@ class Product_Quick_View extends Product_Shortcode_Single {
 	}
 
 	protected function get_rating( Product $product ) {
-		$component = new Product_Rating( [
+		$component = Product_Rating::factory( [
 			Product_Rating::PRODUCT => $product,
 			Product_Rating::LINK    => get_the_permalink( $product->post_id() ) . '#bc-single-product__reviews',
 		] );

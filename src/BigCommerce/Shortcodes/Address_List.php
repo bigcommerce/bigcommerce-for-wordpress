@@ -18,7 +18,7 @@ class Address_List implements Shortcode {
 			return '';
 		}
 
-		$controller = new Templates\Address_List();
+		$controller = Templates\Address_List::factory();
 
 		return $controller->render();
 	}

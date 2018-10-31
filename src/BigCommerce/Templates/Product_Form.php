@@ -16,7 +16,7 @@ class Product_Form extends Controller {
 
 	const SHOW_OPTIONS = 'show_options';
 
-	protected $template = 'components/product-form.php';
+	protected $template = 'components/products/product-form.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [
@@ -42,7 +42,7 @@ class Product_Form extends Controller {
 	}
 
 	protected function get_options( Product $product ) {
-		$component = new Product_Options( [
+		$component = Product_Options::factory( [
 			Product_Options::PRODUCT => $product,
 		] );
 
@@ -50,7 +50,7 @@ class Product_Form extends Controller {
 	}
 
 	protected function get_modifiers( Product $product ) {
-		$component = new Product_Modifiers( [
+		$component = Product_Modifiers::factory( [
 			Product_Modifiers::PRODUCT => $product,
 		] );
 

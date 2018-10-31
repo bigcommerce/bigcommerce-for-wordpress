@@ -4,7 +4,7 @@
 namespace BigCommerce\Templates;
 
 use BigCommerce\Customizer\Sections\Buttons;
-use BigCommerce\Settings\Cart as Cart_Settings;
+use BigCommerce\Settings\Sections\Cart as Cart_Settings;
 
 
 class Gift_Certificate_Form extends Form_Controller {

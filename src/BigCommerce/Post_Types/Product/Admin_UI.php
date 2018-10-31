@@ -7,26 +7,9 @@ namespace BigCommerce\Post_Types\Product;
 use BigCommerce\Import\Runner\Status;
 
 class Admin_UI {
-	/**
-	 * Print the product title as static HTML to replace
-	 * the CSS-hidden title field.
-	 *
-	 * @param \WP_Post $post
-	 *
-	 * @return void
-	 * @action edit_form_before_permalink
-	 */
-	public function insert_static_title( \WP_Post $post ) {
-		if ( $post->post_type !== Product::NAME ) {
-			return;
-		}
-		$title = $post->post_title;
-		printf( '<h2 class="product-title" title="%s">%s</h2>', __( 'Title is set on bigcommerce.com', 'bigcommerce' ), esc_html( $title ) );
-	}
 
 	/**
-	 * Prevent updates to the post title in the event that user
-	 * disables the CSS hiding the post title field
+	 * Prevent updates to the post slug
 	 *
 	 * @param array $post_data
 	 * @param array $submitted_data
@@ -34,15 +17,43 @@ class Admin_UI {
 	 * @return array
 	 * @filter wp_insert_post_data
 	 */
-	public function prevent_title_changes( $post_data, $submitted_data ) {
+	public function prevent_slug_changes( $post_data, $submitted_data ) {
 		if ( empty( $submitted_data[ 'ID' ] ) || empty( $post_data[ 'post_type' ] ) || $post_data[ 'post_type' ] !== Product::NAME ) {
 			return $post_data;
 		}
 
-		$original_title            = wp_slash( get_post_field( 'post_title', $submitted_data[ 'ID' ] ) );
-		$post_data[ 'post_title' ] = $original_title;
+		$original_slug            = wp_slash( get_post_field( 'post_name', $submitted_data[ 'ID' ] ) );
+		$post_data[ 'post_name' ] = $original_slug;
 
 		return $post_data;
+	}
+
+	/**
+	 * Filters the sample permalink HTML markup to make it a static link
+	 *
+	 * @param string   $html    Sample permalink HTML markup.
+	 * @param int      $post_id Post ID.
+	 * @param string   $title   New sample permalink title.
+	 * @param string   $slug    New sample permalink slug.
+	 * @param \WP_Post $post    Post object.
+	 *
+	 * @return string
+	 * @action get_sample_permalink_html
+	 */
+	public function override_sample_permalink_html( $html, $post_id, $title, $slug, $post ) {
+		if ( get_post_type( $post ) !== Product::NAME ) {
+			return $html;
+		}
+
+		if ( strpos( $html, 'editable-post-name-full' ) === false ) {
+			return $html; // it's not an editable permalink
+		}
+
+		$html = preg_replace( '#<span id="editable-post-name">(.*?)</span>#', '$1', $html ); // strip out the editable tags
+		$html = preg_replace( '#<span id="edit-slug-buttons">.*?</span>#', '', $html ); // remove the edit button
+		$html = preg_replace( '#<span id="editable-post-name-full">.*?</span>#', '', $html ); // remove the hidden field
+
+		return $html;
 	}
 
 	/**

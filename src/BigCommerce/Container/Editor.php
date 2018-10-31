@@ -7,8 +7,8 @@ use Pimple\Container;
 use BigCommerce\Editor\Add_Products_Button;
 use BigCommerce\Editor\Editor_Dialog_Template;
 use BigCommerce\Customizer\Styles;
-use BigCommerce\Settings\Cart as Cart_Settings;
-use BigCommerce\Settings\Gift_Certificates as Gift_Certificate_Settings;
+use BigCommerce\Settings\Sections\Cart as Cart_Settings;
+use BigCommerce\Settings\Sections\Gift_Certificates as Gift_Certificate_Settings;
 
 /**
  * Class Editor
@@ -40,7 +40,7 @@ class Editor extends Provider {
 
 	private function render_dialog_template( Container $container ) {
 		$container[ self::UI_DIALOG ] = function ( Container $container ) {
-			$path = dirname( $container[ 'plugin_file' ] ) . '/admin-views';
+			$path = dirname( $container[ 'plugin_file' ] ) . '/templates/admin';
 
 			return new Editor_Dialog_Template( $path );
 		};

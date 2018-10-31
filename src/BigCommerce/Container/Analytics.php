@@ -76,15 +76,15 @@ class Analytics extends Provider {
 			return new Events\View_Product();
 		};
 
-		add_filter( 'bigcommerce/template=components/view-product-button.php/options', $this->create_callback( 'view_product_button', function ( $options, $template ) use ( $container ) {
+		add_filter( 'bigcommerce/template=components/products/view-product-button.php/options', $this->create_callback( 'view_product_button', function ( $options, $template ) use ( $container ) {
 			return $container[ self::VIEW_PRODUCT ]->add_tracking_attributes_to_button( $options, $template );
 		} ), 10, 2 );
 
-		add_filter( 'bigcommerce/template=components/product-card.php/options', $this->create_callback( 'quickview_product_button', function ( $options, $template ) use ( $container ) {
+		add_filter( 'bigcommerce/template=components/products/product-card.php/options', $this->create_callback( 'quickview_product_button', function ( $options, $template ) use ( $container ) {
 			return $container[ self::VIEW_PRODUCT ]->add_tracking_attributes_to_button( $options, $template );
 		} ), 10, 2 );
 
-		add_filter( 'bigcommerce/template=components/product-title.php/options', $this->create_callback( 'view_product_title', function( $options, $template ) use ( $container ) {
+		add_filter( 'bigcommerce/template=components/products/product-title.php/options', $this->create_callback( 'view_product_title', function( $options, $template ) use ( $container ) {
 			return $container[ self::VIEW_PRODUCT ]->add_tracking_attributes_to_permalink( $options, $template );
 		}), 10, 3 );
 	}

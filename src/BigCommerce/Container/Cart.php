@@ -80,9 +80,5 @@ class Cart extends Provider {
 		add_action( 'bigcommerce/action_endpoint/' . Checkout::ACTION, $this->create_callback( 'checkout_handle_request', function ( $args ) use ( $container ) {
 			$container[ self::CHECKOUT ]->handle_request( reset( $args ), $container[ Api::FACTORY ]->cart() );
 		} ), 10, 1 );
-
-		add_filter( 'bigcommerce/checkout/url', $this->create_callback( 'checkout_url', function ( $url ) use ( $container ) {
-			return $container[ self::CHECKOUT ]->set_login_token_for_checkout( $url );
-		} ), 10, 1 );
 	}
 }

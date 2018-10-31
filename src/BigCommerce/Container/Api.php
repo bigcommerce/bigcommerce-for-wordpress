@@ -9,7 +9,7 @@ use BigCommerce\Api\Null_Client;
 use BigCommerce\Api\Configuration;
 use BigCommerce\Api\Request_Headers;
 use BigCommerce\Api_Factory;
-use BigCommerce\Settings\Api_Credentials;
+use BigCommerce\Settings\Sections\Api_Credentials;
 use Pimple\Container;
 
 class Api extends Provider {
@@ -96,9 +96,9 @@ class Api extends Provider {
 		$container[ self::CONFIG_COMPLETE ] = function( Container $container ) {
 			$credentials = [
 				$container[ self::CLIENT_ID ],
-				$container[ self::CLIENT_SECRET ],
 				$container[ self::ACCESS_TOKEN ],
-				$container[ self::HOST ]
+				$container[ self::HOST ],
+				// not including Client Secret here, because that's stored in the auth connector
 			];
 			return ( count( array_filter( $credentials ) ) === count( $credentials ) );
 		};

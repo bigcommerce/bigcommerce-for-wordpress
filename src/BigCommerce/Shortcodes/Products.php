@@ -71,18 +71,18 @@ class Products implements Shortcode {
 		if ( count( $products ) > 1 || $attr[ 'paged' ] > 1 ) {
 			$cards = array_map( function ( Product $product ) use ( $attr ) {
 				if ( empty( $attr[ 'preview' ] ) ) {
-					$card = new Product_Card( [
+					$card = Product_Card::factory( [
 						Product_Card::PRODUCT => $product,
 					] );
 				} else {
-					$card = new Product_Card_Preview( [
+					$card = Product_Card_Preview::factory( [
 						Product_Card::PRODUCT => $product,
 					] );
 				}
 
 				return $card->render();
 			}, $products );
-			$grid  = new Product_Shortcode_Grid( [
+			$grid  = Product_Shortcode_Grid::factory( [
 				Product_Shortcode_Grid::CARDS         => $cards,
 				Product_Shortcode_Grid::NEXT_PAGE_URL => $this->next_page_url( $attr, $query->max_num_pages ),
 				Product_Shortcode_Grid::WRAP          => intval( $attr[ 'ajax' ] ) !== 1,
@@ -91,11 +91,11 @@ class Products implements Shortcode {
 			return $grid->render();
 		} else {
 			if ( empty( $attr[ 'preview' ] ) ) {
-				$single = new Product_Shortcode_Single( [
+				$single = Product_Shortcode_Single::factory( [
 					Product_Shortcode_Single::PRODUCT => reset( $products ),
 				] );
 			} else {
-				$single = new Product_Shortcode_Single_Preview( [
+				$single = Product_Shortcode_Single_Preview::factory( [
 					Product_Shortcode_Single::PRODUCT => reset( $products ),
 				] );
 			}

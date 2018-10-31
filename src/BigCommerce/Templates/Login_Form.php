@@ -9,7 +9,7 @@ class Login_Form extends Controller {
 	const REGISTER_LINK = 'register_link';
 	const MESSAGE       = 'message';
 
-	protected $template = 'components/login-form.php';
+	protected $template = 'components/accounts/login-form.php';
 
 	protected function parse_options( array $options ) {
 		return [];
@@ -55,7 +55,7 @@ class Login_Form extends Controller {
 		}
 		switch ( $_GET[ 'bc-message' ] ) {
 			case 'loggedout':
-				$message = new Message( [
+				$message = Message::factory( [
 					Message::CONTENT => __( 'You are now logged out.', 'bigcommerce' ),
 					Message::TYPE    => Message::SUCCESS,
 				] );
@@ -63,7 +63,7 @@ class Login_Form extends Controller {
 				return $message->render();
 			case 'empty_username':
 			case 'empty_password':
-				$message = new Message( [
+				$message = Message::factory( [
 					Message::CONTENT => __( 'Please enter an email address and password.', 'bigcommerce' ),
 					Message::TYPE    => Message::ERROR,
 				] );
@@ -71,7 +71,7 @@ class Login_Form extends Controller {
 				return $message->render();
 			case 'invalid_email':
 			case 'incorrect_password':
-				$message = new Message( [
+				$message = Message::factory( [
 					Message::CONTENT => __( 'Please check that you have entered your email address and password correctly.', 'bigcommerce' ),
 					Message::TYPE    => Message::ERROR,
 				] );

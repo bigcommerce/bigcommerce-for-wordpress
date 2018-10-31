@@ -11,6 +11,7 @@ use BigCommerce\Api\v3\Model\CartRequestData;
 use BigCommerce\Api\v3\Model\CartResponse;
 use BigCommerce\Api\v3\Model\CartUpdateRequest;
 use BigCommerce\Cart\Cart_Mapper;
+use BigCommerce\Settings\Sections\Channels;
 use BigCommerce\Taxonomies\Availability\Availability;
 use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Condition\Condition;
@@ -293,6 +294,10 @@ class Cart_Controller extends Rest_Controller {
 		$customer_id = (int) ( is_user_logged_in() ? get_user_option( Login::CUSTOMER_ID_META, get_current_user_id() ) : 0 );
 		if ( $customer_id ) {
 			$request->setCustomerId( $customer_id );
+		}
+		$channel_id = (int) get_option( Channels::CHANNEL_ID, 0 );
+		if ( $channel_id ) {
+			$request->setChannelId( $channel_id );
 		}
 		$cart    = $this->cart_api->cartsPost( $request )->getData();
 

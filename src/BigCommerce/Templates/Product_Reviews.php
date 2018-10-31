@@ -12,7 +12,7 @@ class Product_Reviews extends Controller {
 	const REVIEWS       = 'reviews';
 	const NEXT_PAGE_URL = 'next_page_url';
 
-	protected $template = 'components/product-reviews.php';
+	protected $template = 'components/reviews/product-reviews.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [
@@ -35,7 +35,7 @@ class Product_Reviews extends Controller {
 	}
 
 	protected function get_reviews( $reviews, Product $product, $next_page ) {
-		$component = new Review_List( [
+		$component = Review_List::factory( [
 			Review_List::PRODUCT       => $product,
 			Review_List::REVIEWS       => $reviews,
 			Review_List::NEXT_PAGE_URL => $next_page,
@@ -45,9 +45,9 @@ class Product_Reviews extends Controller {
 	}
 
 	protected function get_header( Product $product ) {
-		$component = new Product_Rating( [
+		$component = Product_Rating::factory( [
 			Product_Rating::PRODUCT => $product,
-		], 'components/product-rating-header.php' );
+		], 'components/reviews/product-rating-header.php' );
 
 		return $component->render();
 	}
@@ -63,9 +63,9 @@ class Product_Reviews extends Controller {
 			return '';
 		}
 
-		$component = new Review_Form( [
+		$component = Review_Form::factory( [
 			Review_Form::PRODUCT => $product,
-		], 'components/review-form.php' );
+		] );
 
 		return $component->render();
 	}

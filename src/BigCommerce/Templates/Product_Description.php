@@ -10,7 +10,7 @@ class Product_Description extends Controller {
 	const PRODUCT = 'product';
 	const CONTENT = 'content';
 
-	protected $template = 'components/product-description.php';
+	protected $template = 'components/products/product-description.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [

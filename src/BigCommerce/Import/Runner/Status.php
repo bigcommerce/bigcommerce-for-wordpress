@@ -7,6 +7,8 @@ namespace BigCommerce\Import\Runner;
 class Status {
 	const NOT_STARTED              = 'not_started';
 	const STARTED                  = 'started';
+	const INITIALIZING_CHANNEL     = 'initializing_channel';
+	const INITIALIZED_CHANNEL      = 'initialized_channel';
 	const FETCHING_PRODUCT_IDS     = 'fetching_product_ids';
 	const FETCHED_PRODUCT_IDS      = 'fetched_product_ids';
 	const MARKING_DELETED_PRODUCTS = 'marking_deleted_products';

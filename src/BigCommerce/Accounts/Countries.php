@@ -34,6 +34,7 @@ class Countries {
 	 *
 	 * @return array
 	 * @filter bigcommerce/js_config
+	 * @filter bigcommerce/admin/js_config
 	 */
 	public function js_config( $config ) {
 		$config[ 'countries' ] = $this->get_countries();

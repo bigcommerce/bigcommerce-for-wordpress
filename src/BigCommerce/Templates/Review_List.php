@@ -9,7 +9,7 @@ class Review_List extends Controller {
 	const PAGINATION    = 'pagination';
 	const WRAP          = 'wrap';
 
-	protected $template = 'components/review-list.php';
+	protected $template = 'components/reviews/review-list.php';
 
 
 	protected function parse_options( array $options ) {
@@ -38,7 +38,7 @@ class Review_List extends Controller {
 		if ( empty( $next_page_url ) ) {
 			return '';
 		}
-		$component = new Review_List_Pagination( [
+		$component = Review_List_Pagination::factory( [
 			Review_List_Pagination::NEXT_PAGE_URL => $next_page_url,
 		] );
 

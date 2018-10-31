@@ -57,11 +57,11 @@ class Channel implements ArrayAccess
     protected static $swaggerTypes = [
         'id' => 'int',
         'type' => 'string',
-        'external_id' => 'string',
+        'platform' => 'string',
         'name' => 'string',
-        'config' => '\BigCommerce\Api\v3\Model\ChannelConfig',
-        'created_at' => 'string',
-        'updated_at' => 'string'
+        'date_created' => 'string',
+        'date_modified' => 'string',
+        'external_id' => 'string'
     ];
 
     public static function swaggerTypes()
@@ -76,11 +76,11 @@ class Channel implements ArrayAccess
     protected static $attributeMap = [
         'id' => 'id',
         'type' => 'type',
-        'external_id' => 'external_id',
+        'platform' => 'platform',
         'name' => 'name',
-        'config' => 'config',
-        'created_at' => 'created_at',
-        'updated_at' => 'updated_at'
+        'date_created' => 'date_created',
+        'date_modified' => 'date_modified',
+        'external_id' => 'external_id'
     ];
 
 
@@ -91,11 +91,11 @@ class Channel implements ArrayAccess
     protected static $setters = [
         'id' => 'setId',
         'type' => 'setType',
-        'external_id' => 'setExternalId',
+        'platform' => 'setPlatform',
         'name' => 'setName',
-        'config' => 'setConfig',
-        'created_at' => 'setCreatedAt',
-        'updated_at' => 'setUpdatedAt'
+        'date_created' => 'setDateCreated',
+        'date_modified' => 'setDateModified',
+        'external_id' => 'setExternalId'
     ];
 
 
@@ -106,11 +106,11 @@ class Channel implements ArrayAccess
     protected static $getters = [
         'id' => 'getId',
         'type' => 'getType',
-        'external_id' => 'getExternalId',
+        'platform' => 'getPlatform',
         'name' => 'getName',
-        'config' => 'getConfig',
-        'created_at' => 'getCreatedAt',
-        'updated_at' => 'getUpdatedAt'
+        'date_created' => 'getDateCreated',
+        'date_modified' => 'getDateModified',
+        'external_id' => 'getExternalId'
     ];
 
     public static function attributeMap()
@@ -146,11 +146,11 @@ class Channel implements ArrayAccess
     {
         $this->container['id'] = isset($data['id']) ? $data['id'] : null;
         $this->container['type'] = isset($data['type']) ? $data['type'] : null;
-        $this->container['external_id'] = isset($data['external_id']) ? $data['external_id'] : null;
+        $this->container['platform'] = isset($data['platform']) ? $data['platform'] : null;
         $this->container['name'] = isset($data['name']) ? $data['name'] : null;
-        $this->container['config'] = isset($data['config']) ? $data['config'] : null;
-        $this->container['created_at'] = isset($data['created_at']) ? $data['created_at'] : null;
-        $this->container['updated_at'] = isset($data['updated_at']) ? $data['updated_at'] : null;
+        $this->container['date_created'] = isset($data['date_created']) ? $data['date_created'] : null;
+        $this->container['date_modified'] = isset($data['date_modified']) ? $data['date_modified'] : null;
+        $this->container['external_id'] = isset($data['external_id']) ? $data['external_id'] : null;
     }
 
     /**
@@ -225,22 +225,22 @@ class Channel implements ArrayAccess
     }
 
     /**
-     * Gets external_id
+     * Gets platform
      * @return string
      */
-    public function getExternalId()
+    public function getPlatform()
     {
-        return $this->container['external_id'];
+        return $this->container['platform'];
     }
 
     /**
-     * Sets external_id
-     * @param string $external_id
+     * Sets platform
+     * @param string $platform
      * @return $this
      */
-    public function setExternalId($external_id)
+    public function setPlatform($platform)
     {
-        $this->container['external_id'] = $external_id;
+        $this->container['platform'] = $platform;
 
         return $this;
     }
@@ -267,64 +267,64 @@ class Channel implements ArrayAccess
     }
 
     /**
-     * Gets config
-     * @return \BigCommerce\Api\v3\Model\ChannelConfig
+     * Gets date_created
+     * @return string
      */
-    public function getConfig()
+    public function getDateCreated()
     {
-        return $this->container['config'];
+        return $this->container['date_created'];
     }
 
     /**
-     * Sets config
-     * @param \BigCommerce\Api\v3\Model\ChannelConfig $config
+     * Sets date_created
+     * @param string $date_created
      * @return $this
      */
-    public function setConfig($config)
+    public function setDateCreated($date_created)
     {
-        $this->container['config'] = $config;
+        $this->container['date_created'] = $date_created;
 
         return $this;
     }
 
     /**
-     * Gets created_at
+     * Gets date_modified
      * @return string
      */
-    public function getCreatedAt()
+    public function getDateModified()
     {
-        return $this->container['created_at'];
+        return $this->container['date_modified'];
     }
 
     /**
-     * Sets created_at
-     * @param string $created_at
+     * Sets date_modified
+     * @param string $date_modified
      * @return $this
      */
-    public function setCreatedAt($created_at)
+    public function setDateModified($date_modified)
     {
-        $this->container['created_at'] = $created_at;
+        $this->container['date_modified'] = $date_modified;
 
         return $this;
     }
 
     /**
-     * Gets updated_at
+     * Gets external_id
      * @return string
      */
-    public function getUpdatedAt()
+    public function getExternalId()
     {
-        return $this->container['updated_at'];
+        return $this->container['external_id'];
     }
 
     /**
-     * Sets updated_at
-     * @param string $updated_at
+     * Sets external_id
+     * @param string $external_id
      * @return $this
      */
-    public function setUpdatedAt($updated_at)
+    public function setExternalId($external_id)
     {
-        $this->container['updated_at'] = $updated_at;
+        $this->container['external_id'] = $external_id;
 
         return $this;
     }

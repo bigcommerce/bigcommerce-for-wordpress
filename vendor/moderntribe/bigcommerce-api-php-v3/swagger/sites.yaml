@@ -1,0 +1,421 @@
+swagger: '2.0'
+info:
+  title: Sites & Routes
+  version: '0.0.1'
+host: "api.bigcommerce.com"
+basePath: "/stores/{store_id}/v3"
+tags:
+- name: Sites
+  description: BigCommerce Sites & Routes API Definition.
+schemes:
+- https
+consumes:
+- application/json
+produces:
+- application/json
+paths:
+  '/channels/{channel_id}/site':
+    get:
+      tags:
+      - Sites
+      summary: GET Channel Site
+      description: Alias of GET /sites?channel_id=channel_id
+      operationId: get-channel-site
+      parameters:
+      - name: channel_id
+        in: path
+        required: true
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SiteResponse'
+    put:
+      tags:
+      - Sites
+      summary: PUT Channel Site
+      operationId: put-channel-site
+      parameters:
+      - name: channel_id
+        in: path
+        required: true
+        type: string
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Site'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/SiteResponse'
+    post:
+      tags:
+      - Sites
+      summary: POST Channel Site
+      description: Alias of POST /sites
+      operationId: post-channel-site
+      parameters:
+      - name: channel_id
+        in: path
+        required: true
+        type: string
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/SiteCreateRequest'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/SiteResponse'
+  '/sites':
+    post:
+      tags:
+      - Sites
+      summary: POST Site
+      operationId: post-site
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/SiteCreateRequest'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SiteResponse'
+  '/sites/{id}':
+    get:
+      tags:
+      - Sites
+      summary: GET Site
+      operationId: get-site
+      parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SiteResponse'
+    put:
+      tags:
+      - Sites
+      summary: PUT Site
+      operationId: put-site
+      parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Site'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SiteResponse'
+    delete:
+      tags:
+      - Sites
+      summary: DELETE Site
+      operationId: delete-site
+      parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+      responses:
+        '200':
+          description: OK
+  '/sites/{site_id}/routes':
+    get:
+      tags:
+      - Sites
+      summary: GET Site Routes
+      operationId: index-site-routes
+      parameters:
+      - name: site_id
+        in: path
+        required: true
+        type: string
+      - name: type
+        in: query
+        description: Filter routes by a given resource type
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/RouteCollectionResponse'
+          examples:
+            Example 1: |-
+              {
+                  "data": [
+                      {
+                          "id": 1,
+                          "type": "product",
+                          "matching": "5",
+                          "route": "/products?id={id}"
+                      }, {
+                          "id": 2,
+                          "type": "category",
+                          "matching": "44",
+                          "route": "/category/{slug}"
+                      }
+                  ],
+                  "meta": {
+                      "pagination": {
+                          "total": 1,
+                          "count": 1,
+                          "per_page": 50,
+                          "current_page": 1,
+                          "total_pages": 1
+                      }
+                  }
+              }
+    post:
+      tags:
+      - Sites
+      summary: POST Site Route
+      operationId: post-site-route
+      parameters:
+      - name: site_id
+        in: path
+        required: true
+        type: string
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Route'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/RouteResponse'
+  '/sites/{site_id}/routes/{id}':
+    get:
+      tags:
+      - Sites
+      summary: GET Site Route
+      operationId: get-site-route
+      parameters:
+      - name: site_id
+        in: path
+        required: true
+        type: string
+      - name: id
+        in: path
+        required: true
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/RouteResponse'
+    put:
+      tags:
+      - Sites
+      summary: PUT Site Route
+      operationId: put-site-route
+      parameters:
+      - name: site_id
+        in: path
+        required: true
+        type: string
+      - name: id
+        in: path
+        required: true
+        type: string
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Route'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/RouteResponse'
+    delete:
+      tags:
+      - Sites
+      summary: DELETE Site Route
+      operationId: delete-route
+      parameters:
+      - name: site_id
+        in: path
+        required: true
+        type: string
+      - name: id
+        in: path
+        required: true
+        type: string
+      responses:
+        '200':
+          description: OK
+definitions:
+  CollectionMeta:
+    type: object
+    description: BC Meta payload for collection-type responses
+    properties:
+      pagination:
+        $ref: "#/definitions/Pagination"
+  Pagination:
+    type: object
+    description: |
+      Data about the response, including pagination and collection totals.
+    properties:
+      total:
+        type: integer
+        description: |
+          Total number of items in the result set.
+      count:
+        type: integer
+        description: |
+          Total number of items in the collection response.
+      per_page:
+        type: integer
+        description: |
+          The amount of items returned in the collection per page, controlled by the limit parameter.
+      current_page:
+        type: integer
+        description: |
+          The page you are currently on within the collection.
+      total_pages:
+        type: integer
+        description: |
+          The total number of pages in the collection.
+      links:
+        type: object
+        description: |
+          Pagination links for the previous and next parts of the whole collection.
+        properties:
+          previous:
+            type: string
+            description: |
+              Link to the previous page returned in the response.
+          current:
+            type: string
+            description: |
+              Link to the current page returned in the response.
+          next:
+            type: string
+            description: |
+              Link to the next page returned in the response.
+  RouteCollectionResponse:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Route'
+      meta:
+        $ref: '#/definitions/CollectionMeta'
+  RouteResponse:
+    type: object
+    properties:
+      data:
+        $ref: "#/definitions/Route"
+      meta:
+        $ref: "#/definitions/Meta"
+  Route:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Unique ID for this route
+      type:
+        type: string
+        description: |-
+          What type of resource are we routing to?
+        enum:
+        - product
+        - brand
+        - category
+        - page
+        - blog
+        - home
+        - cart
+        - checkout
+        - search
+        - account
+        - login
+        - returns
+        - static
+      matching:
+        type: string
+        description: |-
+          (entity_id?) For a given type, which resources should match this route? e.g For a route with the type: "product" and matching: "5" this route would be used for the product with the ID of 5.
+
+          Depending on the type of resource, this may be an ID (matching a specific item), or a "*" wildcard matching all items of that type.
+        example: '5'
+      route:
+        type: string
+        description: |-
+          The route template that will be used to generate the URL for the requested resource.
+
+          Supports several tokens:
+
+          - {id} The ID of the requested item
+          - {slug} The slug for the requested item (if available). Note: the `slug` value may contain `/` slash
+          - {language} The language string that the client is using
+        example: /my-amazing-product
+  SiteCreateRequest:
+    type: object
+    properties:
+      url:
+        type: string
+        description: The Fully Qualified URL (including host and scheme) where this site is hosted. All URLs generated for this site will be appended to this.
+        example: 'http://kittens.mybigcommerce.com/'
+      channel_id:
+        type: integer
+        description: 'The channel this site is attached to. Each site belongs to a single channel, and each channel can have either zero or one sites.'
+  SiteResponse:
+    description: |
+      Response payload for the BigCommerce API.
+    type: object
+    properties:
+      data:
+        $ref: "#/definitions/Site"
+      meta:
+        $ref: "#/definitions/Meta"
+  Site:
+    type: object
+    properties:
+      id:
+        type: integer
+      url:
+        type: string
+        description: The Fully Qualified URL (including host and scheme) where this site is hosted. All URLs generated for this site will be appended to this.
+        example: 'http://kittens.mybigcommerce.com/'
+      channel_id:
+        type: integer
+        description: 'The channel this site is attached to. Each site belongs to a single channel, and each channel can have either zero or one sites.'
+      created_at:
+        type: string
+        description: When was this site created? RFC 3339
+        example: '2018-01-04T04:15:50.000Z'
+      updated_at:
+        type: string
+        description: When was this site defintion last updated? RFC 3339
+        example: '2018-01-04T04:15:50.000Z'
+      routes:
+        type: array
+        description: (optional - if included) collection of routes defined for this site. Limited to 200 routes side loaded (query routes direction via `/routes` for bulk)
+        items:
+          $ref: '#/definitions/Route'
+  Meta:
+    type: object
+    description: Empty meta object; may be used later.

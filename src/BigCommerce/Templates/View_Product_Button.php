@@ -14,7 +14,7 @@ class View_Product_Button extends Controller {
 	const PERMALINK  = 'permalink';
 	const ATTRIBUTES = 'attributes';
 
-	protected $template = 'components/view-product-button.php';
+	protected $template = 'components/products/view-product-button.php';
 
 
 	protected function parse_options( array $options ) {

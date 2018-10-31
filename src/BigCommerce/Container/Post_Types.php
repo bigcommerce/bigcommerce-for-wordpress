@@ -14,6 +14,7 @@ class Post_Types extends Provider {
 	const PRODUCT_UNSUPPORTED = 'post_type.product.unsupported';
 	const PRODUCT_DELETION    = 'post_type.product.deletion';
 	const STORE_LINKS         = 'post_type.product.store_links';
+	const CHANNEL_SYNC        = 'post_type.product.channel_sync';
 
 	const CART_INDICATOR = 'post_type.page.cart_indicator';
 	const CART_CREATOR   = 'post_type.page.cart_creator';
@@ -65,13 +66,13 @@ class Post_Types extends Provider {
 		$load_post_admin_hooks = $this->create_callback( 'load_post_php', function () use ( $container ) {
 			static $loaded = false; // gutenberg calls rest_api_init even when not on rest API requests, causing this to load twice
 			if ( ! $loaded ) {
-				add_filter( 'wp_insert_post_data', $this->create_callback( 'prevent_title_changes', function ( $data, $submitted ) use ( $container ) {
-					return $container[ self::PRODUCT_ADMIN ]->prevent_title_changes( $data, $submitted );
+				add_filter( 'wp_insert_post_data', $this->create_callback( 'prevent_slug_changes', function ( $data, $submitted ) use ( $container ) {
+					return $container[ self::PRODUCT_ADMIN ]->prevent_slug_changes( $data, $submitted );
 				} ), 10, 2 );
 
-				add_action( 'edit_form_before_permalink', $this->create_callback( 'insert_static_title', function ( \WP_Post $post ) use ( $container ) {
-					$container[ self::PRODUCT_ADMIN ]->insert_static_title( $post );
-				} ), 10, 1 );
+				add_filter( 'get_sample_permalink_html', $this->create_callback( 'override_sample_permalink_html', function ( $html, $post_id, $title, $slug, $post ) use ( $container ) {
+					return $container[ self::PRODUCT_ADMIN ]->override_sample_permalink_html( $html, $post_id, $title, $slug, $post );
+				} ), 10, 5 );
 
 				add_action( 'add_meta_boxes_' . Product\Product::NAME, $this->create_callback( 'remove_featured_image_meta_box', function ( \WP_Post $post ) use ( $container ) {
 					$container[ self::PRODUCT_ADMIN ]->remove_featured_image_meta_box( $post );
@@ -115,5 +116,27 @@ class Post_Types extends Provider {
 		add_action( 'before_delete_post', $this->create_callback( 'delete_product', function ( $post_id ) use ( $container ) {
 			$container[ self::PRODUCT_DELETION ]->delete_product_data( $post_id );
 		} ), 10, 1 );
+
+
+		$container[ self::CHANNEL_SYNC ] = function ( Container $container ) {
+			return new Product\Channel_Sync( $container[ Api::FACTORY ]->channels() );
+		};
+
+		add_action( 'save_post', $this->create_callback( 'sync_to_channel', function ( $post_id, $post ) use ( $container ) {
+			$container[ self::CHANNEL_SYNC ]->post_updated( $post_id, $post );
+		} ), 10, 2 );
+		add_action( 'before_delete_post', $this->create_callback( 'delete_from_channel', function ( $post_id ) use ( $container ) {
+			$container[ self::CHANNEL_SYNC ]->post_deleted( $post_id );
+		} ), 5, 1 );
+
+		// do not push updates back upstream when running an import
+		add_action( 'bigcommerce/import/before', function () {
+			add_filter( 'bigcommerce/channel/listing/should_update', '__return_false', 10, 0 );
+			add_filter( 'bigcommerce/channel/listing/should_delete', '__return_false', 10, 0 );
+		}, 10, 0 );
+		add_action( 'bigcommerce/import/after', function () {
+			remove_filter( 'bigcommerce/channel/listing/should_update', '__return_false', 10 );
+			remove_filter( 'bigcommerce/channel/listing/should_delete', '__return_false', 10 );
+		}, 10, 0 );
 	}
 }

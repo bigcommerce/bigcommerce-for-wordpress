@@ -16,7 +16,7 @@ class Order_Shipment extends Controller {
 	const ADDRESS         = 'address';
 	const ITEMS           = 'items';
 
-	protected $template = 'components/order-shipment.php';
+	protected $template = 'components/orders/order-shipment.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [

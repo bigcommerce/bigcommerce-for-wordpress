@@ -6,7 +6,7 @@ namespace BigCommerce\Container;
 
 use BigCommerce\Import\Processors;
 use BigCommerce\Import\Runner;
-use BigCommerce\Settings\Import as Import_Settings;
+use BigCommerce\Settings\Sections\Import as Import_Settings;
 use Pimple\Container;
 
 class Import extends Provider {
@@ -15,6 +15,7 @@ class Import extends Provider {
 	const TIMEOUT      = 'timeout';
 
 	const START   = 'import.start';
+	const CHANNEL = 'import.channel';
 	const FETCH   = 'import.fetch_ids';
 	const MARK    = 'import.mark_deleted';
 	const QUEUE   = 'import.queue';
@@ -79,8 +80,12 @@ class Import extends Provider {
 			return new Processors\Start_Import();
 		};
 
+		$container[ self::CHANNEL ] = function ( Container $container ) {
+			return new Processors\Channel_Initializer( $container[ Api::FACTORY ]->channels(), $container[ Api::FACTORY ]->catalog() );
+		};
+
 		$container[ self::FETCH ] = function ( Container $container ) {
-			return new Processors\Product_ID_Fetcher( $container[ Api::FACTORY ]->catalog() );
+			return new Processors\Product_ID_Fetcher( $container[ Api::FACTORY ]->channels() );
 		};
 
 		$container[ self::MARK ] = function ( Container $container ) {
@@ -88,7 +93,7 @@ class Import extends Provider {
 		};
 
 		$container[ self::QUEUE ] = function ( Container $container ) {
-			return new Processors\Queue_Runner( $container[ Api::FACTORY ]->catalog(), 5, 10 );
+			return new Processors\Queue_Runner( $container[ Api::FACTORY ]->catalog(), $container[ Api::FACTORY ]->channels(), 5, 10 );
 		};
 
 		$container[ self::STORE ] = function ( Container $container ) {
@@ -108,15 +113,23 @@ class Import extends Provider {
 		} );
 		add_action( 'bigcommerce/import/start', $start, 10, 0 );
 
-		// Step 1: Import product IDs. May take multiple batches
+		// Step: Make sure that the channel is fully initialized with products. May take multiple batches
+
+		$channel = $this->create_callback( 'process_channel', function () use ( $container ) {
+			$container[ self::CHANNEL ]->run();
+		} );
+		add_action( 'bigcommerce/import/run/status=' . Runner\Status::STARTED, $channel, 10, 0 );
+		add_action( 'bigcommerce/import/run/status=' . Runner\Status::INITIALIZING_CHANNEL, $channel, 10, 0 );
+
+		// Step: Import product IDs. May take multiple batches
 
 		$fetch = $this->create_callback( 'process_fetch', function () use ( $container ) {
 			$container[ self::FETCH ]->run();
 		} );
-		add_action( 'bigcommerce/import/run/status=' . Runner\Status::STARTED, $fetch, 10, 0 );
+		add_action( 'bigcommerce/import/run/status=' . Runner\Status::INITIALIZED_CHANNEL, $fetch, 10, 0 );
 		add_action( 'bigcommerce/import/run/status=' . Runner\Status::FETCHING_PRODUCT_IDS, $fetch, 10, 0 );
 
-		// Step 2: Any products no longer coming from the api should be deleted
+		// Step: Any products no longer coming from the api should be deleted
 
 		$mark = $this->create_callback( 'process_mark', function () use ( $container ) {
 			$container[ self::MARK ]->run();
@@ -125,7 +138,7 @@ class Import extends Provider {
 		// in theory this should never be able to run, as the marking process is a single step. Leave it as a safeguard.
 		add_action( 'bigcommerce/import/run/status=' . Runner\Status::MARKING_DELETED_PRODUCTS, $mark, 10, 0 );
 
-		// Step 3: Process the queue we've established.
+		// Step: Process the queue we've established.
 
 		$queue = $this->create_callback( 'process_queue', function () use ( $container ) {
 			$container[ self::QUEUE ]->run();
@@ -133,14 +146,16 @@ class Import extends Provider {
 		add_action( 'bigcommerce/import/run/status=' . Runner\Status::MARKED_DELETED_PRODUCTS, $queue, 10, 0 );
 		add_action( 'bigcommerce/import/run/status=' . Runner\Status::PROCESSING_QUEUE, $queue, 10, 0 );
 
-		// Step 4: Get the store info (currency, units).
+		// Step: Get the store info (currency, units).
+
 		$store = $this->create_callback( 'fetch_store', function () use ( $container ) {
 			$container[ self::STORE ]->run();
 		} );
 		add_action( 'bigcommerce/import/run/status=' . Runner\Status::PROCESSED_QUEUE, $store, 10, 0 );
 		add_action( 'bigcommerce/import/run/status=' . Runner\Status::FETCHING_STORE, $store, 10, 0 );
 
-		// Step 5: Cleanup
+		// Step: Cleanup
+
 		$cleanup = $this->create_callback( 'process_cleanup', function () use ( $container ) {
 			$container[ self::CLEANUP ]->run();
 		} );

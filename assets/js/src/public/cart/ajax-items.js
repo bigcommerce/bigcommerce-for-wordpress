@@ -108,7 +108,10 @@ const updatedCartTotals = (data = {}) => {
 	const taxTotal = tools.getNodes('.bc-cart-tax__amount', false, el.container, true)[0];
 
 	subTotal.textContent = baseAmount;
-	taxTotal.textContent = taxAmount;
+
+	if (taxTotal) {
+		taxTotal.textContent = taxAmount;
+	}
 };
 
 /**

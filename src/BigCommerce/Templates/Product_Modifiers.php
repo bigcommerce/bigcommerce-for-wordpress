@@ -10,7 +10,7 @@ class Product_Modifiers extends Controller {
 	const PRODUCT   = 'product';
 	const MODIFIERS = 'modifiers';
 
-	protected $template = 'components/product-modifiers.php';
+	protected $template = 'components/products/product-modifiers.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [

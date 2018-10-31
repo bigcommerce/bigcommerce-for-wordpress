@@ -13,7 +13,7 @@ class Product_Rating extends Controller {
 	const COUNT      = 'review_count';
 	const LINK       = 'link';
 
-	protected $template = 'components/product-rating.php';
+	protected $template = 'components/reviews/product-rating.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [

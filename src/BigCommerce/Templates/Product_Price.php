@@ -9,7 +9,7 @@ use BigCommerce\Post_Types\Product\Product;
 class Product_Price extends Controller {
 	const PRODUCT = 'product';
 
-	protected $template = 'components/product-price.php';
+	protected $template = 'components/products/product-price.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [

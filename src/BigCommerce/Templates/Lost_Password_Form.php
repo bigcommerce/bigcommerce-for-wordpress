@@ -11,7 +11,7 @@ class Lost_Password_Form extends Controller {
 	const REDIRECT     = 'redirect_to';
 	const MESSAGE      = 'message';
 
-	protected $template = 'components/lostpassword-form.php';
+	protected $template = 'components/accounts/lostpassword-form.php';
 
 	protected function parse_options( array $options ) {
 		return [];
@@ -50,7 +50,7 @@ class Lost_Password_Form extends Controller {
 		switch ( $_GET[ 'bc-message' ] ) {
 			case 'empty_username':
 			case 'invalid_email':
-				$message = new Message( [
+				$message = Message::factory( [
 					Message::CONTENT => __( 'Please enter a valid email address.', 'bigcommerce' ),
 					Message::TYPE    => Message::ERROR,
 				] );

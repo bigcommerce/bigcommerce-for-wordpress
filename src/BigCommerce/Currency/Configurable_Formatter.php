@@ -4,7 +4,7 @@
 namespace BigCommerce\Currency;
 
 
-use BigCommerce\Settings\Currency as Position;
+use BigCommerce\Settings\Sections\Currency as Position;
 
 class Configurable_Formatter implements Currency_Formatter {
 	private $symbol;

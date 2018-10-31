@@ -20,7 +20,7 @@ class Product_Archive extends Controller {
 	const PAGINATION  = 'pagination';
 	const COLUMNS     = 'columns';
 
-	protected $template = 'components/product-archive.php';
+	protected $template = 'components/catalog/product-archive.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [
@@ -51,7 +51,7 @@ class Product_Archive extends Controller {
 		while ( $query->have_posts() ) {
 			$query->the_post();
 			$product = new Product( get_the_ID() );
-			$card    = new Product_Card( [
+			$card    = Product_Card::factory( [
 				Product_Card::PRODUCT => $product,
 			] );
 			$cards[] = $card->render();
@@ -89,7 +89,7 @@ class Product_Archive extends Controller {
 	}
 
 	private function get_refinery( \WP_Query $query ) {
-		$component = new Refinery( [
+		$component = Refinery::factory( [
 			Refinery::QUERY => $query,
 		] );
 
@@ -105,7 +105,7 @@ class Product_Archive extends Controller {
 	}
 
 	private function get_no_results() {
-		$component = new No_Results( [] );
+		$component = No_Results::factory( [] );
 
 		return $component->render();
 	}

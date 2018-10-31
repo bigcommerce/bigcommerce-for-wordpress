@@ -5,15 +5,22 @@ namespace BigCommerce\Import\Processors;
 
 
 use BigCommerce\Api\v3\Api\CatalogApi;
+use BigCommerce\Api\v3\Api\ChannelsApi;
 use BigCommerce\Import\Product_Importer;
 use BigCommerce\Import\Product_Remover;
 use BigCommerce\Import\Runner\Status;
+use BigCommerce\Settings\Sections\Channels;
 
 class Queue_Runner implements Import_Processor {
 	/**
-	 * @var CatalogApi API instanced used for importing products
+	 * @var CatalogApi Catalog API instance used for importing products
 	 */
-	private $api;
+	private $catalog;
+
+	/**
+	 * @var ChannelsApi Channels API instance used for importing products
+	 */
+	private $channels;
 
 	/**
 	 * @var int Number of items to process from the queue per batch
@@ -28,12 +35,14 @@ class Queue_Runner implements Import_Processor {
 	/**
 	 * Queue_Runner constructor.
 	 *
-	 * @param CatalogApi $api
-	 * @param int        $batch
-	 * @param int        $max_attempts
+	 * @param CatalogApi  $catalog
+	 * @param ChannelsApi $channels
+	 * @param int         $batch
+	 * @param int         $max_attempts
 	 */
-	public function __construct( CatalogApi $api, $batch = 5, $max_attempts = 10 ) {
-		$this->api          = $api;
+	public function __construct( CatalogApi $catalog, ChannelsApi $channels, $batch = 5, $max_attempts = 10 ) {
+		$this->catalog      = $catalog;
+		$this->channels     = $channels;
 		$this->batch        = (int) $batch;
 		$this->max_attempts = (int) $max_attempts;
 	}
@@ -41,6 +50,13 @@ class Queue_Runner implements Import_Processor {
 	public function run() {
 		$status = new Status();
 		$status->set_status( Status::PROCESSING_QUEUE );
+
+		$channel_id = get_option( Channels::CHANNEL_ID, 0 );
+		if ( empty( $channel_id ) ) {
+			do_action( 'bigcommerce/import/error', __( 'Channel ID is not set. Product import canceled.', 'bigcommerce' ) );
+
+			return;
+		}
 
 		/** @var \wpdb $wpdb */
 		global $wpdb;
@@ -60,7 +76,7 @@ class Queue_Runner implements Import_Processor {
 			switch ( $import->import_action ) {
 				case 'update':
 				case 'ignore':
-					$importer = new Product_Importer( $import->bc_id, $this->api );
+					$importer = new Product_Importer( $import->bc_id, $import->listing_id, $this->catalog, $this->channels, $channel_id );
 					$post_id  = $importer->import();
 					if ( ! empty( $post_id ) || $import->attempts > $this->max_attempts ) {
 						$wpdb->delete( $wpdb->bc_import_queue, [ 'bc_id' => $import->bc_id ], [ '%d' ] );

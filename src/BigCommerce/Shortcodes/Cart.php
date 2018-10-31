@@ -22,7 +22,7 @@ class Cart implements Shortcode {
 	}
 
 	public function render( $attr, $instance ) {
-		if ( ( (bool) get_option( \BigCommerce\Settings\Cart::OPTION_ENABLE_CART, true ) ) == false ) {
+		if ( ( (bool) get_option( \BigCommerce\Settings\Sections\Cart::OPTION_ENABLE_CART, true ) ) == false ) {
 			return ''; // render nothing if the cart is disabled
 		}
 
@@ -32,11 +32,11 @@ class Cart implements Shortcode {
 		$cart = $this->get_cart( $attr );
 
 		if ( count( $cart[ 'items' ] ) > 0 ) {
-			$controller = new Templates\Cart( [
+			$controller = Templates\Cart::factory( [
 				Templates\Cart::CART => $cart,
 			] );
 		} else {
-			$controller = new Templates\Cart_Empty( [
+			$controller = Templates\Cart_Empty::factory( [
 				Templates\Cart::CART => $cart,
 			] );
 		}

@@ -19,7 +19,7 @@ class Address_Formatted extends Controller {
 	const COUNTRY    = 'country';
 	const PHONE      = 'phone';
 
-	protected $template = 'components/address-formatted.php';
+	protected $template = 'components/accounts/address-formatted.php';
 
 
 	protected function parse_options( array $options ) {

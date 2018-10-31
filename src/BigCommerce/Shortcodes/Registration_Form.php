@@ -17,7 +17,7 @@ class Registration_Form implements Shortcode {
 		if ( ! get_option( 'users_can_register' ) || ! bigcommerce()->credentials_set() || is_user_logged_in() ) {
 			return '';
 		}
-		$component = new Templates\Registration_Form();
+		$component = Templates\Registration_Form::factory();
 		return $component->render();
 	}
 

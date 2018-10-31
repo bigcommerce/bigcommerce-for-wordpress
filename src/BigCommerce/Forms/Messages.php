@@ -95,7 +95,7 @@ class Messages {
 
 		foreach ( $error->get_error_codes() as $code ) {
 			foreach ( $error->get_error_messages( $code ) as $content ) {
-				$template   = new Message( [
+				$template   = Message::factory( [
 					Message::CONTENT => $content,
 					Message::KEY     => $code,
 					Message::TYPE    => Message::ERROR,
@@ -104,7 +104,7 @@ class Messages {
 			}
 		}
 
-		$controller = new Message_Group( [
+		$controller = Message_Group::factory( [
 			Message_Group::MESSAGES => $messages,
 			Message_Group::TYPE     => Message_Group::ERROR,
 		] );
@@ -148,9 +148,9 @@ class Messages {
 		 */
 		$args = apply_filters( 'bigcommerce/messages/success/arguments', $args, $data );
 
-		$template = new Message( $args );
+		$template = Message::factory( $args );
 
-		$controller = new Message_Group( [
+		$controller = Message_Group::factory( [
 			Message_Group::MESSAGES => [ $template->render() ],
 			Message_Group::TYPE     => Message_Group::SUCCESS,
 		] );

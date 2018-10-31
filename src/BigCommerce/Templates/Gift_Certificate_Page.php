@@ -24,13 +24,13 @@ class Gift_Certificate_Page extends Controller {
 	}
 
 	private function get_form() {
-		$controller = new Gift_Certificate_Form();
+		$controller = Gift_Certificate_Form::factory();
 
 		return $controller->render();
 	}
 
 	private function get_instructions() {
-		$controller = new Gift_Certificate_Redemption_Instructions();
+		$controller = Gift_Certificate_Redemption_Instructions::factory();
 
 		return $controller->render();
 	}

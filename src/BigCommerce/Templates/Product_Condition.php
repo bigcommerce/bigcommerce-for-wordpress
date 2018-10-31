@@ -10,7 +10,7 @@ class Product_Condition extends Controller {
 	const PRODUCT   = 'product';
 	const CONDITION = 'condition';
 
-	protected $template = 'components/product-condition.php';
+	protected $template = 'components/products/product-condition.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [

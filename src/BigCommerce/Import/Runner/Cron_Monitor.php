@@ -2,7 +2,7 @@
 
 namespace BigCommerce\Import\Runner;
 
-use BigCommerce\Settings\Import;
+use BigCommerce\Settings\Sections\Import;
 
 /**
  * Class Cron_Monitor

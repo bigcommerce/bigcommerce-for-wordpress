@@ -12,7 +12,7 @@ class Search_Box extends Controller {
 	const SEARCH_LABEL   = 'search_label';
 	const BUTTON_CLASSES = 'button_classes';
 
-	protected $template = 'components/search-box.php';
+	protected $template = 'components/catalog/search-box.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [

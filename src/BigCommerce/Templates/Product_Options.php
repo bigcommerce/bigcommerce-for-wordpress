@@ -11,7 +11,7 @@ class Product_Options extends Controller {
 	const OPTIONS  = 'options';
 	const VARIANTS = 'variants';
 
-	protected $template = 'components/product-options.php';
+	protected $template = 'components/products/product-options.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [

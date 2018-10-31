@@ -4,7 +4,7 @@
 namespace BigCommerce\Analytics;
 
 
-use BigCommerce\Settings\Analytics;
+use BigCommerce\Settings\Sections\Analytics;
 
 class Facebook_Pixel {
 	/**

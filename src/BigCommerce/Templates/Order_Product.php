@@ -24,7 +24,7 @@ class Order_Product extends Controller {
 	const OPTIONS          = 'options';
 	const PERMALINK        = 'permalink';
 
-	protected $template = 'components/order-product.php';
+	protected $template = 'components/orders/order-product.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [
@@ -132,7 +132,7 @@ class Order_Product extends Controller {
 	protected function get_fallback_image( $size ) {
 		$default = get_option( Sections\Product_Single::DEFAULT_IMAGE, 0 );
 		if ( empty( $default ) ) {
-			$component = new Fallback_Image( [] );
+			$component = Fallback_Image::factory( [] );
 
 			return $component->render();
 		}

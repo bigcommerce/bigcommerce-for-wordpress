@@ -9,7 +9,7 @@ use BigCommerce\Post_Types\Product\Product;
 class Product_Card_Preview extends Product_Card {
 
 	protected function get_title( Product $product ) {
-		$component = new Product_Title( [
+		$component = Product_Title::factory( [
 			Product_Title::PRODUCT => $product,
 			Product_Title::SHOW_CONDITION => false,
 			Product_Title::SHOW_INVENTORY => false,

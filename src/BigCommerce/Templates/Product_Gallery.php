@@ -12,7 +12,7 @@ class Product_Gallery extends Controller {
 	const IMAGE_IDS = 'image_ids';
 	const FALLBACK  = 'fallback_image';
 
-	protected $template = 'components/product-gallery.php';
+	protected $template = 'components/products/product-gallery.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [
@@ -34,7 +34,7 @@ class Product_Gallery extends Controller {
 	}
 
 	protected function get_fallback() {
-		$component = new Fallback_Image( [] );
+		$component = Fallback_Image::factory( [] );
 
 		return $component->render();
 	}

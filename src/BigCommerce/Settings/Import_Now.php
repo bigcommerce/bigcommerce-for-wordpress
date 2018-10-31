@@ -6,6 +6,7 @@ namespace BigCommerce\Settings;
 
 use BigCommerce\Import\Runner\Cron_Runner;
 use BigCommerce\Post_Types\Product\Product;
+use BigCommerce\Settings\Screens\Settings_Screen;
 
 class Import_Now {
 	const ACTION = 'bigcommerce_import_now';
@@ -69,7 +70,7 @@ class Import_Now {
 		}
 
 		if ( ! empty( $_REQUEST[ 'redirect_to' ] ) ) {
-			wp_safe_redirect( $_REQUEST[ 'redirect_to' ], 303 );
+			wp_safe_redirect( esc_url_raw( $_REQUEST[ 'redirect_to' ] ), 303 );
 		} elseif ( current_user_can( $this->settings_screen->get_capability() ) ) {
 			wp_safe_redirect( esc_url_raw( $this->settings_screen->get_url() ), 303 );
 		} else {

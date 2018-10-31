@@ -8,7 +8,7 @@ class Registration_Form extends Form_Controller {
 	const STATES    = 'states';
 	const COUNTRIES = 'countries';
 
-	protected $template = 'components/registration-form.php';
+	protected $template = 'components/accounts/registration-form.php';
 
 	protected $submission_key = 'bc-register';
 

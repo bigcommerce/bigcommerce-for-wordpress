@@ -12,7 +12,7 @@ use BigCommerce\Taxonomies\Product_Category\Product_Category;
 
 class Editor_Dialog_Template {
 
-	/** @var string Path to the public-views directory */
+	/** @var string Path to the templates/public directory */
 	private $template_dir;
 
 	private $rendered = false;

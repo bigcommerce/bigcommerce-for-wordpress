@@ -18,7 +18,7 @@ class Account_Profile implements Shortcode {
 			return '';
 		}
 
-		$component = new Templates\Profile_Form();
+		$component = Templates\Profile_Form::factory();
 
 		return $component->render();
 	}

@@ -2,6 +2,9 @@
 
 namespace BigCommerce\Import;
 
+use BigCommerce\Api\v3\Api\CatalogApi;
+use BigCommerce\Api\v3\Model;
+
 class Product_Updater extends Product_Saver {
 
 	protected function save_wp_post( Product_Builder $builder ) {
@@ -24,7 +27,7 @@ class Product_Updater extends Product_Saver {
 		$variants    = $builder->build_variants();
 		$variant_ids = array_column( $variants, 'variant_id' );
 
-		$existing_variants = $wpdb->get_col( $wpdb->prepare( "SELECT variant_id FROM {$wpdb->bc_variants} WHERE bc_id=%d", $this->data[ 'id' ] ) );
+		$existing_variants = $wpdb->get_col( $wpdb->prepare( "SELECT variant_id FROM {$wpdb->bc_variants} WHERE bc_id=%d", $this->product[ 'id' ] ) );
 		$to_remove         = array_diff( $existing_variants, $variant_ids );
 		foreach ( $to_remove as $variant_id ) {
 			$wpdb->delete( $wpdb->bc_variants, [ 'variant_id' => $variant_id ], [ '%d' ] );
@@ -41,7 +44,15 @@ class Product_Updater extends Product_Saver {
 	}
 
 	protected function send_notifications() {
-		do_action( 'bigcommerce/import/product/updated', $this->post_id, $this->data, $this->api );
+		/**
+		 * A product has been updated by the import process
+		 *
+		 * @param int           $post_id The Post ID of the updated product
+		 * @param Model\Product $product The product data
+		 * @param Model\Listing $listing The channel listing data
+		 * @param CatalogApi    $catalog The Catalog API instance
+		 */
+		do_action( 'bigcommerce/import/product/updated', $this->post_id, $this->product, $this->catalog );
 		parent::send_notifications();
 	}
 }

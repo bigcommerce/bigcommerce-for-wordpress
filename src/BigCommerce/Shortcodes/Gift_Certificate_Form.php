@@ -18,11 +18,11 @@ class Gift_Certificate_Form implements Shortcode {
 	}
 
 	public function render( $attr, $instance ) {
-		if ( ( (bool) get_option( \BigCommerce\Settings\Gift_Certificates::OPTION_ENABLE, true ) ) == false ) {
+		if ( ( (bool) get_option( \BigCommerce\Settings\Sections\Gift_Certificates::OPTION_ENABLE, true ) ) == false ) {
 			return ''; // render nothing if gift certificates are disabled
 		}
 
-		$controller = new Templates\Gift_Certificate_Page();
+		$controller = Templates\Gift_Certificate_Page::factory();
 
 		return $controller->render();
 	}

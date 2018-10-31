@@ -9,7 +9,7 @@ class Order_History extends Controller {
 	const PAGINATION    = 'pagination';
 	const WRAP          = 'wrap';
 
-	protected $template = 'components/order-history.php';
+	protected $template = 'components/orders/order-history.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [
@@ -34,7 +34,7 @@ class Order_History extends Controller {
 		if ( empty( $next_page_url ) ) {
 			return '';
 		}
-		$component = new Orders_Shortcode_Pagination( [
+		$component = Orders_Shortcode_Pagination::factory( [
 			Orders_Shortcode_Pagination::NEXT_PAGE_URL => $next_page_url,
 		] );
 
