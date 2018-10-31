@@ -72,6 +72,7 @@ abstract class Term_Mapper {
 	protected function find_existing_term( $bc_id ) {
 		$terms = get_terms( [
 			'taxonomy'   => $this->taxonomy,
+			'hide_empty' => false,
 			'meta_query' => [
 				[
 					'key'     => 'bigcommerce_id',

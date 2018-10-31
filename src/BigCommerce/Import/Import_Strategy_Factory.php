@@ -5,31 +5,54 @@ namespace BigCommerce\Import;
 
 
 use BigCommerce\Api\v3\Api\CatalogApi;
+use BigCommerce\Api\v3\Model;
 use BigCommerce\Api\v3\ObjectSerializer;
 use BigCommerce\Post_Types\Product\Product;
 
 class Import_Strategy_Factory {
-	private $data;
-	private $api;
+	/**
+	 * @var Model\Product
+	 */
+	private $product;
+	/**
+	 * @var Model\Listing
+	 */
+	private $listing;
+	/**
+	 * @var CatalogApi
+	 */
+	private $catalog;
+	/**
+	 * @var string
+	 */
 	private $version;
 
-	public function __construct( \BigCommerce\Api\v3\Model\Product $data, CatalogApi $api, $version ) {
-		$this->data    = $data;
-		$this->api     = $api;
+	/**
+	 * Import_Strategy_Factory constructor.
+	 *
+	 * @param Model\Product $product
+	 * @param Model\Listing $listing
+	 * @param CatalogApi    $catalog
+	 * @param string        $version
+	 */
+	public function __construct( Model\Product $product, Model\Listing $listing, CatalogApi $catalog, $version ) {
+		$this->product = $product;
+		$this->listing = $listing;
+		$this->catalog = $catalog;
 		$this->version = $version;
 	}
 
 	public function get_strategy() {
 		$matching_post_id = $this->get_matching_post();
 		if ( empty( $matching_post_id ) ) {
-			return new Product_Creator( $this->data, $this->api );
+			return new Product_Creator( $this->product, $this->listing, $this->catalog );
 		}
 
 		if ( ! $this->needs_refresh( $matching_post_id ) ) {
-			return new Product_Ignorer( $this->data, $this->api, $matching_post_id );
+			return new Product_Ignorer( $this->product, $this->listing, $this->catalog, $matching_post_id );
 		}
 
-		return new Product_Updater( $this->data, $this->api, $matching_post_id );
+		return new Product_Updater( $this->product, $this->listing, $this->catalog, $matching_post_id );
 
 	}
 
@@ -39,7 +62,7 @@ class Import_Strategy_Factory {
 
 		$sql = "SELECT post_id FROM {$wpdb->bc_products} WHERE bc_id=%d";
 
-		return (int) $wpdb->get_var( $wpdb->prepare( $sql, $this->data[ 'id' ] ) );
+		return (int) $wpdb->get_var( $wpdb->prepare( $sql, $this->product[ 'id' ] ) );
 	}
 
 	private function needs_refresh( $post_id ) {
@@ -52,8 +75,20 @@ class Import_Strategy_Factory {
 			$product    = new Product( $post_id );
 			$serializer = new ObjectSerializer();
 
-			$response = $product->get_source_data() != $serializer->sanitizeForSerialization( $this->data );
+			$product_changed = $product->get_source_data() != $serializer->sanitizeForSerialization( $this->product );
+			$listing_changed = $product->get_listing_data() != $serializer->sanitizeForSerialization( $this->listing );
+			$response        = ( $product_changed || $listing_changed );
 		}
-		return apply_filters( 'bigcommerce/import/strategy/needs_refresh', $response, $post_id, $this->data, $this->version );
+
+		/**
+		 * Filter whether the product should be refreshed
+		 *
+		 * @param bool          $response Whether the product should be refreshed
+		 * @param int           $post_id  The ID of the product post
+		 * @param Model\Product $product  The product data from the API
+		 * @param Model\Listing $listing  The channel listing data from the API
+		 * @param string        $version  The version of the importer
+		 */
+		return apply_filters( 'bigcommerce/import/strategy/needs_refresh', $response, $post_id, $this->product, $this->listing, $this->version );
 	}
 }

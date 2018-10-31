@@ -14,8 +14,8 @@ use BigCommerce\Pages\Orders_Page;
 use BigCommerce\Pages\Registration_Page;
 use BigCommerce\Pages\Required_Page;
 use BigCommerce\Pages\Shipping_Returns_Page;
-use BigCommerce\Settings\Cart as Cart_Settings;
-use BigCommerce\Settings\Gift_Certificates as Gift_Certificate_Settings;
+use BigCommerce\Settings\Sections\Cart as Cart_Settings;
+use BigCommerce\Settings\Sections\Gift_Certificates as Gift_Certificate_Settings;
 use Pimple\Container;
 
 class Pages extends Provider {

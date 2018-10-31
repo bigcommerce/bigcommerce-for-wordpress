@@ -12,7 +12,7 @@ class Address_Delete extends Controller {
 	const ACTION     = 'action';
 	const URL        = 'url';
 
-	protected $template = 'components/address-delete.php';
+	protected $template = 'components/accounts/address-delete.php';
 
 
 	protected function parse_options( array $options ) {

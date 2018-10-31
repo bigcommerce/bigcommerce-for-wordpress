@@ -10,7 +10,7 @@ class Order_Details extends Order_Summary {
 	const PRODUCTS  = 'products';
 	const SHIPMENTS = 'shipments';
 
-	protected $template = 'components/order-details.php';
+	protected $template = 'components/orders/order-details.php';
 
 	public function get_data() {
 		$order = $this->options[ self::ORDER ];
@@ -24,7 +24,7 @@ class Order_Details extends Order_Summary {
 
 	protected function get_products( $order ) {
 		return array_map( function ( $product ) {
-			$controller = new Order_Product( [
+			$controller = Order_Product::factory( [
 				Order_Product::PRODUCT        => $product,
 				Order_Product::THUMBNAIL_SIZE => $this->options[ self::THUMBNAIL_SIZE ],
 			] );
@@ -39,7 +39,7 @@ class Order_Details extends Order_Summary {
 		}
 
 		return array_map( function ( Shipment $shipment ) {
-			$controller = new Order_Shipment( [
+			$controller = Order_Shipment::factory( [
 				Order_Shipment::SHIPMENT => $shipment,
 			] );
 

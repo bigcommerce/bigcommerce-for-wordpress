@@ -18,7 +18,7 @@ class Review_Single extends Controller {
 	const DATE       = 'date_reviewed';
 	const TIMESTAMP  = 'timestamp';
 
-	protected $template = 'components/review-single.php';
+	protected $template = 'components/reviews/review-single.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [

@@ -7,7 +7,7 @@ namespace BigCommerce\Templates;
 class Review_List_Pagination extends Controller {
 	const NEXT_PAGE_URL = 'next_page_url';
 
-	protected $template = 'components/review-list-pagination.php';
+	protected $template = 'components/reviews/review-list-pagination.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [

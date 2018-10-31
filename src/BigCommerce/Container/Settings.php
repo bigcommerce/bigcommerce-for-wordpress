@@ -3,41 +3,61 @@
 
 namespace BigCommerce\Container;
 
-use BigCommerce\Settings\Account_Settings;
-use BigCommerce\Settings\Analytics as Analytics_Settings;
-use BigCommerce\Settings\Api_Credentials;
-use BigCommerce\Settings\Connect_Account_Screen;
+use BigCommerce\Merchant\Onboarding_Api;
 use BigCommerce\Settings\Connection_Status;
-use BigCommerce\Settings\Cart as Cart_Settings;
-use BigCommerce\Settings\Gift_Certificates as Gift_Ceritifcate_Settings;
-use BigCommerce\Settings\Import as Import_Settings;
 use BigCommerce\Settings\Import_Now;
 use BigCommerce\Settings\Import_Status;
-use BigCommerce\Settings\Reviews;
-use BigCommerce\Settings\Settings_Header;
-use BigCommerce\Settings\Settings_Screen;
-use BigCommerce\Settings\Welcome_Screen;
+use BigCommerce\Settings\Screens\Abstract_Screen;
+use BigCommerce\Settings\Screens\Connect_Channel_Screen;
+use BigCommerce\Settings\Screens\Create_Account_Screen;
+use BigCommerce\Settings\Screens\Pending_Account_Screen;
+use BigCommerce\Settings\Screens\Settings_Screen;
+use BigCommerce\Settings\Screens\Welcome_Screen;
+use BigCommerce\Settings\Sections\Account_Settings;
+use BigCommerce\Settings\Sections\Analytics as Analytics_Settings;
+use BigCommerce\Settings\Sections\Api_Credentials;
+use BigCommerce\Settings\Sections\Channel_Select;
+use BigCommerce\Settings\Sections\Channels as Channel_Settings;
+use BigCommerce\Settings\Sections\Cart as Cart_Settings;
+use BigCommerce\Settings\Sections\Gift_Certificates as Gift_Ceritifcate_Settings;
+use BigCommerce\Settings\Sections\Import as Import_Settings;
+use BigCommerce\Settings\Sections\New_Account_Section;
+use BigCommerce\Settings\Sections\Reviews;
 use Pimple\Container;
 
 class Settings extends Provider {
-	const SCREEN                   = 'settings.screen';
-	const WELCOME                  = 'settings.screen.welcome';
-	const CONNECT                  = 'settings.screen.connect';
-	const API_SECTION              = 'settings.api';
-	const API_STATUS               = 'settings.api_status';
-	const CART_SECTION             = 'settings.cart';
-	const GIFT_CERTIFICATE_SECTION = 'settings.gift_certificates';
-	const CURRENCY_SECTION         = 'settings.currency';
-	const IMPORT_SECTION           = 'settings.import';
-	const ACCOUNTS_SECTION         = 'settings.accounts';
-	const ANALYTICS_SECTION        = 'settings.analytics';
-	const REVIEWS_SECTION          = 'settings.reviews';
-	const IMPORT_NOW               = 'settings.import_now';
-	const IMPORT_STATUS            = 'settings.import_status';
+	const SETTINGS_SCREEN = 'settings.screen.settings';
+	const WELCOME_SCREEN  = 'settings.screen.welcome';
+	const CREATE_SCREEN   = 'settings.screen.create';
+	const CHANNEL_SCREEN  = 'settings.screen.channel';
+	const PENDING_SCREEN  = 'settings.screen.pending';
+
+	const API_SECTION              = 'settings.section.api';
+	const CONNECT_ACCOUNT_SECTION  = 'settings.section.connect_account';
+	const CART_SECTION             = 'settings.section.cart';
+	const GIFT_CERTIFICATE_SECTION = 'settings.section.gift_certificates';
+	const CURRENCY_SECTION         = 'settings.section.currency';
+	const IMPORT_SECTION           = 'settings.section.import';
+	const ACCOUNTS_SECTION         = 'settings.section.accounts';
+	const ANALYTICS_SECTION        = 'settings.section.analytics';
+	const REVIEWS_SECTION          = 'settings.section.reviews';
+	const NEW_ACCOUNT_SECTION      = 'settings.section.new_account';
+	const SELECT_CHANNEL_SECTION   = 'settings.section.select_channel';
+	const CHANNEL_SECTION          = 'settings.section.channel';
+
+	const API_STATUS    = 'settings.api_status';
+	const IMPORT_NOW    = 'settings.import_now';
+	const IMPORT_STATUS = 'settings.import_status';
+
+	const CONFIG_STATUS            = 'settings.configuration_status';
+	const STATUS_NEW               = 0;
+	const STATUS_ACCOUNT_PENDING   = 10;
+	const STATUS_API_CONNECTED     = 20;
+	const STATUS_CHANNEL_CONNECTED = 40;
 
 	public function register( Container $container ) {
 		$this->settings_screen( $container );
-		$this->api_credentials( $container );
+//		$this->api_credentials( $container );
 		$this->api_status_indicator( $container );
 		$this->cart( $container );
 		$this->gift_certificates( $container );
@@ -46,39 +66,33 @@ class Settings extends Provider {
 		$this->accounts( $container );
 		$this->analytics( $container );
 		$this->reviews( $container );
+		$this->onboarding( $container );
 	}
 
 	private function settings_screen( Container $container ) {
-		$container[ self::SCREEN ] = function ( Container $container ) {
-			return new Settings_Screen( $container[ Api::CONFIG_COMPLETE ], $container[ Assets::PATH ] );
+		$container[ self::SETTINGS_SCREEN ] = function ( Container $container ) {
+			return new Settings_Screen( $container[ self::CONFIG_STATUS ], $container[ Assets::PATH ] );
 		};
 		add_action( 'admin_menu', $this->create_callback( 'settings_screen_admin_menu', function () use ( $container ) {
-			$container[ self::SCREEN ]->register_settings_page();
-		} ), 10, 0 );
-		$container[ self::WELCOME ] = function ( Container $container ) {
-			$path = dirname( $container[ 'plugin_file' ] ) . '/admin-views';
-
-			return new Welcome_Screen( $container[ Api::CONFIG_COMPLETE ], $container[ Assets::PATH ], $path, $container[ self::CONNECT ] );
-		};
-		add_action( 'admin_menu', $this->create_callback( 'welcome_screen_admin_menu', function () use ( $container ) {
-			$container[ self::WELCOME ]->register_settings_page();
-		} ), 10, 0 );
-		$container[ self::CONNECT ] = function ( Container $container ) {
-			return new Connect_Account_Screen( $container[ Api::CONFIG_COMPLETE ], $container[ Assets::PATH ] );
-		};
-		add_action( 'admin_menu', $this->create_callback( 'connect_screen_admin_menu', function () use ( $container ) {
-			$container[ self::CONNECT ]->register_settings_page();
+			$container[ self::SETTINGS_SCREEN ]->register_settings_page();
 		} ), 10, 0 );
 
-		$redirect_to_welcome_screen  = $this->create_callback( 'redirect_to_welcome_screen', function () use ( $container ) {
-			$container[ self::WELCOME ]->redirect_to_screen();
-		} );
-		$redirect_to_settings_screen = $this->create_callback( 'redirect_to_settings_screen', function () use ( $container ) {
-			$container[ self::SCREEN ]->redirect_to_screen();
-		} );
-		add_action( 'bigcommerce/settings/unregistered_screen=' . Settings_Screen::NAME, $redirect_to_welcome_screen, 10, 0 );
-		add_action( 'bigcommerce/settings/unregistered_screen=' . Welcome_Screen::NAME, $redirect_to_settings_screen, 10, 0 );
-		add_action( 'bigcommerce/settings/unregistered_screen=' . Connect_Account_Screen::NAME, $redirect_to_settings_screen, 10, 0 );
+		$container[ self::CONFIG_STATUS ] = function ( Container $container ) {
+			if ( ! $container[ Api::CONFIG_COMPLETE ] ) {
+				$store_id   = get_option( Onboarding_Api::STORE_ID, '' );
+
+				if ( empty( $store_id ) ) {
+					return self::STATUS_NEW;
+				}
+
+				return self::STATUS_ACCOUNT_PENDING;
+			}
+			if ( ! get_option( Channel_Settings::CHANNEL_ID, false ) ) {
+				return self::STATUS_API_CONNECTED;
+			}
+
+			return self::STATUS_CHANNEL_CONNECTED;
+		};
 	}
 
 	private function api_credentials( Container $container ) {
@@ -104,14 +118,17 @@ class Settings extends Provider {
 
 	private function api_status_indicator( Container $container ) {
 		$container[ self::API_STATUS ] = function ( Container $container ) {
-			return new Connection_Status( $container[ Api::FACTORY ]->catalog(), $container[ Api::CONFIG_COMPLETE ] );
+			return new Connection_Status( $container[ Api::FACTORY ]->catalog(), $container[ self::CONFIG_STATUS ] );
 		};
 
 		add_action( 'admin_notices', $this->create_callback( 'credentials_required', function () use ( $container ) {
-			$container[ self::API_STATUS ]->credentials_required_notice( $container[ self::WELCOME ], [
-				$container[ self::WELCOME ],
-				$container[ self::CONNECT ],
+			$excluded = apply_filters( 'bigcommerce/settings/credentials_notice/excluded_screens', [
+				$container[ self::WELCOME_SCREEN ]->get_hook_suffix(),
+				$container[ self::CREATE_SCREEN ]->get_hook_suffix(),
+				$container[ self::CHANNEL_SCREEN ]->get_hook_suffix(),
+				$container[ self::PENDING_SCREEN ]->get_hook_suffix(),
 			] );
+			$container[ self::API_STATUS ]->credentials_required_notice( $container[ self::WELCOME_SCREEN ], $excluded );
 		} ), 10, 0 );
 
 		$flush = $this->create_callback( 'api_status_flush', function () use ( $container ) {
@@ -158,7 +175,7 @@ class Settings extends Provider {
 		} ), 20, 0 );
 
 		$container[ self::IMPORT_NOW ] = function ( Container $container ) {
-			return new Import_Now( $container[ self::SCREEN ] );
+			return new Import_Now( $container[ self::SETTINGS_SCREEN ] );
 		};
 		add_action( 'bigcommerce/settings/header/import_status', $this->create_callback( 'import_now_render', function () use ( $container ) {
 			$container[ self::IMPORT_NOW ]->render_button();
@@ -167,7 +184,7 @@ class Settings extends Provider {
 			$container[ self::IMPORT_NOW ]->handle_request();
 		} ), 10, 0 );
 		add_action( 'admin_notices', $this->create_callback( 'import_now_notices', function () use ( $container ) {
-			if ( $container[ Api::CONFIG_COMPLETE ] ) {
+			if ( $container[ self::CONFIG_STATUS ] >= self::STATUS_CHANNEL_CONNECTED ) {
 				$container[ self::IMPORT_NOW ]->list_table_notice();
 			}
 		} ), 0, 0 );
@@ -176,12 +193,12 @@ class Settings extends Provider {
 			return new Import_Status();
 		};
 		add_action( 'bigcommerce/settings/section/after_fields/id=' . Import_Settings::NAME, $this->create_callback( 'import_status_render', function () use ( $container ) {
-			if ( $container[ Api::CONFIG_COMPLETE ] ) {
+			if ( $container[ self::CONFIG_STATUS ] >= self::STATUS_CHANNEL_CONNECTED ) {
 				$container[ self::IMPORT_STATUS ]->render_status();
 			}
 		} ), 20, 0 );
 		add_action( 'bigcommerce/settings/import/product_list_table_notice', $this->create_callback( 'import_current_status_notice', function () use ( $container ) {
-			if ( $container[ Api::CONFIG_COMPLETE ] ) {
+			if ( $container[ self::CONFIG_STATUS ] >= self::STATUS_CHANNEL_CONNECTED ) {
 				$container[ self::IMPORT_STATUS ]->current_status_notice();
 			}
 		} ), 10, 0 );
@@ -189,7 +206,7 @@ class Settings extends Provider {
 
 	private function currency( Container $container ) {
 		$container[ self::CURRENCY_SECTION ] = function ( Container $container ) {
-			return new \BigCommerce\Settings\Currency();
+			return new \BigCommerce\Settings\Sections\Currency();
 		};
 		add_action( 'bigcommerce/settings/register/screen=' . Settings_Screen::NAME, $this->create_callback( 'currency_settings_register', function () use ( $container ) {
 			$container[ self::CURRENCY_SECTION ]->register_settings_section();
@@ -231,11 +248,96 @@ class Settings extends Provider {
 
 	private function reviews( Container $container ) {
 		$container[ self::REVIEWS_SECTION ] = function ( Container $container ) {
-			return new Reviews( $container[ Api::FACTORY ] );
+			return new Reviews();
 		};
 
 		add_action( 'bigcommerce/settings/register/screen=' . Settings_Screen::NAME, $this->create_callback( 'review_settings_register', function () use ( $container ) {
 			$container[ self::REVIEWS_SECTION ]->register_settings_section();
 		} ), 60, 0 );
+	}
+
+	private function onboarding( Container $container ) {
+		$container[ self::WELCOME_SCREEN ] = function ( Container $container ) {
+			$path = dirname( $container['plugin_file'] ) . '/templates/admin';
+
+			return new Welcome_Screen( $container[ self::CONFIG_STATUS ], $container[ Assets::PATH ], $path );
+		};
+		add_action( 'admin_menu', $this->create_callback( 'welcome_screen_admin_menu', function () use ( $container ) {
+			$container[ self::WELCOME_SCREEN ]->register_settings_page();
+		} ), 10, 0 );
+		$welcome_screen_url = $this->create_callback( 'welcome_screen_url', function ( $url ) use ( $container ) {
+			return $container[ self::WELCOME_SCREEN ]->get_url();
+		} );
+		add_filter( 'bigcommerce/onboarding/error_redirect', $welcome_screen_url, 10, 1 );
+
+		$container[ self::CREATE_SCREEN ] = function ( Container $container ) {
+			return new Create_Account_Screen( $container[ self::CONFIG_STATUS ], $container[ Assets::PATH ] );
+		};
+		add_action( 'admin_menu', $this->create_callback( 'create_screen_admin_menu', function () use ( $container ) {
+			$container[ self::CREATE_SCREEN ]->register_settings_page();
+		} ), 10, 0 );
+		add_filter( 'bigcommerce/settings/create_account_url', $this->create_callback( 'create_account_url', function ( $url ) use ( $container ) {
+			return $container[ self::CREATE_SCREEN ]->get_url();
+		} ), 10, 1 );
+		add_action( 'admin_post_' . Create_Account_Screen::NAME, $this->create_callback( 'handle_create_account', function () use ( $container ) {
+			$container[ self::CREATE_SCREEN ]->handle_submission();
+		} ), 10, 1 );
+
+		$container[ self::NEW_ACCOUNT_SECTION ] = function ( Container $container ) {
+			return new New_Account_Section();
+		};
+		add_action( 'bigcommerce/settings/register/screen=' . Create_Account_Screen::NAME, $this->create_callback( 'new_account_action_register', function () use ( $container ) {
+			$container[ self::NEW_ACCOUNT_SECTION ]->register_settings_section();
+		} ), 50, 0 );
+		add_action( 'bigcommerce/create_account/validate_request', $this->create_callback( 'new_account_validate', function ( $submission, $errors ) use ( $container ) {
+			$container[ self::NEW_ACCOUNT_SECTION ]->validate_request( $submission, $errors );
+		} ), 10, 2 );
+
+		$container[ self::CHANNEL_SCREEN ] = function ( Container $container ) {
+			return new Connect_Channel_Screen( $container[ self::CONFIG_STATUS ], $container[ Assets::PATH ] );
+		};
+		add_action( 'admin_menu', $this->create_callback( 'create_channel_screen_admin_menu', function () use ( $container ) {
+			$container[ self::CHANNEL_SCREEN ]->register_settings_page();
+		} ), 10, 0 );
+
+		$container [ self::SELECT_CHANNEL_SECTION ] = function ( Container $container ) {
+			return new Channel_Select( $container[ Api::FACTORY ]->channels() );
+		};
+		add_action( 'bigcommerce/settings/register/screen=' . Connect_Channel_Screen::NAME, $this->create_callback( 'select_channel_section_register', function () use ( $container ) {
+			$container[ self::SELECT_CHANNEL_SECTION ]->register_settings_section();
+		} ), 10, 0 );
+
+		$container [ self::CHANNEL_SECTION ] = function ( Container $container ) {
+			return new Channel_Settings();
+		};
+		add_action( 'bigcommerce/settings/register/screen=' . Settings_Screen::NAME, $this->create_callback( 'channel_section_register', function () use ( $container ) {
+			$container[ self::CHANNEL_SECTION ]->register_settings_section();
+		} ), 80, 0 );
+
+		$container[ self::PENDING_SCREEN ] = function ( Container $container ) {
+			return new Pending_Account_Screen( $container[ self::CONFIG_STATUS ], $container[ Assets::PATH ] );
+		};
+		add_action( 'admin_menu', $this->create_callback( 'pending_screen_admin_menu', function () use ( $container ) {
+			$container[ self::PENDING_SCREEN ]->register_settings_page();
+		} ), 10, 0 );
+		$pending_screen_url = $this->create_callback( 'pending_screen_url', function ( $url ) use ( $container ) {
+			return $container[ self::PENDING_SCREEN ]->get_url();
+		} );
+		add_filter( 'bigcommerce/onboarding/success_redirect', $pending_screen_url, 10, 1 );
+
+		add_action( 'bigcommerce/settings/unregistered_screen', $this->create_callback( 'redirect_unregistered_screen', function ( $screen ) use ( $container ) {
+			/** @var Abstract_Screen[] $possible_screens */
+			$possible_screens = [
+				$container[ self::SETTINGS_SCREEN ],
+				$container[ self::WELCOME_SCREEN ],
+				$container[ self::CHANNEL_SCREEN ],
+				$container[ self::PENDING_SCREEN ],
+			];
+			foreach ( $possible_screens as $screen ) {
+				if ( $screen->should_register() ) {
+					$screen->redirect_to_screen();
+				}
+			}
+		} ), 10, 1 );
 	}
 }

@@ -7,7 +7,7 @@ namespace BigCommerce\Templates;
 class Product_Shortcode_Pagination extends Controller {
 	const NEXT_PAGE_URL = 'next_page_url';
 
-	protected $template = 'components/product-shortcode-pagination.php';
+	protected $template = 'components/products/product-shortcode-pagination.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [

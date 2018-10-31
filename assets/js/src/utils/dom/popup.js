@@ -47,8 +47,10 @@ const popup = (opts) => {
 			specs.push(spec);
 		});
 
-		window.open(options.url, options.name, specs.join());
+		return window.open(options.url, options.name, specs.join());
 	}
+
+	return false;
 };
 
 export default popup;

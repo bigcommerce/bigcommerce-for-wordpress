@@ -7,6 +7,10 @@ namespace BigCommerce\Settings;
 use BigCommerce\Api\ConfigurationRequiredException;
 use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api\v3\Api\CatalogApi;
+use BigCommerce\Container\Settings;
+use BigCommerce\Settings\Screens\Abstract_Screen;
+use BigCommerce\Settings\Screens\Settings_Screen;
+use BigCommerce\Settings\Sections\Api_Credentials;
 
 class Connection_Status {
 	const STATUS_CACHE     = 'bigcommerce_connection_status';
@@ -17,17 +21,17 @@ class Connection_Status {
 	 */
 	private $client;
 
-	private $configured = false;
+	private $configuration_status = false;
 
 	/**
 	 * Connection_Status constructor.
 	 *
 	 * @param CatalogApi $client
-	 * @param bool       $configured Whether API configuration settings are fully in place
+	 * @param bool       $configuration_status Whether API configuration settings are fully in place
 	 */
-	public function __construct( CatalogApi $client, $configured ) {
-		$this->client     = $client;
-		$this->configured = $configured;
+	public function __construct( CatalogApi $client, $configuration_status ) {
+		$this->client               = $client;
+		$this->configuration_status = $configuration_status;
 	}
 
 	public function register_field() {
@@ -52,7 +56,7 @@ class Connection_Status {
 	 * @return string
 	 */
 	private function get_api_status() {
-		if ( ! $this->configured ) {
+		if ( ! $this->configuration_status >= Settings::STATUS_API_CONNECTED ) {
 			return $this->connection_failed_message( false, null );
 		}
 		$status = get_transient( self::STATUS_CACHE );
@@ -77,21 +81,19 @@ class Connection_Status {
 	/**
 	 * Display a notice if all required credentials are not set.
 	 *
-	 * @param Abstract_Screen   $target_screen    Settings screen the link will point to
-	 * @param Abstract_Screen[] $excluded_screens Settings screens that should not show the notice
+	 * @param Abstract_Screen $target_screen    Settings screen the link will point to
+	 * @param string[]        $excluded_screens Settings screen IDs that should not show the notice
 	 *
 	 * @return void
 	 */
 	public function credentials_required_notice( Abstract_Screen $target_screen, $excluded_screens = [] ) {
-		if ( $this->configured ) {
+		if ( $this->configuration_status >= Settings::STATUS_CHANNEL_CONNECTED ) {
 			return;
 		}
 		if ( function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
-			foreach ( $excluded_screens as $settings_screen ) {
-				if ( $screen && $screen->id === $settings_screen->get_hook_suffix() ) {
-					return;
-				}
+			if ( $screen && in_array( $screen->id, $excluded_screens ) ) {
+				return;
 			}
 		}
 		$message = __( 'Please connect to your BigCommerce account to start using products.', 'bigcommerce' );
@@ -128,7 +130,7 @@ class Connection_Status {
 					$notice .= sprintf( '<p><code>%s</code></p>', esc_html( $debug ) );
 				}
 			}
-			$notice = sprintf( '<div class="notice notice-error">%s</div>', $notice );
+			$notice = sprintf( '<div class="notice notice-error bigcommerce-notice">%s</div>', $notice );
 		}
 
 		return $status . $notice;

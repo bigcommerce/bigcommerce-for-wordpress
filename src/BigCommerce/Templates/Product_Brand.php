@@ -10,7 +10,7 @@ class Product_Brand extends Controller {
 	const PRODUCT = 'product';
 	const BRAND   = 'brand';
 
-	protected $template = 'components/product-brand.php';
+	protected $template = 'components/products/product-brand.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [

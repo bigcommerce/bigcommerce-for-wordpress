@@ -13,7 +13,7 @@ class Product_Shortcode_Grid extends Controller {
 	const WRAP          = 'wrap';
 	const COLUMNS       = 'columns';
 
-	protected $template = 'product-shortcode-grid.php';
+	protected $template = 'components/products/product-shortcode-grid.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [
@@ -39,7 +39,7 @@ class Product_Shortcode_Grid extends Controller {
 		if ( empty( $next_page_url ) ) {
 			return '';
 		}
-		$component = new Product_Shortcode_Pagination( [
+		$component = Product_Shortcode_Pagination::factory( [
 			Product_Shortcode_Pagination::NEXT_PAGE_URL => $next_page_url,
 		] );
 

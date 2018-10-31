@@ -3,44 +3,62 @@
 
 namespace BigCommerce\Templates;
 
-use BigCommerce\Assets\Theme\Image_Sizes;
-use BigCommerce\Customizer\Sections;
-
 
 class Cart extends Controller {
-	const CART           = 'cart';
-	const FALLBACK_IMAGE = 'fallback_image';
-	const IMAGE_SIZE     = 'image_size';
+	const CART          = 'cart';
+	const ERROR_MESSAGE = 'error_message';
+	const HEADER        = 'header';
+	const ITEMS         = 'items';
+	const FOOTER        = 'footer';
 
-	protected $template = 'cart.php';
+	protected $template = 'components/cart/cart.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [
-			self::CART       => [],
-			self::IMAGE_SIZE => Image_Sizes::BC_SMALL,
+			self::CART => [],
 		];
 
 		return wp_parse_args( $options, $defaults );
 	}
 
 	public function get_data() {
+		$cart = $this->options[ self::CART ];
+
 		return [
-			self::CART           => $this->options[ self::CART ],
-			self::FALLBACK_IMAGE => $this->get_fallback_image(),
-			self::IMAGE_SIZE     => $this->options[ self::IMAGE_SIZE ],
+			self::CART          => $cart,
+			self::ERROR_MESSAGE => $this->get_error_message(),
+			self::HEADER        => $this->get_header(),
+			self::ITEMS         => $this->get_items( $cart ),
+			self::FOOTER        => $this->get_footer( $cart ),
 		];
 	}
 
-	protected function get_fallback_image() {
-		$default = get_option( Sections\Product_Single::DEFAULT_IMAGE, 0 );
-		if ( empty( $default ) ) {
-			$component = new Fallback_Image( [] );
+	protected function get_error_message() {
+		$component = Cart_Error_Message::factory( [] );
 
-			return $component->render();
-		}
-
-		return wp_get_attachment_image( $default, $this->options[ self::IMAGE_SIZE ] );
+		return $component->render();
 	}
 
+	protected function get_header() {
+		$component = Cart_Header::factory( [] );
+
+		return $component->render();
+	}
+
+	protected function get_items( $cart ) {
+		$component = Cart_Items::factory( [
+			Cart_Items::CART => $cart,
+		] );
+
+		return $component->render();
+	}
+
+	protected function get_footer( $cart ) {
+		$component = Cart_Footer::factory( [
+			Cart_Footer::CART => $cart,
+		] );
+
+		return $component->render();
+	}
 
 }

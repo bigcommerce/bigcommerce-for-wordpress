@@ -4,7 +4,7 @@
 namespace BigCommerce\Cart;
 
 use BigCommerce\Settings;
-use BigCommerce\Settings\Cart;
+use BigCommerce\Settings\Sections\Cart;
 
 class Cart_Menu_Item {
 
@@ -32,7 +32,7 @@ class Cart_Menu_Item {
 		if ( $menu_item->type != 'post_type' ) {
 			return false;
 		}
-		$cart_page_id = get_option( Settings\Cart::OPTION_CART_PAGE_ID, 0 );
+		$cart_page_id = get_option( Settings\Sections\Cart::OPTION_CART_PAGE_ID, 0 );
 
 		return $menu_item->object_id == $cart_page_id;
 	}

@@ -15,7 +15,7 @@ class Profile_Form extends Controller {
 	const PHONE      = 'phone';
 	const ERRORS     = 'errors';
 
-	protected $template = 'components/profile-form.php';
+	protected $template = 'components/accounts/profile-form.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [

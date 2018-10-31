@@ -42,7 +42,7 @@ class Sub_Nav {
 	}
 
 	private function get_subnav() {
-		$component = new Sub_Nav_Links( [
+		$component = Sub_Nav_Links::factory( [
 			Sub_Nav_Links::LINKS => $this->get_links(),
 		] );
 

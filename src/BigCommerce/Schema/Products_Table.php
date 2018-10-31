@@ -7,7 +7,7 @@ namespace BigCommerce\Schema;
 class Products_Table extends Table_Maker {
 	const NAME = 'bc_products';
 
-	protected $schema_version = '0.1.1';
+	protected $schema_version = '0.13.0';
 
 	protected $tables = [ self::NAME ];
 
@@ -21,6 +21,7 @@ class Products_Table extends Table_Maker {
 				return "CREATE TABLE {$table_name} (
 				        post_id BIGINT(20) unsigned NOT NULL,
 				        bc_id BIGINT(20) unsigned NOT NULL,
+				        listing_id BIGINT(20) unsigned NOT NULL DEFAULT 0,
 				        is_featured TINYINT DEFAULT 0,
 				        sku VARCHAR(255),
 				        upc VARCHAR(255),
@@ -40,6 +41,7 @@ class Products_Table extends Table_Maker {
 				        inventory_tracking ENUM('none', 'product', 'variant'),
 				        PRIMARY KEY  (post_id),
 				        KEY bc_id (bc_id),
+				        KEY listing_id (listing_id),
 				        KEY is_featured (is_featured),
 				        KEY sku (sku(50)),
 				        KEY calculated_price (calculated_price),

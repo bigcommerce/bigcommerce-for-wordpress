@@ -22,10 +22,10 @@ class Login_Form implements Shortcode {
 
 		switch ( $action ) {
 			case 'lostpassword':
-				$controller = new Templates\Lost_Password_Form();
+				$controller = Templates\Lost_Password_Form::factory();
 				break;
 			default:
-				$controller = new Templates\Login_Form();
+				$controller = Templates\Login_Form::factory();
 				break;
 		}
 

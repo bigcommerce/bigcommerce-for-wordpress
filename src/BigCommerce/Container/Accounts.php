@@ -81,9 +81,11 @@ class Accounts extends Provider {
 		add_filter( 'bigcommerce/countries/data', $this->create_callback( 'countries', function ( $data ) use ( $container ) {
 			return $container[ self::COUNTRIES ]->get_countries();
 		} ), 5, 1 );
-		add_filter( 'bigcommerce/js_config', $this->create_callback( 'js_config', function ( $config ) use ( $container ) {
+		$countries_js_config = $this->create_callback( 'countries_js_config', function ( $config ) use ( $container ) {
 			return $container[ self::COUNTRIES ]->js_config( $config );
-		} ), 10, 1 );
+		} );
+		add_filter( 'bigcommerce/js_config', $countries_js_config, 10, 1 );
+		add_filter( 'bigcommerce/admin/js_config', $countries_js_config, 10, 1 );
 
 		$container[ self::DELETE_ADDRESS ] = function ( Container $container ) {
 			return new Delete_Address_Handler();

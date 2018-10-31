@@ -15,7 +15,7 @@ class Product_Featured_Image extends Controller {
 	const IMAGE         = 'image';
 	const SIZE          = 'size';
 
-	protected $template = 'components/product-featured-image.php';
+	protected $template = 'components/products/product-featured-image.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [
@@ -66,7 +66,7 @@ class Product_Featured_Image extends Controller {
 			return wp_get_attachment_image( $attachment_id, $this->options[ self::SIZE ] );
 		}
 
-		$component = new Fallback_Image( [] );
+		$component = Fallback_Image::factory( [] );
 
 		return $component->render();
 	}

@@ -14,7 +14,7 @@ class View_Product {
 	 * @param string $template
 	 *
 	 * @return array
-	 * @filter bigcommerce/template=components/view-product-button.php/options
+	 * @filter bigcommerce/template=components/products/view-product-button.php/options
 	 */
 	public function add_tracking_attributes_to_button( $options = [], $template = '' ) {
 		if ( empty( $options[ View_Product_Button::PRODUCT ] ) ) {
@@ -45,7 +45,7 @@ class View_Product {
 	 * @param string $template
 	 *
 	 * @return array
-	 * @filter bigcommerce/template=components/product-title.php/options
+	 * @filter bigcommerce/template=components/products/product-title.php/options
 	 */
 	public function add_tracking_attributes_to_permalink( $options, $template ) {
 		if ( empty( $options[ Product_Title::USE_PERMALINK ] ) || empty( $options[ Product_Title::PRODUCT ] ) ) {

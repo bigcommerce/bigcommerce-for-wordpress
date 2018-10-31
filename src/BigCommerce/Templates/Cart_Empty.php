@@ -6,7 +6,7 @@ namespace BigCommerce\Templates;
 
 class Cart_Empty extends Controller {
 	const CART = 'cart';
-	protected $template = 'cart-empty.php';
+	protected $template = 'components/cart/cart-empty.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [

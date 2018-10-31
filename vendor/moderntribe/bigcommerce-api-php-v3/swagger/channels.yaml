@@ -8,7 +8,7 @@ tags:
   - name: Channels
     description: BigCommerce Channels API Definition.
 schemes:
-- http
+- https
 consumes:
 - application/json
 produces:
@@ -19,80 +19,53 @@ paths:
     x-description: |
       Channels are representations of where a merchant could sell their products and services on, whether it be online or in-person. They are what show in the UI when a merchant goes to list products to a Channel, manage its Orders, etc.
     get:
-      summary: List all Channels
       tags:
         - Channels
+      summary: List all Channels
+      operationId: listChannels
       responses:
         200:
           description: Successful Response
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/Channel'
+            $ref: "#/definitions/ChannelCollectionResponse"
           examples:
             application/json:
               - id: 1
-                type: wordpress
+                type: storefront
+                platform: wordpress
                 name: mysite.com
-                external_id: 12345
-                config:
-                  default_currency: USD
-                  default_price_list_id: 5
-                  storefront_urls:
-                    cart: https://mysite.com/items
-                    home: https://mysite.com/
-                    login: https://mysite.com/login
-                    register: https://mysite.com/register
-                    account: https://mysite.com/my-account
-                created_at: 2018-01-04T04:15:50+00:00
-                updated_at: 2018-01-18T01:22:10+00:00
+                date_created: 2018-01-04T04:15:50+00:00
+                date_modified: 2018-01-18T01:22:10+00:00
               - id: 2
-                type: wordpress
+                type: storefront
+                platform: wordpress
                 name: mysite-2.com
-                external_id: 23456
-                config:
-                  default_currency: USD
-                  default_price_list_id: 5
-                  storefront_urls:
-                    cart: https://mysite-2.com/cart
-                    home: https://mysite-2.com/
-                    login: https://mysite-2.com/login
-                    register: https://mysite-2.com/signup
-                    account: https://mysite-2.com/account
-                created_at: 2018-01-09T00:12:40+00:00
-                updated_at: 2018-01-18T01:26:10+00:00
+                date_created: 2018-01-09T00:12:40+00:00
+                date_modified: 2018-01-18T01:26:10+00:00
     post:
+      tags:
+        - Channels
       summary: Create a Channel
+      operationId: createChannel
       parameters:
         - name: body
           in: body
           required: true
           schema:
-            $ref: '#/definitions/Channel'
-      tags:
-        - Channels
+            $ref: '#/definitions/CreateChannelRequest'
       responses:
         200:
           description: ''
           schema:
-            $ref: '#/definitions/Channel'
+            $ref: "#/definitions/ChannelResponse"
           examples:
             application/json:
               id: 1
-              type: wordpress
+              type: storefront
+              platform: wordpress
               name: mysite.com
-              external_id: '12345'
-              config:
-                default_currency: 'USD'
-                default_price_list_id: 5
-                storefront_urls:
-                  cart: https://mysite.com/items
-                  home: http//mysite.com/
-                  login: https://mysite.com/login
-                  register: https://mysite.com/register
-                  account: https://mysite.com/my-account
-              created_at: 2018-01-04T04:15:50+00:00
-              updated_at: 2018-01-18T01:22:10+00:00
+              date_created: 2018-01-04T04:15:50+00:00
+              date_modified: 2018-01-18T01:22:10+00:00
   /channels/{channelId}:
     parameters:
       - name: "channelId"
@@ -105,150 +78,126 @@ paths:
     x-description: |
       Retrieve, update or remove a specific Channel
     get:
-      summary: Get Channel
       tags:
         - Channels
+      summary: Get Channel
+      operationId: getChannel
       responses:
         200:
           description: Successful Response
           schema:
-            $ref: '#/definitions/Channel'
+            $ref: "#/definitions/ChannelResponse"
           examples:
             application/json:
               id: 1
-              type: wordpress
-              external_id: 12345
+              type: storefront
+              platform: wordpress
               name: mysite.com
-              config:
-                default_currency: null
-                default_price_list_id: null
-                storefront_urls:
-                  cart: https://mysite.com/items
-                  home: http//mysite.com/
-                  login: https://mysite.com/login
-                  register: https://mysite.com/register
-                  account: https://mysite.com/my-account
-                  shipping_returns: https://mysite.com/shipping-and-returns
-              created_at: 2018-01-04T04:15:50+00:00
-              updated_at: 2018-01-18T01:22:10+00:00
+              date_created: 2018-01-04T04:15:50+00:00
+              date_modified: 2018-01-18T01:22:10+00:00
     put:
+      tags:
+        - Channels
       summary: Update Channel
+      operationId: updateChannel
       parameters:
         - name: body
           in: body
           required: true
           schema:
-            $ref: '#/definitions/Channel'
-      tags:
-        - Channels
+            $ref: '#/definitions/UpdateChannelRequest'
       responses:
         201:
           description: ''
           schema:
-            $ref: '#/definitions/Channel'
+            $ref: "#/definitions/ChannelResponse"
           examples:
             application/json:
               id: 1
-              type: wordpress
+              type: storefront
+              platform: wordpress
               name: mysite.com
-              external_id: 78787
-              config:
-                default_currency: USD
-                default_price_list_id: 50
-                storefront_urls:
-                  cart: https://mysite.com/items
-                  home: http//mysite.com/
-                  login: https://mysite.com/login
-                  register: https://mysite.com/register
-                  account: https://mysite.com/my-account
-                  shipping_returns: https://mysite.com/shipping-and-returns
-              created_at: 2018-01-04T04:15:50+00:00
-              updated_at: 2018-01-18T08:42:10+00:00
-    delete:
-      summary: Delete Channel
-      tags:
-        - Channels
-      responses:
-        204:
-          description: |
-             Deleting a Channel will cause any future Orders created with the Channel to fall back to the standard BigCommerce source.
-  /channels/listings:
+              date_created: 2018-01-04T04:15:50+00:00
+              date_modified: 2018-01-18T08:42:10+00:00
+  /channels/{channelId}/listings:
     x-summary: Channel Listings Collection
     x-description: |
-      Listings are representations of a product or variants purchasable state on a Channel
+      Listings are representations of a product or variants purchasable state on a Channel.
+      If state is omitted in the variants object, it inherits the top-level state
     get:
-      summary: List all Channels Listings
-      parameters:
-        - in: query
-          name: channel_id
-          type: integer
-          x-example: 1
       tags:
         - Channels
+      summary: List all Channels Listings
+      operationId: listChannelListings
+      parameters:
+          - name: "channelId"
+            in: "path"
+            type: integer
+            required: true
+            format: int64
+          - $ref: "#/parameters/LimitParam"
+          - $ref: "#/parameters/AfterParam"
+          #- $ref: "#/parameters/DateModifiedMaxParam"
+          #- $ref: "#/parameters/DateModifiedMinParam"
       responses:
         200:
           description: Successful Response
+          schema:
+            $ref: "#/definitions/ListingCollectionResponse"
+    put:
+      tags:
+        - Channels
+      summary: Update Channel Listings
+      operationId: updateChannelListings
+      parameters:
+        - name: "channelId"
+          in: "path"
+          type: integer
+          required: true
+          format: int64
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UpdateListingRequest'
+      responses:
+        201:
+          description: ''
+          schema:
+            $ref: '#/definitions/ListingCollectionResponse'
+    post:
+      tags:
+        - Channels
+      summary: Create Channel Listings
+      operationId: createChannelListings
+      parameters:
+        - name: "channelId"
+          in: "path"
+          type: integer
+          required: true
+          format: int64
+        - name: body
+          in: body
+          required: true
+          description: "If state is omitted in the variants object, it inherits the top-level state"
           schema:
             type: array
             items:
               $ref: '#/definitions/Listing'
-          examples:
-            application/json:
-              data:
-                - channel_id: 1
-                  listing_id: 123
-                  product_id: 5431
-                  external_product_id: PRD-LST1
-                  external_link: http://www.mysite.com/products/product-name
-                  state: active
-                  name: Product Name
-                  description: This is a wonderful description.
-                  brand: Brand Name
-                  condition: New
-                  categories:
-                   - 12
-                   - 42
-                  custom_properties:
-                    example_prop_one: Sample Category Attribute
-                    example_prop_two: Another Attribute
-                  created_at: 2018-01-04T04:15:50+00:00
-                  updated_at: 2018-01-18T05:32:12+00:00
-                  errors:
-                    - code: error_code_one
-                      message: This is the error message.
-                      severity: error
-                  variants:
-                    - variant_id: 42424
-                      external_variant_id: VRT-231241
-                      state: active
-                      price: 45.25
-                      custom_properties:
-                        example_prop_one: Variant Level Custom Prop
-                      errors:
-                        - code: warning_code_one
-                          message: This is the warning message.
-                          severity: warning
-                      created_at: 2018-01-04T04:15:50+00:00
-                      updated_at: 2018-01-18T05:32:12+00:00
-              meta:
-                total: 1
-    post:
-      summary: Create a Channel Listing
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/Listing'
-      tags:
-        - Channels
       responses:
         201:
           description: ''
           schema:
-            $ref: '#/definitions/Listing'
-  /channels/listings/{listingId}:
+            $ref: '#/definitions/ListingCollectionResponse'
+  /channels/{channelId}/listings/{listingId}:
     parameters:
+      - name: "channelId"
+        in: "path"
+        type: integer
+        required: true
+        format: int64
       - name: "listingId"
         in: "path"
         description: "The ID of a Channel Listing that's available through GET /channels/listings"
@@ -257,40 +206,122 @@ paths:
         format: "int64"
     x-summary: Channel Listing
     x-description: |
-      Retrieve, update or remove a specific Channel Listing
+      Retrieve a specific Channel Listing
     get:
-      summary: Get Channel Listing
       tags:
         - Channels
+      summary: Get Channel Listing
+      operationId: getChannelListing
       responses:
         200:
           description: Successful Response
           schema:
-            $ref: '#/definitions/Listing'
-    put:
-      summary: Update Channel Listing
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/Listing'
-      tags:
-        - Channels
-      responses:
-        201:
-          description: ''
-          schema:
-            $ref: '#/definitions/Listing'
-    delete:
-      summary: Delete Channel Listing
-      tags:
-        - Channels
-      responses:
-        204:
-          description: |
-            This will completely remove the Listing from the Channel.
+            $ref: '#/definitions/ListingResponse'
 definitions:
+  CollectionMeta:
+    type: object
+    description: BC Meta payload for collection-type responses
+    properties:
+      pagination:
+        $ref: "#/definitions/Pagination"
+  Pagination:
+    type: object
+    description: |
+      Data about the response, including pagination and collection totals.
+    properties:
+      total:
+        type: integer
+        description: |
+          Total number of items in the result set.
+      count:
+        type: integer
+        description: |
+          Total number of items in the collection response.
+      per_page:
+        type: integer
+        description: |
+          The amount of items returned in the collection per page, controlled by the limit parameter.
+      current_page:
+        type: integer
+        description: |
+          The page you are currently on within the collection.
+      total_pages:
+        type: integer
+        description: |
+          The total number of pages in the collection.
+      links:
+        type: object
+        description: |
+          Pagination links for the previous and next parts of the whole collection.
+        properties:
+          previous:
+            type: string
+            description: |
+              Link to the previous page returned in the response.
+          current:
+            type: string
+            description: |
+              Link to the current page returned in the response.
+          next:
+            type: string
+            description: |
+              Link to the next page returned in the response.
+  CreateChannelRequest:
+    title: Channel
+    type: object
+    properties:
+      type:
+        type: string
+        enum: [pos, marketplace, storefront, marketing, custom]
+      platform:
+        type: string
+        enum: [wordpress, bigcommerce]
+      name:
+        type: string
+      external_id:
+        type: string
+    required:
+      - name
+      - type
+      - platform
+  UpdateChannelRequest:
+    title: Channel
+    type: object
+    properties:
+      type:
+        type: string
+        enum: [pos, marketplace, storefront, marketing, custom]
+      platform:
+        type: string
+        enum: [wordpress, bigcommerce]
+      name:
+        type: string
+      external_id:
+        type: string
+    required:
+      - name
+      - type
+      - platform
+  ChannelResponse:
+    description: |
+      Response payload for the BigCommerce API.
+    type: object
+    properties:
+      data:
+        $ref: "#/definitions/Channel"
+      meta:
+        $ref: "#/definitions/Meta"
+  ChannelCollectionResponse:
+    description: |
+      Response payload for the BigCommerce API.
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Channel'
+      meta:
+        $ref: "#/definitions/CollectionMeta"
   Channel:
     title: Channel
     type: object
@@ -300,39 +331,43 @@ definitions:
         format: int32
       type:
         type: string
-      external_id:
+      platform:
         type: string
       name:
         type: string
-      config:
-        type: object
-        properties:
-          default_currency:
-            type: string
-          default_price_list_id:
-            type: integer
-            format: int32
-          storefront_urls:
-            type: object
-            properties:
-              cart:
-                type: string
-              home:
-                type: string
-              login:
-                type: string
-              register:
-                type: string
-              account:
-                type: string
-              shipping_returns:
-                type: string
-      created_at:
+      date_created:
         type: string
-      updated_at:
+      date_modified:
+        type: string
+      external_id:
         type: string
     required:
       - name
+  UpdateListingRequest:
+    title: Update Listing
+    allOf:
+      - $ref: '#/definitions/Listing'
+      - type: object
+        required:
+          - listing_id
+  ListingCollectionResponse:
+    title: Listing Collection Response
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Listing'
+      meta:
+        $ref: "#/definitions/CollectionMeta"
+  ListingResponse:
+    title: Listing Collection Response
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/Listing'
+      meta:
+        $ref: "#/definitions/Meta"
   Listing:
     title: Listing
     type: object
@@ -346,97 +381,105 @@ definitions:
       product_id:
         type: integer
         format: int32
-      external_product_id:
-        type: string
-      external_link:
-        type: string
       state:
         enum:
-            - unknown_listing_state
-            - pending
-            - pending_disable
-            - pending_delete
-            - queued
-            - submitted
-            - active
-            - error
-            - rejected
-            - disabled
-            - deleted
+          - active
+          - disabled
+          - error
+          - pending
+          - pending_disable
+          - pending_delete
+          - queued
+          - rejected
+          - submitted
+          - deleted
+          - unknown
       name:
         type: string
       description:
         type: string
-      brand:
+      external_id:
         type: string
-      condition:
+      date_created:
         type: string
-      categories:
-        type: array
-        items:
-          type: string
-      custom_properties:
-        type: object
-        properties:
-          example_prop_one:
-            type: string
-          example_prop_two:
-            type: string
-      created_at:
+        format: date-time
+      date_modified:
         type: string
-      updated_at:
-        type: string
-      errors:
-        type: array
-        items:
-          $ref: '#/definitions/ListingError'
+        format: date-time
       variants:
         type: array
-        items:
-          $ref: '#/definitions/ListingVariant'
+        items: { $ref: '#/definitions/ListingVariant' }
     required:
+      - channel_id
       - product_id
       - state
-  ListingError:
-    title: Listing Error
-    type: object
-    properties:
-      code:
-        type: string
-      message:
-        type: string
-      severity:
-        enum:
-            - warning
-            - error
   ListingVariant:
-    title: Listing Variants
+    title: Listing Variant
     type: object
     properties:
+      product_id:
+        type: integer
+        format: int64
       variant_id:
         type: integer
-        format: int32
-      external_variant_id:
+        format: int64
+      external_id:
         type: string
       state:
+        enum:
+          - active
+          - disabled
+          - error
+          - pending
+          - pending_disable
+          - pending_delete
+          - queued
+          - rejected
+          - submitted
+          - deleted
+          - unknown
+      date_created:
         type: string
-      price:
-        type: number
-      custom_properties:
-        type: object
-        properties:
-          example_prop_one:
-            type: string
-          example_prop_two:
-            type: string
-      errors:
-        type: array
-        items:
-          $ref: '#/definitions/ListingError'
-      created_at:
-        type: string
-      updated_at:
+      date_modified:
         type: string
     required:
+      - product_id
       - variant_id
       - state
+  Meta:
+    type: object
+    description: Empty meta object; may be used later.
+parameters:
+  AfterParam:
+    name: after
+    description: |
+      Specifies the prior ID number in a limited (paginated) list of listings.
+    required: false
+    in: query
+    type: integer
+  DateModifiedMaxParam:
+    name: date_modified:max
+    description: "max iso8601 time"
+    in: query
+    type: string
+    format: date-time
+  DateModifiedMinParam:
+    name: date_modified:min
+    description: "min iso8601 time"
+    in: query
+    type: string
+    format: date-time
+  PageParam:
+    name: page
+    description: |
+      Specifies the page number in a limited (paginated) list of listings.
+    required: false
+    in: query
+    type: integer
+  LimitParam:
+    name: limit
+    description: |
+      Controls the number of items per page in a limited (paginated) list of products.
+    required: false
+    in: query
+    type: integer

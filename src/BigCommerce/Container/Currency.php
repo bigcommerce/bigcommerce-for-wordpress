@@ -24,15 +24,15 @@ class Currency extends Provider {
 				return new Intl_Formatter( $container[ self::CURRENCY_CODE ] );
 			}
 
-			$symbol   = get_option( Settings\Currency::CURRENCY_SYMBOL, '$' );
-			$position = get_option( Settings\Currency::CURRENCY_SYMBOL_POSITION, Settings\Currency::POSITION_LEFT );
-			$decimals = get_option( Settings\Currency::DECIMAL_UNITS, 2 );
+			$symbol   = get_option( Settings\Sections\Currency::CURRENCY_SYMBOL, '$' );
+			$position = get_option( Settings\Sections\Currency::CURRENCY_SYMBOL_POSITION, Settings\Sections\Currency::POSITION_LEFT );
+			$decimals = get_option( Settings\Sections\Currency::DECIMAL_UNITS, 2 );
 
 			return new Configurable_Formatter( $symbol, $position, $decimals );
 		};
 
 		$container[ self::CURRENCY_CODE ] = function ( Container $container ) {
-			$currency = get_option( Settings\Currency::CURRENCY_CODE, 'USD' );
+			$currency = get_option( Settings\Sections\Currency::CURRENCY_CODE, 'USD' );
 
 			return $currency ?: 'USD';
 		};

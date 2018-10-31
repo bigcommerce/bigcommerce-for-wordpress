@@ -96,14 +96,14 @@ class Reviews_Listing_Controller extends Rest_Controller {
 		$total_pages   = empty( $total_reviews ) ? 0 : ceil( $total_reviews / $per_page );
 
 		$reviews = array_map( function ( $review ) use ( $product ) {
-			$controller = new Review_Single( array_merge( [
+			$controller = Review_Single::factory( array_merge( [
 				Review_Single::PRODUCT => $product,
 			], $review ) );
 
 			return $controller->render();
 		}, $reviews );
 
-		$controller = new Review_List( [
+		$controller = Review_List::factory( [
 			Review_List::PRODUCT => $product,
 			Review_List::REVIEWS => $reviews,
 			Review_List::WRAP    => false,

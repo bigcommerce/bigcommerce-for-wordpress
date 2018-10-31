@@ -19,7 +19,7 @@ class Product_Title extends Controller {
 	const USE_PERMALINK   = 'use_permalink';
 	const LINK_ATTRIBUTES = 'link_attributes';
 
-	protected $template = 'components/product-title.php';
+	protected $template = 'components/products/product-title.php';
 
 
 	protected function parse_options( array $options ) {
@@ -65,7 +65,7 @@ class Product_Title extends Controller {
 		if ( empty( $this->options[ self::SHOW_CONDITION ] ) || ! $product->show_condition() ) {
 			return '';
 		}
-		$controller = new Product_Condition( [
+		$controller = Product_Condition::factory( [
 			Product_Condition::PRODUCT => $product,
 		] );
 
@@ -76,7 +76,7 @@ class Product_Title extends Controller {
 		if ( empty( $this->options[ self::SHOW_INVENTORY ] ) ) {
 			return '';
 		}
-		$controller = new Inventory_Level( [
+		$controller = Inventory_Level::factory( [
 			Inventory_Level::PRODUCT => $product,
 		] );
 

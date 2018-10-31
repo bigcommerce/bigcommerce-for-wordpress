@@ -3,8 +3,6 @@
 
 namespace BigCommerce\Cart;
 
-use BigCommerce\Accounts\Login;
-use Bigcommerce\Api\Client;
 use BigCommerce\Api\v3\Api\CartApi;
 use BigCommerce\Api_Factory;
 
@@ -48,27 +46,5 @@ class Checkout {
 
 			return;
 		}
-	}
-
-	/**
-	 * @param string $checkout_url
-	 *
-	 * @return string
-	 * @filter bigcommerce/checkout/url
-	 */
-	public function set_login_token_for_checkout( $checkout_url ) {
-		$customer_id = (int) ( is_user_logged_in() ? get_user_option( Login::CUSTOMER_ID_META, get_current_user_id() ) : 0 );
-		if ( $customer_id ) {
-			try {
-				$store_api = $this->api_factory->store();
-				$store = $store_api->getStore();
-				$token = $store_api->getCustomerLoginToken( $customer_id, $checkout_url );
-				$checkout_url = $store->secure_url . '/login/token/' . $token;
-			} catch ( \Exception $e ) {
-				return $checkout_url;
-			}
-		}
-
-		return $checkout_url;
 	}
 }

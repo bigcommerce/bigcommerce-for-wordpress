@@ -58,7 +58,7 @@ class Purchase_Gift_Certificate_Handler implements Form_Handler {
 		$message = apply_filters( 'bigcommerce/form/gift_certificate/success_message', __( 'Gift Certificate Created!', 'bigcommerce' ) );
 
 		if ( $response ) {
-			if ( get_option( Settings\Cart::OPTION_ENABLE_CART, true ) ) {
+			if ( get_option( Settings\Sections\Cart::OPTION_ENABLE_CART, true ) ) {
 				$url = $cart->get_cart_url();
 			} else {
 				$url = $cart->get_checkout_url( $response->getId() );

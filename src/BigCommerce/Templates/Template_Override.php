@@ -24,10 +24,10 @@ class Template_Override {
 	 */
 	public function render_product_single( $post_id ) {
 		$product = new Product( get_the_ID() );
-		$single  = new Product_Single( [
+		$single  = Product_Single::factory( [
 			Product_Single::PRODUCT => $product,
 		] );
-		$wrapper = new Page_Wrapper( [
+		$wrapper = Page_Wrapper::factory( [
 			Page_Wrapper::CONTENT => $single->render(),
 		] );
 
@@ -41,10 +41,10 @@ class Template_Override {
 	 * @filter bigcommerce/template/product/archive
 	 */
 	public function render_product_archive() {
-		$archive = new Product_Archive( [
+		$archive = Product_Archive::factory( [
 			Product_Archive::QUERY => $GLOBALS[ 'wp_query' ],
 		] );
-		$wrapper = new Page_Wrapper( [
+		$wrapper = Page_Wrapper::factory( [
 			Page_Wrapper::CONTENT => $archive->render(),
 		] );
 
@@ -140,6 +140,8 @@ class Template_Override {
 		$templates = array_filter( $templates, function ( $path ) {
 			return ! in_array( $path, [ 'taxonomy.php', 'archive.php', 'index.php' ] );
 		} );
+
+		$templates[] = sprintf( 'archive-%s.php', Product::NAME );
 
 		$prefixed = $this->prefix_theme_paths( $templates );
 

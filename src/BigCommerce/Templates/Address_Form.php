@@ -23,7 +23,7 @@ class Address_Form extends Controller {
 	const STATES    = 'states';
 	const ERRORS    = 'errors';
 
-	protected $template = 'components/address-form.php';
+	protected $template = 'components/accounts/address-form.php';
 
 
 	protected function parse_options( array $options ) {

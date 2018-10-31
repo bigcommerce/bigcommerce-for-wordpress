@@ -15,7 +15,7 @@ class Related_Product extends Controller {
 	const IMAGE   = 'image';
 	const FORM    = 'form';
 
-	protected $template = 'components/related-product-card.php';
+	protected $template = 'components/products/related-product-card.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [
@@ -40,7 +40,7 @@ class Related_Product extends Controller {
 	}
 
 	protected function get_title( Product $product ) {
-		$component = new Product_Title( [
+		$component = Product_Title::factory( [
 			Product_Title::PRODUCT => $product,
 		] );
 
@@ -48,7 +48,7 @@ class Related_Product extends Controller {
 	}
 
 	protected function get_price( Product $product ) {
-		$component = new Product_Price( [
+		$component = Product_Price::factory( [
 			Product_Price::PRODUCT => $product,
 		] );
 
@@ -56,7 +56,7 @@ class Related_Product extends Controller {
 	}
 
 	protected function get_brand( Product $product ) {
-		$component = new Product_Brand( [
+		$component = Product_Brand::factory( [
 			Product_Brand::PRODUCT => $product,
 		] );
 
@@ -64,7 +64,7 @@ class Related_Product extends Controller {
 	}
 
 	protected function get_featured_image( Product $product ) {
-		$component = new Product_Featured_Image( [
+		$component = Product_Featured_Image::factory( [
 			Product_Featured_Image::PRODUCT => $product,
 		] );
 
@@ -76,12 +76,12 @@ class Related_Product extends Controller {
 			return '';
 		}
 		if ( $product->has_options() ) {
-			$component = new View_Product_Button( [
+			$component = View_Product_Button::factory( [
 				View_Product_Button::PRODUCT => $product,
 				View_Product_Button::LABEL   => get_option( Buttons::CHOOSE_OPTIONS, __( 'Choose Options', 'bigcommerce' ) ),
 			] );
 		} else {
-			$component = new Product_Form( [
+			$component = Product_Form::factory( [
 				Product_Form::PRODUCT      => $product,
 				Product_Form::SHOW_OPTIONS => false,
 			] );

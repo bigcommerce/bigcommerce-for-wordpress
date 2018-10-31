@@ -4,6 +4,7 @@ namespace BigCommerce\Import;
 
 use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api\v3\Api\CatalogApi;
+use BigCommerce\Api\v3\Model;
 use BigCommerce\Api\v3\Model\ProductReview;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Taxonomies\Availability\Availability;
@@ -19,13 +20,38 @@ use BigCommerce\Taxonomies\Product_Type\Product_Type;
  * Handles storing a product in the database
  */
 abstract class Product_Saver implements Post_Import_Strategy {
-	protected $data;
-	protected $post_id;
-	protected $api;
+	/**
+	 * @var Model\Product
+	 */
+	protected $product;
 
-	public function __construct( $data, CatalogApi $api, $post_id = 0 ) {
-		$this->data    = $data;
-		$this->api     = $api;
+	/**
+	 * @var Model\Listing
+	 */
+	protected $listing;
+
+	/**
+	 * @var int
+	 */
+	protected $post_id;
+
+	/**
+	 * @var CatalogApi
+	 */
+	protected $catalog;
+
+	/**
+	 * Product_Saver constructor.
+	 *
+	 * @param Model\Product $product
+	 * @param Model\Listing $listing
+	 * @param CatalogApi    $catalog
+	 * @param int           $post_id
+	 */
+	public function __construct( Model\Product $product, Model\Listing $listing, CatalogApi $catalog, $post_id = 0 ) {
+		$this->product = $product;
+		$this->listing = $listing;
+		$this->catalog = $catalog;
 		$this->post_id = $post_id;
 	}
 
@@ -35,7 +61,7 @@ abstract class Product_Saver implements Post_Import_Strategy {
 	 * @return int The imported post ID
 	 */
 	public function do_import() {
-		$builder = new Product_Builder( $this->data, $this->api );
+		$builder = new Product_Builder( $this->product, $this->listing, $this->catalog );
 		$this->save_wp_post( $builder );
 		$this->save_wp_postmeta( $builder );
 
@@ -43,7 +69,8 @@ abstract class Product_Saver implements Post_Import_Strategy {
 		$this->save_product_variants( $builder );
 
 		$product = new Product( $this->post_id );
-		$product->update_source_data( $this->data );
+		$product->update_source_data( $this->product );
+		$product->update_listing_data( $this->listing );
 
 		$this->save_modifiers( $product );
 		$this->save_options( $product );
@@ -125,7 +152,7 @@ abstract class Product_Saver implements Post_Import_Strategy {
 	 */
 	protected function save_modifiers( Product $product ) {
 		try {
-			$modifiers = $this->api->getModifiers( $this->data[ 'id' ] );
+			$modifiers = $this->catalog->getModifiers( $this->product[ 'id' ] );
 			$product->update_modifier_data( $modifiers->getData() );
 		} catch ( ApiException $e ) {
 			$product->update_modifier_data( [] );
@@ -141,7 +168,7 @@ abstract class Product_Saver implements Post_Import_Strategy {
 	 */
 	protected function save_options( Product $product ) {
 		try {
-			$options = $this->api->getOptions( $this->data[ 'id' ] );
+			$options = $this->catalog->getOptions( $this->product[ 'id' ] );
 			$product->update_options_data( $options->getData() );
 		} catch ( ApiException $e ) {
 			$product->update_options_data( [] );
@@ -156,7 +183,7 @@ abstract class Product_Saver implements Post_Import_Strategy {
 	 * @return void
 	 */
 	protected function save_custom_fields( Product $product ) {
-		$custom_fields = isset( $this->data[ 'custom_fields' ] ) ? (array) $this->data[ 'custom_fields' ] : [];
+		$custom_fields = isset( $this->product[ 'custom_fields' ] ) ? (array) $this->product[ 'custom_fields' ] : [];
 		$custom_fields = array_map( function ( $field ) {
 			return [
 				'name'  => $field[ 'name' ],
@@ -215,11 +242,11 @@ abstract class Product_Saver implements Post_Import_Strategy {
 		/** @var \wpdb $wpdb */
 		global $wpdb;
 
-		$fetch   = new Review_Fetcher( $this->api, $this->data[ 'id' ] );
+		$fetch   = new Review_Fetcher( $this->catalog, $this->product[ 'id' ] );
 		$reviews = array_map( function ( ProductReview $review ) {
 			$builder = new Review_Builder( $review );
 
-			return $builder->build_review_array( $this->post_id, $this->data[ 'id' ] );
+			return $builder->build_review_array( $this->post_id, $this->product[ 'id' ] );
 		}, $fetch->fetch() );
 
 		$existing_reviews = array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT review_id FROM {$wpdb->bc_reviews} WHERE post_id=%d", $this->post_id ) ) );
@@ -247,6 +274,14 @@ abstract class Product_Saver implements Post_Import_Strategy {
 	 * @return void
 	 */
 	protected function send_notifications() {
-		do_action( 'bigcommerce/import/product/saved', $this->post_id, $this->data, $this->api );
+		/**
+		 * A product has been saved by the import process
+		 *
+		 * @param int           $post_id The Post ID of the skipped product
+		 * @param Model\Product $product The product data
+		 * @param Model\Listing $listing The channel listing data
+		 * @param CatalogApi    $catalog The Catalog API instance
+		 */
+		do_action( 'bigcommerce/import/product/saved', $this->post_id, $this->product, $this->listing, $this->catalog );
 	}
 }

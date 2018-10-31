@@ -186,6 +186,8 @@ definitions:
     properties:
       customer_id:
           type: integer
+      channel_id:
+          type: integer
       line_items:
           type: array
           items:
@@ -206,6 +208,8 @@ definitions:
           items:
             $ref: "#/definitions/LineItemGiftCertificateRequestData"
       customer_id:
+          type: integer
+      channel_id:
           type: integer
   CartUpdateRequestData:
     type: object
@@ -307,6 +311,8 @@ definitions:
         format: UUID
       customer_id:
         description: ID of the customer to which the cart belongs.
+        type: integer
+      channel_id:
         type: integer
       email:
         description: The cart's email. This is the same email that is used in the billing address
@@ -558,3 +564,7 @@ definitions:
         format: float
       amount_as_integer:
         type: number
+
+  Meta:
+    type: object
+    description: Empty meta object; may be used later.

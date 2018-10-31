@@ -19,7 +19,7 @@ class Product_Shortcode_Single extends Controller {
 	const FORM        = 'form';
 	const SPECS       = 'specs';
 
-	protected $template = 'product-shortcode-single.php';
+	protected $template = 'components/products/product-shortcode-single.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [
@@ -48,7 +48,7 @@ class Product_Shortcode_Single extends Controller {
 	}
 
 	protected function get_title( Product $product ) {
-		$component = new Product_Title( [
+		$component = Product_Title::factory( [
 			Product_Title::PRODUCT => $product,
 		] );
 
@@ -56,7 +56,7 @@ class Product_Shortcode_Single extends Controller {
 	}
 
 	protected function get_description( Product $product ) {
-		$component = new Product_Description( [
+		$component = Product_Description::factory( [
 			Product_Description::PRODUCT => $product,
 		] );
 
@@ -64,7 +64,7 @@ class Product_Shortcode_Single extends Controller {
 	}
 
 	protected function get_price( Product $product ) {
-		$component = new Product_Price( [
+		$component = Product_Price::factory( [
 			Product_Price::PRODUCT => $product,
 		] );
 
@@ -72,7 +72,7 @@ class Product_Shortcode_Single extends Controller {
 	}
 
 	protected function get_brand( Product $product ) {
-		$component = new Product_Brand( [
+		$component = Product_Brand::factory( [
 			Product_Brand::PRODUCT => $product,
 		] );
 
@@ -80,7 +80,7 @@ class Product_Shortcode_Single extends Controller {
 	}
 
 	protected function get_gallery( Product $product ) {
-		$component = new Product_Gallery( [
+		$component = Product_Gallery::factory( [
 			Product_Gallery::PRODUCT => $product,
 		] );
 
@@ -91,7 +91,7 @@ class Product_Shortcode_Single extends Controller {
 		if ( $product->out_of_stock() ) {
 			return '';
 		}
-		$component = new Product_Form( [
+		$component = Product_Form::factory( [
 			Product_Form::PRODUCT      => $product,
 			Product_Form::SHOW_OPTIONS => true,
 		] );
@@ -100,7 +100,7 @@ class Product_Shortcode_Single extends Controller {
 	}
 
 	protected function get_rating( Product $product ) {
-		$component = new Product_Rating( [
+		$component = Product_Rating::factory( [
 			Product_Rating::PRODUCT => $product,
 			Product_Rating::LINK    => get_the_permalink( $product->post_id() ) . '#bc-single-product__reviews',
 		] );
@@ -109,7 +109,7 @@ class Product_Shortcode_Single extends Controller {
 	}
 
 	protected function get_specs( Product $product ) {
-		$component = new Product_Specs( [
+		$component = Product_Specs::factory( [
 			Product_Specs::PRODUCT => $product,
 		] );
 

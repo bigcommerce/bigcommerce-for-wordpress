@@ -50,7 +50,7 @@ class Order_History implements Shortcode {
 		$orders      = $this->get_orders( $attr );
 		$total_pages = empty( $orders ) ? 0 : $this->get_total_pages( $attr[ 'per_page' ] );
 
-		$controller = new Templates\Order_History( [
+		$controller = Templates\Order_History::factory( [
 			Templates\Order_History::ORDERS        => $orders,
 			Templates\Order_History::NEXT_PAGE_URL => $this->next_page_url( $attr, $total_pages ),
 			Templates\Order_History::WRAP          => intval( $attr[ 'ajax' ] ) !== 1,
@@ -63,12 +63,12 @@ class Order_History implements Shortcode {
 		$customer = new Customer( get_current_user_id() );
 		$order    = $customer->get_order_details( $order_id );
 		if ( empty( $order ) ) {
-			$controller = new Templates\Order_Not_Found( [] );
+			$controller = Templates\Order_Not_Found::factory( [] );
 
 			return $controller->render();
 		}
 
-		$controller = new Templates\Order_Details( [ Templates\Order_Details::ORDER => $order ] );
+		$controller = Templates\Order_Details::factory( [ Templates\Order_Details::ORDER => $order ] );
 
 		return $controller->render();
 	}
@@ -77,7 +77,7 @@ class Order_History implements Shortcode {
 		$orders   = [];
 		$customer = new Customer( get_current_user_id() );
 		foreach ( $customer->get_orders( $args[ 'paged' ], $args[ 'per_page' ] ) as $order ) {
-			$component = new Order_Summary( [
+			$component = Order_Summary::factory( [
 				Order_Summary::ORDER => $order,
 			] );
 			$orders[]  = $component->render();

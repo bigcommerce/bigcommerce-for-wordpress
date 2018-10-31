@@ -4,7 +4,7 @@
 namespace BigCommerce\Import\Runner;
 
 
-use BigCommerce\Settings\Import;
+use BigCommerce\Settings\Sections\Import;
 
 class Cron_Scheduler {
 	/**

@@ -8,7 +8,7 @@ use BigCommerce\Assets\Theme\Image_Sizes;
 use BigCommerce\Customizer\Sections;
 use BigCommerce\Pages\Orders_Page;
 use BigCommerce\Post_Types\Product\Product;
-use BigCommerce\Settings\Account_Settings;
+use BigCommerce\Settings\Sections\Account_Settings;
 use BigCommerce\Shortcodes;
 
 class Order_Summary extends Controller {
@@ -38,7 +38,7 @@ class Order_Summary extends Controller {
 	const DETAILS_URL      = 'details_url';
 	const SUPPORT_EMAIL    = 'support_email';
 
-	protected $template = 'components/order-summary.php';
+	protected $template = 'components/order/order-summary.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [
@@ -192,7 +192,7 @@ class Order_Summary extends Controller {
 	protected function get_fallback_image( $size ) {
 		$default = get_option( Sections\Product_Single::DEFAULT_IMAGE, 0 );
 		if ( empty( $default ) ) {
-			$component = new Fallback_Image( [] );
+			$component = Fallback_Image::factory( [] );
 
 			return $component->render();
 		}

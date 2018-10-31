@@ -5,13 +5,13 @@ namespace BigCommerce\Templates;
 
 
 use BigCommerce\Post_Types\Product\Product;
-use BigCommerce\Settings\Units;
+use BigCommerce\Settings\Sections\Units;
 
 class Product_Specs extends Controller {
 	const PRODUCT = 'product';
 	const SPECS   = 'specs';
 
-	protected $template = 'components/product-specs.php';
+	protected $template = 'components/products/product-specs.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [

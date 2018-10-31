@@ -31,7 +31,7 @@ class Gift_Certificate_Balance_Page extends Controller {
 	}
 
 	private function get_form() {
-		$controller = new Gift_Certificate_Balance_Form();
+		$controller = Gift_Certificate_Balance_Form::factory();
 
 		return $controller->render();
 	}
@@ -40,7 +40,7 @@ class Gift_Certificate_Balance_Page extends Controller {
 		if ( empty( $this->options[ self::CODE ] ) ) {
 			return '';
 		}
-		$controller = new Gift_Certificate_Balance_Response( [
+		$controller = Gift_Certificate_Balance_Response::factory( [
 			Gift_Certificate_Balance_Response::CODE    => $this->options[ self::CODE ],
 			Gift_Certificate_Balance_Response::BALANCE => $this->options[ self::BALANCE ],
 		] );
@@ -49,7 +49,7 @@ class Gift_Certificate_Balance_Page extends Controller {
 	}
 
 	private function get_instructions() {
-		$controller = new Gift_Certificate_Redemption_Instructions();
+		$controller = Gift_Certificate_Redemption_Instructions::factory();
 
 		return $controller->render();
 	}

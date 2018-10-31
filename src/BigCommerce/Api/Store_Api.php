@@ -85,5 +85,4 @@ class Store_Api extends v2ApiAdapter {
 			return false;
 		}
 	}
-
 }

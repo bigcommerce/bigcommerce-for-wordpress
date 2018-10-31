@@ -1,0 +1,60 @@
+.bigcommerce-notice {
+	position: relative;
+	padding: 10px;
+
+	.wp-admin & {
+		background-color: var(--color-white);
+	}
+
+	.bc-settings-bigcommerce & {
+		background-color: var(--color-off-white);
+		margin-bottom: 10px;
+
+		&:nth-child(2) {
+			margin-top: -20px;
+		}
+	}
+
+	.bigcommerce-notice__list {
+		list-style-type: disc;
+		margin-left: 20px;
+
+		.bigcommerce-notice__list-item {
+			margin-bottom: 8px;
+		}
+	}
+}
+
+.bigcommerce-notice__heading {
+	margin-top: 0.5em;
+
+	@media (--viewport-medium) {
+		padding-right: 130px;
+	}
+}
+
+p.bigcommerce-notice__refresh {
+	margin: 0;
+
+	@media (--viewport-medium) {
+		position: absolute;
+		top: 20px;
+		right: 20px;
+	}
+}
+
+.bigcommerce-notice__refresh-button {
+	text-decoration: none;
+	font-size: 12px;
+	line-height: 14px;
+	display: inline-block;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+
+	i {
+		display: inline-block;
+		vertical-align: text-bottom;
+		font-size: 18px;
+		line-height: 14px;
+	}
+}

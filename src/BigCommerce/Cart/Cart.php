@@ -33,7 +33,7 @@ class Cart {
 	 * @return string
 	 */
 	public function get_cart_id() {
-		if ( get_option( Settings\Cart::OPTION_ENABLE_CART, true ) ) {
+		if ( get_option( Settings\Sections\Cart::OPTION_ENABLE_CART, true ) ) {
 			return isset( $_COOKIE[ self::CART_COOKIE ] ) ? $_COOKIE[ self::CART_COOKIE ] : '';
 		} else {
 			return false;
@@ -137,6 +137,10 @@ class Cart {
 			if ( $customer_id ) {
 				$request->setCustomerId( $customer_id );
 			}
+			$channel_id = (int) get_option( Settings\Sections\Channels::CHANNEL_ID, 0 );
+			if ( $channel_id ) {
+				$request->setChannelId( $channel_id );
+			}
 			try {
 				$cart    = $this->api->cartsPost( $request )->getData();
 				$cart_id = $cart->getId();
@@ -199,7 +203,7 @@ class Cart {
 	}
 
 	public function get_cart_url() {
-		$cart_page_id = get_option( Settings\Cart::OPTION_CART_PAGE_ID, 0 );
+		$cart_page_id = get_option( Settings\Sections\Cart::OPTION_CART_PAGE_ID, 0 );
 		if ( empty( $cart_page_id ) ) {
 			$url = home_url( '/' );
 		} else {

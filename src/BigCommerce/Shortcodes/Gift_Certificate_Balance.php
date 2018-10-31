@@ -19,7 +19,7 @@ class Gift_Certificate_Balance implements Shortcode {
 	}
 
 	public function render( $attr, $instance ) {
-		if ( ( (bool) get_option( \BigCommerce\Settings\Gift_Certificates::OPTION_ENABLE, true ) ) == false ) {
+		if ( ( (bool) get_option( \BigCommerce\Settings\Sections\Gift_Certificates::OPTION_ENABLE, true ) ) == false ) {
 			return ''; // render nothing if gift certificates are disabled
 		}
 
@@ -31,7 +31,7 @@ class Gift_Certificate_Balance implements Shortcode {
 				Templates\Gift_Certificate_Balance_Page::BALANCE => $this->get_balance( $code ),
 			];
 		}
-		$controller = new Templates\Gift_Certificate_Balance_Page( $args );
+		$controller = Templates\Gift_Certificate_Balance_Page::factory( $args );
 
 		return $controller->render();
 	}

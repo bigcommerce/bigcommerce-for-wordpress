@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.13.0]
+
+### Added
+- Created account creation and authentication process
+- Required creation of a Channel before importing products
+- Added two-way sync for Product post status, title, and description with the linked Channel
+- Added support for the BigCommerce Sites & Routes API
+- Added admin notice when the BigCommerce account is not sufficiently configured to support checkout
+
+### Changed
+- Refactored the Cart template into several smaller components
+- Moved theme templates from `public-views` to `templates/public`
+- Organized theme templates into subdirectories
+- Moved admin templates from `admin-views` to `templates/admin`
+- Refreshed the list of countries and states used in address forms
+- Updated BigCommerce PHP API to version 0.13.0
+- Refactored template controller instantiation to add additional filtering for both the path and the controller class.
+- Refactored settings sections into the namespace `BigCommerce\Settings\Sections`
+- Refactored settings screens into the namespace `BigCommerce\Settings\Screens`
+- Changed checkout login token generation to use the OAuth connector API
+
+### Removed
+- Removed the API Credentials settings section. All authentication should now go through the OAuth authentication process.
+- Removed ability to edit Product post slug. The slug is imported from the Catalog API.
+- Removed the Import Settings metabox obviated by the Channels API.
+
 ## [0.12.0]
 ### Added
 - Added the Product Sync feature to Product List page.
@@ -97,6 +123,7 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[0.13.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/0.12.0...0.13.0
 [0.12.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/0.11.1...0.12.0
 [0.11.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/0.11.0...0.11.1
 [0.11.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/0.10.0...0.11.0

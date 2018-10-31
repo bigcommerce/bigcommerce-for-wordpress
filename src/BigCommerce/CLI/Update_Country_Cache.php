@@ -70,6 +70,7 @@ class Update_Country_Cache extends Command {
 					$states = Client::getCollection( sprintf( '/countries/%d/states?limit=250', $country->id ) );
 				} catch ( \Exception $e ) {
 					$states = null;
+					\WP_CLI::warning( sprintf( __( 'Error fetching states for %s. Error message: %s', 'bigcommerce' ), $country->country, $e->getMessage() ) );
 				}
 				$country         = $country->getCreateFields();
 				$country->states = $states ? array_map( function ( $state ) {

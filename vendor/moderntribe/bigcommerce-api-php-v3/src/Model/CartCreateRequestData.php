@@ -56,6 +56,7 @@ class CartCreateRequestData implements ArrayAccess
       */
     protected static $swaggerTypes = [
         'customer_id' => 'int',
+        'channel_id' => 'int',
         'line_items' => '\BigCommerce\Api\v3\Model\LineItemRequestData[]',
         'gift_certificates' => '\BigCommerce\Api\v3\Model\LineItemGiftCertificateRequestData[]'
     ];
@@ -71,6 +72,7 @@ class CartCreateRequestData implements ArrayAccess
      */
     protected static $attributeMap = [
         'customer_id' => 'customer_id',
+        'channel_id' => 'channel_id',
         'line_items' => 'line_items',
         'gift_certificates' => 'gift_certificates'
     ];
@@ -82,6 +84,7 @@ class CartCreateRequestData implements ArrayAccess
      */
     protected static $setters = [
         'customer_id' => 'setCustomerId',
+        'channel_id' => 'setChannelId',
         'line_items' => 'setLineItems',
         'gift_certificates' => 'setGiftCertificates'
     ];
@@ -93,6 +96,7 @@ class CartCreateRequestData implements ArrayAccess
      */
     protected static $getters = [
         'customer_id' => 'getCustomerId',
+        'channel_id' => 'getChannelId',
         'line_items' => 'getLineItems',
         'gift_certificates' => 'getGiftCertificates'
     ];
@@ -129,6 +133,7 @@ class CartCreateRequestData implements ArrayAccess
     public function __construct(array $data = null)
     {
         $this->container['customer_id'] = isset($data['customer_id']) ? $data['customer_id'] : null;
+        $this->container['channel_id'] = isset($data['channel_id']) ? $data['channel_id'] : null;
         $this->container['line_items'] = isset($data['line_items']) ? $data['line_items'] : null;
         $this->container['gift_certificates'] = isset($data['gift_certificates']) ? $data['gift_certificates'] : null;
     }
@@ -173,6 +178,27 @@ class CartCreateRequestData implements ArrayAccess
     public function setCustomerId($customer_id)
     {
         $this->container['customer_id'] = $customer_id;
+
+        return $this;
+    }
+
+    /**
+     * Gets channel_id
+     * @return int
+     */
+    public function getChannelId()
+    {
+        return $this->container['channel_id'];
+    }
+
+    /**
+     * Sets channel_id
+     * @param int $channel_id
+     * @return $this
+     */
+    public function setChannelId($channel_id)
+    {
+        $this->container['channel_id'] = $channel_id;
 
         return $this;
     }

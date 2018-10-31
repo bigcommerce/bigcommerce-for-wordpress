@@ -10,6 +10,29 @@ abstract class Controller {
 	protected $options  = [];
 
 	/**
+	 * Creates an instance of the controller
+	 *
+	 * @param array  $options
+	 * @param string $template
+	 *
+	 * @return static
+	 */
+	public static function factory( array $options = [], $template = '' ) {
+		/**
+		 * Filter the factory class that instantiates template controllers
+		 *
+		 * @param Controller_Factory $factory   The instance of the factory class
+		 * @param string             $classname The name of the requested class
+		 */
+		$factory = apply_filters( 'bigcommerce/template/controller_factory', new Controller_Factory(), static::class );
+		if ( ! $factory instanceof Controller_Factory ) {
+			throw new \RuntimeException( sprintf( __( 'Template controller factory must extend %s', 'bigcommerce' ), Controller_Factory::class ) );
+		}
+
+		return $factory->get_controller( static::class, $options, $template );
+	}
+
+	/**
 	 * @param string $template
 	 * @param array  $options
 	 */
@@ -150,10 +173,11 @@ abstract class Controller {
 	protected function build_attribute_string( $attributes ) {
 		$rendered = [];
 		foreach ( $attributes as $attr => $value ) {
-			$attr = sanitize_title_with_dashes( $attr );
-			$value = esc_attr( $value );
+			$attr       = sanitize_title_with_dashes( $attr );
+			$value      = esc_attr( $value );
 			$rendered[] = sprintf( '%s="%s"', $attr, $value );
 		}
+
 		return implode( ' ', $rendered );
 	}
 }

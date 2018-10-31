@@ -15,7 +15,7 @@ class Refinery extends Controller {
 	const FILTERS = 'filters';
 	const ACTION  = 'action';
 
-	protected $template = 'components/refinery.php';
+	protected $template = 'components/catalog/refinery.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [
@@ -40,7 +40,7 @@ class Refinery extends Controller {
 
 	private function get_search( \WP_Query $query ) {
 		$search    = $query->is_search() && isset( $query->query[ 's' ] ) ? stripslashes( $query->query[ 's' ] ) : '';
-		$component = new Search_Box( [
+		$component = Search_Box::factory( [
 			Search_Box::NAME           => 's',
 			Search_Box::VALUE          => $search,
 			Search_Box::BUTTON_CLASSES => [ 'bc-btn', 'bc-btn--small', 'bc-icon', 'icon-bc-search' ],
@@ -68,7 +68,7 @@ class Refinery extends Controller {
 			return '';
 		}
 
-		$component = new Refinement_Box( [
+		$component = Refinement_Box::factory( [
 			Refinement_Box::LABEL   => __( 'Sort by', 'bigcommerce' ),
 			Refinement_Box::NAME    => 'bc-sort',
 			Refinement_Box::VALUE   => ! empty( $_GET[ 'bc-sort' ] ) ? $_GET[ 'bc-sort' ] : $default_sort,
@@ -113,7 +113,7 @@ class Refinery extends Controller {
 				continue;
 			}
 			array_unshift( $choices, $tax_object->labels->all_items );
-			$component = new Refinement_Box( [
+			$component = Refinement_Box::factory( [
 				Refinement_Box::LABEL   => sprintf( __( 'Shop by %s', 'bigcommerce' ), $label ),
 				Refinement_Box::NAME    => $taxonomy,
 				Refinement_Box::VALUE   => empty( $_GET[ $taxonomy ] ) ? '' : $_GET[ $taxonomy ],

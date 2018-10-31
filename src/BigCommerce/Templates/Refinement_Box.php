@@ -12,7 +12,7 @@ class Refinement_Box extends Controller {
 	const LABEL   = 'label';
 	const TYPE    = 'type';
 
-	protected $template = 'components/refinement-box.php';
+	protected $template = 'components/catalog/refinement-box.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [

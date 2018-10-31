@@ -58,18 +58,12 @@ class Listing implements ArrayAccess
         'channel_id' => 'int',
         'listing_id' => 'int',
         'product_id' => 'int',
-        'external_product_id' => 'string',
-        'external_link' => 'string',
         'state' => 'string',
         'name' => 'string',
         'description' => 'string',
-        'brand' => 'string',
-        'condition' => 'string',
-        'categories' => 'string[]',
-        'custom_properties' => '\BigCommerce\Api\v3\Model\ListingCustomProperties',
-        'created_at' => 'string',
-        'updated_at' => 'string',
-        'errors' => '\BigCommerce\Api\v3\Model\ListingError[]',
+        'external_id' => 'string',
+        'date_created' => '\DateTime',
+        'date_modified' => '\DateTime',
         'variants' => '\BigCommerce\Api\v3\Model\ListingVariant[]'
     ];
 
@@ -86,18 +80,12 @@ class Listing implements ArrayAccess
         'channel_id' => 'channel_id',
         'listing_id' => 'listing_id',
         'product_id' => 'product_id',
-        'external_product_id' => 'external_product_id',
-        'external_link' => 'external_link',
         'state' => 'state',
         'name' => 'name',
         'description' => 'description',
-        'brand' => 'brand',
-        'condition' => 'condition',
-        'categories' => 'categories',
-        'custom_properties' => 'custom_properties',
-        'created_at' => 'created_at',
-        'updated_at' => 'updated_at',
-        'errors' => 'errors',
+        'external_id' => 'external_id',
+        'date_created' => 'date_created',
+        'date_modified' => 'date_modified',
         'variants' => 'variants'
     ];
 
@@ -110,18 +98,12 @@ class Listing implements ArrayAccess
         'channel_id' => 'setChannelId',
         'listing_id' => 'setListingId',
         'product_id' => 'setProductId',
-        'external_product_id' => 'setExternalProductId',
-        'external_link' => 'setExternalLink',
         'state' => 'setState',
         'name' => 'setName',
         'description' => 'setDescription',
-        'brand' => 'setBrand',
-        'condition' => 'setCondition',
-        'categories' => 'setCategories',
-        'custom_properties' => 'setCustomProperties',
-        'created_at' => 'setCreatedAt',
-        'updated_at' => 'setUpdatedAt',
-        'errors' => 'setErrors',
+        'external_id' => 'setExternalId',
+        'date_created' => 'setDateCreated',
+        'date_modified' => 'setDateModified',
         'variants' => 'setVariants'
     ];
 
@@ -134,18 +116,12 @@ class Listing implements ArrayAccess
         'channel_id' => 'getChannelId',
         'listing_id' => 'getListingId',
         'product_id' => 'getProductId',
-        'external_product_id' => 'getExternalProductId',
-        'external_link' => 'getExternalLink',
         'state' => 'getState',
         'name' => 'getName',
         'description' => 'getDescription',
-        'brand' => 'getBrand',
-        'condition' => 'getCondition',
-        'categories' => 'getCategories',
-        'custom_properties' => 'getCustomProperties',
-        'created_at' => 'getCreatedAt',
-        'updated_at' => 'getUpdatedAt',
-        'errors' => 'getErrors',
+        'external_id' => 'getExternalId',
+        'date_created' => 'getDateCreated',
+        'date_modified' => 'getDateModified',
         'variants' => 'getVariants'
     ];
 
@@ -164,17 +140,17 @@ class Listing implements ArrayAccess
         return self::$getters;
     }
 
-    const STATE_UNKNOWN_LISTING_STATE = 'unknown_listing_state';
+    const STATE_ACTIVE = 'active';
+    const STATE_DISABLED = 'disabled';
+    const STATE_ERROR = 'error';
     const STATE_PENDING = 'pending';
     const STATE_PENDING_DISABLE = 'pending_disable';
     const STATE_PENDING_DELETE = 'pending_delete';
     const STATE_QUEUED = 'queued';
-    const STATE_SUBMITTED = 'submitted';
-    const STATE_ACTIVE = 'active';
-    const STATE_ERROR = 'error';
     const STATE_REJECTED = 'rejected';
-    const STATE_DISABLED = 'disabled';
+    const STATE_SUBMITTED = 'submitted';
     const STATE_DELETED = 'deleted';
+    const STATE_UNKNOWN = 'unknown';
     
 
     
@@ -185,17 +161,17 @@ class Listing implements ArrayAccess
     public function getStateAllowableValues()
     {
         return [
-            self::STATE_UNKNOWN_LISTING_STATE,
+            self::STATE_ACTIVE,
+            self::STATE_DISABLED,
+            self::STATE_ERROR,
             self::STATE_PENDING,
             self::STATE_PENDING_DISABLE,
             self::STATE_PENDING_DELETE,
             self::STATE_QUEUED,
-            self::STATE_SUBMITTED,
-            self::STATE_ACTIVE,
-            self::STATE_ERROR,
             self::STATE_REJECTED,
-            self::STATE_DISABLED,
+            self::STATE_SUBMITTED,
             self::STATE_DELETED,
+            self::STATE_UNKNOWN,
         ];
     }
     
@@ -215,18 +191,12 @@ class Listing implements ArrayAccess
         $this->container['channel_id'] = isset($data['channel_id']) ? $data['channel_id'] : null;
         $this->container['listing_id'] = isset($data['listing_id']) ? $data['listing_id'] : null;
         $this->container['product_id'] = isset($data['product_id']) ? $data['product_id'] : null;
-        $this->container['external_product_id'] = isset($data['external_product_id']) ? $data['external_product_id'] : null;
-        $this->container['external_link'] = isset($data['external_link']) ? $data['external_link'] : null;
         $this->container['state'] = isset($data['state']) ? $data['state'] : null;
         $this->container['name'] = isset($data['name']) ? $data['name'] : null;
         $this->container['description'] = isset($data['description']) ? $data['description'] : null;
-        $this->container['brand'] = isset($data['brand']) ? $data['brand'] : null;
-        $this->container['condition'] = isset($data['condition']) ? $data['condition'] : null;
-        $this->container['categories'] = isset($data['categories']) ? $data['categories'] : null;
-        $this->container['custom_properties'] = isset($data['custom_properties']) ? $data['custom_properties'] : null;
-        $this->container['created_at'] = isset($data['created_at']) ? $data['created_at'] : null;
-        $this->container['updated_at'] = isset($data['updated_at']) ? $data['updated_at'] : null;
-        $this->container['errors'] = isset($data['errors']) ? $data['errors'] : null;
+        $this->container['external_id'] = isset($data['external_id']) ? $data['external_id'] : null;
+        $this->container['date_created'] = isset($data['date_created']) ? $data['date_created'] : null;
+        $this->container['date_modified'] = isset($data['date_modified']) ? $data['date_modified'] : null;
         $this->container['variants'] = isset($data['variants']) ? $data['variants'] : null;
     }
 
@@ -238,13 +208,16 @@ class Listing implements ArrayAccess
     public function listInvalidProperties()
     {
         $invalid_properties = [];
+        if ($this->container['channel_id'] === null) {
+            $invalid_properties[] = "'channel_id' can't be null";
+        }
         if ($this->container['product_id'] === null) {
             $invalid_properties[] = "'product_id' can't be null";
         }
         if ($this->container['state'] === null) {
             $invalid_properties[] = "'state' can't be null";
         }
-        $allowed_values = ["unknown_listing_state", "pending", "pending_disable", "pending_delete", "queued", "submitted", "active", "error", "rejected", "disabled", "deleted"];
+        $allowed_values = ["active", "disabled", "error", "pending", "pending_disable", "pending_delete", "queued", "rejected", "submitted", "deleted", "unknown"];
         if (!in_array($this->container['state'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'state', must be one of #{allowed_values}.";
         }
@@ -260,13 +233,16 @@ class Listing implements ArrayAccess
      */
     public function valid()
     {
+        if ($this->container['channel_id'] === null) {
+            return false;
+        }
         if ($this->container['product_id'] === null) {
             return false;
         }
         if ($this->container['state'] === null) {
             return false;
         }
-        $allowed_values = ["unknown_listing_state", "pending", "pending_disable", "pending_delete", "queued", "submitted", "active", "error", "rejected", "disabled", "deleted"];
+        $allowed_values = ["active", "disabled", "error", "pending", "pending_disable", "pending_delete", "queued", "rejected", "submitted", "deleted", "unknown"];
         if (!in_array($this->container['state'], $allowed_values)) {
             return false;
         }
@@ -338,48 +314,6 @@ class Listing implements ArrayAccess
     }
 
     /**
-     * Gets external_product_id
-     * @return string
-     */
-    public function getExternalProductId()
-    {
-        return $this->container['external_product_id'];
-    }
-
-    /**
-     * Sets external_product_id
-     * @param string $external_product_id
-     * @return $this
-     */
-    public function setExternalProductId($external_product_id)
-    {
-        $this->container['external_product_id'] = $external_product_id;
-
-        return $this;
-    }
-
-    /**
-     * Gets external_link
-     * @return string
-     */
-    public function getExternalLink()
-    {
-        return $this->container['external_link'];
-    }
-
-    /**
-     * Sets external_link
-     * @param string $external_link
-     * @return $this
-     */
-    public function setExternalLink($external_link)
-    {
-        $this->container['external_link'] = $external_link;
-
-        return $this;
-    }
-
-    /**
      * Gets state
      * @return string
      */
@@ -395,9 +329,9 @@ class Listing implements ArrayAccess
      */
     public function setState($state)
     {
-        $allowed_values = array('unknown_listing_state', 'pending', 'pending_disable', 'pending_delete', 'queued', 'submitted', 'active', 'error', 'rejected', 'disabled', 'deleted');
+        $allowed_values = array('active', 'disabled', 'error', 'pending', 'pending_disable', 'pending_delete', 'queued', 'rejected', 'submitted', 'deleted', 'unknown');
         if ((!in_array($state, $allowed_values))) {
-            throw new \InvalidArgumentException("Invalid value for 'state', must be one of 'unknown_listing_state', 'pending', 'pending_disable', 'pending_delete', 'queued', 'submitted', 'active', 'error', 'rejected', 'disabled', 'deleted'");
+            throw new \InvalidArgumentException("Invalid value for 'state', must be one of 'active', 'disabled', 'error', 'pending', 'pending_disable', 'pending_delete', 'queued', 'rejected', 'submitted', 'deleted', 'unknown'");
         }
         $this->container['state'] = $state;
 
@@ -447,148 +381,64 @@ class Listing implements ArrayAccess
     }
 
     /**
-     * Gets brand
+     * Gets external_id
      * @return string
      */
-    public function getBrand()
+    public function getExternalId()
     {
-        return $this->container['brand'];
+        return $this->container['external_id'];
     }
 
     /**
-     * Sets brand
-     * @param string $brand
+     * Sets external_id
+     * @param string $external_id
      * @return $this
      */
-    public function setBrand($brand)
+    public function setExternalId($external_id)
     {
-        $this->container['brand'] = $brand;
+        $this->container['external_id'] = $external_id;
 
         return $this;
     }
 
     /**
-     * Gets condition
-     * @return string
+     * Gets date_created
+     * @return \DateTime
      */
-    public function getCondition()
+    public function getDateCreated()
     {
-        return $this->container['condition'];
+        return $this->container['date_created'];
     }
 
     /**
-     * Sets condition
-     * @param string $condition
+     * Sets date_created
+     * @param \DateTime $date_created
      * @return $this
      */
-    public function setCondition($condition)
+    public function setDateCreated($date_created)
     {
-        $this->container['condition'] = $condition;
+        $this->container['date_created'] = $date_created;
 
         return $this;
     }
 
     /**
-     * Gets categories
-     * @return string[]
+     * Gets date_modified
+     * @return \DateTime
      */
-    public function getCategories()
+    public function getDateModified()
     {
-        return $this->container['categories'];
+        return $this->container['date_modified'];
     }
 
     /**
-     * Sets categories
-     * @param string[] $categories
+     * Sets date_modified
+     * @param \DateTime $date_modified
      * @return $this
      */
-    public function setCategories($categories)
+    public function setDateModified($date_modified)
     {
-        $this->container['categories'] = $categories;
-
-        return $this;
-    }
-
-    /**
-     * Gets custom_properties
-     * @return \BigCommerce\Api\v3\Model\ListingCustomProperties
-     */
-    public function getCustomProperties()
-    {
-        return $this->container['custom_properties'];
-    }
-
-    /**
-     * Sets custom_properties
-     * @param \BigCommerce\Api\v3\Model\ListingCustomProperties $custom_properties
-     * @return $this
-     */
-    public function setCustomProperties($custom_properties)
-    {
-        $this->container['custom_properties'] = $custom_properties;
-
-        return $this;
-    }
-
-    /**
-     * Gets created_at
-     * @return string
-     */
-    public function getCreatedAt()
-    {
-        return $this->container['created_at'];
-    }
-
-    /**
-     * Sets created_at
-     * @param string $created_at
-     * @return $this
-     */
-    public function setCreatedAt($created_at)
-    {
-        $this->container['created_at'] = $created_at;
-
-        return $this;
-    }
-
-    /**
-     * Gets updated_at
-     * @return string
-     */
-    public function getUpdatedAt()
-    {
-        return $this->container['updated_at'];
-    }
-
-    /**
-     * Sets updated_at
-     * @param string $updated_at
-     * @return $this
-     */
-    public function setUpdatedAt($updated_at)
-    {
-        $this->container['updated_at'] = $updated_at;
-
-        return $this;
-    }
-
-    /**
-     * Gets errors
-     * @return \BigCommerce\Api\v3\Model\ListingError[]
-     */
-    public function getErrors()
-    {
-        return $this->container['errors'];
-    }
-
-    /**
-     * Sets errors
-     * @param \BigCommerce\Api\v3\Model\ListingError[] $errors
-     * @return $this
-     */
-    public function setErrors($errors)
-    {
-        $this->container['errors'] = $errors;
+        $this->container['date_modified'] = $date_modified;
 
         return $this;
     }

@@ -7,7 +7,7 @@ namespace BigCommerce\Schema;
 class Import_Queue_Table extends Table_Maker {
 	const NAME = 'bc_import_queue';
 
-	protected $schema_version = '0.6.0';
+	protected $schema_version = '0.13.0';
 
 	protected $tables = [ self::NAME ];
 
@@ -20,6 +20,7 @@ class Import_Queue_Table extends Table_Maker {
 			case self::NAME:
 				return "CREATE TABLE {$table_name} (
 				        bc_id BIGINT(20) unsigned NOT NULL,
+				        listing_id BIGINT(20) unsigned NOT NULL DEFAULT 0,
 				        date_modified DATETIME NOT NULL,
 				        import_action ENUM( 'update', 'delete', 'ignore' ) NOT NULL,
 				        date_created DATETIME NOT NULL,

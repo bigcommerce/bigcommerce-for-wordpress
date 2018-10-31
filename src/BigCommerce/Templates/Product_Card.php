@@ -17,7 +17,7 @@ class Product_Card extends Controller {
 	const QUICK_VIEW = 'quick_view';
 	const ATTRIBUTES = 'attributes';
 
-	protected $template = 'components/product-card.php';
+	protected $template = 'components/products/product-card.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [
@@ -45,7 +45,7 @@ class Product_Card extends Controller {
 	}
 
 	protected function get_title( Product $product ) {
-		$component = new Product_Title( [
+		$component = Product_Title::factory( [
 			Product_Title::PRODUCT => $product,
 		] );
 
@@ -53,7 +53,7 @@ class Product_Card extends Controller {
 	}
 
 	protected function get_price( Product $product ) {
-		$component = new Product_Price( [
+		$component = Product_Price::factory( [
 			Product_Price::PRODUCT => $product,
 		] );
 
@@ -61,7 +61,7 @@ class Product_Card extends Controller {
 	}
 
 	protected function get_brand( Product $product ) {
-		$component = new Product_Brand( [
+		$component = Product_Brand::factory( [
 			Product_Brand::PRODUCT => $product,
 		] );
 
@@ -69,7 +69,7 @@ class Product_Card extends Controller {
 	}
 
 	protected function get_featured_image( Product $product ) {
-		$component = new Product_Featured_Image( [
+		$component = Product_Featured_Image::factory( [
 			Product_Featured_Image::PRODUCT => $product,
 		] );
 
@@ -81,12 +81,12 @@ class Product_Card extends Controller {
 			return '';
 		}
 		if ( $product->has_options() ) {
-			$component = new View_Product_Button( [
+			$component = View_Product_Button::factory( [
 				View_Product_Button::PRODUCT => $product,
 				View_Product_Button::LABEL   => get_option( Buttons::CHOOSE_OPTIONS, __( 'Choose Options', 'bigcommerce' ) ),
 			] );
 		} else {
-			$component = new Product_Form( [
+			$component = Product_Form::factory( [
 				Product_Form::PRODUCT      => $product,
 				Product_Form::SHOW_OPTIONS => false,
 			] );
@@ -96,7 +96,7 @@ class Product_Card extends Controller {
 	}
 
 	protected function get_popup_template( Product $product ) {
-		$component = new Product_Quick_View( [
+		$component = Product_Quick_View::factory( [
 			Product_Quick_View::PRODUCT => $product,
 		] );
 

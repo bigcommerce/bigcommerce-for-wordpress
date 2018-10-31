@@ -8,7 +8,7 @@ class Address_New extends Controller {
 
 	const FORM = 'form';
 
-	protected $template = 'components/address-new.php';
+	protected $template = 'components/accounts/address-new.php';
 
 
 	protected function parse_options( array $options ) {
@@ -24,7 +24,7 @@ class Address_New extends Controller {
 	}
 
 	protected function get_form() {
-		$form = new Address_Form( [] );
+		$form = Address_Form::factory( [] );
 		return $form->render();
 	}
 

@@ -55,14 +55,12 @@ class ListingVariant implements ArrayAccess
       * @var string[]
       */
     protected static $swaggerTypes = [
+        'product_id' => 'int',
         'variant_id' => 'int',
-        'external_variant_id' => 'string',
+        'external_id' => 'string',
         'state' => 'string',
-        'price' => 'float',
-        'custom_properties' => '\BigCommerce\Api\v3\Model\ListingCustomProperties',
-        'errors' => '\BigCommerce\Api\v3\Model\ListingError[]',
-        'created_at' => 'string',
-        'updated_at' => 'string'
+        'date_created' => 'string',
+        'date_modified' => 'string'
     ];
 
     public static function swaggerTypes()
@@ -75,14 +73,12 @@ class ListingVariant implements ArrayAccess
      * @var string[]
      */
     protected static $attributeMap = [
+        'product_id' => 'product_id',
         'variant_id' => 'variant_id',
-        'external_variant_id' => 'external_variant_id',
+        'external_id' => 'external_id',
         'state' => 'state',
-        'price' => 'price',
-        'custom_properties' => 'custom_properties',
-        'errors' => 'errors',
-        'created_at' => 'created_at',
-        'updated_at' => 'updated_at'
+        'date_created' => 'date_created',
+        'date_modified' => 'date_modified'
     ];
 
 
@@ -91,14 +87,12 @@ class ListingVariant implements ArrayAccess
      * @var string[]
      */
     protected static $setters = [
+        'product_id' => 'setProductId',
         'variant_id' => 'setVariantId',
-        'external_variant_id' => 'setExternalVariantId',
+        'external_id' => 'setExternalId',
         'state' => 'setState',
-        'price' => 'setPrice',
-        'custom_properties' => 'setCustomProperties',
-        'errors' => 'setErrors',
-        'created_at' => 'setCreatedAt',
-        'updated_at' => 'setUpdatedAt'
+        'date_created' => 'setDateCreated',
+        'date_modified' => 'setDateModified'
     ];
 
 
@@ -107,14 +101,12 @@ class ListingVariant implements ArrayAccess
      * @var string[]
      */
     protected static $getters = [
+        'product_id' => 'getProductId',
         'variant_id' => 'getVariantId',
-        'external_variant_id' => 'getExternalVariantId',
+        'external_id' => 'getExternalId',
         'state' => 'getState',
-        'price' => 'getPrice',
-        'custom_properties' => 'getCustomProperties',
-        'errors' => 'getErrors',
-        'created_at' => 'getCreatedAt',
-        'updated_at' => 'getUpdatedAt'
+        'date_created' => 'getDateCreated',
+        'date_modified' => 'getDateModified'
     ];
 
     public static function attributeMap()
@@ -132,8 +124,40 @@ class ListingVariant implements ArrayAccess
         return self::$getters;
     }
 
+    const STATE_ACTIVE = 'active';
+    const STATE_DISABLED = 'disabled';
+    const STATE_ERROR = 'error';
+    const STATE_PENDING = 'pending';
+    const STATE_PENDING_DISABLE = 'pending_disable';
+    const STATE_PENDING_DELETE = 'pending_delete';
+    const STATE_QUEUED = 'queued';
+    const STATE_REJECTED = 'rejected';
+    const STATE_SUBMITTED = 'submitted';
+    const STATE_DELETED = 'deleted';
+    const STATE_UNKNOWN = 'unknown';
     
 
+    
+    /**
+     * Gets allowable values of the enum
+     * @return string[]
+     */
+    public function getStateAllowableValues()
+    {
+        return [
+            self::STATE_ACTIVE,
+            self::STATE_DISABLED,
+            self::STATE_ERROR,
+            self::STATE_PENDING,
+            self::STATE_PENDING_DISABLE,
+            self::STATE_PENDING_DELETE,
+            self::STATE_QUEUED,
+            self::STATE_REJECTED,
+            self::STATE_SUBMITTED,
+            self::STATE_DELETED,
+            self::STATE_UNKNOWN,
+        ];
+    }
     
 
     /**
@@ -148,14 +172,12 @@ class ListingVariant implements ArrayAccess
      */
     public function __construct(array $data = null)
     {
+        $this->container['product_id'] = isset($data['product_id']) ? $data['product_id'] : null;
         $this->container['variant_id'] = isset($data['variant_id']) ? $data['variant_id'] : null;
-        $this->container['external_variant_id'] = isset($data['external_variant_id']) ? $data['external_variant_id'] : null;
+        $this->container['external_id'] = isset($data['external_id']) ? $data['external_id'] : null;
         $this->container['state'] = isset($data['state']) ? $data['state'] : null;
-        $this->container['price'] = isset($data['price']) ? $data['price'] : null;
-        $this->container['custom_properties'] = isset($data['custom_properties']) ? $data['custom_properties'] : null;
-        $this->container['errors'] = isset($data['errors']) ? $data['errors'] : null;
-        $this->container['created_at'] = isset($data['created_at']) ? $data['created_at'] : null;
-        $this->container['updated_at'] = isset($data['updated_at']) ? $data['updated_at'] : null;
+        $this->container['date_created'] = isset($data['date_created']) ? $data['date_created'] : null;
+        $this->container['date_modified'] = isset($data['date_modified']) ? $data['date_modified'] : null;
     }
 
     /**
@@ -166,12 +188,20 @@ class ListingVariant implements ArrayAccess
     public function listInvalidProperties()
     {
         $invalid_properties = [];
+        if ($this->container['product_id'] === null) {
+            $invalid_properties[] = "'product_id' can't be null";
+        }
         if ($this->container['variant_id'] === null) {
             $invalid_properties[] = "'variant_id' can't be null";
         }
         if ($this->container['state'] === null) {
             $invalid_properties[] = "'state' can't be null";
         }
+        $allowed_values = ["active", "disabled", "error", "pending", "pending_disable", "pending_delete", "queued", "rejected", "submitted", "deleted", "unknown"];
+        if (!in_array($this->container['state'], $allowed_values)) {
+            $invalid_properties[] = "invalid value for 'state', must be one of #{allowed_values}.";
+        }
+
         return $invalid_properties;
     }
 
@@ -183,15 +213,43 @@ class ListingVariant implements ArrayAccess
      */
     public function valid()
     {
+        if ($this->container['product_id'] === null) {
+            return false;
+        }
         if ($this->container['variant_id'] === null) {
             return false;
         }
         if ($this->container['state'] === null) {
             return false;
         }
+        $allowed_values = ["active", "disabled", "error", "pending", "pending_disable", "pending_delete", "queued", "rejected", "submitted", "deleted", "unknown"];
+        if (!in_array($this->container['state'], $allowed_values)) {
+            return false;
+        }
         return true;
     }
 
+
+    /**
+     * Gets product_id
+     * @return int
+     */
+    public function getProductId()
+    {
+        return $this->container['product_id'];
+    }
+
+    /**
+     * Sets product_id
+     * @param int $product_id
+     * @return $this
+     */
+    public function setProductId($product_id)
+    {
+        $this->container['product_id'] = $product_id;
+
+        return $this;
+    }
 
     /**
      * Gets variant_id
@@ -215,22 +273,22 @@ class ListingVariant implements ArrayAccess
     }
 
     /**
-     * Gets external_variant_id
+     * Gets external_id
      * @return string
      */
-    public function getExternalVariantId()
+    public function getExternalId()
     {
-        return $this->container['external_variant_id'];
+        return $this->container['external_id'];
     }
 
     /**
-     * Sets external_variant_id
-     * @param string $external_variant_id
+     * Sets external_id
+     * @param string $external_id
      * @return $this
      */
-    public function setExternalVariantId($external_variant_id)
+    public function setExternalId($external_id)
     {
-        $this->container['external_variant_id'] = $external_variant_id;
+        $this->container['external_id'] = $external_id;
 
         return $this;
     }
@@ -251,112 +309,53 @@ class ListingVariant implements ArrayAccess
      */
     public function setState($state)
     {
+        $allowed_values = array('active', 'disabled', 'error', 'pending', 'pending_disable', 'pending_delete', 'queued', 'rejected', 'submitted', 'deleted', 'unknown');
+        if ((!in_array($state, $allowed_values))) {
+            throw new \InvalidArgumentException("Invalid value for 'state', must be one of 'active', 'disabled', 'error', 'pending', 'pending_disable', 'pending_delete', 'queued', 'rejected', 'submitted', 'deleted', 'unknown'");
+        }
         $this->container['state'] = $state;
 
         return $this;
     }
 
     /**
-     * Gets price
-     * @return float
-     */
-    public function getPrice()
-    {
-        return $this->container['price'];
-    }
-
-    /**
-     * Sets price
-     * @param float $price
-     * @return $this
-     */
-    public function setPrice($price)
-    {
-        $this->container['price'] = $price;
-
-        return $this;
-    }
-
-    /**
-     * Gets custom_properties
-     * @return \BigCommerce\Api\v3\Model\ListingCustomProperties
-     */
-    public function getCustomProperties()
-    {
-        return $this->container['custom_properties'];
-    }
-
-    /**
-     * Sets custom_properties
-     * @param \BigCommerce\Api\v3\Model\ListingCustomProperties $custom_properties
-     * @return $this
-     */
-    public function setCustomProperties($custom_properties)
-    {
-        $this->container['custom_properties'] = $custom_properties;
-
-        return $this;
-    }
-
-    /**
-     * Gets errors
-     * @return \BigCommerce\Api\v3\Model\ListingError[]
-     */
-    public function getErrors()
-    {
-        return $this->container['errors'];
-    }
-
-    /**
-     * Sets errors
-     * @param \BigCommerce\Api\v3\Model\ListingError[] $errors
-     * @return $this
-     */
-    public function setErrors($errors)
-    {
-        $this->container['errors'] = $errors;
-
-        return $this;
-    }
-
-    /**
-     * Gets created_at
+     * Gets date_created
      * @return string
      */
-    public function getCreatedAt()
+    public function getDateCreated()
     {
-        return $this->container['created_at'];
+        return $this->container['date_created'];
     }
 
     /**
-     * Sets created_at
-     * @param string $created_at
+     * Sets date_created
+     * @param string $date_created
      * @return $this
      */
-    public function setCreatedAt($created_at)
+    public function setDateCreated($date_created)
     {
-        $this->container['created_at'] = $created_at;
+        $this->container['date_created'] = $date_created;
 
         return $this;
     }
 
     /**
-     * Gets updated_at
+     * Gets date_modified
      * @return string
      */
-    public function getUpdatedAt()
+    public function getDateModified()
     {
-        return $this->container['updated_at'];
+        return $this->container['date_modified'];
     }
 
     /**
-     * Sets updated_at
-     * @param string $updated_at
+     * Sets date_modified
+     * @param string $date_modified
      * @return $this
      */
-    public function setUpdatedAt($updated_at)
+    public function setDateModified($date_modified)
     {
-        $this->container['updated_at'] = $updated_at;
+        $this->container['date_modified'] = $date_modified;
 
         return $this;
     }

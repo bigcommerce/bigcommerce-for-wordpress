@@ -45,7 +45,7 @@ class Import_Status {
 	public function current_status_notice() {
 		$current = $this->current_status();
 		if ( $current[ 'message' ] ) {
-			printf( '<div class="notice notice-info"><p class="import-status import-status-current">%s</p></div>', $current[ 'message' ] );
+			printf( '<div class="notice notice-info bigcommerce-notice"><p class="import-status import-status-current">%s</p></div>', $current[ 'message' ] );
 		}
 	}
 
