@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.14.0]
+
+### Added
+
+- Introduced embedded checkout, with an option in the admin to disable it.
+
+### Fixed
+
+- Fixed a typo in the order summary template path. Order history should load correctly now.
+- Replaced obsolete information regarding API credentials in the plugin readme.
+
 ## [0.13.0]
 
 ### Added
@@ -25,6 +36,9 @@
 - Removed the API Credentials settings section. All authentication should now go through the OAuth authentication process.
 - Removed ability to edit Product post slug. The slug is imported from the Catalog API.
 - Removed the Import Settings metabox obviated by the Channels API.
+
+### Fixed
+- Fixed the cart tax total to refresh when cart quantities change.
 
 ## [0.12.0]
 ### Added
@@ -123,6 +137,7 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[0.14.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/0.13.0...0.14.0
 [0.13.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/0.12.0...0.13.0
 [0.12.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/0.11.1...0.12.0
 [0.11.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/0.11.0...0.11.1

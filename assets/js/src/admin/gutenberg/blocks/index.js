@@ -5,6 +5,7 @@
 
 import products from './products/products';
 import cart from './cart/cart';
+import checkout from './checkout/checkout';
 import account from './account-profile/account-profile';
 import address from './address-list/address-list';
 import orders from './order-history/order-history';
@@ -18,6 +19,7 @@ const { registerBlockType } = wp.blocks;
 const blocks =  [
 	products,
 	cart,
+	checkout,
 	account,
 	address,
 	orders,

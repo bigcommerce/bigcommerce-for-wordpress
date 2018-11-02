@@ -38,7 +38,7 @@ class Order_Summary extends Controller {
 	const DETAILS_URL      = 'details_url';
 	const SUPPORT_EMAIL    = 'support_email';
 
-	protected $template = 'components/order/order-summary.php';
+	protected $template = 'components/orders/order-summary.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [

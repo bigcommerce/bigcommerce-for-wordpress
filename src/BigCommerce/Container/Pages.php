@@ -8,6 +8,7 @@ use BigCommerce\Pages\Account_Page;
 use BigCommerce\Pages\Address_Page;
 use BigCommerce\Pages\Cart_Page;
 use BigCommerce\Pages\Check_Balance_Page;
+use BigCommerce\Pages\Checkout_Page;
 use BigCommerce\Pages\Gift_Certificate_Page;
 use BigCommerce\Pages\Login_Page;
 use BigCommerce\Pages\Orders_Page;
@@ -22,6 +23,7 @@ class Pages extends Provider {
 	const REQUIRED_PAGES = 'pages.required_pages';
 
 	const CART_PAGE         = 'pages.cart';
+	const CHECKOUT_PAGE     = 'pages.checkout';
 	const LOGIN_PAGE        = 'pages.login';
 	const REGISTRATION_PAGE = 'pages.register';
 	const ACCOUNT_PAGE      = 'pages.account';
@@ -43,6 +45,9 @@ class Pages extends Provider {
 			if ( ( (bool) get_option( Cart_Settings::OPTION_ENABLE_CART, true ) ) === true ) {
 				$pages[] = $container[ self::CART_PAGE ];
 			}
+			if ( ( (bool) get_option( Cart_Settings::OPTION_EMBEDDED_CHECKOUT, true ) ) === true ) {
+				$pages[] = $container[ self::CHECKOUT_PAGE ];
+			}
 			if ( ( (bool) get_option( Gift_Certificate_Settings::OPTION_ENABLE, true ) ) === true ) {
 				$pages[] = $container[ self::GIFT_PURCHACE ];
 				$pages[] = $container[ self::GIFT_BALANCE ];
@@ -56,6 +61,10 @@ class Pages extends Provider {
 
 		$container[ self::CART_PAGE ] = function ( Container $container ) {
 			return new Cart_Page();
+		};
+
+		$container[ self::CHECKOUT_PAGE ] = function ( Container $container ) {
+			return new Checkout_Page();
 		};
 
 		$container[ self::LOGIN_PAGE ] = function ( Container $container ) {
@@ -86,7 +95,7 @@ class Pages extends Provider {
 			return new Check_Balance_Page();
 		};
 
-		$container[ self::SHIPPING_PAGE ] = function( Container $container ) {
+		$container[ self::SHIPPING_PAGE ] = function ( Container $container ) {
 			return new Shipping_Returns_Page();
 		};
 

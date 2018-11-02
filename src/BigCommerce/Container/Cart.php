@@ -45,7 +45,10 @@ class Cart extends Provider {
 		};
 
 		add_action( 'template_redirect', $this->create_callback( 'shortcode_check', function () use ( $container ) {
-			$container[ self::CACHE_CONTROL ]->check_for_cart_shortcode();
+			$container[ self::CACHE_CONTROL ]->check_for_shortcodes( [
+				\BigCommerce\Shortcodes\Cart::NAME,
+				\BigCommerce\Shortcodes\Checkout::NAME,
+			] );
 		} ), 10, 0 );
 		add_action( 'bigcommerce/do_not_cache', $this->create_callback( 'do_not_cache', function () use ( $container ) {
 			$container[ self::CACHE_CONTROL ]->do_not_cache();

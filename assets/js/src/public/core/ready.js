@@ -17,6 +17,7 @@ import viewportDims from './viewport-dims';
 import gallery from '../gallery/index';
 import buttons from '../buttons/index';
 import cart from '../cart/index';
+import checkout from '../checkout/index';
 import loop from '../loop/index';
 import page from '../page/index';
 import product from '../product/index';
@@ -56,6 +57,7 @@ const init = () => {
 	buttons();
 	gallery();
 	cart();
+	checkout();
 	loop();
 	page();
 	product();

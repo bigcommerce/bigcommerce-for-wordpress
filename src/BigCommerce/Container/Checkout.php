@@ -31,6 +31,10 @@ class Checkout extends Provider {
 		add_action( 'admin_post_' . Requirements_Notice::REFRESH, $this->create_callback( 'refresh_checkout_requirements', function () use ( $container ) {
 			$container[ self::REQUIREMENTS_NOTICE ]->refresh_status();
 		} ), 10, 0 );
+
+		add_filter( 'pre_option_' . \BigCommerce\Settings\Sections\Cart::OPTION_EMBEDDED_CHECKOUT, $this->create_callback( 'embedded_checkout_requirement_check', function( $value ) use ( $container ) {
+			return $container[ self::REQUIREMENTS_NOTICE ]->filter_embedded_checkout( $value );
+		}), 10, 1 );
 	}
 
 	private function customer_login( Container $container ) {

@@ -5,6 +5,8 @@ namespace BigCommerce\Cart;
 
 use BigCommerce\Api\v3\Api\CartApi;
 use BigCommerce\Api_Factory;
+use BigCommerce\Pages\Checkout_Page;
+use BigCommerce\Settings\Sections\Cart as Cart_Settings;
 
 /**
  * Class Buy_Now
@@ -33,6 +35,15 @@ class Checkout {
 
 			return;
 		}
+
+		if ( get_option( Cart_Settings::OPTION_EMBEDDED_CHECKOUT, true ) ) {
+			$checkout_page = get_option( Checkout_Page::NAME, 0 );
+			if ( $checkout_page ) {
+				wp_safe_redirect( get_permalink( $checkout_page ), 303 );
+				exit();
+			}
+		}
+
 		try {
 			$redirects    = $cart_api->cartsCartIdRedirectUrlsPost( $cart_id )->getData();
 			$checkout_url = $redirects[ 'checkout_url' ];
