@@ -68,21 +68,21 @@ class Routes {
 	}
 
 	/**
-	 * @return int 0 if not updated successfully
+	 * @return void
+	 * @action update_option_home
 	 */
 	public function update_site_home() {
 		$channel_id = get_option( Channels::CHANNEL_ID );
 
 		if (!empty($channel_id)) {
 			$body = new Site( [
-				'url' => home_url( '/' ),
+				'url' => untrailingslashit( home_url() ),
 			] );
 			try {
 				$site_id  = $this->get_site_id( $channel_id );
-				$response = $this->sites->putSite( $site_id, $body );
+				$this->sites->putSite( $site_id, $body );
 			} catch ( ApiException $e ) {
 				do_action('bigcommerce/update_site_home/error');
-				return 0;
 			}
 		}
 	}
@@ -92,8 +92,8 @@ class Routes {
 	 * @action post_updated
 	 *
 	 * @param int     $post_id     Post ID.
-	 * @param WP_Post $new_post    The Post Object
-	 * @param WP_Post $old_post    The Previous Post Object
+	 * @param \WP_Post $new_post    The Post Object
+	 * @param \WP_Post $old_post    The Previous Post Object
 	 */
 	function update_route_permalink($post_id, $new_post, $old_post) {
 
@@ -140,7 +140,7 @@ class Routes {
 	 */
 	private function create_site( $channel_id ) {
 		$request = new SiteCreateRequest( [
-			'url'        => home_url( '/' ),
+			'url'        => untrailingslashit( home_url() ),
 			'channel_id' => $channel_id,
 		] );
 		try {
@@ -157,7 +157,7 @@ class Routes {
 	 * @return Route[] A list of routes for pages on this site
 	 */
 	protected function get_route_list() {
-		$home_url = untrailingslashit( home_url( '/' ) );
+		$home_url = untrailingslashit( home_url() );
 		$routes   = [
 			new Route( [
 				'type'     => 'home',

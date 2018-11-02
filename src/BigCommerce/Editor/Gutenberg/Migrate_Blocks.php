@@ -137,6 +137,7 @@ class Migrate_Blocks {
 			Shortcodes\Account_Profile::NAME          => Blocks\Account_Profile::NAME,
 			Shortcodes\Address_List::NAME             => Blocks\Address_List::NAME,
 			Shortcodes\Cart::NAME                     => Blocks\Cart::NAME,
+			Shortcodes\Checkout::NAME                 => Blocks\Checkout::NAME,
 			Shortcodes\Login_Form::NAME               => Blocks\Login_Form::NAME,
 			Shortcodes\Order_History::NAME            => Blocks\Order_History::NAME,
 			Shortcodes\Registration_Form::NAME        => Blocks\Registration_Form::NAME,
@@ -146,7 +147,8 @@ class Migrate_Blocks {
 
 		foreach ( $shortcode_map as $shortcode_id => $block_id ) {
 			$shortcode = sprintf( '[%s]', $shortcode_id );
-			$block     = sprintf( "<!-- wp:%s -->\n[%s]\n<!-- /wp:%s -->", $block_id, $shortcode_id, $block_id );
+			$block_data = [ 'shortcode' => $shortcode ];
+			$block     = sprintf( "<!-- wp:%s %s -->\n[%s]\n<!-- /wp:%s -->", $block_id, json_encode( $block_data ), $shortcode_id, $block_id );
 			$content   = str_replace( $shortcode, $block, $content );
 		}
 

@@ -5,17 +5,24 @@ namespace BigCommerce\Settings\Sections;
 
 
 use BigCommerce\Pages\Cart_Page;
+use BigCommerce\Pages\Checkout_Page;
+use BigCommerce\Pages\Required_Page;
 use BigCommerce\Settings\Screens\Settings_Screen;
 
 class Cart extends Settings_Section {
-	const NAME                = 'cart';
-	const OPTION_ENABLE_CART  = 'bigcommerce_enable_cart';
-	const OPTION_CART_PAGE_ID = Cart_Page::NAME;
+	use WithPages;
+
+	const NAME                     = 'cart';
+	const OPTION_ENABLE_CART       = 'bigcommerce_enable_cart';
+	const OPTION_CART_PAGE_ID      = Cart_Page::NAME;
+	const OPTION_EMBEDDED_CHECKOUT = 'bigcommerce_enable_embedded_checkout';
 
 	private $cart_page;
+	private $checkout_page;
 
-	public function __construct( Cart_Page $cart_page ) {
+	public function __construct( Cart_Page $cart_page, Checkout_Page $checkout_page ) {
 		$this->cart_page = $cart_page;
+		$this->checkout_page = $checkout_page;
 	}
 
 	/**
@@ -25,7 +32,7 @@ class Cart extends Settings_Section {
 	public function register_settings_section() {
 		add_settings_section(
 			self::NAME,
-			__( 'Cart Settings', 'bigcommerce' ),
+			__( 'Cart & Checkout', 'bigcommerce' ),
 			function ( $section ) {
 				do_action( 'bigcommerce/settings/render/cart', $section );
 			},
@@ -37,12 +44,6 @@ class Cart extends Settings_Section {
 			self::OPTION_ENABLE_CART
 		);
 
-		register_setting(
-			Settings_Screen::NAME,
-			self::OPTION_CART_PAGE_ID
-		);
-
-
 		add_settings_field(
 			self::OPTION_ENABLE_CART,
 			esc_html( __( 'Enable Cart', 'bigcommerce' ) ),
@@ -51,12 +52,43 @@ class Cart extends Settings_Section {
 			self::NAME
 		);
 
+		register_setting(
+			Settings_Screen::NAME,
+			$this->cart_page->get_option_name()
+		);
 		add_settings_field(
-			self::OPTION_CART_PAGE_ID,
-			esc_html( __( 'Cart Page', 'bigcommerce' ) ),
-			[ $this, 'render_cart_page_field', ],
+			$this->cart_page->get_option_name(),
+			$this->cart_page->get_post_state_label(),
+			[ $this, 'render_page_field' ],
+			Settings_Screen::NAME,
+			self::NAME,
+			[ 'page' => $this->cart_page ]
+		);
+
+		register_setting(
+			Settings_Screen::NAME,
+			self::OPTION_EMBEDDED_CHECKOUT
+		);
+
+		add_settings_field(
+			self::OPTION_EMBEDDED_CHECKOUT,
+			esc_html( __( 'Enable Embedded Checkout', 'bigcommerce' ) ),
+			[ $this, 'render_embedded_checkout_field', ],
 			Settings_Screen::NAME,
 			self::NAME
+		);
+
+		register_setting(
+			Settings_Screen::NAME,
+			$this->checkout_page->get_option_name()
+		);
+		add_settings_field(
+			$this->checkout_page->get_option_name(),
+			$this->checkout_page->get_post_state_label(),
+			[ $this, 'render_page_field' ],
+			Settings_Screen::NAME,
+			self::NAME,
+			[ 'page' => $this->checkout_page ]
 		);
 	}
 
@@ -64,6 +96,12 @@ class Cart extends Settings_Section {
 		$value    = (bool) get_option( self::OPTION_ENABLE_CART, true );
 		$checkbox = sprintf( '<input type="checkbox" value="1" class="regular-text code" name="%s" %s />', esc_attr( self::OPTION_ENABLE_CART ), checked( true, $value, false ) );
 		printf( '<p class="description">%s %s</p>', $checkbox, __( 'If enabled, customers will be able to add products to a cart before proceeding to checkout. If disabled, products will use a Buy Now button that takes them directly to checkout.', 'bigcommerce' ) );
+	}
+
+	public function render_embedded_checkout_field() {
+		$value = (bool) get_option( self::OPTION_EMBEDDED_CHECKOUT, true );
+		$checkbox = sprintf( '<input type="checkbox" value="1" class="regular-text code" name="%s" %s />', esc_attr( self::OPTION_EMBEDDED_CHECKOUT ), checked( true, $value, false ) );
+		printf( '<p class="description">%s %s</p>', $checkbox, __( 'If enabled, the checkout form will be embedded on your checkout page. If disabled, customers will be redirected to bigcommerce.com for checkout. Your site must have a valid SSL certificate to support embedded checkout.', 'bigcommerce' ) );
 	}
 
 	public function render_cart_page_field() {

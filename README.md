@@ -15,39 +15,15 @@ As with any WordPress plugin, upload the plugin ZIP file to the
 * SSL
 * The PHP intl extension will enable better currency formatting
 
-### BigCommerce API Account
-
-To connect with your BigCommerce account, you first must create an API Account.
-
-To create an API account, visit the [API Accounts page under Advanced
-Settings](https://login.bigcommerce.com/deep-links/settings/auth/api-accounts) in
-your BigCommerce store admin.
-
-Click the "Create API Account" button at the top of the page to create a new account,
-and grant it all privileges. (Currently "Content", "Marketing", and "Themes" permissions
-are not used, but they may be added to the plugin in the future.)
-
-Make note of the following information about your API account:
-
-* API Path (similar to `https://api.bigcommerce.com/stores/abc9defghi/v3/`)
-* Client ID
-* Client Secret
-* Access Token
-
 ### Settings
 
 Find the BigCommerce settings screen at BigCommerce -> Settings in the WordPress
 admin menu.
 
-#### API Credentials
-
-For the plugin for function properly, it must be connected to the BigCommerce API.
-Copy your account credentials into the "API Credentials" section.
-
 #### Product Sync
 
-Once your API credentials are validated, the plugin will import products using
-the BigCommerce API. This will run automatically using WordPress cron, using the schedule
+Once authenticated with the BigCommerce API, the plugin will import products.
+This will run automatically using WordPress cron, using the schedule
 set on the settings page (default: daily).
 
 If you choose to disable the cron job, you can set a server-side cron job to run the sync
@@ -57,11 +33,9 @@ using WP-CLI. The command to import products is:
 wp bigcommerce import products
 ```
 
-Product descriptions can be edited in the WordPress admin. The "Do not update products
-on import" setting should remain checked to preserve these edits. If it is unchecked,
-those edits will be overwritten with data from the API on the next import. No matter the
-value of the checkbox, other product details (e.g., prices, availability, categories) will
-always be synchronized.
+Product titles, descriptions, and post statuses can be edited in the
+WordPress admin. Your changes will be automatically synced with your
+BigCommerce channel and preserved during future imports.
 
 #### Cart Settings
 
@@ -148,8 +122,10 @@ command: `wp bigcommerce import products`
 
 The import runs in several stages:
 
-1. A list of all products from the API is added to a queue for processing.
-1. Any products on the site that are no longer available in the BigCommerce store are
+1. If your channel does not currently have any listings, all products from
+the store will be added to the channel.
+1. A list of all products from the channel is added to a queue for processing.
+1. Any products on the site that are no longer available in the BigCommerce channel are
 marked for deletion.
 1. The queue is processed in chunks (five items at a time), whereby products are imported,
 updated, or deleted to match the data in BigCommerce.

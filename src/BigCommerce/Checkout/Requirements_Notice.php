@@ -184,4 +184,20 @@ class Requirements_Notice {
 
 		return $url;
 	}
+
+	/**
+	 * Disable embedded checkout if SSL is not supported
+	 *
+	 * @param int|bool $option
+	 *
+	 * @return int|bool
+	 * @filter pre_option_ . Cart::OPTION_EMBEDDED_CHECKOUT
+	 */
+	public function filter_embedded_checkout( $option ) {
+		if ( ! $this->get_ssl_status() ) {
+			return 0; // not `false`, because WP would ignore it
+		}
+
+		return $option;
+	}
 }

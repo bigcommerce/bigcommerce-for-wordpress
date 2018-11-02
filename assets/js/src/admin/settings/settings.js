@@ -11,21 +11,17 @@ const el = {
 };
 
 /**
- * @function toggleSiblingOptions
+ * @function toggleDependentOptions
  * @description toggle table elements display on settings pages.
  *
  * @param field
+ * @param dependents
  */
-const toggleSiblingOptions = (field) => {
-	const tableRow = tools.closest(field, 'tr');
-	const table = tools.closest(field, 'table');
-	const siblings = tools.getNodes('tr', true, table, true);
+const toggleDependentOptions = (field, dependents) => {
 	const display = field.checked ? 'table-row' : 'none';
-
-	siblings.forEach((row) => {
-		if (row !== tableRow) {
-			row.style.display = display;
-		}
+	dependents.forEach((dependent) => {
+		const row = tools.closest(dependent, 'tr');
+		row.style.display = display;
 	});
 };
 
@@ -34,7 +30,15 @@ const toggleSiblingOptions = (field) => {
  * @description toggle the <tr> elements on and off depending on checkbox state.
  */
 const toggleCartOption = () => {
-	toggleSiblingOptions(el.cartCheckbox);
+	toggleDependentOptions(el.cartCheckbox, [el.cartPageSelect]);
+};
+
+/**
+ * @function toggleCheckoutOption
+ * @description toggle the <tr> elements on and off depending on checkbox state.
+ */
+const toggleCheckoutOption = () => {
+	toggleDependentOptions(el.checkoutCheckbox, [el.checkoutPageSelect]);
 };
 
 /**
@@ -42,12 +46,17 @@ const toggleCartOption = () => {
  * @description toggle the <tr> elements on and off depending on checkbox state.
  */
 const toggleGiftCertificateOption = () => {
-	toggleSiblingOptions(el.giftCertificateCheckbox);
+	toggleDependentOptions(el.giftCertificateCheckbox, [el.gitfCertificatePageSelect, el.gittBalancePageSelect]);
 };
 
 const cacheElements = () => {
 	el.cartCheckbox = tools.getNodes('input[name="bigcommerce_enable_cart"]', false, el.container, true)[0];
+	el.cartPageSelect = tools.getNodes('select[name="bigcommerce_cart_page_id"]', false, el.container, true)[0];
+	el.checkoutCheckbox = tools.getNodes('input[name="bigcommerce_enable_embedded_checkout"]', false, el.container, true)[0];
+	el.checkoutPageSelect = tools.getNodes('select[name="bigcommerce_checkout_page_id"]', false, el.container, true)[0];
 	el.giftCertificateCheckbox = tools.getNodes('input[name="bigcommerce_enable_gift_certificates"]', false, el.container, true)[0];
+	el.gitfCertificatePageSelect = tools.getNodes('select[name="bigcommerce_gift_certificate_page_id"]', false, el.container, true)[0];
+	el.gittBalancePageSelect = tools.getNodes('select[name="bigcommerce_gift_balance_page_id"]', false, el.container, true)[0];
 };
 
 /**
@@ -56,6 +65,7 @@ const cacheElements = () => {
  */
 const bindEvents = () => {
 	delegate(el.container, 'input[name="bigcommerce_enable_cart"]', 'change', toggleCartOption);
+	delegate(el.container, 'input[name="bigcommerce_enable_embedded_checkout"]', 'change', toggleCheckoutOption);
 	delegate(el.container, 'input[name="bigcommerce_enable_gift_certificates"]', 'change', toggleGiftCertificateOption);
 };
 
@@ -66,6 +76,7 @@ const init = () => {
 
 	cacheElements();
 	toggleCartOption();
+	toggleCheckoutOption();
 	toggleGiftCertificateOption();
 	bindEvents();
 };

@@ -57,7 +57,8 @@ class CartRedirectUrls implements ArrayAccess
       */
     protected static $swaggerTypes = [
         'cart_url' => 'string',
-        'checkout_url' => 'string'
+        'checkout_url' => 'string',
+        'embedded_checkout_url' => 'string'
     ];
 
     public static function swaggerTypes()
@@ -71,7 +72,8 @@ class CartRedirectUrls implements ArrayAccess
      */
     protected static $attributeMap = [
         'cart_url' => 'cart_url',
-        'checkout_url' => 'checkout_url'
+        'checkout_url' => 'checkout_url',
+        'embedded_checkout_url' => 'embedded_checkout_url'
     ];
 
 
@@ -81,7 +83,8 @@ class CartRedirectUrls implements ArrayAccess
      */
     protected static $setters = [
         'cart_url' => 'setCartUrl',
-        'checkout_url' => 'setCheckoutUrl'
+        'checkout_url' => 'setCheckoutUrl',
+        'embedded_checkout_url' => 'setEmbeddedCheckoutUrl'
     ];
 
 
@@ -91,7 +94,8 @@ class CartRedirectUrls implements ArrayAccess
      */
     protected static $getters = [
         'cart_url' => 'getCartUrl',
-        'checkout_url' => 'getCheckoutUrl'
+        'checkout_url' => 'getCheckoutUrl',
+        'embedded_checkout_url' => 'getEmbeddedCheckoutUrl'
     ];
 
     public static function attributeMap()
@@ -127,6 +131,7 @@ class CartRedirectUrls implements ArrayAccess
     {
         $this->container['cart_url'] = isset($data['cart_url']) ? $data['cart_url'] : null;
         $this->container['checkout_url'] = isset($data['checkout_url']) ? $data['checkout_url'] : null;
+        $this->container['embedded_checkout_url'] = isset($data['embedded_checkout_url']) ? $data['embedded_checkout_url'] : null;
     }
 
     /**
@@ -190,6 +195,27 @@ class CartRedirectUrls implements ArrayAccess
     public function setCheckoutUrl($checkout_url)
     {
         $this->container['checkout_url'] = $checkout_url;
+
+        return $this;
+    }
+
+    /**
+     * Gets embedded_checkout_url
+     * @return string
+     */
+    public function getEmbeddedCheckoutUrl()
+    {
+        return $this->container['embedded_checkout_url'];
+    }
+
+    /**
+     * Sets embedded_checkout_url
+     * @param string $embedded_checkout_url
+     * @return $this
+     */
+    public function setEmbeddedCheckoutUrl($embedded_checkout_url)
+    {
+        $this->container['embedded_checkout_url'] = $embedded_checkout_url;
 
         return $this;
     }

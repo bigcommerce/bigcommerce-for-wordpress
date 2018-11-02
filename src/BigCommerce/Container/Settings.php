@@ -79,7 +79,7 @@ class Settings extends Provider {
 
 		$container[ self::CONFIG_STATUS ] = function ( Container $container ) {
 			if ( ! $container[ Api::CONFIG_COMPLETE ] ) {
-				$store_id   = get_option( Onboarding_Api::STORE_ID, '' );
+				$store_id = get_option( Onboarding_Api::STORE_ID, '' );
 
 				if ( empty( $store_id ) ) {
 					return self::STATUS_NEW;
@@ -145,7 +145,7 @@ class Settings extends Provider {
 
 	private function cart( Container $container ) {
 		$container[ self::CART_SECTION ] = function ( Container $container ) {
-			return new Cart_Settings( $container[ Pages::CART_PAGE ] );
+			return new Cart_Settings( $container[ Pages::CART_PAGE ], $container[ Pages::CHECKOUT_PAGE ] );
 		};
 		add_action( 'bigcommerce/settings/register/screen=' . Settings_Screen::NAME, $this->create_callback( 'cart_settings_register', function () use ( $container ) {
 			$container[ self::CART_SECTION ]->register_settings_section();
@@ -258,7 +258,7 @@ class Settings extends Provider {
 
 	private function onboarding( Container $container ) {
 		$container[ self::WELCOME_SCREEN ] = function ( Container $container ) {
-			$path = dirname( $container['plugin_file'] ) . '/templates/admin';
+			$path = dirname( $container[ 'plugin_file' ] ) . '/templates/admin';
 
 			return new Welcome_Screen( $container[ self::CONFIG_STATUS ], $container[ Assets::PATH ], $path );
 		};

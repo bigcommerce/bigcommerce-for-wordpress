@@ -301,6 +301,9 @@ definitions:
       checkout_url:
         type: string
         format: url
+      embedded_checkout_url:
+        type: string
+        format: url
   Cart:
     description: A cart contains a collection of items, prices, discounts, etc.. It does not contain customer-related data.
     type: object

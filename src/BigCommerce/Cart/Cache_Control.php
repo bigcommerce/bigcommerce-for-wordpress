@@ -8,14 +8,19 @@ use BigCommerce\Shortcodes\Cart;
 
 class Cache_Control {
 	/**
+	 * @param string[] $shortcodes
+	 *
 	 * @return void
 	 * @action template_redirect
 	 */
-	public function check_for_cart_shortcode() {
+	public function check_for_shortcodes( $shortcodes ) {
 		if ( is_singular() ) {
 			$object = get_queried_object();
-			if ( strpos( $object->post_content, $this->cart_shortcode() ) !== false ) {
-				do_action( 'bigcommerce/do_not_cache' );
+			foreach ( $shortcodes as $shortcode ) {
+				if ( strpos( $object->post_content, sprintf( '[%s', $shortcode ) ) ) {
+					do_action( 'bigcommerce/do_not_cache' );
+					break;
+				}
 			}
 		}
 	}

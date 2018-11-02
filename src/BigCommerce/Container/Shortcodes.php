@@ -9,6 +9,7 @@ use Pimple\Container;
 class Shortcodes extends Provider {
 	const PRODUCTS     = 'shortcode.products';
 	const CART         = 'shortcode.cart';
+	const CHECKOUT     = 'shortcode.checkout';
 	const LOGIN        = 'shortcode.login';
 	const REGISTER     = 'shortcode.register';
 	const ACCOUNT      = 'shortcode.account';
@@ -23,6 +24,9 @@ class Shortcodes extends Provider {
 		};
 		$container[ self::CART ]         = function ( Container $container ) {
 			return new Codes\Cart( $container[ Api::FACTORY ]->cart() );
+		};
+		$container[ self::CHECKOUT ]     = function ( Container $container ) {
+			return new Codes\Checkout( $container[ Api::FACTORY ]->cart() );
 		};
 		$container[ self::LOGIN ]        = function ( Container $container ) {
 			return new Codes\Login_Form();
@@ -49,6 +53,7 @@ class Shortcodes extends Provider {
 		add_action( 'after_setup_theme', $this->create_callback( 'register', function () use ( $container ) {
 			add_shortcode( Codes\Products::NAME, [ $container[ self::PRODUCTS ], 'render' ] );
 			add_shortcode( Codes\Cart::NAME, [ $container[ self::CART ], 'render' ] );
+			add_shortcode( Codes\Checkout::NAME, [ $container[ self::CHECKOUT ], 'render' ] );
 			add_shortcode( Codes\Login_Form::NAME, [ $container[ self::LOGIN ], 'render' ] );
 			add_shortcode( Codes\Registration_Form::NAME, [ $container[ self::REGISTER ], 'render' ] );
 			add_shortcode( Codes\Account_Profile::NAME, [ $container[ self::ACCOUNT ], 'render' ] );

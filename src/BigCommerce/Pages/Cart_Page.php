@@ -3,7 +3,6 @@
 
 namespace BigCommerce\Pages;
 
-use BigCommerce\Settings\Sections\Cart as Cart_Settings;
 use BigCommerce\Shortcodes;
 
 class Cart_Page extends Required_Page {

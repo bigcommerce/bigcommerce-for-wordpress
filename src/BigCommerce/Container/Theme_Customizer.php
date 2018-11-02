@@ -16,6 +16,7 @@ class Theme_Customizer extends Provider {
 	const SECTION_CATALOG         = 'customizer.section.catalog';
 	const SECTION_PRODUCT_SINGLE  = 'customizer.section.product_single';
 	const SECTION_PRODUCT_ARCHIVE = 'customizer.section.product_archive';
+	const SECTION_CHECKOUT        = 'customizer.section.checkout';
 	const STYLES                  = 'customizer.styles';
 
 	public function register( Container $container ) {
@@ -39,6 +40,10 @@ class Theme_Customizer extends Provider {
 			return new Sections\Product_Archive();
 		};
 
+		$container[ self::SECTION_CHECKOUT ] = function ( Container $container ) {
+			return new Sections\Checkout();
+		};
+
 		$container[ self::STYLES ] = function ( Container $container ) {
 			$path = dirname( $container[ 'plugin_file' ] ) . '/assets/customizer.template.css';
 
@@ -51,6 +56,10 @@ class Theme_Customizer extends Provider {
 			$container[ self::SECTION_COLORS ]->register( $wp_customize );
 			$container[ self::SECTION_PRODUCT_SINGLE ]->register( $wp_customize );
 			$container[ self::SECTION_PRODUCT_ARCHIVE ]->register( $wp_customize );
+
+			if ( get_option( \BigCommerce\Settings\Sections\Cart::OPTION_EMBEDDED_CHECKOUT, true ) ) {
+				$container[ self::SECTION_CHECKOUT ]->register( $wp_customize );
+			}
 		} ), 10, 1 );
 
 		add_action( 'wp_head', $this->create_callback( 'customizer_styles', function () use ( $container ) {

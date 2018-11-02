@@ -68,6 +68,9 @@ class Editor extends Provider {
 			if ( ( (bool) get_option( Cart_Settings::OPTION_ENABLE_CART, true ) ) === true ) {
 				$blocks[] = new Gutenberg\Blocks\Cart();
 			}
+			if ( ( (bool) get_option( Cart_Settings::OPTION_EMBEDDED_CHECKOUT, true ) ) === true ) {
+				$blocks[] = new Gutenberg\Blocks\Checkout();
+			}
 			if ( ( (bool) get_option( Gift_Certificate_Settings::OPTION_ENABLE, true ) ) === true ) {
 				$blocks[] = new Gutenberg\Blocks\Gift_Certificate_Form();
 				$blocks[] = new Gutenberg\Blocks\Gift_Certificate_Balance();

@@ -239,4 +239,20 @@ class Cart {
 
 		return $checkout_url;
 	}
+
+	public function get_embedded_checkout_url( $cart_id ) {
+		$cart_id = $cart_id ?: $this->get_cart_id();
+		if ( empty( $cart_id ) ) {
+			return '';
+		}
+		try {
+			$redirects = $this->api->cartsCartIdRedirectUrlsPost( $cart_id )->getData();
+		} catch ( ApiException $e ) {
+			return '';
+		}
+		$checkout_url = $redirects[ 'embedded_checkout_url' ];
+		$checkout_url = apply_filters( 'bigcommerce/checkout/url', $checkout_url );
+
+		return $checkout_url;
+	}
 }
