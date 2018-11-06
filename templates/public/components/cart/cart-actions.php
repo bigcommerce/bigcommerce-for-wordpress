@@ -21,4 +21,5 @@
 				data-js="proceed-to-checkout"
 		><?php esc_html_e( 'Proceed to Checkout', 'bigcommerce' ); ?></button>
 	</form>
+	<?php do_action( 'bigcommerce/cart/proceed_to_checkout', $cart ); ?>
 </div>
