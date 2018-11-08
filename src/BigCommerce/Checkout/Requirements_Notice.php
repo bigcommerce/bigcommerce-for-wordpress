@@ -53,9 +53,11 @@ class Requirements_Notice {
 				sprintf( '<a href="%s">%s</a>', esc_url( $this->get_payment_configuration_url() ), __( 'Configure Payment', 'bigcommerce' ) )
 			);
 		}
-		if ( empty( $status[ 'ssl' ] ) ) {
-			$notices[] = __( 'An SSL certificate on your domain is required.', 'bigcommerce' );
-		}
+		/* 2018-11-07: We have opted not to show a notification for a missing SSL certificate. It's not _really
+		 * required unless embedded checkout is enabled */
+		//if ( empty( $status[ 'ssl' ] ) ) {
+		//	$notices[] = __( 'An SSL certificate on your domain is required.', 'bigcommerce' );
+		//}
 
 		if ( empty( $notices ) ) {
 			return;
@@ -194,10 +196,18 @@ class Requirements_Notice {
 	 * @filter pre_option_ . Cart::OPTION_EMBEDDED_CHECKOUT
 	 */
 	public function filter_embedded_checkout( $option ) {
-		if ( ! $this->get_ssl_status() ) {
+		if ( ! $this->can_enable_embedded_checkout() ) {
 			return 0; // not `false`, because WP would ignore it
 		}
 
 		return $option;
+	}
+
+	/**
+	 * @return bool
+	 * @filter bigcommerce/checkout/can_embed
+	 */
+	public function can_enable_embedded_checkout() {
+		return (bool) $this->get_ssl_status();
 	}
 }

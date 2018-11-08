@@ -32,13 +32,17 @@ class Checkout extends Provider {
 			$container[ self::REQUIREMENTS_NOTICE ]->refresh_status();
 		} ), 10, 0 );
 
-		add_filter( 'pre_option_' . \BigCommerce\Settings\Sections\Cart::OPTION_EMBEDDED_CHECKOUT, $this->create_callback( 'embedded_checkout_requirement_check', function( $value ) use ( $container ) {
+		add_filter( 'pre_option_' . \BigCommerce\Settings\Sections\Cart::OPTION_EMBEDDED_CHECKOUT, $this->create_callback( 'embedded_checkout_requirement_check', function ( $value ) use ( $container ) {
 			return $container[ self::REQUIREMENTS_NOTICE ]->filter_embedded_checkout( $value );
-		}), 10, 1 );
+		} ), 10, 1 );
+
+		add_filter( 'bigcommerce/checkout/can_embed', $this->create_callback( 'embedded_checkout_supported', function ( $supported ) use ( $container ) {
+			return $container[ self::REQUIREMENTS_NOTICE ]->can_enable_embedded_checkout();
+		} ), 1, 1 );
 	}
 
 	private function customer_login( Container $container ) {
-		$container[ self::LOGIN ] = function( Container $container ) {
+		$container[ self::LOGIN ] = function ( Container $container ) {
 			return new Customer_Login( $container[ Merchant::ONBOARDING_API ], $container[ Api::FACTORY ]->store() );
 		};
 

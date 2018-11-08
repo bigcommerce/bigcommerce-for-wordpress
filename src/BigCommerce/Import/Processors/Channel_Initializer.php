@@ -12,6 +12,7 @@ use BigCommerce\Api\v3\Model\Product;
 use BigCommerce\Api\v3\Model\Variant;
 use BigCommerce\Import\Runner\Status;
 use BigCommerce\Settings\Sections\Channels;
+use BigCommerce\Settings\Sections\Import;
 
 /**
  * Class Channel_Initializer
@@ -63,7 +64,7 @@ class Channel_Initializer implements Import_Processor {
 
 		$page = $this->get_page();
 		if ( empty( $page ) ) {
-			if ( $this->channel_has_listings( $channel_id ) ) {
+			if ( ! get_option( Import::OPTION_NEW_PRODUCTS, 1 ) && $this->channel_has_listings( $channel_id ) ) {
 				$status->set_status( Status::INITIALIZED_CHANNEL );
 				$this->clear_state();
 
@@ -117,7 +118,13 @@ class Channel_Initializer implements Import_Processor {
 			return;
 		}
 
-		$listing_requests = array_map( function ( Product $product ) use ( $channel_id ) {
+		$id_map = get_option( Listing_ID_Fetcher::PRODUCT_LISTING_MAP, [] ) ?: [];
+
+		$listing_requests = array_values( array_filter( array_map( function ( Product $product ) use ( $channel_id, $id_map ) {
+			if ( array_key_exists( $product->getId(), $id_map ) ) {
+				return false;
+			}
+
 			return new Listing( [
 				'channel_id' => (int) $channel_id,
 				'product_id' => (int) $product->getId(),
@@ -132,18 +139,20 @@ class Channel_Initializer implements Import_Processor {
 					] );
 				}, $product->getVariants() ),
 			] );
-		}, $response->getData() );
+		}, $response->getData() ) ) );
 
 
-		try {
-			$response = $this->channels->createChannelListings( $channel_id, $listing_requests );
-		} catch ( ApiException $e ) {
-			do_action( 'bigcommerce/import/error', $e->getMessage(), [
-				'response' => $e->getResponseBody(),
-				'headers'  => $e->getResponseHeaders(),
-			] );
+		if ( ! empty( $listing_requests ) ) {
+			try {
+				$this->channels->createChannelListings( $channel_id, $listing_requests );
+			} catch ( ApiException $e ) {
+				do_action( 'bigcommerce/import/error', $e->getMessage(), [
+					'response' => $e->getResponseBody(),
+					'headers'  => $e->getResponseHeaders(),
+				] );
 
-			return;
+				return;
+			}
 		}
 
 		$total_pages = $response->getMeta()->getPagination()->getTotalPages();

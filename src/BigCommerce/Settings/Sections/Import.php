@@ -7,8 +7,9 @@ namespace BigCommerce\Settings\Sections;
 use BigCommerce\Settings\Screens\Settings_Screen;
 
 class Import extends Settings_Section {
-	const NAME                     = 'import';
-	const OPTION_FREQUENCY         = 'bigcommerce_import_frequency';
+	const NAME                = 'import';
+	const OPTION_FREQUENCY    = 'bigcommerce_import_frequency';
+	const OPTION_NEW_PRODUCTS = 'bigcommerce_import_new_products';
 
 	const FREQUENCY_FIVE    = 'five_minutes';
 	const FREQUENCY_THIRTY  = 'thirty_minutes';
@@ -31,7 +32,10 @@ class Import extends Settings_Section {
 			Settings_Screen::NAME
 		);
 
-		add_action( 'bigcommerce/settings/section/before_callback/id=' . self::NAME, [ $this, 'section_description' ], 10, 0 );
+		add_action( 'bigcommerce/settings/section/before_callback/id=' . self::NAME, [
+			$this,
+			'section_description',
+		], 10, 0 );
 
 		add_settings_field(
 			self::OPTION_FREQUENCY,
@@ -45,6 +49,20 @@ class Import extends Settings_Section {
 			Settings_Screen::NAME,
 			self::OPTION_FREQUENCY
 		);
+
+		/* // disabled until BigCommerce has a UI for managing channels
+		add_settings_field(
+			self::OPTION_NEW_PRODUCTS,
+			__( 'Automatic Listing', 'bigcommerce' ),
+			[ $this, 'new_products_toggle' ],
+			Settings_Screen::NAME,
+			self::NAME
+		);
+
+		register_setting(
+			Settings_Screen::NAME,
+			self::OPTION_NEW_PRODUCTS
+		); */
 	}
 
 	public function section_description() {
@@ -52,7 +70,7 @@ class Import extends Settings_Section {
 	}
 
 	/**
-	 * @return string
+	 * @return void
 	 */
 	public function frequency_select() {
 		$current = get_option( self::OPTION_FREQUENCY, self::DEFAULT_FREQUENCY );
@@ -72,5 +90,22 @@ class Import extends Settings_Section {
 		$select .= '</select>';
 
 		echo $select;
+	}
+
+	public function new_products_toggle() {
+		$current = get_option( self::OPTION_NEW_PRODUCTS, 1 );
+
+		printf(
+			'<p><label><input type="radio" name="%s" value="1" %s /> %s</label></p>',
+			esc_attr( self::OPTION_NEW_PRODUCTS ),
+			checked( 1, (int) $current, false ),
+			__( 'Yes, automatically list new BigCommerce products on this Channel', 'bigcommerce' )
+		);
+		printf(
+			'<p><label><input type="radio" name="%s" value="0" %s /> %s</label></p>',
+			esc_attr( self::OPTION_NEW_PRODUCTS ),
+			checked( 0, (int) $current, false ),
+			__( "No, I'll select which products should be listed on this Channel within BigCommerce", 'bigcommerce' )
+		);
 	}
 }

@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.15.0]
+
+### Added
+
+- Automatically add new products to the BigCommerce channel on next import
+
+### Fixed
+
+- Fixed an error in channel initialization that limited channels to the first 100 products
+
+### Removed
+
+- Removed the missing SSL notice from the admin. Instead, a smaller notice is
+  displayed next to the Embedded Checkout option, explaining why it is disabled.
+
 ## [0.14.0]
 
 ### Added
@@ -137,6 +152,7 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[0.15.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/0.14.0...0.15.0
 [0.14.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/0.13.0...0.14.0
 [0.13.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/0.12.0...0.13.0
 [0.12.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/0.11.1...0.12.0

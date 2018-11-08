@@ -4,6 +4,7 @@ namespace BigCommerce\Uninstall;
 
 use BigCommerce\Customizer;
 use BigCommerce\Import\Processors\Channel_Initializer;
+use BigCommerce\Import\Processors\Listing_ID_Fetcher;
 use BigCommerce\Import\Processors\Product_ID_Fetcher;
 use BigCommerce\Import\Runner\Lock;
 use BigCommerce\Import\Runner\Status;
@@ -138,6 +139,7 @@ function delete_options() {
 		Settings\Sections\Cart::OPTION_ENABLE_CART,
 		Settings\Sections\Cart::OPTION_CART_PAGE_ID,
 		Settings\Sections\Import::OPTION_FREQUENCY,
+		Settings\Sections\Import::OPTION_NEW_PRODUCTS,
 		Settings\Sections\Account_Settings::SUPPORT_EMAIL,
 		Settings\Sections\Analytics::FACEBOOK_PIXEL,
 		Settings\Sections\Analytics::GOOGLE_ANALYTICS,
@@ -157,6 +159,7 @@ function delete_options() {
 		Status::CURRENT_LOG,
 		Status::PREVIOUS_LOG,
 		Lock::OPTION,
+		Listing_ID_Fetcher::STATE_OPTION,
 		Channel_Initializer::STATE_OPTION,
 		Product_ID_Fetcher::STATE_OPTION,
 		Merchant\Onboarding_Api::ACCOUNT_ID,

@@ -63,9 +63,17 @@ class Import_Status {
 		}
 
 		switch ( $current[ 'status' ] ) {
+			case Status::FETCHING_LISTING_IDS:
+			case Status::FETCHED_LISTING_IDS:
+				$status_string = __( 'Fetching existing listings from the BigCommerce API', 'bigcommerce' );
+				break;
+			case Status::INITIALIZING_CHANNEL:
+			case Status::INITIALIZED_CHANNEL:
+				$status_string = __( 'Adding listings to the channel', 'bigcommerce' );
+				break;
 			case Status::FETCHING_PRODUCT_IDS:
 			case Status::FETCHED_PRODUCT_IDS:
-				$status_string = __( 'Fetching product IDs from BigCommerce API', 'bigcommerce' );
+				$status_string = __( 'Identifying products to import from the BigCommerce API', 'bigcommerce' );
 				break;
 			case Status::MARKING_DELETED_PRODUCTS:
 			case Status::MARKED_DELETED_PRODUCTS:

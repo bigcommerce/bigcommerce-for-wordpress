@@ -445,6 +445,7 @@ class ComposerStaticInitd79c76bcf45f34dd2b99ed4a9ad94887
         'BigCommerce\\Import\\Processors\\Deleted_Product_Marker' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Processors/Deleted_Product_Marker.php',
         'BigCommerce\\Import\\Processors\\Error_Handler' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Processors/Error_Handler.php',
         'BigCommerce\\Import\\Processors\\Import_Processor' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Processors/Import_Processor.php',
+        'BigCommerce\\Import\\Processors\\Listing_ID_Fetcher' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Processors/Listing_ID_Fetcher.php',
         'BigCommerce\\Import\\Processors\\Product_ID_Fetcher' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Processors/Product_ID_Fetcher.php',
         'BigCommerce\\Import\\Processors\\Queue_Runner' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Processors/Queue_Runner.php',
         'BigCommerce\\Import\\Processors\\Start_Import' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Processors/Start_Import.php',
