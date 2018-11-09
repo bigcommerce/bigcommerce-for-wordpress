@@ -1,13 +1,13 @@
 <?php
 /*
 Plugin Name:  BigCommerce for WordPress
-Description:  BigCommerce for WordPress
-Author:       Modern Tribe
-Version:      0.15.0
-Author URI:   http://www.tri.be
+Description:  Scale your ecommerce business with WordPress on the front-end and BigCommerce on the back end. Free up server resources from things like catalog management, processing payments, and managing fulfillment logistics.
+Author:       BigCommerce
+Version:      1.0
+Author URI:   https://www.bigcommerce.com/wordpress
 Requires PHP: 5.6.24
 Text Domain:  bigcommerce
-License:      GPL3
+License:      GPLv2 or later
 */
 
 if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
