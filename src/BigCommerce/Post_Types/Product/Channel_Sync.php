@@ -51,8 +51,8 @@ class Channel_Sync {
 			return;
 		}
 
-		$channel_id = get_option( Channels::CHANNEL_ID, 0 );
-		$listing_id = $this->get_listing_id( $post_id );
+		$channel_id = (int) get_option( Channels::CHANNEL_ID, 0 );
+		$listing_id = (int) $this->get_listing_id( $post_id );
 		if ( empty( $channel_id ) || empty( $listing_id ) ) {
 			return;
 		}
@@ -76,7 +76,7 @@ class Channel_Sync {
 		$update_request = new UpdateListingRequest( [
 			'channel_id'    => $channel_id,
 			'listing_id'    => $listing_id,
-			'product_id'    => $listing->getProductId(),
+			'product_id'    => (int) $listing->getProductId(),
 			'state'         => $this->get_listing_state( $post_id, $listing ),
 			'name'          => $this->get_listing_title( $post_id, $listing ),
 			'description'   => $this->get_listing_description( $post_id, $listing ),

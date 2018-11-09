@@ -15,6 +15,7 @@ class Import extends Provider {
 	const TIMEOUT      = 'timeout';
 
 	const START   = 'import.start';
+	const LISTING = 'import.listings';
 	const CHANNEL = 'import.channel';
 	const FETCH   = 'import.fetch_ids';
 	const MARK    = 'import.mark_deleted';
@@ -80,6 +81,10 @@ class Import extends Provider {
 			return new Processors\Start_Import();
 		};
 
+		$container[ self::LISTING ] = function ( Container $container ) {
+			return new Processors\Listing_ID_Fetcher( $container[ Api::FACTORY ]->channels() );
+		};
+
 		$container[ self::CHANNEL ] = function ( Container $container ) {
 			return new Processors\Channel_Initializer( $container[ Api::FACTORY ]->channels(), $container[ Api::FACTORY ]->catalog() );
 		};
@@ -113,12 +118,20 @@ class Import extends Provider {
 		} );
 		add_action( 'bigcommerce/import/start', $start, 10, 0 );
 
+		// Step: Get a list of all products already listed in the channel
+
+		$channel = $this->create_callback( 'process_listings', function () use ( $container ) {
+			$container[ self::LISTING ]->run();
+		} );
+		add_action( 'bigcommerce/import/run/status=' . Runner\Status::STARTED, $channel, 10, 0 );
+		add_action( 'bigcommerce/import/run/status=' . Runner\Status::FETCHING_LISTING_IDS, $channel, 10, 0 );
+
 		// Step: Make sure that the channel is fully initialized with products. May take multiple batches
 
 		$channel = $this->create_callback( 'process_channel', function () use ( $container ) {
 			$container[ self::CHANNEL ]->run();
 		} );
-		add_action( 'bigcommerce/import/run/status=' . Runner\Status::STARTED, $channel, 10, 0 );
+		add_action( 'bigcommerce/import/run/status=' . Runner\Status::FETCHED_LISTING_IDS, $channel, 10, 0 );
 		add_action( 'bigcommerce/import/run/status=' . Runner\Status::INITIALIZING_CHANNEL, $channel, 10, 0 );
 
 		// Step: Import product IDs. May take multiple batches

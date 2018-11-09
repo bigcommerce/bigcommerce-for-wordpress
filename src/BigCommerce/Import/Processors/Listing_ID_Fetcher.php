@@ -12,8 +12,9 @@ use BigCommerce\Api\v3\Model\ListingCollectionResponse;
 use BigCommerce\Import\Runner\Status;
 use BigCommerce\Settings\Sections\Channels;
 
-class Product_ID_Fetcher implements Import_Processor {
-	const STATE_OPTION = 'bigcommerce_import_product_id_fetcher_state';
+class Listing_ID_Fetcher implements Import_Processor {
+	const STATE_OPTION        = 'bigcommerce_import_listing_id_fetcher_state';
+	const PRODUCT_LISTING_MAP = 'bigcommerce_product_listing_map';
 
 	/**
 	 * @var ChannelsApi
@@ -26,10 +27,10 @@ class Product_ID_Fetcher implements Import_Processor {
 	private $limit;
 
 	/**
-	 * Product_ID_Fetcher constructor.
+	 * Listing_ID_Fetcher constructor.
 	 *
 	 * @param ChannelsApi $channels The Channels API connection to use for the import
-	 * @param int         $limit    Number of product IDs to fetch per request
+	 * @param int         $limit    Number of listing IDs to fetch per request
 	 */
 	public function __construct( ChannelsApi $channels, $limit = 100 ) {
 		$this->limit    = $limit;
@@ -38,7 +39,7 @@ class Product_ID_Fetcher implements Import_Processor {
 
 	public function run() {
 		$status = new Status();
-		$status->set_status( Status::FETCHING_PRODUCT_IDS );
+		$status->set_status( Status::FETCHING_LISTING_IDS );
 
 		$channel_id = get_option( Channels::CHANNEL_ID, 0 );
 		if ( empty( $channel_id ) ) {
@@ -48,6 +49,9 @@ class Product_ID_Fetcher implements Import_Processor {
 		}
 
 		$next = $this->get_next();
+		if ( empty( $next ) ) {
+			update_option( self::PRODUCT_LISTING_MAP, [], false );
+		}
 
 		try {
 			$response = $this->channels->listChannelListings( $channel_id, $this->limit, $next ?: null );
@@ -60,28 +64,17 @@ class Product_ID_Fetcher implements Import_Processor {
 			return;
 		}
 
-		/** @var \wpdb $wpdb */
-		global $wpdb;
-		$inserts = array_map( function ( Listing $listing ) {
-			$modified = $listing->getDateModified() ?: $listing->getDateCreated() ?: new \DateTime();
-			$action = ! in_array( $listing->getState(), [ 'DELETED_GROUP', 'deleted' ] ) ? 'update' : 'delete';
-
-			return sprintf( '( %d, %d, "%s", "%s", "%s" )', $listing->getProductId(), $listing->getListingId(), $modified->format( 'Y-m-d H:i:s' ), $action, date( 'Y-m-d H:i:s' ) );
-		}, $response->getData() );
-
-		$count = 0;
-		if ( ! empty( $inserts ) ) {
-			$values = implode( ', ', $inserts );
-			$count  = $wpdb->query( "INSERT IGNORE INTO {$wpdb->bc_import_queue} ( bc_id, listing_id, date_modified, import_action, date_created ) VALUES $values" );
+		$id_map = get_option( self::PRODUCT_LISTING_MAP, [] ) ?: [];
+		foreach ( $response->getData() as $listing ) {
+			$id_map[ (int) $listing->getProductId() ] = (int) $listing->getListingId();
 		}
-
-		do_action( 'bigcommerce/import/fetched_ids', $count, $response );
+		update_option( self::PRODUCT_LISTING_MAP, $id_map, false );
 
 		$next = $this->extract_next_from_response( $response );
 		if ( $next ) {
 			$this->set_next( $next );
 		} else {
-			$status->set_status( Status::FETCHED_PRODUCT_IDS );
+			$status->set_status( Status::FETCHED_LISTING_IDS );
 			$this->clear_state();
 		}
 	}
@@ -102,6 +95,7 @@ class Product_ID_Fetcher implements Import_Processor {
 		if ( empty( $args[ 'after' ] ) ) {
 			return 0;
 		}
+
 		return (int) $args[ 'after' ];
 	}
 

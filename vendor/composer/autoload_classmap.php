@@ -389,6 +389,7 @@ return array(
     'BigCommerce\\Import\\Processors\\Deleted_Product_Marker' => $baseDir . '/src/BigCommerce/Import/Processors/Deleted_Product_Marker.php',
     'BigCommerce\\Import\\Processors\\Error_Handler' => $baseDir . '/src/BigCommerce/Import/Processors/Error_Handler.php',
     'BigCommerce\\Import\\Processors\\Import_Processor' => $baseDir . '/src/BigCommerce/Import/Processors/Import_Processor.php',
+    'BigCommerce\\Import\\Processors\\Listing_ID_Fetcher' => $baseDir . '/src/BigCommerce/Import/Processors/Listing_ID_Fetcher.php',
     'BigCommerce\\Import\\Processors\\Product_ID_Fetcher' => $baseDir . '/src/BigCommerce/Import/Processors/Product_ID_Fetcher.php',
     'BigCommerce\\Import\\Processors\\Queue_Runner' => $baseDir . '/src/BigCommerce/Import/Processors/Queue_Runner.php',
     'BigCommerce\\Import\\Processors\\Start_Import' => $baseDir . '/src/BigCommerce/Import/Processors/Start_Import.php',

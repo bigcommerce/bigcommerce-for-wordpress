@@ -21,7 +21,7 @@ class Cart extends Settings_Section {
 	private $checkout_page;
 
 	public function __construct( Cart_Page $cart_page, Checkout_Page $checkout_page ) {
-		$this->cart_page = $cart_page;
+		$this->cart_page     = $cart_page;
 		$this->checkout_page = $checkout_page;
 	}
 
@@ -99,19 +99,25 @@ class Cart extends Settings_Section {
 	}
 
 	public function render_embedded_checkout_field() {
-		$value = (bool) get_option( self::OPTION_EMBEDDED_CHECKOUT, true );
-		$checkbox = sprintf( '<input type="checkbox" value="1" class="regular-text code" name="%s" %s />', esc_attr( self::OPTION_EMBEDDED_CHECKOUT ), checked( true, $value, false ) );
-		printf( '<p class="description">%s %s</p>', $checkbox, __( 'If enabled, the checkout form will be embedded on your checkout page. If disabled, customers will be redirected to bigcommerce.com for checkout. Your site must have a valid SSL certificate to support embedded checkout.', 'bigcommerce' ) );
+		$value     = (bool) get_option( self::OPTION_EMBEDDED_CHECKOUT, true );
+		$permitted = (bool) apply_filters( 'bigcommerce/checkout/can_embed', true );
+		$checkbox  = sprintf( '<input type="checkbox" value="1" class="regular-text code" name="%s" %s %s />', esc_attr( self::OPTION_EMBEDDED_CHECKOUT ), checked( true, $value, false ), disabled( $permitted, false, false ) );
+		if ( $permitted ) {
+			$description = __( 'If enabled, the checkout form will be embedded on your checkout page. If disabled, customers will be redirected to bigcommerce.com for checkout. Your WordPress domain must have a valid SSL certificate to support embedded checkout.', 'bigcommerce' );
+		} else {
+			$description = __( 'Embedded checkout is disabled. An SSL certificate is required for your WordPress domain to support embedded checkout.', 'bigcommerce' );
+		}
+		printf( '<p class="description">%s %s</p>', $checkbox, $description );
 	}
 
 	public function render_cart_page_field() {
 		$value      = (int) get_option( self::OPTION_CART_PAGE_ID, 0 );
 		$candidates = $this->cart_page->get_post_candidates();
-		$options = array_map( function( $post_id ) use ( $value ) {
+		$options    = array_map( function ( $post_id ) use ( $value ) {
 			return sprintf( '<option value="%d" %s>%s</option>', $post_id, selected( $post_id, $value, false ), esc_html( get_the_title( $post_id ) ) );
 		}, $candidates );
 		if ( empty( $options ) ) {
-			$options = [
+			$options     = [
 				sprintf( '<option value="0">&mdash; %s &mdash;</option>', __( 'No pages available', 'bigcommerce' ) ),
 			];
 			$description = sprintf( __( 'Create a page with the [%s] shortcode, then select it here as the cart page.', 'bigcommerce' ), \BigCommerce\Shortcodes\Cart::NAME );
