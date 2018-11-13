@@ -50,12 +50,6 @@ class Refinery extends Controller {
 	}
 
 	private function get_sort( \WP_Query $query ) {
-		/**
-		 * Filter the default sort order for products
-		 *
-		 * @param string $sort The sorting method to use
-		 */
-		$default_sort    = apply_filters( 'bigcommerce/template/product/archive/default_sort', Customizer\Sections\Product_Archive::SORT_TITLE_ASC );
 		$choices         = Customizer\Sections\Product_Archive::sort_choices();
 		$enabled_choices = get_option( Customizer\Sections\Product_Archive::SORT_OPTIONS, array_keys( $choices ) );
 		if ( ! is_array( $enabled_choices ) ) {
@@ -68,10 +62,22 @@ class Refinery extends Controller {
 			return '';
 		}
 
+		/**
+		 * Filter the default sort order for products
+		 *
+		 * @param string $sort The sorting method to use
+		 */
+		$default_sort = apply_filters( 'bigcommerce/template/product/archive/default_sort', Customizer\Sections\Product_Archive::SORT_TITLE_ASC );
+		if ( array_key_exists( 'bc-sort', $_GET ) && array_key_exists( $_GET[ 'bc-sort' ], $choices ) ) {
+			$sort = $_GET[ 'bc-sort' ];
+		} else {
+			$sort = $default_sort;
+		}
+
 		$component = Refinement_Box::factory( [
 			Refinement_Box::LABEL   => __( 'Sort by', 'bigcommerce' ),
 			Refinement_Box::NAME    => 'bc-sort',
-			Refinement_Box::VALUE   => ! empty( $_GET[ 'bc-sort' ] ) ? $_GET[ 'bc-sort' ] : $default_sort,
+			Refinement_Box::VALUE   => $sort,
 			Refinement_Box::CHOICES => $choices,
 			Refinement_Box::ACTION  => remove_query_arg( 'bc-sort' ),
 		] );
@@ -116,7 +122,7 @@ class Refinery extends Controller {
 			$component = Refinement_Box::factory( [
 				Refinement_Box::LABEL   => sprintf( __( 'Shop by %s', 'bigcommerce' ), $label ),
 				Refinement_Box::NAME    => $taxonomy,
-				Refinement_Box::VALUE   => empty( $_GET[ $taxonomy ] ) ? '' : $_GET[ $taxonomy ],
+				Refinement_Box::VALUE   => empty( $_GET[ $taxonomy ] ) ? '' : sanitize_text_field( $_GET[ $taxonomy ] ),
 				Refinement_Box::CHOICES => $choices,
 				Refinement_Box::ACTION  => remove_query_arg( $taxonomy ),
 				Refinement_Box::TYPE    => 'filter',
@@ -134,6 +140,7 @@ class Refinery extends Controller {
 
 		if ( $query->is_tax() ) {
 			$term = get_queried_object();
+
 			return get_term_link( $term );
 		}
 

@@ -213,8 +213,12 @@ class Registration_Handler implements Form_Handler {
 
 		$profile = wp_parse_args( $submitted_profile, $defaults );
 
-		if ( ! is_email( $profile[ 'email' ] ) ) {
-			$profile[ 'email' ] = '';
+		foreach ( $profile as $key => &$value ) {
+			if ( $key === 'email' ) {
+				$value = sanitize_email( $value );
+			} else {
+				$value = sanitize_text_field( $value );
+			}
 		}
 
 		return $profile;
@@ -237,6 +241,7 @@ class Registration_Handler implements Form_Handler {
 			return array_key_exists( $key, $defaults );
 		}, ARRAY_FILTER_USE_KEY );
 		$address           = wp_parse_args( $submitted_address, $defaults );
+		$address = array_map( 'sanitize_text_field', $address );
 
 		return $address;
 	}

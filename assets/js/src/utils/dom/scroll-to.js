@@ -15,7 +15,7 @@ const scrollTo = (opts) => {
 		duration: 1000,
 		easing: 'linear',
 		offset: 0,
-		$target: $(),
+		$target: jQuery(),
 	}, opts);
 	let position;
 	let htmlPosition;
@@ -24,7 +24,7 @@ const scrollTo = (opts) => {
 		position = options.$target.offset().top + options.offset;
 
 		if (options.auto) {
-			htmlPosition = $('html').scrollTop();
+			htmlPosition = jQuery('html').scrollTop();
 
 			if (position > htmlPosition) {
 				options.duration = (position - htmlPosition) / options.auto_coefficent;
@@ -33,7 +33,7 @@ const scrollTo = (opts) => {
 			}
 		}
 
-		$('html, body').animate({ scrollTop: position }, options.duration, options.easing, options.after_scroll);
+		jQuery('html, body').animate({ scrollTop: position }, options.duration, options.easing, options.after_scroll);
 	}
 };
 

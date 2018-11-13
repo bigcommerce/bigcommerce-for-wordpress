@@ -18,7 +18,7 @@ const handleAnchorClick = (e) => {
 	scrollTo({
 		offset: -150,
 		duration: 300,
-		$target: $(target),
+		$target: jQuery(target),
 	});
 };
 

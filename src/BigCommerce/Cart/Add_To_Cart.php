@@ -109,7 +109,7 @@ class Add_To_Cart {
 
 	protected function get_variant_id( Product $product, $submission ) {
 		if ( ! empty( $submission[ 'variant_id' ] ) ) {
-			return $submission[ 'variant_id' ];
+			return (int) $submission[ 'variant_id' ];
 		}
 
 		$data = $product->get_source_data();
