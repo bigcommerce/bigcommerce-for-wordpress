@@ -125,6 +125,8 @@ class Update_Address_Handler implements Form_Handler {
 		}, ARRAY_FILTER_USE_KEY );
 		$address           = wp_parse_args( $submitted_address, $defaults );
 
+		$address = array_map( 'sanitize_text_field', $address );
+
 		return $address;
 	}
 }

@@ -32,7 +32,7 @@ class Login_Form extends Controller {
 			'echo'           => true,
 			'remember'       => true,
 			'value_remember' => true,
-			'redirect'       => isset( $_GET[ 'redirect_to' ] ) ? $_GET[ 'redirect_to' ] : home_url( '/' ),
+			'redirect'       => isset( $_GET[ 'redirect_to' ] ) ? wp_sanitize_redirect( $_GET[ 'redirect_to' ] ) : home_url( '/' ),
 			'label_username' => __( 'Email Address', 'bigcommerce' ),
 			'label_log_in'   => __( 'Sign In', 'bigcommerce' ),
 		] );

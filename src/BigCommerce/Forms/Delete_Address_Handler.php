@@ -23,7 +23,7 @@ class Delete_Address_Handler implements Form_Handler {
 		}
 
 		$customer   = new Customer( get_current_user_id() );
-		$address_id = $submission[ 'address-id' ];
+		$address_id = (int) $submission[ 'address-id' ];
 		$customer->delete_address( $address_id );
 
 

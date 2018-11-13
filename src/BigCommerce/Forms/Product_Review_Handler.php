@@ -46,16 +46,16 @@ class Product_Review_Handler implements Form_Handler {
 			return;
 		}
 
-		$product    = new Product( $submission[ 'bc-review' ][ 'post_id' ] );
+		$product    = new Product( (int) $submission[ 'bc-review' ][ 'post_id' ] );
 		$product_id = $product->bc_id();
 
 		$review_request = new ProductReviewPost( [
-			'title'         => $submission[ 'bc-review' ][ 'subject' ],
-			'text'          => $submission[ 'bc-review' ][ 'content' ],
+			'title'         => sanitize_text_field( $submission[ 'bc-review' ][ 'subject' ] ),
+			'text'          => sanitize_textarea_field( $submission[ 'bc-review' ][ 'content' ] ),
 			'status'        => apply_filters( 'bigcommerce/form/review/status', 'pending', $submission, $product_id ),
 			'rating'        => intval( $submission[ 'bc-review' ][ 'rating' ] ),
-			'email'         => $submission[ 'bc-review' ][ 'email' ],
-			'name'          => $submission[ 'bc-review' ][ 'name' ],
+			'email'         => sanitize_email( $submission[ 'bc-review' ][ 'email' ] ),
+			'name'          => sanitize_text_field( $submission[ 'bc-review' ][ 'name' ] ),
 			'date_reviewed' => new \DateTime(),
 		] );
 

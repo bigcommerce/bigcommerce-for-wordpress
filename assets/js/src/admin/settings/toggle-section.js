@@ -32,7 +32,7 @@ const scrollToOptions = {
  * @description animate the page scroll position to the deep linked section.
  */
 const scrollToSection = (section) => {
-	scrollToOptions.$target = $(section);
+	scrollToOptions.$target = jQuery(section);
 	scrollToOptions.offset = -40;
 	scrollTo(scrollToOptions);
 };

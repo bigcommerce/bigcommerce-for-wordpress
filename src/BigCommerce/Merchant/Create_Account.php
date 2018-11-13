@@ -33,18 +33,18 @@ class Create_Account {
 		update_option( Onboarding_Api::AUTH_KEY, $secret_key, false );
 
 		$contact = new Account_Contact([
-			'email'          => $submission[ 'email' ],
-			'first_name'     => $submission[ 'first_name' ],
-			'last_name'      => $submission[ 'last_name' ],
-			'address_line_1' => $submission[ 'street_1' ],
-			'address_line_2' => $submission[ 'street_2' ],
-			'city'           => $submission[ 'city' ],
-			'district'       => $submission[ 'state' ],
-			'postal_code'    => $submission[ 'zip' ],
-			'country'        => $submission[ 'country' ],
-			'phone_number'   => $submission[ 'phone' ],
+			'email'          => sanitize_email( $submission[ 'email' ] ),
+			'first_name'     => sanitize_text_field( $submission[ 'first_name' ] ),
+			'last_name'      => sanitize_text_field( $submission[ 'last_name' ] ),
+			'address_line_1' => sanitize_text_field( $submission[ 'street_1' ] ),
+			'address_line_2' => sanitize_text_field( $submission[ 'street_2' ] ),
+			'city'           => sanitize_text_field( $submission[ 'city' ] ),
+			'district'       => sanitize_text_field( $submission[ 'state' ] ),
+			'postal_code'    => sanitize_text_field( $submission[ 'zip' ] ),
+			'country'        => sanitize_text_field( $submission[ 'country' ] ),
+			'phone_number'   => sanitize_text_field( $submission[ 'phone' ] ),
 		]);
-		$request = new Create_Account_Request( $secret_key, $submission[ 'store_name' ], home_url( '/' ), $contact );
+		$request = new Create_Account_Request( $secret_key, sanitize_text_field( $submission[ 'store_name' ] ), home_url( '/' ), $contact );
 		$response = $this->onboarding->create_account( $request );
 
 		if ( is_wp_error( $response ) ) {
