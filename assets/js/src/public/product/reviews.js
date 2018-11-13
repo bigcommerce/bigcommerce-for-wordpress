@@ -3,7 +3,6 @@
  * @description Product reviews scripts.
  */
 
-import $ from 'jquery';
 import delegate from 'delegate';
 import * as tools from '../../utils/tools';
 import scrollTo from '../../utils/dom/scroll-to';
@@ -32,7 +31,7 @@ const scrollToReviews = (e) => {
 		e.preventDefault();
 	}
 
-	scrollToOptions.$target = $('.bc-single-product__reviews');
+	scrollToOptions.$target = jQuery('.bc-single-product__reviews');
 	scrollToOptions.offset = -30;
 	scrollTo(scrollToOptions);
 };
@@ -42,7 +41,7 @@ const scrollToReviews = (e) => {
  * @description animate the page scroll position to the review form.
  */
 const scrollToReviewForm = () => {
-	scrollToOptions.$target = $('.bc-product-review-form');
+	scrollToOptions.$target = jQuery('.bc-product-review-form');
 	scrollToOptions.offset = 40;
 	scrollTo(scrollToOptions);
 };

@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.1]
+
+### Changed
+
+- Added an additional layer of sanitization to all user input to meet wordpress.org
+  plugin review guidelines
+- Replaced bundled jQuery with calls to WordPress's default jQuery
+
 ## [0.15.0]
 
 ### Added
@@ -152,6 +160,7 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[1.0.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/0.15.0...1.0.1
 [0.15.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/0.14.0...0.15.0
 [0.14.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/0.13.0...0.14.0
 [0.13.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/0.12.0...0.13.0

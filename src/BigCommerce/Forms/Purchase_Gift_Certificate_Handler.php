@@ -159,14 +159,14 @@ class Purchase_Gift_Certificate_Handler implements Form_Handler {
 			'amount'    => $amount,
 			'quantity'  => 1,
 			'sender'    => [
-				'name'  => $submission[ 'sender-name' ],
-				'email' => $submission[ 'sender-email' ],
+				'name'  => sanitize_text_field( $submission[ 'sender-name' ] ),
+				'email' => sanitize_email( $submission[ 'sender-email' ] ),
 			],
 			'recipient' => [
-				'name'  => $submission[ 'recipient-name' ],
-				'email' => $submission[ 'recipient-email' ],
+				'name'  => sanitize_text_field( $submission[ 'recipient-name' ] ),
+				'email' => sanitize_email( $submission[ 'recipient-email' ] ),
 			],
-			'message'   => $submission[ 'message' ],
+			'message'   => sanitize_textarea_field( $submission[ 'message' ] ),
 		];
 
 		return $data;

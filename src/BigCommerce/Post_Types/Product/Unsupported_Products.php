@@ -24,7 +24,7 @@ class Unsupported_Products {
 	public function disallow_publication( $caps, $cap, $user_id, $args ) {
 		if ( $cap == 'publish_posts' && is_admin() && function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
-			if ( $screen && $screen->base == 'post' && isset( $_GET[ 'post' ] ) && $this->is_unsupported_product( $_GET[ 'post' ] ) ) {
+			if ( $screen && $screen->base == 'post' && isset( $_GET[ 'post' ] ) && $this->is_unsupported_product( (int) $_GET[ 'post' ] ) ) {
 				$caps[] = 'do_not_allow';
 			}
 		}

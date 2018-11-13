@@ -152,6 +152,14 @@ class Update_Profile_Handler implements Form_Handler {
 
 		$profile = wp_parse_args( $submitted_profile, $defaults );
 
+		foreach ( $profile as $key => &$value ) {
+			if ( $key === 'email' ) {
+				$value = sanitize_email( $value );
+			} else {
+				$value = sanitize_text_field( $value );
+			}
+		}
+
 		return $profile;
 	}
 }
