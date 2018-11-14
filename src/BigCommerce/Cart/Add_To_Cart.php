@@ -33,20 +33,39 @@ class Add_To_Cart {
 		$product_id = $product->bc_id();
 		$variant_id = $this->get_variant_id( $product, $_POST );
 		$options    = empty( $_POST[ 'option' ] ) ? [] : (array) $_POST[ 'option' ];
-		$modifiers  = empty( $_POST[ 'modifier' ] ) ? [] : (array) $_POST[ 'modifier' ];
+		$options = array_map( 'absint', $options );
 
+		$submitted_modifiers  = empty( $_POST[ 'modifier' ] ) ? [] : (array) $_POST[ 'modifier' ];
+		$modifiers = [];
 		$modifier_config = $product->modifiers();
 		foreach ( $modifier_config as $config ) {
-			if ( $config[ 'type' ] === 'date' && isset( $modifiers[ $config[ 'id' ] ] ) ) {
-				$modifiers[ $config[ 'id' ] ] = strtotime( $modifiers[ $config[ 'id' ] ] );
+			if ( array_key_exists( $config[ 'id' ], $submitted_modifiers ) ) {
+				$modifiers[ $config[ 'id' ] ] = $this->sanitize_modifier( $submitted_modifiers[ $config[ 'id' ] ], $config );
 			}
 		}
+
 		$quantity = array_key_exists( 'quantity', $_POST ) ? absint( $_POST[ 'quantity' ] ) : 1;
 
 		$cart     = new Cart( $cart_api );
 		$response = $cart->add_line_item( $product_id, $options, $quantity, $modifiers );
 
 		$this->handle_response( $response, $cart, $post_id, $product_id, $variant_id );
+	}
+
+	private function sanitize_modifier( $value, $config ) {
+		switch ( $config[ 'type' ] ) {
+			case 'date':
+				return strtotime( $value );
+			case 'checkbox':
+				return intval( $value );
+			case 'multi_line_text':
+				return sanitize_textarea_field( $value );
+			case 'numbers_only_text':
+				return filter_var( $value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION|FILTER_FLAG_ALLOW_THOUSAND );
+			case 'text':
+			default:
+				return sanitize_text_field( $value );
+		}
 	}
 
 	/**
