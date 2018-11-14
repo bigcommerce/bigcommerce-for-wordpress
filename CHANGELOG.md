@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.2]
+
+### Changed
+
+- Added even more sanitization to meet wordpress.org plugin review guidelines
+
 ## [1.0.1]
 
 ### Changed
@@ -160,6 +166,7 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[1.0.2]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.0.1...1.0.2
 [1.0.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/0.15.0...1.0.1
 [0.15.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/0.14.0...0.15.0
 [0.14.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/0.13.0...0.14.0

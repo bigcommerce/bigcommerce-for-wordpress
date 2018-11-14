@@ -25,7 +25,7 @@ class Gift_Certificate_Balance implements Shortcode {
 
 		$args = [];
 		if ( isset( $_REQUEST[ 'bc-gift-balance' ][ 'code' ] ) ) {
-			$code = $_REQUEST[ 'bc-gift-balance' ][ 'code' ];
+			$code = sanitize_text_field( $_REQUEST[ 'bc-gift-balance' ][ 'code' ] );
 			$args = [
 				Templates\Gift_Certificate_Balance_Page::CODE    => $code,
 				Templates\Gift_Certificate_Balance_Page::BALANCE => $this->get_balance( $code ),
