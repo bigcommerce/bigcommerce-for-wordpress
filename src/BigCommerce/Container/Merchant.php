@@ -37,7 +37,7 @@ class Merchant extends Provider {
 
 	private function account_onboarding( Container $container ) {
 		$container[ self::MIDDLEMAN_URL ] = function ( Container $container ) {
-			return apply_filters( 'bigcommerce/oauth_connector/url', 'https://us-east1-bigcommerce-auth-connector.cloudfunctions.net/v1' );
+			return apply_filters( 'bigcommerce/oauth_connector/url', 'https://wp-login.bigcommerce.com/v1' );
 		};
 
 		$container[ self::ONBOARDING_API ] = function ( Container $container ) {
