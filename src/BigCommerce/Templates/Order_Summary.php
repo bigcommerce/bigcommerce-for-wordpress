@@ -90,7 +90,8 @@ class Order_Summary extends Controller {
 	}
 
 	private function format_gmt_date( $date_string ) {
-		return get_date_from_gmt( $date_string, $this->options[ self::DATE_FORMAT ] );
+		$dateTime = new \DateTime( $date_string );
+		return $dateTime->format( $this->options[ self::DATE_FORMAT ] );
 	}
 
 	/**
