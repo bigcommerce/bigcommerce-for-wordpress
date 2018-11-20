@@ -17,8 +17,10 @@
  * @var string[] $states
  * @var string[] $errors
  */
-$error_class = 'bc-form__control--error';
+$error_class = 'bc-form__control--error'; // REQUIRED
 ?>
+
+<!-- data-js="bc-dynamic-fields" is required -->
 <form action="" enctype="multipart/form-data" method="post" class="bc-form bc-form-2col <?php if ( ! empty( $errors ) ) { echo 'bc-form--has-errors'; } ?>" data-js="bc-dynamic-fields" data-form-type="bc-address-form">
 	<?php wp_nonce_field( 'edit-address' . $id ); ?>
 	<input type="hidden" name="bc-action" value="edit-address" />
@@ -53,9 +55,11 @@ $error_class = 'bc-form__control--error';
 		<input type="text" name="bc-address[city]" id="bc-account-address-city" value="<?php echo esc_attr( $city ); ?>" data-form-field="bc-form-field-city">
 	</label>
 
+	<!-- data-js="bc-dynamic-state" is required -->
 	<label for="bc-account-address-state" class="bc-form__control bc-form-2col__control bc-form-2col__control--left bc-account-address-state <?php if ( in_array( 'state', $errors ) ) { echo $error_class; } ?>" data-js="bc-dynamic-state">
 		<span class="bc-form__label bc-account-address__form-label bc-form-control-required"><?php echo esc_html( __( 'State/Province:', 'bigcommerce' ) ); ?></span>
 		<?php if ( ! empty( $states ) ) { ?>
+			<!-- data-js="bc-dynamic-state-control" is required -->
 			<select id="bc-account-address-state" name="bc-address[state]" data-js="bc-dynamic-state-control" data-form-field="bc-form-field-state">
 				<?php foreach ( $states as $state_abbr => $state_name ) { ?>
 					<option value="<?php echo esc_attr( $state_name ); ?>" data-state-abbr="<?php echo esc_attr( $state_abbr ); ?>"
@@ -63,6 +67,7 @@ $error_class = 'bc-form__control--error';
 				<?php } ?>
 			</select>
 		<?php } else { ?>
+			<!-- data-js="bc-dynamic-state-control" is required -->
 			<input type="text" id="bc-account-address-state" name="bc-address[state]" value="<?php echo esc_attr( $state ); ?>" data-js="bc-dynamic-state-control" data-form-field="bc-form-field-state" />
 		<?php } ?>
 	</label>
@@ -74,6 +79,7 @@ $error_class = 'bc-form__control--error';
 
 	<label for="bc-account-address-country" class="bc-form__control bc-form-2col__control bc-form-2col__control--left <?php if ( in_array( 'country', $errors ) ) { echo $error_class; } ?>">
 		<span class="bc-form__label bc-account-address__form-label bc-form-control-required"><?php echo esc_html( __( 'Country:', 'bigcommerce' ) ); ?></span>
+		<!-- data-js="bc-dynamic-country-select" is required -->
 		<select name="bc-address[country]" id="bc-account-address-country" data-js="bc-dynamic-country-select" data-form-field="bc-form-field-country">
 			<?php foreach ( $countries as $iso => $value ) { ?>
 				<option value="<?php echo esc_attr( $value ); ?>" data-country-iso="<?php echo esc_attr( $iso ); ?>"
@@ -89,6 +95,7 @@ $error_class = 'bc-form__control--error';
 
 	<div class="bc-account-address-form-actions">
 		<button class="bc-btn bc-account-address-form-save" aria-label="<?php __( 'Save Address', 'bigcommerce' ); ?>" type="submit" data-js="bc-account-address-form-save"><?php echo esc_html( __( 'Save', 'bigcommerce' ) ); ?></button>
+		<!-- data-js="bc-account-address-form-cancel" is required -->
 		<button class="bc-btn bc-btn--inverse bc-account-address-form-cancel" aria-label="<?php __( 'Cancel Editing', 'bigcommerce' ); ?>" type="button" data-js="bc-account-address-form-cancel"><?php echo esc_html( __( 'Cancel', 'bigcommerce' ) ); ?></button>
 	</div>
 

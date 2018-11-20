@@ -62,7 +62,6 @@ class Connect_Account {
 			$response_code = (int) wp_remote_retrieve_response_code( $response );
 		} while ( $response_code === 409 && $tries < $max_tries );
 
-
 		try {
 			if ( is_wp_error( $response ) ) {
 				add_settings_error( self::CONNECT_ACTION, $response->get_error_code(), $response->get_error_message() );
@@ -75,11 +74,12 @@ class Connect_Account {
 			}
 			$redirect_url = apply_filters( 'bigcommerce/onboarding/success_redirect', admin_url() );
 		} catch ( \RuntimeException $e ) {
+			delete_option( Onboarding_Api::STORE_ID );
 			set_transient( 'settings_errors', get_settings_errors(), 30 );
 			$redirect_url = apply_filters( 'bigcommerce/onboarding/error_redirect', admin_url() );
 		}
 
-		wp_safe_redirect( $redirect_url, 303 );
+		wp_safe_redirect( esc_url_raw( $redirect_url ), 303 );
 		exit();
 	}
 

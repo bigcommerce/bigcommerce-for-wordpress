@@ -11,6 +11,9 @@ class Product_Modifiers extends Controller {
 	const MODIFIERS = 'modifiers';
 
 	protected $template = 'components/products/product-modifiers.php';
+	protected $wrapper_tag = 'div';
+	protected $wrapper_classes = [ 'bc-product-form__modifiers' ];
+	protected $wrapper_attributes = [ 'data-js' => 'product-modifiers' ];
 
 	protected function parse_options( array $options ) {
 		$defaults = [

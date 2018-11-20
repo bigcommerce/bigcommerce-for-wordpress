@@ -12,7 +12,7 @@
  */
 
 ?>
-
+<!-- data-js="bc-cart" is required -->
 <section class="bc-cart" data-js="bc-cart" data-cart_id="<?php echo esc_attr( $cart['cart_id'] ); ?>">
 	<?php
 	echo $error_message;

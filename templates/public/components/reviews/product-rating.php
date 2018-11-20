@@ -30,6 +30,7 @@ use BigCommerce\Post_Types\Product\Product;
 		</div>
 	</div>
 	<div class="bc-single-product__rating-reviews">
+		<!-- data-js="bc-single-product-reviews-anchor" is required -->
 		<a
 			<?php if ( $link ) { ?>
 				href="<?php echo esc_url( $link ); ?>"

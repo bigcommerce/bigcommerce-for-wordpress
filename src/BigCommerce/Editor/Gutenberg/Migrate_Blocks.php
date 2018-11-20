@@ -130,7 +130,7 @@ class Migrate_Blocks {
 		}
 		$product_shortcode = Shortcodes\Products::NAME;
 
-		$search  = '#(?<!\<div class=\"wp-block-bigcommerce-products\"\>)(?<!\")\s*(\[\s*' . $product_shortcode . '[^\]]*\])\s*(?!\<\/div\>)#';
+		$search  = '#(?<!\<div class=\"wp-block-bigcommerce-products\"\>)(?<!\")\s*(\[\s*' . $product_shortcode . '(\s[^\]]*)?\])\s*(?!\<\/div\>)#';
 		$content = preg_replace_callback( $search, [ $this, 'product_shortcode_to_block' ], $content );
 
 		$shortcode_map = [
@@ -143,6 +143,7 @@ class Migrate_Blocks {
 			Shortcodes\Registration_Form::NAME        => Blocks\Registration_Form::NAME,
 			Shortcodes\Gift_Certificate_Form::NAME    => Blocks\Gift_Certificate_Form::NAME,
 			Shortcodes\Gift_Certificate_Balance::NAME => Blocks\Gift_Certificate_Balance::NAME,
+			Shortcodes\Product_Reviews::NAME          => Blocks\Product_Reviews::NAME,
 		];
 
 		foreach ( $shortcode_map as $shortcode_id => $block_id ) {

@@ -8,7 +8,7 @@ import * as tools from '../../utils/tools';
 import scrollTo from '../../utils/dom/scroll-to';
 
 const el = {
-	container: tools.getNodes('.bc-product-single', false, document, true)[0],
+	container: tools.getNodes('#bc-single-product__reviews', false, document, true)[0],
 };
 
 const state = {
@@ -80,7 +80,7 @@ const disableProductReviewForm = (e) => {
  * @description on page load, if we have an alert from the form submission, determine its type and scroll to the message.
  */
 const handleFormAlert = () => {
-	const alert = tools.getNodes('.bc-alert-group', false, el.reviewsWrapper, true)[0];
+	const alert = tools.getNodes('.bc-alert-group', false, el.container, true)[0];
 
 	if (!alert) {
 		return;
@@ -96,13 +96,16 @@ const handleFormAlert = () => {
 };
 
 const cacheElements  = () => {
-	el.reviewsWrapper = tools.getNodes('#bc-single-product__reviews', false, document, true)[0];
+	el.productSingle = tools.getNodes('.bc-product-single', false, document, true)[0];
 	el.formWrapper = tools.getNodes('bc-product-review-form-wrapper')[0];
 };
 
 const bindEvents = () => {
-	delegate(el.container, '[data-js="bc-single-product-reviews-anchor"]', 'click', scrollToReviews);
 	handleFormAlert();
+
+	if (el.productSingle) {
+		delegate(el.productSingle, '[data-js="bc-single-product-reviews-anchor"]', 'click', scrollToReviews);
+	}
 
 	if (el.formWrapper) {
 		delegate(el.formWrapper, '[data-js="bc-product-review-write"]', 'click', enableProductReviewForm);

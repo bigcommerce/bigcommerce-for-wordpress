@@ -12,6 +12,9 @@ class Product_Options extends Controller {
 	const VARIANTS = 'variants';
 
 	protected $template = 'components/products/product-options.php';
+	protected $wrapper_tag = 'div';
+	protected $wrapper_classes = [ 'bc-product-form__options' ];
+	protected $wrapper_attributes = [ 'data-js' => 'product-options' ];
 
 	protected function parse_options( array $options ) {
 		$defaults = [

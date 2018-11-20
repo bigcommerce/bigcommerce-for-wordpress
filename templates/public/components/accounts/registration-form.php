@@ -9,6 +9,7 @@ $error_class = 'bc-form__control--error';
 ?>
 
 <section class="bc-account-page">
+	<!-- data-js="bc-dynamic-fields" is required -->
 	<form class="bc-form bc-form-2col bc-account-form--register <?php if ( ! empty( $errors ) ) { echo 'bc-form--has-errors'; } ?>" action="" enctype="multipart/form-data" method="post" data-js="bc-dynamic-fields">
 		<?php wp_nonce_field( 'register-account' ); ?>
 		<input type="hidden" name="bc-action" value="register-account"/>

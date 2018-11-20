@@ -8,20 +8,20 @@
 
 ?>
 
-<section class="bc-account-addresses" data-js="bc-account-addresses">
+<!-- class="bc-account-addresses__list" is required -->
+<ul class="bc-account-addresses__list">
+	<?php foreach ( $addresses as $address ) { ?>
+		<!-- class="bc-account-addresses__item" is required -->
+		<li class="bc-account-addresses__item" data-js="bc-account-address-entry">
 
-	<ul class="bc-account-addresses__list">
-		<?php foreach ( $addresses as $address ) { ?>
-			<li class="bc-account-addresses__item" data-js="bc-account-address-entry">
+			<?php echo $address[ 'formatted' ]; ?>
+			<?php echo $address[ 'actions' ]; ?>
 
-				<?php echo $address[ 'formatted' ]; ?>
-				<?php echo $address[ 'actions' ]; ?>
-
-			</li>
-		<?php } ?>
-
-		<li class="bc-account-addresses__item bc-account-addresses__add-new" data-js="bc-account-addresses__add-new">
-			<?php echo $new_address; ?>
 		</li>
-	</ul>
-</section>
+	<?php } ?>
+
+	<!-- class="bc-account-addresses__item" is required -->
+	<li class="bc-account-addresses__item bc-account-addresses__add-new" data-js="bc-account-addresses__add-new">
+		<?php echo $new_address; ?>
+	</li>
+</ul>

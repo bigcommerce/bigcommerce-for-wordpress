@@ -8,12 +8,6 @@
 
 use BigCommerce\Post_Types\Product\Product;
 
-?>
-
-<div class="bc-product-form__modifiers" data-js="product-modifiers">
-	<?php
-	foreach ( $modifiers as $modifier ) {
-		echo $modifier;
-	}
-	?>
-</div>
+foreach ( $modifiers as $modifier ) {
+	echo $modifier;
+}

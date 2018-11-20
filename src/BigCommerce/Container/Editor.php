@@ -64,6 +64,7 @@ class Editor extends Provider {
 				new Gutenberg\Blocks\Address_List(),
 				new Gutenberg\Blocks\Order_History(),
 				new Gutenberg\Blocks\Login_Form(),
+				new Gutenberg\Blocks\Product_Reviews()
 			];
 			if ( ( (bool) get_option( Cart_Settings::OPTION_ENABLE_CART, true ) ) === true ) {
 				$blocks[] = new Gutenberg\Blocks\Cart();

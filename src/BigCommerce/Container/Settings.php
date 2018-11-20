@@ -23,6 +23,7 @@ use BigCommerce\Settings\Sections\Gift_Certificates as Gift_Ceritifcate_Settings
 use BigCommerce\Settings\Sections\Import as Import_Settings;
 use BigCommerce\Settings\Sections\New_Account_Section;
 use BigCommerce\Settings\Sections\Reviews;
+use BigCommerce\Settings\Sections\Troubleshooting_Diagnostics;
 use Pimple\Container;
 
 class Settings extends Provider {
@@ -44,6 +45,7 @@ class Settings extends Provider {
 	const NEW_ACCOUNT_SECTION      = 'settings.section.new_account';
 	const SELECT_CHANNEL_SECTION   = 'settings.section.select_channel';
 	const CHANNEL_SECTION          = 'settings.section.channel';
+	const DIAGNOSTICS_SECTION      = 'settings.section.diagnostics';
 
 	const API_STATUS    = 'settings.api_status';
 	const IMPORT_NOW    = 'settings.import_now';
@@ -67,6 +69,7 @@ class Settings extends Provider {
 		$this->analytics( $container );
 		$this->reviews( $container );
 		$this->onboarding( $container );
+		$this->diagnostics( $container );
 	}
 
 	private function settings_screen( Container $container ) {
@@ -339,5 +342,22 @@ class Settings extends Provider {
 				}
 			}
 		} ), 10, 1 );
+	}
+
+	/**
+	 * @param Container $container
+	 */
+	private function diagnostics( Container $container) {
+		$container[ self::DIAGNOSTICS_SECTION ] = function ( Container $container ) {
+			return new Troubleshooting_Diagnostics();
+		};
+
+		add_action( 'bigcommerce/settings/register/screen=' . Settings_Screen::NAME, $this->create_callback( 'diagnostics_settings_register', function () use ( $container ) {
+			$container[ self::DIAGNOSTICS_SECTION ]->register_settings_section();
+		} ), 90, 0 );
+
+		add_action('wp_ajax_'.Troubleshooting_Diagnostics::AJAX_ACTION, $this->create_callback( 'diagnostics_settings_action', function () use ( $container ) {
+			$container[ self::DIAGNOSTICS_SECTION ]->get_diagnostics_data();
+		} ), 10, 0 );
 	}
 }

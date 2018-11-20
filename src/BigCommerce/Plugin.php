@@ -4,7 +4,7 @@
 namespace BigCommerce;
 
 class Plugin {
-	const VERSION = '1.0.2';
+	const VERSION = '1.1.0';
 
 	protected static $_instance;
 
@@ -41,6 +41,10 @@ class Plugin {
 	}
 
 	private function load_functions() {
+		// Get relative path to this file
+		$reviews_file = dirname( __FILE__ ). '/Functions/reviews.php';
+
+		require_once $reviews_file ;
 	}
 
 	private function load_service_providers() {

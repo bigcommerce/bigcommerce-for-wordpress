@@ -5,6 +5,7 @@
 
 import request from 'superagent';
 import { PRODUCTS_ENDPOINT, SHORTCODE_ENDPOINT } from '../admin/config/wp-settings';
+import { ADMIN_AJAX } from '../admin/config/wp-settings';
 import { GUTENBERG_PRODUCTS } from '../admin/gutenberg/config/gutenberg-settings';
 
 export const wpAPIProductLookup = (queryString = '') => request
@@ -25,3 +26,11 @@ export const wpAPICartDelete = cartURL => request
 export const wpAPIProductsPreview = (queryObj = {}) => request
 	.get(GUTENBERG_PRODUCTS.preview_url)
 	.query(queryObj);
+
+export const wpAdminAjax = (queryObj = {}) => request
+	.get(ADMIN_AJAX)
+	.query(queryObj)
+	.timeout({
+		response: 20000,  // Wait 5 seconds for the server to start sending,
+		deadline: 60000, // but allow 1 minute for the file to finish loading.
+	});

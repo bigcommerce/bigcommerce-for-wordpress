@@ -9,6 +9,9 @@ class Address_New extends Controller {
 	const FORM = 'form';
 
 	protected $template = 'components/accounts/address-new.php';
+	protected $wrapper_tag = 'div';
+	protected $wrapper_classes = [ 'bc-account-address__actions', 'bc-account-address__actions--new' ];
+	protected $wrapper_attributes = [ 'data-js' => 'bc-account-address-actions' ];
 
 
 	protected function parse_options( array $options ) {

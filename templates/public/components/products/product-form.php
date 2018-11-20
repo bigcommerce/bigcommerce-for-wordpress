@@ -20,7 +20,11 @@ use BigCommerce\Post_Types\Product\Product;
       class="bc-form bc-product-form">
 	<?php echo $options; ?>
 	<?php echo $modifiers; ?>
+
+	<!-- data-js="bc-product-message" is required. -->
 	<div class="bc-product-form__product-message" data-js="bc-product-message"></div>
+
+	<!-- data-js="variant_id" is required. -->
 	<input type="hidden" name="variant_id" class="variant_id" data-js="variant_id" value="">
 	<?php if ( $max_quantity != 1 ) { ?>
 		<div class="bc-product-form__quantity">

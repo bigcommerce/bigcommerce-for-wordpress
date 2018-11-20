@@ -10,12 +10,14 @@
 
 
 <?php if ( $wrap ) { ?>
+	<!-- class="bc-load-items" is required -->
 	<div class="bc-load-items bc-product-review-list-wrapper">
 
 	<?php if ( ! empty( $pagination ) ) { ?>
+		<!-- class="bc-load-items__loader" is required -->
 		<div class="bc-load-items__loader"></div>
 	<?php } ?>
-
+	<!-- class="bc-load-items-container" and the conditional class "bc-load-items-container--has-pages" are required. -->
 	<div class="bc-product-review-list bc-load-items-container <?php echo( ! empty( $pagination ) ? esc_attr( 'bc-load-items-container--has-pages' ) : '' ); ?>">
 <?php } ?>
 

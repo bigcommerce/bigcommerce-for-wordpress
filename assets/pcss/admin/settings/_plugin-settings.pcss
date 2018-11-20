@@ -213,6 +213,103 @@
 	}
 }
 
+.bc-settings-section--bigcommerce_diagnostics {
+
+	.bc-diagnostics-data__description {
+		margin: 10px 0;
+	}
+
+	.bc-admin-diagnostics-loader {
+		line-height: 20px;
+		vertical-align: middle;
+		margin: 20px 0;
+		display: none;
+
+		&.is-active {
+			display: block;
+		}
+	}
+
+	.spinner.bc-admin-spinner {
+		float: none;
+		display: inline-block;
+		vertical-align: middle;
+		position: relative;
+		top: -3px;
+	}
+}
+
+.bc-diagnostics-data--success {
+
+	.wrap & {
+		padding: 9px 0;
+		margin-bottom: 20px;
+	}
+
+	.bc-icon {
+		display: inline-block;
+		position: relative;
+		top: 2px;
+		color: var(--color-bc-green);
+	}
+}
+
+.bc-diagnostics-data--error {
+	border: 1px solid var(--color-bc-red);
+	padding: 10px;
+
+	.bc-admin-btn {
+		margin-top: 20px;
+	}
+}
+
+.bc-diagnostics-data,
+.bc-setings-diagnostics-wrapper {
+	margin-top: 10px;
+	padding: 20px 0;
+}
+
+.bc-diagnostics-data__section {
+	border-top: 1px solid var(--color-bc-concrete);
+	margin-top: 10px;
+	padding: 20px 0;
+
+	.bc-admin-btn {
+		margin-top: 20px;
+	}
+}
+
+.bc-diagnostics-data__section-header {
+	margin-top: 0;
+}
+
+.bc-diagnostics-data__meta {
+	padding: 4px 0;
+
+	@media (--viewport-wpadmin) {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		align-items: flex-start;
+	}
+}
+
+.bc-diagnostics-data__meta-label {
+	font-weight: var(--font-weight-bold);
+
+	@media (--viewport-wpadmin) {
+		flex: 0 0 170px;
+		padding-right: 10px;
+	}
+}
+
+.bc-diagnostics-data__meta-value {
+	@media (--viewport-wpadmin) {
+		flex: 1;
+		padding-left: 20px;
+	}
+}
+
 .bc-settings-form--bigcommerce {
 
 	.bc-settings-save {

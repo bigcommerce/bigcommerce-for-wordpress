@@ -6,7 +6,7 @@
  * @var string[] $defaults
  * @var string   $button_label The label of the purchase button
  */
-$error_class = 'bc-form__control--error';
+$error_class = 'bc-form__control--error'; // REQUIRED
 
 ?>
 <section class="bc-gift-page">

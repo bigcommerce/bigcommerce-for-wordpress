@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.1.0]
+
+### Added
+
+- Created a new template tag, shortcode, and block for displaying product reviews.
+  Shortcode usage: `[bigcommerce_reviews id={product ID}]`. Template tag
+  usage: `echo \BigCommerce\Functions\product_reviews( $product_id );`
+- Added a plugin diagnostics section to the settings screen.
+- Added a static method to retrieve a Product object by product ID. Usage:
+  `$product = \BigCommerce\Posts_Types\Product\Product::by_product_id( $product_id );`
+
+### Changed
+
+- Template may now have a wrapper HTML element that cannot be modified with
+  a template override. This wrapper is defined in the template controller
+  class associated with the template. Filters `bigcommerce/template/wrapper/tag`,
+  `bigcommerce/template/wrapper/classes`, and `bigcommerce/template/wrapper/attributes`
+  are available to modify this wrapper. Modification may break JavaScript
+  provided by the plugin. We have added comments next to other HTML
+  elements that are required to maintain JS functionality.
+
+### Fixed
+
+- Better error handling when the OAuth connector gives unexpected responses.
+
 ## [1.0.2]
 
 ### Changed
@@ -166,6 +191,7 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[1.1.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.0.2...1.1.0
 [1.0.2]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.0.1...1.0.2
 [1.0.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/0.15.0...1.0.1
 [0.15.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/0.14.0...0.15.0

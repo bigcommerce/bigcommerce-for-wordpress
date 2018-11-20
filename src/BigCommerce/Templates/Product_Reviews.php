@@ -13,6 +13,9 @@ class Product_Reviews extends Controller {
 	const NEXT_PAGE_URL = 'next_page_url';
 
 	protected $template = 'components/reviews/product-reviews.php';
+	protected $wrapper_tag = 'section';
+	protected $wrapper_classes = [ 'bc-single-product__reviews' ];
+	protected $wrapper_attributes = [ 'id' => 'bc-single-product__reviews' ];
 
 	protected function parse_options( array $options ) {
 		$defaults = [

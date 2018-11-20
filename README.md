@@ -219,6 +219,14 @@ default header and footer. The page content is rendered inside the wrapper templ
 in `components/page-wrapper.php`. By modifying this wrapper template to match the HTML
 markup of a template in your theme, you should have consistent styling across your site.
 
+Additional precautions should be taken when editing the contents of a template override. Within
+each of the templates there are `data-attributes` and `PHP` calls that are required in order for the
+template to work properly. Wherever you see a PHP call, you should assume that it is a necessary
+part of that template and should not be removed or altered. Additionally, you will find documentation
+in all of these templates denoting where specific classes or data-attributes are required. Omitting or
+removing these classes or attributes could potentially break the JS functionality of this plugin and
+your site's theme.
+
 ## Action and Filter Hooks
 
 ### Architectural Guidelines

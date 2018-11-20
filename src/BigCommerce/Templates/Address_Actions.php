@@ -11,6 +11,9 @@ class Address_Actions extends Controller {
 	const ADDRESS     = 'address';
 
 	protected $template = 'components/accounts/address-actions.php';
+	protected $wrapper_tag = 'div';
+	protected $wrapper_classes = [ 'bc-account-address__actions' ];
+	protected $wrapper_attributes = [ 'data-js' => 'bc-account-address-actions' ];
 
 
 	protected function parse_options( array $options ) {

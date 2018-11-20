@@ -18,6 +18,9 @@ class Product_Card extends Controller {
 	const ATTRIBUTES = 'attributes';
 
 	protected $template = 'components/products/product-card.php';
+	protected $wrapper_tag = 'div';
+	protected $wrapper_classes = [ 'bc-product-card' ];
+	protected $wrapper_attributes = [ 'data-js' => 'bc-product-loop-card' ];
 
 	protected function parse_options( array $options ) {
 		$defaults = [

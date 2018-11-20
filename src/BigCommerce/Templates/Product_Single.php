@@ -23,6 +23,8 @@ class Product_Single extends Controller {
 	const REVIEWS     = 'reviews';
 
 	protected $template = 'components/products/product-single.php';
+	protected $wrapper_tag = 'div';
+	protected $wrapper_classes = [ 'bc-product-single' ];
 
 	protected function parse_options( array $options ) {
 		$defaults = [
@@ -158,59 +160,8 @@ class Product_Single extends Controller {
 			return '';
 		}
 
-		/**
-		 * Filter the number of product reviews to show per page.
-		 *
-		 * @param int $per_page The number of reviews to show per page
-		 * @param int $post_id  The ID of the product post
-		 */
-		$per_page = absint( apply_filters( 'bigcommerce/products/reviews/per_page', 12, $product->post_id() ) );
-
-		if ( empty( $per_page ) ) {
-			return '';
-		}
-
-		$reviews       = $product->get_reviews( [
-			'per_page' => $per_page,
-		] );
-		$total_reviews = $product->get_review_count();
-		$total_pages   = empty( $total_reviews ) ? 0 : ceil( $total_reviews / $per_page );
-		$next_page_url = $this->next_page_url( $product->post_id(), $per_page, 1, $total_pages );
-
-		$reviews = array_map( function ( $review ) use ( $product ) {
-			$controller = Review_Single::factory( array_merge( [
-				Review_Single::PRODUCT => $product,
-			], $review ) );
-
-			return $controller->render();
-		}, $reviews );
-
-		$controller = Product_Reviews::factory( [
-			Product_Reviews::PRODUCT       => $product,
-			Product_Reviews::REVIEWS       => $reviews,
-			Product_Reviews::NEXT_PAGE_URL => $next_page_url,
-		] );
-
-		return $controller->render();
-	}
-
-	private function next_page_url( $post_id, $per_page, $current_page, $max_pages ) {
-		if ( $current_page >= $max_pages ) {
-			return '';
-		}
-
-		$base_url = apply_filters( 'bigcommerce/product/reviews/rest_url', '', $post_id );
-
-		$attr = [
-			'per_page' => $per_page,
-			'paged' => $current_page + 1,
-			'ajax'  => 1,
-		];
-
-		$url = add_query_arg( $attr, $base_url );
-		$url = wp_nonce_url( $url, 'wp_rest' );
-
-		return $url;
+		$shortcode = sprintf( '[%s post_id="%s"]', \BigCommerce\Shortcodes\Product_Reviews::NAME, $product->post_id() );
+		return do_shortcode( $shortcode );
 	}
 
 }
