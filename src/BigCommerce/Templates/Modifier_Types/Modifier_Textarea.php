@@ -11,6 +11,8 @@ class Modifier_Textarea extends Modifier_Type {
 	const MAXROWS       = 'maxrows';
 
 	protected $template = 'components/modifier-types/modifier-textarea.php';
+	protected $wrapper_tag = 'div';
+	protected $wrapper_classes = [ 'bc-product-form__control', 'bc-product-form__control--textarea' ];
 
 	public function get_data() {
 		$data                        = parent::get_data();

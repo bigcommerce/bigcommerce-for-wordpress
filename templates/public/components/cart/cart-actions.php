@@ -15,6 +15,7 @@
 			method="post"
 			enctype="multipart/form-data"
 	>
+		<!-- data-js="proceed-to-checkout" is required -->
 		<button
 				type="submit"
 				class="bc-btn bc-cart-actions__checkout-button"

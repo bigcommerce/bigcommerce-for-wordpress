@@ -7,6 +7,7 @@ namespace BigCommerce\Post_Types\Product;
 use BigCommerce\Api\v3\ObjectSerializer;
 use BigCommerce\Customizer\Sections\Buttons;
 use BigCommerce\Customizer\Sections\Product_Single;
+use BigCommerce\Exceptions\Product_Not_Found_Exception;
 use BigCommerce\Settings\Sections\Cart;
 use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Condition\Condition;
@@ -541,5 +542,39 @@ class Product {
 		$count = $wpdb->get_var( $sql );
 
 		return intval( $count );
+	}
+
+	/**
+	 * Gets a BigCommerce Product ID and returns matching Product object
+	 *
+	 * @param $product_id
+	 *
+	 * @return Product|array
+	 */
+	public static function by_product_id( $product_id ) {
+
+		if ( empty( $product_id ) ) {
+			throw new \InvalidArgumentException( __( 'Product ID must be a positive integer', 'bigcommerce' ) );
+		}
+
+		$args = [
+			'meta_query'     => [
+				[
+					'key'   => 'bigcommerce_id',
+					'value' => absint( $product_id ),
+				],
+			],
+			'post_type'      => self::NAME,
+			'posts_per_page' => 1,
+		];
+
+		$posts = get_posts( $args );
+
+
+		if ( empty( $posts ) ) {
+			throw new Product_Not_Found_Exception( sprintf( __( 'No product found matching BigCommerce ID %d', 'bigcommerce' ), $product_id ) );
+		}
+
+		return new Product( $posts[ 0 ]->ID );
 	}
 }

@@ -5,7 +5,7 @@
  * @var string[] $errors
  * @var string[] $defaults
  */
-$error_class = 'bc-form__control--error';
+$error_class = 'bc-form__control--error'; // REQUIRED
 
 ?>
 <div class="bc-gift-balance__form">

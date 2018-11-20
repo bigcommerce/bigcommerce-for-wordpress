@@ -11,4 +11,5 @@ export const GUTENBERG_LOGIN = GUTENBERG_BLOCKS['bigcommerce/login-form'] || {};
 export const GUTENBERG_REGISTER = GUTENBERG_BLOCKS['bigcommerce/registration-form'] || {};
 export const GUTENBERG_GIFT_CERTIFICATE_FORM = GUTENBERG_BLOCKS['bigcommerce/gift-certificate-form'] || {};
 export const GUTENBERG_GIFT_CERTIFICATE_BALANCE = GUTENBERG_BLOCKS['bigcommerce/gift-certificate-balance'] || {};
+export const GUTENBERG_PRODUCT_REVIEWS = GUTENBERG_BLOCKS['bigcommerce/product-reviews'] || {};
 export const GUTENBERG_STORE_LINK = gutenbergconfig.store_link || '';

@@ -13,6 +13,9 @@ class Address_List extends Controller {
 	const NEW_ADDRESS = 'new_address';
 
 	protected $template = 'components/accounts/address-list.php';
+	protected $wrapper_tag = 'section';
+	protected $wrapper_classes = [ 'bc-account-addresses' ];
+	protected $wrapper_attributes = [ 'data-js' => 'bc-account-addresses' ];
 
 	protected function parse_options( array $options ) {
 		$defaults = [

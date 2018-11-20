@@ -14,7 +14,7 @@ class Welcome_Screen extends Abstract_Screen {
 
 	public function __construct( $configuration_status, $assets_url, $template_dir ) {
 		parent::__construct( $configuration_status, $assets_url );
-		$this->template_dir   = trailingslashit( $template_dir );
+		$this->template_dir = trailingslashit( $template_dir );
 	}
 
 	protected function get_page_title() {
@@ -26,9 +26,12 @@ class Welcome_Screen extends Abstract_Screen {
 	}
 
 	public function render_settings_page() {
+		$_GET[ 'settings-updated' ] = 1;
+		settings_errors();
+		unset( $_GET[ 'settings-updated' ] );
 		$connect_account_url = $this->get_connect_account_url();
 		$create_account_url  = $this->get_create_account_url();
-		$notices = $this->get_notices();
+		$notices             = $this->get_notices();
 		include trailingslashit( $this->template_dir ) . 'welcome-screen.php';
 	}
 
@@ -57,6 +60,7 @@ class Welcome_Screen extends Abstract_Screen {
 		 * @param array $notices
 		 */
 		$notices = apply_filters( 'bigcomerce/settings/welcome/notices', [] );
+
 		return (array) $notices;
 	}
 }

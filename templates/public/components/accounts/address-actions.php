@@ -6,15 +6,16 @@
  * @var string $delete_form
  */
 ?>
-<div class="bc-account-address__actions" data-js="bc-account-address-actions">
-	<button class="bc-account-address__edit" data-js="bc-account-address-edit-trigger" data-content=""
-					data-target=""><?php echo esc_html( __( 'Edit', 'bigcommerce' ) ); ?></button>
 
-	<script type="text/template" data-js="">
+<!-- This button has to be the first element of the template. -->
+<button class="bc-account-address__edit" data-js="bc-account-address-edit-trigger" data-content=""
+				data-target=""><?php echo esc_html( __( 'Edit', 'bigcommerce' ) ); ?></button>
 
-		<?php echo $form; ?>
+<!-- This script tag and empty data-js="" attribute are required -->
+<script type="text/template" data-js="">
 
-	</script>
+	<?php echo $form; ?>
 
-	<?php echo $delete_form; ?>
-</div>
+</script>
+
+<?php echo $delete_form; ?>

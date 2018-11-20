@@ -8,7 +8,7 @@
  * @var string   $phone
  * @var string[] $errors
  */
-$error_class = 'bc-form__control--error';
+$error_class = 'bc-form__control--error'; // REQUIRED
 ?>
 
 <section class="bc-account-page" data-form-type="bc-account-form">

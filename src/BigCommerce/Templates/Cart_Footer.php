@@ -10,6 +10,8 @@ class Cart_Footer extends Controller {
 	const ACTIONS = 'actions';
 
 	protected $template = 'components/cart/cart-footer.php';
+	protected $wrapper_tag = 'footer';
+	protected $wrapper_classes = [ 'bc-cart-footer' ];
 
 	protected function parse_options( array $options ) {
 		$defaults = [

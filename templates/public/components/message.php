@@ -10,6 +10,8 @@
  */
 
 ?>
+
+<!-- class="bc-alert" is required -->
 <div class="bc-alert bc-alert--<?php echo sanitize_html_class( $type ); ?>" data-message-key="<?php echo esc_attr( $key ); ?>" <?php echo $attributes; ?>>
 	<?php echo $content; ?>
 </div>

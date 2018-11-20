@@ -8,6 +8,9 @@ class Product_Shortcode_Pagination extends Controller {
 	const NEXT_PAGE_URL = 'next_page_url';
 
 	protected $template = 'components/products/product-shortcode-pagination.php';
+	protected $wrapper_tag = 'div';
+	protected $wrapper_classes = [ 'bc-load-items__trigger', 'bc-load-items__trigger--posts' ];
+	protected $wrapper_attributes = [ 'data-js' => 'load-items-trigger' ];
 
 	protected function parse_options( array $options ) {
 		$defaults = [

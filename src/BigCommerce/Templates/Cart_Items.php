@@ -12,6 +12,8 @@ class Cart_Items extends Controller {
 	const FALLBACK_IMAGE = 'fallback_image';
 
 	protected $template = 'components/cart/cart-items.php';
+	protected $wrapper_tag = 'div';
+	protected $wrapper_classes = [ 'bc-cart-body' ];
 
 	protected function parse_options( array $options ) {
 		$defaults = [

@@ -8,10 +8,8 @@
 
 ?>
 
-<section class="bc-single-product__reviews" id="bc-single-product__reviews">
-	<?php echo $header; ?>
+<?php echo $header; ?>
 
-	<?php echo $form; ?>
+<?php echo $form; ?>
 
-	<?php echo $reviews; ?>
-</section>
+<?php echo $reviews; ?>

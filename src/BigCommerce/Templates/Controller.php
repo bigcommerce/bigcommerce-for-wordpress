@@ -10,6 +10,21 @@ abstract class Controller {
 	protected $options  = [];
 
 	/**
+	 * @var string The tag for a wrapper element around this template
+	 */
+	protected $wrapper_tag = '';
+
+	/**
+	 * @var string[] The classes for the wrapper element around this template
+	 */
+	protected $wrapper_classes = [];
+
+	/**
+	 * @var string The data-js attribute for the wrapper tag
+	 */
+	protected $wrapper_attributes = [];
+
+	/**
 	 * Creates an instance of the controller
 	 *
 	 * @param array  $options
@@ -90,7 +105,7 @@ abstract class Controller {
 		 */
 		$data = apply_filters( 'bigcommerce/template=' . $this->template . '/data', $data, $this->template, $this->options );
 
-		return $template->render( $data );
+		return $this->wrap( $template->render( $data ) );
 	}
 
 	/**
@@ -146,6 +161,49 @@ abstract class Controller {
 		$path = apply_filters( 'bigcommerce/template=' . $this->template . '/path', $path, $relative_path );
 
 		return new Template( $path );
+	}
+
+	/**
+	 * Wrap the template output in an optional tag. This provides us a mechanism
+	 * to ensure that some elements and classes are consistently available
+	 * for JavaScript targeting, despite possible template overrides.
+	 *
+	 * @param string $html
+	 *
+	 * @return string
+	 */
+	protected function wrap( $html ) {
+		/**
+		 * Filter the HTML tag of the wrapper for a template
+		 *
+		 * @param string $tag      The tag name. Should be a valid HTML element, or an empty string
+		 * @param string $template The template path
+		 */
+		$tag = sanitize_html_class( apply_filters( 'bigcommerce/template/wrapper/tag', $this->wrapper_tag, $this->template ) );
+		if ( empty( $tag ) ) {
+			return $html;
+		}
+
+		/**
+		 * Filter the HTML tag of the wrapper for a template
+		 *
+		 * @param string[] $classes  An array of class names
+		 * @param string   $template The template path
+		 */
+		$classes = apply_filters( 'bigcommerce/template/wrapper/classes', $this->wrapper_classes, $this->template );
+		$classes = array_filter( array_map( 'sanitize_html_class', $classes ) );
+
+		$attributes = apply_filters( 'bigcommerce/template/wrapper/attributes', $this->wrapper_attributes, $this->template );
+
+		$attrs = array_map( function ( $key ) use ( $attributes ) {
+			if ( is_bool( $attributes[ $key ] ) ) {
+				return $attributes[ $key ] ? sanitize_title_with_dashes( $key ) : '';
+			}
+
+			return sanitize_title_with_dashes( $key ) . '="' . esc_attr( $attributes[ $key ] ) . '""';
+		}, array_keys( $attributes ) );
+
+		return sprintf( '<%s class="%s" %s>%s</%s>', $tag, implode( ' ', $classes ), implode( ' ', $attrs ), $html, $tag );
 	}
 
 	protected function format_currency( $value, $return_empty_ammounts = true ) {

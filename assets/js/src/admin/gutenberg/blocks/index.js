@@ -13,6 +13,7 @@ import login from './login-form/login-form';
 import register from './registration-form/registration-form';
 import giftForm from './gift-certificate-form/gift-certificate-form';
 import giftBalance from './gift-certificate-balance/gift-certificate-balance';
+import productReviews from './product-reviews/product-reviews';
 
 const { registerBlockType } = wp.blocks;
 
@@ -27,6 +28,7 @@ const blocks =  [
 	register,
 	giftForm,
 	giftBalance,
+	productReviews,
 ];
 
 const initBlocks = () => {

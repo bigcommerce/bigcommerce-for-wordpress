@@ -9,6 +9,7 @@
 
 <section class="bc-cart" data-js="bc-cart" data-cart_id="<?php echo esc_attr( $cart['cart_id'] ); ?>">
 	<div class="bc-cart-error">
+		<!-- data-js="bc-cart-error-message" is required -->
 		<p class="bc-cart-error__message" data-js="bc-cart-error-message"></p>
 	</div>
 	<header class="bc-cart-header">

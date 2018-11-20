@@ -10,6 +10,8 @@ class Modifier_Date extends Modifier_Type {
 	const MAX_VALUE     = 'max_value';
 
 	protected $template = 'components/modifier-types/modifier-date.php';
+	protected $wrapper_t = 'div';
+	protected $wrapper_classes = [ 'bc-product-form__control', 'bc-product-form__control--date' ];
 
 	public function get_data() {
 		$data                        = parent::get_data();

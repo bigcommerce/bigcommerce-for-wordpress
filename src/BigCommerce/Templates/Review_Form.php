@@ -10,6 +10,11 @@ class Review_Form extends Controller {
 	const MESSAGES = 'messages';
 
 	protected $template = 'components/reviews/review-form.php';
+	protected $wrapper_tag = 'div';
+	protected $wrapper_classes = [ 'bc-product-review-form-wrapper' ];
+	protected $wrapper_attributes = [
+		'data-js' => 'bc-product-review-form-wrapper',
+	];
 
 	protected function parse_options( array $options ) {
 		$defaults = [

@@ -8,7 +8,7 @@ use BigCommerce\Settings\Sections\Api_Credentials;
 
 class Account_Status {
 
-	const STATUS_AJAX    = 'bigcommerce_account_status';
+	const STATUS_AJAX = 'bigcommerce_account_status';
 
 
 	/**
@@ -43,9 +43,9 @@ class Account_Status {
 	public function handle_account_status_request() {
 		$this->validate_ajax_nonce( $_REQUEST );
 
-		$store        = get_option( Onboarding_Api::STORE_ID, 0 );
+		$store = get_option( Onboarding_Api::STORE_ID, 0 );
 		try {
-			$response = $this->onboarding->status($store);
+			$response = $this->onboarding->status( $store );
 		} catch ( \RuntimeException $e ) {
 			wp_send_json_error( [
 				'code'    => 'missing_credentials',
@@ -57,6 +57,20 @@ class Account_Status {
 
 		$response_code = (int) wp_remote_retrieve_response_code( $response );
 		$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
+		if ( $response_code >= 400 && $response_code < 500 ) {
+			delete_option( Onboarding_Api::ACCOUNT_ID );
+			delete_option( Onboarding_Api::STORE_ID );
+			add_settings_error( self::STATUS_AJAX, $response_code, __( 'We encountered an unexpected error connecting your account. Please try again.', 'bigcommerce' ) );
+			set_transient( 'settings_errors', get_settings_errors(), 30 );
+			wp_send_json_error( [
+				'code'          => 'not_found',
+				'message'       => __( 'There was an error locating your account. Please refresh this page and try connecting again.', 'bigcommerce' ),
+				'data'          => wp_remote_retrieve_body( $response ),
+				'response_code' => $response_code,
+				'redirect'      => apply_filters( 'bigcommerce/onboarding/error_redirect', admin_url() ),
+			], 200 );
+			exit();
+		}
 		if ( $response_code < 200 || $response_code >= 400 || empty( $response_body ) || empty( $response_body[ 'status' ] ) ) {
 			wp_send_json_error( [
 				'code'          => 'bad_gateway',
