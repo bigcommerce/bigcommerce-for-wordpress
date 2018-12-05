@@ -56,6 +56,7 @@ class Cart {
 		$cookie_life = apply_filters( 'bigcommerce/cart/cookie_lifetime', 30 * DAY_IN_SECONDS );
 		$secure      = ( 'https' === parse_url( home_url(), PHP_URL_SCHEME ) );
 		setcookie( self::CART_COOKIE, $cart_id, time() + $cookie_life, COOKIEPATH, COOKIE_DOMAIN, $secure );
+		$_COOKIE[ self::CART_COOKIE ] = $cart_id;
 	}
 
 	/**
@@ -200,6 +201,7 @@ class Cart {
 		);
 		$secure = ( 'https' === parse_url( home_url(), PHP_URL_SCHEME ) );
 		setcookie( self::COUNT_COOKIE, $count, time() + MINUTE_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN, $secure );
+		$_COOKIE[ self::COUNT_COOKIE ] = $count;
 	}
 
 	public function get_cart_url() {

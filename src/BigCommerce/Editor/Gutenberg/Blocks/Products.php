@@ -11,37 +11,49 @@ use BigCommerce\Shortcodes;
  *
  * A block to add one or more products into the post content
  */
-class Products extends Gutenberg_Block {
+class Products extends Shortcode_Block {
 	const NAME = 'bigcommerce/products';
 
 	private $shortcode_rest_controller;
 
-	public function __construct( Shortcode_Controller $shortcode_controller ) {
-		parent::__construct();
+	protected $shortcode = Shortcodes\Products::NAME;
+
+	protected $category = 'common';
+
+	public function __construct( $assets_url, Shortcode_Controller $shortcode_controller ) {
+		parent::__construct( $assets_url );
 		$this->shortcode_rest_controller = $shortcode_controller;
 	}
 
-	public function render( $attributes ) {
-		if ( empty( $attributes[ 'shortcode' ] ) ) {
-			return sprintf( '[%s]', Shortcodes\Products::NAME );
-		}
-		return $attributes[ 'shortcode' ]; // content will be passed through do_shortcode
+	protected function title() {
+		return __( 'BigCommerce Products', 'bigcommerce' );
+	}
+
+	protected function html_title() {
+		return __( 'BigCommerce Products', 'bigcommerce' );
+	}
+
+	protected function html_image() {
+		return '';
+	}
+
+	protected function keywords() {
+		$keywords = parent::keywords();
+		$keywords[] = __( 'store', 'bigcommerce' );
+		$keywords[] = __( 'catalog', 'bigcommerce' );
+		return $keywords;
 	}
 
 	public function js_config() {
-		return [
-			'name'                   => $this->name(),
-			'title'                  => __( 'BigCommerce Products', 'bigcommerce' ),
-			'category'               => 'common',
-			'keywords'               => [
-				__( 'ecommerce', 'bigcommerce' ),
-				__( 'commerce', 'bigcommerce' ),
-				__( 'products', 'bigcommerce' ),
-			],
-			'preview_url'            => $this->get_preview_url(),
-			'inspector_title'        => __( 'Add Big Commerce Products', 'bigcommerce' ),
-			'inspector_button_title' => __( 'Edit Products', 'bigcommerce' ),
+		$config = parent::js_config();
+
+		$config[ 'preview_url' ] = $this->get_preview_url();
+
+		$config[ 'inspector' ] = [
+			'title' => __( 'Add Big Commerce Products', 'bigcommerce' ),
+			'button_title' => __( 'Edit Products', 'bigcommerce' ),
 		];
+		return $config;
 	}
 
 	protected function attributes() {
@@ -49,7 +61,7 @@ class Products extends Gutenberg_Block {
 			'shortcode' => [
 				'type' => 'string',
 			],
-			'attributes' => [
+			'queryParams' => [
 				'type' => 'object',
 			],
 		];

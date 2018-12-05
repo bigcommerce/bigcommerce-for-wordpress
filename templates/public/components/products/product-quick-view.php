@@ -20,8 +20,8 @@
 use BigCommerce\Post_Types\Product\Product;
 
 ?>
-
-<div id="bc-product-<?php echo esc_attr( $sku ); ?>--quick-view" class="bc-product-card bc-product-card--single">
+<!-- data-js="bc-product-data-wrapper" is required. -->
+<div id="bc-product-<?php echo esc_attr( $sku ); ?>--quick-view" class="bc-product-card bc-product-card--single" data-js="bc-product-data-wrapper">
 	<?php echo $gallery; ?>
 
 	<div class="bc-product__meta">

@@ -9,30 +9,28 @@ use BigCommerce\Shortcodes;
  *
  * A block to display the gift certificate form
  */
-class Gift_Certificate_Form extends Gutenberg_Block {
+class Gift_Certificate_Form extends Shortcode_Block {
 	const NAME = 'bigcommerce/gift-certificate-form';
 
 
-	public function __construct() {
-		parent::__construct();
+	protected $icon = 'tickets-alt';
+	protected $shortcode = Shortcodes\Gift_Certificate_Form::NAME;
+
+	protected function title() {
+		return __( 'BigCommerce Gift Certificates', 'bigcommerce' );
 	}
 
-	public function render( $attributes ) {
-		return sprintf( '[%s]', Shortcodes\Gift_Certificate_Form::NAME ); // content will be passed through do_shortcode
+	protected function html_title() {
+		return __( 'Gift Certificates', 'bigcommerce' );
 	}
 
-	public function js_config() {
-		return [
-			'name'       => $this->name(),
-			'title'      => __( 'BigCommerce Gift Certificates', 'bigcommerce' ),
-			'category'   => 'widgets',
-			'keywords'   => [
-				__( 'checkout', 'bigcommerce' ),
-			],
-			'shortcode'  => sprintf( '[%s]', Shortcodes\Gift_Certificate_Form::NAME ),
-			'block_html' => [
-				'title' => __( 'Gift Certificates', 'bigcommerce' ),
-			],
-		];
+	protected function html_image() {
+		return $this->image_url( 'Gutenberg-Block_Gift-Cert-Form.png' );
+	}
+
+	protected function keywords() {
+		$keywords = parent::keywords();
+		$keywords[] = __( 'checkout', 'bigcommerce' );
+		return $keywords;
 	}
 }

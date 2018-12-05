@@ -13,10 +13,13 @@
  * @var string $reviews
  */
 ?>
-<section class="bc-product-single__top">
+
+<!-- data-js="bc-product-data-wrapper" is required. -->
+<section class="bc-product-single__top" data-js="bc-product-data-wrapper">
 	<?php echo $images; ?>
 
-	<div class="bc-product-single__meta">
+	<!-- data-js="bc-product-meta" is required. -->
+	<div class="bc-product-single__meta" data-js="bc-product-meta">
 		<?php echo $title; ?>
 		<?php echo $brand; ?>
 		<?php echo $price; ?>

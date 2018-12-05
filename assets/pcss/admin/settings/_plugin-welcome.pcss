@@ -43,24 +43,24 @@
 
 	&-title {
 		color: var(--color-bc-black);
-		font-size: 32px;
+		font-size: 2em;
 		font-weight: var(--font-weight-regular);
-		line-height: 40px;
+		line-height: 1.25;
 		margin: 18px 0 22px;
 
 		@media (--viewport-medium) {
-			font-size: 48px;
-			line-height: 52px;
+			font-size: 3em;
+			line-height: 1.1;
 		}
 	}
 
 	p {
-		font-size: 15px;
+		font-size: 0.938em;
 		line-height: 1.44;
 		margin: 0;
 
 		@media (--viewport-medium) {
-			font-size: 18px;
+			font-size: var(--font-size-content-lg);
 		}
 	}
 }
@@ -91,6 +91,10 @@
 	}
 }
 
+.bc-welcome__alt-actions {
+	margin-top: 20px;
+}
+
 .bc-welcome__notice {
 	background-color: var(--color-off-white);
 	margin-bottom: 20px;
@@ -104,9 +108,9 @@
 .bc-welcome__notice {
 
 	&-title {
-		font-size: 22px;
+		font-size: 1.375em;
 		font-weight: var(--font-weight-medium);
-		line-height: 29px;
+		line-height: 1.32;
 		margin: 0;
 
 		+ p {
@@ -115,7 +119,7 @@
 	}
 
 	p {
-		font-size: 16px;
-		line-height: 24px;
+		font-size: var(--font-size-content);
+		line-height: var(--line-height-base);
 	}
 }

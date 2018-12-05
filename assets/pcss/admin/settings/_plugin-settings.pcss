@@ -1,3 +1,7 @@
+/* Set base font size for BC plugin admin views */
+.bc-settings-bigcommerce {
+	font-size: var(--font-size-base);
+}
 
 .bc-settings-header {
 	color: var(--color-bc-black);
@@ -79,28 +83,28 @@
 
 	.bc-settings-header__welcome-title {
 		color: var(--color-bc-black);
-		font-size: 32px;
+		font-size: 2em;
 		line-height: 1.01;
 		margin-bottom: 18px;
 
 		@media (--viewport-medium) {
-			font-size: 48px;
+			font-size: 3em;
 		}
 	}
 }
 
 .bc-settings-header__welcome-text {
-	font-size: 18px;
+	font-size: var(--font-size-content-lg);
 }
 
 .bc-settings-header__cta-title {
-	font-size: 22px;
-	line-height: 22px;
+	font-size: 1.375em;
+	line-height: var(--line-height-even);
 	margin: 0 0 14px;
 }
 
 .bc-settings-header__cta-text {
-	font-size: 16px;
+	font-size: var(--font-size-content);
 	margin: 0;
 }
 
@@ -135,11 +139,24 @@
 	justify-content: flex-start;
 	padding: 20px;
 	position: relative;
+	transition: var(--transition);
+	width: 100%;
+
+	&:hover,
+	&:focus {
+		border-color: var(--color-bc-doger-blue);
+		outline: none;
+
+		.icon-bc-arrow-solid {
+			color: var(--color-bc-doger-blue);
+		}
+	}
 
 	.icon-bc-arrow-solid {
 		font-size: 20px;
-		color: #888;
+		color: var(--color-bc-grey);
 		margin-left: auto;
+		transition: var(--transition);
 	}
 
 	.bc-icon--settings {
@@ -160,6 +177,7 @@
 	}
 
 	.bc-settings-section--open & .icon-bc-arrow-solid {
+		color: var(--color-bc-grey);
 		transform: rotate(180deg);
 	}
 
@@ -169,14 +187,10 @@
 }
 
 .bc-settings-section__title {
-	font-size: 20px;
+	font-size: var(--font-size-content-xl);
 	font-weight: var(--font-weight-regular);
-	line-height: 26px;
+	line-height: var(--line-height-s);
 	margin: 0 0 0 30px;
-
-	@media (--viewport-large) {
-		margin-left: calc(4.16667% - 16px);
-	}
 
 	.bc-settings-section--open & {
 		color: var(--color-white);
@@ -194,8 +208,8 @@
 .bc-settings-section__body {
 	background-color: var(--color-white);
 	color: var(--color-bc-black);
-	font-size: 14px;
-	line-height: 18px;
+	font-size: var(--font-size-content-m);
+	line-height: var(--line-height-s);
 	padding: 20px 20px 40px;
 
 	> p:first-child {
@@ -203,11 +217,15 @@
 		padding-top: 0;
 	}
 
+	p {
+		font-size: 1em;
+	}
+
 	.form-table {
 
 		p.description {
 			color: var(--color-grey-dark);
-			font-size: 12px;
+			font-size: 0.857em;
 			font-style: italic;
 		}
 	}
@@ -307,6 +325,28 @@
 	@media (--viewport-wpadmin) {
 		flex: 1;
 		padding-left: 20px;
+	}
+}
+
+.bc-diagnostics-data__meta-importlogs {
+
+	.bc-diagnostics-data__meta-value {
+		border: 1px solid var(--color-bc-concrete);
+		font-family: monospace;
+		overflow: scroll;
+		position: relative;
+		height: 200px;
+		width: auto;
+	}
+
+	.bc-diagnostics-data__meta-value-container {
+		position: absolute;
+		top: 5px;
+		left: 18px;
+
+		pre {
+			margin: 0;
+		}
 	}
 }
 

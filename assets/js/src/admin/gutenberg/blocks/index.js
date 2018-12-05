@@ -3,38 +3,46 @@
  * @description Clearinghouse for all Gutenberg blocks.
  */
 
-import products from './products/products';
-import cart from './cart/cart';
-import checkout from './checkout/checkout';
-import account from './account-profile/account-profile';
-import address from './address-list/address-list';
-import orders from './order-history/order-history';
-import login from './login-form/login-form';
-import register from './registration-form/registration-form';
-import giftForm from './gift-certificate-form/gift-certificate-form';
-import giftBalance from './gift-certificate-balance/gift-certificate-balance';
-import productReviews from './product-reviews/product-reviews';
+import ShortcodeBlock from './shortcode-block/shortcode-block';
+import ProductsBlock from './products/products';
+import ProductReviewsBlock from './product-reviews/product-reviews';
+
+import {
+	GUTENBERG_ACCOUNT,
+	GUTENBERG_ADDRESS,
+	GUTENBERG_CART,
+	GUTENBERG_CHECKOUT,
+	GUTENBERG_GIFT_CERTIFICATE_BALANCE,
+	GUTENBERG_GIFT_CERTIFICATE_FORM,
+	GUTENBERG_LOGIN,
+	GUTENBERG_ORDERS,
+	GUTENBERG_PRODUCT_REVIEWS,
+	GUTENBERG_PRODUCTS,
+	GUTENBERG_REGISTER,
+} from '../config/gutenberg-settings';
 
 const { registerBlockType } = wp.blocks;
 
-const blocks =  [
-	products,
-	cart,
-	checkout,
-	account,
-	address,
-	orders,
-	login,
-	register,
-	giftForm,
-	giftBalance,
-	productReviews,
+const blocks = [
+	new ProductsBlock(GUTENBERG_PRODUCTS),
+	new ShortcodeBlock(GUTENBERG_CART),
+	new ShortcodeBlock(GUTENBERG_CHECKOUT),
+	new ShortcodeBlock(GUTENBERG_ACCOUNT),
+	new ShortcodeBlock(GUTENBERG_ADDRESS),
+	new ShortcodeBlock(GUTENBERG_ORDERS),
+	new ShortcodeBlock(GUTENBERG_LOGIN),
+	new ShortcodeBlock(GUTENBERG_REGISTER),
+	new ShortcodeBlock(GUTENBERG_GIFT_CERTIFICATE_FORM),
+	new ShortcodeBlock(GUTENBERG_GIFT_CERTIFICATE_BALANCE),
+	new ProductReviewsBlock(GUTENBERG_PRODUCT_REVIEWS),
 ];
 
 const initBlocks = () => {
 	blocks.forEach((block) => {
 		const blockName = `${block.id}`;
-		registerBlockType(blockName, block);
+		if (blockName) {
+			registerBlockType(blockName, block);
+		}
 	});
 };
 

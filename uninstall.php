@@ -8,6 +8,7 @@ use BigCommerce\Import\Processors\Listing_ID_Fetcher;
 use BigCommerce\Import\Processors\Product_ID_Fetcher;
 use BigCommerce\Import\Runner\Lock;
 use BigCommerce\Import\Runner\Status;
+use BigCommerce\Logging\Error_Log;
 use BigCommerce\Merchant;
 use BigCommerce\Pages;
 use BigCommerce\Post_Types\Product\Product;
@@ -148,7 +149,9 @@ function delete_options() {
 		Settings\Sections\Currency::CURRENCY_SYMBOL,
 		Settings\Sections\Currency::CURRENCY_SYMBOL_POSITION,
 		Settings\Sections\Currency::DECIMAL_UNITS,
+		Settings\Sections\Currency::INTEGER_UNITS,
 		Settings\Sections\Gift_Certificates::OPTION_ENABLE,
+		Settings\Sections\Troubleshooting_Diagnostics::LOG_ERRORS,
 		Settings\Sections\Units::MASS,
 		Settings\Sections\Units::LENGTH,
 		'schema-' . Schema\Products_Table::class,
@@ -159,6 +162,7 @@ function delete_options() {
 		Status::CURRENT_LOG,
 		Status::PREVIOUS_LOG,
 		Lock::OPTION,
+		Settings\Import_Status::IMPORT_TOTAL_PRODUCTS,
 		Listing_ID_Fetcher::STATE_OPTION,
 		Channel_Initializer::STATE_OPTION,
 		Product_ID_Fetcher::STATE_OPTION,

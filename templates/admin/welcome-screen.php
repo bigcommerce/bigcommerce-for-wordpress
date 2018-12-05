@@ -5,6 +5,7 @@
  *
  * @var string $connect_account_url
  * @var string $create_account_url
+ * @var string $credentials_url
  * @var array  $notices
  */
 ?>
@@ -18,6 +19,14 @@
 		<div class="bc-welcome__btn-group">
 			<a class="bc-admin-btn" href="<?php echo esc_url( $connect_account_url ); ?>"><?php esc_html_e( 'Connect My Account', 'bigcommerce' ); ?></a>
 			<a class="bc-admin-btn bc-admin-btn--outline" href="<?php echo esc_url( $create_account_url ); ?>"><?php esc_html_e( 'Create New Account', 'bigcommerce' ); ?></a>
+		</div>
+		<div class="bc-welcome__alt-actions">
+			<?php printf(
+				'%s <a href="%s">%s</a>',
+				esc_html( __( 'Multiple WordPress sites connecting to a single BigCommerce store?', 'bigcommerce' ) ),
+				esc_url( $credentials_url ),
+				esc_html( __( 'Enter your API credentials', 'bigcommerce' ) )
+			); ?>
 		</div>
 	</div>
 

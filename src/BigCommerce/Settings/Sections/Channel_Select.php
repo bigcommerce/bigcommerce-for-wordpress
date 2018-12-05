@@ -60,7 +60,7 @@ class Channel_Select extends Settings_Section {
 				'type'    => 'text',
 				'option'  => self::NEW_NAME,
 				'default' => parse_url( home_url(), PHP_URL_HOST ),
-				'class' => 'bc-create-channel-wrapper',
+				'class'   => 'bc-create-channel-wrapper',
 			]
 		);
 	}

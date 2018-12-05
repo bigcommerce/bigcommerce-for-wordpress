@@ -115,7 +115,11 @@ class Requirements_Notice {
 	private function get_tax_class_count() {
 		$api = $this->factory->tax_class();
 		try {
-			return count( $api->get_tax_classes() );
+			$classes = $api->get_tax_classes();
+			if ( ! is_array( $classes ) ) {
+				return 0;
+			}
+			return count( $classes );
 		} catch ( \Exception $e ) {
 			return 0;
 		}

@@ -45,8 +45,8 @@ p.bigcommerce-notice__refresh {
 
 .bigcommerce-notice__refresh-button {
 	text-decoration: none;
-	font-size: 12px;
-	line-height: 14px;
+	font-size: var(--font-size-content-xs);
+	line-height: 1.15;
 	display: inline-block;
 	text-transform: uppercase;
 	letter-spacing: 1px;
@@ -54,7 +54,170 @@ p.bigcommerce-notice__refresh {
 	i {
 		display: inline-block;
 		vertical-align: text-bottom;
-		font-size: 18px;
-		line-height: 14px;
+		font-size: var(--font-size-content-lg);
+		line-height: 0.78;
 	}
 }
+
+.bigcommerce-notice__import-status {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	color: var(--color-white);
+	font-weight: var(--font-weight-medium);
+	transition: background-color 250ms ease;
+
+	@media (--viewport-wpadmin) {
+		flex-wrap: nowrap;
+	}
+
+	.wp-admin & {
+		background-color: var(--color-bc-doger-blue);
+		border: 0;
+		padding: 20px;
+	}
+
+	&.bigcommerce-notice__import-status--success {
+		background-color: var(--color-bc-green);
+		align-content: center;
+		align-items: center;
+	}
+
+	&.bigcommerce-notice__import-status--error {
+		border: 1px solid var(--color-bc-red);
+		background-color: var(--color-white);
+		color: var(--color-bc-black);
+	}
+}
+
+.import-status {
+	flex: 1;
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: flex-start;
+
+	@media (--viewport-wpadmin) {
+		flex: 0 1 50%;
+	}
+
+	.bc-icon,
+	.dashicons {
+		flex: 0 0 auto;
+		font-size: 16px;
+		line-height: 1.5;
+		margin-right: 4px;
+		margin-top: 3px;
+	}
+
+	.dashicons-warning {
+		color: var(--color-bc-red);
+		font-size: 21px;
+		line-height: 1.1;
+	}
+
+	p.bc-import-status-message {
+		flex: 1;
+		margin: 0;
+		font-size: 16px;
+	}
+
+	.bigcommerce-notice__import-status--success & {
+		justify-content: center;
+
+		@media (--viewport-wpadmin) {
+			justify-content: flex-start;
+		}
+
+		p.bc-import-status-message {
+			flex: 0 0 auto;
+		}
+	}
+
+	&.import-status-previous {
+
+		p.bc-import-status-message {
+			font-size: inherit;
+		}
+	}
+}
+
+.bc-import-progress-bar__wrapper {
+	flex: 0 0 100%;
+	line-height: 1.5;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: center;
+	justify-content: center;
+	height: 20px;
+	margin-top: 20px;
+
+	@media (--viewport-wpadmin) {
+		flex: 0 1 50%;
+		justify-content: flex-end;
+		margin-top: 0;
+	}
+
+	.button {
+		background: transparent;
+		color: var(--color-white);
+		font-size: 20px;
+		border: 0;
+		box-shadow: none;
+		opacity: 1;
+		transition: var(--transition-opacity);
+
+		&:hover,
+		&:focus {
+			color: var(--color-white);
+			background: transparent;
+			opacity: 0.7;
+		}
+	}
+}
+
+.bc-import-progress-count {
+	flex: 0 0 auto;
+	text-align: right;
+	padding-right: 20px;
+}
+
+.bc-import-progress-bar {
+	flex: 0 1 220px;
+	position: relative;
+	height: 20px;
+	border-radius: 10px;
+	overflow: hidden;
+}
+
+.bc-import-progress-bar__mask {
+	position: absolute;
+	top: 0;
+	left: -100%;
+	width: 100%;
+	height: 100%;
+	background-color: var(--color-bc-black);
+	border-radius: 10px;
+	transition: left 0.25s ease;
+}
+
+.bc-import-progress-bar__bg {
+	background-color: var(--color-white);
+	width: 100%;
+	height: 100%;
+}
+
+.bc-import-progress-bar__percent {
+	position: absolute;
+	right: 8px;
+	top: 50%;
+	transform: translateY(-50%);
+	font-size: 10px;
+	font-weight: var(--font-weight-bold);
+	color: var(--color-bc-doger-blue);
+	text-shadow: 0 0 1px rgba(250, 250, 250, 0.5);
+}
+

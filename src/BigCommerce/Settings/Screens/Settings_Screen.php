@@ -32,6 +32,7 @@ class Settings_Screen extends Abstract_Screen {
 		 * Triggered after registering the main settings screen
 		 *
 		 * @param string $hook_suffix
+		 *
 		 * @deprecated 2018-08-30 Use 'bigcommerce/settings/register/screen=' . Settings_Screen::NAME
 		 */
 		do_action( 'bigcommerce/settings/register', $this->hook_suffix );
@@ -82,6 +83,13 @@ class Settings_Screen extends Abstract_Screen {
 		return ob_get_clean();
 	}
 
+	protected function submit_button() {
+		echo '<div class="bc-settings-save">';
+		printf( '<img class="bc-settings-save__logo" src="%s" alt="%s" />', trailingslashit( $this->assets_url ) . 'img/admin/big-commerce-logo.svg', __( 'BigCommerce', 'bigcommerce' ) );
+		submit_button();
+		echo '</div>';
+	}
+
 	/**
 	 * @return string The date of the last import. Empty if not available.
 	 */
@@ -98,6 +106,21 @@ class Settings_Screen extends Abstract_Screen {
 			default:
 				return '';
 		}
+	}
+
+	/**
+	 * Render a link to support documentation at BigCommerce
+	 *
+	 * @return void
+	 * @action bigcommerce/settings/after_form/page= . self::NAME
+	 */
+	public function render_support_link() {
+		$support_link = 'https://support.bigcommerce.com/s/article/BigCommerce-for-WordPress-Resources';
+		printf(
+			'<p><a href="%s">%s</a></p>',
+			esc_url( $support_link ),
+			__( 'Have questions? Need help?', 'bigcommerce' )
+		);
 	}
 
 	public function should_register() {

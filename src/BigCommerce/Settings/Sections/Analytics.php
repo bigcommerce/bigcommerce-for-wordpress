@@ -55,8 +55,9 @@ class Analytics extends Settings_Section {
 			Settings_Screen::NAME,
 			self::NAME,
 			[
-				'option' => self::FACEBOOK_PIXEL,
-				'type'   => 'text',
+				'option'    => self::FACEBOOK_PIXEL,
+				'type'      => 'text',
+				'label_for' => 'field-' . self::FACEBOOK_PIXEL,
 			]
 		);
 		add_settings_field(
@@ -66,8 +67,9 @@ class Analytics extends Settings_Section {
 			Settings_Screen::NAME,
 			self::NAME,
 			[
-				'option' => self::GOOGLE_ANALYTICS,
-				'type'   => 'text',
+				'option'    => self::GOOGLE_ANALYTICS,
+				'type'      => 'text',
+				'label_for' => 'field-' . self::GOOGLE_ANALYTICS,
 			]
 		);
 	}

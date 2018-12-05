@@ -28,7 +28,7 @@ export default class Inspector extends Component {
 		return (
 			<InspectorControls>
 				<PanelBody
-					title={GUTENBERG_PRODUCTS.inspector_title}
+					title={GUTENBERG_PRODUCTS.inspector.title}
 					initialOpen
 				>
 					<PanelRow>
@@ -40,7 +40,7 @@ export default class Inspector extends Component {
 							data-content="bc-shortcode-ui"
 							onClick={this.triggerDialog}
 						>
-							{GUTENBERG_PRODUCTS.inspector_button_title}
+							{GUTENBERG_PRODUCTS.inspector.button_title}
 						</Button>
 					</PanelRow>
 				</PanelBody>

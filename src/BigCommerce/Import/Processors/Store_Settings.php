@@ -8,6 +8,7 @@ use BigCommerce\Api\Store_Api;
 use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api\v3\Model\CartRequestData;
 use BigCommerce\Import\Runner\Status;
+use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Settings;
 
 class Store_Settings implements Import_Processor {
@@ -37,6 +38,7 @@ class Store_Settings implements Import_Processor {
 				Settings\Sections\Currency::CURRENCY_SYMBOL          => $store->currency_symbol,
 				Settings\Sections\Currency::CURRENCY_SYMBOL_POSITION => $this->sanitize_currency_symbol_position( $store->currency_symbol_location ),
 				Settings\Sections\Currency::DECIMAL_UNITS            => absint( $store->decimal_places ),
+				Settings\Sections\Currency::INTEGER_UNITS            => $this->get_max_integer_units(),
 
 				Settings\Sections\Units::MASS   => $this->sanitize_mass_unit( $store->weight_units ),
 				Settings\Sections\Units::LENGTH => $this->sanitize_length_unit( $store->dimension_units ),
@@ -122,6 +124,18 @@ class Store_Settings implements Import_Processor {
 		}
 
 		return '';
+	}
+
+	/**
+	 * Get the max price integer part length to be used in the ordering by price
+	 *
+	 * @return int
+	 */
+	private function get_max_integer_units() {
+		global $wpdb;
+		$max_length = $wpdb->get_var( "SELECT CHAR_LENGTH( MAX( FLOOR( calculated_price ) ) ) AS 'max_length' FROM {$wpdb->bc_products}" );
+
+		return min( (int) $max_length, 4 );
 	}
 
 }

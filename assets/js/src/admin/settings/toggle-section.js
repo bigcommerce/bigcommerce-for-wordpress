@@ -10,19 +10,15 @@ import * as tools from '../../utils/tools';
 import { up, down } from '../../utils/dom/slide';
 import parseUrl from '../../utils/data/parse-url';
 import scrollTo from '../../utils/dom/scroll-to';
-import { wpAdminAjax } from '../../utils/ajax';
-import { bigCommerceDiagnostics, bigCommerceDiagnosticsError } from '../templates/diagnostics';
-import { DIAGNOSTICS_ACTION, DIAGNOSTICS_NONCE } from '../config/wp-settings';
 
 const el = {
 	container: tools.getNodes('.bc-settings-form', false, document, true)[0],
+	page: tools.getNodes('.bc-settings', false, document, true)[0],
 	url: parseUrl(window.location.href),
 };
 
 const state = {
 	timeout: 300,
-	diagnosticsSet: false,
-	isFetching: false,
 };
 
 const scrollToOptions = {
@@ -42,49 +38,6 @@ const scrollToSection = (section) => {
 	scrollTo(scrollToOptions);
 };
 
-const getPluginDiagnostics = (target) => {
-	const targetCell = target.delegateTarget ? tools.closest(target.delegateTarget, 'td') : target.querySelector('td');
-	const loader = tools.getNodes('.bc-admin-diagnostics-loader', false, targetCell, true)[0];
-	const activeWrapper = tools.getNodes('.bc-setings-diagnostics-wrapper', false, targetCell, true)[0];
-	const getDiagnosticsWrapper = tools.closest(target.delegateTarget, '.bc-diagnostics-data');
-
-	state.isFetching = true;
-	loader.classList.add('is-active');
-
-	if (activeWrapper) {
-		activeWrapper.parentNode.removeChild(activeWrapper);
-	}
-
-	wpAdminAjax({ action: DIAGNOSTICS_ACTION, _wpnonce: DIAGNOSTICS_NONCE })
-		.end((err, res) => {
-			const wrapper = document.createElement('div');
-			wrapper.classList.add('bc-setings-diagnostics-wrapper');
-
-			state.isFetching = false;
-			loader.classList.remove('is-active');
-
-			if (err || !res) {
-				console.error(err);
-				state.diagnosticsSet = false;
-				wrapper.innerHTML = bigCommerceDiagnosticsError;
-				targetCell.appendChild(wrapper);
-				return;
-			}
-
-			if (res.body.success === false) {
-				state.diagnosticsSet = false;
-				wrapper.innerHTML = bigCommerceDiagnosticsError;
-				targetCell.appendChild(wrapper);
-				return;
-			}
-
-			state.diagnosticsSet = true;
-			getDiagnosticsWrapper.parentNode.removeChild(getDiagnosticsWrapper);
-			wrapper.innerHTML = bigCommerceDiagnostics(res.body);
-			targetCell.appendChild(wrapper);
-		});
-};
-
 /**
  * @function expandSection
  * @description expand section and control timing of overlay style.
@@ -93,12 +46,15 @@ const expandSection = (section, target) => {
 	if (el.settingSections.length === 0) {
 		return;
 	}
+	const trigger = tools.getNodes('section-toggle-trigger', false, section)[0];
+	trigger.setAttribute('aria-expanded', true);
 
 	tools.addClass(section, 'bc-settings-section--open');
 	down(target, state.timeout);
 	_.delay(() => {
 		target.style.overflow = 'visible';
 	}, (state.timeout));
+	target.removeAttribute('hidden');
 };
 
 /**
@@ -109,10 +65,13 @@ const collapseSection = (section, target) => {
 	if (el.settingSections.length === 0) {
 		return;
 	}
+	const trigger = tools.getNodes('section-toggle-trigger', false, section)[0];
+	trigger.setAttribute('aria-expanded', false);
 
 	tools.removeClass(section, 'bc-settings-section--open');
 	target.style.overflow = 'hidden';
 	up(target, state.timeout);
+	target.setAttribute('hidden', '');
 };
 
 /**
@@ -120,6 +79,8 @@ const collapseSection = (section, target) => {
  * @description toggle the setting sections open and closed depending on state.
  */
 const toggleSection = (e) => {
+	e.preventDefault();
+
 	if (el.settingSections.length === 0) {
 		return;
 	}
@@ -131,6 +92,33 @@ const toggleSection = (e) => {
 		collapseSection(section, target);
 	} else {
 		expandSection(section, target);
+	}
+};
+
+/**
+ * @function keyboardNavigation
+ * @description allow arrow up/down buttons to control accordion trigger focus.
+ */
+const keyboardNavigation = (e) => {
+	const triggers = tools.getNodes('section-toggle-trigger', true, el.container);
+	const target = e.target;
+	const key = e.which.toString();
+
+	if (target.classList.contains('bc-settings-section__header')) {
+		if (key.match(/38|40/)) {
+			const index = triggers.indexOf(target);
+			const direction = (key.match(/34|40/)) ? 1 : -1;
+			const newIndex = (index + triggers.length + direction) % triggers.length;
+
+			triggers[newIndex].focus();
+
+			e.preventDefault();
+		}
+	}
+
+	// Prevents spacebar triggering select dropdown with page scroll
+	if (target.matches('.bc-choices.is-focused') && e.keyCode === 32) {
+		e.preventDefault();
 	}
 };
 
@@ -162,7 +150,7 @@ const cacheElements = () => {
  */
 const bindEvents = () => {
 	delegate(el.container, '[data-js="section-toggle-trigger"]', 'click', toggleSection);
-	delegate(el.container, '[data-js="bc-admin-get-diagnostics"]', 'click', getPluginDiagnostics);
+	delegate(el.page, '.bc-settings-form', 'keydown', keyboardNavigation);
 };
 
 const init = () => {

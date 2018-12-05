@@ -13,6 +13,10 @@ use BigCommerce\Import\Runner\Status;
  * Displays the import status on the settings page after the import button
  */
 class Import_Status {
+
+	const AJAX_ACTION_IMPORT_STATUS = 'bigcommerce_import_status';
+	const IMPORT_TOTAL_PRODUCTS     = 'bigcommerce_import_total_products';
+
 	/**
 	 * @return void
 	 * @action bigcommerce/settings/render/frequency
@@ -24,9 +28,10 @@ class Import_Status {
 		$next     = $this->next_status();
 
 		if ( $previous[ 'message' ] ) {
-			$previous_output = sprintf( '<span class="import-status import-status-previous">%s</span>', $previous[ 'message' ] );
-			if ( $previous[ 'status' ] === Status::FAILED ) {
-				$previous_output = sprintf( '<div class="notice notice-error">%s</div>', $previous_output );
+			$icon            = $previous['status'] === Status::FAILED ? '<i class="dashicons dashicons-warning"></i>' : '';
+			$previous_output = sprintf( '<div class="import-status import-status-previous">%s <p class="bc-import-status-message">%s</p></div>', $icon, $previous['message'] );
+			if ( $previous['status'] === Status::FAILED ) {
+				$previous_output = sprintf( '<div class="notice bigcommerce-notice bigcommerce-notice__import-status bigcommerce-notice__import-status--error">%s</div>', $previous_output );
 			}
 			echo $previous_output;
 		}
@@ -45,20 +50,70 @@ class Import_Status {
 	public function current_status_notice() {
 		$current = $this->current_status();
 		if ( $current[ 'message' ] ) {
-			printf( '<div class="notice notice-info bigcommerce-notice"><p class="import-status import-status-current">%s</p></div>', $current[ 'message' ] );
+			printf( '<div class="notice notice-info bigcommerce-notice bigcommerce-notice__import-status" data-js="bc-import-progress-status"><div class="import-status import-status-current"><i class="bc-icon icon-bc-sync"></i> <p class="bc-import-status-message">%s</p></div></div>', $current[ 'message' ] );
 		}
+	}
+
+	/**
+	 * Returns current status and pushes next cron task to run
+	 *
+	 * returns wp_send_json response
+	 */
+	public function ajax_current_status() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( [ 'code' => 'unauthorized' ], 403 );
+		}
+		$nonce = filter_input( INPUT_GET, '_wpnonce' );
+		if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, self::AJAX_ACTION_IMPORT_STATUS ) ) {
+			wp_send_json_error( [ 'code' => 'invalid_nonce' ], 403 );
+		}
+		// return current status
+		wp_send_json_success( $this->current_status() );
+
+		// Just in case
+		wp_die( '', '', [ 'response' => null ] );
 	}
 
 	/**
 	 * @return array The message describing the current import and the status string
 	 */
 	private function current_status() {
-		$status  = new Status();
-		$current = $status->current_status();
+		$status   = new Status();
+		$current  = $status->current_status();
+		$previous = $status->previous_status();
+
+		// TODO: refactor import task registration, then create this list dynamically
+		$step = [
+			Status::FETCHING_LISTING_IDS     => 1,
+			Status::FETCHED_LISTING_IDS      => 1,
+			Status::INITIALIZING_CHANNEL     => 2,
+			Status::INITIALIZED_CHANNEL      => 2,
+			Status::FETCHING_PRODUCT_IDS     => 3,
+			Status::FETCHED_PRODUCT_IDS      => 3,
+			Status::MARKING_DELETED_PRODUCTS => 4,
+			Status::MARKED_DELETED_PRODUCTS  => 4,
+			Status::PROCESSING_QUEUE         => 5,
+			Status::PROCESSED_QUEUE          => 5,
+			Status::FETCHING_STORE           => 6,
+			Status::FETCHED_STORE            => 6,
+
+		];
+
+		$total_steps = max( $step );
+		$total       = (int) get_option( self::IMPORT_TOTAL_PRODUCTS, 0 );
+		$remaining   = $this->get_remaining_in_queue();
+		$total       = max( $remaining, $total ); // just in case the option isn't set.
+		$completed   = $total - $remaining;
+		$response    = [];
 		if ( $current[ 'status' ] === Status::NOT_STARTED ) {
 			return [
-				'message' => '',
-				'status'  => $current[ 'status' ],
+				'message'  => '',
+				'status'   => $current['status'],
+				'products' => [
+					'total'     => (int) $total,
+					'completed' => (int) $completed,
+					'status'    => sprintf( _n( '%s Product Successfully Synced', '%s Products Successfully Synced', $total, 'bigcommerce' ), $total ),
+				],
 			];
 		}
 
@@ -81,8 +136,7 @@ class Import_Status {
 				break;
 			case Status::PROCESSING_QUEUE:
 			case Status::PROCESSED_QUEUE:
-				$remaining     = $this->get_remaining_in_queue();
-				$status_string = sprintf( __( 'Importing products. %d remaining.', 'bigcommerce' ), $remaining );
+				$status_string = sprintf( __( 'Importing products: %d of %d', 'bigcommerce' ), $completed, $total );
 				break;
 			case Status::FETCHING_STORE:
 			case Status::FETCHED_STORE:
@@ -96,13 +150,20 @@ class Import_Status {
 		if ( empty( $status_string ) ) {
 			$status_string = __( 'Import in progress.', 'bigcommerce' );
 		} else {
-			$status_string = sprintf( __( 'Import in progress. Status: %s', 'bigcommerce' ), $status_string );
+			$status_string = sprintf( __( 'Step %s of %s: %s', 'bigcommerce' ), $step[$current[ 'status' ]], $total_steps, $status_string );
 		}
+		$response = array_merge( [
+			'message'  => apply_filters( 'bigcommerce/settings/import_status/current', $status_string, $current[ 'status' ], $current[ 'timestamp' ] ),
+			'status'   => $current[ 'status' ],
+			'previous' => $previous[ 'status' ],
+			'products' => [
+				'total'     => (int) $total,
+				'completed' => (int) $completed,
+				'status'    => sprintf( __( '%s of %s', 'bigcommerce' ), $completed, $total ),
+			],
+		], $response );
 
-		return [
-			'message' => apply_filters( 'bigcommerce/settings/import_status/current', $status_string, $current[ 'status' ], $current[ 'timestamp' ] ),
-			'status'  => $current[ 'status' ],
-		];
+		return $response;
 	}
 
 	/**
@@ -155,6 +216,18 @@ class Import_Status {
 			'status'  => $next,
 		];
 
+	}
+
+	/**
+	 * Cache the current size of the import queue.
+	 * This allows us to show progress as the queue
+	 * diminishes.
+	 *
+	 * @return void
+	 */
+	public function cache_queue_size() {
+		$count = $this->get_remaining_in_queue();
+		update_option( self::IMPORT_TOTAL_PRODUCTS, (int) $count );
 	}
 
 	/**

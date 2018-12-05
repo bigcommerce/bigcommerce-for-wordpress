@@ -42,7 +42,10 @@ class Import extends Settings_Section {
 			__( 'Sync Frequency', 'bigcommerce' ),
 			[ $this, 'frequency_select' ],
 			Settings_Screen::NAME,
-			self::NAME
+			self::NAME,
+			[
+				'label_for' => 'field-' . self::OPTION_FREQUENCY,
+			]
 		);
 
 		register_setting(
@@ -50,7 +53,6 @@ class Import extends Settings_Section {
 			self::OPTION_FREQUENCY
 		);
 
-		/* // disabled until BigCommerce has a UI for managing channels
 		add_settings_field(
 			self::OPTION_NEW_PRODUCTS,
 			__( 'Automatic Listing', 'bigcommerce' ),
@@ -62,7 +64,7 @@ class Import extends Settings_Section {
 		register_setting(
 			Settings_Screen::NAME,
 			self::OPTION_NEW_PRODUCTS
-		); */
+		);
 	}
 
 	public function section_description() {
@@ -83,7 +85,7 @@ class Import extends Settings_Section {
 			self::FREQUENCY_MONTHLY => __( 'Month', 'bigcommerce' ),
 		];
 
-		$select = sprintf( '<select name="%s" class="regular-text bc-field-choices">', esc_attr( self::OPTION_FREQUENCY ) );
+		$select = sprintf( '<select id="field-%s" name="%s" class="regular-text bc-field-choices">', esc_attr( self::OPTION_FREQUENCY ), esc_attr( self::OPTION_FREQUENCY ) );
 		foreach ( $options as $key => $label ) {
 			$select .= sprintf( '<option value="%s" %s>%s</option>', esc_attr( $key ), selected( $current, $key, false ), esc_html( $label ) );
 		}
@@ -95,6 +97,7 @@ class Import extends Settings_Section {
 	public function new_products_toggle() {
 		$current = get_option( self::OPTION_NEW_PRODUCTS, 1 );
 
+		echo '<fieldset>';
 		printf(
 			'<p><label><input type="radio" name="%s" value="1" %s /> %s</label></p>',
 			esc_attr( self::OPTION_NEW_PRODUCTS ),
@@ -107,5 +110,6 @@ class Import extends Settings_Section {
 			checked( 0, (int) $current, false ),
 			__( "No, I'll select which products should be listed on this Channel within BigCommerce", 'bigcommerce' )
 		);
+		echo '</fieldset>';
 	}
 }

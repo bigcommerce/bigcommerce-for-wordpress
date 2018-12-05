@@ -17,8 +17,6 @@ class Channels extends Settings_Section {
 	const CHANNEL_ID   = 'bigcommerce_channel_id';
 	const CHANNEL_NAME = 'bigcommerce_channel_name';
 
-
-
 	public function register_settings_section() {
 
 		add_settings_section(
@@ -40,8 +38,9 @@ class Channels extends Settings_Section {
 			Settings_Screen::NAME,
 			self::NAME,
 			[
-				'type'    => 'text',
-				'option'  => self::CHANNEL_NAME,
+				'type'      => 'text',
+				'option'    => self::CHANNEL_NAME,
+				'label_for' => 'field-' . self::CHANNEL_NAME,
 			]
 		);
 	}

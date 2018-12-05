@@ -12,6 +12,7 @@ class Currency extends Settings_Section {
 	const CURRENCY_CODE            = 'bigcommerce_currency_code';
 	const CURRENCY_SYMBOL          = 'bigcommerce_currency_symbol';
 	const CURRENCY_SYMBOL_POSITION = 'bigcommerce_currency_symbol_position';
+	const INTEGER_UNITS            = 'bigcommerce_integer_units';
 	const DECIMAL_UNITS            = 'bigcommerce_decimal_units';
 
 	const POSITION_LEFT        = 'left';
@@ -46,6 +47,7 @@ class Currency extends Settings_Section {
 			self::DECIMAL_UNITS
 		);
 
+
 		/**
 		 * This filter is documented in src/BigCommerce/Container/Currency.php
 		 */
@@ -62,9 +64,10 @@ class Currency extends Settings_Section {
 			Settings_Screen::NAME,
 			self::NAME,
 			[
-				'option'  => self::CURRENCY_SYMBOL,
-				'type'    => 'text',
-				'default' => '$',
+				'option'    => self::CURRENCY_SYMBOL,
+				'type'      => 'text',
+				'default'   => '$',
+				'label_for' => 'field-' . self::CURRENCY_SYMBOL,
 			]
 		);
 
@@ -73,7 +76,10 @@ class Currency extends Settings_Section {
 			esc_html( __( 'Symbol Position', 'bigcommerce' ) ),
 			[ $this, 'render_position_select', ],
 			Settings_Screen::NAME,
-			self::NAME
+			self::NAME,
+			[
+				'label_for' => 'field-' . self::CURRENCY_SYMBOL_POSITION,
+			]
 		);
 
 		add_settings_field(
@@ -83,23 +89,38 @@ class Currency extends Settings_Section {
 			Settings_Screen::NAME,
 			self::NAME,
 			[
-				'option'  => self::DECIMAL_UNITS,
-				'type'    => 'number',
-				'default' => 2,
+				'option'    => self::DECIMAL_UNITS,
+				'type'      => 'number',
+				'default'   => 2,
+				'label_for' => 'field-' . self::DECIMAL_UNITS,
 			]
 		);
 	}
 
 	public function render_section( $section ) {
+		/**
+		 * This filter is documented in src/BigCommerce/Container/Currency.php
+		 */
+		$auto_format = apply_filters( 'bigcommerce/settings/currency/auto-format', class_exists( '\NumberFormatter' ) );
+
+		if ( ! $auto_format ) {
+			$message = sprintf(
+				__( 'These settings affect how your prices are displayed in WordPress, but will not affect the <a href="%s"> BigCommerce currency settings</a> with which shoppers will be charged.', 'bigcommerce' ),
+				esc_url( 'https://login.bigcommerce.com/deep-links/settings/currencies' )
+			);
+			printf( '<p class="description">%s</p>', $message );
+		}
+
 		$code = get_option( self::CURRENCY_CODE, '' );
 		if ( ! empty( $code ) ) {
 			printf(
 				'<p>%s</p>',
 				sprintf( __( 'Currency code set to %s', 'bigcommerce' ), $code )
 			);
-		} elseif ( class_exists( '\NumberFormatter' ) ) {
+		} elseif ( $auto_format ) {
 			printf( '<p>%s</p>', __( 'Currency code will be automatically set when the product import completes', 'bigcommerce' ) );
 		}
+
 		do_action( 'bigcommerce/settings/render/currency', $section );
 	}
 
@@ -116,7 +137,7 @@ class Currency extends Settings_Section {
 			$options[] = sprintf( '<option value="%s" %s>%s</option>', esc_attr( $key ), selected( $key, $value, false ), esc_html( $label ) );
 		}
 
-		printf( '<select name="%s" class="regular-text">%s</select>', esc_attr( self::CURRENCY_SYMBOL_POSITION ), implode( "\n", $options ) );
+		printf( '<select id="field-%s" name="%s" class="regular-text">%s</select>', esc_attr( self::CURRENCY_SYMBOL_POSITION ), esc_attr( self::CURRENCY_SYMBOL_POSITION ), implode( "\n", $options ) );
 	}
 
 }

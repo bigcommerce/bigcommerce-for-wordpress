@@ -31,6 +31,7 @@ class Welcome_Screen extends Abstract_Screen {
 		unset( $_GET[ 'settings-updated' ] );
 		$connect_account_url = $this->get_connect_account_url();
 		$create_account_url  = $this->get_create_account_url();
+		$credentials_url     = $this->get_credentials_url();
 		$notices             = $this->get_notices();
 		include trailingslashit( $this->template_dir ) . 'welcome-screen.php';
 	}
@@ -41,6 +42,10 @@ class Welcome_Screen extends Abstract_Screen {
 
 	private function get_create_account_url() {
 		return apply_filters( 'bigcommerce/settings/create_account_url', 'https://www.bigcommerce.com/' );
+	}
+
+	private function get_credentials_url() {
+		return apply_filters( 'bigcommerce/settings/credentials_url', admin_url() );
 	}
 
 	public function should_register() {

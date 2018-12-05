@@ -3,15 +3,18 @@
 namespace BigCommerce\Settings\Sections;
 
 
+use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Import\Runner\Cron_Runner;
 use BigCommerce\Import\Runner\Status;
+use BigCommerce\Logging\Error_Log;
 use BigCommerce\Merchant\Onboarding_Api;
 use BigCommerce\Pages\Cart_Page;
 use BigCommerce\Pages\Gift_Certificate_Page;
 use BigCommerce\Pages\Registration_Page;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Settings\Screens\Settings_Screen;
-use \BigCommerce\Customizer\Sections\Product_Archive;
+use BigCommerce\Customizer\Sections\Product_Archive;
+
 
 /**
  * Class Troubleshooting_Diagnostics
@@ -24,8 +27,10 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 	const DIAGNOSTICS_ID   = 'bigcommerce_diagnostics_id';
 	const DIAGNOSTICS_NAME = 'bigcommerce_diagnostics_name';
 	const TEXTBOX_NAME     = 'bigcommerce_diagnostics_output';
+	const LOG_ERRORS       = 'bigcommerce_diagnostics_log_import_errors';
 
-	const AJAX_ACTION = 'bigcommerce_support_data';
+	const AJAX_ACTION               = 'bigcommerce_support_data';
+	const AJAX_ACTION_IMPORT_ERRORS = 'bigcommerce_import_errors_log';
 
 	/*
 	 * Add settings section self::NAME
@@ -38,6 +43,24 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 			__( 'Diagnostics', 'bigcommerce' ),
 			'__return_false',
 			Settings_Screen::NAME
+		);
+
+		register_setting(
+			Settings_Screen::NAME,
+			self::LOG_ERRORS
+		);
+
+		add_settings_field(
+			self::LOG_ERRORS,
+			esc_html( __( 'Log import errors', 'bigcommerce' ) ),
+			[ $this, 'render_enable_import_errors', ],
+			Settings_Screen::NAME,
+			self::NAME,
+			[
+				'type'        => 'checkbox',
+				'option'      => self::LOG_ERRORS,
+				'description' => __( 'If enabled, will log import error messages to /wp-content/uploads/logs/bigcommerce/import.log. If you want to use a different path please define BIGCOMMERCE_DEBUG_LOG in your wp-config.php with the desired writeable path.', 'bigcommerce' ),
+			]
 		);
 
 		add_settings_field(
@@ -53,6 +76,7 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 				'description' => __( 'The following is information about your WordPress install that may be helpful information to provide to BigCommerce Customer Support in the event that issues arise and you require help troubleshooting.', 'bigcommerce' ),
 			]
 		);
+
 
 	}
 
@@ -73,6 +97,12 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 		);
 	}
 
+	public function render_enable_import_errors( $args ) {
+		$value    = (bool) get_option( $args[ 'option' ], false );
+		$checkbox = sprintf( '<input type="%s" value="1" class="regular-text code" name="%s" %s/>', esc_attr( $args[ 'type' ] ), esc_attr( $args[ 'option' ] ), checked( true, $value, false ) );
+		printf( '<p class="description">%s %s</p>', $checkbox, __( $args[ 'description' ], 'bigcommerce' ) );
+	}
+
 	/**
 	 * Sets a wp_send_json answer for the ajax call that holds
 	 * information about the plugin and the hosting system
@@ -90,144 +120,181 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 		$diagnostics     = [
 			[
 				'label' => __( 'WordPress Installation', 'bigcommerce' ),
+				'key'   => 'wordpress',
 				'value' => [
 					[
 						'label' => __( 'Site URL', 'bigcommerce' ),
+						'key'   => 'siteurl',
 						'value' => get_site_url(),
 					],
 					[
 						'label' => __( 'WP version', 'bigcommerce' ),
+						'key'   => 'wpversion',
 						'value' => get_bloginfo( 'version' ),
 					],
 					[
 						'label' => __( 'Multisite', 'bigcommerce' ),
+						'key'   => 'multisite',
 						'value' => is_multisite() ? 'yes' : 'No',
 					],
 					[
 						'label' => __( 'Permalinks', 'bigcommerce' ),
+						'key'   => 'permalinks',
 						'value' => get_option( 'permalink_structure' ),
 					],
 					[
 						'label' => __( 'Plugins Active', 'bigcommerce' ),
+						'key'   => 'plugins',
 						'value' => $this->get_plugin_active_names(),
 					],
 					[
 						'label' => __( 'Network Plugins Active', 'bigcommerce' ),
+						'key'   => 'networkplugins',
 						'value' => is_multisite() ? $this->get_plugin_network_active_names() : [],
 					],
 					[
 						'label' => __( 'Must Have Plugins', 'bigcommerce' ),
+						'key'   => 'muplugins',
 						'value' => $this->get_mu_plugin_names(),
 					],
 				],
 			],
 			[
 				'label' => __( 'Server Environment', 'bigcommerce' ),
+				'key'   => 'server',
 				'value' => [
 					[
 						'label' => __( 'PHP Version', 'bigcommerce' ),
+						'key'   => 'phpversion',
 						'value' => phpversion(),
 					],
 					[
 						'label' => __( 'Max Execution Time', 'bigcommerce' ),
+						'key'   => 'max_execution_time',
 						'value' => ini_get( 'max_execution_time' ),
 					],
 					[
 						'label' => __( 'Memory Limit', 'bigcommerce' ),
+						'key'   => 'memory_limit',
 						'value' => ini_get( 'memory_limit' ),
 					],
 					[
 						'label' => __( 'Upload Max Filesize', 'bigcommerce' ),
+						'key'   => 'upload_max_filesize',
 						'value' => ini_get( 'upload_max_filesize' ),
 					],
 					[
 						'label' => __( 'Post Max Size', 'bigcommerce' ),
+						'key'   => 'post_max_size',
 						'value' => ini_get( 'post_max_size' ),
 					],
 					[
 						'label' => __( 'WP debug', 'bigcommerce' ),
+						'key'   => 'wp_debug',
 						'value' => ( defined( 'WP_DEBUG' ) && WP_DEBUG ) ? 'Yes' : 'No',
 					],
 					[
 						'label' => __( 'WP debug display', 'bigcommerce' ),
+						'key'   => 'wp_debug_display',
 						'value' => ( defined( 'WP_DEBUG_DISPLAY' ) && WP_DEBUG_DISPLAY ) ? 'Yes' : 'No',
 					],
 					[
 						'label' => __( 'WP debug log', 'bigcommerce' ),
+						'key'   => 'wp_debug_log',
 						'value' => ( defined( 'WP_DEBUG_LOG' ) && WP_DEBUG_LOG ) ? 'Yes' : 'No',
 					],
 					[
 						'label' => __( 'Mysql Version', 'bigcommerce' ),
+						'key'   => 'mysqlversion',
 						'value' => $wpdb->db_version(),
 					],
 					[
 						'label' => __( 'Web Server', 'bigcommerce' ),
+						'key'   => 'webserver',
 						'value' => $_SERVER[ "SERVER_SOFTWARE" ],
 					],
 				],
 			],
 			[
 				'label' => __( 'BigCommerce Plugin', 'bigcommerce' ),
+				'key'   => 'bigcommerce',
 				'value' => [
 					[
 						'label' => __( 'Channel ID', 'bigcommerce' ),
+						'key'   => 'channelid',
 						'value' => get_option( Channels::CHANNEL_ID ),
 					],
 					[
 						'label' => __( 'Store ID', 'bigcommerce' ),
+						'key'   => 'storeid',
 						'value' => get_option( Onboarding_Api::STORE_ID, '' ),
 					],
 					[
 						'label' => __( 'Api URL', 'bigcommerce' ),
+						'key'   => 'apiurl',
 						'value' => get_option( Api_Credentials::OPTION_STORE_URL ),
 					],
 					[
 						'label' => __( 'Import Frequency', 'bigcommerce' ),
+						'key'   => 'importfrequency',
 						'value' => get_option( Import::OPTION_FREQUENCY ),
 					],
 					[
 						'label' => __( 'Import Status', 'bigcommerce' ),
+						'key'   => 'importstatus',
 						'value' => $this->previous_status()[ 'status' ],
 					],
 					[
 						'label' => __( 'Last Import', 'bigcommerce' ),
+						'key'   => 'lastimport',
 						'value' => $this->previous_status()[ 'time_date' ],
 					],
 					[
 						'label' => __( 'Next Import', 'bigcommerce' ),
+						'key'   => 'nextimport',
 						'value' => $this->next_status()[ 'time_date' ],
 					],
 					[
 						'label' => __( 'Products Count', 'bigcommerce' ),
+						'key'   => 'productcount',
 						'value' => $products_amount,
 					],
 					[
 						'label' => __( 'Cart Enabled', 'bigcommerce' ),
+						'key'   => 'cartenabled',
 						'value' => get_option( Cart::OPTION_ENABLE_CART ) ? true : false,
 					],
 					[
-						'label' => __( 'Cart Slug Page', 'bigcommerce' ),
+						'label' => __( 'Cart Page Slug', 'bigcommerce' ),
+						'key'   => 'cartpage',
 						'value' => get_post_field( 'post_name', get_option( Cart_Page::NAME ) ),
 					],
 					[
 						'label' => __( 'Archive Slug', 'bigcommerce' ),
+						'key'   => 'archiveslug',
 						'value' => get_option( Product_Archive::ARCHIVE_SLUG ),
 					],
 					[
 						'label' => __( 'Account Page Slug', 'bigcommerce' ),
+						'key'   => 'accountslug',
 						'value' => get_post_field( 'post_name', get_option( Registration_Page::NAME ) ),
 					],
 					[
 						'label' => __( 'Gift Certificate Page Slug', 'bigcommerce' ),
+						'key'   => 'giftcertificateslug',
 						'value' => get_post_field( 'post_name', get_option( Gift_Certificate_Page::NAME ) ),
 					],
 					[
 						'label' => __( 'Template Overrides', 'bigcommerce' ),
+						'key'   => 'templateoverrides',
 						'value' => $this->get_template_overrides(),
 					],
 				],
 			],
 		];
+
+		$diagnostics = apply_filters( 'bigcommerce/diagnostics', $diagnostics );
+
 		// Send response
 		wp_send_json( $diagnostics );
 
@@ -344,7 +411,7 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 
 
 	/**
-	 * @param string $folder  folder Location
+	 * @param string $folder folder Location
 	 *
 	 * @return array   File list
 	 */
@@ -423,5 +490,21 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 			] );
 			exit();
 		}
+	}
+
+	/**
+	 * Responds a formatted log content
+	 *
+	 * @param Error_Log $log
+	 */
+	public function get_import_errors( Error_Log $log ) {
+		// Validate request nonce
+		$this->validate_ajax_nonce( $_REQUEST );
+
+		// Send response
+		wp_send_json( $log->get_log_data() );
+
+		// Just in case
+		wp_die( '', '', [ 'response' => null ] );
 	}
 }

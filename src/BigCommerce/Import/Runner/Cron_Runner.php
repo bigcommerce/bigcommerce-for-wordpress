@@ -54,6 +54,28 @@ class Cron_Runner {
 		$lock->release_lock();
 	}
 
+	/**
+	 * When an ajax request to get the current import status comes in,
+	 * run the next step in the process by triggering the scheduled
+	 * cron job.
+	 *
+	 * Runs at priority 5, before the ajax response handler
+	 *
+	 * @return void
+	 * @action Import_Status::AJAX_ACTION_IMPORT_STATUS 5
+	 */
+	public function ajax_continue_import() {
+		// in case there's already an event scheduled, remove it
+		wp_unschedule_hook( self::CONTINUE_CRON );
+
+		// Then fire the action that the cron would have fired on the schedule.
+		do_action( self::CONTINUE_CRON );
+
+		// This will have the side effect of scheduling the next run, so the
+		// cron can continue to run if the user leaves the page and the Ajax
+		// requests stop coming.
+	}
+
 	private function schedule_next() {
 		$status  = new Status();
 		$current = $status->current_status();

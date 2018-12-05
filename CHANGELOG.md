@@ -1,5 +1,34 @@
 # Changelog
 
+## [1.2.0]
+
+### Added
+
+- Product prices will update dynamically to reflect the price of the selected variant.
+- Reintroduced the ability to set API credentials without using the connector app.
+- Added logs for import errors, viewable through the plugin diagnostics section
+  on the plugin settings screen.
+- Added support for links directly to product variants.
+- The import process will continue to run via ajax requests while an admin is
+  on the plugin settings screen. This can speed up import processing on sites
+  that depend on WordPress cron jobs for the import.
+
+### Changed
+
+- Refactored Gutenberg block registration to re-use code and allow more
+  configuration when registering the blocks in PHP.
+- Font sizes use relative units instead of pixels.
+- Increased quantity field width to accommodate three digits.
+
+### Fixed
+
+- Fixed compatibility with newer (4.4+) versions of Gutenberg.
+- Updated the `$_COOKIE` superglobal immediately on setting the cart cookie.
+- Fixed a PHP error when the BigCommerce tax class API returns an invalid value.
+- Added decimal precision to price sorting queries, fixing sorting for products
+  that round to the same integer value.
+- Improved accessibility and keyboard navigation on the plugin settings screen.
+
 ## [1.1.0]
 
 ### Added
@@ -191,6 +220,7 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[1.2.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.1.0...1.2.0
 [1.1.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.0.2...1.1.0
 [1.0.2]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.0.1...1.0.2
 [1.0.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/0.15.0...1.0.1

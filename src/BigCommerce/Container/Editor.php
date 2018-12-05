@@ -59,25 +59,25 @@ class Editor extends Provider {
 	private function gutenberg( Container $container ) {
 		$container[ self::GUTENBERG_BLOCKS ] = function ( Container $container ) {
 			$blocks = [
-				new Gutenberg\Blocks\Products( $container[ Rest::SHORTCODE ] ),
-				new Gutenberg\Blocks\Account_Profile(),
-				new Gutenberg\Blocks\Address_List(),
-				new Gutenberg\Blocks\Order_History(),
-				new Gutenberg\Blocks\Login_Form(),
-				new Gutenberg\Blocks\Product_Reviews()
+				new Gutenberg\Blocks\Products( $container[ Assets::PATH ], $container[ Rest::SHORTCODE ] ),
+				new Gutenberg\Blocks\Account_Profile( $container[ Assets::PATH ] ),
+				new Gutenberg\Blocks\Address_List( $container[ Assets::PATH ] ),
+				new Gutenberg\Blocks\Order_History( $container[ Assets::PATH ] ),
+				new Gutenberg\Blocks\Login_Form( $container[ Assets::PATH ] ),
+				new Gutenberg\Blocks\Product_Reviews( $container[ Assets::PATH ] )
 			];
 			if ( ( (bool) get_option( Cart_Settings::OPTION_ENABLE_CART, true ) ) === true ) {
-				$blocks[] = new Gutenberg\Blocks\Cart();
+				$blocks[] = new Gutenberg\Blocks\Cart( $container[ Assets::PATH ] );
 			}
 			if ( ( (bool) get_option( Cart_Settings::OPTION_EMBEDDED_CHECKOUT, true ) ) === true ) {
-				$blocks[] = new Gutenberg\Blocks\Checkout();
+				$blocks[] = new Gutenberg\Blocks\Checkout( $container[ Assets::PATH ] );
 			}
 			if ( ( (bool) get_option( Gift_Certificate_Settings::OPTION_ENABLE, true ) ) === true ) {
-				$blocks[] = new Gutenberg\Blocks\Gift_Certificate_Form();
-				$blocks[] = new Gutenberg\Blocks\Gift_Certificate_Balance();
+				$blocks[] = new Gutenberg\Blocks\Gift_Certificate_Form( $container[ Assets::PATH ] );
+				$blocks[] = new Gutenberg\Blocks\Gift_Certificate_Balance( $container[ Assets::PATH ] );
 			}
 			if ( get_option( 'users_can_register' ) ) {
-				$blocks[] = new Gutenberg\Blocks\Registration_Form();
+				$blocks[] = new Gutenberg\Blocks\Registration_Form( $container[ Assets::PATH ] );
 			}
 			return $blocks;
 		};
