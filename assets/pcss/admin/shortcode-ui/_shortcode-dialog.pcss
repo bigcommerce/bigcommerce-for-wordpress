@@ -48,6 +48,7 @@
 	left: 5%;
 	top: 5%;
 	overflow-y: scroll;
+	font-size: var(--font-size-base);
 
 	> div {
 		height: 100%;
@@ -184,6 +185,10 @@
 	}
 }
 
+.bc-shortcode-ui__default-header {
+	font-size: var(--font-size-content-s);
+}
+
 .bc-shortcode-ui__selections {
 	position: relative;
 	overflow: hidden;
@@ -248,8 +253,8 @@
 	vertical-align: middle;
 	border-radius: 4px;
 	padding: 4px 2px 4px 10px;
-	font-size: 12px;
-	line-height: 20px;
+	font-size: var(--font-size-content-xs);
+	line-height: 1.67;
 	font-weight: 500;
 	margin-right: 4px;
 	margin-bottom: 4px;
@@ -304,6 +309,7 @@
 }
 
 .bc-shortcode-ui__display-settings {
+	font-size: var(--font-size-content-s);
 
 	& > * {
 		display: block;

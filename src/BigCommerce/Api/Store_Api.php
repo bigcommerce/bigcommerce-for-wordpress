@@ -8,7 +8,7 @@ use Firebase\JWT\JWT;
 
 class Store_Api extends v2ApiAdapter {
 
-	public function getCustomerLoginToken( $id, $redirectUrl = '', $requestIp = '' ) {
+	public function getCustomerLoginToken( $id, $redirectUrl = '', $requestIp = '', $channel_id = 0 ) {
 		$config     = $this->apiClient->getConfig();
 		$client_id  = $config->getClientId();
 		$secret     = $config->getClientSecret();
@@ -32,6 +32,10 @@ class Store_Api extends v2ApiAdapter {
 
 		if ( ! empty( $requestIp ) ) {
 			$payload[ 'request_ip' ] = $requestIp;
+		}
+
+		if ( ! empty( $channel_id ) ) {
+			$payload[ 'channel_id' ] = (int) $channel_id;
 		}
 
 		return JWT::encode( $payload, $secret, 'HS256' );

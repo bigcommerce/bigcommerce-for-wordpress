@@ -6,6 +6,7 @@ namespace BigCommerce\Container;
 
 use BigCommerce\Import\Processors;
 use BigCommerce\Import\Runner;
+use BigCommerce\Settings\Import_Status;
 use BigCommerce\Settings\Sections\Import as Import_Settings;
 use Pimple\Container;
 
@@ -74,6 +75,10 @@ class Import extends Provider {
 		add_action( Runner\Cron_Runner::CONTINUE_CRON, $this->create_callback( 'cron_continue', function () use ( $container ) {
 			$container[ self::CRON_RUNNER ]->continue_import();
 		} ), 10, 0 );
+
+		add_action( 'wp_ajax_' . Import_Status::AJAX_ACTION_IMPORT_STATUS, $this->create_callback( 'ajax_continue', function () use ( $container ) {
+			$container[ self::CRON_RUNNER ]->ajax_continue_import();
+		} ), 5, 0 );
 	}
 
 	private function process( Container $container ) {

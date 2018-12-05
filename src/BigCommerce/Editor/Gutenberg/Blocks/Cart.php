@@ -9,32 +9,27 @@ use BigCommerce\Shortcodes;
  *
  * A block to display the current user's cart
  */
-class Cart extends Gutenberg_Block {
+class Cart extends Shortcode_Block {
 	const NAME = 'bigcommerce/cart';
 
+	protected $icon = 'cart';
+	protected $shortcode = Shortcodes\Cart::NAME;
 
-	public function __construct() {
-		parent::__construct();
+	protected function title() {
+		return __( 'BigCommerce Cart', 'bigcommerce' );
 	}
 
-	public function render( $attributes ) {
-		return sprintf( '[%s]', Shortcodes\Cart::NAME ); // content will be passed through do_shortcode
+	protected function html_title() {
+		return __( 'Cart', 'bigcommerce' );
 	}
 
-	public function js_config() {
-		return [
-			'name'      => $this->name(),
-			'title'     => __( 'BigCommerce Cart', 'bigcommerce' ),
-			'category'  => 'widgets',
-			'keywords'  => [
-				__( 'ecommerce', 'bigcommerce' ),
-				__( 'commerce', 'bigcommerce' ),
-				__( 'checkout', 'bigcommerce' ),
-			],
-			'shortcode' => sprintf( '[%s]', Shortcodes\Cart::NAME ),
-			'block_html' => [
-				'title' => __( 'Cart', 'bigcommerce' ),
-			],
-		];
+	protected function html_image() {
+		return $this->image_url( 'Gutenberg-Block_Cart.png' );
+	}
+
+	protected function keywords() {
+		$keywords = parent::keywords();
+		$keywords[] = __( 'checkout', 'bigcommerce' );
+		return $keywords;
 	}
 }

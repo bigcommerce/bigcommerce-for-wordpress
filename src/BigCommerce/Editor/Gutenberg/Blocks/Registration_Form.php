@@ -9,32 +9,30 @@ use BigCommerce\Shortcodes;
  *
  * A block to display the registration form
  */
-class Registration_Form extends Gutenberg_Block {
+class Registration_Form extends Shortcode_Block {
 	const NAME = 'bigcommerce/registration-form';
 
 
-	public function __construct() {
-		parent::__construct();
+	protected $icon = 'nametag';
+	protected $shortcode = Shortcodes\Registration_Form::NAME;
+
+	protected function title() {
+		return __( 'BigCommerce Registration Form', 'bigcommerce' );
 	}
 
-	public function render( $attributes ) {
-		return sprintf( '[%s]', Shortcodes\Registration_Form::NAME ); // content will be passed through do_shortcode
+	protected function html_title() {
+		return __( 'Registration Form', 'bigcommerce' );
 	}
 
-	public function js_config() {
+	protected function html_image() {
+		return $this->image_url( 'Gutenberg-Block_Register-Form.png' );
+	}
+
+	protected function keywords() {
 		return [
-			'name'       => $this->name(),
-			'title'      => __( 'BigCommerce Registration Form', 'bigcommerce' ),
-			'category'   => 'widgets',
-			'keywords'   => [
-				__( 'users', 'bigcommerce' ),
-				__( 'registration', 'bigcommerce' ),
-				__( 'account', 'bigcommerce' ),
-			],
-			'shortcode'  => sprintf( '[%s]', Shortcodes\Registration_Form::NAME ),
-			'block_html' => [
-				'title' => __( 'Registration Form', 'bigcommerce' ),
-			],
+			__( 'users', 'bigcommerce' ),
+			__( 'registration', 'bigcommerce' ),
+			__( 'account', 'bigcommerce' ),
 		];
 	}
 }

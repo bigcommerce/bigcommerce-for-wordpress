@@ -4,7 +4,6 @@
  */
 
 
-import { ADMIN_IMAGES } from '../../../config/wp-settings';
 import { GUTENBERG_PRODUCT_REVIEWS as BLOCK } from '../../config/gutenberg-settings';
 import ShortcodeInput from './shortcodeInput';
 
@@ -16,7 +15,7 @@ const { Fragment } = wp.element;
 const editBlock = withInstanceId((props) => {
 	const { attributes, setAttributes, instanceId } = props;
 	const { productId } = attributes;
-	const blockImage = `${ADMIN_IMAGES}Gutenberg-Block_Product_Reviews.png`;
+	const blockImage = BLOCK.block_html.image;
 	const fieldId = `block-product-reviews-input-${instanceId}`;
 
 	return (

@@ -9,6 +9,7 @@ use BigCommerce\Api\Store_Api;
 use BigCommerce\Merchant\Models\Customer_Login_Request;
 use BigCommerce\Merchant\Onboarding_Api;
 use BigCommerce\Settings\Sections\Api_Credentials;
+use BigCommerce\Settings\Sections\Channels;
 
 class Customer_Login {
 	/**
@@ -37,6 +38,7 @@ class Customer_Login {
 		$customer_id = (int) ( is_user_logged_in() ? get_user_option( Login::CUSTOMER_ID_META, get_current_user_id() ) : 0 );
 		$hash = $this->get_store_hash();
 		$store_id = get_option( Onboarding_Api::STORE_ID, '' );
+		$channel_id = get_option( Channels::CHANNEL_ID, 0 );
 
 		if ( ! $customer_id || ! $hash ) {
 			return $checkout_url;
@@ -45,11 +47,11 @@ class Customer_Login {
 		try {
 			if ( $store_id ) {
 				// for accounts created through the onboarding process
-				$request = new Customer_Login_Request( $hash, $checkout_url );
+				$request = new Customer_Login_Request( $hash, $checkout_url, $channel_id );
 				$token = $this->onboarding->customer_login_token( $store_id, $customer_id, $request );
 			} else {
 				// for customers that set their own API keys in constants
-				$token = $this->store->getCustomerLoginToken( $customer_id, $checkout_url );
+				$token = $this->store->getCustomerLoginToken( $customer_id, $checkout_url, '', $channel_id );
 			}
 		} catch ( \Exception $e ) {
 			return $checkout_url;

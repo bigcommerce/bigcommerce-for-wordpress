@@ -3,6 +3,8 @@
 
 namespace BigCommerce\Import;
 
+use BigCommerce\Logging\Error_Log;
+
 /**
  * Class Image_Importer
  *
@@ -21,6 +23,11 @@ class Image_Importer {
 		$this->require_files();
 		$tmp = download_url( $this->image_url );
 		if ( is_wp_error( $tmp ) ) {
+			do_action( 'bigcommerce/import/log', Error_Log::NOTICE, __( 'Failed to download image', 'bigcommerce' ), [
+				'url'   => $this->image_url,
+				'error' => $tmp->get_error_messages(),
+			] );
+
 			return false;
 		}
 
@@ -34,6 +41,11 @@ class Image_Importer {
 		$image_id = media_handle_sideload( $file_array, $this->attach_to_post_id );
 		if ( is_wp_error( $image_id ) ) {
 			unlink( $tmp );
+
+			do_action( 'bigcommerce/import/log', Error_Log::NOTICE, __( 'Failed to sideload image', 'bigcommerce' ), [
+				'url'   => $this->image_url,
+				'error' => $image_id->get_error_messages(),
+			] );
 
 			return false;
 		}

@@ -48,7 +48,10 @@ class Account_Settings extends Settings_Section {
 				[ $this, 'render_page_field' ],
 				Settings_Screen::NAME,
 				self::NAME,
-				[ 'page' => $page ]
+				[
+					'page'      => $page,
+					'label_for' => 'field-' . $page->get_option_name(),
+				]
 			);
 		}
 
@@ -59,9 +62,10 @@ class Account_Settings extends Settings_Section {
 			Settings_Screen::NAME,
 			self::NAME,
 			[
-				'option' => self::SUPPORT_EMAIL,
-				'label'  => __( 'Support Email', 'bigcommerce' ),
-				'type'   => 'text',
+				'option'    => self::SUPPORT_EMAIL,
+				'label'     => __( 'Support Email', 'bigcommerce' ),
+				'label_for' => 'field-' . self::SUPPORT_EMAIL,
+				'type'      => 'text',
 			]
 		);
 		register_setting( Settings_Screen::NAME, self::SUPPORT_EMAIL, [

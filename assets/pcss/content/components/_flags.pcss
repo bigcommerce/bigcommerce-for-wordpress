@@ -26,7 +26,7 @@
 	vertical-align: middle;
 	padding: 7px 8px;
 	background-color: var(--color-bc-light-grey);
-	font-size: 12px;
+	font-size: 0.522em;
 	line-height: var(--line-height-even);
 	font-weight: var(--font-weight-semibold);
 }
@@ -43,7 +43,16 @@
 	}
 
 	.bc-product-flag--grey {
+		font-size: 0.5em;
 		margin-bottom: 5px;
+
+		@media (--viewport-medium) {
+			font-size: 0.429em;
+		}
+
+		@media (--viewport-full) {
+			font-size: 0.375em;
+		}
 	}
 }
 

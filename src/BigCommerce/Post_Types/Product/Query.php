@@ -5,6 +5,7 @@ namespace BigCommerce\Post_Types\Product;
 
 
 use BigCommerce\Customizer\Sections\Product_Archive;
+use BigCommerce\Settings\Sections\Currency;
 use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Flag\Flag;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
@@ -94,7 +95,7 @@ class Query {
 					$meta_query[ 'bigcommerce_price' ] = [
 						'key'     => Product::PRICE_META_KEY,
 						'compare' => 'EXISTS',
-						'type'    => 'DECIMAL',
+						'type'    => 'DECIMAL' . $this->get_ordering_decimal_format(),
 					];
 					$query->set( 'meta_query', $meta_query );
 					$query->set( 'orderby', [ 'bigcommerce_price' => 'ASC', 'title' => 'ASC' ] );
@@ -105,7 +106,7 @@ class Query {
 					$meta_query[ 'bigcommerce_price' ] = [
 						'key'     => Product::PRICE_META_KEY,
 						'compare' => 'EXISTS',
-						'type'    => 'DECIMAL',
+						'type'    => 'DECIMAL' . $this->get_ordering_decimal_format(),
 					];
 					$query->set( 'meta_query', $meta_query );
 					$query->set( 'orderby', [ 'bigcommerce_price' => 'DESC', 'title' => 'ASC' ] );
@@ -181,6 +182,19 @@ class Query {
 			$post__not_in = array_merge( $post__not_in, $out );
 			$query->set( 'post__not_in', $post__not_in );
 		}
+	}
+
+	/**
+	 * Get the Decimal Data Type Characteristics for Decimal price ordering
+	 *
+	 * @return string
+	 */
+	private function get_ordering_decimal_format(){
+		$decimals     = get_option( Currency::DECIMAL_UNITS ) ?: 2;
+		$integer      = get_option( Currency::INTEGER_UNITS ) ?: 16;
+		$max_length_m = $integer + $decimals;
+
+		return "($max_length_m, $decimals)";
 	}
 
 	/**

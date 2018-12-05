@@ -6,6 +6,7 @@ namespace BigCommerce\Import;
 
 use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Api\v3\Api\ChannelsApi;
+use BigCommerce\Logging\Error_Log;
 
 class Product_Importer {
 	/**
@@ -61,6 +62,10 @@ class Product_Importer {
 			);
 			$listing_response = $this->channels_api->getChannelListing( $this->channel_id, $this->listing_id );
 		} catch ( \Exception $e ) {
+			do_action( 'bigcommerce/import/log', Error_Log::WARNING, __( 'Product import error', 'bigcommerce' ), [
+				'product_id' => $this->product_id,
+				'error'      => $e,
+			] );
 			do_action( 'bigcommerce/import/product/error', $this->product_id, $this->catalog_api, $e );
 
 			return 0;

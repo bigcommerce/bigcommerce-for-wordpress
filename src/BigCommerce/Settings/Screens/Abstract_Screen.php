@@ -140,7 +140,6 @@ abstract class Abstract_Screen {
 
 	protected function submit_button() {
 		echo '<div class="bc-settings-save">';
-		printf( '<img class="bc-settings-save__logo" src="%s" alt="%s" />', trailingslashit( $this->assets_url ) . 'img/admin/big-commerce-logo.svg', __( 'BigCommerce', 'bigcommerce' ) );
 		submit_button();
 		echo '</div>';
 	}
@@ -217,7 +216,7 @@ abstract class Abstract_Screen {
 	 * @return void
 	 */
 	protected function section_header( $section, $page ) {
-		echo '<div class="bc-settings-section__header" data-js="section-toggle-trigger">';
+		printf( '<button class="%s" data-js="%s" tabindex="0" aria-controls="%s" aria-expanded="false">', 'bc-settings-section__header', 'section-toggle-trigger', sanitize_html_class( $section[ 'id' ] ) . '-body' );
 
 		/**
 		 * Fires before rendering the title of a settings section.
@@ -239,7 +238,7 @@ abstract class Abstract_Screen {
 		 */
 		do_action( 'bigcommerce/settings/section/after_title/id=' . $section[ 'id' ], $section );
 
-		echo '<i class="bc-icon icon-bc-arrow-solid"></i></div>'; // bc-settings-section__header
+		echo '<i class="bc-icon icon-bc-arrow-solid"></i></button>'; // bc-settings-section__header
 	}
 
 	/**
@@ -253,7 +252,7 @@ abstract class Abstract_Screen {
 	protected function section_body( $section, $page ) {
 		global $wp_settings_fields;
 
-		echo '<div class="bc-settings-section__target" data-js="section-toggle-target"><div class="bc-settings-section__body">';
+		printf( "<div id='%s' class='%s' data-js='%s' hidden><div class='%s'>", sanitize_html_class( $section[ 'id' ] ) . '-body', 'bc-settings-section__target', 'section-toggle-target', 'bc-settings-section__body' );
 
 		/**
 		 * Fires before calling the callback of a settings section.

@@ -6,6 +6,7 @@ namespace BigCommerce\Import;
 
 use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api\v3\Api\CatalogApi;
+use BigCommerce\Logging\Error_Log;
 
 abstract class Term_Mapper {
 	/**
@@ -100,6 +101,11 @@ abstract class Term_Mapper {
 
 		$term = wp_insert_term( $this->sanitize_string( $bc_term[ 'name' ] ), $this->taxonomy, $this->get_term_args( $bc_term ) );
 		if ( is_wp_error( $term ) ) {
+			do_action( 'bigcommerce/import/log', Error_Log::NOTICE, __( 'Could not create term', 'bigcommerce' ), [
+				'term'  => $bc_term,
+				'error' => $term->get_error_messages(),
+			] );
+
 			return 0;
 		}
 

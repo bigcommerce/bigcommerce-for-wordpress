@@ -10,6 +10,9 @@ class Product_Price extends Controller {
 	const PRODUCT = 'product';
 
 	protected $template = 'components/products/product-price.php';
+	protected $wrapper_tag = 'p';
+	protected $wrapper_classes = [ 'bc-product__pricing' ];
+	protected $wrapper_attributes = [ 'data-js' => 'bc-product-pricing' ];
 
 	protected function parse_options( array $options ) {
 		$defaults = [

@@ -6,6 +6,8 @@
 import _ from 'lodash';
 import delegate from 'delegate';
 import * as tools from '../../utils/tools';
+import queryToJson from '../../utils/data/query-to-json';
+import updateQueryVar from '../../utils/data/update-query-var';
 import { PRODUCT_MESSAGES } from '../config/wp-settings';
 import { productMessage } from '../templates/product-message';
 
@@ -18,6 +20,11 @@ const state = {
 	isValidOption: false,
 	variantID: '',
 	variantMessage: '',
+	variantPrice: '',
+};
+
+const el = {
+	singleWrapper: tools.getNodes('.bc-product-single', false, document, true)[0],
 };
 
 /**
@@ -88,6 +95,26 @@ const handleAlertMessage = (formWrapper = '') => {
 };
 
 /**
+ * @function setSelectedVariantPrice
+ * @description get the price of the current selected variant ID and replace the price element with it's formatted_price value.
+ * @param wrapper
+ */
+const setSelectedVariantPrice = (wrapper = '') => {
+	if (!wrapper || !state.variantPrice) {
+		return;
+	}
+
+	const salePriceElement = wrapper.querySelector('.bc-product__original-price');
+	const priceElement = wrapper.querySelector('.bc-product__price');
+
+	if (salePriceElement) {
+		salePriceElement.parentNode.removeChild(salePriceElement);
+	}
+
+	priceElement.textContent = state.variantPrice;
+};
+
+/**
  * @function handleSelectedVariant
  * @description Takes the current variant and handles status and messaging.
  * @param product
@@ -97,11 +124,14 @@ const handleSelectedVariant = (product = {}) => {
 		return;
 	}
 
+	// Set the price and ID regardless of state.
+	state.variantPrice = product.formatted_price;
+	state.variantID = product.variant_id;
+
 	// Case: Current variant choice has inventory and is not disabled.
 	if ((product.inventory > 0 || product.inventory === -1) && !product.disabled) {
 		state.isValidOption = true;
 		state.variantMessage = '';
-		state.variantID = product.variant_id;
 		return;
 	}
 
@@ -121,7 +151,6 @@ const handleSelectedVariant = (product = {}) => {
 
 	// Case: We're assuming there are no issues with the current selections and the form action can be used.
 	state.isValidOption = true;
-	state.variantID = product.variant_id;
 	state.variantMessage = '';
 };
 
@@ -182,6 +211,18 @@ const buildSelectionArray = (selectionArray, optionsContainer) => {
 };
 
 /**
+ * @function setVariantURLParameter
+ * @description Set and/or updates the variant_id query param in the url.
+ */
+const setVariantURLParameter = () => {
+	if (!state.variantID || !el.singleWrapper) {
+		return;
+	}
+
+	window.history.replaceState(null, null, updateQueryVar('variant_id', state.variantID));
+};
+
+/**
  * @function handleSelections
  * @description On load or on selection change, determine which product form we are in and run all main functions.
  * @param e - a delegate event from a click or an options node.
@@ -190,6 +231,7 @@ const handleSelections = (e = '') => {
 	let optionsContainer = '';
 	state.variantMessage = '';
 	state.variantID = '';
+	state.variantPrice = '';
 
 	if (e.delegateTarget) {
 		optionsContainer = tools.closest(e.delegateTarget, '[data-js="product-options"]');
@@ -200,10 +242,13 @@ const handleSelections = (e = '') => {
 	const formWrapper = tools.closest(optionsContainer, '.bc-product-form');
 	const productID = optionsContainer.dataset.productId;
 	const submitButton = tools.getNodes('.bc-btn--form-submit', false, formWrapper, true)[0];
+	const metaWrapper = tools.closest(optionsContainer, '[data-js="bc-product-data-wrapper"]');
 
 	buildSelectionArray(instances.selections[productID], optionsContainer);
 	parseVariants(instances.product[productID], instances.selections[productID]);
+	setVariantURLParameter();
 	setVariantIDHiddenField(formWrapper);
+	setSelectedVariantPrice(metaWrapper);
 	setButtonState(submitButton);
 	handleAlertMessage(formWrapper);
 };
@@ -225,6 +270,26 @@ const handleOptionClicks = (options = '') => {
 			delegate(option, 'select', 'change', handleSelections);
 		}
 	});
+};
+
+/**
+ * @function handleVariantQueryParam
+ * @description Creates an added layer of variant checking to ensure that a URL with a variant_id param is set properly.
+ */
+const handleVariantQueryParam = () => {
+	// Assumes this is the PDP single page.
+	const variantID = queryToJson().variant_id;
+
+	if (!variantID || !el.singleWrapper) {
+		return;
+	}
+
+	const productOptions = tools.getNodes('product-options', false, el.singleWrapper)[0];
+	const formWrapper = el.singleWrapper.querySelector('.bc-product-form');
+
+	tools.addClass(formWrapper, 'bc-product__is-setting-options');
+	handleSelections(productOptions);
+	_.delay(() => tools.removeClass(formWrapper, 'bc-product__is-setting-options'), 500);
 };
 
 /**
@@ -264,6 +329,7 @@ const init = (container) => {
 	}
 
 	initOptionsPickers();
+	handleVariantQueryParam();
 };
 
 export default init;

@@ -109,7 +109,7 @@ class Onboarding_Api {
 		$request[ 'token' ] = $this->build_auth_token( $store_id );
 		$url                = sprintf( '%s/stores/%s/customers/%s/login-token', $this->base_url, $store_id, $customer_id );
 		$response           = wp_remote_post( $url, [
-			'body'    => $request,
+			'body'    => array_filter( $request ),
 			'timeout' => $this->timeout,
 		] );
 		if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {

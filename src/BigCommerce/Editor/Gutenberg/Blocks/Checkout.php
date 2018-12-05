@@ -9,32 +9,27 @@ use BigCommerce\Shortcodes;
  *
  * A block to display the checkout form
  */
-class Checkout extends Gutenberg_Block {
+class Checkout extends Shortcode_Block {
 	const NAME = 'bigcommerce/checkout';
 
+	protected $icon = 'money';
+	protected $shortcode = Shortcodes\Checkout::NAME;
 
-	public function __construct() {
-		parent::__construct();
+	protected function title() {
+		return __( 'BigCommerce Checkout', 'bigcommerce' );
 	}
 
-	public function render( $attributes ) {
-		return sprintf( '[%s]', Shortcodes\Checkout::NAME ); // content will be passed through do_shortcode
+	protected function html_title() {
+		return __( 'Checkout', 'bigcommerce' );
 	}
 
-	public function js_config() {
-		return [
-			'name'      => $this->name(),
-			'title'     => __( 'BigCommerce Checkout', 'bigcommerce' ),
-			'category'  => 'widgets',
-			'keywords'  => [
-				__( 'ecommerce', 'bigcommerce' ),
-				__( 'commerce', 'bigcommerce' ),
-				__( 'checkout', 'bigcommerce' ),
-			],
-			'shortcode' => sprintf( '[%s]', Shortcodes\Checkout::NAME ),
-			'block_html' => [
-				'title' => __( 'Checkout', 'bigcommerce' ),
-			],
-		];
+	protected function html_image() {
+		return $this->image_url( 'Gutenberg-Block_Checkout.png' );
+	}
+
+	protected function keywords() {
+		$keywords = parent::keywords();
+		$keywords[] = __( 'checkout', 'bigcommerce' );
+		return $keywords;
 	}
 }

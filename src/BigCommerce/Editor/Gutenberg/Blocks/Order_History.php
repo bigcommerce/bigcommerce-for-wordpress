@@ -9,29 +9,27 @@ use BigCommerce\Shortcodes;
  *
  * A block to display the current user's order history
  */
-class Order_History extends Gutenberg_Block {
+class Order_History extends Shortcode_Block {
 	const NAME = 'bigcommerce/order-history';
 
-	public function __construct() {
-		parent::__construct();
+	protected $icon = 'clipboard';
+	protected $shortcode = Shortcodes\Order_History::NAME;
+
+	protected function title() {
+		return __( 'BigCommerce Order History', 'bigcommerce' );
 	}
 
-	public function render( $attributes ) {
-		return sprintf( '[%s]', Shortcodes\Order_History::NAME ); // content will be passed through do_shortcode
+	protected function html_title() {
+		return __( 'Order History', 'bigcommerce' );
 	}
 
-	public function js_config() {
-		return [
-			'name'       => $this->name(),
-			'title'      => __( 'BigCommerce Order History', 'bigcommerce' ),
-			'category'   => 'widgets',
-			'keywords'   => [
-				__( 'checkout', 'bigcommerce' ),
-			],
-			'shortcode'  => sprintf( '[%s]', Shortcodes\Order_History::NAME ),
-			'block_html' => [
-				'title' => __( 'Order History', 'bigcommerce' ),
-			],
-		];
+	protected function html_image() {
+		return $this->image_url( 'Gutenberg-Block_Order-History.png' );
+	}
+
+	protected function keywords() {
+		$keywords = parent::keywords();
+		$keywords[] = __( 'checkout', 'bigcommerce' );
+		return $keywords;
 	}
 }

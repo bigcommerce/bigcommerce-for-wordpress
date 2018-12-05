@@ -51,7 +51,7 @@ class New_Account_Section extends Settings_Section {
 			'city'       => [
 				'label' => __( 'City', 'bigcommerce' ),
 			],
-			'state'     => [
+			'state'      => [
 				'label'    => __( 'State', 'bigcommerce' ),
 				'callback' => [ $this, 'render_state_field' ],
 			],
@@ -68,7 +68,7 @@ class New_Account_Section extends Settings_Section {
 		];
 
 		foreach ( $fields as $key => $field ) {
-			$required_label = ! isset( $field['required'] ) ? sprintf( '<span class="bc-settings-field--required">*<span>' ) : '';
+			$required_label = ! isset( $field[ 'required' ] ) ? sprintf( '<span class="bc-settings-field--required">*<span>' ) : '';
 			add_settings_field(
 				self::STORE_INFO . '-' . $key,
 				$field[ 'label' ] . $required_label,
@@ -76,9 +76,10 @@ class New_Account_Section extends Settings_Section {
 				Create_Account_Screen::NAME,
 				self::NAME,
 				[
-					'option'  => $key,
-					'default' => empty( $field[ 'default' ] ) ? '' : $field[ 'default' ],
-					'required' => isset( $field[ 'required' ] ) ? (bool) $field[ 'required' ] : true,
+					'option'    => $key,
+					'default'   => empty( $field[ 'default' ] ) ? '' : $field[ 'default' ],
+					'required'  => isset( $field[ 'required' ] ) ? (bool) $field[ 'required' ] : true,
+					'label_for' => 'field-' . self::STORE_INFO . '-' . $key,
 				]
 			);
 		}
@@ -92,16 +93,25 @@ class New_Account_Section extends Settings_Section {
 	 */
 	public function render_field( $args ) {
 		$submission = get_option( Create_Account_Screen::SUBMITTED_DATA, [] );
-		$option  = $args[ 'option' ];
-		$default = isset( $args[ 'default' ] ) ? $args[ 'default' ] : '';
-		$type    = 'text';
+		$option     = $args[ 'option' ];
+		$default    = isset( $args[ 'default' ] ) ? $args[ 'default' ] : '';
+		$type       = 'text';
 		if ( ! empty( $submission[ self::STORE_INFO ][ $option ] ) ) {
 			$value = $submission[ self::STORE_INFO ][ $option ];
 		} else {
 			$value = $default;
 		}
 		$placeholder = ( isset( $args[ 'required' ] ) && $args[ 'required' ] === false ) ? sprintf( 'placeholder="%s"', esc_attr( __( 'Optional', 'bigcommerce' ) ) ) : '';
-		printf( '<input type="%s" value="%s" class="regular-text code" name="%s[%s]" %s data-lpignore="true" />', esc_attr( $type ), esc_attr( $value ), esc_attr( self::STORE_INFO ), esc_attr( $option ), $placeholder );
+		printf(
+			'<input id="field-%s-%s" type="%s" value="%s" class="regular-text code" name="%s[%s]" %s data-lpignore="true" />',
+			esc_attr( self::STORE_INFO ),
+			esc_attr( $option ),
+			esc_attr( $type ),
+			esc_attr( $value ),
+			esc_attr( self::STORE_INFO ),
+			esc_attr( $option ),
+			$placeholder
+		);
 		if ( ! empty( $args[ 'description' ] ) ) {
 			printf( '<p class="description">%s</p>', esc_html( $args[ 'description' ] ) );
 		}
@@ -109,7 +119,7 @@ class New_Account_Section extends Settings_Section {
 
 	public function render_state_field( $args ) {
 		$submission = get_option( Create_Account_Screen::SUBMITTED_DATA, [] );
-		$option = $args[ 'option' ];
+		$option     = $args[ 'option' ];
 		/**
 		 * This filter is documented in src/BigCommerce/Templates/Address_Form.php
 		 */
@@ -129,9 +139,9 @@ class New_Account_Section extends Settings_Section {
 			$value = $args[ 'default' ];
 		}
 		if ( empty( $states ) ) {
-			printf( '<input type="text" name="%s[%s]" data-js="bc-dynamic-state-control" value="%s" class="regular-text code" data-lpignore="true" />', esc_attr( self::STORE_INFO ), esc_attr( $option ), esc_attr( $value ) );
+			printf( '<input id="field-%s-%s" type="text" name="%s[%s]" data-js="bc-dynamic-state-control" value="%s" class="regular-text code" data-lpignore="true" />', esc_attr( self::STORE_INFO ), esc_attr( $option ), esc_attr( self::STORE_INFO ), esc_attr( $option ), esc_attr( $value ) );
 		} else {
-			printf( '<select name="%s[%s]" data-js="bc-dynamic-state-control">', esc_attr( self::STORE_INFO ), esc_attr( $option ) );
+			printf( '<select id="field-%s-%s" name="%s[%s]" data-js="bc-dynamic-state-control">', esc_attr( self::STORE_INFO ), esc_attr( $option ), esc_attr( self::STORE_INFO ), esc_attr( $option ) );
 			foreach ( $states as $state_abbr => $state_name ) {
 				printf( '<option value="%s" data-state-abbr="%s" %s>%s</option>', esc_attr( $state_abbr ), esc_attr( $state_abbr ), selected( $value, $state_abbr, false ), esc_html( $state_name ) );
 			}
@@ -141,7 +151,7 @@ class New_Account_Section extends Settings_Section {
 
 	public function render_country_field( $args ) {
 		$submission = get_option( Create_Account_Screen::SUBMITTED_DATA, [] );
-		$option = $args[ 'option' ];
+		$option     = $args[ 'option' ];
 		/**
 		 * This filter is documented in src/BigCommerce/Templates/Address_Form.php
 		 */
@@ -157,7 +167,7 @@ class New_Account_Section extends Settings_Section {
 		} else {
 			$value = $default_country;
 		}
-		printf( '<select name="%s[%s]" data-js="bc-dynamic-country-select">', esc_attr( self::STORE_INFO ), esc_attr( $option ) );
+		printf( '<select id="field-%s-%s" name="%s[%s]" data-js="bc-dynamic-country-select">', esc_attr( self::STORE_INFO ), esc_attr( $option ), esc_attr( self::STORE_INFO ), esc_attr( $option ) );
 		foreach ( $countries as $iso => $country_name ) {
 			$selected = false;
 			if ( $value === $iso || $value === $country_name ) {
@@ -187,7 +197,7 @@ class New_Account_Section extends Settings_Section {
 	}
 
 	/**
-	 * @param array $submission The data submitted to the form
+	 * @param array     $submission The data submitted to the form
 	 * @param \WP_Error $errors
 	 *
 	 * @return void

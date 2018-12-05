@@ -9,31 +9,28 @@ use BigCommerce\Shortcodes;
  *
  * A block to display the current user's account profile
  */
-class Account_Profile extends Gutenberg_Block {
+class Account_Profile extends Shortcode_Block {
 	const NAME = 'bigcommerce/account-profile';
 
+	protected $icon = 'id';
+	protected $shortcode = Shortcodes\Account_Profile::NAME;
 
-	public function __construct() {
-		parent::__construct();
+	protected function title() {
+		return __( 'BigCommerce Account Profile', 'bigcommerce' );
 	}
 
-	public function render( $attributes ) {
-		return sprintf( '[%s]', Shortcodes\Account_Profile::NAME ); // content will be passed through do_shortcode
+	protected function html_title() {
+		return __( 'My Account', 'bigcommerce' );
 	}
 
-	public function js_config() {
-		return [
-			'name'       => $this->name(),
-			'title'      => __( 'BigCommerce Account Profile', 'bigcommerce' ),
-			'category'   => 'widgets',
-			'keywords'   => [
-				__( 'user', 'bigcommerce' ),
-				__( 'account', 'bigcommerce' ),
-			],
-			'shortcode'  => sprintf( '[%s]', Shortcodes\Account_Profile::NAME ),
-			'block_html' => [
-				'title' => __( 'My Account', 'bigcommerce' ),
-			],
-		];
+	protected function html_image() {
+		return $this->image_url( 'Gutenberg-Block_My-Account.png' );
+	}
+
+	protected function keywords() {
+		$keywords = parent::keywords();
+		$keywords[] = __( 'user', 'bigcommerce' );
+		$keywords[] = __( 'account', 'bigcommerce' );
+		return $keywords;
 	}
 }

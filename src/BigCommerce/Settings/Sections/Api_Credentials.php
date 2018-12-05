@@ -36,20 +36,24 @@ class Api_Credentials extends Settings_Section {
 		$options = [
 			self::OPTION_STORE_URL     => [
 				'label'       => __( 'Base API Path', 'bigcommerce' ),
+				'label_for'   => 'field-' . self::OPTION_STORE_URL,
 				'description' => __( 'The API Path for your BigCommerce store. E.g., https://api.bigcommerce.com/stores/abc9defghi/v3/', 'bigcommerce' ),
 			],
 			self::OPTION_CLIENT_ID     => [
 				'label'       => __( 'Client ID', 'bigcommerce' ),
+				'label_for'   => 'field-' . self::OPTION_CLIENT_ID,
 				'description' => __( 'The Client ID provided for your API account. E.g., abcdefg24hijk6lmno8pqrs1tu3vwxyz', 'bigcommerce' ),
 				'type'        => 'password',
 			],
 			self::OPTION_CLIENT_SECRET => [
 				'label'       => __( 'Client Secret', 'bigcommerce' ),
+				'label_for'   => 'field-' . self::OPTION_CLIENT_SECRET,
 				'description' => __( 'The Client Secret provided for your API account. E.g., 0bcdefg24hijk6lmno8pqrs1tu3vw5x', 'bigcommerce' ),
 				'type'        => 'password',
 			],
 			self::OPTION_ACCESS_TOKEN  => [
 				'label'       => __( 'Access Token', 'bigcommerce' ),
+				'label_for'   => 'field-' . self::OPTION_ACCESS_TOKEN,
 				'description' => __( 'The Access Token provided for your API account. E.g., ab24cdef68gh13ijkl5mn7opqrst9u2v', 'bigcommerce' ),
 				'type'        => 'password',
 			],
@@ -70,7 +74,8 @@ class Api_Credentials extends Settings_Section {
 				$args
 			);
 
-			if ( ! $this->get_option_from_env( $key ) ) { // prevents clearing out value in DB when constant is set
+			$disabled = $this->disabled_message( $key );;
+			if ( ! $disabled ) { // prevents clearing out value in DB when constant is set
 				register_setting( $screen, $key );
 			}
 		}
@@ -85,7 +90,7 @@ class Api_Credentials extends Settings_Section {
 	public function render_help_text() {
 		$api_accounts_url = 'https://login.bigcommerce.com/deep-links/settings/auth/api-accounts';
 		$help_text        = sprintf(
-			__( 'After signing in on BigCommerce with your account owner login, the following credentials can be obtained from the <a href="%s" target="_blank">API Accounts</a> section.', 'bigcomerce' ),
+			__( 'After signing in on BigCommerce with your account owner login, <a href="%s" target="_blank">create a new API Account</a> and copy the following credentials.', 'bigcomerce' ),
 			$api_accounts_url
 		);
 		printf( '<p class="description">%s</p>', $help_text );
@@ -93,6 +98,24 @@ class Api_Credentials extends Settings_Section {
 
 	public function render_field( $args ) {
 		$option = $args[ 'option' ];
+		$disabled = $this->disabled_message( $option );
+		if ( ! $disabled ) {
+			parent::render_field( $args );
+		} else {
+			$args[ 'disabled' ] = $disabled;
+			$this->render_text( $args );
+		}
+	}
+
+	/**
+	 * Get the message explaining why a field is disabled, or
+	 * false if it is not disabled
+	 *
+	 * @param string $option The name of the option
+	 *
+	 * @return bool|string The explanatory message
+	 */
+	private function disabled_message( $option ) {
 		if ( array_key_exists( $option, $this->option_to_env_map ) ) {
 			$env = bigcommerce_get_env( $this->option_to_env_map[ $option ] );
 		}
@@ -103,12 +126,7 @@ class Api_Credentials extends Settings_Section {
 		 * @param bool|string $disabled Empty if the field should be enabled, a string indicating why it's disabled otherwise.
 		 */
 		$disabled = apply_filters( 'bigcommerce/settings/api/disabled/field=' . $option, $disabled );
-		if ( ! $disabled ) {
-			parent::render_field( $args );
-		} else {
-			$args[ 'disabled' ] = $disabled;
-			$this->render_text( $args );
-		}
+		return $disabled;
 	}
 
 	/**
@@ -127,7 +145,7 @@ class Api_Credentials extends Settings_Section {
 			$default = isset( $args[ 'default' ] ) ? $args[ 'default' ] : '';
 			$value   = get_option( $option, $default );
 		}
-		printf( '<input type="text" value="%s" class="regular-text code" disabled="disabled" data-lpignore="true" />', esc_attr( $value ) );
+		printf( '<input id="field-%s" type="text" value="%s" class="regular-text code" disabled="disabled" data-lpignore="true" />', esc_attr( $option ), esc_attr( $value ) );
 		if ( ! empty( $args[ 'description' ] ) ) {
 			printf( '<p class="description">%s</p>', esc_html( $args[ 'description' ] ) );
 		}

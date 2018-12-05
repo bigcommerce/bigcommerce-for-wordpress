@@ -4,7 +4,7 @@
 namespace BigCommerce;
 
 class Plugin {
-	const VERSION = '1.1.0';
+	const VERSION = '1.2.0';
 
 	protected static $_instance;
 
@@ -48,6 +48,7 @@ class Plugin {
 	}
 
 	private function load_service_providers() {
+		$this->providers[ 'logger' ]            = new Container\Log();
 		$this->providers[ 'accounts' ]          = new Container\Accounts();
 		$this->providers[ 'amp' ]               = new Container\Amp();
 		$this->providers[ 'analytics' ]         = new Container\Analytics();
@@ -75,6 +76,7 @@ class Plugin {
 		$this->providers[ 'taxonomies' ]        = new Container\Taxonomies();
 		$this->providers[ 'templates' ]         = new Container\Templates();
 		$this->providers[ 'widgets' ]           = new Container\Widgets();
+
 
 		/**
 		 * Filter the service providers the power the plugin

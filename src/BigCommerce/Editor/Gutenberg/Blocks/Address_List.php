@@ -9,31 +9,29 @@ use BigCommerce\Shortcodes;
  *
  * A block to display the current user's addresses
  */
-class Address_List extends Gutenberg_Block {
+class Address_List extends Shortcode_Block {
 	const NAME = 'bigcommerce/address-list';
 
+	protected $icon = 'location';
+	protected $shortcode = Shortcodes\Address_List::NAME;
 
-	public function __construct() {
-		parent::__construct();
+	protected function title() {
+		return __( 'BigCommerce Address List', 'bigcommerce' );
 	}
 
-	public function render( $attributes ) {
-		return sprintf( '[%s]', Shortcodes\Address_List::NAME ); // content will be passed through do_shortcode
+	protected function html_title() {
+		return __( 'My Addresses', 'bigcommerce' );
 	}
 
-	public function js_config() {
-		return [
-			'name'       => $this->name(),
-			'title'      => __( 'BigCommerce Address List', 'bigcommerce' ),
-			'category'   => 'widgets',
-			'keywords'   => [
-				__( 'checkout', 'bigcommerce' ),
-				__( 'shipping', 'bigcommerce' ),
-			],
-			'shortcode'  => sprintf( '[%s]', Shortcodes\Address_List::NAME ),
-			'block_html' => [
-				'title' => __( 'My Addresses', 'bigcommerce' ),
-			],
-		];
+	protected function html_image() {
+		return $this->image_url( 'Gutenberg-Block_Addresses.png' );
 	}
+
+	protected function keywords() {
+		$keywords = parent::keywords();
+		$keywords[] = __( 'checkout', 'bigcommerce' );
+		$keywords[] = __( 'shipping', 'bigcommerce' );
+		return $keywords;
+	}
+
 }

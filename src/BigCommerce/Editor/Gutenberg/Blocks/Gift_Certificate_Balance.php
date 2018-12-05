@@ -9,30 +9,27 @@ use BigCommerce\Shortcodes;
  *
  * A block to display the gift certificate form
  */
-class Gift_Certificate_Balance extends Gutenberg_Block {
+class Gift_Certificate_Balance extends Shortcode_Block {
 	const NAME = 'bigcommerce/gift-certificate-balance';
 
+	protected $icon = 'money';
+	protected $shortcode = Shortcodes\Gift_Certificate_Balance::NAME;
 
-	public function __construct() {
-		parent::__construct();
+	protected function title() {
+		return __( 'BigCommerce Gift Certificate Balance', 'bigcommerce' );
 	}
 
-	public function render( $attributes ) {
-		return sprintf( '[%s]', Shortcodes\Gift_Certificate_Balance::NAME ); // content will be passed through do_shortcode
+	protected function html_title() {
+		return __( 'Gift Certificate Balance', 'bigcommerce' );
 	}
 
-	public function js_config() {
-		return [
-			'name'       => $this->name(),
-			'title'      => __( 'BigCommerce Gift Certificate Balance', 'bigcommerce' ),
-			'category'   => 'widgets',
-			'keywords'   => [
-				__( 'checkout', 'bigcommerce' ),
-			],
-			'shortcode'  => sprintf( '[%s]', Shortcodes\Gift_Certificate_Balance::NAME ),
-			'block_html' => [
-				'title' => __( 'Gift Certificate Balance', 'bigcommerce' ),
-			],
-		];
+	protected function html_image() {
+		return $this->image_url( 'Gutenberg-Block_Gift-Cert-Balance.png' );
+	}
+
+	protected function keywords() {
+		$keywords = parent::keywords();
+		$keywords[] = __( 'checkout', 'bigcommerce' );
+		return $keywords;
 	}
 }

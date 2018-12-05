@@ -3,11 +3,15 @@
 
 namespace BigCommerce\Container;
 
+use BigCommerce\Api\v3\Api\CatalogApi;
+use BigCommerce\Import\Runner\Cron_Runner;
+use BigCommerce\Import\Runner\Status;
 use BigCommerce\Merchant\Onboarding_Api;
 use BigCommerce\Settings\Connection_Status;
 use BigCommerce\Settings\Import_Now;
 use BigCommerce\Settings\Import_Status;
 use BigCommerce\Settings\Screens\Abstract_Screen;
+use BigCommerce\Settings\Screens\Api_Credentials_Screen;
 use BigCommerce\Settings\Screens\Connect_Channel_Screen;
 use BigCommerce\Settings\Screens\Create_Account_Screen;
 use BigCommerce\Settings\Screens\Pending_Account_Screen;
@@ -25,13 +29,15 @@ use BigCommerce\Settings\Sections\New_Account_Section;
 use BigCommerce\Settings\Sections\Reviews;
 use BigCommerce\Settings\Sections\Troubleshooting_Diagnostics;
 use Pimple\Container;
+use \BigCommerce\Container\Log;
 
 class Settings extends Provider {
-	const SETTINGS_SCREEN = 'settings.screen.settings';
-	const WELCOME_SCREEN  = 'settings.screen.welcome';
-	const CREATE_SCREEN   = 'settings.screen.create';
-	const CHANNEL_SCREEN  = 'settings.screen.channel';
-	const PENDING_SCREEN  = 'settings.screen.pending';
+	const SETTINGS_SCREEN    = 'settings.screen.settings';
+	const WELCOME_SCREEN     = 'settings.screen.welcome';
+	const CREATE_SCREEN      = 'settings.screen.create';
+	const CHANNEL_SCREEN     = 'settings.screen.channel';
+	const PENDING_SCREEN     = 'settings.screen.pending';
+	const CREDENTIALS_SCREEN = 'settings.screen.credentials';
 
 	const API_SECTION              = 'settings.section.api';
 	const CONNECT_ACCOUNT_SECTION  = 'settings.section.connect_account';
@@ -47,9 +53,10 @@ class Settings extends Provider {
 	const CHANNEL_SECTION          = 'settings.section.channel';
 	const DIAGNOSTICS_SECTION      = 'settings.section.diagnostics';
 
-	const API_STATUS    = 'settings.api_status';
-	const IMPORT_NOW    = 'settings.import_now';
-	const IMPORT_STATUS = 'settings.import_status';
+	const API_STATUS         = 'settings.api_status';
+	const IMPORT_NOW         = 'settings.import_now';
+	const IMPORT_STATUS      = 'settings.import_status';
+	const IMPORT_LIVE_STATUS = 'settings.import_status_live';
 
 	const CONFIG_STATUS            = 'settings.configuration_status';
 	const STATUS_NEW               = 0;
@@ -59,7 +66,7 @@ class Settings extends Provider {
 
 	public function register( Container $container ) {
 		$this->settings_screen( $container );
-//		$this->api_credentials( $container );
+		$this->api_credentials( $container );
 		$this->api_status_indicator( $container );
 		$this->cart( $container );
 		$this->gift_certificates( $container );
@@ -78,6 +85,10 @@ class Settings extends Provider {
 		};
 		add_action( 'admin_menu', $this->create_callback( 'settings_screen_admin_menu', function () use ( $container ) {
 			$container[ self::SETTINGS_SCREEN ]->register_settings_page();
+		} ), 10, 0 );
+
+		add_action( 'bigcommerce/settings/after_form/page=' . Settings_Screen::NAME, $this->create_callback( 'settings_support_message', function () use ( $container ) {
+			$container[ self::SETTINGS_SCREEN ]->render_support_link();
 		} ), 10, 0 );
 
 		$container[ self::CONFIG_STATUS ] = function ( Container $container ) {
@@ -106,7 +117,7 @@ class Settings extends Provider {
 			$container[ self::API_SECTION ]->register_settings_section( $suffix, $screen );
 		} );
 		add_action( 'bigcommerce/settings/register/screen=' . Settings_Screen::NAME, $register_callback, 70, 2 );
-		add_action( 'bigcommerce/settings/register/screen=' . Connect_Account_Screen::NAME, $register_callback, 10, 2 );
+		add_action( 'bigcommerce/settings/register/screen=' . Api_Credentials_Screen::NAME, $register_callback, 10, 2 );
 		add_action( 'bigcommerce/settings/render/credentials', $this->create_callback( 'api_credentials_description', function () use ( $container ) {
 			$container[ self::API_SECTION ]->render_help_text();
 		} ), 10, 0 );
@@ -130,6 +141,7 @@ class Settings extends Provider {
 				$container[ self::CREATE_SCREEN ]->get_hook_suffix(),
 				$container[ self::CHANNEL_SCREEN ]->get_hook_suffix(),
 				$container[ self::PENDING_SCREEN ]->get_hook_suffix(),
+				$container[ self::CREDENTIALS_SCREEN ]->get_hook_suffix(),
 			] );
 			$container[ self::API_STATUS ]->credentials_required_notice( $container[ self::WELCOME_SCREEN ], $excluded );
 		} ), 10, 0 );
@@ -173,6 +185,11 @@ class Settings extends Provider {
 		$container[ self::IMPORT_SECTION ] = function ( Container $container ) {
 			return new Import_Settings();
 		};
+
+		$container[ self::IMPORT_LIVE_STATUS ] = function ( Container $container ) {
+			return new Cron_Runner();
+		};
+
 		add_action( 'bigcommerce/settings/register/screen=' . Settings_Screen::NAME, $this->create_callback( 'import_register', function () use ( $container ) {
 			$container[ self::IMPORT_SECTION ]->register_settings_section();
 		} ), 20, 0 );
@@ -180,12 +197,15 @@ class Settings extends Provider {
 		$container[ self::IMPORT_NOW ] = function ( Container $container ) {
 			return new Import_Now( $container[ self::SETTINGS_SCREEN ] );
 		};
+
 		add_action( 'bigcommerce/settings/header/import_status', $this->create_callback( 'import_now_render', function () use ( $container ) {
 			$container[ self::IMPORT_NOW ]->render_button();
 		} ), 10, 0 );
+
 		add_action( 'admin_post_' . Import_Now::ACTION, $this->create_callback( 'import_now_handle', function () use ( $container ) {
 			$container[ self::IMPORT_NOW ]->handle_request();
 		} ), 10, 0 );
+
 		add_action( 'admin_notices', $this->create_callback( 'import_now_notices', function () use ( $container ) {
 			if ( $container[ self::CONFIG_STATUS ] >= self::STATUS_CHANNEL_CONNECTED ) {
 				$container[ self::IMPORT_NOW ]->list_table_notice();
@@ -195,15 +215,28 @@ class Settings extends Provider {
 		$container[ self::IMPORT_STATUS ] = function ( Container $container ) {
 			return new Import_Status();
 		};
+
 		add_action( 'bigcommerce/settings/section/after_fields/id=' . Import_Settings::NAME, $this->create_callback( 'import_status_render', function () use ( $container ) {
 			if ( $container[ self::CONFIG_STATUS ] >= self::STATUS_CHANNEL_CONNECTED ) {
 				$container[ self::IMPORT_STATUS ]->render_status();
 			}
 		} ), 20, 0 );
+
 		add_action( 'bigcommerce/settings/import/product_list_table_notice', $this->create_callback( 'import_current_status_notice', function () use ( $container ) {
 			if ( $container[ self::CONFIG_STATUS ] >= self::STATUS_CHANNEL_CONNECTED ) {
 				$container[ self::IMPORT_STATUS ]->current_status_notice();
 			}
+		} ), 10, 0 );
+
+		add_action( 'bigcommerce/import/before', $this->create_callback( 'cache_import_queue_size', function ( $status ) use ( $container ) {
+			if ( in_array( $status, [ Status::MARKING_DELETED_PRODUCTS, Status::MARKED_DELETED_PRODUCTS ] ) ) {
+				$container[ self::IMPORT_STATUS ]->cache_queue_size();
+			}
+		} ), 10, 1 );
+
+		// Ajax actions
+		add_action( 'wp_ajax_' . Import_Status::AJAX_ACTION_IMPORT_STATUS, $this->create_callback( 'import_current_status_message', function () use ( $container ) {
+			$container[ self::IMPORT_STATUS ]->ajax_current_status();
 		} ), 10, 0 );
 	}
 
@@ -328,6 +361,20 @@ class Settings extends Provider {
 		} );
 		add_filter( 'bigcommerce/onboarding/success_redirect', $pending_screen_url, 10, 1 );
 
+		$container[ self::CREDENTIALS_SCREEN ] = function ( Container $container ) {
+			return new Api_Credentials_Screen( $container[ self::CONFIG_STATUS ], $container[ Assets::PATH ] );
+		};
+		add_action( 'admin_menu', $this->create_callback( 'credentials_screen_admin_menu', function () use ( $container ) {
+			$container[ self::CREDENTIALS_SCREEN ]->register_settings_page();
+		} ), 10, 0 );
+		$api_credentials_url = $this->create_callback( 'api_credentials_url', function ( $url ) use ( $container ) {
+			return $container[ self::CREDENTIALS_SCREEN ]->get_url();
+		} );
+		add_filter( 'bigcommerce/settings/credentials_url', $api_credentials_url );
+		add_action( 'admin_action_update', $this->create_callback( 'validate_api_credentials', function () use ( $container ) {
+			$container[ self::CREDENTIALS_SCREEN ]->validate_credentials();
+		} ), 10, 0 );
+
 		add_action( 'bigcommerce/settings/unregistered_screen', $this->create_callback( 'redirect_unregistered_screen', function ( $screen ) use ( $container ) {
 			/** @var Abstract_Screen[] $possible_screens */
 			$possible_screens = [
@@ -347,7 +394,7 @@ class Settings extends Provider {
 	/**
 	 * @param Container $container
 	 */
-	private function diagnostics( Container $container) {
+	private function diagnostics( Container $container ) {
 		$container[ self::DIAGNOSTICS_SECTION ] = function ( Container $container ) {
 			return new Troubleshooting_Diagnostics();
 		};
@@ -356,8 +403,13 @@ class Settings extends Provider {
 			$container[ self::DIAGNOSTICS_SECTION ]->register_settings_section();
 		} ), 90, 0 );
 
-		add_action('wp_ajax_'.Troubleshooting_Diagnostics::AJAX_ACTION, $this->create_callback( 'diagnostics_settings_action', function () use ( $container ) {
+		add_action( 'wp_ajax_' . Troubleshooting_Diagnostics::AJAX_ACTION, $this->create_callback( 'diagnostics_settings_action', function () use ( $container ) {
 			$container[ self::DIAGNOSTICS_SECTION ]->get_diagnostics_data();
 		} ), 10, 0 );
+
+		add_action( 'wp_ajax_' . Troubleshooting_Diagnostics::AJAX_ACTION_IMPORT_ERRORS, $this->create_callback( 'diagnostics_settings_import_errors_action', function () use ( $container ) {
+			$container[ self::DIAGNOSTICS_SECTION ]->get_import_errors( $container[ Log::LOGGER ] );
+		} ), 10, 0 );
+
 	}
 }

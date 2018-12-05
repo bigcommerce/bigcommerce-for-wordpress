@@ -20,7 +20,7 @@
 .bc-choices {
 
 	&[data-type*="select-one"]:after {
-		border-color: #888 transparent transparent;
+		border-color: var(--color-bc-grey) transparent transparent;
 		border-width: 4px;
 		right: 16px;
 	}
@@ -36,6 +36,17 @@
 		box-sizing: border-box;
 		min-height: 20px;
 		padding: 11px 10px 10px;
+	}
+
+	&.is-focused {
+
+		&[data-type*="select-one"]:after {
+			border-color: var(--color-bc-doger-blue) transparent transparent;
+		}
+
+		.choices__inner {
+			border-color: var(--color-bc-doger-blue);
+		}
 	}
 
 	&[data-type*="select-one"] .choices__inner {

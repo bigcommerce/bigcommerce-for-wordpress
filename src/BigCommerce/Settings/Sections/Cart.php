@@ -49,7 +49,10 @@ class Cart extends Settings_Section {
 			esc_html( __( 'Enable Cart', 'bigcommerce' ) ),
 			[ $this, 'render_enable_cart_field', ],
 			Settings_Screen::NAME,
-			self::NAME
+			self::NAME,
+			[
+				'label_for' => 'field-' . self::OPTION_ENABLE_CART,
+			]
 		);
 
 		register_setting(
@@ -62,7 +65,10 @@ class Cart extends Settings_Section {
 			[ $this, 'render_page_field' ],
 			Settings_Screen::NAME,
 			self::NAME,
-			[ 'page' => $this->cart_page ]
+			[
+				'page'      => $this->cart_page,
+				'label_for' => 'field-' . $this->cart_page->get_option_name(),
+			]
 		);
 
 		register_setting(
@@ -75,7 +81,10 @@ class Cart extends Settings_Section {
 			esc_html( __( 'Enable Embedded Checkout', 'bigcommerce' ) ),
 			[ $this, 'render_embedded_checkout_field', ],
 			Settings_Screen::NAME,
-			self::NAME
+			self::NAME,
+			[
+				'label_for' => 'field-' . self::OPTION_EMBEDDED_CHECKOUT,
+			]
 		);
 
 		register_setting(
@@ -88,20 +97,23 @@ class Cart extends Settings_Section {
 			[ $this, 'render_page_field' ],
 			Settings_Screen::NAME,
 			self::NAME,
-			[ 'page' => $this->checkout_page ]
+			[
+				'page'      => $this->checkout_page,
+				'label_for' => 'field-' . $this->checkout_page->get_option_name(),
+			]
 		);
 	}
 
 	public function render_enable_cart_field() {
 		$value    = (bool) get_option( self::OPTION_ENABLE_CART, true );
-		$checkbox = sprintf( '<input type="checkbox" value="1" class="regular-text code" name="%s" %s />', esc_attr( self::OPTION_ENABLE_CART ), checked( true, $value, false ) );
+		$checkbox = sprintf( '<input id="field-%s" type="checkbox" value="1" class="regular-text code" name="%s" %s />', esc_attr( self::OPTION_ENABLE_CART ), esc_attr( self::OPTION_ENABLE_CART ), checked( true, $value, false ) );
 		printf( '<p class="description">%s %s</p>', $checkbox, __( 'If enabled, customers will be able to add products to a cart before proceeding to checkout. If disabled, products will use a Buy Now button that takes them directly to checkout.', 'bigcommerce' ) );
 	}
 
 	public function render_embedded_checkout_field() {
 		$value     = (bool) get_option( self::OPTION_EMBEDDED_CHECKOUT, true );
 		$permitted = (bool) apply_filters( 'bigcommerce/checkout/can_embed', true );
-		$checkbox  = sprintf( '<input type="checkbox" value="1" class="regular-text code" name="%s" %s %s />', esc_attr( self::OPTION_EMBEDDED_CHECKOUT ), checked( true, $value, false ), disabled( $permitted, false, false ) );
+		$checkbox  = sprintf( '<input id="field-%s" type="checkbox" value="1" class="regular-text code" name="%s" %s %s />', esc_attr( self::OPTION_EMBEDDED_CHECKOUT ), esc_attr( self::OPTION_EMBEDDED_CHECKOUT ), checked( true, $value, false ), disabled( $permitted, false, false ) );
 		if ( $permitted ) {
 			$description = __( 'If enabled, the checkout form will be embedded on your checkout page. If disabled, customers will be redirected to bigcommerce.com for checkout. Your WordPress domain must have a valid SSL certificate to support embedded checkout.', 'bigcommerce' );
 		} else {
