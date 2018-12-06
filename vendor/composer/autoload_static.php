@@ -4,18 +4,36 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit8f7fd79f651f54307ed496fe06946c44
+class ComposerStaticInitf60e41aa4e4039e3554451f03f0fe316
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
     );
 
-    public static $firstCharsPsr4 = array (
-        'P' => true,
-        'M' => true,
-        'F' => true,
-        'D' => true,
-        'B' => true,
+    public static $prefixLengthsPsr4 = array (
+        'P' => 
+        array (
+            'Psr\\Log\\' => 8,
+            'Psr\\Container\\' => 14,
+        ),
+        'M' => 
+        array (
+            'Monolog\\' => 8,
+        ),
+        'F' => 
+        array (
+            'Firebase\\JWT\\' => 13,
+        ),
+        'D' => 
+        array (
+            'Dotenv\\' => 7,
+        ),
+        'B' => 
+        array (
+            'Bigcommerce\\Test\\' => 17,
+            'BigCommerce\\Api\\v3\\' => 19,
+            'BigCommerce\\' => 12,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -79,8 +97,12 @@ class ComposerStaticInit8f7fd79f651f54307ed496fe06946c44
         'BigCommerce\\Accounts\\Roles\\Role' => __DIR__ . '/../..' . '/src/BigCommerce/Accounts/Roles/Role.php',
         'BigCommerce\\Accounts\\Sub_Nav' => __DIR__ . '/../..' . '/src/BigCommerce/Accounts/Sub_Nav.php',
         'BigCommerce\\Accounts\\User_Profile_Settings' => __DIR__ . '/../..' . '/src/BigCommerce/Accounts/User_Profile_Settings.php',
+        'BigCommerce\\Amp\\Amp_Assets' => __DIR__ . '/../..' . '/src/BigCommerce/Amp/Amp_Assets.php',
+        'BigCommerce\\Amp\\Amp_Cart' => __DIR__ . '/../..' . '/src/BigCommerce/Amp/Amp_Cart.php',
         'BigCommerce\\Amp\\Amp_Controller_Factory' => __DIR__ . '/../..' . '/src/BigCommerce/Amp/Amp_Controller_Factory.php',
         'BigCommerce\\Amp\\Amp_Template_Override' => __DIR__ . '/../..' . '/src/BigCommerce/Amp/Amp_Template_Override.php',
+        'BigCommerce\\Amp\\Classic' => __DIR__ . '/../..' . '/src/BigCommerce/Amp/Classic.php',
+        'BigCommerce\\Amp\\Overrides' => __DIR__ . '/../..' . '/src/BigCommerce/Amp/Overrides.php',
         'BigCommerce\\Analytics\\Events\\Add_To_Cart' => __DIR__ . '/../..' . '/src/BigCommerce/Analytics/Events/Add_To_Cart.php',
         'BigCommerce\\Analytics\\Events\\View_Product' => __DIR__ . '/../..' . '/src/BigCommerce/Analytics/Events/View_Product.php',
         'BigCommerce\\Analytics\\Facebook_Pixel' => __DIR__ . '/../..' . '/src/BigCommerce/Analytics/Facebook_Pixel.php',
@@ -98,6 +120,7 @@ class ComposerStaticInit8f7fd79f651f54307ed496fe06946c44
         'BigCommerce\\Api\\Shipping_Api' => __DIR__ . '/../..' . '/src/BigCommerce/Api/Shipping_Api.php',
         'BigCommerce\\Api\\Store_Api' => __DIR__ . '/../..' . '/src/BigCommerce/Api/Store_Api.php',
         'BigCommerce\\Api\\Tax_Class_Api' => __DIR__ . '/../..' . '/src/BigCommerce/Api/Tax_Class_Api.php',
+        'BigCommerce\\Api\\Webhooks_Api' => __DIR__ . '/../..' . '/src/BigCommerce/Api/Webhooks_Api.php',
         'BigCommerce\\Api\\v2ApiAdapter' => __DIR__ . '/../..' . '/src/BigCommerce/Api/v2ApiAdapter.php',
         'BigCommerce\\Api\\v3\\ApiClient' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/ApiClient.php',
         'BigCommerce\\Api\\v3\\ApiException' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/ApiException.php',
@@ -399,6 +422,7 @@ class ComposerStaticInit8f7fd79f651f54307ed496fe06946c44
         'BigCommerce\\Container\\Post_Meta' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Post_Meta.php',
         'BigCommerce\\Container\\Post_Types' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Post_Types.php',
         'BigCommerce\\Container\\Provider' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Provider.php',
+        'BigCommerce\\Container\\Proxy' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Proxy.php',
         'BigCommerce\\Container\\Rest' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Rest.php',
         'BigCommerce\\Container\\Rewrites' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Rewrites.php',
         'BigCommerce\\Container\\Schema' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Schema.php',
@@ -407,6 +431,7 @@ class ComposerStaticInit8f7fd79f651f54307ed496fe06946c44
         'BigCommerce\\Container\\Taxonomies' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Taxonomies.php',
         'BigCommerce\\Container\\Templates' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Templates.php',
         'BigCommerce\\Container\\Theme_Customizer' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Theme_Customizer.php',
+        'BigCommerce\\Container\\Webhooks' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Webhooks.php',
         'BigCommerce\\Container\\Widgets' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Widgets.php',
         'BigCommerce\\Currency\\Configurable_Formatter' => __DIR__ . '/../..' . '/src/BigCommerce/Currency/Configurable_Formatter.php',
         'BigCommerce\\Currency\\Currency_Formatter' => __DIR__ . '/../..' . '/src/BigCommerce/Currency/Currency_Formatter.php',
@@ -515,6 +540,9 @@ class ComposerStaticInit8f7fd79f651f54307ed496fe06946c44
         'BigCommerce\\Post_Types\\Product\\Query_Mapper' => __DIR__ . '/../..' . '/src/BigCommerce/Post_Types/Product/Query_Mapper.php',
         'BigCommerce\\Post_Types\\Product\\Store_Links' => __DIR__ . '/../..' . '/src/BigCommerce/Post_Types/Product/Store_Links.php',
         'BigCommerce\\Post_Types\\Product\\Unsupported_Products' => __DIR__ . '/../..' . '/src/BigCommerce/Post_Types/Product/Unsupported_Products.php',
+        'BigCommerce\\Proxy\\AMP_Cart_Controller' => __DIR__ . '/../..' . '/src/BigCommerce/Proxy/AMP_Cart_Controller.php',
+        'BigCommerce\\Proxy\\Proxy_Cache' => __DIR__ . '/../..' . '/src/BigCommerce/Proxy/Proxy_Cache.php',
+        'BigCommerce\\Proxy\\Proxy_Controller' => __DIR__ . '/../..' . '/src/BigCommerce/Proxy/Proxy_Controller.php',
         'BigCommerce\\Rest\\Cart_Controller' => __DIR__ . '/../..' . '/src/BigCommerce/Rest/Cart_Controller.php',
         'BigCommerce\\Rest\\Orders_Shortcode_Controller' => __DIR__ . '/../..' . '/src/BigCommerce/Rest/Orders_Shortcode_Controller.php',
         'BigCommerce\\Rest\\Products_Controller' => __DIR__ . '/../..' . '/src/BigCommerce/Rest/Products_Controller.php',
@@ -586,6 +614,9 @@ class ComposerStaticInit8f7fd79f651f54307ed496fe06946c44
         'BigCommerce\\Templates\\Address_Formatted' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Address_Formatted.php',
         'BigCommerce\\Templates\\Address_List' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Address_List.php',
         'BigCommerce\\Templates\\Address_New' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Address_New.php',
+        'BigCommerce\\Templates\\Amp_Cart_Actions' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Amp_Cart_Actions.php',
+        'BigCommerce\\Templates\\Amp_Cart_Items' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Amp_Cart_items.php',
+        'BigCommerce\\Templates\\Amp_Cart_Summary' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Amp_Cart_Summary.php',
         'BigCommerce\\Templates\\Cart' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Cart.php',
         'BigCommerce\\Templates\\Cart_Actions' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Cart_Actions.php',
         'BigCommerce\\Templates\\Cart_Empty' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Cart_Empty.php',
@@ -668,6 +699,8 @@ class ComposerStaticInit8f7fd79f651f54307ed496fe06946c44
         'BigCommerce\\Templates\\Template_Override' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Template_Override.php',
         'BigCommerce\\Templates\\View_Product_Button' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/View_Product_Button.php',
         'BigCommerce\\Util\\Cart_Item_Iterator' => __DIR__ . '/../..' . '/src/BigCommerce/Util/Cart_Item_Iterator.php',
+        'BigCommerce\\Webhooks\\Product_Update_Webhook' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Product_Update_Webhook.php',
+        'BigCommerce\\Webhooks\\Webhook' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Webhook.php',
         'BigCommerce\\Widgets\\Product_Category_Widget' => __DIR__ . '/../..' . '/src/BigCommerce/Widgets/Product_Category_Widget.php',
         'Bigcommerce\\Api\\Client' => __DIR__ . '/..' . '/bigcommerce/api/src/Bigcommerce/Api/Client.php',
         'Bigcommerce\\Api\\ClientError' => __DIR__ . '/..' . '/bigcommerce/api/src/Bigcommerce/Api/ClientError.php',
@@ -876,10 +909,10 @@ class ComposerStaticInit8f7fd79f651f54307ed496fe06946c44
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->firstCharsPsr4 = ComposerStaticInit8f7fd79f651f54307ed496fe06946c44::$firstCharsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit8f7fd79f651f54307ed496fe06946c44::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit8f7fd79f651f54307ed496fe06946c44::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit8f7fd79f651f54307ed496fe06946c44::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitf60e41aa4e4039e3554451f03f0fe316::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitf60e41aa4e4039e3554451f03f0fe316::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitf60e41aa4e4039e3554451f03f0fe316::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitf60e41aa4e4039e3554451f03f0fe316::$classMap;
 
         }, null, ClassLoader::class);
     }

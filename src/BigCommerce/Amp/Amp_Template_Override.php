@@ -26,6 +26,16 @@ class Amp_Template_Override {
 	 * @filter bigcommerce/template/path
 	 */
 	public function override_template_path( $path, $relative_path ) {
+		/*
+		 * If we're not using AMP classic and are using paired/native instead,
+		 * then we should only override `components/*` templates. All the other
+		 * templates (i.e. single product, archive etc) will be rendered from
+		 * the main WP theme template and thus we should not override that.
+		 */
+		if ( ! $this->is_classic() && ! strpos( $path, 'components' ) ) {
+			return $path;
+		}
+
 		$amp_path          = '';
 		$amp_relative_path = trailingslashit( $this->amp_directory ) . $relative_path;
 
@@ -53,5 +63,75 @@ class Amp_Template_Override {
 		}
 
 		return $path;
+	}
+
+	/**
+	 * Override classic template paths for the custom AMP classic theme.
+	 *
+	 * @param string   $file The absolute path to the amp template.
+	 * @param string   $template_type The type of template being served.
+	 * @param \WP_Post $post The post object of the current post being viewed.
+	 *
+	 * @return string
+	 * @filter amp_post_template_file
+	 */
+	public function override_classic_amp_template_path( $file, $template_type, $post ) {
+		$template = $template_type . '-' . $post->post_type . '.php';
+		$file     = $this->override_template_path( $file, $template );
+		return $file;
+	}
+
+	/**
+	 * Load header file from the plugin.
+	 *
+	 * @param string $file      Template file path.
+	 * @param string $type      Template type.
+	 * @param array  $container \BigCommerce\Container\Amp
+	 *
+	 * @return string
+	 */
+	public function override_classic_header_bar_template( $file, $type, $container ) {
+		if ( 'header-bar' === $type ) {
+			$file = $this->override_template_path( $file, 'components/header/header-bar.php' );
+		}
+		return $file;
+	}
+
+	/**
+	 * Is classic mode enabled for AMP rendering?
+	 *
+	 * @return bool
+	 */
+	public function is_classic() {
+		if ( is_callable( [ '\AMP_Options_Manager', 'get_option' ] ) ) {
+			$theme_support = \AMP_Options_Manager::get_option( 'theme_support', false );
+
+			if ( 'native' === $theme_support || 'paired' === $theme_support ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Adds header_nav_menu to the AMP data in classic mode.
+	 *
+	 * @param array $data AMP template data.
+	 * @return array Filtered data.
+	 */
+	public function provide_header_nav_menu( $data ) {
+		if ( ! isset( $data['header_nav_menu'] ) ) {
+			$data['header_nav_menu'] = wp_nav_menu(
+				array(
+					'theme_location' => 'amp-menu',
+					'container'      => 'false',
+					'depth'          => 1,
+					'echo'           => false,
+				)
+			);
+		}
+
+		return $data;
 	}
 }

@@ -23,12 +23,11 @@ class Styles {
 	}
 
 	/**
-	 * @return void
-	 * @action wp_head
+	 * @return string
 	 */
-	public function print_styles() {
+	public function get_styles() {
 		if ( ! $this->using_plugin_css() ) {
-			return;
+			return '';
 		}
 
 		$vars = [
@@ -47,8 +46,30 @@ class Styles {
 		}
 		$css = apply_filters( 'bigcommerce/css/customizer_styles', $template );
 
+		return $css;
+	}
+
+	/**
+	 * @return void
+	 * @action wp_head
+	 */
+	public function print_styles() {
+		$css = $this->get_styles();
+
 		if ( ! empty( $css ) ) {
-			echo "\n<style type='text/css'>\n", $css, "\n</style>\n";
+			echo "\n<style type='text/css'>\n", $css, "\n</style>\n"; // WPCS: XSS okay. CSS is clean.
+		}
+	}
+
+	/**
+	 * @return void
+	 * @action wp_head
+	 */
+	public function print_css() {
+		$css = $this->get_styles();
+
+		if ( ! empty( $css ) ) {
+			echo $css; // WPCS: XSS okay. CSS is clean.
 		}
 	}
 

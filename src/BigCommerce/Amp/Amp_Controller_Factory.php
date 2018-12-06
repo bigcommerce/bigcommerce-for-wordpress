@@ -3,8 +3,13 @@
 
 namespace BigCommerce\Amp;
 
-
 use BigCommerce\Templates\Controller_Factory;
+use BigCommerce\Templates\Cart_Actions;
+use BigCommerce\Templates\Amp_Cart_Actions;
+use BigCommerce\Templates\Cart_Items;
+use BigCommerce\Templates\Amp_Cart_Items;
+use BigCommerce\Templates\Cart_Summary;
+use BigCommerce\Templates\Amp_Cart_Summary;
 
 /**
  * Class Amp_Controller_Factory
@@ -22,7 +27,9 @@ class Amp_Controller_Factory extends Controller_Factory {
 	 *            replacement AMP class names.
 	 */
 	private $override_class_map = [
-
+		Cart_Actions::class => Amp_Cart_Actions::class,
+		Cart_Items::class   => Amp_Cart_Items::class,
+		Cart_Summary::class => Amp_Cart_Summary::class,
 	];
 
 	public function get_controller( $classname, array $options = [], $template = '' ) {

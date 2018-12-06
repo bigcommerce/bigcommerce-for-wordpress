@@ -4,14 +4,16 @@
 
 	.wp-admin & {
 		background-color: var(--color-white);
+		margin-top: 15px;
 	}
 
 	.bc-settings-bigcommerce & {
 		background-color: var(--color-off-white);
-		margin-bottom: 10px;
+		margin-bottom: 15px;
+		margin-top: 0;
 
 		&:nth-child(2) {
-			margin-top: -20px;
+			margin-top: -15px;
 		}
 	}
 
@@ -67,6 +69,7 @@ p.bigcommerce-notice__refresh {
 	color: var(--color-white);
 	font-weight: var(--font-weight-medium);
 	transition: background-color 250ms ease;
+	margin-top: 15px;
 
 	@media (--viewport-wpadmin) {
 		flex-wrap: nowrap;
@@ -107,21 +110,20 @@ p.bigcommerce-notice__refresh {
 	.dashicons {
 		flex: 0 0 auto;
 		font-size: 16px;
-		line-height: 1.5;
+		line-height: 1.4;
 		margin-right: 4px;
 		margin-top: 3px;
 	}
 
 	.dashicons-warning {
 		color: var(--color-bc-red);
-		font-size: 21px;
-		line-height: 1.1;
 	}
 
 	p.bc-import-status-message {
 		flex: 1;
 		margin: 0;
-		font-size: 16px;
+		font-size: 14px;
+		line-height: 1.5;
 	}
 
 	.bigcommerce-notice__import-status--success & {
@@ -139,7 +141,7 @@ p.bigcommerce-notice__refresh {
 	&.import-status-previous {
 
 		p.bc-import-status-message {
-			font-size: inherit;
+			//font-size: inherit;
 		}
 	}
 }

@@ -66,6 +66,7 @@ class Product {
 
 	public function brand() {
 		$brands = get_the_terms( $this->post_id, Brand::NAME );
+
 		if ( $brands && ! is_wp_error( $brands ) ) {
 			return reset( $brands )->name;
 		}

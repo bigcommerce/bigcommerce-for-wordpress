@@ -4,7 +4,7 @@
 namespace BigCommerce;
 
 class Plugin {
-	const VERSION = '1.2.0';
+	const VERSION = '1.3.0';
 
 	protected static $_instance;
 
@@ -68,6 +68,7 @@ class Plugin {
 		$this->providers[ 'pages' ]             = new Container\Pages();
 		$this->providers[ 'post_types' ]        = new Container\Post_Types();
 		$this->providers[ 'post_meta' ]         = new Container\Post_Meta();
+		$this->providers[ 'proxy' ]             = new Container\Proxy();
 		$this->providers[ 'rest' ]              = new Container\Rest();
 		$this->providers[ 'rewrites' ]          = new Container\Rewrites();
 		$this->providers[ 'schema' ]            = new Container\Schema();
@@ -76,6 +77,7 @@ class Plugin {
 		$this->providers[ 'taxonomies' ]        = new Container\Taxonomies();
 		$this->providers[ 'templates' ]         = new Container\Templates();
 		$this->providers[ 'widgets' ]           = new Container\Widgets();
+		$this->providers[ 'webhooks' ]          = new Container\Webhooks();
 
 
 		/**

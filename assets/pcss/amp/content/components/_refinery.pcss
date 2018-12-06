@@ -1,0 +1,27 @@
+.bc-product-archive__refinery {
+
+	.bc-form {
+		@media (--viewport-large) {
+			justify-content: space-between;
+		}
+	}
+}
+
+.bc-product-archive__search {
+	@media (--viewport-large) {
+		flex: 1 1 100%;
+	}
+}
+
+.bc-product-archive__select {
+	@media (--viewport-large) {
+		flex: 0 1 calc(33.3333% - 20px);
+		flex-wrap: wrap;
+		margin-right: 20px;
+		margin-top: 15px;
+
+		&:last-child {
+			margin-right: 0;
+		}
+	}
+}

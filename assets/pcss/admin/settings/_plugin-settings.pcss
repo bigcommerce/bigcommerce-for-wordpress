@@ -37,7 +37,7 @@
 		width: 75%;
 		bottom: 1px;
 		right: -20px;
-		z-index: 1;
+		z-index: -1;
 
 		@media (--viewport-medium) {
 			height: 220px;
@@ -61,6 +61,7 @@
 .bc-settings-header__cta {
 	position: relative;
 	z-index: 2;
+	min-height: 100px;
 
 	@media (--viewport-medium) {
 		lost-column: 5/12;
