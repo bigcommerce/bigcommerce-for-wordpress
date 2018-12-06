@@ -128,6 +128,16 @@ class Settings extends Provider {
 		add_filter( 'pre_option_' . Api_Credentials::OPTION_CLIENT_ID, $env_filter, 10, 3 );
 		add_filter( 'pre_option_' . Api_Credentials::OPTION_CLIENT_SECRET, $env_filter, 10, 3 );
 		add_filter( 'pre_option_' . Api_Credentials::OPTION_ACCESS_TOKEN, $env_filter, 10, 3 );
+
+		$update_options_action = $this->create_callback( 'api_credentials_update_action', function ( $new_value, $old_value ) use ( $container ) {
+			if ( $container[ Api::CONFIG_COMPLETE ] ) {
+				$container[ self::API_SECTION ]->do_api_settings_updated_action( $new_value, $old_value );
+			}
+		} );
+		add_action( 'update_option_' . Api_Credentials::OPTION_STORE_URL, $update_options_action, 10, 2 );
+		add_action( 'update_option_' . Api_Credentials::OPTION_CLIENT_ID, $update_options_action, 10, 2 );
+		add_action( 'update_option_' . Api_Credentials::OPTION_CLIENT_SECRET, $update_options_action, 10, 2 );
+		add_action( 'update_option_' . Api_Credentials::OPTION_ACCESS_TOKEN, $update_options_action, 10, 2 );
 	}
 
 	private function api_status_indicator( Container $container ) {

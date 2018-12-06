@@ -20,6 +20,7 @@ use BigCommerce\Taxonomies\Condition\Condition;
 use BigCommerce\Taxonomies\Flag\Flag;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
 use BigCommerce\Taxonomies\Product_Type\Product_Type;
+use BigCommerce\Webhooks\Product_Update_Webhook;
 
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	die;
@@ -183,7 +184,10 @@ function delete_options() {
 		Customizer\Sections\Product_Single::RELATED_COUNT,
 		Customizer\Sections\Product_Single::DEFAULT_IMAGE,
 		'bigcommerce_flushed_rewrites',
+		md5( 'bc_webhook_' . Product_Update_Webhook::ACTION . Product_Update_Webhook::SCOPE ),
+		md5( 'bc_webhook_password_' . Product_Update_Webhook::ACTION . Product_Update_Webhook::SCOPE ),
 	];
+
 	foreach ( $options as $option ) {
 		\delete_option( $option );
 	}

@@ -9,7 +9,6 @@ class Cart_Actions extends Controller {
 
 	protected $template = 'components/cart/cart-actions.php';
 
-
 	protected function parse_options( array $options ) {
 		$defaults = [
 			self::CART => [],

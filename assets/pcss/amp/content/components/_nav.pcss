@@ -1,0 +1,69 @@
+.amp-wp-header div {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+}
+
+.hamburger {
+	position: relative;
+	height: 2em;
+	width: 4em;
+	padding: 0.5em 1em;
+	background: none;
+	margin: 0 1em 0 -1em;
+}
+
+.hamburger:focus {
+	outline: none;
+}
+
+.hamburger::-moz-focus-inner {
+	border: 0;
+}
+
+.hamburger:before {
+	content: "";
+	position: absolute;
+	top: 10%;
+	left: 25%;
+	border-top: 2px solid white;
+	border-bottom: 2px solid white;
+	height: 80%;
+	width: 50%;
+}
+
+.hamburger:after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 25%;
+	margin-top: -1px;
+	width: 50%;
+	height: 2px;
+	background: white;
+}
+
+.close-sidebar {
+	float: right;
+	font-size: 1.5em;
+	cursor: pointer;
+	padding: 10px 5%;
+}
+
+#sidebar-menu[open] {
+	width: 380px;
+}
+
+.menu {
+	clear: both;
+}
+
+.menu li {
+	list-style: none;
+}
+
+.menu a {
+	display: block;
+	padding: 10px 5%;
+	text-decoration: none;
+}

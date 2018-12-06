@@ -11,6 +11,7 @@ use BigCommerce\Api\Payments_Api;
 use BigCommerce\Api\Shipping_Api;
 use BigCommerce\Api\Store_Api;
 use BigCommerce\Api\Tax_Class_Api;
+use BigCommerce\Api\Webhooks_Api;
 use BigCommerce\Api\v3\Api\CartApi;
 use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Api\v3\Api\ChannelsApi;
@@ -146,6 +147,13 @@ class Api_Factory {
 	 */
 	public function tax_class() {
 		return new Tax_Class_Api( $this->api_client );
+	}
+
+	/**
+	 * @return Webhooks_Api
+	 */
+	public function webhooks() {
+		return new Webhooks_Api( $this->api_client );
 	}
 
 	/**

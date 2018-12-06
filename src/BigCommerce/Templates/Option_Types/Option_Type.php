@@ -9,6 +9,7 @@ abstract class Option_Type extends Controller {
 	const LABEL   = 'label';
 	const OPTIONS = 'options';
 	const ID      = 'id';
+	const POST_ID = 'post_id';
 
 	protected function parse_options( array $options ) {
 		$defaults = [
@@ -21,11 +22,16 @@ abstract class Option_Type extends Controller {
 	}
 
 	public function get_data() {
-		return [
+		$data = [
 			self::ID      => $this->get_id(),
 			self::LABEL   => $this->get_label(),
 			self::OPTIONS => $this->get_options(),
 		];
+		$post = get_post();
+		if ( $post ) {
+			$data[ self::POST_ID ] = $post->ID;
+		}
+		return $data;
 	}
 
 	protected function get_id() {

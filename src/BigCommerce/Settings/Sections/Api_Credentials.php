@@ -191,4 +191,24 @@ class Api_Credentials extends Settings_Section {
 
 		return false;
 	}
+
+	/**
+	 * Fires an action (once per pageload) when an API credential setting updates.
+	 *
+	 * @param string $old_value Previous option value.
+	 * @param string $new_value New option value.
+	 */
+	public function do_api_settings_updated_action( $old_value, $new_value ) {
+		static $did_action;
+
+		if ( ! $did_action ) {
+			$did_action = true;
+
+			/**
+			 * Fires (once per pageload) when an API credential setting updates.
+			 */
+			do_action( 'bigcommerce/settings/api_credentials_updated' );
+		}
+
+	}
 }

@@ -17,6 +17,8 @@ class Form_Redirect {
 		if ( empty( $url ) ) {
 			return;
 		}
+
+		do_action( 'bigcommerce/form/before_redirect', $url );
 		wp_safe_redirect( esc_url_raw( $url ) );
 		exit();
 	}

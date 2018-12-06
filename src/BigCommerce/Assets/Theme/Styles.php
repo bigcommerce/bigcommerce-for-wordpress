@@ -29,7 +29,7 @@ class Styles {
 	public function enqueue_styles() {
 		$debug = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
 
-		$css_file = $debug ? 'master.css' : 'master.min.css';
+		$css_file = apply_filters( 'bigcommerce/assets/stylesheet', $debug ? 'master.css' : 'master.min.css' );
 		$css_src  = $this->directory . 'css/' . $css_file;
 
 		wp_register_style( 'bigcommerce-styles', $css_src, [], $this->version );

@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.0]
+
+### Added
+
+- Added templates, styles, and plugin logic for compatibility with the Official AMP
+  Plugin for Wordpress, through version 1.0. Themes still need to be made AMP-compatible
+  if not using AMP classic mode.
+- Added REST endpoints to proxy several BigCommerce API endpoints, including catalog, 
+  channels and cart. Most requests are cached for ten minutes by default.
+- Added creation and handling of a BigCommerce webhook to bust cached proxy data
+  related to a product when the product is updated in BigCommerce.
+
 ## [1.2.0]
 
 ### Added
@@ -220,6 +232,7 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[1.3.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.2.0...1.3.0
 [1.2.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.1.0...1.2.0
 [1.1.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.0.2...1.1.0
 [1.0.2]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.0.1...1.0.2
