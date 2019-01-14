@@ -1,10 +1,11 @@
 <?php
 
-namespace BigCommerce\Import;
+namespace BigCommerce\Import\Importers\Products;
 
 use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Api\v3\Model;
 use BigCommerce\Post_Types\Product\Product;
+use BigCommerce\Import\Importers\Products\Product_Builder;
 
 class Product_Creator extends Product_Saver {
 

@@ -1,12 +1,8 @@
 <?php
 /**
  * WidgetTemplateApi
- * PHP version 5
  *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -28,21 +24,14 @@
 
 namespace BigCommerce\Api\v3\Api;
 
+use \BigCommerce\Api\v3\Configuration;
 use \BigCommerce\Api\v3\ApiClient;
 use \BigCommerce\Api\v3\ApiException;
-use \BigCommerce\Api\v3\Configuration;
 use \BigCommerce\Api\v3\ObjectSerializer;
 
-/**
- * WidgetTemplateApi Class Doc Comment
- *
- * @category Class
- * @package  BigCommerce\Api\v3
- * @author   Swagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
- */
 class WidgetTemplateApi
 {
+
     /**
      * API Client
      *
@@ -53,35 +42,30 @@ class WidgetTemplateApi
     /**
      * Constructor
      *
-     * @param \BigCommerce\Api\v3\ApiClient|null $apiClient The api client to use
+     * @param \BigCommerce\Api\v3\ApiClient $apiClient The api client to use
      */
-    public function __construct(\BigCommerce\Api\v3\ApiClient $apiClient = null)
+    public function __construct(\BigCommerce\Api\v3\ApiClient $apiClient)
     {
-        if ($apiClient === null) {
-            $apiClient = new ApiClient();
-            $apiClient->getConfig()->setHost('https://api.bigcommerce.com/stores/{{store_id}}/v3');
-        }
-
         $this->apiClient = $apiClient;
     }
 
     /**
-     * Get API client
-     *
-     * @return \BigCommerce\Api\v3\ApiClient get the API client
-     */
+    * Get API client
+    *
+    * @return \BigCommerce\Api\v3\ApiClient get the API client
+    */
     public function getApiClient()
     {
         return $this->apiClient;
     }
 
     /**
-     * Set the API client
-     *
-     * @param \BigCommerce\Api\v3\ApiClient $apiClient set the API client
-     *
-     * @return WidgetTemplateApi
-     */
+    * Set the API client
+    *
+    * @param \BigCommerce\Api\v3\ApiClient $apiClient set the API client
+    *
+    * @return WidgetTemplateApi
+    */
     public function setApiClient(\BigCommerce\Api\v3\ApiClient $apiClient)
     {
         $this->apiClient = $apiClient;
@@ -90,34 +74,41 @@ class WidgetTemplateApi
 
     /**
      * Operation createWidgetTemplate
-     *
      * Creates a widget template.
      *
+     *
      * @param \BigCommerce\Api\v3\Model\WidgetTemplatePost $template_body  (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\WidgetTemplateResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function createWidgetTemplate($template_body)
+    public function createWidgetTemplate($template_body, array $params = [])
     {
-        list($response) = $this->createWidgetTemplateWithHttpInfo($template_body);
+        list($response) = $this->createWidgetTemplateWithHttpInfo( $template_body, $params);
         return $response;
     }
+
 
     /**
      * Operation createWidgetTemplateWithHttpInfo
      *
-     * Creates a widget template.
-     *
+     * @see self::createWidgetTemplate()
      * @param \BigCommerce\Api\v3\Model\WidgetTemplatePost $template_body  (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\WidgetTemplateResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createWidgetTemplateWithHttpInfo($template_body)
+    public function createWidgetTemplateWithHttpInfo( $template_body, array $params = [])
     {
+        
         // verify the required parameter 'template_body' is set
-        if ($template_body === null) {
+        if (!isset($template_body)) {
             throw new \InvalidArgumentException('Missing the required parameter $template_body when calling createWidgetTemplate');
         }
+        
+
         // parse inputs
         $resourcePath = "/content/widget-templates";
         $httpBody = '';
@@ -130,21 +121,26 @@ class WidgetTemplateApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
         // body params
         $_tempBody = null;
         if (isset($template_body)) {
-            $_tempBody = $template_body;
+        $_tempBody = $template_body;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -156,54 +152,63 @@ class WidgetTemplateApi
                 '\BigCommerce\Api\v3\Model\WidgetTemplateResponse',
                 '/content/widget-templates'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\WidgetTemplateResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\WidgetTemplateResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\WidgetTemplateResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deleteWidgetTemplate
-     *
      * Deletes a widget template.
      *
+     *
      * @param string $uuid The identifier for a specific template. (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deleteWidgetTemplate($uuid)
+    public function deleteWidgetTemplate($uuid, array $params = [])
     {
-        list($response) = $this->deleteWidgetTemplateWithHttpInfo($uuid);
+        list($response) = $this->deleteWidgetTemplateWithHttpInfo($uuid, $params);
         return $response;
     }
+
 
     /**
      * Operation deleteWidgetTemplateWithHttpInfo
      *
-     * Deletes a widget template.
-     *
+     * @see self::deleteWidgetTemplate()
      * @param string $uuid The identifier for a specific template. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteWidgetTemplateWithHttpInfo($uuid)
+    public function deleteWidgetTemplateWithHttpInfo($uuid, array $params = [])
     {
+        
         // verify the required parameter 'uuid' is set
-        if ($uuid === null) {
+        if (!isset($uuid)) {
             throw new \InvalidArgumentException('Missing the required parameter $uuid when calling deleteWidgetTemplate');
         }
+        
+
         // parse inputs
         $resourcePath = "/content/widget-templates/{uuid}";
         $httpBody = '';
@@ -216,8 +221,15 @@ class WidgetTemplateApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($uuid !== null) {
+
+
+        if (isset($uuid)) {
             $resourcePath = str_replace(
                 "{" . "uuid" . "}",
                 $this->apiClient->getSerializer()->toPathValue($uuid),
@@ -227,13 +239,13 @@ class WidgetTemplateApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -245,54 +257,63 @@ class WidgetTemplateApi
                 null,
                 '/content/widget-templates/{uuid}'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getWidgetTemplate
-     *
      * Gets a widget template.
      *
+     *
      * @param string $uuid The identifier for a specific template. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\WidgetTemplateResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getWidgetTemplate($uuid)
+    public function getWidgetTemplate($uuid, array $params = [])
     {
-        list($response) = $this->getWidgetTemplateWithHttpInfo($uuid);
+        list($response) = $this->getWidgetTemplateWithHttpInfo($uuid, $params);
         return $response;
     }
+
 
     /**
      * Operation getWidgetTemplateWithHttpInfo
      *
-     * Gets a widget template.
-     *
+     * @see self::getWidgetTemplate()
      * @param string $uuid The identifier for a specific template. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\WidgetTemplateResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getWidgetTemplateWithHttpInfo($uuid)
+    public function getWidgetTemplateWithHttpInfo($uuid, array $params = [])
     {
+        
         // verify the required parameter 'uuid' is set
-        if ($uuid === null) {
+        if (!isset($uuid)) {
             throw new \InvalidArgumentException('Missing the required parameter $uuid when calling getWidgetTemplate');
         }
+        
+
         // parse inputs
         $resourcePath = "/content/widget-templates/{uuid}";
         $httpBody = '';
@@ -305,8 +326,15 @@ class WidgetTemplateApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($uuid !== null) {
+
+
+        if (isset($uuid)) {
             $resourcePath = str_replace(
                 "{" . "uuid" . "}",
                 $this->apiClient->getSerializer()->toPathValue($uuid),
@@ -316,13 +344,13 @@ class WidgetTemplateApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -334,58 +362,64 @@ class WidgetTemplateApi
                 '\BigCommerce\Api\v3\Model\WidgetTemplateResponse',
                 '/content/widget-templates/{uuid}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\WidgetTemplateResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\WidgetTemplateResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\WidgetTemplateResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getWidgetTemplates
-     *
      * Gets all widget templates.
      *
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $widget_template_kind The kind of widget template. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     *
+     * @param array $params = []
+     *     - page int Specifies the page number in a limited (paginated) list of products. (optional)
+     *     - limit int Controls the number of items per page in a limited (paginated) list of products. (optional)
+     *     - widget_template_kind string The kind of widget template. (optional)
      * @return \BigCommerce\Api\v3\Model\WidgetTemplatesResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getWidgetTemplates($page = null, $limit = null, $widget_template_kind = null)
+    public function getWidgetTemplates(array $params = [])
     {
-        list($response) = $this->getWidgetTemplatesWithHttpInfo($page, $limit, $widget_template_kind);
+        list($response) = $this->getWidgetTemplatesWithHttpInfo($params);
         return $response;
     }
+
 
     /**
      * Operation getWidgetTemplatesWithHttpInfo
      *
-     * Gets all widget templates.
-     *
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $widget_template_kind The kind of widget template. (optional)
+     * @see self::getWidgetTemplates()
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\WidgetTemplatesResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getWidgetTemplatesWithHttpInfo($page = null, $limit = null, $widget_template_kind = null)
+    public function getWidgetTemplatesWithHttpInfo(array $params = [])
     {
+        
+
         // parse inputs
         $resourcePath = "/content/widget-templates";
         $httpBody = '';
@@ -399,27 +433,20 @@ class WidgetTemplateApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($page !== null) {
-            $queryParams['page'] = $this->apiClient->getSerializer()->toQueryValue($page);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($limit !== null) {
-            $queryParams['limit'] = $this->apiClient->getSerializer()->toQueryValue($limit);
-        }
-        // query params
-        if ($widget_template_kind !== null) {
-            $queryParams['widget_template_kind'] = $this->apiClient->getSerializer()->toQueryValue($widget_template_kind);
-        }
+
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -431,60 +458,70 @@ class WidgetTemplateApi
                 '\BigCommerce\Api\v3\Model\WidgetTemplatesResponse',
                 '/content/widget-templates'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\WidgetTemplatesResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\WidgetTemplatesResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\WidgetTemplatesResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation previewWidget
-     *
      * Render a widget template and return the widget html.
+     *
      *
      * @param string $uuid The identifier for a specific template. (required)
      * @param \BigCommerce\Api\v3\Model\WidgetTemplatePreview $template_body  (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\WidgetTemplatePreviewResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function previewWidget($uuid, $template_body)
+    public function previewWidget($uuid, $template_body, array $params = [])
     {
-        list($response) = $this->previewWidgetWithHttpInfo($uuid, $template_body);
+        list($response) = $this->previewWidgetWithHttpInfo($uuid,  $template_body, $params);
         return $response;
     }
+
 
     /**
      * Operation previewWidgetWithHttpInfo
      *
-     * Render a widget template and return the widget html.
-     *
+     * @see self::previewWidget()
      * @param string $uuid The identifier for a specific template. (required)
      * @param \BigCommerce\Api\v3\Model\WidgetTemplatePreview $template_body  (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\WidgetTemplatePreviewResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function previewWidgetWithHttpInfo($uuid, $template_body)
+    public function previewWidgetWithHttpInfo($uuid,  $template_body, array $params = [])
     {
+        
         // verify the required parameter 'uuid' is set
-        if ($uuid === null) {
+        if (!isset($uuid)) {
             throw new \InvalidArgumentException('Missing the required parameter $uuid when calling previewWidget');
         }
+        
         // verify the required parameter 'template_body' is set
-        if ($template_body === null) {
+        if (!isset($template_body)) {
             throw new \InvalidArgumentException('Missing the required parameter $template_body when calling previewWidget');
         }
+        
+
         // parse inputs
         $resourcePath = "/content/widget-templates/{uuid}/preview";
         $httpBody = '';
@@ -497,8 +534,15 @@ class WidgetTemplateApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($uuid !== null) {
+
+
+        if (isset($uuid)) {
             $resourcePath = str_replace(
                 "{" . "uuid" . "}",
                 $this->apiClient->getSerializer()->toPathValue($uuid),
@@ -511,15 +555,15 @@ class WidgetTemplateApi
         // body params
         $_tempBody = null;
         if (isset($template_body)) {
-            $_tempBody = $template_body;
+        $_tempBody = $template_body;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -531,64 +575,75 @@ class WidgetTemplateApi
                 '\BigCommerce\Api\v3\Model\WidgetTemplatePreviewResponse',
                 '/content/widget-templates/{uuid}/preview'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\WidgetTemplatePreviewResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\WidgetTemplatePreviewResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\WidgetTemplatePreviewResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation updateWidgetTemplate
-     *
      * Updates a widget template.
+     *
      *
      * @param string $uuid The identifier for a specific template. (required)
      * @param \BigCommerce\Api\v3\Model\WidgetTemplatePut $template_body  (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\WidgetTemplateResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function updateWidgetTemplate($uuid, $template_body)
+    public function updateWidgetTemplate($uuid, $template_body, array $params = [])
     {
-        list($response) = $this->updateWidgetTemplateWithHttpInfo($uuid, $template_body);
+        list($response) = $this->updateWidgetTemplateWithHttpInfo($uuid,  $template_body, $params);
         return $response;
     }
+
 
     /**
      * Operation updateWidgetTemplateWithHttpInfo
      *
-     * Updates a widget template.
-     *
+     * @see self::updateWidgetTemplate()
      * @param string $uuid The identifier for a specific template. (required)
      * @param \BigCommerce\Api\v3\Model\WidgetTemplatePut $template_body  (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\WidgetTemplateResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updateWidgetTemplateWithHttpInfo($uuid, $template_body)
+    public function updateWidgetTemplateWithHttpInfo($uuid,  $template_body, array $params = [])
     {
+        
         // verify the required parameter 'uuid' is set
-        if ($uuid === null) {
+        if (!isset($uuid)) {
             throw new \InvalidArgumentException('Missing the required parameter $uuid when calling updateWidgetTemplate');
         }
+        
         // verify the required parameter 'template_body' is set
-        if ($template_body === null) {
+        if (!isset($template_body)) {
             throw new \InvalidArgumentException('Missing the required parameter $template_body when calling updateWidgetTemplate');
         }
+        
+
         // parse inputs
         $resourcePath = "/content/widget-templates/{uuid}";
         $httpBody = '';
@@ -601,8 +656,15 @@ class WidgetTemplateApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($uuid !== null) {
+
+
+        if (isset($uuid)) {
             $resourcePath = str_replace(
                 "{" . "uuid" . "}",
                 $this->apiClient->getSerializer()->toPathValue($uuid),
@@ -615,15 +677,15 @@ class WidgetTemplateApi
         // body params
         $_tempBody = null;
         if (isset($template_body)) {
-            $_tempBody = $template_body;
+        $_tempBody = $template_body;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -635,22 +697,26 @@ class WidgetTemplateApi
                 '\BigCommerce\Api\v3\Model\WidgetTemplateResponse',
                 '/content/widget-templates/{uuid}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\WidgetTemplateResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\WidgetTemplateResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\WidgetTemplateResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;

@@ -2,7 +2,7 @@
 
 namespace BigCommerce\Import;
 
-interface Post_Import_Strategy {
+interface Import_Strategy {
 	const VERSION = '0.13.0';
 
 	/**

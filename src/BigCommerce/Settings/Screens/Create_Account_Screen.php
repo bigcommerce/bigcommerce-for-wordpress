@@ -37,7 +37,7 @@ class Create_Account_Screen extends Abstract_Screen {
 	}
 
 	protected function submit_button() {
-		submit_button( __( 'Create My Account', 'bigcommerce' ) );
+		submit_button( __( 'Create My Account', 'bigcommerce' ), 'primary', 'submit', true, ['data-js' => 'bc-settings-create-account-button'] );
 	}
 
 	public function should_register() {

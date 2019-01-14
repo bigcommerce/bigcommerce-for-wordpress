@@ -15,6 +15,7 @@ class Post_Types extends Provider {
 	const PRODUCT_DELETION    = 'post_type.product.deletion';
 	const STORE_LINKS         = 'post_type.product.store_links';
 	const CHANNEL_SYNC        = 'post_type.product.channel_sync';
+	const PRODUCT_ADMIN_LIST  = 'post_type.product.admin_list';
 
 	const CART_INDICATOR = 'post_type.page.cart_indicator';
 	const CART_CREATOR   = 'post_type.page.cart_creator';
@@ -28,6 +29,11 @@ class Post_Types extends Provider {
 	}
 
 	private function product( Container $container ) {
+
+		$container[ self::PRODUCT_ADMIN_LIST ] = function ( Container $container ) {
+			return new Product\Admin_List();
+		};
+
 		$container[ self::PRODUCT_CONFIG ] = function ( Container $container ) {
 			return new Product\Config( Product\Product::NAME );
 		};
@@ -134,9 +140,19 @@ class Post_Types extends Provider {
 			add_filter( 'bigcommerce/channel/listing/should_update', '__return_false', 10, 0 );
 			add_filter( 'bigcommerce/channel/listing/should_delete', '__return_false', 10, 0 );
 		}, 10, 0 );
+
 		add_action( 'bigcommerce/import/after', function () {
 			remove_filter( 'bigcommerce/channel/listing/should_update', '__return_false', 10 );
 			remove_filter( 'bigcommerce/channel/listing/should_delete', '__return_false', 10 );
 		}, 10, 0 );
+
+		// Admin extra columns list
+		add_filter('manage_bigcommerce_product_posts_columns', $this->create_callback( 'add_bigcommerce_product_id_column', function ( $columns ) use ( $container ) {
+			return $container[ self::PRODUCT_ADMIN_LIST ]->add_bigcommerce_product_id_column( $columns );
+		} ), 5, 1 );
+
+		add_action('manage_bigcommerce_product_posts_custom_column', $this->create_callback( 'add_bigcommerce_product_id_values', function ( $columns, $post_id ) use ( $container ) {
+			$container[ self::PRODUCT_ADMIN_LIST ]->get_bigcommerce_product_id_value( $columns, $post_id );
+		} ), 5, 2 );
 	}
 }

@@ -7,7 +7,7 @@ namespace BigCommerce\Schema;
 class Import_Queue_Table extends Table_Maker {
 	const NAME = 'bc_import_queue';
 
-	protected $schema_version = '0.13.0';
+	protected $schema_version = '1.3.4';
 
 	protected $tables = [ self::NAME ];
 
@@ -27,6 +27,8 @@ class Import_Queue_Table extends Table_Maker {
 				        priority INT(10) unsigned NOT NULL DEFAULT 0,
 				        attempts INT(10) unsigned NOT NULL DEFAULT 0,
 				        last_attempt DATETIME,
+				        product_data LONGTEXT,
+				        listing_data LONGTEXT,
 				        PRIMARY KEY  (bc_id),
 				        KEY date_modified (date_modified),
 				        KEY import_action (import_action),

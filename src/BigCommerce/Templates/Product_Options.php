@@ -91,18 +91,28 @@ class Product_Options extends Controller {
 
 	protected function get_selected_variant_options( Product $product ) {
 
-		$variant_id = filter_input( INPUT_GET, 'variant_id', FILTER_SANITIZE_NUMBER_INT );
-		if ( $variant_id < 1 ) {
-			return [];
-		}
-		if ( $variant_id ) {
-			$variants = $this->get_variants( $product );
+		$variant_id = (int) filter_input( INPUT_GET, 'variant_id', FILTER_SANITIZE_NUMBER_INT );
+		$sku        = filter_input( INPUT_GET, 'sku', FILTER_SANITIZE_STRING );
+		$variants   = $this->get_variants( $product );
+
+		if ( $sku ) {
 			foreach ( $variants as $variant ) {
-				if ( $variant[ 'variant_id' ] != $variant_id ) {
+				if ( $variant['sku'] !== $sku ) {
 					continue;
 				}
 				$options = [];
-				foreach ( $variant[ 'options' ] as $option ) {
+				foreach ( $variant['options'] as $option ) {
+					$options[ $option->option_id ] = $option->id;
+				}
+				return $options;
+			}
+		} elseif ( $variant_id > 1 ) {
+			foreach ( $variants as $variant ) {
+				if ( $variant['variant_id'] != $variant_id ) {
+					continue;
+				}
+				$options = [];
+				foreach ( $variant['options'] as $option ) {
 					$options[ $option->option_id ] = $option->id;
 				}
 				return $options;

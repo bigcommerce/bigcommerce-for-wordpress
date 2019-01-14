@@ -1,7 +1,7 @@
 <?php
 
 
-namespace BigCommerce\Import;
+namespace BigCommerce\Import\Importers\Products;
 
 
 use BigCommerce\Api\v3\ApiException;
@@ -9,6 +9,11 @@ use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Api\v3\Model;
 use BigCommerce\Api\v3\Model\Modifier;
 use BigCommerce\Api\v3\Model\ProductImage;
+use BigCommerce\Import\Image_Importer;
+use BigCommerce\Import\Mappers\Brand_Mapper;
+use BigCommerce\Import\Mappers\Product_Category_Mapper;
+use BigCommerce\Import\Record_Builder;
+use BigCommerce\Import\Import_Strategy;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Taxonomies\Availability\Availability;
 use BigCommerce\Taxonomies\Brand\Brand;
@@ -164,7 +169,7 @@ class Product_Builder extends Record_Builder {
 			];
 
 			return $variant;
-		}, $this->product[ 'variants' ] );
+		}, (array) $this->product[ 'variants' ] );
 	}
 
 	public function build_taxonomy_terms() {
@@ -311,7 +316,7 @@ class Product_Builder extends Record_Builder {
 	public function build_post_meta() {
 		$meta = [];
 
-		$meta[ Product::IMPORTER_VERSION_META_KEY ] = Post_Import_Strategy::VERSION;
+		$meta[ Product::IMPORTER_VERSION_META_KEY ] = Import_Strategy::VERSION;
 		$meta[ 'bigcommerce_id' ]                   = $this->product[ 'id' ];
 		$meta[ Product::RATING_META_KEY ]           = $this->get_avg_rating();
 		$meta[ Product::SALES_META_KEY ]            = $this->sanitize_int( $this->product[ 'total_sold' ] );

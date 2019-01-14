@@ -1,12 +1,8 @@
 <?php
 /**
  * SitesApi
- * PHP version 5
  *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -28,21 +24,14 @@
 
 namespace BigCommerce\Api\v3\Api;
 
+use \BigCommerce\Api\v3\Configuration;
 use \BigCommerce\Api\v3\ApiClient;
 use \BigCommerce\Api\v3\ApiException;
-use \BigCommerce\Api\v3\Configuration;
 use \BigCommerce\Api\v3\ObjectSerializer;
 
-/**
- * SitesApi Class Doc Comment
- *
- * @category Class
- * @package  BigCommerce\Api\v3
- * @author   Swagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
- */
 class SitesApi
 {
+
     /**
      * API Client
      *
@@ -53,35 +42,30 @@ class SitesApi
     /**
      * Constructor
      *
-     * @param \BigCommerce\Api\v3\ApiClient|null $apiClient The api client to use
+     * @param \BigCommerce\Api\v3\ApiClient $apiClient The api client to use
      */
-    public function __construct(\BigCommerce\Api\v3\ApiClient $apiClient = null)
+    public function __construct(\BigCommerce\Api\v3\ApiClient $apiClient)
     {
-        if ($apiClient === null) {
-            $apiClient = new ApiClient();
-            $apiClient->getConfig()->setHost('https://api.bigcommerce.com/stores/{store_id}/v3');
-        }
-
         $this->apiClient = $apiClient;
     }
 
     /**
-     * Get API client
-     *
-     * @return \BigCommerce\Api\v3\ApiClient get the API client
-     */
+    * Get API client
+    *
+    * @return \BigCommerce\Api\v3\ApiClient get the API client
+    */
     public function getApiClient()
     {
         return $this->apiClient;
     }
 
     /**
-     * Set the API client
-     *
-     * @param \BigCommerce\Api\v3\ApiClient $apiClient set the API client
-     *
-     * @return SitesApi
-     */
+    * Set the API client
+    *
+    * @param \BigCommerce\Api\v3\ApiClient $apiClient set the API client
+    *
+    * @return SitesApi
+    */
     public function setApiClient(\BigCommerce\Api\v3\ApiClient $apiClient)
     {
         $this->apiClient = $apiClient;
@@ -90,40 +74,48 @@ class SitesApi
 
     /**
      * Operation deleteRoute
-     *
      * DELETE Site Route
+     *
      *
      * @param string $site_id  (required)
      * @param string $id  (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deleteRoute($site_id, $id)
+    public function deleteRoute($site_id, $id, array $params = [])
     {
-        list($response) = $this->deleteRouteWithHttpInfo($site_id, $id);
+        list($response) = $this->deleteRouteWithHttpInfo($site_id, $id, $params);
         return $response;
     }
+
 
     /**
      * Operation deleteRouteWithHttpInfo
      *
-     * DELETE Site Route
-     *
+     * @see self::deleteRoute()
      * @param string $site_id  (required)
      * @param string $id  (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteRouteWithHttpInfo($site_id, $id)
+    public function deleteRouteWithHttpInfo($site_id, $id, array $params = [])
     {
+        
         // verify the required parameter 'site_id' is set
-        if ($site_id === null) {
+        if (!isset($site_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $site_id when calling deleteRoute');
         }
+        
         // verify the required parameter 'id' is set
-        if ($id === null) {
+        if (!isset($id)) {
             throw new \InvalidArgumentException('Missing the required parameter $id when calling deleteRoute');
         }
+        
+
         // parse inputs
         $resourcePath = "/sites/{site_id}/routes/{id}";
         $httpBody = '';
@@ -136,8 +128,15 @@ class SitesApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($site_id !== null) {
+
+
+        if (isset($site_id)) {
             $resourcePath = str_replace(
                 "{" . "site_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($site_id),
@@ -145,7 +144,9 @@ class SitesApi
             );
         }
         // path params
-        if ($id !== null) {
+
+
+        if (isset($id)) {
             $resourcePath = str_replace(
                 "{" . "id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($id),
@@ -155,13 +156,13 @@ class SitesApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -173,46 +174,53 @@ class SitesApi
                 null,
                 '/sites/{site_id}/routes/{id}'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deleteSite
-     *
      * DELETE Site
      *
+     *
      * @param string $id  (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deleteSite($id)
+    public function deleteSite($id, array $params = [])
     {
-        list($response) = $this->deleteSiteWithHttpInfo($id);
+        list($response) = $this->deleteSiteWithHttpInfo($id, $params);
         return $response;
     }
+
 
     /**
      * Operation deleteSiteWithHttpInfo
      *
-     * DELETE Site
-     *
+     * @see self::deleteSite()
      * @param string $id  (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteSiteWithHttpInfo($id)
+    public function deleteSiteWithHttpInfo($id, array $params = [])
     {
+        
         // verify the required parameter 'id' is set
-        if ($id === null) {
+        if (!isset($id)) {
             throw new \InvalidArgumentException('Missing the required parameter $id when calling deleteSite');
         }
+        
+
         // parse inputs
         $resourcePath = "/sites/{id}";
         $httpBody = '';
@@ -225,8 +233,15 @@ class SitesApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($id !== null) {
+
+
+        if (isset($id)) {
             $resourcePath = str_replace(
                 "{" . "id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($id),
@@ -236,13 +251,13 @@ class SitesApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -254,46 +269,53 @@ class SitesApi
                 null,
                 '/sites/{id}'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getChannelSite
-     *
      * GET Channel Site
      *
+     *
      * @param string $channel_id  (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\SiteResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getChannelSite($channel_id)
+    public function getChannelSite($channel_id, array $params = [])
     {
-        list($response) = $this->getChannelSiteWithHttpInfo($channel_id);
+        list($response) = $this->getChannelSiteWithHttpInfo($channel_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getChannelSiteWithHttpInfo
      *
-     * GET Channel Site
-     *
+     * @see self::getChannelSite()
      * @param string $channel_id  (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\SiteResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getChannelSiteWithHttpInfo($channel_id)
+    public function getChannelSiteWithHttpInfo($channel_id, array $params = [])
     {
+        
         // verify the required parameter 'channel_id' is set
-        if ($channel_id === null) {
+        if (!isset($channel_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $channel_id when calling getChannelSite');
         }
+        
+
         // parse inputs
         $resourcePath = "/channels/{channel_id}/site";
         $httpBody = '';
@@ -306,8 +328,15 @@ class SitesApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($channel_id !== null) {
+
+
+        if (isset($channel_id)) {
             $resourcePath = str_replace(
                 "{" . "channel_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($channel_id),
@@ -317,13 +346,13 @@ class SitesApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -335,50 +364,58 @@ class SitesApi
                 '\BigCommerce\Api\v3\Model\SiteResponse',
                 '/channels/{channel_id}/site'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\SiteResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\SiteResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\SiteResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getSite
-     *
      * GET Site
      *
+     *
      * @param string $id  (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\SiteResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getSite($id)
+    public function getSite($id, array $params = [])
     {
-        list($response) = $this->getSiteWithHttpInfo($id);
+        list($response) = $this->getSiteWithHttpInfo($id, $params);
         return $response;
     }
+
 
     /**
      * Operation getSiteWithHttpInfo
      *
-     * GET Site
-     *
+     * @see self::getSite()
      * @param string $id  (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\SiteResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getSiteWithHttpInfo($id)
+    public function getSiteWithHttpInfo($id, array $params = [])
     {
+        
         // verify the required parameter 'id' is set
-        if ($id === null) {
+        if (!isset($id)) {
             throw new \InvalidArgumentException('Missing the required parameter $id when calling getSite');
         }
+        
+
         // parse inputs
         $resourcePath = "/sites/{id}";
         $httpBody = '';
@@ -391,8 +428,15 @@ class SitesApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($id !== null) {
+
+
+        if (isset($id)) {
             $resourcePath = str_replace(
                 "{" . "id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($id),
@@ -402,13 +446,13 @@ class SitesApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -420,56 +464,65 @@ class SitesApi
                 '\BigCommerce\Api\v3\Model\SiteResponse',
                 '/sites/{id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\SiteResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\SiteResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\SiteResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getSiteRoute
-     *
      * GET Site Route
+     *
      *
      * @param string $site_id  (required)
      * @param string $id  (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\RouteResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getSiteRoute($site_id, $id)
+    public function getSiteRoute($site_id, $id, array $params = [])
     {
-        list($response) = $this->getSiteRouteWithHttpInfo($site_id, $id);
+        list($response) = $this->getSiteRouteWithHttpInfo($site_id, $id, $params);
         return $response;
     }
+
 
     /**
      * Operation getSiteRouteWithHttpInfo
      *
-     * GET Site Route
-     *
+     * @see self::getSiteRoute()
      * @param string $site_id  (required)
      * @param string $id  (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\RouteResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getSiteRouteWithHttpInfo($site_id, $id)
+    public function getSiteRouteWithHttpInfo($site_id, $id, array $params = [])
     {
+        
         // verify the required parameter 'site_id' is set
-        if ($site_id === null) {
+        if (!isset($site_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $site_id when calling getSiteRoute');
         }
+        
         // verify the required parameter 'id' is set
-        if ($id === null) {
+        if (!isset($id)) {
             throw new \InvalidArgumentException('Missing the required parameter $id when calling getSiteRoute');
         }
+        
+
         // parse inputs
         $resourcePath = "/sites/{site_id}/routes/{id}";
         $httpBody = '';
@@ -482,8 +535,15 @@ class SitesApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($site_id !== null) {
+
+
+        if (isset($site_id)) {
             $resourcePath = str_replace(
                 "{" . "site_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($site_id),
@@ -491,7 +551,9 @@ class SitesApi
             );
         }
         // path params
-        if ($id !== null) {
+
+
+        if (isset($id)) {
             $resourcePath = str_replace(
                 "{" . "id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($id),
@@ -501,13 +563,13 @@ class SitesApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -519,52 +581,59 @@ class SitesApi
                 '\BigCommerce\Api\v3\Model\RouteResponse',
                 '/sites/{site_id}/routes/{id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\RouteResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\RouteResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\RouteResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation indexSiteRoutes
-     *
      * GET Site Routes
      *
+     *
      * @param string $site_id  (required)
-     * @param string $type Filter routes by a given resource type (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - type string Filter routes by a given resource type (optional)
      * @return \BigCommerce\Api\v3\Model\RouteCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function indexSiteRoutes($site_id, $type = null)
+    public function indexSiteRoutes($site_id, array $params = [])
     {
-        list($response) = $this->indexSiteRoutesWithHttpInfo($site_id, $type);
+        list($response) = $this->indexSiteRoutesWithHttpInfo($site_id, $params);
         return $response;
     }
+
 
     /**
      * Operation indexSiteRoutesWithHttpInfo
      *
-     * GET Site Routes
-     *
+     * @see self::indexSiteRoutes()
      * @param string $site_id  (required)
-     * @param string $type Filter routes by a given resource type (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\RouteCollectionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function indexSiteRoutesWithHttpInfo($site_id, $type = null)
+    public function indexSiteRoutesWithHttpInfo($site_id, array $params = [])
     {
+        
         // verify the required parameter 'site_id' is set
-        if ($site_id === null) {
+        if (!isset($site_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $site_id when calling indexSiteRoutes');
         }
+        
+
         // parse inputs
         $resourcePath = "/sites/{site_id}/routes";
         $httpBody = '';
@@ -578,11 +647,14 @@ class SitesApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($type !== null) {
-            $queryParams['type'] = $this->apiClient->getSerializer()->toQueryValue($type);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
+
         // path params
-        if ($site_id !== null) {
+
+
+        if (isset($site_id)) {
             $resourcePath = str_replace(
                 "{" . "site_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($site_id),
@@ -592,13 +664,13 @@ class SitesApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -610,56 +682,65 @@ class SitesApi
                 '\BigCommerce\Api\v3\Model\RouteCollectionResponse',
                 '/sites/{site_id}/routes'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\RouteCollectionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\RouteCollectionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\RouteCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation postChannelSite
-     *
      * POST Channel Site
+     *
      *
      * @param string $channel_id  (required)
      * @param \BigCommerce\Api\v3\Model\SiteCreateRequest $body  (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\SiteResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function postChannelSite($channel_id, $body)
+    public function postChannelSite($channel_id, $body, array $params = [])
     {
-        list($response) = $this->postChannelSiteWithHttpInfo($channel_id, $body);
+        list($response) = $this->postChannelSiteWithHttpInfo($channel_id,  $body, $params);
         return $response;
     }
+
 
     /**
      * Operation postChannelSiteWithHttpInfo
      *
-     * POST Channel Site
-     *
+     * @see self::postChannelSite()
      * @param string $channel_id  (required)
      * @param \BigCommerce\Api\v3\Model\SiteCreateRequest $body  (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\SiteResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function postChannelSiteWithHttpInfo($channel_id, $body)
+    public function postChannelSiteWithHttpInfo($channel_id,  $body, array $params = [])
     {
+        
         // verify the required parameter 'channel_id' is set
-        if ($channel_id === null) {
+        if (!isset($channel_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $channel_id when calling postChannelSite');
         }
+        
         // verify the required parameter 'body' is set
-        if ($body === null) {
+        if (!isset($body)) {
             throw new \InvalidArgumentException('Missing the required parameter $body when calling postChannelSite');
         }
+        
+
         // parse inputs
         $resourcePath = "/channels/{channel_id}/site";
         $httpBody = '';
@@ -672,8 +753,15 @@ class SitesApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($channel_id !== null) {
+
+
+        if (isset($channel_id)) {
             $resourcePath = str_replace(
                 "{" . "channel_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($channel_id),
@@ -686,15 +774,15 @@ class SitesApi
         // body params
         $_tempBody = null;
         if (isset($body)) {
-            $_tempBody = $body;
+        $_tempBody = $body;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -706,50 +794,58 @@ class SitesApi
                 '\BigCommerce\Api\v3\Model\SiteResponse',
                 '/channels/{channel_id}/site'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\SiteResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 201:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\SiteResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\SiteResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation postSite
-     *
      * POST Site
      *
+     *
      * @param \BigCommerce\Api\v3\Model\SiteCreateRequest $body  (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\SiteResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function postSite($body)
+    public function postSite($body, array $params = [])
     {
-        list($response) = $this->postSiteWithHttpInfo($body);
+        list($response) = $this->postSiteWithHttpInfo( $body, $params);
         return $response;
     }
+
 
     /**
      * Operation postSiteWithHttpInfo
      *
-     * POST Site
-     *
+     * @see self::postSite()
      * @param \BigCommerce\Api\v3\Model\SiteCreateRequest $body  (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\SiteResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function postSiteWithHttpInfo($body)
+    public function postSiteWithHttpInfo( $body, array $params = [])
     {
+        
         // verify the required parameter 'body' is set
-        if ($body === null) {
+        if (!isset($body)) {
             throw new \InvalidArgumentException('Missing the required parameter $body when calling postSite');
         }
+        
+
         // parse inputs
         $resourcePath = "/sites";
         $httpBody = '';
@@ -762,21 +858,26 @@ class SitesApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
         // body params
         $_tempBody = null;
         if (isset($body)) {
-            $_tempBody = $body;
+        $_tempBody = $body;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -788,56 +889,65 @@ class SitesApi
                 '\BigCommerce\Api\v3\Model\SiteResponse',
                 '/sites'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\SiteResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\SiteResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\SiteResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation postSiteRoute
-     *
      * POST Site Route
+     *
      *
      * @param string $site_id  (required)
      * @param \BigCommerce\Api\v3\Model\Route $body  (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\RouteResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function postSiteRoute($site_id, $body)
+    public function postSiteRoute($site_id, $body, array $params = [])
     {
-        list($response) = $this->postSiteRouteWithHttpInfo($site_id, $body);
+        list($response) = $this->postSiteRouteWithHttpInfo($site_id,  $body, $params);
         return $response;
     }
+
 
     /**
      * Operation postSiteRouteWithHttpInfo
      *
-     * POST Site Route
-     *
+     * @see self::postSiteRoute()
      * @param string $site_id  (required)
      * @param \BigCommerce\Api\v3\Model\Route $body  (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\RouteResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function postSiteRouteWithHttpInfo($site_id, $body)
+    public function postSiteRouteWithHttpInfo($site_id,  $body, array $params = [])
     {
+        
         // verify the required parameter 'site_id' is set
-        if ($site_id === null) {
+        if (!isset($site_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $site_id when calling postSiteRoute');
         }
+        
         // verify the required parameter 'body' is set
-        if ($body === null) {
+        if (!isset($body)) {
             throw new \InvalidArgumentException('Missing the required parameter $body when calling postSiteRoute');
         }
+        
+
         // parse inputs
         $resourcePath = "/sites/{site_id}/routes";
         $httpBody = '';
@@ -850,8 +960,15 @@ class SitesApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($site_id !== null) {
+
+
+        if (isset($site_id)) {
             $resourcePath = str_replace(
                 "{" . "site_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($site_id),
@@ -864,15 +981,15 @@ class SitesApi
         // body params
         $_tempBody = null;
         if (isset($body)) {
-            $_tempBody = $body;
+        $_tempBody = $body;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -884,56 +1001,65 @@ class SitesApi
                 '\BigCommerce\Api\v3\Model\RouteResponse',
                 '/sites/{site_id}/routes'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\RouteResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 201:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\RouteResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\RouteResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation putChannelSite
-     *
      * PUT Channel Site
+     *
      *
      * @param string $channel_id  (required)
      * @param \BigCommerce\Api\v3\Model\Site $body  (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\SiteResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function putChannelSite($channel_id, $body)
+    public function putChannelSite($channel_id, $body, array $params = [])
     {
-        list($response) = $this->putChannelSiteWithHttpInfo($channel_id, $body);
+        list($response) = $this->putChannelSiteWithHttpInfo($channel_id,  $body, $params);
         return $response;
     }
+
 
     /**
      * Operation putChannelSiteWithHttpInfo
      *
-     * PUT Channel Site
-     *
+     * @see self::putChannelSite()
      * @param string $channel_id  (required)
      * @param \BigCommerce\Api\v3\Model\Site $body  (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\SiteResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function putChannelSiteWithHttpInfo($channel_id, $body)
+    public function putChannelSiteWithHttpInfo($channel_id,  $body, array $params = [])
     {
+        
         // verify the required parameter 'channel_id' is set
-        if ($channel_id === null) {
+        if (!isset($channel_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $channel_id when calling putChannelSite');
         }
+        
         // verify the required parameter 'body' is set
-        if ($body === null) {
+        if (!isset($body)) {
             throw new \InvalidArgumentException('Missing the required parameter $body when calling putChannelSite');
         }
+        
+
         // parse inputs
         $resourcePath = "/channels/{channel_id}/site";
         $httpBody = '';
@@ -946,8 +1072,15 @@ class SitesApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($channel_id !== null) {
+
+
+        if (isset($channel_id)) {
             $resourcePath = str_replace(
                 "{" . "channel_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($channel_id),
@@ -960,15 +1093,15 @@ class SitesApi
         // body params
         $_tempBody = null;
         if (isset($body)) {
-            $_tempBody = $body;
+        $_tempBody = $body;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -980,56 +1113,65 @@ class SitesApi
                 '\BigCommerce\Api\v3\Model\SiteResponse',
                 '/channels/{channel_id}/site'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\SiteResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 201:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\SiteResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\SiteResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation putSite
-     *
      * PUT Site
+     *
      *
      * @param string $id  (required)
      * @param \BigCommerce\Api\v3\Model\Site $body  (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\SiteResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function putSite($id, $body)
+    public function putSite($id, $body, array $params = [])
     {
-        list($response) = $this->putSiteWithHttpInfo($id, $body);
+        list($response) = $this->putSiteWithHttpInfo($id,  $body, $params);
         return $response;
     }
+
 
     /**
      * Operation putSiteWithHttpInfo
      *
-     * PUT Site
-     *
+     * @see self::putSite()
      * @param string $id  (required)
      * @param \BigCommerce\Api\v3\Model\Site $body  (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\SiteResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function putSiteWithHttpInfo($id, $body)
+    public function putSiteWithHttpInfo($id,  $body, array $params = [])
     {
+        
         // verify the required parameter 'id' is set
-        if ($id === null) {
+        if (!isset($id)) {
             throw new \InvalidArgumentException('Missing the required parameter $id when calling putSite');
         }
+        
         // verify the required parameter 'body' is set
-        if ($body === null) {
+        if (!isset($body)) {
             throw new \InvalidArgumentException('Missing the required parameter $body when calling putSite');
         }
+        
+
         // parse inputs
         $resourcePath = "/sites/{id}";
         $httpBody = '';
@@ -1042,8 +1184,15 @@ class SitesApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($id !== null) {
+
+
+        if (isset($id)) {
             $resourcePath = str_replace(
                 "{" . "id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($id),
@@ -1056,15 +1205,15 @@ class SitesApi
         // body params
         $_tempBody = null;
         if (isset($body)) {
-            $_tempBody = $body;
+        $_tempBody = $body;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -1076,62 +1225,72 @@ class SitesApi
                 '\BigCommerce\Api\v3\Model\SiteResponse',
                 '/sites/{id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\SiteResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\SiteResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\SiteResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation putSiteRoute
-     *
      * PUT Site Route
+     *
      *
      * @param string $site_id  (required)
      * @param string $id  (required)
      * @param \BigCommerce\Api\v3\Model\Route $body  (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\RouteResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function putSiteRoute($site_id, $id, $body)
+    public function putSiteRoute($site_id, $id, $body, array $params = [])
     {
-        list($response) = $this->putSiteRouteWithHttpInfo($site_id, $id, $body);
+        list($response) = $this->putSiteRouteWithHttpInfo($site_id, $id,  $body, $params);
         return $response;
     }
+
 
     /**
      * Operation putSiteRouteWithHttpInfo
      *
-     * PUT Site Route
-     *
+     * @see self::putSiteRoute()
      * @param string $site_id  (required)
      * @param string $id  (required)
      * @param \BigCommerce\Api\v3\Model\Route $body  (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\RouteResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function putSiteRouteWithHttpInfo($site_id, $id, $body)
+    public function putSiteRouteWithHttpInfo($site_id, $id,  $body, array $params = [])
     {
+        
         // verify the required parameter 'site_id' is set
-        if ($site_id === null) {
+        if (!isset($site_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $site_id when calling putSiteRoute');
         }
+        
         // verify the required parameter 'id' is set
-        if ($id === null) {
+        if (!isset($id)) {
             throw new \InvalidArgumentException('Missing the required parameter $id when calling putSiteRoute');
         }
+        
         // verify the required parameter 'body' is set
-        if ($body === null) {
+        if (!isset($body)) {
             throw new \InvalidArgumentException('Missing the required parameter $body when calling putSiteRoute');
         }
+        
+
         // parse inputs
         $resourcePath = "/sites/{site_id}/routes/{id}";
         $httpBody = '';
@@ -1144,8 +1303,15 @@ class SitesApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($site_id !== null) {
+
+
+        if (isset($site_id)) {
             $resourcePath = str_replace(
                 "{" . "site_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($site_id),
@@ -1153,7 +1319,9 @@ class SitesApi
             );
         }
         // path params
-        if ($id !== null) {
+
+
+        if (isset($id)) {
             $resourcePath = str_replace(
                 "{" . "id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($id),
@@ -1166,15 +1334,15 @@ class SitesApi
         // body params
         $_tempBody = null;
         if (isset($body)) {
-            $_tempBody = $body;
+        $_tempBody = $body;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -1186,14 +1354,16 @@ class SitesApi
                 '\BigCommerce\Api\v3\Model\RouteResponse',
                 '/sites/{site_id}/routes/{id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\RouteResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 201:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\RouteResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\RouteResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;

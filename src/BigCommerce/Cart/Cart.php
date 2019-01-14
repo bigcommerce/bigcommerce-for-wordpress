@@ -129,8 +129,19 @@ class Cart {
 				}
 			}
 		} catch ( ApiException $e ) {
-			// request failed. next try to make a new cart
-			$cart = null;
+			try {
+				// request failed. Check if the original cart exists
+				$cart = $this->api->cartsCartIdGet( $cart_id,[
+					'line_items.physical_items.options',
+					'line_items.digital_items.options',
+					'redirect_urls',
+				] )->getData();
+				return null; // indicates that the request failed
+			} catch ( ApiException $e ) {
+				// request failed. Cart no longer exists, but we can try to make a new one
+				$cart = null;
+				$cart_id = '';
+			}
 		}
 
 		if ( empty( $cart ) ) { // either there was no cart ID passed, or the cart no longer exists
@@ -149,10 +160,23 @@ class Cart {
 			} catch ( ApiException $e ) {
 				// request failed. cannot create a new cart
 				$cart = null;
+				$this->set_cart_id( '' );
 			}
 		}
 		if ( ! empty( $cart ) ) {
 			$this->set_item_count_cookie( $cart );
+		}
+
+		if ( $cart_id ) {
+			try {
+				$cart = $this->api->cartsCartIdGet( $cart_id,[
+					'line_items.physical_items.options',
+					'line_items.digital_items.options',
+					'redirect_urls',
+				] )->getData();
+			} catch ( ApiException $e ) {
+				$cart = null;
+			}
 		}
 
 		return $cart;

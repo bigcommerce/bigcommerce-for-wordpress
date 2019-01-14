@@ -352,10 +352,10 @@ class Product {
 	}
 
 	public function purchase_button() {
-		$options = $this->has_options() ? 'disabled="disabled"' : '';
+		$options = $this->has_options() || $this->out_of_stock() ? 'disabled="disabled"' : '';
 		if ( get_option( Cart::OPTION_ENABLE_CART, true ) ) {
 			$label  = get_option( Buttons::ADD_TO_CART, __( 'Add to Cart', 'bigcommerce' ) );
-			$button = sprintf( '<button class="bc-btn bc-btn--form-submit bc-btn--add_to_cart" type="submit" %s>%s</button>', $options, $label );
+			$button = sprintf( '<button class="bc-btn bc-btn--form-submit bc-btn--add_to_cart" type="submit" data-js="%s" %s>%s</button>', $this->bc_id(), $options, $label );
 		} else {
 			$label  = get_option( Buttons::BUY_NOW, __( 'Buy Now', 'bigcommerce' ) );
 			$button = sprintf( '<button class="bc-btn bc-btn--form-submit bc-btn--buy" type="submit" %s>%s</button>', $options, $label );

@@ -25,6 +25,7 @@ class Product_Single extends Controller {
 	protected $template = 'components/products/product-single.php';
 	protected $wrapper_tag = 'div';
 	protected $wrapper_classes = [ 'bc-product-single' ];
+	protected $wrapper_attributes = [ 'data-js' => 'bc-product-single' ];
 
 	protected function parse_options( array $options ) {
 		$defaults = [

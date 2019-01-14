@@ -197,7 +197,9 @@ class Shortcode_Controller extends Products_Controller {
 	protected function build_query_shortcode_args( $request ) {
 		$args = [];
 		if ( ! empty( $request[ 'search' ] ) ) {
-			$args[ 'search' ] = $request[ 'search' ];
+			// Striping [] from shortcode search to avoid shortcode break
+			// If you wanna keep then you may want to consider [ "&#91;" , "&#93;" ] as replacement
+			$args[ 'search' ] =  str_replace( [ '[' , ']' ] , '' , $request[ 'search' ] );
 		}
 		if ( ! empty( $request[ Brand::NAME ] ) ) {
 			$args[ 'brand' ] = implode( ',', array_filter( array_map( [

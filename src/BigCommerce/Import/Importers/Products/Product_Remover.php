@@ -1,7 +1,7 @@
 <?php
 
 
-namespace BigCommerce\Import;
+namespace BigCommerce\Import\Importers\Products;
 
 
 class Product_Remover {

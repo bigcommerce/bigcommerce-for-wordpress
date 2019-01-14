@@ -22,6 +22,10 @@ class Status {
 	const CLEANING                 = 'cleaning';
 	const COMPLETED                = 'completed';
 	const FAILED                   = 'failed';
+	const UPDATING_CATEGORIES      = 'updating_categories';
+	const UPDATED_CATEGORIES       = 'updated_categories';
+	const UPDATING_BRANDS          = 'updating_brands';
+	const UPDATED_BRANDS           = 'updated_brands';
 
 	const CURRENT_LOG  = 'bigcommerce_current_import_status_log';
 	const PREVIOUS_LOG = 'bigcommerce_previous_import_status_log';

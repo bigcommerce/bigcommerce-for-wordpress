@@ -1,12 +1,8 @@
 <?php
 /**
  * ThemeRegionsApi
- * PHP version 5
  *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -28,21 +24,14 @@
 
 namespace BigCommerce\Api\v3\Api;
 
+use \BigCommerce\Api\v3\Configuration;
 use \BigCommerce\Api\v3\ApiClient;
 use \BigCommerce\Api\v3\ApiException;
-use \BigCommerce\Api\v3\Configuration;
 use \BigCommerce\Api\v3\ObjectSerializer;
 
-/**
- * ThemeRegionsApi Class Doc Comment
- *
- * @category Class
- * @package  BigCommerce\Api\v3
- * @author   Swagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
- */
 class ThemeRegionsApi
 {
+
     /**
      * API Client
      *
@@ -53,35 +42,30 @@ class ThemeRegionsApi
     /**
      * Constructor
      *
-     * @param \BigCommerce\Api\v3\ApiClient|null $apiClient The api client to use
+     * @param \BigCommerce\Api\v3\ApiClient $apiClient The api client to use
      */
-    public function __construct(\BigCommerce\Api\v3\ApiClient $apiClient = null)
+    public function __construct(\BigCommerce\Api\v3\ApiClient $apiClient)
     {
-        if ($apiClient === null) {
-            $apiClient = new ApiClient();
-            $apiClient->getConfig()->setHost('https://api.bigcommerce.com/stores/{{store_id}}/v3');
-        }
-
         $this->apiClient = $apiClient;
     }
 
     /**
-     * Get API client
-     *
-     * @return \BigCommerce\Api\v3\ApiClient get the API client
-     */
+    * Get API client
+    *
+    * @return \BigCommerce\Api\v3\ApiClient get the API client
+    */
     public function getApiClient()
     {
         return $this->apiClient;
     }
 
     /**
-     * Set the API client
-     *
-     * @param \BigCommerce\Api\v3\ApiClient $apiClient set the API client
-     *
-     * @return ThemeRegionsApi
-     */
+    * Set the API client
+    *
+    * @param \BigCommerce\Api\v3\ApiClient $apiClient set the API client
+    *
+    * @return ThemeRegionsApi
+    */
     public function setApiClient(\BigCommerce\Api\v3\ApiClient $apiClient)
     {
         $this->apiClient = $apiClient;
@@ -90,34 +74,35 @@ class ThemeRegionsApi
 
     /**
      * Operation getRegions
-     *
      * Get an ordered list of unique regions defined in a template file.
      *
-     * @param string $template_file The template file, for example: &#x60;pages/home&#x60;. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     *
+     * @param array $params = []
+     *     - template_file string The template file, for example: &#x60;pages/home&#x60;. (required)
      * @return \BigCommerce\Api\v3\Model\ThemeRegionsResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getRegions($template_file)
+    public function getRegions(array $params = [])
     {
-        list($response) = $this->getRegionsWithHttpInfo($template_file);
+        list($response) = $this->getRegionsWithHttpInfo($params);
         return $response;
     }
+
 
     /**
      * Operation getRegionsWithHttpInfo
      *
-     * Get an ordered list of unique regions defined in a template file.
-     *
-     * @param string $template_file The template file, for example: &#x60;pages/home&#x60;. (required)
+     * @see self::getRegions()
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ThemeRegionsResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getRegionsWithHttpInfo($template_file)
+    public function getRegionsWithHttpInfo(array $params = [])
     {
-        // verify the required parameter 'template_file' is set
-        if ($template_file === null) {
-            throw new \InvalidArgumentException('Missing the required parameter $template_file when calling getRegions');
-        }
+        
+
         // parse inputs
         $resourcePath = "/content/regions";
         $httpBody = '';
@@ -131,19 +116,20 @@ class ThemeRegionsApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($template_file !== null) {
-            $queryParams['templateFile'] = $this->apiClient->getSerializer()->toQueryValue($template_file);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
+
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -155,22 +141,26 @@ class ThemeRegionsApi
                 '\BigCommerce\Api\v3\Model\ThemeRegionsResponse',
                 '/content/regions'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ThemeRegionsResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ThemeRegionsResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ThemeRegionsResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;

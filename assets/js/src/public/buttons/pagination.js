@@ -161,6 +161,7 @@ const handleRequestError = (err = {}, target = '') => {
 const getNextPageItems = (e) => {
 	e.preventDefault();
 	e.delegateTarget.setAttribute('disabled', 'disabled');
+	const button = e.delegateTarget;
 	const itemsURL = e.delegateTarget.dataset.href;
 
 	if (!itemsURL) {
@@ -168,7 +169,7 @@ const getNextPageItems = (e) => {
 	}
 
 	shortcodeState.isFetching = true;
-	handleSpinnerState(e.delegateTarget);
+	handleSpinnerState(button);
 
 	request
 		.get(itemsURL)
@@ -178,14 +179,14 @@ const getNextPageItems = (e) => {
 		})
 		.end((err, res) => {
 			shortcodeState.isFetching = false;
-			handleSpinnerState(e.delegateTarget);
+			handleSpinnerState(button);
 
 			if (err) {
-				handleRequestError(err, e.delegateTarget);
+				handleRequestError(err, button);
 				return;
 			}
 
-			handleItemsLoading(e.delegateTarget, res.body);
+			handleItemsLoading(button, res.body);
 		});
 };
 

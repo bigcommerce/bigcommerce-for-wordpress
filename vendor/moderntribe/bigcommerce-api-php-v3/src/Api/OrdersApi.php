@@ -1,12 +1,8 @@
 <?php
 /**
  * OrdersApi
- * PHP version 5
  *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -28,21 +24,14 @@
 
 namespace BigCommerce\Api\v3\Api;
 
+use \BigCommerce\Api\v3\Configuration;
 use \BigCommerce\Api\v3\ApiClient;
 use \BigCommerce\Api\v3\ApiException;
-use \BigCommerce\Api\v3\Configuration;
 use \BigCommerce\Api\v3\ObjectSerializer;
 
-/**
- * OrdersApi Class Doc Comment
- *
- * @category Class
- * @package  BigCommerce\Api\v3
- * @author   Swagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
- */
 class OrdersApi
 {
+
     /**
      * API Client
      *
@@ -53,35 +42,30 @@ class OrdersApi
     /**
      * Constructor
      *
-     * @param \BigCommerce\Api\v3\ApiClient|null $apiClient The api client to use
+     * @param \BigCommerce\Api\v3\ApiClient $apiClient The api client to use
      */
-    public function __construct(\BigCommerce\Api\v3\ApiClient $apiClient = null)
+    public function __construct(\BigCommerce\Api\v3\ApiClient $apiClient)
     {
-        if ($apiClient === null) {
-            $apiClient = new ApiClient();
-            $apiClient->getConfig()->setHost('https://api.bigcommerce.com/stores/{{store_id}}/v3');
-        }
-
         $this->apiClient = $apiClient;
     }
 
     /**
-     * Get API client
-     *
-     * @return \BigCommerce\Api\v3\ApiClient get the API client
-     */
+    * Get API client
+    *
+    * @return \BigCommerce\Api\v3\ApiClient get the API client
+    */
     public function getApiClient()
     {
         return $this->apiClient;
     }
 
     /**
-     * Set the API client
-     *
-     * @param \BigCommerce\Api\v3\ApiClient $apiClient set the API client
-     *
-     * @return OrdersApi
-     */
+    * Set the API client
+    *
+    * @param \BigCommerce\Api\v3\ApiClient $apiClient set the API client
+    *
+    * @return OrdersApi
+    */
     public function setApiClient(\BigCommerce\Api\v3\ApiClient $apiClient)
     {
         $this->apiClient = $apiClient;
@@ -90,40 +74,48 @@ class OrdersApi
 
     /**
      * Operation createTransaction
-     *
      * 
+     *
      *
      * @param int $order_id The ID of the &#x60;Order&#x60; to which the transactions belong. (required)
      * @param \BigCommerce\Api\v3\Model\TransactionPost $transaction A BigCommerce &#x60;Transaction&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\TransactionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function createTransaction($order_id, $transaction)
+    public function createTransaction($order_id, $transaction, array $params = [])
     {
-        list($response) = $this->createTransactionWithHttpInfo($order_id, $transaction);
+        list($response) = $this->createTransactionWithHttpInfo($order_id,  $transaction, $params);
         return $response;
     }
+
 
     /**
      * Operation createTransactionWithHttpInfo
      *
-     * 
-     *
+     * @see self::createTransaction()
      * @param int $order_id The ID of the &#x60;Order&#x60; to which the transactions belong. (required)
      * @param \BigCommerce\Api\v3\Model\TransactionPost $transaction A BigCommerce &#x60;Transaction&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\TransactionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createTransactionWithHttpInfo($order_id, $transaction)
+    public function createTransactionWithHttpInfo($order_id,  $transaction, array $params = [])
     {
+        
         // verify the required parameter 'order_id' is set
-        if ($order_id === null) {
+        if (!isset($order_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $order_id when calling createTransaction');
         }
+        
         // verify the required parameter 'transaction' is set
-        if ($transaction === null) {
+        if (!isset($transaction)) {
             throw new \InvalidArgumentException('Missing the required parameter $transaction when calling createTransaction');
         }
+        
+
         // parse inputs
         $resourcePath = "/orders/{order_id}/transactions";
         $httpBody = '';
@@ -136,8 +128,15 @@ class OrdersApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($order_id !== null) {
+
+
+        if (isset($order_id)) {
             $resourcePath = str_replace(
                 "{" . "order_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($order_id),
@@ -150,15 +149,15 @@ class OrdersApi
         // body params
         $_tempBody = null;
         if (isset($transaction)) {
-            $_tempBody = $transaction;
+        $_tempBody = $transaction;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -170,58 +169,68 @@ class OrdersApi
                 '\BigCommerce\Api\v3\Model\TransactionResponse',
                 '/orders/{order_id}/transactions'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\TransactionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\TransactionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\TransactionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 204:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NoContent', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NoContent', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getTransactions
-     *
      * 
      *
+     *
      * @param int $order_id The ID of the &#x60;Order&#x60; to which the transactions belong. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\TransactionCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getTransactions($order_id)
+    public function getTransactions($order_id, array $params = [])
     {
-        list($response) = $this->getTransactionsWithHttpInfo($order_id);
+        list($response) = $this->getTransactionsWithHttpInfo($order_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getTransactionsWithHttpInfo
      *
-     * 
-     *
+     * @see self::getTransactions()
      * @param int $order_id The ID of the &#x60;Order&#x60; to which the transactions belong. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\TransactionCollectionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getTransactionsWithHttpInfo($order_id)
+    public function getTransactionsWithHttpInfo($order_id, array $params = [])
     {
+        
         // verify the required parameter 'order_id' is set
-        if ($order_id === null) {
+        if (!isset($order_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $order_id when calling getTransactions');
         }
+        
+
         // parse inputs
         $resourcePath = "/orders/{order_id}/transactions";
         $httpBody = '';
@@ -234,8 +243,15 @@ class OrdersApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($order_id !== null) {
+
+
+        if (isset($order_id)) {
             $resourcePath = str_replace(
                 "{" . "order_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($order_id),
@@ -245,13 +261,13 @@ class OrdersApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -263,22 +279,26 @@ class OrdersApi
                 '\BigCommerce\Api\v3\Model\TransactionCollectionResponse',
                 '/orders/{order_id}/transactions'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\TransactionCollectionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\TransactionCollectionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\TransactionCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 204:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NoContent', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NoContent', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;

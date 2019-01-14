@@ -5,6 +5,7 @@ namespace BigCommerce\Assets\Theme;
 
 
 use BigCommerce\Rest\Cart_Controller;
+use BigCommerce\Settings\Sections\Cart;
 
 class JS_Config {
 	/**
@@ -33,7 +34,9 @@ class JS_Config {
 			$this->data = [
 				'images_url' => $this->directory . 'img/admin/',
 				'cart'       => [
-					'api_url' => $this->cart_controller->get_base_url(),
+					'api_url'         => $this->cart_controller->get_base_url(),
+					'ajax_enabled'    => (bool) get_option( Cart::OPTION_AJAX_CART, true ),
+					'ajax_cart_nonce' => wp_create_nonce( 'wp_rest' ),
 				],
 				'product'    => [
 					'messages' => [

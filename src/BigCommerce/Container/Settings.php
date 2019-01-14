@@ -223,7 +223,7 @@ class Settings extends Provider {
 		} ), 0, 0 );
 
 		$container[ self::IMPORT_STATUS ] = function ( Container $container ) {
-			return new Import_Status();
+			return new Import_Status( $container[ Import::TASK_MANAGER ] );
 		};
 
 		add_action( 'bigcommerce/settings/section/after_fields/id=' . Import_Settings::NAME, $this->create_callback( 'import_status_render', function () use ( $container ) {

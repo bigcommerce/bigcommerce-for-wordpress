@@ -55,7 +55,7 @@ class Cart implements Shortcode {
 				'line_items.digital_items.options',
 				'redirect_urls',
 			];
-			$cart   = $this->cart_api->cartsCartIdGet( $cart_id, $include )->getData();
+			$cart   = $this->cart_api->cartsCartIdGet( $cart_id, [ 'include' => $include ] )->getData();
 			$mapper = new Cart_Mapper( $cart );
 
 			return $mapper->map();

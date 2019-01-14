@@ -6,6 +6,7 @@ namespace BigCommerce\Settings;
 
 use BigCommerce\Import\Runner\Cron_Runner;
 use BigCommerce\Import\Runner\Status;
+use BigCommerce\Import\Task_Manager;
 
 /**
  * Class Import_Status
@@ -18,6 +19,15 @@ class Import_Status {
 	const IMPORT_TOTAL_PRODUCTS     = 'bigcommerce_import_total_products';
 
 	/**
+	 * @var Task_Manager
+	 */
+	private $manager;
+
+	public function __construct( Task_Manager $manager ) {
+		$this->manager = $manager;
+	}
+
+	/**
 	 * @return void
 	 * @action bigcommerce/settings/render/frequency
 	 */
@@ -28,15 +38,15 @@ class Import_Status {
 		$next     = $this->next_status();
 
 		if ( $previous[ 'message' ] ) {
-			$icon            = $previous['status'] === Status::FAILED ? '<i class="dashicons dashicons-warning"></i>' : '';
-			$previous_output = sprintf( '<div class="import-status import-status-previous">%s <p class="bc-import-status-message">%s</p></div>', $icon, $previous['message'] );
-			if ( $previous['status'] === Status::FAILED ) {
+			$icon            = $previous[ 'status' ] === Status::FAILED ? '<i class="dashicons dashicons-warning"></i>' : '';
+			$previous_output = sprintf( '<div class="import-status import-status-previous">%s <p class="bc-import-status-message">%s</p></div>', $icon, $previous[ 'message' ] );
+			if ( $previous[ 'status' ] === Status::FAILED ) {
 				$previous_output = sprintf( '<div class="notice bigcommerce-notice bigcommerce-notice__import-status bigcommerce-notice__import-status--error">%s</div>', $previous_output );
 			}
 			echo $previous_output;
 		}
 		if ( $next[ 'message' ] ) {
-			printf( ' <span class="import-status import-status-next">%s</span>', $next[ 'message' ] );
+			printf( '<span class="import-status import-status-next">%s</span>', $next[ 'message' ] );
 		}
 
 	}
@@ -82,33 +92,21 @@ class Import_Status {
 		$current  = $status->current_status();
 		$previous = $status->previous_status();
 
-		// TODO: refactor import task registration, then create this list dynamically
-		$step = [
-			Status::FETCHING_LISTING_IDS     => 1,
-			Status::FETCHED_LISTING_IDS      => 1,
-			Status::INITIALIZING_CHANNEL     => 2,
-			Status::INITIALIZED_CHANNEL      => 2,
-			Status::FETCHING_PRODUCT_IDS     => 3,
-			Status::FETCHED_PRODUCT_IDS      => 3,
-			Status::MARKING_DELETED_PRODUCTS => 4,
-			Status::MARKED_DELETED_PRODUCTS  => 4,
-			Status::PROCESSING_QUEUE         => 5,
-			Status::PROCESSED_QUEUE          => 5,
-			Status::FETCHING_STORE           => 6,
-			Status::FETCHED_STORE            => 6,
+		$total_steps     = $this->manager->task_count() - 1; // minus one to ignore the "start" step"
+		$completed_steps = $this->manager->completed_count( $current[ 'status' ] );
+		$current_task    = $this->manager->get_task( $current[ 'status' ] );
 
-		];
+		$total     = (int) get_option( self::IMPORT_TOTAL_PRODUCTS, 0 );
+		$remaining = $this->get_remaining_in_queue();
+		$total     = max( $remaining, $total ); // just in case the option isn't set.
+		$completed = $total - $remaining;
 
-		$total_steps = max( $step );
-		$total       = (int) get_option( self::IMPORT_TOTAL_PRODUCTS, 0 );
-		$remaining   = $this->get_remaining_in_queue();
-		$total       = max( $remaining, $total ); // just in case the option isn't set.
-		$completed   = $total - $remaining;
-		$response    = [];
+		$response  = [];
+
 		if ( $current[ 'status' ] === Status::NOT_STARTED ) {
 			return [
 				'message'  => '',
-				'status'   => $current['status'],
+				'status'   => $current[ 'status' ],
 				'products' => [
 					'total'     => (int) $total,
 					'completed' => (int) $completed,
@@ -118,39 +116,18 @@ class Import_Status {
 		}
 
 		switch ( $current[ 'status' ] ) {
-			case Status::FETCHING_LISTING_IDS:
-			case Status::FETCHED_LISTING_IDS:
-				$status_string = __( 'Fetching existing listings from the BigCommerce API', 'bigcommerce' );
-				break;
-			case Status::INITIALIZING_CHANNEL:
-			case Status::INITIALIZED_CHANNEL:
-				$status_string = __( 'Adding listings to the channel', 'bigcommerce' );
-				break;
-			case Status::FETCHING_PRODUCT_IDS:
-			case Status::FETCHED_PRODUCT_IDS:
-				$status_string = __( 'Identifying products to import from the BigCommerce API', 'bigcommerce' );
-				break;
-			case Status::MARKING_DELETED_PRODUCTS:
-			case Status::MARKED_DELETED_PRODUCTS:
-				$status_string = __( 'Identifying products to remove from WordPress', 'bigcommerce' );
-				break;
 			case Status::PROCESSING_QUEUE:
-			case Status::PROCESSED_QUEUE:
 				$status_string = sprintf( __( 'Importing products: %d of %d', 'bigcommerce' ), $completed, $total );
 				break;
-			case Status::FETCHING_STORE:
-			case Status::FETCHED_STORE:
-				$status_string = __( 'Fetching currency settings', 'bigcommerce' );
-				break;
 			default:
-				$status_string = '';
+				$status_string = $current_task->get_description();
 				break;
 		}
 
 		if ( empty( $status_string ) ) {
 			$status_string = __( 'Import in progress.', 'bigcommerce' );
 		} else {
-			$status_string = sprintf( __( 'Step %s of %s: %s', 'bigcommerce' ), $step[$current[ 'status' ]], $total_steps, $status_string );
+			$status_string = sprintf( __( 'Step %s of %s: %s', 'bigcommerce' ), $completed_steps, $total_steps, $status_string );
 		}
 		$response = array_merge( [
 			'message'  => apply_filters( 'bigcommerce/settings/import_status/current', $status_string, $current[ 'status' ], $current[ 'timestamp' ] ),

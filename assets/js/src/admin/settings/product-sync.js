@@ -36,7 +36,13 @@ const dismissImportNotice = () => {
  */
 const importSuccess = (response, node, icon) => {
 	state.syncCompleted = true;
-	const messageWrapper = tools.getNodes('.bc-import-progress-bar__wrapper', false, document, true)[0];
+	let messageWrapper = tools.getNodes('.bc-import-progress-bar__wrapper', false, document, true)[0];
+
+	if (!messageWrapper) {
+		messageWrapper = document.createElement('div');
+		tools.addClass(messageWrapper, 'bc-import-progress-bar__wrapper');
+		el.container.appendChild(messageWrapper);
+	}
 
 	messageWrapper.innerHTML = importCloseButton;
 	tools.removeClass(icon, 'icon-bc-sync');
@@ -190,8 +196,6 @@ const pollProductSyncWatcher = () => {
 			case 'processing_queue':
 				handleProgressBar(data.products.total, data.products.completed, data.products.status);
 				break;
-			case 'fetched_store':
-			case 'fetching_store':
 			case 'not_started':
 				handleProgressBar(data.products.total, data.products.total, data.products.status);
 				break;

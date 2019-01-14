@@ -18,7 +18,7 @@ use BigCommerce\Post_Types\Product\Product;
 
 ?>
 
-<div id="bc-product-<?php echo esc_attr( $sku ); ?>" class="bc-product-card bc-product-card--single">
+<div id="bc-product-<?php echo esc_attr( $sku ); ?>" class="bc-product-card bc-product-card--single" data-js="bc-product-single">
 	<?php echo $gallery; ?>
 
 	<div class="bc-product__meta">

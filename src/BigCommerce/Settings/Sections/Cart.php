@@ -14,6 +14,7 @@ class Cart extends Settings_Section {
 
 	const NAME                     = 'cart';
 	const OPTION_ENABLE_CART       = 'bigcommerce_enable_cart';
+	const OPTION_AJAX_CART         = 'bigcommerce_ajax_cart';
 	const OPTION_CART_PAGE_ID      = Cart_Page::NAME;
 	const OPTION_EMBEDDED_CHECKOUT = 'bigcommerce_enable_embedded_checkout';
 
@@ -52,6 +53,22 @@ class Cart extends Settings_Section {
 			self::NAME,
 			[
 				'label_for' => 'field-' . self::OPTION_ENABLE_CART,
+			]
+		);
+
+		register_setting(
+			Settings_Screen::NAME,
+			self::OPTION_AJAX_CART
+		);
+
+		add_settings_field(
+			self::OPTION_AJAX_CART,
+			esc_html( __( 'Ajax Cart', 'bigcommerce' ) ),
+			[ $this, 'render_ajax_cart_field', ],
+			Settings_Screen::NAME,
+			self::NAME,
+			[
+				'label_for' => 'field-' . self::OPTION_AJAX_CART,
 			]
 		);
 
@@ -108,6 +125,12 @@ class Cart extends Settings_Section {
 		$value    = (bool) get_option( self::OPTION_ENABLE_CART, true );
 		$checkbox = sprintf( '<input id="field-%s" type="checkbox" value="1" class="regular-text code" name="%s" %s />', esc_attr( self::OPTION_ENABLE_CART ), esc_attr( self::OPTION_ENABLE_CART ), checked( true, $value, false ) );
 		printf( '<p class="description">%s %s</p>', $checkbox, __( 'If enabled, customers will be able to add products to a cart before proceeding to checkout. If disabled, products will use a Buy Now button that takes them directly to checkout.', 'bigcommerce' ) );
+	}
+
+	public function render_ajax_cart_field() {
+		$value    = (bool) get_option( self::OPTION_AJAX_CART, true );
+		printf( '<p><label><input type="radio" value="0" name="%s" %s /> %s</label></p>', esc_attr( self::OPTION_AJAX_CART ), checked( false, $value, false ), __( 'When a product is added to the cart, redirect the customer to the shopping cart page immediately', 'bigcommerce' ) );
+		printf( '<p><label><input type="radio" value="1" name="%s" %s /> %s</label></p>', esc_attr( self::OPTION_AJAX_CART ), checked( true, $value, false ), __( 'When a product is added to the cart, keep the customer on the present page and display a notification via Ajax', 'bigcommerce' ) );
 	}
 
 	public function render_embedded_checkout_field() {

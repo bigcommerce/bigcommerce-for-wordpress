@@ -9,6 +9,7 @@ use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Api\v3\Model\Listing;
 use BigCommerce\Api\v3\Model\ListingCollectionResponse;
+use BigCommerce\Api\v3\ObjectSerializer;
 use BigCommerce\Import\Runner\Status;
 use BigCommerce\Settings\Sections\Channels;
 
@@ -24,14 +25,20 @@ class Product_ID_Fetcher implements Import_Processor {
 	 * @var int
 	 */
 	private $limit;
+	/**
+	 * @var CatalogApi
+	 */
+	private $catalog;
 
 	/**
 	 * Product_ID_Fetcher constructor.
 	 *
+	 * @param CatalogApi  $catalog
 	 * @param ChannelsApi $channels The Channels API connection to use for the import
 	 * @param int         $limit    Number of product IDs to fetch per request
 	 */
-	public function __construct( ChannelsApi $channels, $limit = 100 ) {
+	public function __construct( CatalogApi $catalog, ChannelsApi $channels, $limit = 100 ) {
+		$this->catalog  = $catalog;
 		$this->limit    = $limit;
 		$this->channels = $channels;
 	}
@@ -50,7 +57,33 @@ class Product_ID_Fetcher implements Import_Processor {
 		$next = $this->get_next();
 
 		try {
-			$response = $this->channels->listChannelListings( $channel_id, $this->limit, $next ?: null );
+			$listings_response = $this->channels->listChannelListings( $channel_id, [
+				'limit' => $this->limit,
+				'after' => $next ?: null,
+			] );
+			$listings          = $listings_response->getData();
+		} catch ( ApiException $e ) {
+			do_action( 'bigcommerce/import/error', $e->getMessage(), [
+				'response' => $e->getResponseBody(),
+				'headers'  => $e->getResponseHeaders(),
+			] );
+
+			return;
+		}
+
+		$product_ids = array_map( function ( Listing $listing ) {
+			return (int) $listing->getProductId();
+		}, $listings );
+
+		try {
+			$products_response = $this->catalog->getProducts( [
+				'id:in'   => $product_ids,
+				'include' => [ 'variants', 'custom_fields', 'images', 'bulk_pricing_rules' ],
+			] );
+			$products          = [];
+			foreach ( $products_response->getData() as $product ) {
+				$products[ $product->getId() ] = $product;
+			}
 		} catch ( ApiException $e ) {
 			do_action( 'bigcommerce/import/error', $e->getMessage(), [
 				'response' => $e->getResponseBody(),
@@ -62,22 +95,35 @@ class Product_ID_Fetcher implements Import_Processor {
 
 		/** @var \wpdb $wpdb */
 		global $wpdb;
-		$inserts = array_map( function ( Listing $listing ) {
+		$inserts = array_filter( array_map( function ( Listing $listing ) use ( $products ) {
 			$modified = $listing->getDateModified() ?: $listing->getDateCreated() ?: new \DateTime();
-			$action = ! in_array( $listing->getState(), [ 'DELETED_GROUP', 'deleted' ] ) ? 'update' : 'delete';
+			$action   = ! in_array( $listing->getState(), [ 'DELETED_GROUP', 'deleted' ] ) ? 'update' : 'delete';
 
-			return sprintf( '( %d, %d, "%s", "%s", "%s" )', $listing->getProductId(), $listing->getListingId(), $modified->format( 'Y-m-d H:i:s' ), $action, date( 'Y-m-d H:i:s' ) );
-		}, $response->getData() );
+			$product_id = $listing->getProductId();
+			if ( ! array_key_exists( $product_id, $products ) ) {
+				return false;
+			}
+
+			return sprintf(
+				'( %d, %d, "%s", "%s", "%s", "%s", "%s" )',
+				$product_id,
+				$listing->getListingId(),
+				$modified->format( 'Y-m-d H:i:s' ),
+				$action, date( 'Y-m-d H:i:s' ),
+				esc_sql( json_encode( ObjectSerializer::sanitizeForSerialization( $products[ $product_id ] ) ) ),
+				esc_sql( json_encode( ObjectSerializer::sanitizeForSerialization( $listing ) ) )
+			);
+		}, $listings ) );
 
 		$count = 0;
 		if ( ! empty( $inserts ) ) {
 			$values = implode( ', ', $inserts );
-			$count  = $wpdb->query( "INSERT IGNORE INTO {$wpdb->bc_import_queue} ( bc_id, listing_id, date_modified, import_action, date_created ) VALUES $values" );
+			$count  = $wpdb->query( "INSERT IGNORE INTO {$wpdb->bc_import_queue} ( bc_id, listing_id, date_modified, import_action, date_created, product_data, listing_data ) VALUES $values" );
 		}
 
-		do_action( 'bigcommerce/import/fetched_ids', $count, $response );
+		do_action( 'bigcommerce/import/fetched_ids', $count, $listings_response );
 
-		$next = $this->extract_next_from_response( $response );
+		$next = $this->extract_next_from_response( $listings_response );
 		if ( $next ) {
 			$this->set_next( $next );
 		} else {
@@ -102,6 +148,7 @@ class Product_ID_Fetcher implements Import_Processor {
 		if ( empty( $args[ 'after' ] ) ) {
 			return 0;
 		}
+
 		return (int) $args[ 'after' ];
 	}
 

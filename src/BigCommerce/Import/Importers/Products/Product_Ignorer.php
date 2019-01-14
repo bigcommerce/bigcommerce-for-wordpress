@@ -1,13 +1,14 @@
 <?php
 
 
-namespace BigCommerce\Import;
+namespace BigCommerce\Import\Importers\Products;
 
 
 use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Api\v3\Model;
+use BigCommerce\Import\Import_Strategy;
 
-class Product_Ignorer implements Post_Import_Strategy {
+class Product_Ignorer implements Import_Strategy {
 	/**
 	 * @var Model\Product
 	 */

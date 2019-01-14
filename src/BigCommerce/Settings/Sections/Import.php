@@ -10,6 +10,8 @@ class Import extends Settings_Section {
 	const NAME                = 'import';
 	const OPTION_FREQUENCY    = 'bigcommerce_import_frequency';
 	const OPTION_NEW_PRODUCTS = 'bigcommerce_import_new_products';
+	const BATCH_SIZE          = 'bigcommerce_import_batch_size';
+	const MAX_CONCURRENT      = 'bigcommerce_import_max_concurrent';
 
 	const FREQUENCY_FIVE    = 'five_minutes';
 	const FREQUENCY_THIRTY  = 'thirty_minutes';
@@ -65,6 +67,50 @@ class Import extends Settings_Section {
 			Settings_Screen::NAME,
 			self::OPTION_NEW_PRODUCTS
 		);
+
+
+		add_settings_field(
+			self::BATCH_SIZE,
+			__( 'Import Batch Size', 'bigcommerce' ),
+			[ $this, 'render_number_field' ],
+			Settings_Screen::NAME,
+			self::NAME,
+			[
+				'min'         => 1,
+				'max'         => 250,
+				'option'      => self::BATCH_SIZE,
+				'default'     => 5,
+				'description' => __( 'How many products to import in each batch. If your import is hitting system limits, consider lowering this number.', 'bigcommerce' ),
+				'label_for' => 'field-' . self::BATCH_SIZE,
+			]
+		);
+
+		register_setting(
+			Settings_Screen::NAME,
+			self::BATCH_SIZE
+		);
+
+
+		/* // disabled until we figure out how to implement concurrent processing
+		add_settings_field(
+			self::MAX_CONCURRENT,
+			__( 'Max Concurrent Imports', 'bigcommerce' ),
+			[ $this, 'render_number_field' ],
+			Settings_Screen::NAME,
+			self::NAME,
+			[
+				'min'         => 1,
+				'max'         => 25,
+				'option'      => self::MAX_CONCURRENT,
+				'default'     => 1,
+				'description' => __( 'How many concurrent import batches to run in separate processes. If you import is hitting system limits or you find site performance lagging while imports run, consider lowering this number.', 'bigcommerce' ),
+			]
+		);
+
+		register_setting(
+			Settings_Screen::NAME,
+			self::MAX_CONCURRENT
+		);*/
 	}
 
 	public function section_description() {

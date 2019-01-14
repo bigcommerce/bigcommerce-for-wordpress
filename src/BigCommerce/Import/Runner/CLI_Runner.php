@@ -27,7 +27,7 @@ class CLI_Runner {
 			$lock->set_lock();
 
 			do_action( 'bigcommerce/import/before', $current[ 'status' ] );
-			do_action( 'bigcommerce/import/run/status=' . $current[ 'status' ] );
+			do_action( 'bigcommerce/import/run', $current[ 'status' ] );
 			do_action( 'bigcommerce/import/after', $current[ 'status' ] );
 
 			$current = $status->current_status();

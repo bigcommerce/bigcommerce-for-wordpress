@@ -1,9 +1,10 @@
 <?php
 
-namespace BigCommerce\Import;
+namespace BigCommerce\Import\Importers\Products;
 
 use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Api\v3\Model;
+use BigCommerce\Import\Importers\Products\Product_Builder;
 
 class Product_Updater extends Product_Saver {
 

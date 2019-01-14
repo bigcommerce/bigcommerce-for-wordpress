@@ -19,7 +19,9 @@ class Proxy_Controller extends WP_REST_Controller {
 	 *
 	 * @var array Configurations.
 	 */
-	protected $config;
+	private $config = [
+		'proxy_base' => 'bc/v3',
+	];
 
 	/**
 	 * Proxy base namespace.

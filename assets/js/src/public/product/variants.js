@@ -18,9 +18,11 @@ const instances = {
 
 const state = {
 	isValidOption: false,
+	singleVariant: false,
 	variantID: '',
 	variantMessage: '',
 	variantPrice: '',
+	sku: '',
 };
 
 const el = {
@@ -96,7 +98,8 @@ const handleAlertMessage = (formWrapper = '') => {
 
 /**
  * @function setSelectedVariantPrice
- * @description get the price of the current selected variant ID and replace the price element with it's formatted_price value.
+ * @description get the price of the current selected variant ID and replace the price element with it's
+ *     formatted_price value.
  * @param wrapper
  */
 const setSelectedVariantPrice = (wrapper = '') => {
@@ -127,6 +130,7 @@ const handleSelectedVariant = (product = {}) => {
 	// Set the price and ID regardless of state.
 	state.variantPrice = product.formatted_price;
 	state.variantID = product.variant_id;
+	state.sku = product.sku;
 
 	// Case: Current variant choice has inventory and is not disabled.
 	if ((product.inventory > 0 || product.inventory === -1) && !product.disabled) {
@@ -163,8 +167,10 @@ const handleSelectedVariant = (product = {}) => {
 const parseVariants = (variants, choices) => {
 	// Case: This is a product without variants.
 	if (variants.length === 1) {
-		state.isValidOption = true;
+		state.isValidOption = variants[0].inventory !== 0;
+		state.singleVariant = true;
 		state.variantID = variants[0].variant_id;
+		state.sku = variants[0].sku;
 		return;
 	}
 
@@ -211,33 +217,36 @@ const buildSelectionArray = (selectionArray, optionsContainer) => {
 };
 
 /**
- * @function setVariantURLParameter
+ * @function setProductURLParameter
  * @description Set and/or updates the variant_id query param in the url.
  */
-const setVariantURLParameter = () => {
-	if (!state.variantID || !el.singleWrapper) {
+const setProductURLParameter = () => {
+	if (!state.variantID || !state.sku || !el.singleWrapper || state.singleVariant) {
 		return;
 	}
 
-	window.history.replaceState(null, null, updateQueryVar('variant_id', state.variantID));
+	window.history.replaceState(null, null, updateQueryVar('variant_id'));
+	window.history.replaceState(null, null, updateQueryVar('sku', state.sku));
 };
 
 /**
  * @function handleSelections
  * @description On load or on selection change, determine which product form we are in and run all main functions.
- * @param e - a delegate event from a click or an options node.
+ * @param e - a delegate event from a click.
+ * @param node - a specific DOM node to use for options.
  */
-const handleSelections = (e = '') => {
-	let optionsContainer = '';
+const handleSelections = (e, node = '') => {
+	const optionsContainer = e ? tools.closest(e.delegateTarget, '[data-js="product-options"]') : node;
+
+	if (!optionsContainer) {
+		return;
+	}
+
 	state.variantMessage = '';
 	state.variantID = '';
+	state.sku = '';
 	state.variantPrice = '';
-
-	if (e.delegateTarget) {
-		optionsContainer = tools.closest(e.delegateTarget, '[data-js="product-options"]');
-	} else {
-		optionsContainer = e;
-	}
+	state.singleVariant = false;
 
 	const formWrapper = tools.closest(optionsContainer, '.bc-product-form');
 	const productID = optionsContainer.dataset.productId;
@@ -246,7 +255,7 @@ const handleSelections = (e = '') => {
 
 	buildSelectionArray(instances.selections[productID], optionsContainer);
 	parseVariants(instances.product[productID], instances.selections[productID]);
-	setVariantURLParameter();
+	setProductURLParameter();
 	setVariantIDHiddenField(formWrapper);
 	setSelectedVariantPrice(metaWrapper);
 	setButtonState(submitButton);
@@ -255,7 +264,8 @@ const handleSelections = (e = '') => {
 
 /**
  * @function handleOptionClicks
- * @description Click/change event listener for form fields on each product. Runs our main handleSelections function on the event.
+ * @description Click/change event listener for form fields on each product. Runs our main handleSelections function on
+ *     the event.
  * @param options - the current .initialized form options node.
  */
 const handleOptionClicks = (options = '') => {
@@ -273,14 +283,14 @@ const handleOptionClicks = (options = '') => {
 };
 
 /**
- * @function handleVariantQueryParam
+ * @function handleProductQueryParam
  * @description Creates an added layer of variant checking to ensure that a URL with a variant_id param is set properly.
  */
-const handleVariantQueryParam = () => {
+const handleProductQueryParam = () => {
 	// Assumes this is the PDP single page.
 	const variantID = queryToJson().variant_id;
-
-	if (!variantID || !el.singleWrapper) {
+	const sku = queryToJson().sku;
+	if ((!variantID && !sku) || !el.singleWrapper) {
 		return;
 	}
 
@@ -288,13 +298,48 @@ const handleVariantQueryParam = () => {
 	const formWrapper = el.singleWrapper.querySelector('.bc-product-form');
 
 	tools.addClass(formWrapper, 'bc-product__is-setting-options');
-	handleSelections(productOptions);
+	handleSelections(null, productOptions);
 	_.delay(() => tools.removeClass(formWrapper, 'bc-product__is-setting-options'), 500);
 };
 
 /**
+ * @function initializeUniqueFieldIDs
+ * @description Add a UID to each field and label set for option in order to avoid collisions with form control.
+ * @param options
+ * @param productVariantsID
+ */
+const initializeUniqueFieldIDs = (options = [], productVariantsID = '') => {
+	tools.getNodes('product-form-option', true, options).forEach((option) => {
+		const fieldType = option.dataset.field;
+
+		// Set a UID for all labels
+		tools.getNodes('label', true, option, true).forEach((label) => {
+			const labelFor = `${label.getAttribute('for')}[${productVariantsID}]`;
+			label.setAttribute('for', labelFor);
+		});
+
+		// Set the same UID for each radio input.
+		if (fieldType === 'product-form-option-radio') {
+			tools.getNodes('input[type=radio]', true, option, true).forEach((radio) => {
+				const fieldID = `${radio.getAttribute('id')}[${productVariantsID}]`;
+				radio.setAttribute('id', fieldID);
+			});
+		}
+
+		// Set the same UID for each select field.
+		if (fieldType === 'product-form-option-select') {
+			tools.getNodes('select', true, option, true).forEach((select) => {
+				const fieldID = `${select.getAttribute('id')}[${productVariantsID}]`;
+				select.setAttribute('id', fieldID);
+			});
+		}
+	});
+};
+
+/**
  * @function initOptionsPickers
- * @description Traverse the dom and find forms that have not been initialized. Add a unique ID and setup instanced containers for handling product form data.
+ * @description Traverse the dom and find forms that have not been initialized. Add a unique ID and setup instanced
+ *     containers for handling product form data.
  */
 const initOptionsPickers = () => {
 	let variantsObj;
@@ -312,6 +357,7 @@ const initOptionsPickers = () => {
 		instances.selections[productVariantsID] = [];
 
 		// "Initialize" the current form options.
+		initializeUniqueFieldIDs(options, productVariantsID);
 		tools.addClass(options, 'initialized');
 
 		// Add the unique ID to the current options node for easily selecting the form parent associated with this product.
@@ -319,7 +365,7 @@ const initOptionsPickers = () => {
 
 		// On initialization, setup our form.
 		handleOptionClicks(options);
-		handleSelections(options);
+		handleSelections(null, options);
 	});
 };
 
@@ -329,7 +375,7 @@ const init = (container) => {
 	}
 
 	initOptionsPickers();
-	handleVariantQueryParam();
+	handleProductQueryParam();
 };
 
 export default init;

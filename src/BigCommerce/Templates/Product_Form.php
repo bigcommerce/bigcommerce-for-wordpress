@@ -5,16 +5,18 @@ namespace BigCommerce\Templates;
 
 
 use BigCommerce\Post_Types\Product\Product;
+use BigCommerce\Settings\Sections\Cart;
 
 class Product_Form extends Controller {
-	const PRODUCT      = 'product';
-	const OPTIONS      = 'options';
-	const MODIFIERS    = 'modifiers';
-	const BUTTON       = 'button';
-	const MIN_QUANTITY = 'min_quantity';
-	const MAX_QUANTITY = 'max_quantity';
-
-	const SHOW_OPTIONS = 'show_options';
+	const PRODUCT             = 'product';
+	const OPTIONS             = 'options';
+	const MODIFIERS           = 'modifiers';
+	const BUTTON              = 'button';
+	const MIN_QUANTITY        = 'min_quantity';
+	const MAX_QUANTITY        = 'max_quantity';
+	const AJAX_ADD_TO_CART    = 'ajax_add_to_cart';
+	const SHOW_OPTIONS        = 'show_options';
+	const QUANTITY_FIELD_TYPE = 'quantity_field_type';
 
 	protected $template = 'components/products/product-form.php';
 
@@ -32,12 +34,14 @@ class Product_Form extends Controller {
 		$product = $this->options[ self::PRODUCT ];
 
 		return [
-			self::PRODUCT      => $product,
-			self::BUTTON       => $product->purchase_button(),
-			self::MIN_QUANTITY => max( (int) $product->order_quantity_minimum, 1 ),
-			self::MAX_QUANTITY => $this->options[ self::SHOW_OPTIONS ] ? $this->get_max_quantity( (int) $product->order_quantity_maximum, $product->get_inventory_level() ) : 1,
-			self::OPTIONS      => $this->options[ self::SHOW_OPTIONS ] ? $this->get_options( $product ) : '',
-			self::MODIFIERS    => $this->options[ self::SHOW_OPTIONS ] ? $this->get_modifiers( $product ) : '',
+			self::PRODUCT             => $product,
+			self::BUTTON              => $product->purchase_button(),
+			self::MIN_QUANTITY        => max( (int) $product->order_quantity_minimum, 1 ),
+			self::MAX_QUANTITY        => $this->get_max_quantity( (int) $product->order_quantity_maximum, $product->get_inventory_level() ),
+			self::OPTIONS             => $this->options[ self::SHOW_OPTIONS ] ? $this->get_options( $product ) : '',
+			self::MODIFIERS           => $this->options[ self::SHOW_OPTIONS ] ? $this->get_modifiers( $product ) : '',
+			self::AJAX_ADD_TO_CART    => (bool) get_option( Cart::OPTION_AJAX_CART, false ),
+			self::QUANTITY_FIELD_TYPE => $this->options[ self::SHOW_OPTIONS ] ? 'number' : 'hidden',
 		];
 	}
 

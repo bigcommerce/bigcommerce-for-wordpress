@@ -8,7 +8,7 @@ import modifiers from './modifiers';
 import reviews from './reviews';
 
 const el = {
-	container: tools.getNodes('.bc-product-single', false, document, true)[0],
+	container: tools.getNodes('bc-product-single', false, document)[0],
 };
 
 const init = () => {
