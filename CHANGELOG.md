@@ -1,5 +1,46 @@
 # Changelog
 
+## [1.4.0]
+
+### Added
+
+- On sites where the official AMP plugin for WordPress is active and SSL is not enabled,
+  added an admin notice on the settings page informing users some features won't work
+  correctly without HTTPS.
+- In AMP, added cart item count indicator to nav menu item linking to Cart page
+- Option to use Ajax to add products to the customer's cart
+- Added the BigCommerce product ID to the products list in the WordPress admin
+- Option to control the import batch size
+
+### Fixed
+
+- Fixed icons not loading correctly in AMP templates.
+- Fixed as issue with product variants not working on single product shortcodes.
+- Fixed an issue with field labels and IDs colliding when products are duplicated on
+  the same page. All clicks would control the first product on the page.
+- Fixed click behavior on product galleries
+- Fixed bug allowing an import to start (and fail) before setting up a channel
+- Fixed 1970 dates showing on order history when orders had not been shipped
+- Fixed bug that ignored the minimum quantity requirements when adding a product to the cart
+  from a product card.
+- Fixed an issue with pagination ajax on shortcode product groups.
+
+### Changed
+
+- Updated BigCommerce v3 API client library to version 1.3.0. Parameters
+  have changed on most methods to accept an array of arguments instead of
+  a long parameter list.
+- Refactored import task registration to use a filterable list. Instances
+  of `Task_Definition` should be registered with the `Task_Manager` with an
+  appropriate priority to control the order of operations.
+- Changed the action that triggers each step of the import. It now uses the
+  `bigcommerce/import/run` hook, with the current status as the first parameter,
+  replacing the former `bigcommerce/import/run/status={$current_status}`.
+- Separated category and brand imports into separate import steps, allowing
+  for bulk queries and reducing the number of API requests required to import
+  a product.
+- Reorganized classes related to the API import process.
+
 ## [1.3.0]
 
 ### Added
@@ -7,7 +48,7 @@
 - Added templates, styles, and plugin logic for compatibility with the Official AMP
   Plugin for Wordpress, through version 1.0. Themes still need to be made AMP-compatible
   if not using AMP classic mode.
-- Added REST endpoints to proxy several BigCommerce API endpoints, including catalog, 
+- Added REST endpoints to proxy several BigCommerce API endpoints, including catalog,
   channels and cart. Most requests are cached for ten minutes by default.
 - Added creation and handling of a BigCommerce webhook to bust cached proxy data
   related to a product when the product is updated in BigCommerce.
@@ -139,7 +180,7 @@
 ### Added
 - Added the Product Sync feature to Product List page.
 - Added Welcome screen and Connect Account screen.
- 
+
 ### Changed
 - Refactored JS code in Gutenberg modules to use ES6 React syntax (removes usage of `wp` global React wrapper).
 - Refactored other JS modules for extendability and moved i18n strings to PHP JS_Config.
@@ -232,6 +273,7 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[1.4.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.3.0...1.4.0
 [1.3.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.2.0...1.3.0
 [1.2.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.1.0...1.2.0
 [1.1.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.0.2...1.1.0

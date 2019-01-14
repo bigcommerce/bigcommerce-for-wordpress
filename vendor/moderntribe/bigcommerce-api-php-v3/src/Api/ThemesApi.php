@@ -1,12 +1,8 @@
 <?php
 /**
  * ThemesApi
- * PHP version 5
  *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -28,21 +24,14 @@
 
 namespace BigCommerce\Api\v3\Api;
 
+use \BigCommerce\Api\v3\Configuration;
 use \BigCommerce\Api\v3\ApiClient;
 use \BigCommerce\Api\v3\ApiException;
-use \BigCommerce\Api\v3\Configuration;
 use \BigCommerce\Api\v3\ObjectSerializer;
 
-/**
- * ThemesApi Class Doc Comment
- *
- * @category Class
- * @package  BigCommerce\Api\v3
- * @author   Swagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
- */
 class ThemesApi
 {
+
     /**
      * API Client
      *
@@ -53,35 +42,30 @@ class ThemesApi
     /**
      * Constructor
      *
-     * @param \BigCommerce\Api\v3\ApiClient|null $apiClient The api client to use
+     * @param \BigCommerce\Api\v3\ApiClient $apiClient The api client to use
      */
-    public function __construct(\BigCommerce\Api\v3\ApiClient $apiClient = null)
+    public function __construct(\BigCommerce\Api\v3\ApiClient $apiClient)
     {
-        if ($apiClient === null) {
-            $apiClient = new ApiClient();
-            $apiClient->getConfig()->setHost('https://api.bigcommerce.com/stores/{{store_id}}/v3');
-        }
-
         $this->apiClient = $apiClient;
     }
 
     /**
-     * Get API client
-     *
-     * @return \BigCommerce\Api\v3\ApiClient get the API client
-     */
+    * Get API client
+    *
+    * @return \BigCommerce\Api\v3\ApiClient get the API client
+    */
     public function getApiClient()
     {
         return $this->apiClient;
     }
 
     /**
-     * Set the API client
-     *
-     * @param \BigCommerce\Api\v3\ApiClient $apiClient set the API client
-     *
-     * @return ThemesApi
-     */
+    * Set the API client
+    *
+    * @param \BigCommerce\Api\v3\ApiClient $apiClient set the API client
+    *
+    * @return ThemesApi
+    */
     public function setApiClient(\BigCommerce\Api\v3\ApiClient $apiClient)
     {
         $this->apiClient = $apiClient;
@@ -90,34 +74,41 @@ class ThemesApi
 
     /**
      * Operation activateStoreTheme
-     *
      * Activates a store theme.
      *
+     *
      * @param \BigCommerce\Api\v3\Model\Activate $body Request parameters. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\NoContent
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function activateStoreTheme($body)
+    public function activateStoreTheme($body, array $params = [])
     {
-        list($response) = $this->activateStoreThemeWithHttpInfo($body);
+        list($response) = $this->activateStoreThemeWithHttpInfo( $body, $params);
         return $response;
     }
+
 
     /**
      * Operation activateStoreThemeWithHttpInfo
      *
-     * Activates a store theme.
-     *
+     * @see self::activateStoreTheme()
      * @param \BigCommerce\Api\v3\Model\Activate $body Request parameters. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\NoContent, HTTP status code, HTTP response headers (array of strings)
      */
-    public function activateStoreThemeWithHttpInfo($body)
+    public function activateStoreThemeWithHttpInfo( $body, array $params = [])
     {
+        
         // verify the required parameter 'body' is set
-        if ($body === null) {
+        if (!isset($body)) {
             throw new \InvalidArgumentException('Missing the required parameter $body when calling activateStoreTheme');
         }
+        
+
         // parse inputs
         $resourcePath = "/themes/actions/activate";
         $httpBody = '';
@@ -130,21 +121,26 @@ class ThemesApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
         // body params
         $_tempBody = null;
         if (isset($body)) {
-            $_tempBody = $body;
+        $_tempBody = $body;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -156,54 +152,63 @@ class ThemesApi
                 '\BigCommerce\Api\v3\Model\NoContent',
                 '/themes/actions/activate'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\NoContent', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 204:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NoContent', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NoContent', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 default:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deleteStoreTheme
-     *
      * Deletes a specified store theme.
      *
+     *
      * @param string $theme_id The theme identifier. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\NoContent
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function deleteStoreTheme($theme_id)
+    public function deleteStoreTheme($theme_id, array $params = [])
     {
-        list($response) = $this->deleteStoreThemeWithHttpInfo($theme_id);
+        list($response) = $this->deleteStoreThemeWithHttpInfo($theme_id, $params);
         return $response;
     }
+
 
     /**
      * Operation deleteStoreThemeWithHttpInfo
      *
-     * Deletes a specified store theme.
-     *
+     * @see self::deleteStoreTheme()
      * @param string $theme_id The theme identifier. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\NoContent, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteStoreThemeWithHttpInfo($theme_id)
+    public function deleteStoreThemeWithHttpInfo($theme_id, array $params = [])
     {
+        
         // verify the required parameter 'theme_id' is set
-        if ($theme_id === null) {
+        if (!isset($theme_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $theme_id when calling deleteStoreTheme');
         }
+        
+
         // parse inputs
         $resourcePath = "/themes/{theme_id}";
         $httpBody = '';
@@ -216,8 +221,15 @@ class ThemesApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($theme_id !== null) {
+
+
+        if (isset($theme_id)) {
             $resourcePath = str_replace(
                 "{" . "theme_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($theme_id),
@@ -227,13 +239,13 @@ class ThemesApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -245,60 +257,70 @@ class ThemesApi
                 '\BigCommerce\Api\v3\Model\NoContent',
                 '/themes/{theme_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\NoContent', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 204:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NoContent', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NoContent', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 default:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation downloadTheme
-     *
      * Downloads a specified store theme.
+     *
      *
      * @param string $theme_id The theme identifier. (required)
      * @param \BigCommerce\Api\v3\Model\WhichThemeToDownload $which A BigCommerce object specifying which theme to download. One of: &#x60;original&#x60;: the original Marketplace or uploaded custom theme; &#x60;last_activated&#x60;: the theme version most recently applied to the store; &#x60;last_created&#x60;: the theme version most recently created. If &#x60;which&#x60; is missing or invalid in the request, its value will default to &#x60;last_activated&#x60;. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\JobId
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function downloadTheme($theme_id, $which)
+    public function downloadTheme($theme_id, $which, array $params = [])
     {
-        list($response) = $this->downloadThemeWithHttpInfo($theme_id, $which);
+        list($response) = $this->downloadThemeWithHttpInfo($theme_id,  $which, $params);
         return $response;
     }
+
 
     /**
      * Operation downloadThemeWithHttpInfo
      *
-     * Downloads a specified store theme.
-     *
+     * @see self::downloadTheme()
      * @param string $theme_id The theme identifier. (required)
      * @param \BigCommerce\Api\v3\Model\WhichThemeToDownload $which A BigCommerce object specifying which theme to download. One of: &#x60;original&#x60;: the original Marketplace or uploaded custom theme; &#x60;last_activated&#x60;: the theme version most recently applied to the store; &#x60;last_created&#x60;: the theme version most recently created. If &#x60;which&#x60; is missing or invalid in the request, its value will default to &#x60;last_activated&#x60;. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\JobId, HTTP status code, HTTP response headers (array of strings)
      */
-    public function downloadThemeWithHttpInfo($theme_id, $which)
+    public function downloadThemeWithHttpInfo($theme_id,  $which, array $params = [])
     {
+        
         // verify the required parameter 'theme_id' is set
-        if ($theme_id === null) {
+        if (!isset($theme_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $theme_id when calling downloadTheme');
         }
+        
         // verify the required parameter 'which' is set
-        if ($which === null) {
+        if (!isset($which)) {
             throw new \InvalidArgumentException('Missing the required parameter $which when calling downloadTheme');
         }
+        
+
         // parse inputs
         $resourcePath = "/themes/{theme_id}/actions/download";
         $httpBody = '';
@@ -311,8 +333,15 @@ class ThemesApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($theme_id !== null) {
+
+
+        if (isset($theme_id)) {
             $resourcePath = str_replace(
                 "{" . "theme_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($theme_id),
@@ -325,15 +354,15 @@ class ThemesApi
         // body params
         $_tempBody = null;
         if (isset($which)) {
-            $_tempBody = $which;
+        $_tempBody = $which;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -345,54 +374,63 @@ class ThemesApi
                 '\BigCommerce\Api\v3\Model\JobId',
                 '/themes/{theme_id}/actions/download'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\JobId', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\JobId', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\JobId', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 default:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getJob
-     *
      * Gets a specified job.
      *
+     *
      * @param string $job_id The job identifier. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\JobResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getJob($job_id)
+    public function getJob($job_id, array $params = [])
     {
-        list($response) = $this->getJobWithHttpInfo($job_id);
+        list($response) = $this->getJobWithHttpInfo($job_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getJobWithHttpInfo
      *
-     * Gets a specified job.
-     *
+     * @see self::getJob()
      * @param string $job_id The job identifier. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\JobResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getJobWithHttpInfo($job_id)
+    public function getJobWithHttpInfo($job_id, array $params = [])
     {
+        
         // verify the required parameter 'job_id' is set
-        if ($job_id === null) {
+        if (!isset($job_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $job_id when calling getJob');
         }
+        
+
         // parse inputs
         $resourcePath = "/themes/jobs/{job_id}";
         $httpBody = '';
@@ -405,8 +443,15 @@ class ThemesApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($job_id !== null) {
+
+
+        if (isset($job_id)) {
             $resourcePath = str_replace(
                 "{" . "job_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($job_id),
@@ -416,13 +461,13 @@ class ThemesApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -434,54 +479,63 @@ class ThemesApi
                 '\BigCommerce\Api\v3\Model\JobResponse',
                 '/themes/jobs/{job_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\JobResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\JobResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\JobResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 default:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getStoreTheme
-     *
      * Gets a specified store theme.
      *
+     *
      * @param string $theme_id The theme identifier. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\ThemeResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getStoreTheme($theme_id)
+    public function getStoreTheme($theme_id, array $params = [])
     {
-        list($response) = $this->getStoreThemeWithHttpInfo($theme_id);
+        list($response) = $this->getStoreThemeWithHttpInfo($theme_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getStoreThemeWithHttpInfo
      *
-     * Gets a specified store theme.
-     *
+     * @see self::getStoreTheme()
      * @param string $theme_id The theme identifier. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ThemeResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getStoreThemeWithHttpInfo($theme_id)
+    public function getStoreThemeWithHttpInfo($theme_id, array $params = [])
     {
+        
         // verify the required parameter 'theme_id' is set
-        if ($theme_id === null) {
+        if (!isset($theme_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $theme_id when calling getStoreTheme');
         }
+        
+
         // parse inputs
         $resourcePath = "/themes/{theme_id}";
         $httpBody = '';
@@ -494,8 +548,15 @@ class ThemesApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($theme_id !== null) {
+
+
+        if (isset($theme_id)) {
             $resourcePath = str_replace(
                 "{" . "theme_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($theme_id),
@@ -505,13 +566,13 @@ class ThemesApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -523,48 +584,56 @@ class ThemesApi
                 '\BigCommerce\Api\v3\Model\ThemeResponse',
                 '/themes/{theme_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ThemeResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ThemeResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ThemeResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 default:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getStoreThemes
-     *
      * Gets all store themes.
      *
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     *
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\ThemesCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getStoreThemes()
+    public function getStoreThemes(array $params = [])
     {
-        list($response) = $this->getStoreThemesWithHttpInfo();
+        list($response) = $this->getStoreThemesWithHttpInfo($params);
         return $response;
     }
+
 
     /**
      * Operation getStoreThemesWithHttpInfo
      *
-     * Gets all store themes.
-     *
+     * @see self::getStoreThemes()
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ThemesCollectionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getStoreThemesWithHttpInfo()
+    public function getStoreThemesWithHttpInfo(array $params = [])
     {
+        
+
         // parse inputs
         $resourcePath = "/themes";
         $httpBody = '';
@@ -577,16 +646,21 @@ class ThemesApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -598,54 +672,63 @@ class ThemesApi
                 '\BigCommerce\Api\v3\Model\ThemesCollectionResponse',
                 '/themes'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ThemesCollectionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ThemesCollectionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ThemesCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 default:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation uploadTheme
-     *
      * Uploads a new theme to a BigCommerce store.
      *
-     * @param \SplFileObject $file The file. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     *
+     * @param array $params = []
+     *     - file \SplFileObject The file. (required)
      * @return \BigCommerce\Api\v3\Model\JobId
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function uploadTheme($file)
+    public function uploadTheme(array $params = [])
     {
-        list($response) = $this->uploadThemeWithHttpInfo($file);
+        list($response) = $this->uploadThemeWithHttpInfo($params);
         return $response;
     }
+
 
     /**
      * Operation uploadThemeWithHttpInfo
      *
-     * Uploads a new theme to a BigCommerce store.
-     *
-     * @param \SplFileObject $file The file. (required)
+     * @see self::uploadTheme()
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\JobId, HTTP status code, HTTP response headers (array of strings)
      */
-    public function uploadThemeWithHttpInfo($file)
+    public function uploadThemeWithHttpInfo(array $params = [])
     {
+        
         // verify the required parameter 'file' is set
-        if ($file === null) {
-            throw new \InvalidArgumentException('Missing the required parameter $file when calling uploadTheme');
+        if (!isset($params[ 'file' ])) {
+            throw new \InvalidArgumentException('Missing the required parameter $params[ "file" ] when calling uploadTheme');
         }
+        $file = array_key_exists( 'file', $params ) ? $params[ 'file' ] : null;
+        
+
         // parse inputs
         $resourcePath = "/themes";
         $httpBody = '';
@@ -658,18 +741,22 @@ class ThemesApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['multipart/form-data']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
-
         // form params
         if ($file !== null) {
-            // PHP 5.5 introduced a CurlFile object that deprecates the old @filename syntax
-            // See: https://wiki.php.net/rfc/curl-file-upload
-            if (function_exists('curl_file_create')) {
-                $formParams['file'] = curl_file_create($this->apiClient->getSerializer()->toFormValue($file));
-            } else {
-                $formParams['file'] = '@' . $this->apiClient->getSerializer()->toFormValue($file);
-            }
+        // PHP 5.5 introduced a CurlFile object that deprecates the old @filename syntax
+        // See: https://wiki.php.net/rfc/curl-file-upload
+        if (function_exists('curl_file_create')) {
+            $formParams['file'] = curl_file_create($this->apiClient->getSerializer()->toFormValue($file));
+        } else {
+            $formParams['file'] = '@' . $this->apiClient->getSerializer()->toFormValue($file);
+        }
         }
         
         // for model (json/xml)
@@ -678,6 +765,7 @@ class ThemesApi
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -689,18 +777,21 @@ class ThemesApi
                 '\BigCommerce\Api\v3\Model\JobId',
                 '/themes'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\JobId', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 201:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\JobId', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\JobId', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 default:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;

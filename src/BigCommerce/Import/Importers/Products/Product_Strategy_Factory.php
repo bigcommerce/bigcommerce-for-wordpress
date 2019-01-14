@@ -1,15 +1,19 @@
 <?php
 
 
-namespace BigCommerce\Import;
+namespace BigCommerce\Import\Importers\Products;
 
 
 use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Api\v3\Model;
 use BigCommerce\Api\v3\ObjectSerializer;
+use BigCommerce\Import\Import_Strategy;
+use BigCommerce\Import\Importers\Products\Product_Creator;
+use BigCommerce\Import\Importers\Products\Product_Ignorer;
+use BigCommerce\Import\Importers\Products\Product_Updater;
 use BigCommerce\Post_Types\Product\Product;
 
-class Import_Strategy_Factory {
+class Product_Strategy_Factory {
 	/**
 	 * @var Model\Product
 	 */
@@ -28,7 +32,7 @@ class Import_Strategy_Factory {
 	private $version;
 
 	/**
-	 * Import_Strategy_Factory constructor.
+	 * Product_Strategy_Factory constructor.
 	 *
 	 * @param Model\Product $product
 	 * @param Model\Listing $listing
@@ -42,6 +46,9 @@ class Import_Strategy_Factory {
 		$this->version = $version;
 	}
 
+	/**
+	 * @return Import_Strategy
+	 */
 	public function get_strategy() {
 		$matching_post_id = $this->get_matching_post();
 		if ( empty( $matching_post_id ) ) {
@@ -52,7 +59,7 @@ class Import_Strategy_Factory {
 			return new Product_Ignorer( $this->product, $this->listing, $this->catalog, $matching_post_id );
 		}
 
-		return new Product_Updater( $this->product, $this->listing, $this->catalog, $matching_post_id );
+		return new Product_Updater ( $this->product, $this->listing, $this->catalog, $matching_post_id );
 
 	}
 

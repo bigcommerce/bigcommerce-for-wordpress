@@ -1,8 +1,13 @@
 <?php
-
+/**
+ * Class Amp
+ *
+ * @package BigCommerce
+ */
 
 namespace BigCommerce\Container;
 
+use BigCommerce\Amp\Amp_Admin_Notices;
 use BigCommerce\Amp\Amp_Controller_Factory;
 use BigCommerce\Amp\Amp_Template_Override;
 use BigCommerce\Amp\Amp_Cart;
@@ -11,7 +16,11 @@ use Pimple\Container;
 use BigCommerce\Amp\Amp_Assets;
 use BigCommerce\Amp\Overrides;
 use BigCommerce\Customizer\Styles;
+use BigCommerce\Amp\Amp_Cart_Menu_Item;
 
+/**
+ * Class Amp
+ */
 class Amp extends Provider {
 	const TEMPLATE_OVERRIDE  = 'amp.template_override';
 	const TEMPLATE_DIRECTORY = 'amp.template_directory';
@@ -21,8 +30,17 @@ class Amp extends Provider {
 	const OVERRIDES          = 'amp.overrides';
 	const CLASSIC            = 'amp.classic';
 	const AMP_CART           = 'amp.amp_cart';
+	const MENU_ITEM          = 'amp.cart_menu_item';
+	const AMP_ADMIN_NOTICES  = 'amp.notices';
 
+	/**
+	 * Registers AMP classes and callbacks.
+	 *
+	 * @param Container $container Plugin container.
+	 */
 	public function register( Container $container ) {
+
+		$this->admin_notices( $container );
 
 		$container[ self::TEMPLATE_DIRECTORY ] = function ( Container $container ) {
 			/**
@@ -43,7 +61,11 @@ class Amp extends Provider {
 
 		$container[ self::ASSETS ] = function ( Container $container ) {
 			$customizer_template_file = dirname( $container['plugin_file'] ) . '/assets/customizer.template.css';
-			return new Amp_Assets( trailingslashit( plugin_dir_path( $container['plugin_file'] ) ) . 'assets/', $customizer_template_file );
+			return new Amp_Assets(
+				trailingslashit( plugin_dir_path( $container['plugin_file'] ) ) . 'assets/',
+				trailingslashit( plugin_dir_url( $container['plugin_file'] ) ) . 'assets/',
+				$customizer_template_file
+			);
 		};
 
 		$container[ self::CUSTOMIZER_STYLES ] = function ( Container $container ) {
@@ -60,15 +82,26 @@ class Amp extends Provider {
 			return new Classic();
 		};
 
-		$container [ self::AMP_CART ] = function( Container $container ) {
+		$container[ self::AMP_CART ] = function( Container $container ) {
 			return new Amp_Cart( $container[ Proxy::PROXY_BASE ] );
 		};
 
-		add_action( 'bigcommerce/action_endpoint/' . Amp_Cart::CHECKOUT_REDIRECT_ACTION, $this->create_callback( 'amp_checkout_handle_request', function ( $args ) use ( $container ) {
-			$container[ self::AMP_CART ]->handle_redirect_request();
-		} ) );
+		add_action(
+			'bigcommerce/action_endpoint/' . Amp_Cart::CHECKOUT_REDIRECT_ACTION,
+			$this->create_callback(
+				'amp_checkout_handle_request',
+				function ( $args ) use ( $container ) {
+					$container[ self::AMP_CART ]->handle_redirect_request();
+				}
+			)
+		);
+
+		$container[ self::MENU_ITEM ] = function ( Container $container ) {
+			return new Amp_Cart_Menu_Item();
+		};
 
 		add_action( 'wp', $this->create_callback( 'init_template_override', function ( $wp ) use ( $container ) {
+
 			/**
 			 * Toggles whether AMP template overrides will be used to render plugin templates
 			 *
@@ -136,6 +169,10 @@ class Amp extends Provider {
 				} else {
 					add_filter( 'bigcommerce/assets/stylesheet', $amp_filter_stylesheet, 10, 1 );
 				}
+
+				add_filter( 'wp_setup_nav_menu_item', $this->create_callback( 'menu_item', function ( $menu_item ) use ( $container ) {
+					return $container[ self::MENU_ITEM ]->add_classes_to_cart_page( $menu_item, $container[ Proxy::PROXY_BASE ] );
+				} ), 11, 1 );
 			}
 		} ), 10, 1 );
 
@@ -157,5 +194,26 @@ class Amp extends Provider {
 				$container[ self::CLASSIC ]->register_amp_menu();
 			}
 		} ) );
+	}
+
+	/**
+	 * Sets up AMP admin notices class and callbacks.
+	 *
+	 * @param Container $container Plugin container instance.
+	 */
+	private function admin_notices( Container $container ) {
+		$container[ self::AMP_ADMIN_NOTICES ] = function( Container $container ) {
+			return new Amp_Admin_Notices(
+				$container[ Settings::SETTINGS_SCREEN ]->get_hook_suffix(),
+				defined( 'AMP__VERSION' ) && class_exists( 'AMP_Options_Manager' )
+			);
+		};
+
+		add_action(
+			'admin_notices',
+			function() use ( $container ) {
+				$container[ self::AMP_ADMIN_NOTICES ]->render_amp_admin_notices();
+			}
+		);
 	}
 }

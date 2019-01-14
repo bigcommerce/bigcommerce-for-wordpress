@@ -1,12 +1,8 @@
 <?php
 /**
  * PriceListsApi
- * PHP version 5
  *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -28,21 +24,14 @@
 
 namespace BigCommerce\Api\v3\Api;
 
+use \BigCommerce\Api\v3\Configuration;
 use \BigCommerce\Api\v3\ApiClient;
 use \BigCommerce\Api\v3\ApiException;
-use \BigCommerce\Api\v3\Configuration;
 use \BigCommerce\Api\v3\ObjectSerializer;
 
-/**
- * PriceListsApi Class Doc Comment
- *
- * @category Class
- * @package  BigCommerce\Api\v3
- * @author   Swagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
- */
 class PriceListsApi
 {
+
     /**
      * API Client
      *
@@ -53,35 +42,30 @@ class PriceListsApi
     /**
      * Constructor
      *
-     * @param \BigCommerce\Api\v3\ApiClient|null $apiClient The api client to use
+     * @param \BigCommerce\Api\v3\ApiClient $apiClient The api client to use
      */
-    public function __construct(\BigCommerce\Api\v3\ApiClient $apiClient = null)
+    public function __construct(\BigCommerce\Api\v3\ApiClient $apiClient)
     {
-        if ($apiClient === null) {
-            $apiClient = new ApiClient();
-            $apiClient->getConfig()->setHost('https://api.bigcommerce.com/stores/{{store_id}}/v3');
-        }
-
         $this->apiClient = $apiClient;
     }
 
     /**
-     * Get API client
-     *
-     * @return \BigCommerce\Api\v3\ApiClient get the API client
-     */
+    * Get API client
+    *
+    * @return \BigCommerce\Api\v3\ApiClient get the API client
+    */
     public function getApiClient()
     {
         return $this->apiClient;
     }
 
     /**
-     * Set the API client
-     *
-     * @param \BigCommerce\Api\v3\ApiClient $apiClient set the API client
-     *
-     * @return PriceListsApi
-     */
+    * Set the API client
+    *
+    * @param \BigCommerce\Api\v3\ApiClient $apiClient set the API client
+    *
+    * @return PriceListsApi
+    */
     public function setApiClient(\BigCommerce\Api\v3\ApiClient $apiClient)
     {
         $this->apiClient = $apiClient;
@@ -90,34 +74,41 @@ class PriceListsApi
 
     /**
      * Operation createPriceList
-     *
      * 
      *
+     *
      * @param \BigCommerce\Api\v3\Model\PriceListPost $price_list A BigCommerce &#x60;PriceList&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\PriceListResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function createPriceList($price_list)
+    public function createPriceList($price_list, array $params = [])
     {
-        list($response) = $this->createPriceListWithHttpInfo($price_list);
+        list($response) = $this->createPriceListWithHttpInfo( $price_list, $params);
         return $response;
     }
+
 
     /**
      * Operation createPriceListWithHttpInfo
      *
-     * 
-     *
+     * @see self::createPriceList()
      * @param \BigCommerce\Api\v3\Model\PriceListPost $price_list A BigCommerce &#x60;PriceList&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\PriceListResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createPriceListWithHttpInfo($price_list)
+    public function createPriceListWithHttpInfo( $price_list, array $params = [])
     {
+        
         // verify the required parameter 'price_list' is set
-        if ($price_list === null) {
+        if (!isset($price_list)) {
             throw new \InvalidArgumentException('Missing the required parameter $price_list when calling createPriceList');
         }
+        
+
         // parse inputs
         $resourcePath = "/pricelists";
         $httpBody = '';
@@ -130,21 +121,26 @@ class PriceListsApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
         // body params
         $_tempBody = null;
         if (isset($price_list)) {
-            $_tempBody = $price_list;
+        $_tempBody = $price_list;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -156,58 +152,68 @@ class PriceListsApi
                 '\BigCommerce\Api\v3\Model\PriceListResponse',
                 '/pricelists'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\PriceListResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\PriceListResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\PriceListResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 409:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deletePriceList
-     *
      * 
      *
+     *
      * @param int $price_list_id The ID of the &#x60;Price List&#x60; requested. (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deletePriceList($price_list_id)
+    public function deletePriceList($price_list_id, array $params = [])
     {
-        list($response) = $this->deletePriceListWithHttpInfo($price_list_id);
+        list($response) = $this->deletePriceListWithHttpInfo($price_list_id, $params);
         return $response;
     }
+
 
     /**
      * Operation deletePriceListWithHttpInfo
      *
-     * 
-     *
+     * @see self::deletePriceList()
      * @param int $price_list_id The ID of the &#x60;Price List&#x60; requested. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deletePriceListWithHttpInfo($price_list_id)
+    public function deletePriceListWithHttpInfo($price_list_id, array $params = [])
     {
+        
         // verify the required parameter 'price_list_id' is set
-        if ($price_list_id === null) {
+        if (!isset($price_list_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $price_list_id when calling deletePriceList');
         }
+        
+
         // parse inputs
         $resourcePath = "/pricelists/{price_list_id}";
         $httpBody = '';
@@ -220,8 +226,15 @@ class PriceListsApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($price_list_id !== null) {
+
+
+        if (isset($price_list_id)) {
             $resourcePath = str_replace(
                 "{" . "price_list_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($price_list_id),
@@ -231,13 +244,13 @@ class PriceListsApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -249,58 +262,67 @@ class PriceListsApi
                 null,
                 '/pricelists/{price_list_id}'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deletePriceListRecord
-     *
      * 
+     *
      *
      * @param int $price_list_id The ID of the &#x60;Price List&#x60; requested. (required)
      * @param int $variant_id ID of the variant on a product, or on an associated Price List Record. (required)
      * @param string $currency_code The currency code associated with the price record being acted upon. (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deletePriceListRecord($price_list_id, $variant_id, $currency_code)
+    public function deletePriceListRecord($price_list_id, $variant_id, $currency_code, array $params = [])
     {
-        list($response) = $this->deletePriceListRecordWithHttpInfo($price_list_id, $variant_id, $currency_code);
+        list($response) = $this->deletePriceListRecordWithHttpInfo($price_list_id, $variant_id, $currency_code, $params);
         return $response;
     }
+
 
     /**
      * Operation deletePriceListRecordWithHttpInfo
      *
-     * 
-     *
+     * @see self::deletePriceListRecord()
      * @param int $price_list_id The ID of the &#x60;Price List&#x60; requested. (required)
      * @param int $variant_id ID of the variant on a product, or on an associated Price List Record. (required)
      * @param string $currency_code The currency code associated with the price record being acted upon. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deletePriceListRecordWithHttpInfo($price_list_id, $variant_id, $currency_code)
+    public function deletePriceListRecordWithHttpInfo($price_list_id, $variant_id, $currency_code, array $params = [])
     {
+        
         // verify the required parameter 'price_list_id' is set
-        if ($price_list_id === null) {
+        if (!isset($price_list_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $price_list_id when calling deletePriceListRecord');
         }
+        
         // verify the required parameter 'variant_id' is set
-        if ($variant_id === null) {
+        if (!isset($variant_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $variant_id when calling deletePriceListRecord');
         }
+        
         // verify the required parameter 'currency_code' is set
-        if ($currency_code === null) {
+        if (!isset($currency_code)) {
             throw new \InvalidArgumentException('Missing the required parameter $currency_code when calling deletePriceListRecord');
         }
+        
+
         // parse inputs
         $resourcePath = "/pricelists/{price_list_id}/records/{variant_id}/{currency_code}";
         $httpBody = '';
@@ -313,8 +335,15 @@ class PriceListsApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($price_list_id !== null) {
+
+
+        if (isset($price_list_id)) {
             $resourcePath = str_replace(
                 "{" . "price_list_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($price_list_id),
@@ -322,7 +351,9 @@ class PriceListsApi
             );
         }
         // path params
-        if ($variant_id !== null) {
+
+
+        if (isset($variant_id)) {
             $resourcePath = str_replace(
                 "{" . "variant_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($variant_id),
@@ -330,7 +361,9 @@ class PriceListsApi
             );
         }
         // path params
-        if ($currency_code !== null) {
+
+
+        if (isset($currency_code)) {
             $resourcePath = str_replace(
                 "{" . "currency_code" . "}",
                 $this->apiClient->getSerializer()->toPathValue($currency_code),
@@ -340,13 +373,13 @@ class PriceListsApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -358,48 +391,54 @@ class PriceListsApi
                 null,
                 '/pricelists/{price_list_id}/records/{variant_id}/{currency_code}'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deletePriceListRecordsByFilter
-     *
      * 
      *
+     *
      * @param int $price_list_id The ID of the &#x60;Price List&#x60; requested. (required)
-     * @param int $variant_id The ID of the &#x60;Variant&#x60; whose prices were requested. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - variant_id int The ID of the &#x60;Variant&#x60; whose prices were requested. (optional)
      * @return \BigCommerce\Api\v3\Model\NoContent
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function deletePriceListRecordsByFilter($price_list_id, $variant_id = null)
+    public function deletePriceListRecordsByFilter($price_list_id, array $params = [])
     {
-        list($response) = $this->deletePriceListRecordsByFilterWithHttpInfo($price_list_id, $variant_id);
+        list($response) = $this->deletePriceListRecordsByFilterWithHttpInfo($price_list_id, $params);
         return $response;
     }
+
 
     /**
      * Operation deletePriceListRecordsByFilterWithHttpInfo
      *
-     * 
-     *
+     * @see self::deletePriceListRecordsByFilter()
      * @param int $price_list_id The ID of the &#x60;Price List&#x60; requested. (required)
-     * @param int $variant_id The ID of the &#x60;Variant&#x60; whose prices were requested. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\NoContent, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deletePriceListRecordsByFilterWithHttpInfo($price_list_id, $variant_id = null)
+    public function deletePriceListRecordsByFilterWithHttpInfo($price_list_id, array $params = [])
     {
+        
         // verify the required parameter 'price_list_id' is set
-        if ($price_list_id === null) {
+        if (!isset($price_list_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $price_list_id when calling deletePriceListRecordsByFilter');
         }
+        
+
         // parse inputs
         $resourcePath = "/pricelists/{price_list_id}/records";
         $httpBody = '';
@@ -413,11 +452,14 @@ class PriceListsApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($variant_id !== null) {
-            $queryParams['variant_id'] = $this->apiClient->getSerializer()->toQueryValue($variant_id);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
+
         // path params
-        if ($price_list_id !== null) {
+
+
+        if (isset($price_list_id)) {
             $resourcePath = str_replace(
                 "{" . "price_list_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($price_list_id),
@@ -427,13 +469,13 @@ class PriceListsApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -445,56 +487,65 @@ class PriceListsApi
                 '\BigCommerce\Api\v3\Model\NoContent',
                 '/pricelists/{price_list_id}/records'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\NoContent', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 204:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NoContent', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NoContent', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deletePriceListRecordsByVariantId
-     *
      * 
+     *
      *
      * @param int $price_list_id The ID of the &#x60;Price List&#x60; requested. (required)
      * @param int $variant_id ID of the variant on a product, or on an associated Price List Record. (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deletePriceListRecordsByVariantId($price_list_id, $variant_id)
+    public function deletePriceListRecordsByVariantId($price_list_id, $variant_id, array $params = [])
     {
-        list($response) = $this->deletePriceListRecordsByVariantIdWithHttpInfo($price_list_id, $variant_id);
+        list($response) = $this->deletePriceListRecordsByVariantIdWithHttpInfo($price_list_id, $variant_id, $params);
         return $response;
     }
+
 
     /**
      * Operation deletePriceListRecordsByVariantIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::deletePriceListRecordsByVariantId()
      * @param int $price_list_id The ID of the &#x60;Price List&#x60; requested. (required)
      * @param int $variant_id ID of the variant on a product, or on an associated Price List Record. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deletePriceListRecordsByVariantIdWithHttpInfo($price_list_id, $variant_id)
+    public function deletePriceListRecordsByVariantIdWithHttpInfo($price_list_id, $variant_id, array $params = [])
     {
+        
         // verify the required parameter 'price_list_id' is set
-        if ($price_list_id === null) {
+        if (!isset($price_list_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $price_list_id when calling deletePriceListRecordsByVariantId');
         }
+        
         // verify the required parameter 'variant_id' is set
-        if ($variant_id === null) {
+        if (!isset($variant_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $variant_id when calling deletePriceListRecordsByVariantId');
         }
+        
+
         // parse inputs
         $resourcePath = "/pricelists/{price_list_id}/records/{variant_id}";
         $httpBody = '';
@@ -507,8 +558,15 @@ class PriceListsApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($price_list_id !== null) {
+
+
+        if (isset($price_list_id)) {
             $resourcePath = str_replace(
                 "{" . "price_list_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($price_list_id),
@@ -516,7 +574,9 @@ class PriceListsApi
             );
         }
         // path params
-        if ($variant_id !== null) {
+
+
+        if (isset($variant_id)) {
             $resourcePath = str_replace(
                 "{" . "variant_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($variant_id),
@@ -526,13 +586,13 @@ class PriceListsApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -544,44 +604,48 @@ class PriceListsApi
                 null,
                 '/pricelists/{price_list_id}/records/{variant_id}'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deletePriceListsByFilter
-     *
      * 
      *
-     * @param int $id Filter items by id. (optional)
-     * @param string $name Filter items by name. (optional)
+     *
+     * @param array $params = []
+     *     - id int Filter items by id. (optional)
+     *     - name string Filter items by name. (optional)
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deletePriceListsByFilter($id = null, $name = null)
+    public function deletePriceListsByFilter(array $params = [])
     {
-        list($response) = $this->deletePriceListsByFilterWithHttpInfo($id, $name);
+        list($response) = $this->deletePriceListsByFilterWithHttpInfo($params);
         return $response;
     }
+
 
     /**
      * Operation deletePriceListsByFilterWithHttpInfo
      *
-     * 
-     *
-     * @param int $id Filter items by id. (optional)
-     * @param string $name Filter items by name. (optional)
+     * @see self::deletePriceListsByFilter()
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deletePriceListsByFilterWithHttpInfo($id = null, $name = null)
+    public function deletePriceListsByFilterWithHttpInfo(array $params = [])
     {
+        
+
         // parse inputs
         $resourcePath = "/pricelists";
         $httpBody = '';
@@ -595,23 +659,20 @@ class PriceListsApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($id !== null) {
-            $queryParams['id'] = $this->apiClient->getSerializer()->toQueryValue($id);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($name !== null) {
-            $queryParams['name'] = $this->apiClient->getSerializer()->toQueryValue($name);
-        }
+
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -623,46 +684,53 @@ class PriceListsApi
                 null,
                 '/pricelists'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getPriceList
-     *
      * 
      *
+     *
      * @param int $price_list_id The ID of the &#x60;Price List&#x60; requested. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\PriceListResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getPriceList($price_list_id)
+    public function getPriceList($price_list_id, array $params = [])
     {
-        list($response) = $this->getPriceListWithHttpInfo($price_list_id);
+        list($response) = $this->getPriceListWithHttpInfo($price_list_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getPriceListWithHttpInfo
      *
-     * 
-     *
+     * @see self::getPriceList()
      * @param int $price_list_id The ID of the &#x60;Price List&#x60; requested. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\PriceListResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getPriceListWithHttpInfo($price_list_id)
+    public function getPriceListWithHttpInfo($price_list_id, array $params = [])
     {
+        
         // verify the required parameter 'price_list_id' is set
-        if ($price_list_id === null) {
+        if (!isset($price_list_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $price_list_id when calling getPriceList');
         }
+        
+
         // parse inputs
         $resourcePath = "/pricelists/{price_list_id}";
         $httpBody = '';
@@ -675,8 +743,15 @@ class PriceListsApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($price_list_id !== null) {
+
+
+        if (isset($price_list_id)) {
             $resourcePath = str_replace(
                 "{" . "price_list_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($price_list_id),
@@ -686,13 +761,13 @@ class PriceListsApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -704,56 +779,57 @@ class PriceListsApi
                 '\BigCommerce\Api\v3\Model\PriceListResponse',
                 '/pricelists/{price_list_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\PriceListResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\PriceListResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\PriceListResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getPriceListCollection
-     *
      * 
      *
-     * @param int $id Filter items by id. (optional)
-     * @param string $name Filter items by name. (optional)
-     * @param \DateTime $date_created Filter items by date_created. (optional)
-     * @param \DateTime $date_modified Filter items by date_modified. (optional)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     *
+     * @param array $params = []
+     *     - id int Filter items by id. (optional)
+     *     - name string Filter items by name. (optional)
+     *     - date_created \DateTime Filter items by date_created. (optional)
+     *     - date_modified \DateTime Filter items by date_modified. (optional)
+     *     - page int Specifies the page number in a limited (paginated) list of products. (optional)
+     *     - limit int Controls the number of items per page in a limited (paginated) list of products. (optional)
      * @return \BigCommerce\Api\v3\Model\PriceListCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getPriceListCollection($id = null, $name = null, $date_created = null, $date_modified = null, $page = null, $limit = null)
+    public function getPriceListCollection(array $params = [])
     {
-        list($response) = $this->getPriceListCollectionWithHttpInfo($id, $name, $date_created, $date_modified, $page, $limit);
+        list($response) = $this->getPriceListCollectionWithHttpInfo($params);
         return $response;
     }
+
 
     /**
      * Operation getPriceListCollectionWithHttpInfo
      *
-     * 
-     *
-     * @param int $id Filter items by id. (optional)
-     * @param string $name Filter items by name. (optional)
-     * @param \DateTime $date_created Filter items by date_created. (optional)
-     * @param \DateTime $date_modified Filter items by date_modified. (optional)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
+     * @see self::getPriceListCollection()
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\PriceListCollectionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getPriceListCollectionWithHttpInfo($id = null, $name = null, $date_created = null, $date_modified = null, $page = null, $limit = null)
+    public function getPriceListCollectionWithHttpInfo(array $params = [])
     {
+        
+
         // parse inputs
         $resourcePath = "/pricelists";
         $httpBody = '';
@@ -767,39 +843,20 @@ class PriceListsApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($id !== null) {
-            $queryParams['id'] = $this->apiClient->getSerializer()->toQueryValue($id);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($name !== null) {
-            $queryParams['name'] = $this->apiClient->getSerializer()->toQueryValue($name);
-        }
-        // query params
-        if ($date_created !== null) {
-            $queryParams['date_created'] = $this->apiClient->getSerializer()->toQueryValue($date_created);
-        }
-        // query params
-        if ($date_modified !== null) {
-            $queryParams['date_modified'] = $this->apiClient->getSerializer()->toQueryValue($date_modified);
-        }
-        // query params
-        if ($page !== null) {
-            $queryParams['page'] = $this->apiClient->getSerializer()->toQueryValue($page);
-        }
-        // query params
-        if ($limit !== null) {
-            $queryParams['limit'] = $this->apiClient->getSerializer()->toQueryValue($limit);
-        }
+
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -811,64 +868,73 @@ class PriceListsApi
                 '\BigCommerce\Api\v3\Model\PriceListCollectionResponse',
                 '/pricelists'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\PriceListCollectionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\PriceListCollectionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\PriceListCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getPriceListRecord
-     *
      * 
+     *
      *
      * @param int $price_list_id The ID of the &#x60;Price List&#x60; requested. (required)
      * @param int $variant_id ID of the variant on a product, or on an associated Price List Record. (required)
      * @param string $currency_code The currency code associated with the price record being acted upon. (required)
-     * @param string $include Sub-resources to include on a price record, in a comma-separated list. Valid expansions currently include &#x60;bulk_pricing_tiers&#x60; and &#x60;sku&#x60;.  Other valies will be ignored. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - include string Sub-resources to include on a price record, in a comma-separated list. Valid expansions currently include &#x60;bulk_pricing_tiers&#x60; and &#x60;sku&#x60;.  Other valies will be ignored. (optional)
      * @return \BigCommerce\Api\v3\Model\PriceRecordResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getPriceListRecord($price_list_id, $variant_id, $currency_code, $include = null)
+    public function getPriceListRecord($price_list_id, $variant_id, $currency_code, array $params = [])
     {
-        list($response) = $this->getPriceListRecordWithHttpInfo($price_list_id, $variant_id, $currency_code, $include);
+        list($response) = $this->getPriceListRecordWithHttpInfo($price_list_id, $variant_id, $currency_code, $params);
         return $response;
     }
+
 
     /**
      * Operation getPriceListRecordWithHttpInfo
      *
-     * 
-     *
+     * @see self::getPriceListRecord()
      * @param int $price_list_id The ID of the &#x60;Price List&#x60; requested. (required)
      * @param int $variant_id ID of the variant on a product, or on an associated Price List Record. (required)
      * @param string $currency_code The currency code associated with the price record being acted upon. (required)
-     * @param string $include Sub-resources to include on a price record, in a comma-separated list. Valid expansions currently include &#x60;bulk_pricing_tiers&#x60; and &#x60;sku&#x60;.  Other valies will be ignored. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\PriceRecordResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getPriceListRecordWithHttpInfo($price_list_id, $variant_id, $currency_code, $include = null)
+    public function getPriceListRecordWithHttpInfo($price_list_id, $variant_id, $currency_code, array $params = [])
     {
+        
         // verify the required parameter 'price_list_id' is set
-        if ($price_list_id === null) {
+        if (!isset($price_list_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $price_list_id when calling getPriceListRecord');
         }
+        
         // verify the required parameter 'variant_id' is set
-        if ($variant_id === null) {
+        if (!isset($variant_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $variant_id when calling getPriceListRecord');
         }
+        
         // verify the required parameter 'currency_code' is set
-        if ($currency_code === null) {
+        if (!isset($currency_code)) {
             throw new \InvalidArgumentException('Missing the required parameter $currency_code when calling getPriceListRecord');
         }
+        
+
         // parse inputs
         $resourcePath = "/pricelists/{price_list_id}/records/{variant_id}/{currency_code}";
         $httpBody = '';
@@ -882,11 +948,14 @@ class PriceListsApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($include !== null) {
-            $queryParams['include'] = $this->apiClient->getSerializer()->toQueryValue($include);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
+
         // path params
-        if ($price_list_id !== null) {
+
+
+        if (isset($price_list_id)) {
             $resourcePath = str_replace(
                 "{" . "price_list_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($price_list_id),
@@ -894,7 +963,9 @@ class PriceListsApi
             );
         }
         // path params
-        if ($variant_id !== null) {
+
+
+        if (isset($variant_id)) {
             $resourcePath = str_replace(
                 "{" . "variant_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($variant_id),
@@ -902,7 +973,9 @@ class PriceListsApi
             );
         }
         // path params
-        if ($currency_code !== null) {
+
+
+        if (isset($currency_code)) {
             $resourcePath = str_replace(
                 "{" . "currency_code" . "}",
                 $this->apiClient->getSerializer()->toPathValue($currency_code),
@@ -912,13 +985,13 @@ class PriceListsApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -930,78 +1003,72 @@ class PriceListsApi
                 '\BigCommerce\Api\v3\Model\PriceRecordResponse',
                 '/pricelists/{price_list_id}/records/{variant_id}/{currency_code}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\PriceRecordResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\PriceRecordResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\PriceRecordResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getPriceListRecordCollection
-     *
      * 
      *
+     *
      * @param int $price_list_id The ID of the &#x60;Price List&#x60; requested. (required)
-     * @param int $variant_id The ID of the &#x60;Variant&#x60; whose prices were requested. (optional)
-     * @param string $product_id A comma-separated list of ids of &#x60;Product&#x60;s whose prices were requested. (optional)
-     * @param string $currency Filter items by currency. (optional)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $include Sub-resources to include on a price record, in a comma-separated list. Valid expansions currently include &#x60;bulk_pricing_tiers&#x60; and &#x60;sku&#x60;.  Other valies will be ignored. (optional)
-     * @param float $price Filter items by price. (optional)
-     * @param float $sale_price Filter items by sale_price. (optional)
-     * @param float $retail_price Filter items by retail_price. (optional)
-     * @param float $map_price Filter items by map_price. (optional)
-     * @param float $calculated_price Filter items by calculated_price. (optional)
-     * @param \DateTime $date_created Filter items by date_created. (optional)
-     * @param \DateTime $date_modified Filter items by date_modified. (optional)
-     * @param string $sku Filter items by sku. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - variant_id int The ID of the &#x60;Variant&#x60; whose prices were requested. (optional)
+     *     - product_id string A comma-separated list of ids of &#x60;Product&#x60;s whose prices were requested. (optional)
+     *     - currency string Filter items by currency. (optional)
+     *     - page int Specifies the page number in a limited (paginated) list of products. (optional)
+     *     - limit int Controls the number of items per page in a limited (paginated) list of products. (optional)
+     *     - include string Sub-resources to include on a price record, in a comma-separated list. Valid expansions currently include &#x60;bulk_pricing_tiers&#x60; and &#x60;sku&#x60;.  Other valies will be ignored. (optional)
+     *     - price float Filter items by price. (optional)
+     *     - sale_price float Filter items by sale_price. (optional)
+     *     - retail_price float Filter items by retail_price. (optional)
+     *     - map_price float Filter items by map_price. (optional)
+     *     - calculated_price float Filter items by calculated_price. (optional)
+     *     - date_created \DateTime Filter items by date_created. (optional)
+     *     - date_modified \DateTime Filter items by date_modified. (optional)
+     *     - sku string Filter items by sku. (optional)
      * @return \BigCommerce\Api\v3\Model\PriceRecordCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getPriceListRecordCollection($price_list_id, $variant_id = null, $product_id = null, $currency = null, $page = null, $limit = null, $include = null, $price = null, $sale_price = null, $retail_price = null, $map_price = null, $calculated_price = null, $date_created = null, $date_modified = null, $sku = null)
+    public function getPriceListRecordCollection($price_list_id, array $params = [])
     {
-        list($response) = $this->getPriceListRecordCollectionWithHttpInfo($price_list_id, $variant_id, $product_id, $currency, $page, $limit, $include, $price, $sale_price, $retail_price, $map_price, $calculated_price, $date_created, $date_modified, $sku);
+        list($response) = $this->getPriceListRecordCollectionWithHttpInfo($price_list_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getPriceListRecordCollectionWithHttpInfo
      *
-     * 
-     *
+     * @see self::getPriceListRecordCollection()
      * @param int $price_list_id The ID of the &#x60;Price List&#x60; requested. (required)
-     * @param int $variant_id The ID of the &#x60;Variant&#x60; whose prices were requested. (optional)
-     * @param string $product_id A comma-separated list of ids of &#x60;Product&#x60;s whose prices were requested. (optional)
-     * @param string $currency Filter items by currency. (optional)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $include Sub-resources to include on a price record, in a comma-separated list. Valid expansions currently include &#x60;bulk_pricing_tiers&#x60; and &#x60;sku&#x60;.  Other valies will be ignored. (optional)
-     * @param float $price Filter items by price. (optional)
-     * @param float $sale_price Filter items by sale_price. (optional)
-     * @param float $retail_price Filter items by retail_price. (optional)
-     * @param float $map_price Filter items by map_price. (optional)
-     * @param float $calculated_price Filter items by calculated_price. (optional)
-     * @param \DateTime $date_created Filter items by date_created. (optional)
-     * @param \DateTime $date_modified Filter items by date_modified. (optional)
-     * @param string $sku Filter items by sku. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\PriceRecordCollectionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getPriceListRecordCollectionWithHttpInfo($price_list_id, $variant_id = null, $product_id = null, $currency = null, $page = null, $limit = null, $include = null, $price = null, $sale_price = null, $retail_price = null, $map_price = null, $calculated_price = null, $date_created = null, $date_modified = null, $sku = null)
+    public function getPriceListRecordCollectionWithHttpInfo($price_list_id, array $params = [])
     {
+        
         // verify the required parameter 'price_list_id' is set
-        if ($price_list_id === null) {
+        if (!isset($price_list_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $price_list_id when calling getPriceListRecordCollection');
         }
+        
+
         // parse inputs
         $resourcePath = "/pricelists/{price_list_id}/records";
         $httpBody = '';
@@ -1015,63 +1082,14 @@ class PriceListsApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($variant_id !== null) {
-            $queryParams['variant_id'] = $this->apiClient->getSerializer()->toQueryValue($variant_id);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($product_id !== null) {
-            $queryParams['product_id'] = $this->apiClient->getSerializer()->toQueryValue($product_id);
-        }
-        // query params
-        if ($currency !== null) {
-            $queryParams['currency'] = $this->apiClient->getSerializer()->toQueryValue($currency);
-        }
-        // query params
-        if ($page !== null) {
-            $queryParams['page'] = $this->apiClient->getSerializer()->toQueryValue($page);
-        }
-        // query params
-        if ($limit !== null) {
-            $queryParams['limit'] = $this->apiClient->getSerializer()->toQueryValue($limit);
-        }
-        // query params
-        if ($include !== null) {
-            $queryParams['include'] = $this->apiClient->getSerializer()->toQueryValue($include);
-        }
-        // query params
-        if ($price !== null) {
-            $queryParams['price'] = $this->apiClient->getSerializer()->toQueryValue($price);
-        }
-        // query params
-        if ($sale_price !== null) {
-            $queryParams['sale_price'] = $this->apiClient->getSerializer()->toQueryValue($sale_price);
-        }
-        // query params
-        if ($retail_price !== null) {
-            $queryParams['retail_price'] = $this->apiClient->getSerializer()->toQueryValue($retail_price);
-        }
-        // query params
-        if ($map_price !== null) {
-            $queryParams['map_price'] = $this->apiClient->getSerializer()->toQueryValue($map_price);
-        }
-        // query params
-        if ($calculated_price !== null) {
-            $queryParams['calculated_price'] = $this->apiClient->getSerializer()->toQueryValue($calculated_price);
-        }
-        // query params
-        if ($date_created !== null) {
-            $queryParams['date_created'] = $this->apiClient->getSerializer()->toQueryValue($date_created);
-        }
-        // query params
-        if ($date_modified !== null) {
-            $queryParams['date_modified'] = $this->apiClient->getSerializer()->toQueryValue($date_modified);
-        }
-        // query params
-        if ($sku !== null) {
-            $queryParams['sku'] = $this->apiClient->getSerializer()->toQueryValue($sku);
-        }
+
         // path params
-        if ($price_list_id !== null) {
+
+
+        if (isset($price_list_id)) {
             $resourcePath = str_replace(
                 "{" . "price_list_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($price_list_id),
@@ -1081,13 +1099,13 @@ class PriceListsApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -1099,56 +1117,65 @@ class PriceListsApi
                 '\BigCommerce\Api\v3\Model\PriceRecordCollectionResponse',
                 '/pricelists/{price_list_id}/records'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\PriceRecordCollectionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\PriceRecordCollectionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\PriceRecordCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getPriceListRecordsByVariantId
-     *
      * 
+     *
      *
      * @param int $price_list_id The ID of the &#x60;Price List&#x60; requested. (required)
      * @param int $variant_id ID of the variant on a product, or on an associated Price List Record. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\PriceRecordCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getPriceListRecordsByVariantId($price_list_id, $variant_id)
+    public function getPriceListRecordsByVariantId($price_list_id, $variant_id, array $params = [])
     {
-        list($response) = $this->getPriceListRecordsByVariantIdWithHttpInfo($price_list_id, $variant_id);
+        list($response) = $this->getPriceListRecordsByVariantIdWithHttpInfo($price_list_id, $variant_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getPriceListRecordsByVariantIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::getPriceListRecordsByVariantId()
      * @param int $price_list_id The ID of the &#x60;Price List&#x60; requested. (required)
      * @param int $variant_id ID of the variant on a product, or on an associated Price List Record. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\PriceRecordCollectionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getPriceListRecordsByVariantIdWithHttpInfo($price_list_id, $variant_id)
+    public function getPriceListRecordsByVariantIdWithHttpInfo($price_list_id, $variant_id, array $params = [])
     {
+        
         // verify the required parameter 'price_list_id' is set
-        if ($price_list_id === null) {
+        if (!isset($price_list_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $price_list_id when calling getPriceListRecordsByVariantId');
         }
+        
         // verify the required parameter 'variant_id' is set
-        if ($variant_id === null) {
+        if (!isset($variant_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $variant_id when calling getPriceListRecordsByVariantId');
         }
+        
+
         // parse inputs
         $resourcePath = "/pricelists/{price_list_id}/records/{variant_id}";
         $httpBody = '';
@@ -1161,8 +1188,15 @@ class PriceListsApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($price_list_id !== null) {
+
+
+        if (isset($price_list_id)) {
             $resourcePath = str_replace(
                 "{" . "price_list_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($price_list_id),
@@ -1170,7 +1204,9 @@ class PriceListsApi
             );
         }
         // path params
-        if ($variant_id !== null) {
+
+
+        if (isset($variant_id)) {
             $resourcePath = str_replace(
                 "{" . "variant_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($variant_id),
@@ -1180,13 +1216,13 @@ class PriceListsApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -1198,68 +1234,79 @@ class PriceListsApi
                 '\BigCommerce\Api\v3\Model\PriceRecordCollectionResponse',
                 '/pricelists/{price_list_id}/records/{variant_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\PriceRecordCollectionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\PriceRecordCollectionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\PriceRecordCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation setPriceListRecord
-     *
      * 
+     *
      *
      * @param int $price_list_id The ID of the &#x60;Price List&#x60; requested. (required)
      * @param int $variant_id ID of the variant on a product, or on an associated Price List Record. (required)
      * @param string $currency_code The currency code associated with the price record being acted upon. (required)
      * @param \BigCommerce\Api\v3\Model\PriceRecordPut $price_record A BigCommerce &#x60;Price Record&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\PriceRecordResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function setPriceListRecord($price_list_id, $variant_id, $currency_code, $price_record)
+    public function setPriceListRecord($price_list_id, $variant_id, $currency_code, $price_record, array $params = [])
     {
-        list($response) = $this->setPriceListRecordWithHttpInfo($price_list_id, $variant_id, $currency_code, $price_record);
+        list($response) = $this->setPriceListRecordWithHttpInfo($price_list_id, $variant_id, $currency_code,  $price_record, $params);
         return $response;
     }
+
 
     /**
      * Operation setPriceListRecordWithHttpInfo
      *
-     * 
-     *
+     * @see self::setPriceListRecord()
      * @param int $price_list_id The ID of the &#x60;Price List&#x60; requested. (required)
      * @param int $variant_id ID of the variant on a product, or on an associated Price List Record. (required)
      * @param string $currency_code The currency code associated with the price record being acted upon. (required)
      * @param \BigCommerce\Api\v3\Model\PriceRecordPut $price_record A BigCommerce &#x60;Price Record&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\PriceRecordResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function setPriceListRecordWithHttpInfo($price_list_id, $variant_id, $currency_code, $price_record)
+    public function setPriceListRecordWithHttpInfo($price_list_id, $variant_id, $currency_code,  $price_record, array $params = [])
     {
+        
         // verify the required parameter 'price_list_id' is set
-        if ($price_list_id === null) {
+        if (!isset($price_list_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $price_list_id when calling setPriceListRecord');
         }
+        
         // verify the required parameter 'variant_id' is set
-        if ($variant_id === null) {
+        if (!isset($variant_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $variant_id when calling setPriceListRecord');
         }
+        
         // verify the required parameter 'currency_code' is set
-        if ($currency_code === null) {
+        if (!isset($currency_code)) {
             throw new \InvalidArgumentException('Missing the required parameter $currency_code when calling setPriceListRecord');
         }
+        
         // verify the required parameter 'price_record' is set
-        if ($price_record === null) {
+        if (!isset($price_record)) {
             throw new \InvalidArgumentException('Missing the required parameter $price_record when calling setPriceListRecord');
         }
+        
+
         // parse inputs
         $resourcePath = "/pricelists/{price_list_id}/records/{variant_id}/{currency_code}";
         $httpBody = '';
@@ -1272,8 +1319,15 @@ class PriceListsApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($price_list_id !== null) {
+
+
+        if (isset($price_list_id)) {
             $resourcePath = str_replace(
                 "{" . "price_list_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($price_list_id),
@@ -1281,7 +1335,9 @@ class PriceListsApi
             );
         }
         // path params
-        if ($variant_id !== null) {
+
+
+        if (isset($variant_id)) {
             $resourcePath = str_replace(
                 "{" . "variant_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($variant_id),
@@ -1289,7 +1345,9 @@ class PriceListsApi
             );
         }
         // path params
-        if ($currency_code !== null) {
+
+
+        if (isset($currency_code)) {
             $resourcePath = str_replace(
                 "{" . "currency_code" . "}",
                 $this->apiClient->getSerializer()->toPathValue($currency_code),
@@ -1302,15 +1360,15 @@ class PriceListsApi
         // body params
         $_tempBody = null;
         if (isset($price_record)) {
-            $_tempBody = $price_record;
+        $_tempBody = $price_record;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -1322,70 +1380,81 @@ class PriceListsApi
                 '\BigCommerce\Api\v3\Model\PriceRecordResponse',
                 '/pricelists/{price_list_id}/records/{variant_id}/{currency_code}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\PriceRecordResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\PriceRecordResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\PriceRecordResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 409:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation setPriceListRecordCollection
-     *
      * 
+     *
      *
      * @param int $price_list_id The ID of the &#x60;Price List&#x60; requested. (required)
      * @param \BigCommerce\Api\v3\Model\PriceRecordCollectionPut $price_record_batch A BigCommerce &#x60;Price Record&#x60; request. (required)
-     * @param int $x_strict_mode Header that determines whether the Batch API operates in strict mode or not.  Strict mode will reject the entire request if any item in the batch has an error. (optional, default to 0)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\SuccessBatchResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function setPriceListRecordCollection($price_list_id, $price_record_batch, $x_strict_mode = null)
+    public function setPriceListRecordCollection($price_list_id, $price_record_batch, array $params = [])
     {
-        list($response) = $this->setPriceListRecordCollectionWithHttpInfo($price_list_id, $price_record_batch, $x_strict_mode);
+        list($response) = $this->setPriceListRecordCollectionWithHttpInfo($price_list_id,  $price_record_batch, $params);
         return $response;
     }
+
 
     /**
      * Operation setPriceListRecordCollectionWithHttpInfo
      *
-     * 
-     *
+     * @see self::setPriceListRecordCollection()
      * @param int $price_list_id The ID of the &#x60;Price List&#x60; requested. (required)
      * @param \BigCommerce\Api\v3\Model\PriceRecordCollectionPut $price_record_batch A BigCommerce &#x60;Price Record&#x60; request. (required)
-     * @param int $x_strict_mode Header that determines whether the Batch API operates in strict mode or not.  Strict mode will reject the entire request if any item in the batch has an error. (optional, default to 0)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\SuccessBatchResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function setPriceListRecordCollectionWithHttpInfo($price_list_id, $price_record_batch, $x_strict_mode = null)
+    public function setPriceListRecordCollectionWithHttpInfo($price_list_id,  $price_record_batch, array $params = [])
     {
+        
         // verify the required parameter 'price_list_id' is set
-        if ($price_list_id === null) {
+        if (!isset($price_list_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $price_list_id when calling setPriceListRecordCollection');
         }
+        
         // verify the required parameter 'price_record_batch' is set
-        if ($price_record_batch === null) {
+        if (!isset($price_record_batch)) {
             throw new \InvalidArgumentException('Missing the required parameter $price_record_batch when calling setPriceListRecordCollection');
         }
+        
+        
+
         // parse inputs
         $resourcePath = "/pricelists/{price_list_id}/records";
         $httpBody = '';
@@ -1397,13 +1466,21 @@ class PriceListsApi
             $headerParams['Accept'] = $_header_accept;
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
-
         // header params
-        if ($x_strict_mode !== null) {
+
+        if (isset($x_strict_mode)) {
             $headerParams['X-Strict-Mode'] = $this->apiClient->getSerializer()->toHeaderValue($x_strict_mode);
         }
+
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($price_list_id !== null) {
+
+
+        if (isset($price_list_id)) {
             $resourcePath = str_replace(
                 "{" . "price_list_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($price_list_id),
@@ -1416,15 +1493,15 @@ class PriceListsApi
         // body params
         $_tempBody = null;
         if (isset($price_record_batch)) {
-            $_tempBody = $price_record_batch;
+        $_tempBody = $price_record_batch;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -1436,60 +1513,70 @@ class PriceListsApi
                 '\BigCommerce\Api\v3\Model\SuccessBatchResponse',
                 '/pricelists/{price_list_id}/records'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\SuccessBatchResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\SuccessBatchResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\SuccessBatchResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\PriceRecordBatchErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\PriceRecordBatchErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation updatePriceList
-     *
      * 
+     *
      *
      * @param int $price_list_id The ID of the &#x60;Price List&#x60; requested. (required)
      * @param \BigCommerce\Api\v3\Model\PriceListPut $price_list A BigCommerce &#x60;Price List&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\PriceListResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function updatePriceList($price_list_id, $price_list)
+    public function updatePriceList($price_list_id, $price_list, array $params = [])
     {
-        list($response) = $this->updatePriceListWithHttpInfo($price_list_id, $price_list);
+        list($response) = $this->updatePriceListWithHttpInfo($price_list_id,  $price_list, $params);
         return $response;
     }
+
 
     /**
      * Operation updatePriceListWithHttpInfo
      *
-     * 
-     *
+     * @see self::updatePriceList()
      * @param int $price_list_id The ID of the &#x60;Price List&#x60; requested. (required)
      * @param \BigCommerce\Api\v3\Model\PriceListPut $price_list A BigCommerce &#x60;Price List&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\PriceListResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updatePriceListWithHttpInfo($price_list_id, $price_list)
+    public function updatePriceListWithHttpInfo($price_list_id,  $price_list, array $params = [])
     {
+        
         // verify the required parameter 'price_list_id' is set
-        if ($price_list_id === null) {
+        if (!isset($price_list_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $price_list_id when calling updatePriceList');
         }
+        
         // verify the required parameter 'price_list' is set
-        if ($price_list === null) {
+        if (!isset($price_list)) {
             throw new \InvalidArgumentException('Missing the required parameter $price_list when calling updatePriceList');
         }
+        
+
         // parse inputs
         $resourcePath = "/pricelists/{price_list_id}";
         $httpBody = '';
@@ -1502,8 +1589,15 @@ class PriceListsApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($price_list_id !== null) {
+
+
+        if (isset($price_list_id)) {
             $resourcePath = str_replace(
                 "{" . "price_list_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($price_list_id),
@@ -1516,15 +1610,15 @@ class PriceListsApi
         // body params
         $_tempBody = null;
         if (isset($price_list)) {
-            $_tempBody = $price_list;
+        $_tempBody = $price_list;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -1536,26 +1630,31 @@ class PriceListsApi
                 '\BigCommerce\Api\v3\Model\PriceListResponse',
                 '/pricelists/{price_list_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\PriceListResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\PriceListResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\PriceListResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 409:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;

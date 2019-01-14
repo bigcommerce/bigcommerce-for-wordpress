@@ -31,6 +31,19 @@
 	button.bc-btn--form-submit {
 		margin: 0;
 	}
+
+	.bc-product-archive &,
+	.bc-product-grid & {
+		display: flex;
+		flex-wrap: nowrap;
+		flex-direction: column;
+		align-items: flex-end;
+
+		.bc-ajax-add-to-cart__message-wrapper {
+			order: -1;
+			width: 100%;
+		}
+	}
 }
 
 .bc-form__field-group {

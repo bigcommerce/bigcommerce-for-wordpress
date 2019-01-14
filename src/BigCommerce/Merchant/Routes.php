@@ -278,7 +278,7 @@ class Routes {
 	private function find_matching_route( $site_id, Route $route ) {
 		try {
 			$matching = $route->getMatching();
-			$matches  = $this->sites->indexSiteRoutes( $site_id, $route->getType() )->getData();
+			$matches  = $this->sites->indexSiteRoutes( $site_id, [ 'type' => $route->getType() ] )->getData();
 			$matches  = array_filter( $matches, function ( Route $route ) use ( $matching ) {
 				return $route->getMatching() == $matching;
 			} );

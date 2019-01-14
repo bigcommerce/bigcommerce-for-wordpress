@@ -6,8 +6,11 @@ namespace BigCommerce\Import\Processors;
 
 use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Api\v3\Api\ChannelsApi;
-use BigCommerce\Import\Product_Importer;
-use BigCommerce\Import\Product_Remover;
+use BigCommerce\Api\v3\Model\Listing;
+use BigCommerce\Api\v3\Model\Product;
+use BigCommerce\Api\v3\ObjectSerializer;
+use BigCommerce\Import\Importers\Products\Product_Importer;
+use BigCommerce\Import\Importers\Products\Product_Remover;
 use BigCommerce\Import\Runner\Status;
 use BigCommerce\Settings\Sections\Channels;
 
@@ -66,6 +69,10 @@ class Queue_Runner implements Import_Processor {
 		$total   = $wpdb->get_var( 'SELECT FOUND_ROWS()' );
 
 		foreach ( $records as $import ) {
+			if ( function_exists( 'set_time_limit' ) && false === strpos( ini_get( 'disable_functions' ), 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+				@set_time_limit( 60 );
+			}
+
 			$wpdb->update(
 				$wpdb->bc_import_queue,
 				[ 'attempts' => $import->attempts + 1, 'last_attempt' => date( 'Y-m-d H:i:s' ), ],
@@ -76,7 +83,11 @@ class Queue_Runner implements Import_Processor {
 			switch ( $import->import_action ) {
 				case 'update':
 				case 'ignore':
-					$importer = new Product_Importer( $import->bc_id, $import->listing_id, $this->catalog, $this->channels, $channel_id );
+					/** @var Product $product */
+					$product = ObjectSerializer::deserialize( json_decode( $import->product_data ), Product::class );
+					/** @var Listing $listing */
+					$listing = ObjectSerializer::deserialize( json_decode( $import->listing_data ), Listing::class );
+					$importer = new Product_Importer( $product, $listing, $this->catalog, $this->channels, $channel_id );
 					$post_id  = $importer->import();
 					if ( ! empty( $post_id ) || $import->attempts > $this->max_attempts ) {
 						$wpdb->delete( $wpdb->bc_import_queue, [ 'bc_id' => $import->bc_id ], [ '%d' ] );

@@ -2,10 +2,13 @@
 
 namespace BigCommerce\Uninstall;
 
+use BigCommerce\Accounts\Customer;
+use BigCommerce\Accounts\User_Profile_Settings;
 use BigCommerce\Customizer;
 use BigCommerce\Import\Processors\Channel_Initializer;
 use BigCommerce\Import\Processors\Listing_ID_Fetcher;
 use BigCommerce\Import\Processors\Product_ID_Fetcher;
+use BigCommerce\Import\Processors\Term_Import;
 use BigCommerce\Import\Runner\Lock;
 use BigCommerce\Import\Runner\Status;
 use BigCommerce\Logging\Error_Log;
@@ -34,6 +37,7 @@ function uninstall() {
 	delete_terms();
 	delete_tables();
 	delete_options();
+	delete_user_meta_data();
 	flush_rewrites();
 }
 
@@ -83,7 +87,7 @@ function delete_images( $post_id ) {
 		],
 		'fields'      => 'ids',
 	] );
-	foreach( $image_ids as $image ) {
+	foreach ( $image_ids as $image ) {
 		\wp_delete_attachment( $image, true );
 	}
 }
@@ -139,6 +143,7 @@ function delete_options() {
 		Settings\Sections\New_Account_Section::STORE_INFO,
 		Settings\Screens\Create_Account_Screen::SUBMITTED_DATA,
 		Settings\Sections\Cart::OPTION_ENABLE_CART,
+		Settings\Sections\Cart::OPTION_AJAX_CART,
 		Settings\Sections\Cart::OPTION_CART_PAGE_ID,
 		Settings\Sections\Import::OPTION_FREQUENCY,
 		Settings\Sections\Import::OPTION_NEW_PRODUCTS,
@@ -186,10 +191,32 @@ function delete_options() {
 		'bigcommerce_flushed_rewrites',
 		md5( 'bc_webhook_' . Product_Update_Webhook::ACTION . Product_Update_Webhook::SCOPE ),
 		md5( 'bc_webhook_password_' . Product_Update_Webhook::ACTION . Product_Update_Webhook::SCOPE ),
+		Settings\Sections\Cart::OPTION_AJAX_CART,
+		Settings\Sections\Import::BATCH_SIZE,
+		Term_Import::STATE_OPTION,
 	];
 
 	foreach ( $options as $option ) {
 		\delete_option( $option );
+	}
+}
+
+/**
+ * Delete all customer related usermeta data
+ */
+function delete_user_meta_data() {
+	global $wpdb;
+	$customer_id_meta_key = $wpdb->get_blog_prefix() . Customer::CUSTOMER_ID_META;
+	
+	// all meta-keys => value to be deleted
+	$meta_keys            = [
+		$customer_id_meta_key                => '',
+		User_Profile_Settings::SYNC_PASSWORD => ''
+	];
+
+	// Delete metadata
+	foreach ( $meta_keys as $key => $value ) {
+		\delete_metadata( 'user', null, $key, $value, true );
 	}
 }
 

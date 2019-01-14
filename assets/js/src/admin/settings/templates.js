@@ -16,3 +16,9 @@ export const channelConfirmation = channel => (
 	</p>
 	`
 );
+
+export const bcAdminSpinner = (
+	`
+	<span class="spinner is-active"></span>	
+	`
+);

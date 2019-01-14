@@ -46,7 +46,7 @@ const initDialogs = () => {
 		instances.dialogs[dialogID] = new A11yDialog(getOptions(dialogID));
 
 		instances.dialogs[dialogID].on('render', () => {
-			_.delay(() => gallery(dialog), state.delay);
+			_.delay(() => gallery(), state.delay);
 			_.delay(() => variants(dialog), state.delay);
 			_.delay(() => modifiers(dialog), state.delay);
 		});

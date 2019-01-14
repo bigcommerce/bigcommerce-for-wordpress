@@ -51,6 +51,10 @@ a.bc-btn,
 		}
 	}
 
+	&.bc-ajax-cart-processing {
+		animation: ajax-add-to-cart 1s infinite;
+	}
+
 	&--small {
 		padding: 8px 16px;
 	}
@@ -60,5 +64,20 @@ a.bc-btn,
 		box-sizing: border-box;
 		background-color: transparent;
 		border: 4px solid;
+	}
+}
+
+@keyframes ajax-add-to-cart {
+
+	0% {
+		opacity: 0.3;
+	}
+
+	50% {
+		opacity: 0.6;
+	}
+
+	100% {
+		opacity: 0.3;
 	}
 }

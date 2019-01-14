@@ -1,12 +1,8 @@
 <?php
 /**
  * PlacementApi
- * PHP version 5
  *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -28,21 +24,14 @@
 
 namespace BigCommerce\Api\v3\Api;
 
+use \BigCommerce\Api\v3\Configuration;
 use \BigCommerce\Api\v3\ApiClient;
 use \BigCommerce\Api\v3\ApiException;
-use \BigCommerce\Api\v3\Configuration;
 use \BigCommerce\Api\v3\ObjectSerializer;
 
-/**
- * PlacementApi Class Doc Comment
- *
- * @category Class
- * @package  BigCommerce\Api\v3
- * @author   Swagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
- */
 class PlacementApi
 {
+
     /**
      * API Client
      *
@@ -53,35 +42,30 @@ class PlacementApi
     /**
      * Constructor
      *
-     * @param \BigCommerce\Api\v3\ApiClient|null $apiClient The api client to use
+     * @param \BigCommerce\Api\v3\ApiClient $apiClient The api client to use
      */
-    public function __construct(\BigCommerce\Api\v3\ApiClient $apiClient = null)
+    public function __construct(\BigCommerce\Api\v3\ApiClient $apiClient)
     {
-        if ($apiClient === null) {
-            $apiClient = new ApiClient();
-            $apiClient->getConfig()->setHost('https://api.bigcommerce.com/stores/{{store_id}}/v3');
-        }
-
         $this->apiClient = $apiClient;
     }
 
     /**
-     * Get API client
-     *
-     * @return \BigCommerce\Api\v3\ApiClient get the API client
-     */
+    * Get API client
+    *
+    * @return \BigCommerce\Api\v3\ApiClient get the API client
+    */
     public function getApiClient()
     {
         return $this->apiClient;
     }
 
     /**
-     * Set the API client
-     *
-     * @param \BigCommerce\Api\v3\ApiClient $apiClient set the API client
-     *
-     * @return PlacementApi
-     */
+    * Set the API client
+    *
+    * @param \BigCommerce\Api\v3\ApiClient $apiClient set the API client
+    *
+    * @return PlacementApi
+    */
     public function setApiClient(\BigCommerce\Api\v3\ApiClient $apiClient)
     {
         $this->apiClient = $apiClient;
@@ -90,34 +74,41 @@ class PlacementApi
 
     /**
      * Operation createPlacement
-     *
      * Creates a placement.
      *
+     *
      * @param \BigCommerce\Api\v3\Model\PlacementPost $placement_body  (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\PlacementResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function createPlacement($placement_body)
+    public function createPlacement($placement_body, array $params = [])
     {
-        list($response) = $this->createPlacementWithHttpInfo($placement_body);
+        list($response) = $this->createPlacementWithHttpInfo( $placement_body, $params);
         return $response;
     }
+
 
     /**
      * Operation createPlacementWithHttpInfo
      *
-     * Creates a placement.
-     *
+     * @see self::createPlacement()
      * @param \BigCommerce\Api\v3\Model\PlacementPost $placement_body  (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\PlacementResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createPlacementWithHttpInfo($placement_body)
+    public function createPlacementWithHttpInfo( $placement_body, array $params = [])
     {
+        
         // verify the required parameter 'placement_body' is set
-        if ($placement_body === null) {
+        if (!isset($placement_body)) {
             throw new \InvalidArgumentException('Missing the required parameter $placement_body when calling createPlacement');
         }
+        
+
         // parse inputs
         $resourcePath = "/content/placements";
         $httpBody = '';
@@ -130,21 +121,26 @@ class PlacementApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
         // body params
         $_tempBody = null;
         if (isset($placement_body)) {
-            $_tempBody = $placement_body;
+        $_tempBody = $placement_body;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -156,54 +152,63 @@ class PlacementApi
                 '\BigCommerce\Api\v3\Model\PlacementResponse',
                 '/content/placements'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\PlacementResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\PlacementResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\PlacementResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deletePlacement
-     *
      * Deletes a placement.
      *
+     *
      * @param string $uuid The identifier for a specific placement. (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deletePlacement($uuid)
+    public function deletePlacement($uuid, array $params = [])
     {
-        list($response) = $this->deletePlacementWithHttpInfo($uuid);
+        list($response) = $this->deletePlacementWithHttpInfo($uuid, $params);
         return $response;
     }
+
 
     /**
      * Operation deletePlacementWithHttpInfo
      *
-     * Deletes a placement.
-     *
+     * @see self::deletePlacement()
      * @param string $uuid The identifier for a specific placement. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deletePlacementWithHttpInfo($uuid)
+    public function deletePlacementWithHttpInfo($uuid, array $params = [])
     {
+        
         // verify the required parameter 'uuid' is set
-        if ($uuid === null) {
+        if (!isset($uuid)) {
             throw new \InvalidArgumentException('Missing the required parameter $uuid when calling deletePlacement');
         }
+        
+
         // parse inputs
         $resourcePath = "/content/placements/{uuid}";
         $httpBody = '';
@@ -216,8 +221,15 @@ class PlacementApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($uuid !== null) {
+
+
+        if (isset($uuid)) {
             $resourcePath = str_replace(
                 "{" . "uuid" . "}",
                 $this->apiClient->getSerializer()->toPathValue($uuid),
@@ -227,13 +239,13 @@ class PlacementApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -245,54 +257,63 @@ class PlacementApi
                 null,
                 '/content/placements/{uuid}'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getPlacement
-     *
      * Gets a placement.
      *
+     *
      * @param string $uuid The identifier for a specific placement. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\PlacementResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getPlacement($uuid)
+    public function getPlacement($uuid, array $params = [])
     {
-        list($response) = $this->getPlacementWithHttpInfo($uuid);
+        list($response) = $this->getPlacementWithHttpInfo($uuid, $params);
         return $response;
     }
+
 
     /**
      * Operation getPlacementWithHttpInfo
      *
-     * Gets a placement.
-     *
+     * @see self::getPlacement()
      * @param string $uuid The identifier for a specific placement. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\PlacementResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getPlacementWithHttpInfo($uuid)
+    public function getPlacementWithHttpInfo($uuid, array $params = [])
     {
+        
         // verify the required parameter 'uuid' is set
-        if ($uuid === null) {
+        if (!isset($uuid)) {
             throw new \InvalidArgumentException('Missing the required parameter $uuid when calling getPlacement');
         }
+        
+
         // parse inputs
         $resourcePath = "/content/placements/{uuid}";
         $httpBody = '';
@@ -305,8 +326,15 @@ class PlacementApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($uuid !== null) {
+
+
+        if (isset($uuid)) {
             $resourcePath = str_replace(
                 "{" . "uuid" . "}",
                 $this->apiClient->getSerializer()->toPathValue($uuid),
@@ -316,13 +344,13 @@ class PlacementApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -334,64 +362,67 @@ class PlacementApi
                 '\BigCommerce\Api\v3\Model\PlacementResponse',
                 '/content/placements/{uuid}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\PlacementResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\PlacementResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\PlacementResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getPlacements
-     *
      * Gets all placements.
      *
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $widget_template_kind The kind of widget template. (optional)
-     * @param string $template_file The template file, for example: &#x60;pages/home&#x60;. (optional)
-     * @param string $widget_uuid The identifier for a specific widget. (optional)
-     * @param string $widget_template_uuid The identifier for a specific widget template. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     *
+     * @param array $params = []
+     *     - page int Specifies the page number in a limited (paginated) list of products. (optional)
+     *     - limit int Controls the number of items per page in a limited (paginated) list of products. (optional)
+     *     - widget_template_kind string The kind of widget template. (optional)
+     *     - template_file string The template file, for example: &#x60;pages/home&#x60;. (optional)
+     *     - widget_uuid string The identifier for a specific widget. (optional)
+     *     - widget_template_uuid string The identifier for a specific widget template. (optional)
      * @return \BigCommerce\Api\v3\Model\PlacementsResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getPlacements($page = null, $limit = null, $widget_template_kind = null, $template_file = null, $widget_uuid = null, $widget_template_uuid = null)
+    public function getPlacements(array $params = [])
     {
-        list($response) = $this->getPlacementsWithHttpInfo($page, $limit, $widget_template_kind, $template_file, $widget_uuid, $widget_template_uuid);
+        list($response) = $this->getPlacementsWithHttpInfo($params);
         return $response;
     }
+
 
     /**
      * Operation getPlacementsWithHttpInfo
      *
-     * Gets all placements.
-     *
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $widget_template_kind The kind of widget template. (optional)
-     * @param string $template_file The template file, for example: &#x60;pages/home&#x60;. (optional)
-     * @param string $widget_uuid The identifier for a specific widget. (optional)
-     * @param string $widget_template_uuid The identifier for a specific widget template. (optional)
+     * @see self::getPlacements()
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\PlacementsResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getPlacementsWithHttpInfo($page = null, $limit = null, $widget_template_kind = null, $template_file = null, $widget_uuid = null, $widget_template_uuid = null)
+    public function getPlacementsWithHttpInfo(array $params = [])
     {
+        
+
         // parse inputs
         $resourcePath = "/content/placements";
         $httpBody = '';
@@ -405,39 +436,20 @@ class PlacementApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($page !== null) {
-            $queryParams['page'] = $this->apiClient->getSerializer()->toQueryValue($page);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($limit !== null) {
-            $queryParams['limit'] = $this->apiClient->getSerializer()->toQueryValue($limit);
-        }
-        // query params
-        if ($widget_template_kind !== null) {
-            $queryParams['widget_template_kind'] = $this->apiClient->getSerializer()->toQueryValue($widget_template_kind);
-        }
-        // query params
-        if ($template_file !== null) {
-            $queryParams['template_file'] = $this->apiClient->getSerializer()->toQueryValue($template_file);
-        }
-        // query params
-        if ($widget_uuid !== null) {
-            $queryParams['widget_uuid'] = $this->apiClient->getSerializer()->toQueryValue($widget_uuid);
-        }
-        // query params
-        if ($widget_template_uuid !== null) {
-            $queryParams['widget_template_uuid'] = $this->apiClient->getSerializer()->toQueryValue($widget_template_uuid);
-        }
+
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -449,60 +461,70 @@ class PlacementApi
                 '\BigCommerce\Api\v3\Model\PlacementsResponse',
                 '/content/placements'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\PlacementsResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\PlacementsResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\PlacementsResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation updatePlacement
-     *
      * Updates a placement.
+     *
      *
      * @param string $uuid The identifier for a specific placement. (required)
      * @param \BigCommerce\Api\v3\Model\PlacementPut $placement_body  (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\PlacementResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function updatePlacement($uuid, $placement_body)
+    public function updatePlacement($uuid, $placement_body, array $params = [])
     {
-        list($response) = $this->updatePlacementWithHttpInfo($uuid, $placement_body);
+        list($response) = $this->updatePlacementWithHttpInfo($uuid,  $placement_body, $params);
         return $response;
     }
+
 
     /**
      * Operation updatePlacementWithHttpInfo
      *
-     * Updates a placement.
-     *
+     * @see self::updatePlacement()
      * @param string $uuid The identifier for a specific placement. (required)
      * @param \BigCommerce\Api\v3\Model\PlacementPut $placement_body  (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\PlacementResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updatePlacementWithHttpInfo($uuid, $placement_body)
+    public function updatePlacementWithHttpInfo($uuid,  $placement_body, array $params = [])
     {
+        
         // verify the required parameter 'uuid' is set
-        if ($uuid === null) {
+        if (!isset($uuid)) {
             throw new \InvalidArgumentException('Missing the required parameter $uuid when calling updatePlacement');
         }
+        
         // verify the required parameter 'placement_body' is set
-        if ($placement_body === null) {
+        if (!isset($placement_body)) {
             throw new \InvalidArgumentException('Missing the required parameter $placement_body when calling updatePlacement');
         }
+        
+
         // parse inputs
         $resourcePath = "/content/placements/{uuid}";
         $httpBody = '';
@@ -515,8 +537,15 @@ class PlacementApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($uuid !== null) {
+
+
+        if (isset($uuid)) {
             $resourcePath = str_replace(
                 "{" . "uuid" . "}",
                 $this->apiClient->getSerializer()->toPathValue($uuid),
@@ -529,15 +558,15 @@ class PlacementApi
         // body params
         $_tempBody = null;
         if (isset($placement_body)) {
-            $_tempBody = $placement_body;
+        $_tempBody = $placement_body;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -549,22 +578,26 @@ class PlacementApi
                 '\BigCommerce\Api\v3\Model\PlacementResponse',
                 '/content/placements/{uuid}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\PlacementResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\PlacementResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\PlacementResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;

@@ -19,6 +19,13 @@ class Amp_Assets {
 	private $directory;
 
 	/**
+	 * URL of asset directory
+	 *
+	 * @var string
+	 */
+	private $asset_directory_url;
+
+	/**
 	 * @var string Path to the plugin assets directory
 	 */
 	private $customizer_template_file;
@@ -26,8 +33,9 @@ class Amp_Assets {
 	/**
 	 * Assets constructor.
 	 */
-	public function __construct( $asset_directory, $customizer_template_file ) {
+	public function __construct( $asset_directory, $asset_directory_url, $customizer_template_file ) {
 		$this->directory                = trailingslashit( $asset_directory );
+		$this->asset_directory_url      = trailingslashit( $asset_directory_url );
 		$this->customizer_template_file = $customizer_template_file;
 	}
 
@@ -47,7 +55,7 @@ class Amp_Assets {
 		$css_contents = file_get_contents( $css_src );
 
 		// Use absolute URLs for web fonts.
-		$css_contents = str_replace( '../fonts', esc_url( $this->directory . 'fonts' ), $css_contents );
+		$css_contents = str_replace( '../fonts', esc_url( $this->asset_directory_url . 'fonts' ), $css_contents );
 
 		// Remove all !important rules.
 		$css_contents = str_replace( '!important', '', $css_contents );
@@ -66,6 +74,8 @@ class Amp_Assets {
 			'form',
 			'bind',
 			'sidebar',
+			'list',
+			'mustache',
 		);
 
 		if ( is_archive() ) {
@@ -79,6 +89,7 @@ class Amp_Assets {
 				<?php
 			}
 		}
+
 	}
 
 	/**
@@ -96,6 +107,7 @@ class Amp_Assets {
 		if ( $post->ID === $cart_page_id ) {
 			$stylesheet = $debug ? 'cart-amp.css' : 'cart-amp.min.css';
 		}
+
 		return $stylesheet;
 	}
 }

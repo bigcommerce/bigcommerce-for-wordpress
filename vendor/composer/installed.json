@@ -105,17 +105,17 @@
     },
     {
         "name": "moderntribe/bigcommerce-api-php-v3",
-        "version": "0.13.1",
-        "version_normalized": "0.13.1.0",
+        "version": "1.3.0",
+        "version_normalized": "1.3.0.0",
         "source": {
             "type": "git",
             "url": "git@github.com:moderntribe/bigcommerce-api-php-v3.git",
-            "reference": "3b26b5a7b1be4628bada3c293f3147dc7856d675"
+            "reference": "52fe9db805bcdc7e8cdd870eb913e57b1d00826b"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/moderntribe/bigcommerce-api-php-v3/zipball/3b26b5a7b1be4628bada3c293f3147dc7856d675",
-            "reference": "3b26b5a7b1be4628bada3c293f3147dc7856d675",
+            "url": "https://api.github.com/repos/moderntribe/bigcommerce-api-php-v3/zipball/52fe9db805bcdc7e8cdd870eb913e57b1d00826b",
+            "reference": "52fe9db805bcdc7e8cdd870eb913e57b1d00826b",
             "shasum": ""
         },
         "require": {
@@ -129,7 +129,7 @@
             "satooshi/php-coveralls": "~1.0",
             "squizlabs/php_codesniffer": "~2.6"
         },
-        "time": "2018-10-26T02:49:02+00:00",
+        "time": "2018-12-19T20:23:03+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -395,23 +395,23 @@
     },
     {
         "name": "psr/log",
-        "version": "1.0.2",
-        "version_normalized": "1.0.2.0",
+        "version": "1.1.0",
+        "version_normalized": "1.1.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/php-fig/log.git",
-            "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d"
+            "reference": "6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/php-fig/log/zipball/4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
-            "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
+            "url": "https://api.github.com/repos/php-fig/log/zipball/6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd",
+            "reference": "6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd",
             "shasum": ""
         },
         "require": {
             "php": ">=5.3.0"
         },
-        "time": "2016-10-10T12:19:37+00:00",
+        "time": "2018-11-20T15:27:04+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {

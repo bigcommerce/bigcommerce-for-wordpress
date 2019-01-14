@@ -133,7 +133,7 @@
 
 /* Shortcode UI Settings Sidebar */
 .bc-shortcode-ui__settings {
-	height: auto;
+	height: 100%;
 	border-top: 1px solid #ccc;
 	background: var(--color-white);
 	display: flex;
@@ -155,8 +155,20 @@
 
 .bc-shortcode-ui__settings-header {
 	position: relative;
-	flex: 0 0 150px;
+	flex: 0 0 120px;
 	overflow: hidden;
+
+	@media (--viewport-small) {
+		flex: 0 0 90px;
+	}
+
+	@media (--viewport-full) {
+		flex: 0 0 164px;
+	}
+
+	@media (--viewport-xxlarge) {
+		flex: 0 0 130px;
+	}
 }
 
 .bc-shortcode-ui__dynamic-listing-header,
@@ -185,8 +197,13 @@
 	}
 }
 
-.bc-shortcode-ui__default-header {
+.bc-shortcode-ui__default-header p {
 	font-size: var(--font-size-content-s);
+}
+
+.bc-shortcode-ui__settings-title {
+	margin-top: 0;
+	margin-bottom: 0;
 }
 
 .bc-shortcode-ui__selections {

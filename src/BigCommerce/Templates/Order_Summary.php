@@ -59,6 +59,9 @@ class Order_Summary extends Controller {
 		return wp_parse_args( $options, $defaults );
 	}
 
+	/**
+	 * @return array
+	 */
 	public function get_data() {
 		$order    = $this->options[ 'order' ];
 		$image_id = $this->get_image_id( $order[ 'products' ] );
@@ -89,7 +92,18 @@ class Order_Summary extends Controller {
 		];
 	}
 
+	/**
+	 * @param $date_string
+	 *
+	 * @return string
+	 */
 	private function format_gmt_date( $date_string ) {
+		// if $date_string just return the same empty string
+		if (empty($date_string)) {
+			return $date_string;
+		}
+
+		$date_string = date( 'Y-m-d H:i:s', strtotime( $date_string ) );
 		return get_date_from_gmt( $date_string, $this->options[ self::DATE_FORMAT ] );
 	}
 

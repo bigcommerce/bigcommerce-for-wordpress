@@ -13,7 +13,7 @@
  * @var string $reviews
  */
 ?>
-<div class="bc-product-single">
+<div class="bc-product-single" data-js="bc-product-single">
 	<section class="bc-product-single__top">
 
 		<div class="bc-product__gallery">

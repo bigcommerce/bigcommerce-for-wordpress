@@ -20,14 +20,16 @@
 </label>
 
 <div class="bc-product-form__modifier-field">
-	<textarea name="modifier[<?php echo esc_attr( $id ); ?>]"
-	       id="modifier-<?php echo esc_attr( $id ); ?>"
-	       class="bc-product-modifier__textarea"
-	       data-modifier-id="<?php echo esc_attr( $id ); ?>"
-	       <?php if ( $required ) { echo 'required="required"'; } ?>
-	       <?php if ( $minlength ) { printf( 'minlength="%d"', absint( $minlength ) ); } ?>
-	       <?php if ( $maxlength ) { printf( 'maxlength="%d"', absint( $maxlength ) ); } ?>
-	       <?php if ( $maxrows ) { printf( 'data-maxrows="%d"', absint( $maxrows ) ); } ?>
+	<textarea
+		name="modifier[<?php echo esc_attr( $id ); ?>]"
+		id="modifier-<?php echo esc_attr( $id ); ?>"
+		class="bc-product-modifier__textarea"
+		data-js="bc-product-modifier-field"
+		data-modifier-id="<?php echo esc_attr( $id ); ?>"
+		<?php if ( $required ) { echo 'required="required"'; } ?>
+		<?php if ( $minlength ) { printf( 'minlength="%d"', absint( $minlength ) ); } ?>
+		<?php if ( $maxlength ) { printf( 'maxlength="%d"', absint( $maxlength ) ); } ?>
+		<?php if ( $maxrows ) { printf( 'data-maxrows="%d"', absint( $maxrows ) ); } ?>
 	><?php echo esc_textarea( $default_value ); ?></textarea>
 </div>
 

@@ -19,7 +19,7 @@ class Overrides {
 	 *
 	 * Adds 'image_src' to the data passed to the product featured image template.
 	 *
-	 * @param array $data      Data to be sent to the template.
+	 * @param array  $data     Data to be sent to the template.
 	 * @param string $template Current template.
 	 *
 	 * @return array
@@ -112,6 +112,7 @@ class Overrides {
 			esc_url( $url . 'bc-product-placeholder--medium.jpg' ) . ' 370w',
 			esc_url( $url . 'bc-product-placeholder--small.jpg' ) . ' 270w',
 		];
+
 		return sprintf(
 			'<amp-img src="%s" srcset="%s" alt="%s" class="bc-product-placeholder-image" sizes="(max-width: 370px) 85vw, 370px, (max-width: 1200px) 600px" layout="intrinsic" height="370" width="370" />',
 			esc_url( $url . 'bc-product-placeholder--medium.jpg' ),
@@ -124,7 +125,7 @@ class Overrides {
 	 * AMP Kses Allowed HTML
 	 *
 	 * @param array  $allowed_tags Array of allowed tags
-	 * @param string $context Context of kses tags.
+	 * @param string $context      Context of kses tags.
 	 *
 	 * @return array
 	 */
@@ -174,10 +175,30 @@ class Overrides {
 							'class' => array(),
 							'id'    => array(),
 						),
+						'template'        => array(
+							'type' => array(),
+							'id'   => array(),
+						),
+						'amp-list'        => array(
+							'id'               => array(),
+							'layout'           => array(),
+							'height'           => array(),
+							'width'            => array(),
+							'src'              => array(),
+							'single-item'      => array(),
+							'items'            => array(),
+							'class'            => array(),
+							'reset-on-refresh' => array(),
+						),
+						'amp-state'       => array(
+							'id'  => array(),
+							'src' => array(),
+						),
 					)
 				)
 			);
 		}
+
 		return $allowed_tags;
 	}
 }

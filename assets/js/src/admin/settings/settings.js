@@ -30,7 +30,7 @@ const toggleDependentOptions = (field, dependents) => {
  * @description toggle the <tr> elements on and off depending on checkbox state.
  */
 const toggleCartOption = () => {
-	toggleDependentOptions(el.cartCheckbox, [el.cartPageSelect]);
+	toggleDependentOptions(el.cartCheckbox, [el.cartAjaxCheckbox, el.cartPageSelect]);
 };
 
 /**
@@ -51,6 +51,7 @@ const toggleGiftCertificateOption = () => {
 
 const cacheElements = () => {
 	el.cartCheckbox = tools.getNodes('input[name="bigcommerce_enable_cart"]', false, el.container, true)[0];
+	el.cartAjaxCheckbox = tools.getNodes('input[name="bigcommerce_ajax_cart"]', false, el.container, true)[0];
 	el.cartPageSelect = tools.getNodes('select[name="bigcommerce_cart_page_id"]', false, el.container, true)[0];
 	el.checkoutCheckbox = tools.getNodes('input[name="bigcommerce_enable_embedded_checkout"]', false, el.container, true)[0];
 	el.checkoutPageSelect = tools.getNodes('select[name="bigcommerce_checkout_page_id"]', false, el.container, true)[0];

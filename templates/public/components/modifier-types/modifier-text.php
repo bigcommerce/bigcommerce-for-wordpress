@@ -22,6 +22,7 @@
 		<input type="text" name="modifier[<?php echo esc_attr( $id ); ?>]"
 		       id="modifier-<?php echo esc_attr( $id ); ?>"
 		       class="bc-product-modifier__text"
+		       data-js="bc-product-modifier-field"
 		       data-modifier-id="<?php echo esc_attr( $id ); ?>"
 		       <?php if ( $required ) { echo 'required="required"'; } ?>
 		       <?php if ( $minlength ) { printf( 'minlength="%d"', absint( $minlength ) ); } ?>

@@ -76,39 +76,12 @@ class Channel_Initializer implements Import_Processor {
 
 
 		try {
-			$response = $this->catalog->getProducts(
-				null, // $id
-				null, // $name
-				null, // $sku
-				null, // $upc
-				null, // $price
-				null, // $weight
-				null, // $condition
-				null, // $brand_id
-				null, // $date_modified
-				null, // $date_last_imported
-				null, // $is_visible
-				null, // $is_featured
-				null, // $is_free_shipping
-				null, // $inventory_level
-				null, // $inventory_low
-				null, // $out_of_stock
-				null, // $total_sold
-				null, // $type
-				null, // $categories
-				null, // $keyword
-				null, // $keyword_context
-				null, // $status
-				[ 'variants' ], // $include
-				[ 'id', 'name', 'description', 'is_visible' ], // $include_fields
-				null, // $exclude_fields
-				null, // $availability
-				null, // $price_list_id
-				$page, // $page
-				$this->limit, // $limit
-				null, // $direction
-				null  // $sort
-			);
+			$response = $this->catalog->getProducts( [
+				'include'        => [ 'variants' ],
+				'include_fields' => [ 'id', 'name', 'description', 'is_visible' ],
+				'page'           => $page,
+				'limit'          => $this->limit,
+			] );
 		} catch ( ApiException $e ) {
 			do_action( 'bigcommerce/import/error', $e->getMessage(), [
 				'response' => $e->getResponseBody(),
@@ -173,7 +146,7 @@ class Channel_Initializer implements Import_Processor {
 	 */
 	private function channel_has_listings( $channel_id ) {
 		try {
-			$response = $this->channels->listChannelListings( $channel_id, 1 );
+			$response = $this->channels->listChannelListings( $channel_id, [ 'limit' => 1 ] );
 
 			return count( $response->getData() ) > 0;
 		} catch ( ApiException $e ) {

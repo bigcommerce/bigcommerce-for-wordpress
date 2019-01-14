@@ -28,6 +28,7 @@ class JS_Localization {
 				'account_connection_error'          => __( 'There was an error connecting your account:', 'bigcommerce' ),
 				'account_connection_code'           => __( 'Error Code:', 'bigcommerce' ),
 				'account_connection_message'        => __( 'Error Message:', 'bigcommerce' ),
+				'account_creation_message'          => __( 'Creating your BigCommerce account.', 'bigcommerce' ),
 				'channel_confirmation'              => __( "The %s channel will point to this site's URL and its route settings will be updated in BigCommerce.", 'bigcommerce' ),
 				'diagnostics_success_message'       => __( 'Data retrieved successfully', 'bigcommerce' ),
 				'diagnostics_request_error_header'  => __( 'Diagnostics Unavailable', 'bigcommerce' ),

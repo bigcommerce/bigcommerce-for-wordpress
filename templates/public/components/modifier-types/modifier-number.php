@@ -23,6 +23,7 @@
 		<input type="number" name="modifier[<?php echo esc_attr( $id ); ?>]"
 		       id="modifier-<?php echo esc_attr( $id ); ?>"
 		       class="bc-product-modifier__number"
+		       data-js="bc-product-modifier-field"
 		       data-modifier-id="<?php echo esc_attr( $id ); ?>"
 		       step="<?php echo esc_attr( $step ); ?>"
 		       <?php if ( $required ) { echo 'required="required"'; } ?>

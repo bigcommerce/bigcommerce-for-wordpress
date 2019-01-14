@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: moises
- * Date: 26/11/2018
- * Time: 13:26
- */
 
 namespace BigCommerce\Logging;
 

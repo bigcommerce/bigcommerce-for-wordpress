@@ -78,8 +78,7 @@ paths:
         - name: itemId
           in: path
           required: true
-          type: string
-          format: number
+          type: integer
         - name: lineItem
           in: body
           required: true
@@ -103,8 +102,7 @@ paths:
         - name: itemId
           in: path
           required: true
-          type: string
-          format: number
+          type: integer
       tags:
         - Cart
       responses:

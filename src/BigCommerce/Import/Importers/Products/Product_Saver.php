@@ -1,11 +1,14 @@
 <?php
 
-namespace BigCommerce\Import;
+namespace BigCommerce\Import\Importers\Products;
 
 use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Api\v3\Model;
 use BigCommerce\Api\v3\Model\ProductReview;
+use BigCommerce\Import\Review_Builder;
+use BigCommerce\Import\Review_Fetcher;
+use BigCommerce\Import\Import_Strategy;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Taxonomies\Availability\Availability;
 use BigCommerce\Taxonomies\Brand\Brand;
@@ -13,13 +16,14 @@ use BigCommerce\Taxonomies\Condition\Condition;
 use BigCommerce\Taxonomies\Flag\Flag;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
 use BigCommerce\Taxonomies\Product_Type\Product_Type;
+use BigCommerce\Import\Importers\Products\Product_Builder;
 
 /**
  * Class Product_Saver
  *
  * Handles storing a product in the database
  */
-abstract class Product_Saver implements Post_Import_Strategy {
+abstract class Product_Saver implements Import_Strategy {
 	/**
 	 * @var Model\Product
 	 */
@@ -242,12 +246,16 @@ abstract class Product_Saver implements Post_Import_Strategy {
 		/** @var \wpdb $wpdb */
 		global $wpdb;
 
-		$fetch   = new Review_Fetcher( $this->catalog, $this->product[ 'id' ] );
-		$reviews = array_map( function ( ProductReview $review ) {
-			$builder = new Review_Builder( $review );
+		if ( $this->product->getReviewsCount() == 0 ) {
+			$reviews = [];
+		} else {
+			$fetch   = new Review_Fetcher( $this->catalog, $this->product[ 'id' ] );
+			$reviews = array_map( function ( ProductReview $review ) {
+				$builder = new Review_Builder( $review );
 
-			return $builder->build_review_array( $this->post_id, $this->product[ 'id' ] );
-		}, $fetch->fetch() );
+				return $builder->build_review_array( $this->post_id, $this->product[ 'id' ] );
+			}, $fetch->fetch() );
+		}
 
 		$existing_reviews = array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT review_id FROM {$wpdb->bc_reviews} WHERE post_id=%d", $this->post_id ) ) );
 		$valid_review_ids = array_map( 'intval', wp_list_pluck( $reviews, 'review_id' ) );

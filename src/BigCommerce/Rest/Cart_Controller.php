@@ -4,14 +4,12 @@
 namespace BigCommerce\Rest;
 
 
-use BigCommerce\Accounts\Login;
 use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api\v3\Api\CartApi;
-use BigCommerce\Api\v3\Model\CartRequestData;
 use BigCommerce\Api\v3\Model\CartResponse;
 use BigCommerce\Api\v3\Model\CartUpdateRequest;
+use BigCommerce\Cart\Cart;
 use BigCommerce\Cart\Cart_Mapper;
-use BigCommerce\Settings\Sections\Channels;
 use BigCommerce\Taxonomies\Availability\Availability;
 use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Condition\Condition;
@@ -35,12 +33,15 @@ class Cart_Controller extends Rest_Controller {
 				'context' => $this->get_context_param(),
 			],
 			[
+				// Create a new cart with a product
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'create_cart' ],
 				'permission_callback' => [ $this, 'create_cart_permissions_check' ],
 				'args'                => [
 					'product_id' => $this->product_id_param( true ),
-					'variant_id' => $this->variant_id_param( true ),
+					'variant_id' => $this->variant_id_param( false ),
+					'options'    => $this->options_param( false ),
+					'modifiers'  => $this->modifiers_param( false ),
 					'quantity'   => $this->quantity_param( false ),
 				],
 			],
@@ -52,21 +53,25 @@ class Cart_Controller extends Rest_Controller {
 				'context' => $this->get_context_param(),
 			],
 			[
+				// Get a cart
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'get_items' ],
-				'permission_callback' => [ $this, 'get_items_permissions_check' ],
+				'permission_callback' => [ $this, 'cart_id_access_check' ],
 				'args'                => [
 					'cart_id' => $this->cart_id_param( true ),
 				],
 			],
 			[
+				// Add a new product to a cart
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'create_item' ],
-				'permission_callback' => [ $this, 'create_item_permissions_check' ],
+				'permission_callback' => [ $this, 'cart_id_access_check' ],
 				'args'                => [
 					'cart_id'    => $this->cart_id_param( true ),
 					'product_id' => $this->product_id_param( true ),
-					'variant_id' => $this->variant_id_param( true ),
+					'variant_id' => $this->variant_id_param( false ),
+					'options'    => $this->options_param( false ),
+					'modifiers'  => $this->modifiers_param( false ),
 					'quantity'   => $this->quantity_param( false ),
 				],
 			],
@@ -79,9 +84,10 @@ class Cart_Controller extends Rest_Controller {
 				'context' => $this->get_context_param(),
 			],
 			[
+				// Update the quantity for an item already in the cart
 				'methods'             => WP_REST_Server::EDITABLE,
 				'callback'            => [ $this, 'update_item' ],
-				'permission_callback' => [ $this, 'update_item_permissions_check' ],
+				'permission_callback' => [ $this, 'cart_id_access_check' ],
 				'args'                => [
 					'cart_id'  => $this->cart_id_param( true ),
 					'item_id'  => $this->item_id_param( true ),
@@ -89,9 +95,10 @@ class Cart_Controller extends Rest_Controller {
 				],
 			],
 			[
+				// Delete an item from the cart
 				'methods'             => WP_REST_Server::DELETABLE,
 				'callback'            => [ $this, 'delete_item' ],
-				'permission_callback' => [ $this, 'delete_item_permissions_check' ],
+				'permission_callback' => [ $this, 'cart_id_access_check' ],
 				'args'                => [
 					'cart_id' => $this->cart_id_param( true ),
 					'item_id' => $this->item_id_param( true ),
@@ -157,20 +164,18 @@ class Cart_Controller extends Rest_Controller {
 		return true; // no access control
 	}
 
-	public function get_items_permissions_check( $request ) {
-		return true; // no access control
-	}
+	/**
+	 * Checks that the user's cart cookie matches the cart in the request
+	 *
+	 * @param \WP_REST_Request $request
+	 *
+	 * @return bool
+	 */
+	public function cart_id_access_check( $request ) {
+		$cart    = new Cart( $this->cart_api );
+		$cart_id = $request->get_param( 'cart_id' );
 
-	public function create_item_permissions_check( $request ) {
-		return true; // no access control
-	}
-
-	public function update_item_permissions_check( $request ) {
-		return true; // no access control
-	}
-
-	public function delete_item_permissions_check( $request ) {
-		return true; // no access control
+		return $cart_id == $cart->get_cart_id();
 	}
 
 	private function cart_id_param( $required = false ) {
@@ -209,6 +214,50 @@ class Cart_Controller extends Rest_Controller {
 		];
 	}
 
+	private function options_param( $required = false ) {
+		return [
+			'description'       => __( 'The option values for the product to add to the cart', 'bigcommerce' ),
+			'validate_callback' => 'rest_validate_request_arg',
+			'required'          => $required,
+			'type'              => 'array',
+			'items'             => [
+				'type'       => 'object',
+				'properties' => [
+					'id'    => [
+						'description' => __( 'The option field ID', 'bigcommerce' ),
+						'type'        => 'integer',
+					],
+					'value' => [
+						'description' => __( 'The option value', 'bigcommerce' ),
+						'type'        => 'string',
+					],
+				],
+			],
+		];
+	}
+
+	private function modifiers_param( $required = false ) {
+		return [
+			'description'       => __( 'The modifier values for the product to add to the cart', 'bigcommerce' ),
+			'validate_callback' => 'rest_validate_request_arg',
+			'required'          => $required,
+			'type'              => 'array',
+			'items'             => [
+				'type'       => 'object',
+				'properties' => [
+					'id'    => [
+						'description' => __( 'The modifier field ID', 'bigcommerce' ),
+						'type'        => 'integer',
+					],
+					'value' => [
+						'description' => __( 'The modifier value', 'bigcommerce' ),
+						'type'        => 'string',
+					],
+				],
+			],
+		];
+	}
+
 	private function quantity_param( $required = false ) {
 		return [
 			'description'       => __( 'The quantity of the item that should be in the cart', 'bigcommerce' ),
@@ -227,19 +276,16 @@ class Cart_Controller extends Rest_Controller {
 	 * @return \WP_Error|\WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
 	public function create_cart( $request ) {
-		$line_item = $this->create_postable_line_item( $request );
-		try {
-			$cart = $this->create_remote_cart( $line_item );
-		} catch ( ApiException $e ) {
+
+		$response = $this->add_to_cart( $request );
+
+		if ( $response === null ) {
 			return new \WP_Error( 'rest_cannot_create', __( 'Error creating cart.', 'bigcommerce' ), [
 				'status' => 502,
-				'error'  => $e->getMessage(),
 			] );
 		}
 
-		$data = $this->prepare_item_for_response( $cart, $request );
-
-		$response = rest_ensure_response( $data );
+		$response = rest_ensure_response( $this->prepare_item_for_response( $response, $request ) );
 
 		return $response;
 	}
@@ -252,22 +298,46 @@ class Cart_Controller extends Rest_Controller {
 	 * @return \WP_Error|\WP_REST_Response Response object on success, or WP_Error object on failure.
 	 */
 	public function create_item( $request ) {
-		$cart_id   = $request->get_param( 'cart_id' );
-		$line_item = $this->create_postable_line_item( $request );
-		try {
-			$cart = $this->add_to_cart( $cart_id, $line_item );
-		} catch ( ApiException $e ) {
+
+		$response = $this->add_to_cart( $request );
+
+		if ( $response === null ) {
 			return new \WP_Error( 'rest_cannot_create', __( 'Error adding to cart.', 'bigcommerce' ), [
 				'status' => 502,
-				'error'  => $e->getMessage(),
 			] );
 		}
 
-		$data = $this->prepare_item_for_response( $cart, $request );
-
-		$response = rest_ensure_response( $data );
+		$response = rest_ensure_response( $this->prepare_item_for_response( $response, $request ) );
 
 		return $response;
+	}
+
+	/**
+	 * Adds an item to the cart. Creates a cart if necessary.
+	 *
+	 * @param \WP_REST_Request $request Full data about the request.
+	 *
+	 * @return \BigCommerce\Api\v3\Model\Cart|null
+	 */
+	private function add_to_cart( $request ) {
+		$cart = new Cart( $this->cart_api );
+
+		$product_id = $request->get_param( 'product_id' );
+		$quantity   = $request->get_param( 'quantity' );
+		$options    = [];
+		foreach ( (array) $request->get_param( 'options' ) as $option ) {
+			$option = (array) $option;
+
+			$options[ $option[ 'id' ] ] = $option[ 'value' ];
+		}
+		$modifiers = [];
+		foreach ( (array) $request->get_param( 'modifiers' ) as $modifier ) {
+			$modifier = (array) $modifier;
+
+			$modifiers[ $modifier[ 'id' ] ] = $modifier[ 'value' ];
+		}
+
+		return $cart->add_line_item( $product_id, $options, $quantity, $modifiers );
 	}
 
 	protected function create_postable_line_item( \WP_REST_Request $request ) {
@@ -277,48 +347,8 @@ class Cart_Controller extends Rest_Controller {
 			'variant_id' => $request->get_param( 'variant_id' ),
 		];
 
+
 		return $item;
-	}
-
-	/**
-	 * @param array $line_item
-	 *
-	 * @return \BigCommerce\Api\v3\Model\Cart
-	 * @throws ApiException
-	 */
-	protected function create_remote_cart( $line_item ) {
-		$request = new CartRequestData( [
-			'line_items' => [ $line_item ],
-		] );
-		$request->setGiftCertificates( [] );
-		$customer_id = (int) ( is_user_logged_in() ? get_user_option( Login::CUSTOMER_ID_META, get_current_user_id() ) : 0 );
-		if ( $customer_id ) {
-			$request->setCustomerId( $customer_id );
-		}
-		$channel_id = (int) get_option( Channels::CHANNEL_ID, 0 );
-		if ( $channel_id ) {
-			$request->setChannelId( $channel_id );
-		}
-		$cart    = $this->cart_api->cartsPost( $request )->getData();
-
-		return $cart;
-	}
-
-	/**
-	 * Adds an item to the remote cart
-	 *
-	 * @param string $cart_id
-	 * @param array  $line_item
-	 *
-	 * @return \BigCommerce\Api\v3\Model\Cart
-	 * @throws ApiException
-	 */
-	protected function add_to_cart( $cart_id, $line_item ) {
-		$request = new CartRequestData( [
-			'line_items' => [ $line_item ],
-		] );
-
-		return $this->cart_api->cartsCartIdItemsPost( $cart_id, $request )->getData();
 	}
 
 	/**
@@ -334,9 +364,9 @@ class Cart_Controller extends Rest_Controller {
 		try {
 			/**
 			 * @var CartResponse $cart_response
-			 * @var int $status_code
+			 * @var int          $status_code
 			 */
-			list($cart_response, $status_code) = $this->cart_api->cartsCartIdItemsItemIdDeleteWithHttpInfo( $cart_id, $item_id );
+			list( $cart_response, $status_code ) = $this->cart_api->cartsCartIdItemsItemIdDeleteWithHttpInfo( $cart_id, $item_id );
 
 			if ( $status_code == 204 || empty( $cart_response ) || ! $cart_response->getData() ) {
 				$response = rest_ensure_response( '' );
@@ -390,7 +420,7 @@ class Cart_Controller extends Rest_Controller {
 				'line_items.digital_items.options',
 				'redirect_urls',
 			];
-			$cart = $this->cart_api->cartsCartIdGet( $cart_id, $include )->getData();
+			$cart = $this->cart_api->cartsCartIdGet( $cart_id, [ 'include' => $include ] )->getData();
 		} catch ( ApiException $e ) {
 			return new \WP_Error( 'rest_cannot_update', __( 'Cannot update cart', 'bigcommerce' ), [ 'status' => 502 ] );
 		}
@@ -449,7 +479,8 @@ class Cart_Controller extends Rest_Controller {
 			'line_items.digital_items.options',
 			'redirect_urls',
 		];
-		return $this->cart_api->cartsCartIdGet( $cart_id, $include )->getData();
+
+		return $this->cart_api->cartsCartIdGet( $cart_id, [ 'include' => $include ] )->getData();
 	}
 
 	/**

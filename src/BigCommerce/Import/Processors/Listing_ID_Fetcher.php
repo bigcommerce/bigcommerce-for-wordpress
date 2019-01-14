@@ -54,7 +54,10 @@ class Listing_ID_Fetcher implements Import_Processor {
 		}
 
 		try {
-			$response = $this->channels->listChannelListings( $channel_id, $this->limit, $next ?: null );
+			$response = $this->channels->listChannelListings( $channel_id, [
+				'limit' => $this->limit,
+				'after' => $next ?: null,
+			] );
 		} catch ( ApiException $e ) {
 			do_action( 'bigcommerce/import/error', $e->getMessage(), [
 				'response' => $e->getResponseBody(),

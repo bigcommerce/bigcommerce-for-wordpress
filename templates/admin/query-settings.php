@@ -17,7 +17,7 @@
 
 	<section class="bc-shortcode-ui__settings-header" data-js="bc-shortcode-ui-settings-header">
 		<div class="bc-shortcode-ui__default-header active">
-			<h2><?php echo esc_html_x( 'Embed Big Commerce Products', 'default settings sidebar header', 'bigcommerce' ); ?></h2>
+			<h4 class="bc-shortcode-ui__settings-title"><?php echo esc_html_x( 'Embed BigCommerce Products', 'default settings sidebar header', 'bigcommerce' ); ?></h4>
 			<p><?php echo esc_html_x( 'Customize your embedded products by selecting brands, categories or individual products.', 'description for dynamic listing terms sidebar', 'bigcommerce' ); ?></p>
 		</div>
 

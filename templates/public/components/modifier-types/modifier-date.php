@@ -20,6 +20,7 @@
 	<input type="date" name="modifier[<?php echo esc_attr( $id ); ?>]"
 	       id="modifier-<?php echo esc_attr( $id ); ?>"
 	       class="bc-product-modifier__date"
+	       data-js="bc-product-modifier-field"
 	       data-modifier-id="<?php echo esc_attr( $id ); ?>"
 	       <?php if ( $required ) { echo 'required="required"'; } ?>
 	       <?php if ( ! empty( $min_value ) ) { printf( 'min="%s"', esc_attr( $min_value ) ); } ?>

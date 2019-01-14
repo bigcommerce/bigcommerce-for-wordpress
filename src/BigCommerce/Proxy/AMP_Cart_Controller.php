@@ -126,9 +126,10 @@ class AMP_Cart_Controller extends Proxy_Controller {
 			return rest_ensure_response( null );
 		}
 
-		$data          = $response->data['data'];
-		$data['items'] = $this->build_items( $data );
-		$data['total'] = apply_filters(
+		$data                = $response->data['data'];
+		$data['items']       = $this->build_items( $data );
+		$data['items_count'] = count( $data['items'] );
+		$data['total']       = apply_filters(
 			'bigcommerce/currency/format',
 			sprintf( '¤%0.2f', $data['cart_amount'] ),
 			$data['cart_amount']

@@ -1,12 +1,8 @@
 <?php
 /**
  * CatalogApi
- * PHP version 5
  *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -28,21 +24,14 @@
 
 namespace BigCommerce\Api\v3\Api;
 
+use \BigCommerce\Api\v3\Configuration;
 use \BigCommerce\Api\v3\ApiClient;
 use \BigCommerce\Api\v3\ApiException;
-use \BigCommerce\Api\v3\Configuration;
 use \BigCommerce\Api\v3\ObjectSerializer;
 
-/**
- * CatalogApi Class Doc Comment
- *
- * @category Class
- * @package  BigCommerce\Api\v3
- * @author   Swagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
- */
 class CatalogApi
 {
+
     /**
      * API Client
      *
@@ -53,35 +42,30 @@ class CatalogApi
     /**
      * Constructor
      *
-     * @param \BigCommerce\Api\v3\ApiClient|null $apiClient The api client to use
+     * @param \BigCommerce\Api\v3\ApiClient $apiClient The api client to use
      */
-    public function __construct(\BigCommerce\Api\v3\ApiClient $apiClient = null)
+    public function __construct(\BigCommerce\Api\v3\ApiClient $apiClient)
     {
-        if ($apiClient === null) {
-            $apiClient = new ApiClient();
-            $apiClient->getConfig()->setHost('https://api.bigcommerce.com/stores/{{store_id}}/v3');
-        }
-
         $this->apiClient = $apiClient;
     }
 
     /**
-     * Get API client
-     *
-     * @return \BigCommerce\Api\v3\ApiClient get the API client
-     */
+    * Get API client
+    *
+    * @return \BigCommerce\Api\v3\ApiClient get the API client
+    */
     public function getApiClient()
     {
         return $this->apiClient;
     }
 
     /**
-     * Set the API client
-     *
-     * @param \BigCommerce\Api\v3\ApiClient $apiClient set the API client
-     *
-     * @return CatalogApi
-     */
+    * Set the API client
+    *
+    * @param \BigCommerce\Api\v3\ApiClient $apiClient set the API client
+    *
+    * @return CatalogApi
+    */
     public function setApiClient(\BigCommerce\Api\v3\ApiClient $apiClient)
     {
         $this->apiClient = $apiClient;
@@ -90,28 +74,34 @@ class CatalogApi
 
     /**
      * Operation catalogSummaryGet
-     *
      * 
      *
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     *
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\CatalogSummaryResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function catalogSummaryGet()
+    public function catalogSummaryGet(array $params = [])
     {
-        list($response) = $this->catalogSummaryGetWithHttpInfo();
+        list($response) = $this->catalogSummaryGetWithHttpInfo($params);
         return $response;
     }
+
 
     /**
      * Operation catalogSummaryGetWithHttpInfo
      *
-     * 
-     *
+     * @see self::catalogSummaryGet()
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\CatalogSummaryResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function catalogSummaryGetWithHttpInfo()
+    public function catalogSummaryGetWithHttpInfo(array $params = [])
     {
+        
+
         // parse inputs
         $resourcePath = "/catalog/summary";
         $httpBody = '';
@@ -124,16 +114,21 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -145,50 +140,58 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\CatalogSummaryResponse',
                 '/catalog/summary'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\CatalogSummaryResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\CatalogSummaryResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\CatalogSummaryResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation createBrand
-     *
      * 
      *
+     *
      * @param \BigCommerce\Api\v3\Model\BrandPost $brand A &#x60;Brand&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\BrandResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function createBrand($brand)
+    public function createBrand($brand, array $params = [])
     {
-        list($response) = $this->createBrandWithHttpInfo($brand);
+        list($response) = $this->createBrandWithHttpInfo( $brand, $params);
         return $response;
     }
+
 
     /**
      * Operation createBrandWithHttpInfo
      *
-     * 
-     *
+     * @see self::createBrand()
      * @param \BigCommerce\Api\v3\Model\BrandPost $brand A &#x60;Brand&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\BrandResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createBrandWithHttpInfo($brand)
+    public function createBrandWithHttpInfo( $brand, array $params = [])
     {
+        
         // verify the required parameter 'brand' is set
-        if ($brand === null) {
+        if (!isset($brand)) {
             throw new \InvalidArgumentException('Missing the required parameter $brand when calling createBrand');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/brands";
         $httpBody = '';
@@ -201,21 +204,26 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
         // body params
         $_tempBody = null;
         if (isset($brand)) {
-            $_tempBody = $brand;
+        $_tempBody = $brand;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -227,64 +235,75 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\BrandResponse',
                 '/catalog/brands'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\BrandResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\BrandResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\BrandResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 409:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation createBrandImage
-     *
      * 
      *
+     *
      * @param int $brand_id The ID of the &#x60;Brand&#x60; to which the resource belongs. (required)
-     * @param \SplFileObject $image_file An image file. Supported MIME types include GIF, JPEG, and PNG. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - image_file \SplFileObject An image file. Supported MIME types include GIF, JPEG, and PNG. (required)
      * @return \BigCommerce\Api\v3\Model\ImageResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function createBrandImage($brand_id, $image_file)
+    public function createBrandImage($brand_id, array $params = [])
     {
-        list($response) = $this->createBrandImageWithHttpInfo($brand_id, $image_file);
+        list($response) = $this->createBrandImageWithHttpInfo($brand_id, $params);
         return $response;
     }
+
 
     /**
      * Operation createBrandImageWithHttpInfo
      *
-     * 
-     *
+     * @see self::createBrandImage()
      * @param int $brand_id The ID of the &#x60;Brand&#x60; to which the resource belongs. (required)
-     * @param \SplFileObject $image_file An image file. Supported MIME types include GIF, JPEG, and PNG. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ImageResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createBrandImageWithHttpInfo($brand_id, $image_file)
+    public function createBrandImageWithHttpInfo($brand_id, array $params = [])
     {
+        
         // verify the required parameter 'brand_id' is set
-        if ($brand_id === null) {
+        if (!isset($brand_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $brand_id when calling createBrandImage');
         }
+        
         // verify the required parameter 'image_file' is set
-        if ($image_file === null) {
-            throw new \InvalidArgumentException('Missing the required parameter $image_file when calling createBrandImage');
+        if (!isset($params[ 'image_file' ])) {
+            throw new \InvalidArgumentException('Missing the required parameter $params[ "image_file" ] when calling createBrandImage');
         }
+        $image_file = array_key_exists( 'image_file', $params ) ? $params[ 'image_file' ] : null;
+        
+
         // parse inputs
         $resourcePath = "/catalog/brands/{brand_id}/image";
         $httpBody = '';
@@ -297,8 +316,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['multipart/form-data']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($brand_id !== null) {
+
+
+        if (isset($brand_id)) {
             $resourcePath = str_replace(
                 "{" . "brand_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($brand_id),
@@ -307,16 +333,15 @@ class CatalogApi
         }
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
-
         // form params
         if ($image_file !== null) {
-            // PHP 5.5 introduced a CurlFile object that deprecates the old @filename syntax
-            // See: https://wiki.php.net/rfc/curl-file-upload
-            if (function_exists('curl_file_create')) {
-                $formParams['image_file'] = curl_file_create($this->apiClient->getSerializer()->toFormValue($image_file));
-            } else {
-                $formParams['image_file'] = '@' . $this->apiClient->getSerializer()->toFormValue($image_file);
-            }
+        // PHP 5.5 introduced a CurlFile object that deprecates the old @filename syntax
+        // See: https://wiki.php.net/rfc/curl-file-upload
+        if (function_exists('curl_file_create')) {
+            $formParams['image_file'] = curl_file_create($this->apiClient->getSerializer()->toFormValue($image_file));
+        } else {
+            $formParams['image_file'] = '@' . $this->apiClient->getSerializer()->toFormValue($image_file);
+        }
         }
         
         // for model (json/xml)
@@ -325,6 +350,7 @@ class CatalogApi
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -336,64 +362,75 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ImageResponse',
                 '/catalog/brands/{brand_id}/image'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ImageResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ImageResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ImageResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation createBrandMetafield
-     *
      * 
+     *
      *
      * @param int $brand_id The ID of the &#x60;Brand&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\MetafieldPost $metafield A &#x60;Metafield&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\MetafieldResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function createBrandMetafield($brand_id, $metafield)
+    public function createBrandMetafield($brand_id, $metafield, array $params = [])
     {
-        list($response) = $this->createBrandMetafieldWithHttpInfo($brand_id, $metafield);
+        list($response) = $this->createBrandMetafieldWithHttpInfo($brand_id,  $metafield, $params);
         return $response;
     }
+
 
     /**
      * Operation createBrandMetafieldWithHttpInfo
      *
-     * 
-     *
+     * @see self::createBrandMetafield()
      * @param int $brand_id The ID of the &#x60;Brand&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\MetafieldPost $metafield A &#x60;Metafield&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\MetafieldResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createBrandMetafieldWithHttpInfo($brand_id, $metafield)
+    public function createBrandMetafieldWithHttpInfo($brand_id,  $metafield, array $params = [])
     {
+        
         // verify the required parameter 'brand_id' is set
-        if ($brand_id === null) {
+        if (!isset($brand_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $brand_id when calling createBrandMetafield');
         }
+        
         // verify the required parameter 'metafield' is set
-        if ($metafield === null) {
+        if (!isset($metafield)) {
             throw new \InvalidArgumentException('Missing the required parameter $metafield when calling createBrandMetafield');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/brands/{brand_id}/metafields";
         $httpBody = '';
@@ -406,8 +443,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($brand_id !== null) {
+
+
+        if (isset($brand_id)) {
             $resourcePath = str_replace(
                 "{" . "brand_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($brand_id),
@@ -420,15 +464,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($metafield)) {
-            $_tempBody = $metafield;
+        $_tempBody = $metafield;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -440,68 +484,77 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\MetafieldResponse',
                 '/catalog/brands/{brand_id}/metafields'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\MetafieldResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetafieldResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetafieldResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 409:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation createBulkPricingRule
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\BulkPricingRulePost $bulk_pricing_rule &#x60;BulkPricingRule&#x60; object. (required)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - page int Specifies the page number in a limited (paginated) list of products. (optional)
+     *     - limit int Controls the number of items per page in a limited (paginated) list of products. (optional)
      * @return \BigCommerce\Api\v3\Model\BulkPricingRuleResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function createBulkPricingRule($product_id, $bulk_pricing_rule, $page = null, $limit = null)
+    public function createBulkPricingRule($product_id, $bulk_pricing_rule, array $params = [])
     {
-        list($response) = $this->createBulkPricingRuleWithHttpInfo($product_id, $bulk_pricing_rule, $page, $limit);
+        list($response) = $this->createBulkPricingRuleWithHttpInfo($product_id,  $bulk_pricing_rule, $params);
         return $response;
     }
+
 
     /**
      * Operation createBulkPricingRuleWithHttpInfo
      *
-     * 
-     *
+     * @see self::createBulkPricingRule()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\BulkPricingRulePost $bulk_pricing_rule &#x60;BulkPricingRule&#x60; object. (required)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\BulkPricingRuleResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createBulkPricingRuleWithHttpInfo($product_id, $bulk_pricing_rule, $page = null, $limit = null)
+    public function createBulkPricingRuleWithHttpInfo($product_id,  $bulk_pricing_rule, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling createBulkPricingRule');
         }
+        
         // verify the required parameter 'bulk_pricing_rule' is set
-        if ($bulk_pricing_rule === null) {
+        if (!isset($bulk_pricing_rule)) {
             throw new \InvalidArgumentException('Missing the required parameter $bulk_pricing_rule when calling createBulkPricingRule');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/bulk-pricing-rules";
         $httpBody = '';
@@ -515,15 +568,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($page !== null) {
-            $queryParams['page'] = $this->apiClient->getSerializer()->toQueryValue($page);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($limit !== null) {
-            $queryParams['limit'] = $this->apiClient->getSerializer()->toQueryValue($limit);
-        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -536,15 +588,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($bulk_pricing_rule)) {
-            $_tempBody = $bulk_pricing_rule;
+        $_tempBody = $bulk_pricing_rule;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -556,62 +608,73 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\BulkPricingRuleResponse',
                 '/catalog/products/{product_id}/bulk-pricing-rules'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\BulkPricingRuleResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\BulkPricingRuleResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\BulkPricingRuleResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 409:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation createCategory
-     *
      * 
      *
+     *
      * @param \BigCommerce\Api\v3\Model\CategoryPost $category A BigCommerce &#x60;Category&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\CategoryResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function createCategory($category)
+    public function createCategory($category, array $params = [])
     {
-        list($response) = $this->createCategoryWithHttpInfo($category);
+        list($response) = $this->createCategoryWithHttpInfo( $category, $params);
         return $response;
     }
+
 
     /**
      * Operation createCategoryWithHttpInfo
      *
-     * 
-     *
+     * @see self::createCategory()
      * @param \BigCommerce\Api\v3\Model\CategoryPost $category A BigCommerce &#x60;Category&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\CategoryResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createCategoryWithHttpInfo($category)
+    public function createCategoryWithHttpInfo( $category, array $params = [])
     {
+        
         // verify the required parameter 'category' is set
-        if ($category === null) {
+        if (!isset($category)) {
             throw new \InvalidArgumentException('Missing the required parameter $category when calling createCategory');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/categories";
         $httpBody = '';
@@ -624,21 +687,26 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
         // body params
         $_tempBody = null;
         if (isset($category)) {
-            $_tempBody = $category;
+        $_tempBody = $category;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -650,64 +718,75 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\CategoryResponse',
                 '/catalog/categories'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\CategoryResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\CategoryResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\CategoryResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 409:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation createCategoryImage
-     *
      * 
      *
+     *
      * @param int $category_id The ID of the &#x60;Category&#x60; to which the resource belongs. (required)
-     * @param \SplFileObject $image_file An image file. Supported MIME types include GIF, JPEG, and PNG. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - image_file \SplFileObject An image file. Supported MIME types include GIF, JPEG, and PNG. (required)
      * @return \BigCommerce\Api\v3\Model\ImageResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function createCategoryImage($category_id, $image_file)
+    public function createCategoryImage($category_id, array $params = [])
     {
-        list($response) = $this->createCategoryImageWithHttpInfo($category_id, $image_file);
+        list($response) = $this->createCategoryImageWithHttpInfo($category_id, $params);
         return $response;
     }
+
 
     /**
      * Operation createCategoryImageWithHttpInfo
      *
-     * 
-     *
+     * @see self::createCategoryImage()
      * @param int $category_id The ID of the &#x60;Category&#x60; to which the resource belongs. (required)
-     * @param \SplFileObject $image_file An image file. Supported MIME types include GIF, JPEG, and PNG. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ImageResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createCategoryImageWithHttpInfo($category_id, $image_file)
+    public function createCategoryImageWithHttpInfo($category_id, array $params = [])
     {
+        
         // verify the required parameter 'category_id' is set
-        if ($category_id === null) {
+        if (!isset($category_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $category_id when calling createCategoryImage');
         }
+        
         // verify the required parameter 'image_file' is set
-        if ($image_file === null) {
-            throw new \InvalidArgumentException('Missing the required parameter $image_file when calling createCategoryImage');
+        if (!isset($params[ 'image_file' ])) {
+            throw new \InvalidArgumentException('Missing the required parameter $params[ "image_file" ] when calling createCategoryImage');
         }
+        $image_file = array_key_exists( 'image_file', $params ) ? $params[ 'image_file' ] : null;
+        
+
         // parse inputs
         $resourcePath = "/catalog/categories/{category_id}/image";
         $httpBody = '';
@@ -720,8 +799,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['multipart/form-data']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($category_id !== null) {
+
+
+        if (isset($category_id)) {
             $resourcePath = str_replace(
                 "{" . "category_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($category_id),
@@ -730,16 +816,15 @@ class CatalogApi
         }
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
-
         // form params
         if ($image_file !== null) {
-            // PHP 5.5 introduced a CurlFile object that deprecates the old @filename syntax
-            // See: https://wiki.php.net/rfc/curl-file-upload
-            if (function_exists('curl_file_create')) {
-                $formParams['image_file'] = curl_file_create($this->apiClient->getSerializer()->toFormValue($image_file));
-            } else {
-                $formParams['image_file'] = '@' . $this->apiClient->getSerializer()->toFormValue($image_file);
-            }
+        // PHP 5.5 introduced a CurlFile object that deprecates the old @filename syntax
+        // See: https://wiki.php.net/rfc/curl-file-upload
+        if (function_exists('curl_file_create')) {
+            $formParams['image_file'] = curl_file_create($this->apiClient->getSerializer()->toFormValue($image_file));
+        } else {
+            $formParams['image_file'] = '@' . $this->apiClient->getSerializer()->toFormValue($image_file);
+        }
         }
         
         // for model (json/xml)
@@ -748,6 +833,7 @@ class CatalogApi
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -759,64 +845,75 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ImageResponse',
                 '/catalog/categories/{category_id}/image'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ImageResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ImageResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ImageResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation createCategoryMetafield
-     *
      * 
+     *
      *
      * @param int $category_id The ID of the &#x60;Category&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\MetafieldPost $metafield A &#x60;Metafield&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\MetafieldResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function createCategoryMetafield($category_id, $metafield)
+    public function createCategoryMetafield($category_id, $metafield, array $params = [])
     {
-        list($response) = $this->createCategoryMetafieldWithHttpInfo($category_id, $metafield);
+        list($response) = $this->createCategoryMetafieldWithHttpInfo($category_id,  $metafield, $params);
         return $response;
     }
+
 
     /**
      * Operation createCategoryMetafieldWithHttpInfo
      *
-     * 
-     *
+     * @see self::createCategoryMetafield()
      * @param int $category_id The ID of the &#x60;Category&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\MetafieldPost $metafield A &#x60;Metafield&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\MetafieldResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createCategoryMetafieldWithHttpInfo($category_id, $metafield)
+    public function createCategoryMetafieldWithHttpInfo($category_id,  $metafield, array $params = [])
     {
+        
         // verify the required parameter 'category_id' is set
-        if ($category_id === null) {
+        if (!isset($category_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $category_id when calling createCategoryMetafield');
         }
+        
         // verify the required parameter 'metafield' is set
-        if ($metafield === null) {
+        if (!isset($metafield)) {
             throw new \InvalidArgumentException('Missing the required parameter $metafield when calling createCategoryMetafield');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/categories/{category_id}/metafields";
         $httpBody = '';
@@ -829,8 +926,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($category_id !== null) {
+
+
+        if (isset($category_id)) {
             $resourcePath = str_replace(
                 "{" . "category_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($category_id),
@@ -843,15 +947,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($metafield)) {
-            $_tempBody = $metafield;
+        $_tempBody = $metafield;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -863,64 +967,75 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\MetafieldResponse',
                 '/catalog/categories/{category_id}/metafields'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\MetafieldResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetafieldResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetafieldResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 409:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation createComplexRule
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\ComplexRulePost $complex_rule &#x60;ComplexRule&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\ComplexRuleResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function createComplexRule($product_id, $complex_rule)
+    public function createComplexRule($product_id, $complex_rule, array $params = [])
     {
-        list($response) = $this->createComplexRuleWithHttpInfo($product_id, $complex_rule);
+        list($response) = $this->createComplexRuleWithHttpInfo($product_id,  $complex_rule, $params);
         return $response;
     }
+
 
     /**
      * Operation createComplexRuleWithHttpInfo
      *
-     * 
-     *
+     * @see self::createComplexRule()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\ComplexRulePost $complex_rule &#x60;ComplexRule&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ComplexRuleResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createComplexRuleWithHttpInfo($product_id, $complex_rule)
+    public function createComplexRuleWithHttpInfo($product_id,  $complex_rule, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling createComplexRule');
         }
+        
         // verify the required parameter 'complex_rule' is set
-        if ($complex_rule === null) {
+        if (!isset($complex_rule)) {
             throw new \InvalidArgumentException('Missing the required parameter $complex_rule when calling createComplexRule');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/complex-rules";
         $httpBody = '';
@@ -933,8 +1048,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -947,15 +1069,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($complex_rule)) {
-            $_tempBody = $complex_rule;
+        $_tempBody = $complex_rule;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -967,64 +1089,75 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ComplexRuleResponse',
                 '/catalog/products/{product_id}/complex-rules'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ComplexRuleResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ComplexRuleResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ComplexRuleResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 409:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation createConfigurableField
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\ConfigurableFieldPost $configurable_field &#x60;ConfigurableField&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\ConfigurableFieldResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function createConfigurableField($product_id, $configurable_field)
+    public function createConfigurableField($product_id, $configurable_field, array $params = [])
     {
-        list($response) = $this->createConfigurableFieldWithHttpInfo($product_id, $configurable_field);
+        list($response) = $this->createConfigurableFieldWithHttpInfo($product_id,  $configurable_field, $params);
         return $response;
     }
+
 
     /**
      * Operation createConfigurableFieldWithHttpInfo
      *
-     * 
-     *
+     * @see self::createConfigurableField()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\ConfigurableFieldPost $configurable_field &#x60;ConfigurableField&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ConfigurableFieldResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createConfigurableFieldWithHttpInfo($product_id, $configurable_field)
+    public function createConfigurableFieldWithHttpInfo($product_id,  $configurable_field, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling createConfigurableField');
         }
+        
         // verify the required parameter 'configurable_field' is set
-        if ($configurable_field === null) {
+        if (!isset($configurable_field)) {
             throw new \InvalidArgumentException('Missing the required parameter $configurable_field when calling createConfigurableField');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/configurable-fields";
         $httpBody = '';
@@ -1037,8 +1170,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -1051,15 +1191,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($configurable_field)) {
-            $_tempBody = $configurable_field;
+        $_tempBody = $configurable_field;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -1071,64 +1211,75 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ConfigurableFieldResponse',
                 '/catalog/products/{product_id}/configurable-fields'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ConfigurableFieldResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ConfigurableFieldResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ConfigurableFieldResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation createCustomField
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\CustomFieldPost $custom_field &#x60;CustomField&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\CustomFieldResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function createCustomField($product_id, $custom_field)
+    public function createCustomField($product_id, $custom_field, array $params = [])
     {
-        list($response) = $this->createCustomFieldWithHttpInfo($product_id, $custom_field);
+        list($response) = $this->createCustomFieldWithHttpInfo($product_id,  $custom_field, $params);
         return $response;
     }
+
 
     /**
      * Operation createCustomFieldWithHttpInfo
      *
-     * 
-     *
+     * @see self::createCustomField()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\CustomFieldPost $custom_field &#x60;CustomField&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\CustomFieldResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createCustomFieldWithHttpInfo($product_id, $custom_field)
+    public function createCustomFieldWithHttpInfo($product_id,  $custom_field, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling createCustomField');
         }
+        
         // verify the required parameter 'custom_field' is set
-        if ($custom_field === null) {
+        if (!isset($custom_field)) {
             throw new \InvalidArgumentException('Missing the required parameter $custom_field when calling createCustomField');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/custom-fields";
         $httpBody = '';
@@ -1141,8 +1292,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -1155,15 +1313,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($custom_field)) {
-            $_tempBody = $custom_field;
+        $_tempBody = $custom_field;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -1175,64 +1333,75 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\CustomFieldResponse',
                 '/catalog/products/{product_id}/custom-fields'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\CustomFieldResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\CustomFieldResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\CustomFieldResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation createModifier
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\ModifierPost $modifier A &#x60;Modifier&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\ModifierResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function createModifier($product_id, $modifier)
+    public function createModifier($product_id, $modifier, array $params = [])
     {
-        list($response) = $this->createModifierWithHttpInfo($product_id, $modifier);
+        list($response) = $this->createModifierWithHttpInfo($product_id,  $modifier, $params);
         return $response;
     }
+
 
     /**
      * Operation createModifierWithHttpInfo
      *
-     * 
-     *
+     * @see self::createModifier()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\ModifierPost $modifier A &#x60;Modifier&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ModifierResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createModifierWithHttpInfo($product_id, $modifier)
+    public function createModifierWithHttpInfo($product_id,  $modifier, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling createModifier');
         }
+        
         // verify the required parameter 'modifier' is set
-        if ($modifier === null) {
+        if (!isset($modifier)) {
             throw new \InvalidArgumentException('Missing the required parameter $modifier when calling createModifier');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/modifiers";
         $httpBody = '';
@@ -1245,8 +1414,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -1259,15 +1435,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($modifier)) {
-            $_tempBody = $modifier;
+        $_tempBody = $modifier;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -1279,76 +1455,89 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ModifierResponse',
                 '/catalog/products/{product_id}/modifiers'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ModifierResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ModifierResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ModifierResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 409:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation createModifierImage
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $modifier_id The ID of the &#x60;Modifier&#x60;. (required)
      * @param int $value_id The ID of the &#x60;Modifier&#x60;. (required)
-     * @param \SplFileObject $image_file An image file. Supported MIME types include GIF, JPEG, and PNG. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - image_file \SplFileObject An image file. Supported MIME types include GIF, JPEG, and PNG. (required)
      * @return \BigCommerce\Api\v3\Model\ImageResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function createModifierImage($product_id, $modifier_id, $value_id, $image_file)
+    public function createModifierImage($product_id, $modifier_id, $value_id, array $params = [])
     {
-        list($response) = $this->createModifierImageWithHttpInfo($product_id, $modifier_id, $value_id, $image_file);
+        list($response) = $this->createModifierImageWithHttpInfo($product_id, $modifier_id, $value_id, $params);
         return $response;
     }
+
 
     /**
      * Operation createModifierImageWithHttpInfo
      *
-     * 
-     *
+     * @see self::createModifierImage()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $modifier_id The ID of the &#x60;Modifier&#x60;. (required)
      * @param int $value_id The ID of the &#x60;Modifier&#x60;. (required)
-     * @param \SplFileObject $image_file An image file. Supported MIME types include GIF, JPEG, and PNG. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ImageResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createModifierImageWithHttpInfo($product_id, $modifier_id, $value_id, $image_file)
+    public function createModifierImageWithHttpInfo($product_id, $modifier_id, $value_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling createModifierImage');
         }
+        
         // verify the required parameter 'modifier_id' is set
-        if ($modifier_id === null) {
+        if (!isset($modifier_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $modifier_id when calling createModifierImage');
         }
+        
         // verify the required parameter 'value_id' is set
-        if ($value_id === null) {
+        if (!isset($value_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $value_id when calling createModifierImage');
         }
+        
         // verify the required parameter 'image_file' is set
-        if ($image_file === null) {
-            throw new \InvalidArgumentException('Missing the required parameter $image_file when calling createModifierImage');
+        if (!isset($params[ 'image_file' ])) {
+            throw new \InvalidArgumentException('Missing the required parameter $params[ "image_file" ] when calling createModifierImage');
         }
+        $image_file = array_key_exists( 'image_file', $params ) ? $params[ 'image_file' ] : null;
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/modifiers/{modifier_id}/values/{value_id}/image";
         $httpBody = '';
@@ -1361,8 +1550,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['multipart/form-data']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -1370,7 +1566,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($modifier_id !== null) {
+
+
+        if (isset($modifier_id)) {
             $resourcePath = str_replace(
                 "{" . "modifier_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($modifier_id),
@@ -1378,7 +1576,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($value_id !== null) {
+
+
+        if (isset($value_id)) {
             $resourcePath = str_replace(
                 "{" . "value_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($value_id),
@@ -1387,16 +1587,15 @@ class CatalogApi
         }
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
-
         // form params
         if ($image_file !== null) {
-            // PHP 5.5 introduced a CurlFile object that deprecates the old @filename syntax
-            // See: https://wiki.php.net/rfc/curl-file-upload
-            if (function_exists('curl_file_create')) {
-                $formParams['image_file'] = curl_file_create($this->apiClient->getSerializer()->toFormValue($image_file));
-            } else {
-                $formParams['image_file'] = '@' . $this->apiClient->getSerializer()->toFormValue($image_file);
-            }
+        // PHP 5.5 introduced a CurlFile object that deprecates the old @filename syntax
+        // See: https://wiki.php.net/rfc/curl-file-upload
+        if (function_exists('curl_file_create')) {
+            $formParams['image_file'] = curl_file_create($this->apiClient->getSerializer()->toFormValue($image_file));
+        } else {
+            $formParams['image_file'] = '@' . $this->apiClient->getSerializer()->toFormValue($image_file);
+        }
         }
         
         // for model (json/xml)
@@ -1405,6 +1604,7 @@ class CatalogApi
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -1416,70 +1616,82 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ImageResponse',
                 '/catalog/products/{product_id}/modifiers/{modifier_id}/values/{value_id}/image'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ImageResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ImageResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ImageResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation createModifierValue
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $modifier_id The ID of the &#x60;Modifier&#x60;. (required)
      * @param \BigCommerce\Api\v3\Model\ModifierValuePost $modifier_value A &#x60;ModifierValue&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\ModifierValueResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function createModifierValue($product_id, $modifier_id, $modifier_value)
+    public function createModifierValue($product_id, $modifier_id, $modifier_value, array $params = [])
     {
-        list($response) = $this->createModifierValueWithHttpInfo($product_id, $modifier_id, $modifier_value);
+        list($response) = $this->createModifierValueWithHttpInfo($product_id, $modifier_id,  $modifier_value, $params);
         return $response;
     }
+
 
     /**
      * Operation createModifierValueWithHttpInfo
      *
-     * 
-     *
+     * @see self::createModifierValue()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $modifier_id The ID of the &#x60;Modifier&#x60;. (required)
      * @param \BigCommerce\Api\v3\Model\ModifierValuePost $modifier_value A &#x60;ModifierValue&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ModifierValueResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createModifierValueWithHttpInfo($product_id, $modifier_id, $modifier_value)
+    public function createModifierValueWithHttpInfo($product_id, $modifier_id,  $modifier_value, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling createModifierValue');
         }
+        
         // verify the required parameter 'modifier_id' is set
-        if ($modifier_id === null) {
+        if (!isset($modifier_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $modifier_id when calling createModifierValue');
         }
+        
         // verify the required parameter 'modifier_value' is set
-        if ($modifier_value === null) {
+        if (!isset($modifier_value)) {
             throw new \InvalidArgumentException('Missing the required parameter $modifier_value when calling createModifierValue');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/modifiers/{modifier_id}/values";
         $httpBody = '';
@@ -1492,8 +1704,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -1501,7 +1720,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($modifier_id !== null) {
+
+
+        if (isset($modifier_id)) {
             $resourcePath = str_replace(
                 "{" . "modifier_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($modifier_id),
@@ -1514,15 +1735,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($modifier_value)) {
-            $_tempBody = $modifier_value;
+        $_tempBody = $modifier_value;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -1534,60 +1755,70 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ModifierValueResponse',
                 '/catalog/products/{product_id}/modifiers/{modifier_id}/values'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ModifierValueResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ModifierValueResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ModifierValueResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation createOption
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\OptionPost $option An &#x60;Option&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\OptionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function createOption($product_id, $option)
+    public function createOption($product_id, $option, array $params = [])
     {
-        list($response) = $this->createOptionWithHttpInfo($product_id, $option);
+        list($response) = $this->createOptionWithHttpInfo($product_id,  $option, $params);
         return $response;
     }
+
 
     /**
      * Operation createOptionWithHttpInfo
      *
-     * 
-     *
+     * @see self::createOption()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\OptionPost $option An &#x60;Option&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\OptionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createOptionWithHttpInfo($product_id, $option)
+    public function createOptionWithHttpInfo($product_id,  $option, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling createOption');
         }
+        
         // verify the required parameter 'option' is set
-        if ($option === null) {
+        if (!isset($option)) {
             throw new \InvalidArgumentException('Missing the required parameter $option when calling createOption');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/options";
         $httpBody = '';
@@ -1600,8 +1831,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -1614,15 +1852,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($option)) {
-            $_tempBody = $option;
+        $_tempBody = $option;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -1634,70 +1872,82 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\OptionResponse',
                 '/catalog/products/{product_id}/options'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\OptionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\OptionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\OptionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 409:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation createOptionValue
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $option_id The ID of the &#x60;Option&#x60;. (required)
      * @param \BigCommerce\Api\v3\Model\OptionValuePost $option_value A &#x60;OptionValue&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\OptionValueResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function createOptionValue($product_id, $option_id, $option_value)
+    public function createOptionValue($product_id, $option_id, $option_value, array $params = [])
     {
-        list($response) = $this->createOptionValueWithHttpInfo($product_id, $option_id, $option_value);
+        list($response) = $this->createOptionValueWithHttpInfo($product_id, $option_id,  $option_value, $params);
         return $response;
     }
+
 
     /**
      * Operation createOptionValueWithHttpInfo
      *
-     * 
-     *
+     * @see self::createOptionValue()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $option_id The ID of the &#x60;Option&#x60;. (required)
      * @param \BigCommerce\Api\v3\Model\OptionValuePost $option_value A &#x60;OptionValue&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\OptionValueResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createOptionValueWithHttpInfo($product_id, $option_id, $option_value)
+    public function createOptionValueWithHttpInfo($product_id, $option_id,  $option_value, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling createOptionValue');
         }
+        
         // verify the required parameter 'option_id' is set
-        if ($option_id === null) {
+        if (!isset($option_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $option_id when calling createOptionValue');
         }
+        
         // verify the required parameter 'option_value' is set
-        if ($option_value === null) {
+        if (!isset($option_value)) {
             throw new \InvalidArgumentException('Missing the required parameter $option_value when calling createOptionValue');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/options/{option_id}/values";
         $httpBody = '';
@@ -1710,8 +1960,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -1719,7 +1976,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($option_id !== null) {
+
+
+        if (isset($option_id)) {
             $resourcePath = str_replace(
                 "{" . "option_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($option_id),
@@ -1732,15 +1991,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($option_value)) {
-            $_tempBody = $option_value;
+        $_tempBody = $option_value;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -1752,54 +2011,63 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\OptionValueResponse',
                 '/catalog/products/{product_id}/options/{option_id}/values'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\OptionValueResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\OptionValueResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\OptionValueResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation createProduct
-     *
      * 
      *
+     *
      * @param \BigCommerce\Api\v3\Model\ProductPost $product A BigCommerce &#x60;Product&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\ProductResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function createProduct($product)
+    public function createProduct($product, array $params = [])
     {
-        list($response) = $this->createProductWithHttpInfo($product);
+        list($response) = $this->createProductWithHttpInfo( $product, $params);
         return $response;
     }
+
 
     /**
      * Operation createProductWithHttpInfo
      *
-     * 
-     *
+     * @see self::createProduct()
      * @param \BigCommerce\Api\v3\Model\ProductPost $product A BigCommerce &#x60;Product&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ProductResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createProductWithHttpInfo($product)
+    public function createProductWithHttpInfo( $product, array $params = [])
     {
+        
         // verify the required parameter 'product' is set
-        if ($product === null) {
+        if (!isset($product)) {
             throw new \InvalidArgumentException('Missing the required parameter $product when calling createProduct');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products";
         $httpBody = '';
@@ -1812,21 +2080,26 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
         // body params
         $_tempBody = null;
         if (isset($product)) {
-            $_tempBody = $product;
+        $_tempBody = $product;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -1838,64 +2111,75 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ProductResponse',
                 '/catalog/products'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ProductResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 409:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation createProductImage
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\ProductImagePost $product_image A BigCommerce &#x60;ProductImage&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\ProductImageResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function createProductImage($product_id, $product_image)
+    public function createProductImage($product_id, $product_image, array $params = [])
     {
-        list($response) = $this->createProductImageWithHttpInfo($product_id, $product_image);
+        list($response) = $this->createProductImageWithHttpInfo($product_id,  $product_image, $params);
         return $response;
     }
+
 
     /**
      * Operation createProductImageWithHttpInfo
      *
-     * 
-     *
+     * @see self::createProductImage()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\ProductImagePost $product_image A BigCommerce &#x60;ProductImage&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ProductImageResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createProductImageWithHttpInfo($product_id, $product_image)
+    public function createProductImageWithHttpInfo($product_id,  $product_image, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling createProductImage');
         }
+        
         // verify the required parameter 'product_image' is set
-        if ($product_image === null) {
+        if (!isset($product_image)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_image when calling createProductImage');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/images";
         $httpBody = '';
@@ -1908,8 +2192,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -1922,15 +2213,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($product_image)) {
-            $_tempBody = $product_image;
+        $_tempBody = $product_image;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -1942,60 +2233,70 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ProductImageResponse',
                 '/catalog/products/{product_id}/images'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ProductImageResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductImageResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductImageResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation createProductMetafield
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\MetafieldPost $metafield A &#x60;Metafield&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\MetafieldResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function createProductMetafield($product_id, $metafield)
+    public function createProductMetafield($product_id, $metafield, array $params = [])
     {
-        list($response) = $this->createProductMetafieldWithHttpInfo($product_id, $metafield);
+        list($response) = $this->createProductMetafieldWithHttpInfo($product_id,  $metafield, $params);
         return $response;
     }
+
 
     /**
      * Operation createProductMetafieldWithHttpInfo
      *
-     * 
-     *
+     * @see self::createProductMetafield()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\MetafieldPost $metafield A &#x60;Metafield&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\MetafieldResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createProductMetafieldWithHttpInfo($product_id, $metafield)
+    public function createProductMetafieldWithHttpInfo($product_id,  $metafield, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling createProductMetafield');
         }
+        
         // verify the required parameter 'metafield' is set
-        if ($metafield === null) {
+        if (!isset($metafield)) {
             throw new \InvalidArgumentException('Missing the required parameter $metafield when calling createProductMetafield');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/metafields";
         $httpBody = '';
@@ -2008,8 +2309,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -2022,15 +2330,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($metafield)) {
-            $_tempBody = $metafield;
+        $_tempBody = $metafield;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -2042,64 +2350,75 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\MetafieldResponse',
                 '/catalog/products/{product_id}/metafields'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\MetafieldResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetafieldResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetafieldResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 409:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation createProductReview
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\ProductReviewPost $product_review A BigCommerce &#x60;ProductReview&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\ProductReviewResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function createProductReview($product_id, $product_review)
+    public function createProductReview($product_id, $product_review, array $params = [])
     {
-        list($response) = $this->createProductReviewWithHttpInfo($product_id, $product_review);
+        list($response) = $this->createProductReviewWithHttpInfo($product_id,  $product_review, $params);
         return $response;
     }
+
 
     /**
      * Operation createProductReviewWithHttpInfo
      *
-     * 
-     *
+     * @see self::createProductReview()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\ProductReviewPost $product_review A BigCommerce &#x60;ProductReview&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ProductReviewResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createProductReviewWithHttpInfo($product_id, $product_review)
+    public function createProductReviewWithHttpInfo($product_id,  $product_review, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling createProductReview');
         }
+        
         // verify the required parameter 'product_review' is set
-        if ($product_review === null) {
+        if (!isset($product_review)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_review when calling createProductReview');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/reviews";
         $httpBody = '';
@@ -2112,8 +2431,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -2126,15 +2452,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($product_review)) {
-            $_tempBody = $product_review;
+        $_tempBody = $product_review;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -2146,60 +2472,70 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ProductReviewResponse',
                 '/catalog/products/{product_id}/reviews'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ProductReviewResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductReviewResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductReviewResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation createProductVideo
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\ProductVideoPost $product_video A BigCommerce &#x60;ProductVideo&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\ProductVideoResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function createProductVideo($product_id, $product_video)
+    public function createProductVideo($product_id, $product_video, array $params = [])
     {
-        list($response) = $this->createProductVideoWithHttpInfo($product_id, $product_video);
+        list($response) = $this->createProductVideoWithHttpInfo($product_id,  $product_video, $params);
         return $response;
     }
+
 
     /**
      * Operation createProductVideoWithHttpInfo
      *
-     * 
-     *
+     * @see self::createProductVideo()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\ProductVideoPost $product_video A BigCommerce &#x60;ProductVideo&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ProductVideoResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createProductVideoWithHttpInfo($product_id, $product_video)
+    public function createProductVideoWithHttpInfo($product_id,  $product_video, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling createProductVideo');
         }
+        
         // verify the required parameter 'product_video' is set
-        if ($product_video === null) {
+        if (!isset($product_video)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_video when calling createProductVideo');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/videos";
         $httpBody = '';
@@ -2212,8 +2548,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -2226,15 +2569,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($product_video)) {
-            $_tempBody = $product_video;
+        $_tempBody = $product_video;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -2246,60 +2589,70 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ProductVideoResponse',
                 '/catalog/products/{product_id}/videos'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ProductVideoResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductVideoResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductVideoResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation createVariant
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\VariantPost $variant &#x60;Variant&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\VariantResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function createVariant($product_id, $variant)
+    public function createVariant($product_id, $variant, array $params = [])
     {
-        list($response) = $this->createVariantWithHttpInfo($product_id, $variant);
+        list($response) = $this->createVariantWithHttpInfo($product_id,  $variant, $params);
         return $response;
     }
+
 
     /**
      * Operation createVariantWithHttpInfo
      *
-     * 
-     *
+     * @see self::createVariant()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\VariantPost $variant &#x60;Variant&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\VariantResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createVariantWithHttpInfo($product_id, $variant)
+    public function createVariantWithHttpInfo($product_id,  $variant, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling createVariant');
         }
+        
         // verify the required parameter 'variant' is set
-        if ($variant === null) {
+        if (!isset($variant)) {
             throw new \InvalidArgumentException('Missing the required parameter $variant when calling createVariant');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/variants";
         $httpBody = '';
@@ -2312,8 +2665,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -2326,15 +2686,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($variant)) {
-            $_tempBody = $variant;
+        $_tempBody = $variant;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -2346,66 +2706,77 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\VariantResponse',
                 '/catalog/products/{product_id}/variants'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\VariantResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\VariantResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\VariantResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation createVariantImage
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $variant_id ID of the variant on a product, or on an associated Price List Record. (required)
-     * @param \SplFileObject $image_file An image file. Supported MIME types include GIF, JPEG, and PNG. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - image_file \SplFileObject An image file. Supported MIME types include GIF, JPEG, and PNG. (required)
      * @return \BigCommerce\Api\v3\Model\ImageResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function createVariantImage($product_id, $variant_id, $image_file)
+    public function createVariantImage($product_id, $variant_id, array $params = [])
     {
-        list($response) = $this->createVariantImageWithHttpInfo($product_id, $variant_id, $image_file);
+        list($response) = $this->createVariantImageWithHttpInfo($product_id, $variant_id, $params);
         return $response;
     }
+
 
     /**
      * Operation createVariantImageWithHttpInfo
      *
-     * 
-     *
+     * @see self::createVariantImage()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $variant_id ID of the variant on a product, or on an associated Price List Record. (required)
-     * @param \SplFileObject $image_file An image file. Supported MIME types include GIF, JPEG, and PNG. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ImageResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createVariantImageWithHttpInfo($product_id, $variant_id, $image_file)
+    public function createVariantImageWithHttpInfo($product_id, $variant_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling createVariantImage');
         }
+        
         // verify the required parameter 'variant_id' is set
-        if ($variant_id === null) {
+        if (!isset($variant_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $variant_id when calling createVariantImage');
         }
+        
         // verify the required parameter 'image_file' is set
-        if ($image_file === null) {
-            throw new \InvalidArgumentException('Missing the required parameter $image_file when calling createVariantImage');
+        if (!isset($params[ 'image_file' ])) {
+            throw new \InvalidArgumentException('Missing the required parameter $params[ "image_file" ] when calling createVariantImage');
         }
+        $image_file = array_key_exists( 'image_file', $params ) ? $params[ 'image_file' ] : null;
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/variants/{variant_id}/image";
         $httpBody = '';
@@ -2418,8 +2789,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['multipart/form-data']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -2427,7 +2805,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($variant_id !== null) {
+
+
+        if (isset($variant_id)) {
             $resourcePath = str_replace(
                 "{" . "variant_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($variant_id),
@@ -2436,16 +2816,15 @@ class CatalogApi
         }
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
-
         // form params
         if ($image_file !== null) {
-            // PHP 5.5 introduced a CurlFile object that deprecates the old @filename syntax
-            // See: https://wiki.php.net/rfc/curl-file-upload
-            if (function_exists('curl_file_create')) {
-                $formParams['image_file'] = curl_file_create($this->apiClient->getSerializer()->toFormValue($image_file));
-            } else {
-                $formParams['image_file'] = '@' . $this->apiClient->getSerializer()->toFormValue($image_file);
-            }
+        // PHP 5.5 introduced a CurlFile object that deprecates the old @filename syntax
+        // See: https://wiki.php.net/rfc/curl-file-upload
+        if (function_exists('curl_file_create')) {
+            $formParams['image_file'] = curl_file_create($this->apiClient->getSerializer()->toFormValue($image_file));
+        } else {
+            $formParams['image_file'] = '@' . $this->apiClient->getSerializer()->toFormValue($image_file);
+        }
         }
         
         // for model (json/xml)
@@ -2454,6 +2833,7 @@ class CatalogApi
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -2465,70 +2845,82 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ImageResponse',
                 '/catalog/products/{product_id}/variants/{variant_id}/image'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ImageResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ImageResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ImageResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation createVariantMetafield
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $variant_id ID of the variant on a product, or on an associated Price List Record. (required)
      * @param \BigCommerce\Api\v3\Model\MetafieldPost $metafield A &#x60;Metafield&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\MetafieldResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function createVariantMetafield($product_id, $variant_id, $metafield)
+    public function createVariantMetafield($product_id, $variant_id, $metafield, array $params = [])
     {
-        list($response) = $this->createVariantMetafieldWithHttpInfo($product_id, $variant_id, $metafield);
+        list($response) = $this->createVariantMetafieldWithHttpInfo($product_id, $variant_id,  $metafield, $params);
         return $response;
     }
+
 
     /**
      * Operation createVariantMetafieldWithHttpInfo
      *
-     * 
-     *
+     * @see self::createVariantMetafield()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $variant_id ID of the variant on a product, or on an associated Price List Record. (required)
      * @param \BigCommerce\Api\v3\Model\MetafieldPost $metafield A &#x60;Metafield&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\MetafieldResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createVariantMetafieldWithHttpInfo($product_id, $variant_id, $metafield)
+    public function createVariantMetafieldWithHttpInfo($product_id, $variant_id,  $metafield, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling createVariantMetafield');
         }
+        
         // verify the required parameter 'variant_id' is set
-        if ($variant_id === null) {
+        if (!isset($variant_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $variant_id when calling createVariantMetafield');
         }
+        
         // verify the required parameter 'metafield' is set
-        if ($metafield === null) {
+        if (!isset($metafield)) {
             throw new \InvalidArgumentException('Missing the required parameter $metafield when calling createVariantMetafield');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/variants/{variant_id}/metafields";
         $httpBody = '';
@@ -2541,8 +2933,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -2550,7 +2949,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($variant_id !== null) {
+
+
+        if (isset($variant_id)) {
             $resourcePath = str_replace(
                 "{" . "variant_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($variant_id),
@@ -2563,15 +2964,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($metafield)) {
-            $_tempBody = $metafield;
+        $_tempBody = $metafield;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -2583,58 +2984,68 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\MetafieldResponse',
                 '/catalog/products/{product_id}/variants/{variant_id}/metafields'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\MetafieldResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetafieldResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetafieldResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 409:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deleteBrandById
-     *
      * 
      *
+     *
      * @param int $brand_id The ID of the &#x60;Brand&#x60; to which the resource belongs. (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deleteBrandById($brand_id)
+    public function deleteBrandById($brand_id, array $params = [])
     {
-        list($response) = $this->deleteBrandByIdWithHttpInfo($brand_id);
+        list($response) = $this->deleteBrandByIdWithHttpInfo($brand_id, $params);
         return $response;
     }
+
 
     /**
      * Operation deleteBrandByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::deleteBrandById()
      * @param int $brand_id The ID of the &#x60;Brand&#x60; to which the resource belongs. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteBrandByIdWithHttpInfo($brand_id)
+    public function deleteBrandByIdWithHttpInfo($brand_id, array $params = [])
     {
+        
         // verify the required parameter 'brand_id' is set
-        if ($brand_id === null) {
+        if (!isset($brand_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $brand_id when calling deleteBrandById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/brands/{brand_id}";
         $httpBody = '';
@@ -2647,8 +3058,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($brand_id !== null) {
+
+
+        if (isset($brand_id)) {
             $resourcePath = str_replace(
                 "{" . "brand_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($brand_id),
@@ -2658,13 +3076,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -2676,46 +3094,53 @@ class CatalogApi
                 null,
                 '/catalog/brands/{brand_id}'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deleteBrandImage
-     *
      * 
      *
+     *
      * @param int $brand_id The ID of the &#x60;Brand&#x60; to which the resource belongs. (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deleteBrandImage($brand_id)
+    public function deleteBrandImage($brand_id, array $params = [])
     {
-        list($response) = $this->deleteBrandImageWithHttpInfo($brand_id);
+        list($response) = $this->deleteBrandImageWithHttpInfo($brand_id, $params);
         return $response;
     }
+
 
     /**
      * Operation deleteBrandImageWithHttpInfo
      *
-     * 
-     *
+     * @see self::deleteBrandImage()
      * @param int $brand_id The ID of the &#x60;Brand&#x60; to which the resource belongs. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteBrandImageWithHttpInfo($brand_id)
+    public function deleteBrandImageWithHttpInfo($brand_id, array $params = [])
     {
+        
         // verify the required parameter 'brand_id' is set
-        if ($brand_id === null) {
+        if (!isset($brand_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $brand_id when calling deleteBrandImage');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/brands/{brand_id}/image";
         $httpBody = '';
@@ -2728,8 +3153,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($brand_id !== null) {
+
+
+        if (isset($brand_id)) {
             $resourcePath = str_replace(
                 "{" . "brand_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($brand_id),
@@ -2739,13 +3171,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -2757,52 +3189,60 @@ class CatalogApi
                 null,
                 '/catalog/brands/{brand_id}/image'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deleteBrandMetafieldById
-     *
      * 
+     *
      *
      * @param int $metafield_id The ID of the &#x60;Metafield&#x60;. (required)
      * @param int $brand_id The ID of the &#x60;Brand&#x60; to which the resource belongs. (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deleteBrandMetafieldById($metafield_id, $brand_id)
+    public function deleteBrandMetafieldById($metafield_id, $brand_id, array $params = [])
     {
-        list($response) = $this->deleteBrandMetafieldByIdWithHttpInfo($metafield_id, $brand_id);
+        list($response) = $this->deleteBrandMetafieldByIdWithHttpInfo($metafield_id, $brand_id, $params);
         return $response;
     }
+
 
     /**
      * Operation deleteBrandMetafieldByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::deleteBrandMetafieldById()
      * @param int $metafield_id The ID of the &#x60;Metafield&#x60;. (required)
      * @param int $brand_id The ID of the &#x60;Brand&#x60; to which the resource belongs. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteBrandMetafieldByIdWithHttpInfo($metafield_id, $brand_id)
+    public function deleteBrandMetafieldByIdWithHttpInfo($metafield_id, $brand_id, array $params = [])
     {
+        
         // verify the required parameter 'metafield_id' is set
-        if ($metafield_id === null) {
+        if (!isset($metafield_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $metafield_id when calling deleteBrandMetafieldById');
         }
+        
         // verify the required parameter 'brand_id' is set
-        if ($brand_id === null) {
+        if (!isset($brand_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $brand_id when calling deleteBrandMetafieldById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/brands/{brand_id}/metafields/{metafield_id}";
         $httpBody = '';
@@ -2815,8 +3255,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($metafield_id !== null) {
+
+
+        if (isset($metafield_id)) {
             $resourcePath = str_replace(
                 "{" . "metafield_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($metafield_id),
@@ -2824,7 +3271,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($brand_id !== null) {
+
+
+        if (isset($brand_id)) {
             $resourcePath = str_replace(
                 "{" . "brand_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($brand_id),
@@ -2834,13 +3283,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -2852,44 +3301,48 @@ class CatalogApi
                 null,
                 '/catalog/brands/{brand_id}/metafields/{metafield_id}'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deleteBrands
-     *
      * 
      *
-     * @param string $name Filter items by name. (optional)
-     * @param string $page_title Filter items by page_title. (optional)
+     *
+     * @param array $params = []
+     *     - name string Filter items by name. (optional)
+     *     - page_title string Filter items by page_title. (optional)
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deleteBrands($name = null, $page_title = null)
+    public function deleteBrands(array $params = [])
     {
-        list($response) = $this->deleteBrandsWithHttpInfo($name, $page_title);
+        list($response) = $this->deleteBrandsWithHttpInfo($params);
         return $response;
     }
+
 
     /**
      * Operation deleteBrandsWithHttpInfo
      *
-     * 
-     *
-     * @param string $name Filter items by name. (optional)
-     * @param string $page_title Filter items by page_title. (optional)
+     * @see self::deleteBrands()
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteBrandsWithHttpInfo($name = null, $page_title = null)
+    public function deleteBrandsWithHttpInfo(array $params = [])
     {
+        
+
         // parse inputs
         $resourcePath = "/catalog/brands";
         $httpBody = '';
@@ -2903,23 +3356,20 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($name !== null) {
-            $queryParams['name'] = $this->apiClient->getSerializer()->toQueryValue($name);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($page_title !== null) {
-            $queryParams['page_title'] = $this->apiClient->getSerializer()->toQueryValue($page_title);
-        }
+
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -2931,52 +3381,60 @@ class CatalogApi
                 null,
                 '/catalog/brands'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deleteBulkPricingRuleById
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $bulk_pricing_rule_id The ID of the &#x60;BulkPricingRule&#x60;. (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deleteBulkPricingRuleById($product_id, $bulk_pricing_rule_id)
+    public function deleteBulkPricingRuleById($product_id, $bulk_pricing_rule_id, array $params = [])
     {
-        list($response) = $this->deleteBulkPricingRuleByIdWithHttpInfo($product_id, $bulk_pricing_rule_id);
+        list($response) = $this->deleteBulkPricingRuleByIdWithHttpInfo($product_id, $bulk_pricing_rule_id, $params);
         return $response;
     }
+
 
     /**
      * Operation deleteBulkPricingRuleByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::deleteBulkPricingRuleById()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $bulk_pricing_rule_id The ID of the &#x60;BulkPricingRule&#x60;. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteBulkPricingRuleByIdWithHttpInfo($product_id, $bulk_pricing_rule_id)
+    public function deleteBulkPricingRuleByIdWithHttpInfo($product_id, $bulk_pricing_rule_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling deleteBulkPricingRuleById');
         }
+        
         // verify the required parameter 'bulk_pricing_rule_id' is set
-        if ($bulk_pricing_rule_id === null) {
+        if (!isset($bulk_pricing_rule_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $bulk_pricing_rule_id when calling deleteBulkPricingRuleById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/bulk-pricing-rules/{bulk_pricing_rule_id}";
         $httpBody = '';
@@ -2989,8 +3447,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -2998,7 +3463,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($bulk_pricing_rule_id !== null) {
+
+
+        if (isset($bulk_pricing_rule_id)) {
             $resourcePath = str_replace(
                 "{" . "bulk_pricing_rule_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($bulk_pricing_rule_id),
@@ -3008,13 +3475,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -3026,54 +3493,56 @@ class CatalogApi
                 null,
                 '/catalog/products/{product_id}/bulk-pricing-rules/{bulk_pricing_rule_id}'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deleteCategories
-     *
      * 
      *
-     * @param string $name Filter items by name. (optional)
-     * @param int $parent_id Filter items by parent_id. (optional)
-     * @param string $page_title Filter items by page_title. (optional)
-     * @param string $keyword Filter items by keywords. (optional)
-     * @param int $is_visible Filter items by is_visible. (optional)
+     *
+     * @param array $params = []
+     *     - name string Filter items by name. (optional)
+     *     - parent_id int Filter items by parent_id. (optional)
+     *     - page_title string Filter items by page_title. (optional)
+     *     - keyword string Filter items by keywords. (optional)
+     *     - is_visible int Filter items by is_visible. (optional)
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deleteCategories($name = null, $parent_id = null, $page_title = null, $keyword = null, $is_visible = null)
+    public function deleteCategories(array $params = [])
     {
-        list($response) = $this->deleteCategoriesWithHttpInfo($name, $parent_id, $page_title, $keyword, $is_visible);
+        list($response) = $this->deleteCategoriesWithHttpInfo($params);
         return $response;
     }
+
 
     /**
      * Operation deleteCategoriesWithHttpInfo
      *
-     * 
-     *
-     * @param string $name Filter items by name. (optional)
-     * @param int $parent_id Filter items by parent_id. (optional)
-     * @param string $page_title Filter items by page_title. (optional)
-     * @param string $keyword Filter items by keywords. (optional)
-     * @param int $is_visible Filter items by is_visible. (optional)
+     * @see self::deleteCategories()
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteCategoriesWithHttpInfo($name = null, $parent_id = null, $page_title = null, $keyword = null, $is_visible = null)
+    public function deleteCategoriesWithHttpInfo(array $params = [])
     {
+        
+
         // parse inputs
         $resourcePath = "/catalog/categories";
         $httpBody = '';
@@ -3087,35 +3556,20 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($name !== null) {
-            $queryParams['name'] = $this->apiClient->getSerializer()->toQueryValue($name);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($parent_id !== null) {
-            $queryParams['parent_id'] = $this->apiClient->getSerializer()->toQueryValue($parent_id);
-        }
-        // query params
-        if ($page_title !== null) {
-            $queryParams['page_title'] = $this->apiClient->getSerializer()->toQueryValue($page_title);
-        }
-        // query params
-        if ($keyword !== null) {
-            $queryParams['keyword'] = $this->apiClient->getSerializer()->toQueryValue($keyword);
-        }
-        // query params
-        if ($is_visible !== null) {
-            $queryParams['is_visible'] = $this->apiClient->getSerializer()->toQueryValue($is_visible);
-        }
+
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -3127,46 +3581,53 @@ class CatalogApi
                 null,
                 '/catalog/categories'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deleteCategoryById
-     *
      * 
      *
+     *
      * @param int $category_id The ID of the &#x60;Category&#x60; to which the resource belongs. (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deleteCategoryById($category_id)
+    public function deleteCategoryById($category_id, array $params = [])
     {
-        list($response) = $this->deleteCategoryByIdWithHttpInfo($category_id);
+        list($response) = $this->deleteCategoryByIdWithHttpInfo($category_id, $params);
         return $response;
     }
+
 
     /**
      * Operation deleteCategoryByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::deleteCategoryById()
      * @param int $category_id The ID of the &#x60;Category&#x60; to which the resource belongs. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteCategoryByIdWithHttpInfo($category_id)
+    public function deleteCategoryByIdWithHttpInfo($category_id, array $params = [])
     {
+        
         // verify the required parameter 'category_id' is set
-        if ($category_id === null) {
+        if (!isset($category_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $category_id when calling deleteCategoryById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/categories/{category_id}";
         $httpBody = '';
@@ -3179,8 +3640,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($category_id !== null) {
+
+
+        if (isset($category_id)) {
             $resourcePath = str_replace(
                 "{" . "category_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($category_id),
@@ -3190,13 +3658,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -3208,46 +3676,53 @@ class CatalogApi
                 null,
                 '/catalog/categories/{category_id}'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deleteCategoryImage
-     *
      * 
      *
+     *
      * @param int $category_id The ID of the &#x60;Category&#x60; to which the resource belongs. (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deleteCategoryImage($category_id)
+    public function deleteCategoryImage($category_id, array $params = [])
     {
-        list($response) = $this->deleteCategoryImageWithHttpInfo($category_id);
+        list($response) = $this->deleteCategoryImageWithHttpInfo($category_id, $params);
         return $response;
     }
+
 
     /**
      * Operation deleteCategoryImageWithHttpInfo
      *
-     * 
-     *
+     * @see self::deleteCategoryImage()
      * @param int $category_id The ID of the &#x60;Category&#x60; to which the resource belongs. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteCategoryImageWithHttpInfo($category_id)
+    public function deleteCategoryImageWithHttpInfo($category_id, array $params = [])
     {
+        
         // verify the required parameter 'category_id' is set
-        if ($category_id === null) {
+        if (!isset($category_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $category_id when calling deleteCategoryImage');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/categories/{category_id}/image";
         $httpBody = '';
@@ -3260,8 +3735,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($category_id !== null) {
+
+
+        if (isset($category_id)) {
             $resourcePath = str_replace(
                 "{" . "category_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($category_id),
@@ -3271,13 +3753,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -3289,52 +3771,60 @@ class CatalogApi
                 null,
                 '/catalog/categories/{category_id}/image'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deleteCategoryMetafieldById
-     *
      * 
+     *
      *
      * @param int $metafield_id The ID of the &#x60;Metafield&#x60;. (required)
      * @param int $category_id The ID of the &#x60;Category&#x60; to which the resource belongs. (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deleteCategoryMetafieldById($metafield_id, $category_id)
+    public function deleteCategoryMetafieldById($metafield_id, $category_id, array $params = [])
     {
-        list($response) = $this->deleteCategoryMetafieldByIdWithHttpInfo($metafield_id, $category_id);
+        list($response) = $this->deleteCategoryMetafieldByIdWithHttpInfo($metafield_id, $category_id, $params);
         return $response;
     }
+
 
     /**
      * Operation deleteCategoryMetafieldByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::deleteCategoryMetafieldById()
      * @param int $metafield_id The ID of the &#x60;Metafield&#x60;. (required)
      * @param int $category_id The ID of the &#x60;Category&#x60; to which the resource belongs. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteCategoryMetafieldByIdWithHttpInfo($metafield_id, $category_id)
+    public function deleteCategoryMetafieldByIdWithHttpInfo($metafield_id, $category_id, array $params = [])
     {
+        
         // verify the required parameter 'metafield_id' is set
-        if ($metafield_id === null) {
+        if (!isset($metafield_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $metafield_id when calling deleteCategoryMetafieldById');
         }
+        
         // verify the required parameter 'category_id' is set
-        if ($category_id === null) {
+        if (!isset($category_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $category_id when calling deleteCategoryMetafieldById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/categories/{category_id}/metafields/{metafield_id}";
         $httpBody = '';
@@ -3347,8 +3837,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($metafield_id !== null) {
+
+
+        if (isset($metafield_id)) {
             $resourcePath = str_replace(
                 "{" . "metafield_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($metafield_id),
@@ -3356,7 +3853,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($category_id !== null) {
+
+
+        if (isset($category_id)) {
             $resourcePath = str_replace(
                 "{" . "category_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($category_id),
@@ -3366,13 +3865,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -3384,52 +3883,60 @@ class CatalogApi
                 null,
                 '/catalog/categories/{category_id}/metafields/{metafield_id}'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deleteComplexRuleById
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $complex_rule_id The ID of the &#x60;ComplexRule&#x60;. (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deleteComplexRuleById($product_id, $complex_rule_id)
+    public function deleteComplexRuleById($product_id, $complex_rule_id, array $params = [])
     {
-        list($response) = $this->deleteComplexRuleByIdWithHttpInfo($product_id, $complex_rule_id);
+        list($response) = $this->deleteComplexRuleByIdWithHttpInfo($product_id, $complex_rule_id, $params);
         return $response;
     }
+
 
     /**
      * Operation deleteComplexRuleByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::deleteComplexRuleById()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $complex_rule_id The ID of the &#x60;ComplexRule&#x60;. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteComplexRuleByIdWithHttpInfo($product_id, $complex_rule_id)
+    public function deleteComplexRuleByIdWithHttpInfo($product_id, $complex_rule_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling deleteComplexRuleById');
         }
+        
         // verify the required parameter 'complex_rule_id' is set
-        if ($complex_rule_id === null) {
+        if (!isset($complex_rule_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $complex_rule_id when calling deleteComplexRuleById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/complex-rules/{complex_rule_id}";
         $httpBody = '';
@@ -3442,8 +3949,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -3451,7 +3965,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($complex_rule_id !== null) {
+
+
+        if (isset($complex_rule_id)) {
             $resourcePath = str_replace(
                 "{" . "complex_rule_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($complex_rule_id),
@@ -3461,13 +3977,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -3479,52 +3995,60 @@ class CatalogApi
                 null,
                 '/catalog/products/{product_id}/complex-rules/{complex_rule_id}'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deleteConfigurableFieldById
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $configurable_field_id The ID of the &#x60;ConfigurableField&#x60;. (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deleteConfigurableFieldById($product_id, $configurable_field_id)
+    public function deleteConfigurableFieldById($product_id, $configurable_field_id, array $params = [])
     {
-        list($response) = $this->deleteConfigurableFieldByIdWithHttpInfo($product_id, $configurable_field_id);
+        list($response) = $this->deleteConfigurableFieldByIdWithHttpInfo($product_id, $configurable_field_id, $params);
         return $response;
     }
+
 
     /**
      * Operation deleteConfigurableFieldByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::deleteConfigurableFieldById()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $configurable_field_id The ID of the &#x60;ConfigurableField&#x60;. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteConfigurableFieldByIdWithHttpInfo($product_id, $configurable_field_id)
+    public function deleteConfigurableFieldByIdWithHttpInfo($product_id, $configurable_field_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling deleteConfigurableFieldById');
         }
+        
         // verify the required parameter 'configurable_field_id' is set
-        if ($configurable_field_id === null) {
+        if (!isset($configurable_field_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $configurable_field_id when calling deleteConfigurableFieldById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/configurable-fields/{configurable_field_id}";
         $httpBody = '';
@@ -3537,8 +4061,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -3546,7 +4077,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($configurable_field_id !== null) {
+
+
+        if (isset($configurable_field_id)) {
             $resourcePath = str_replace(
                 "{" . "configurable_field_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($configurable_field_id),
@@ -3556,13 +4089,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -3574,56 +4107,65 @@ class CatalogApi
                 null,
                 '/catalog/products/{product_id}/configurable-fields/{configurable_field_id}'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deleteCustomFieldById
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $custom_field_id The ID of the &#x60;CustomField&#x60;. (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deleteCustomFieldById($product_id, $custom_field_id)
+    public function deleteCustomFieldById($product_id, $custom_field_id, array $params = [])
     {
-        list($response) = $this->deleteCustomFieldByIdWithHttpInfo($product_id, $custom_field_id);
+        list($response) = $this->deleteCustomFieldByIdWithHttpInfo($product_id, $custom_field_id, $params);
         return $response;
     }
+
 
     /**
      * Operation deleteCustomFieldByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::deleteCustomFieldById()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $custom_field_id The ID of the &#x60;CustomField&#x60;. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteCustomFieldByIdWithHttpInfo($product_id, $custom_field_id)
+    public function deleteCustomFieldByIdWithHttpInfo($product_id, $custom_field_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling deleteCustomFieldById');
         }
+        
         // verify the required parameter 'custom_field_id' is set
-        if ($custom_field_id === null) {
+        if (!isset($custom_field_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $custom_field_id when calling deleteCustomFieldById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/custom-fields/{custom_field_id}";
         $httpBody = '';
@@ -3636,8 +4178,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -3645,7 +4194,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($custom_field_id !== null) {
+
+
+        if (isset($custom_field_id)) {
             $resourcePath = str_replace(
                 "{" . "custom_field_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($custom_field_id),
@@ -3655,13 +4206,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -3673,56 +4224,65 @@ class CatalogApi
                 null,
                 '/catalog/products/{product_id}/custom-fields/{custom_field_id}'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deleteModifierById
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $modifier_id The ID of the &#x60;Modifier&#x60;. (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deleteModifierById($product_id, $modifier_id)
+    public function deleteModifierById($product_id, $modifier_id, array $params = [])
     {
-        list($response) = $this->deleteModifierByIdWithHttpInfo($product_id, $modifier_id);
+        list($response) = $this->deleteModifierByIdWithHttpInfo($product_id, $modifier_id, $params);
         return $response;
     }
+
 
     /**
      * Operation deleteModifierByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::deleteModifierById()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $modifier_id The ID of the &#x60;Modifier&#x60;. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteModifierByIdWithHttpInfo($product_id, $modifier_id)
+    public function deleteModifierByIdWithHttpInfo($product_id, $modifier_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling deleteModifierById');
         }
+        
         // verify the required parameter 'modifier_id' is set
-        if ($modifier_id === null) {
+        if (!isset($modifier_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $modifier_id when calling deleteModifierById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/modifiers/{modifier_id}";
         $httpBody = '';
@@ -3735,8 +4295,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -3744,7 +4311,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($modifier_id !== null) {
+
+
+        if (isset($modifier_id)) {
             $resourcePath = str_replace(
                 "{" . "modifier_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($modifier_id),
@@ -3754,13 +4323,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -3772,58 +4341,67 @@ class CatalogApi
                 null,
                 '/catalog/products/{product_id}/modifiers/{modifier_id}'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deleteModifierImage
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $modifier_id The ID of the &#x60;Modifier&#x60;. (required)
      * @param int $value_id The ID of the &#x60;Modifier&#x60;. (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deleteModifierImage($product_id, $modifier_id, $value_id)
+    public function deleteModifierImage($product_id, $modifier_id, $value_id, array $params = [])
     {
-        list($response) = $this->deleteModifierImageWithHttpInfo($product_id, $modifier_id, $value_id);
+        list($response) = $this->deleteModifierImageWithHttpInfo($product_id, $modifier_id, $value_id, $params);
         return $response;
     }
+
 
     /**
      * Operation deleteModifierImageWithHttpInfo
      *
-     * 
-     *
+     * @see self::deleteModifierImage()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $modifier_id The ID of the &#x60;Modifier&#x60;. (required)
      * @param int $value_id The ID of the &#x60;Modifier&#x60;. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteModifierImageWithHttpInfo($product_id, $modifier_id, $value_id)
+    public function deleteModifierImageWithHttpInfo($product_id, $modifier_id, $value_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling deleteModifierImage');
         }
+        
         // verify the required parameter 'modifier_id' is set
-        if ($modifier_id === null) {
+        if (!isset($modifier_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $modifier_id when calling deleteModifierImage');
         }
+        
         // verify the required parameter 'value_id' is set
-        if ($value_id === null) {
+        if (!isset($value_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $value_id when calling deleteModifierImage');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/modifiers/{modifier_id}/values/{value_id}/image";
         $httpBody = '';
@@ -3836,8 +4414,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -3845,7 +4430,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($modifier_id !== null) {
+
+
+        if (isset($modifier_id)) {
             $resourcePath = str_replace(
                 "{" . "modifier_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($modifier_id),
@@ -3853,7 +4440,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($value_id !== null) {
+
+
+        if (isset($value_id)) {
             $resourcePath = str_replace(
                 "{" . "value_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($value_id),
@@ -3863,13 +4452,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -3881,58 +4470,67 @@ class CatalogApi
                 null,
                 '/catalog/products/{product_id}/modifiers/{modifier_id}/values/{value_id}/image'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deleteModifierValueById
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $modifier_id The ID of the &#x60;Modifier&#x60;. (required)
      * @param int $value_id The ID of the &#x60;Modifier/Option Value&#x60;. (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deleteModifierValueById($product_id, $modifier_id, $value_id)
+    public function deleteModifierValueById($product_id, $modifier_id, $value_id, array $params = [])
     {
-        list($response) = $this->deleteModifierValueByIdWithHttpInfo($product_id, $modifier_id, $value_id);
+        list($response) = $this->deleteModifierValueByIdWithHttpInfo($product_id, $modifier_id, $value_id, $params);
         return $response;
     }
+
 
     /**
      * Operation deleteModifierValueByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::deleteModifierValueById()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $modifier_id The ID of the &#x60;Modifier&#x60;. (required)
      * @param int $value_id The ID of the &#x60;Modifier/Option Value&#x60;. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteModifierValueByIdWithHttpInfo($product_id, $modifier_id, $value_id)
+    public function deleteModifierValueByIdWithHttpInfo($product_id, $modifier_id, $value_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling deleteModifierValueById');
         }
+        
         // verify the required parameter 'modifier_id' is set
-        if ($modifier_id === null) {
+        if (!isset($modifier_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $modifier_id when calling deleteModifierValueById');
         }
+        
         // verify the required parameter 'value_id' is set
-        if ($value_id === null) {
+        if (!isset($value_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $value_id when calling deleteModifierValueById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/modifiers/{modifier_id}/values/{value_id}";
         $httpBody = '';
@@ -3945,8 +4543,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -3954,7 +4559,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($modifier_id !== null) {
+
+
+        if (isset($modifier_id)) {
             $resourcePath = str_replace(
                 "{" . "modifier_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($modifier_id),
@@ -3962,7 +4569,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($value_id !== null) {
+
+
+        if (isset($value_id)) {
             $resourcePath = str_replace(
                 "{" . "value_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($value_id),
@@ -3972,13 +4581,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -3990,52 +4599,60 @@ class CatalogApi
                 null,
                 '/catalog/products/{product_id}/modifiers/{modifier_id}/values/{value_id}'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deleteOptionById
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $option_id The ID of the &#x60;Option&#x60;. (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deleteOptionById($product_id, $option_id)
+    public function deleteOptionById($product_id, $option_id, array $params = [])
     {
-        list($response) = $this->deleteOptionByIdWithHttpInfo($product_id, $option_id);
+        list($response) = $this->deleteOptionByIdWithHttpInfo($product_id, $option_id, $params);
         return $response;
     }
+
 
     /**
      * Operation deleteOptionByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::deleteOptionById()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $option_id The ID of the &#x60;Option&#x60;. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteOptionByIdWithHttpInfo($product_id, $option_id)
+    public function deleteOptionByIdWithHttpInfo($product_id, $option_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling deleteOptionById');
         }
+        
         // verify the required parameter 'option_id' is set
-        if ($option_id === null) {
+        if (!isset($option_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $option_id when calling deleteOptionById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/options/{option_id}";
         $httpBody = '';
@@ -4048,8 +4665,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -4057,7 +4681,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($option_id !== null) {
+
+
+        if (isset($option_id)) {
             $resourcePath = str_replace(
                 "{" . "option_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($option_id),
@@ -4067,13 +4693,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -4085,58 +4711,67 @@ class CatalogApi
                 null,
                 '/catalog/products/{product_id}/options/{option_id}'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deleteOptionValueById
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $option_id The ID of the &#x60;Option&#x60;. (required)
      * @param int $value_id The ID of the &#x60;Modifier/Option Value&#x60;. (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deleteOptionValueById($product_id, $option_id, $value_id)
+    public function deleteOptionValueById($product_id, $option_id, $value_id, array $params = [])
     {
-        list($response) = $this->deleteOptionValueByIdWithHttpInfo($product_id, $option_id, $value_id);
+        list($response) = $this->deleteOptionValueByIdWithHttpInfo($product_id, $option_id, $value_id, $params);
         return $response;
     }
+
 
     /**
      * Operation deleteOptionValueByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::deleteOptionValueById()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $option_id The ID of the &#x60;Option&#x60;. (required)
      * @param int $value_id The ID of the &#x60;Modifier/Option Value&#x60;. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteOptionValueByIdWithHttpInfo($product_id, $option_id, $value_id)
+    public function deleteOptionValueByIdWithHttpInfo($product_id, $option_id, $value_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling deleteOptionValueById');
         }
+        
         // verify the required parameter 'option_id' is set
-        if ($option_id === null) {
+        if (!isset($option_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $option_id when calling deleteOptionValueById');
         }
+        
         // verify the required parameter 'value_id' is set
-        if ($value_id === null) {
+        if (!isset($value_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $value_id when calling deleteOptionValueById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/options/{option_id}/values/{value_id}";
         $httpBody = '';
@@ -4149,8 +4784,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -4158,7 +4800,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($option_id !== null) {
+
+
+        if (isset($option_id)) {
             $resourcePath = str_replace(
                 "{" . "option_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($option_id),
@@ -4166,7 +4810,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($value_id !== null) {
+
+
+        if (isset($value_id)) {
             $resourcePath = str_replace(
                 "{" . "value_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($value_id),
@@ -4176,13 +4822,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -4194,46 +4840,53 @@ class CatalogApi
                 null,
                 '/catalog/products/{product_id}/options/{option_id}/values/{value_id}'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deleteProductById
-     *
      * 
      *
+     *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deleteProductById($product_id)
+    public function deleteProductById($product_id, array $params = [])
     {
-        list($response) = $this->deleteProductByIdWithHttpInfo($product_id);
+        list($response) = $this->deleteProductByIdWithHttpInfo($product_id, $params);
         return $response;
     }
+
 
     /**
      * Operation deleteProductByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::deleteProductById()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteProductByIdWithHttpInfo($product_id)
+    public function deleteProductByIdWithHttpInfo($product_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling deleteProductById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}";
         $httpBody = '';
@@ -4246,8 +4899,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -4257,13 +4917,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -4275,52 +4935,60 @@ class CatalogApi
                 null,
                 '/catalog/products/{product_id}'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deleteProductImage
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $image_id The ID of the &#x60;Image&#x60; that is being operated on. (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deleteProductImage($product_id, $image_id)
+    public function deleteProductImage($product_id, $image_id, array $params = [])
     {
-        list($response) = $this->deleteProductImageWithHttpInfo($product_id, $image_id);
+        list($response) = $this->deleteProductImageWithHttpInfo($product_id, $image_id, $params);
         return $response;
     }
+
 
     /**
      * Operation deleteProductImageWithHttpInfo
      *
-     * 
-     *
+     * @see self::deleteProductImage()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $image_id The ID of the &#x60;Image&#x60; that is being operated on. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteProductImageWithHttpInfo($product_id, $image_id)
+    public function deleteProductImageWithHttpInfo($product_id, $image_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling deleteProductImage');
         }
+        
         // verify the required parameter 'image_id' is set
-        if ($image_id === null) {
+        if (!isset($image_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $image_id when calling deleteProductImage');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/images/{image_id}";
         $httpBody = '';
@@ -4333,8 +5001,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -4342,7 +5017,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($image_id !== null) {
+
+
+        if (isset($image_id)) {
             $resourcePath = str_replace(
                 "{" . "image_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($image_id),
@@ -4352,13 +5029,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -4370,52 +5047,60 @@ class CatalogApi
                 null,
                 '/catalog/products/{product_id}/images/{image_id}'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deleteProductMetafieldById
-     *
      * 
+     *
      *
      * @param int $metafield_id The ID of the &#x60;Metafield&#x60;. (required)
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deleteProductMetafieldById($metafield_id, $product_id)
+    public function deleteProductMetafieldById($metafield_id, $product_id, array $params = [])
     {
-        list($response) = $this->deleteProductMetafieldByIdWithHttpInfo($metafield_id, $product_id);
+        list($response) = $this->deleteProductMetafieldByIdWithHttpInfo($metafield_id, $product_id, $params);
         return $response;
     }
+
 
     /**
      * Operation deleteProductMetafieldByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::deleteProductMetafieldById()
      * @param int $metafield_id The ID of the &#x60;Metafield&#x60;. (required)
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteProductMetafieldByIdWithHttpInfo($metafield_id, $product_id)
+    public function deleteProductMetafieldByIdWithHttpInfo($metafield_id, $product_id, array $params = [])
     {
+        
         // verify the required parameter 'metafield_id' is set
-        if ($metafield_id === null) {
+        if (!isset($metafield_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $metafield_id when calling deleteProductMetafieldById');
         }
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling deleteProductMetafieldById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/metafields/{metafield_id}";
         $httpBody = '';
@@ -4428,8 +5113,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($metafield_id !== null) {
+
+
+        if (isset($metafield_id)) {
             $resourcePath = str_replace(
                 "{" . "metafield_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($metafield_id),
@@ -4437,7 +5129,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -4447,13 +5141,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -4465,52 +5159,60 @@ class CatalogApi
                 null,
                 '/catalog/products/{product_id}/metafields/{metafield_id}'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deleteProductReview
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $review_id The ID of the &#x60;review&#x60; that is being operated on. (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deleteProductReview($product_id, $review_id)
+    public function deleteProductReview($product_id, $review_id, array $params = [])
     {
-        list($response) = $this->deleteProductReviewWithHttpInfo($product_id, $review_id);
+        list($response) = $this->deleteProductReviewWithHttpInfo($product_id, $review_id, $params);
         return $response;
     }
+
 
     /**
      * Operation deleteProductReviewWithHttpInfo
      *
-     * 
-     *
+     * @see self::deleteProductReview()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $review_id The ID of the &#x60;review&#x60; that is being operated on. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteProductReviewWithHttpInfo($product_id, $review_id)
+    public function deleteProductReviewWithHttpInfo($product_id, $review_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling deleteProductReview');
         }
+        
         // verify the required parameter 'review_id' is set
-        if ($review_id === null) {
+        if (!isset($review_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $review_id when calling deleteProductReview');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/reviews/{review_id}";
         $httpBody = '';
@@ -4523,8 +5225,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -4532,7 +5241,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($review_id !== null) {
+
+
+        if (isset($review_id)) {
             $resourcePath = str_replace(
                 "{" . "review_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($review_id),
@@ -4542,13 +5253,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -4560,52 +5271,60 @@ class CatalogApi
                 null,
                 '/catalog/products/{product_id}/reviews/{review_id}'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deleteProductVideo
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param string $video_id The ID of the &#x60;Video&#x60; that is being operated on. (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deleteProductVideo($product_id, $video_id)
+    public function deleteProductVideo($product_id, $video_id, array $params = [])
     {
-        list($response) = $this->deleteProductVideoWithHttpInfo($product_id, $video_id);
+        list($response) = $this->deleteProductVideoWithHttpInfo($product_id, $video_id, $params);
         return $response;
     }
+
 
     /**
      * Operation deleteProductVideoWithHttpInfo
      *
-     * 
-     *
+     * @see self::deleteProductVideo()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param string $video_id The ID of the &#x60;Video&#x60; that is being operated on. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteProductVideoWithHttpInfo($product_id, $video_id)
+    public function deleteProductVideoWithHttpInfo($product_id, $video_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling deleteProductVideo');
         }
+        
         // verify the required parameter 'video_id' is set
-        if ($video_id === null) {
+        if (!isset($video_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $video_id when calling deleteProductVideo');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/videos/{video_id}";
         $httpBody = '';
@@ -4618,8 +5337,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -4627,7 +5353,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($video_id !== null) {
+
+
+        if (isset($video_id)) {
             $resourcePath = str_replace(
                 "{" . "video_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($video_id),
@@ -4637,13 +5365,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -4655,70 +5383,61 @@ class CatalogApi
                 null,
                 '/catalog/products/{product_id}/videos/{video_id}'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deleteProducts
-     *
      * 
      *
-     * @param string $name Filter items by name. (optional)
-     * @param string $sku Filter items by sku. (optional)
-     * @param float $price Filter items by price. (optional)
-     * @param float $weight Filter items by weight. (optional)
-     * @param int $condition Filter items by condition. (optional)
-     * @param int $brand_id Filter items by brand_id. (optional)
-     * @param \DateTime $date_modified Filter items by date_modified. (optional)
-     * @param \DateTime $date_last_imported Filter items by date_last_imported. (optional)
-     * @param int $is_visible Filter items by is_visible. (optional)
-     * @param int $is_featured Filter items by is_featured. (optional)
-     * @param int $inventory_level Filter items by inventory_level. (optional)
-     * @param int $total_sold Filter items by total_sold. (optional)
-     * @param string $type Filter items by type: &#x60;physical&#x60; or &#x60;digital&#x60;. (optional)
-     * @param int $categories Filter items by categories. (optional)
-     * @param string $keyword Filter items by keywords found in the &#x60;name&#x60;, &#x60;description&#x60;, or &#x60;sku&#x60; fields, or in the brand name. (optional)
+     *
+     * @param array $params = []
+     *     - name string Filter items by name. (optional)
+     *     - sku string Filter items by sku. (optional)
+     *     - price float Filter items by price. (optional)
+     *     - weight float Filter items by weight. (optional)
+     *     - condition int Filter items by condition. (optional)
+     *     - brand_id int Filter items by brand_id. (optional)
+     *     - date_modified \DateTime Filter items by date_modified. (optional)
+     *     - date_last_imported \DateTime Filter items by date_last_imported. (optional)
+     *     - is_visible int Filter items by is_visible. (optional)
+     *     - is_featured int Filter items by is_featured. (optional)
+     *     - inventory_level int Filter items by inventory_level. (optional)
+     *     - total_sold int Filter items by total_sold. (optional)
+     *     - type string Filter items by type: &#x60;physical&#x60; or &#x60;digital&#x60;. (optional)
+     *     - categories int Filter items by categories. (optional)
+     *     - keyword string Filter items by keywords found in the &#x60;name&#x60;, &#x60;description&#x60;, or &#x60;sku&#x60; fields, or in the brand name. (optional)
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deleteProducts($name = null, $sku = null, $price = null, $weight = null, $condition = null, $brand_id = null, $date_modified = null, $date_last_imported = null, $is_visible = null, $is_featured = null, $inventory_level = null, $total_sold = null, $type = null, $categories = null, $keyword = null)
+    public function deleteProducts(array $params = [])
     {
-        list($response) = $this->deleteProductsWithHttpInfo($name, $sku, $price, $weight, $condition, $brand_id, $date_modified, $date_last_imported, $is_visible, $is_featured, $inventory_level, $total_sold, $type, $categories, $keyword);
+        list($response) = $this->deleteProductsWithHttpInfo($params);
         return $response;
     }
+
 
     /**
      * Operation deleteProductsWithHttpInfo
      *
-     * 
-     *
-     * @param string $name Filter items by name. (optional)
-     * @param string $sku Filter items by sku. (optional)
-     * @param float $price Filter items by price. (optional)
-     * @param float $weight Filter items by weight. (optional)
-     * @param int $condition Filter items by condition. (optional)
-     * @param int $brand_id Filter items by brand_id. (optional)
-     * @param \DateTime $date_modified Filter items by date_modified. (optional)
-     * @param \DateTime $date_last_imported Filter items by date_last_imported. (optional)
-     * @param int $is_visible Filter items by is_visible. (optional)
-     * @param int $is_featured Filter items by is_featured. (optional)
-     * @param int $inventory_level Filter items by inventory_level. (optional)
-     * @param int $total_sold Filter items by total_sold. (optional)
-     * @param string $type Filter items by type: &#x60;physical&#x60; or &#x60;digital&#x60;. (optional)
-     * @param int $categories Filter items by categories. (optional)
-     * @param string $keyword Filter items by keywords found in the &#x60;name&#x60;, &#x60;description&#x60;, or &#x60;sku&#x60; fields, or in the brand name. (optional)
+     * @see self::deleteProducts()
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteProductsWithHttpInfo($name = null, $sku = null, $price = null, $weight = null, $condition = null, $brand_id = null, $date_modified = null, $date_last_imported = null, $is_visible = null, $is_featured = null, $inventory_level = null, $total_sold = null, $type = null, $categories = null, $keyword = null)
+    public function deleteProductsWithHttpInfo(array $params = [])
     {
+        
+
         // parse inputs
         $resourcePath = "/catalog/products";
         $httpBody = '';
@@ -4732,75 +5451,20 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($name !== null) {
-            $queryParams['name'] = $this->apiClient->getSerializer()->toQueryValue($name);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($sku !== null) {
-            $queryParams['sku'] = $this->apiClient->getSerializer()->toQueryValue($sku);
-        }
-        // query params
-        if ($price !== null) {
-            $queryParams['price'] = $this->apiClient->getSerializer()->toQueryValue($price);
-        }
-        // query params
-        if ($weight !== null) {
-            $queryParams['weight'] = $this->apiClient->getSerializer()->toQueryValue($weight);
-        }
-        // query params
-        if ($condition !== null) {
-            $queryParams['condition'] = $this->apiClient->getSerializer()->toQueryValue($condition);
-        }
-        // query params
-        if ($brand_id !== null) {
-            $queryParams['brand_id'] = $this->apiClient->getSerializer()->toQueryValue($brand_id);
-        }
-        // query params
-        if ($date_modified !== null) {
-            $queryParams['date_modified'] = $this->apiClient->getSerializer()->toQueryValue($date_modified);
-        }
-        // query params
-        if ($date_last_imported !== null) {
-            $queryParams['date_last_imported'] = $this->apiClient->getSerializer()->toQueryValue($date_last_imported);
-        }
-        // query params
-        if ($is_visible !== null) {
-            $queryParams['is_visible'] = $this->apiClient->getSerializer()->toQueryValue($is_visible);
-        }
-        // query params
-        if ($is_featured !== null) {
-            $queryParams['is_featured'] = $this->apiClient->getSerializer()->toQueryValue($is_featured);
-        }
-        // query params
-        if ($inventory_level !== null) {
-            $queryParams['inventory_level'] = $this->apiClient->getSerializer()->toQueryValue($inventory_level);
-        }
-        // query params
-        if ($total_sold !== null) {
-            $queryParams['total_sold'] = $this->apiClient->getSerializer()->toQueryValue($total_sold);
-        }
-        // query params
-        if ($type !== null) {
-            $queryParams['type'] = $this->apiClient->getSerializer()->toQueryValue($type);
-        }
-        // query params
-        if ($categories !== null) {
-            $queryParams['categories'] = $this->apiClient->getSerializer()->toQueryValue($categories);
-        }
-        // query params
-        if ($keyword !== null) {
-            $queryParams['keyword'] = $this->apiClient->getSerializer()->toQueryValue($keyword);
-        }
+
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -4812,52 +5476,60 @@ class CatalogApi
                 null,
                 '/catalog/products'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deleteVariantById
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $variant_id ID of the variant on a product, or on an associated Price List Record. (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deleteVariantById($product_id, $variant_id)
+    public function deleteVariantById($product_id, $variant_id, array $params = [])
     {
-        list($response) = $this->deleteVariantByIdWithHttpInfo($product_id, $variant_id);
+        list($response) = $this->deleteVariantByIdWithHttpInfo($product_id, $variant_id, $params);
         return $response;
     }
+
 
     /**
      * Operation deleteVariantByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::deleteVariantById()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $variant_id ID of the variant on a product, or on an associated Price List Record. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteVariantByIdWithHttpInfo($product_id, $variant_id)
+    public function deleteVariantByIdWithHttpInfo($product_id, $variant_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling deleteVariantById');
         }
+        
         // verify the required parameter 'variant_id' is set
-        if ($variant_id === null) {
+        if (!isset($variant_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $variant_id when calling deleteVariantById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/variants/{variant_id}";
         $httpBody = '';
@@ -4870,8 +5542,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -4879,7 +5558,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($variant_id !== null) {
+
+
+        if (isset($variant_id)) {
             $resourcePath = str_replace(
                 "{" . "variant_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($variant_id),
@@ -4889,13 +5570,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -4907,58 +5588,67 @@ class CatalogApi
                 null,
                 '/catalog/products/{product_id}/variants/{variant_id}'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation deleteVariantMetafieldById
-     *
      * 
+     *
      *
      * @param int $metafield_id The ID of the &#x60;Metafield&#x60;. (required)
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $variant_id ID of the variant on a product, or on an associated Price List Record. (required)
+     * @param array $params = []
+     * @return null
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
-     * @return void
+     * @throws \InvalidArgumentException
      */
-    public function deleteVariantMetafieldById($metafield_id, $product_id, $variant_id)
+    public function deleteVariantMetafieldById($metafield_id, $product_id, $variant_id, array $params = [])
     {
-        list($response) = $this->deleteVariantMetafieldByIdWithHttpInfo($metafield_id, $product_id, $variant_id);
+        list($response) = $this->deleteVariantMetafieldByIdWithHttpInfo($metafield_id, $product_id, $variant_id, $params);
         return $response;
     }
+
 
     /**
      * Operation deleteVariantMetafieldByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::deleteVariantMetafieldById()
      * @param int $metafield_id The ID of the &#x60;Metafield&#x60;. (required)
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $variant_id ID of the variant on a product, or on an associated Price List Record. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteVariantMetafieldByIdWithHttpInfo($metafield_id, $product_id, $variant_id)
+    public function deleteVariantMetafieldByIdWithHttpInfo($metafield_id, $product_id, $variant_id, array $params = [])
     {
+        
         // verify the required parameter 'metafield_id' is set
-        if ($metafield_id === null) {
+        if (!isset($metafield_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $metafield_id when calling deleteVariantMetafieldById');
         }
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling deleteVariantMetafieldById');
         }
+        
         // verify the required parameter 'variant_id' is set
-        if ($variant_id === null) {
+        if (!isset($variant_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $variant_id when calling deleteVariantMetafieldById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/variants/{variant_id}/metafields/{metafield_id}";
         $httpBody = '';
@@ -4971,8 +5661,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($metafield_id !== null) {
+
+
+        if (isset($metafield_id)) {
             $resourcePath = str_replace(
                 "{" . "metafield_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($metafield_id),
@@ -4980,7 +5677,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -4988,7 +5687,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($variant_id !== null) {
+
+
+        if (isset($variant_id)) {
             $resourcePath = str_replace(
                 "{" . "variant_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($variant_id),
@@ -4998,13 +5699,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -5016,50 +5717,55 @@ class CatalogApi
                 null,
                 '/catalog/products/{product_id}/variants/{variant_id}/metafields/{metafield_id}'
             );
-
             return [null, $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getBrandById
-     *
      * 
      *
+     *
      * @param int $brand_id The ID of the &#x60;Brand&#x60; to which the resource belongs. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\BrandResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getBrandById($brand_id, $include_fields = null, $exclude_fields = null)
+    public function getBrandById($brand_id, array $params = [])
     {
-        list($response) = $this->getBrandByIdWithHttpInfo($brand_id, $include_fields, $exclude_fields);
+        list($response) = $this->getBrandByIdWithHttpInfo($brand_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getBrandByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::getBrandById()
      * @param int $brand_id The ID of the &#x60;Brand&#x60; to which the resource belongs. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\BrandResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getBrandByIdWithHttpInfo($brand_id, $include_fields = null, $exclude_fields = null)
+    public function getBrandByIdWithHttpInfo($brand_id, array $params = [])
     {
+        
         // verify the required parameter 'brand_id' is set
-        if ($brand_id === null) {
+        if (!isset($brand_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $brand_id when calling getBrandById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/brands/{brand_id}";
         $httpBody = '';
@@ -5073,15 +5779,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($brand_id !== null) {
+
+
+        if (isset($brand_id)) {
             $resourcePath = str_replace(
                 "{" . "brand_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($brand_id),
@@ -5091,13 +5796,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -5109,64 +5814,72 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\BrandResponse',
                 '/catalog/brands/{brand_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\BrandResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\BrandResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\BrandResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getBrandMetafieldByBrandId
-     *
      * 
+     *
      *
      * @param int $metafield_id The ID of the &#x60;Metafield&#x60;. (required)
      * @param int $brand_id The ID of the &#x60;Brand&#x60; to which the resource belongs. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\MetafieldResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getBrandMetafieldByBrandId($metafield_id, $brand_id, $include_fields = null, $exclude_fields = null)
+    public function getBrandMetafieldByBrandId($metafield_id, $brand_id, array $params = [])
     {
-        list($response) = $this->getBrandMetafieldByBrandIdWithHttpInfo($metafield_id, $brand_id, $include_fields, $exclude_fields);
+        list($response) = $this->getBrandMetafieldByBrandIdWithHttpInfo($metafield_id, $brand_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getBrandMetafieldByBrandIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::getBrandMetafieldByBrandId()
      * @param int $metafield_id The ID of the &#x60;Metafield&#x60;. (required)
      * @param int $brand_id The ID of the &#x60;Brand&#x60; to which the resource belongs. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\MetafieldResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getBrandMetafieldByBrandIdWithHttpInfo($metafield_id, $brand_id, $include_fields = null, $exclude_fields = null)
+    public function getBrandMetafieldByBrandIdWithHttpInfo($metafield_id, $brand_id, array $params = [])
     {
+        
         // verify the required parameter 'metafield_id' is set
-        if ($metafield_id === null) {
+        if (!isset($metafield_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $metafield_id when calling getBrandMetafieldByBrandId');
         }
+        
         // verify the required parameter 'brand_id' is set
-        if ($brand_id === null) {
+        if (!isset($brand_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $brand_id when calling getBrandMetafieldByBrandId');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/brands/{brand_id}/metafields/{metafield_id}";
         $httpBody = '';
@@ -5180,15 +5893,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($metafield_id !== null) {
+
+
+        if (isset($metafield_id)) {
             $resourcePath = str_replace(
                 "{" . "metafield_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($metafield_id),
@@ -5196,7 +5908,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($brand_id !== null) {
+
+
+        if (isset($brand_id)) {
             $resourcePath = str_replace(
                 "{" . "brand_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($brand_id),
@@ -5206,13 +5920,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -5224,66 +5938,69 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\MetafieldResponse',
                 '/catalog/brands/{brand_id}/metafields/{metafield_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\MetafieldResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetafieldResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetafieldResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getBrandMetafieldsByBrandId
-     *
      * 
      *
+     *
      * @param int $brand_id The ID of the &#x60;Brand&#x60; to which the resource belongs. (required)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $key Filter based on a metafield&#39;s key. (optional)
-     * @param string $namespace Filter based on a metafield&#39;s key. (optional)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - page int Specifies the page number in a limited (paginated) list of products. (optional)
+     *     - limit int Controls the number of items per page in a limited (paginated) list of products. (optional)
+     *     - key string Filter based on a metafield&#39;s key. (optional)
+     *     - namespace string Filter based on a metafield&#39;s key. (optional)
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\MetaFieldCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getBrandMetafieldsByBrandId($brand_id, $page = null, $limit = null, $key = null, $namespace = null, $include_fields = null, $exclude_fields = null)
+    public function getBrandMetafieldsByBrandId($brand_id, array $params = [])
     {
-        list($response) = $this->getBrandMetafieldsByBrandIdWithHttpInfo($brand_id, $page, $limit, $key, $namespace, $include_fields, $exclude_fields);
+        list($response) = $this->getBrandMetafieldsByBrandIdWithHttpInfo($brand_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getBrandMetafieldsByBrandIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::getBrandMetafieldsByBrandId()
      * @param int $brand_id The ID of the &#x60;Brand&#x60; to which the resource belongs. (required)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $key Filter based on a metafield&#39;s key. (optional)
-     * @param string $namespace Filter based on a metafield&#39;s key. (optional)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\MetaFieldCollectionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getBrandMetafieldsByBrandIdWithHttpInfo($brand_id, $page = null, $limit = null, $key = null, $namespace = null, $include_fields = null, $exclude_fields = null)
+    public function getBrandMetafieldsByBrandIdWithHttpInfo($brand_id, array $params = [])
     {
+        
         // verify the required parameter 'brand_id' is set
-        if ($brand_id === null) {
+        if (!isset($brand_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $brand_id when calling getBrandMetafieldsByBrandId');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/brands/{brand_id}/metafields";
         $httpBody = '';
@@ -5297,31 +6014,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($page !== null) {
-            $queryParams['page'] = $this->apiClient->getSerializer()->toQueryValue($page);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($limit !== null) {
-            $queryParams['limit'] = $this->apiClient->getSerializer()->toQueryValue($limit);
-        }
-        // query params
-        if ($key !== null) {
-            $queryParams['key'] = $this->apiClient->getSerializer()->toQueryValue($key);
-        }
-        // query params
-        if ($namespace !== null) {
-            $queryParams['namespace'] = $this->apiClient->getSerializer()->toQueryValue($namespace);
-        }
-        // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
-        }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($brand_id !== null) {
+
+
+        if (isset($brand_id)) {
             $resourcePath = str_replace(
                 "{" . "brand_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($brand_id),
@@ -5331,13 +6031,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -5349,60 +6049,62 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\MetaFieldCollectionResponse',
                 '/catalog/brands/{brand_id}/metafields'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\MetaFieldCollectionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetaFieldCollectionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetaFieldCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getBrands
-     *
      * 
      *
-     * @param string $name Filter items by name. (optional)
-     * @param string $page_title Filter items by page_title. (optional)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     *
+     * @param array $params = []
+     *     - name string Filter items by name. (optional)
+     *     - page_title string Filter items by page_title. (optional)
+     *     - page int Specifies the page number in a limited (paginated) list of products. (optional)
+     *     - limit int Controls the number of items per page in a limited (paginated) list of products. (optional)
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\BrandCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getBrands($name = null, $page_title = null, $page = null, $limit = null, $include_fields = null, $exclude_fields = null)
+    public function getBrands(array $params = [])
     {
-        list($response) = $this->getBrandsWithHttpInfo($name, $page_title, $page, $limit, $include_fields, $exclude_fields);
+        list($response) = $this->getBrandsWithHttpInfo($params);
         return $response;
     }
+
 
     /**
      * Operation getBrandsWithHttpInfo
      *
-     * 
-     *
-     * @param string $name Filter items by name. (optional)
-     * @param string $page_title Filter items by page_title. (optional)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @see self::getBrands()
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\BrandCollectionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getBrandsWithHttpInfo($name = null, $page_title = null, $page = null, $limit = null, $include_fields = null, $exclude_fields = null)
+    public function getBrandsWithHttpInfo(array $params = [])
     {
+        
+
         // parse inputs
         $resourcePath = "/catalog/brands";
         $httpBody = '';
@@ -5416,39 +6118,20 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($name !== null) {
-            $queryParams['name'] = $this->apiClient->getSerializer()->toQueryValue($name);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($page_title !== null) {
-            $queryParams['page_title'] = $this->apiClient->getSerializer()->toQueryValue($page_title);
-        }
-        // query params
-        if ($page !== null) {
-            $queryParams['page'] = $this->apiClient->getSerializer()->toQueryValue($page);
-        }
-        // query params
-        if ($limit !== null) {
-            $queryParams['limit'] = $this->apiClient->getSerializer()->toQueryValue($limit);
-        }
-        // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
-        }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -5460,60 +6143,67 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\BrandCollectionResponse',
                 '/catalog/brands'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\BrandCollectionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\BrandCollectionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\BrandCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getBulkPricingRuleById
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $bulk_pricing_rule_id The ID of the &#x60;BulkPricingRule&#x60;. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\BulkPricingRuleResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getBulkPricingRuleById($product_id, $bulk_pricing_rule_id, $include_fields = null, $exclude_fields = null)
+    public function getBulkPricingRuleById($product_id, $bulk_pricing_rule_id, array $params = [])
     {
-        list($response) = $this->getBulkPricingRuleByIdWithHttpInfo($product_id, $bulk_pricing_rule_id, $include_fields, $exclude_fields);
+        list($response) = $this->getBulkPricingRuleByIdWithHttpInfo($product_id, $bulk_pricing_rule_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getBulkPricingRuleByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::getBulkPricingRuleById()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $bulk_pricing_rule_id The ID of the &#x60;BulkPricingRule&#x60;. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\BulkPricingRuleResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getBulkPricingRuleByIdWithHttpInfo($product_id, $bulk_pricing_rule_id, $include_fields = null, $exclude_fields = null)
+    public function getBulkPricingRuleByIdWithHttpInfo($product_id, $bulk_pricing_rule_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getBulkPricingRuleById');
         }
+        
         // verify the required parameter 'bulk_pricing_rule_id' is set
-        if ($bulk_pricing_rule_id === null) {
+        if (!isset($bulk_pricing_rule_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $bulk_pricing_rule_id when calling getBulkPricingRuleById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/bulk-pricing-rules/{bulk_pricing_rule_id}";
         $httpBody = '';
@@ -5527,15 +6217,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -5543,7 +6232,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($bulk_pricing_rule_id !== null) {
+
+
+        if (isset($bulk_pricing_rule_id)) {
             $resourcePath = str_replace(
                 "{" . "bulk_pricing_rule_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($bulk_pricing_rule_id),
@@ -5553,13 +6244,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -5571,62 +6262,67 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\BulkPricingRuleResponse',
                 '/catalog/products/{product_id}/bulk-pricing-rules/{bulk_pricing_rule_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\BulkPricingRuleResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\BulkPricingRuleResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\BulkPricingRuleResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getBulkPricingRules
-     *
      * 
      *
+     *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - page int Specifies the page number in a limited (paginated) list of products. (optional)
+     *     - limit int Controls the number of items per page in a limited (paginated) list of products. (optional)
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\BulkPricingRuleCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getBulkPricingRules($product_id, $page = null, $limit = null, $include_fields = null, $exclude_fields = null)
+    public function getBulkPricingRules($product_id, array $params = [])
     {
-        list($response) = $this->getBulkPricingRulesWithHttpInfo($product_id, $page, $limit, $include_fields, $exclude_fields);
+        list($response) = $this->getBulkPricingRulesWithHttpInfo($product_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getBulkPricingRulesWithHttpInfo
      *
-     * 
-     *
+     * @see self::getBulkPricingRules()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\BulkPricingRuleCollectionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getBulkPricingRulesWithHttpInfo($product_id, $page = null, $limit = null, $include_fields = null, $exclude_fields = null)
+    public function getBulkPricingRulesWithHttpInfo($product_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getBulkPricingRules');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/bulk-pricing-rules";
         $httpBody = '';
@@ -5640,23 +6336,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($page !== null) {
-            $queryParams['page'] = $this->apiClient->getSerializer()->toQueryValue($page);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($limit !== null) {
-            $queryParams['limit'] = $this->apiClient->getSerializer()->toQueryValue($limit);
-        }
-        // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
-        }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -5666,13 +6353,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -5684,66 +6371,65 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\BulkPricingRuleCollectionResponse',
                 '/catalog/products/{product_id}/bulk-pricing-rules'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\BulkPricingRuleCollectionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\BulkPricingRuleCollectionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\BulkPricingRuleCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getCategories
-     *
      * 
      *
-     * @param string $name Filter items by name. (optional)
-     * @param int $parent_id Filter items by parent_id. (optional)
-     * @param string $page_title Filter items by page_title. (optional)
-     * @param string $keyword Filter items by keywords. (optional)
-     * @param int $is_visible Filter items by is_visible. (optional)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     *
+     * @param array $params = []
+     *     - name string Filter items by name. (optional)
+     *     - parent_id int Filter items by parent_id. (optional)
+     *     - page_title string Filter items by page_title. (optional)
+     *     - keyword string Filter items by keywords. (optional)
+     *     - is_visible int Filter items by is_visible. (optional)
+     *     - page int Specifies the page number in a limited (paginated) list of products. (optional)
+     *     - limit int Controls the number of items per page in a limited (paginated) list of products. (optional)
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\CategoryCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getCategories($name = null, $parent_id = null, $page_title = null, $keyword = null, $is_visible = null, $page = null, $limit = null, $include_fields = null, $exclude_fields = null)
+    public function getCategories(array $params = [])
     {
-        list($response) = $this->getCategoriesWithHttpInfo($name, $parent_id, $page_title, $keyword, $is_visible, $page, $limit, $include_fields, $exclude_fields);
+        list($response) = $this->getCategoriesWithHttpInfo($params);
         return $response;
     }
+
 
     /**
      * Operation getCategoriesWithHttpInfo
      *
-     * 
-     *
-     * @param string $name Filter items by name. (optional)
-     * @param int $parent_id Filter items by parent_id. (optional)
-     * @param string $page_title Filter items by page_title. (optional)
-     * @param string $keyword Filter items by keywords. (optional)
-     * @param int $is_visible Filter items by is_visible. (optional)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @see self::getCategories()
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\CategoryCollectionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getCategoriesWithHttpInfo($name = null, $parent_id = null, $page_title = null, $keyword = null, $is_visible = null, $page = null, $limit = null, $include_fields = null, $exclude_fields = null)
+    public function getCategoriesWithHttpInfo(array $params = [])
     {
+        
+
         // parse inputs
         $resourcePath = "/catalog/categories";
         $httpBody = '';
@@ -5757,51 +6443,20 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($name !== null) {
-            $queryParams['name'] = $this->apiClient->getSerializer()->toQueryValue($name);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($parent_id !== null) {
-            $queryParams['parent_id'] = $this->apiClient->getSerializer()->toQueryValue($parent_id);
-        }
-        // query params
-        if ($page_title !== null) {
-            $queryParams['page_title'] = $this->apiClient->getSerializer()->toQueryValue($page_title);
-        }
-        // query params
-        if ($keyword !== null) {
-            $queryParams['keyword'] = $this->apiClient->getSerializer()->toQueryValue($keyword);
-        }
-        // query params
-        if ($is_visible !== null) {
-            $queryParams['is_visible'] = $this->apiClient->getSerializer()->toQueryValue($is_visible);
-        }
-        // query params
-        if ($page !== null) {
-            $queryParams['page'] = $this->apiClient->getSerializer()->toQueryValue($page);
-        }
-        // query params
-        if ($limit !== null) {
-            $queryParams['limit'] = $this->apiClient->getSerializer()->toQueryValue($limit);
-        }
-        // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
-        }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -5813,54 +6468,60 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\CategoryCollectionResponse',
                 '/catalog/categories'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\CategoryCollectionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\CategoryCollectionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\CategoryCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getCategoryById
-     *
      * 
      *
+     *
      * @param int $category_id The ID of the &#x60;Category&#x60; to which the resource belongs. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\CategoryResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getCategoryById($category_id, $include_fields = null, $exclude_fields = null)
+    public function getCategoryById($category_id, array $params = [])
     {
-        list($response) = $this->getCategoryByIdWithHttpInfo($category_id, $include_fields, $exclude_fields);
+        list($response) = $this->getCategoryByIdWithHttpInfo($category_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getCategoryByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::getCategoryById()
      * @param int $category_id The ID of the &#x60;Category&#x60; to which the resource belongs. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\CategoryResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getCategoryByIdWithHttpInfo($category_id, $include_fields = null, $exclude_fields = null)
+    public function getCategoryByIdWithHttpInfo($category_id, array $params = [])
     {
+        
         // verify the required parameter 'category_id' is set
-        if ($category_id === null) {
+        if (!isset($category_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $category_id when calling getCategoryById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/categories/{category_id}";
         $httpBody = '';
@@ -5874,15 +6535,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($category_id !== null) {
+
+
+        if (isset($category_id)) {
             $resourcePath = str_replace(
                 "{" . "category_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($category_id),
@@ -5892,13 +6552,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -5910,64 +6570,72 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\CategoryResponse',
                 '/catalog/categories/{category_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\CategoryResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\CategoryResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\CategoryResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getCategoryMetafieldByCategoryId
-     *
      * 
+     *
      *
      * @param int $metafield_id The ID of the &#x60;Metafield&#x60;. (required)
      * @param int $category_id The ID of the &#x60;Category&#x60; to which the resource belongs. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\MetafieldResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getCategoryMetafieldByCategoryId($metafield_id, $category_id, $include_fields = null, $exclude_fields = null)
+    public function getCategoryMetafieldByCategoryId($metafield_id, $category_id, array $params = [])
     {
-        list($response) = $this->getCategoryMetafieldByCategoryIdWithHttpInfo($metafield_id, $category_id, $include_fields, $exclude_fields);
+        list($response) = $this->getCategoryMetafieldByCategoryIdWithHttpInfo($metafield_id, $category_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getCategoryMetafieldByCategoryIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::getCategoryMetafieldByCategoryId()
      * @param int $metafield_id The ID of the &#x60;Metafield&#x60;. (required)
      * @param int $category_id The ID of the &#x60;Category&#x60; to which the resource belongs. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\MetafieldResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getCategoryMetafieldByCategoryIdWithHttpInfo($metafield_id, $category_id, $include_fields = null, $exclude_fields = null)
+    public function getCategoryMetafieldByCategoryIdWithHttpInfo($metafield_id, $category_id, array $params = [])
     {
+        
         // verify the required parameter 'metafield_id' is set
-        if ($metafield_id === null) {
+        if (!isset($metafield_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $metafield_id when calling getCategoryMetafieldByCategoryId');
         }
+        
         // verify the required parameter 'category_id' is set
-        if ($category_id === null) {
+        if (!isset($category_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $category_id when calling getCategoryMetafieldByCategoryId');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/categories/{category_id}/metafields/{metafield_id}";
         $httpBody = '';
@@ -5981,15 +6649,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($metafield_id !== null) {
+
+
+        if (isset($metafield_id)) {
             $resourcePath = str_replace(
                 "{" . "metafield_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($metafield_id),
@@ -5997,7 +6664,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($category_id !== null) {
+
+
+        if (isset($category_id)) {
             $resourcePath = str_replace(
                 "{" . "category_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($category_id),
@@ -6007,13 +6676,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -6025,66 +6694,69 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\MetafieldResponse',
                 '/catalog/categories/{category_id}/metafields/{metafield_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\MetafieldResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetafieldResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetafieldResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getCategoryMetafieldsByCategoryId
-     *
      * 
      *
+     *
      * @param int $category_id The ID of the &#x60;Category&#x60; to which the resource belongs. (required)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $key Filter based on a metafield&#39;s key. (optional)
-     * @param string $namespace Filter based on a metafield&#39;s key. (optional)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - page int Specifies the page number in a limited (paginated) list of products. (optional)
+     *     - limit int Controls the number of items per page in a limited (paginated) list of products. (optional)
+     *     - key string Filter based on a metafield&#39;s key. (optional)
+     *     - namespace string Filter based on a metafield&#39;s key. (optional)
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\MetaFieldCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getCategoryMetafieldsByCategoryId($category_id, $page = null, $limit = null, $key = null, $namespace = null, $include_fields = null, $exclude_fields = null)
+    public function getCategoryMetafieldsByCategoryId($category_id, array $params = [])
     {
-        list($response) = $this->getCategoryMetafieldsByCategoryIdWithHttpInfo($category_id, $page, $limit, $key, $namespace, $include_fields, $exclude_fields);
+        list($response) = $this->getCategoryMetafieldsByCategoryIdWithHttpInfo($category_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getCategoryMetafieldsByCategoryIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::getCategoryMetafieldsByCategoryId()
      * @param int $category_id The ID of the &#x60;Category&#x60; to which the resource belongs. (required)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $key Filter based on a metafield&#39;s key. (optional)
-     * @param string $namespace Filter based on a metafield&#39;s key. (optional)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\MetaFieldCollectionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getCategoryMetafieldsByCategoryIdWithHttpInfo($category_id, $page = null, $limit = null, $key = null, $namespace = null, $include_fields = null, $exclude_fields = null)
+    public function getCategoryMetafieldsByCategoryIdWithHttpInfo($category_id, array $params = [])
     {
+        
         // verify the required parameter 'category_id' is set
-        if ($category_id === null) {
+        if (!isset($category_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $category_id when calling getCategoryMetafieldsByCategoryId');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/categories/{category_id}/metafields";
         $httpBody = '';
@@ -6098,31 +6770,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($page !== null) {
-            $queryParams['page'] = $this->apiClient->getSerializer()->toQueryValue($page);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($limit !== null) {
-            $queryParams['limit'] = $this->apiClient->getSerializer()->toQueryValue($limit);
-        }
-        // query params
-        if ($key !== null) {
-            $queryParams['key'] = $this->apiClient->getSerializer()->toQueryValue($key);
-        }
-        // query params
-        if ($namespace !== null) {
-            $queryParams['namespace'] = $this->apiClient->getSerializer()->toQueryValue($namespace);
-        }
-        // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
-        }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($category_id !== null) {
+
+
+        if (isset($category_id)) {
             $resourcePath = str_replace(
                 "{" . "category_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($category_id),
@@ -6132,13 +6787,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -6150,48 +6805,56 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\MetaFieldCollectionResponse',
                 '/catalog/categories/{category_id}/metafields'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\MetaFieldCollectionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetaFieldCollectionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetaFieldCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getCategoryTree
-     *
      * 
      *
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     *
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\CategoryTreeCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getCategoryTree()
+    public function getCategoryTree(array $params = [])
     {
-        list($response) = $this->getCategoryTreeWithHttpInfo();
+        list($response) = $this->getCategoryTreeWithHttpInfo($params);
         return $response;
     }
+
 
     /**
      * Operation getCategoryTreeWithHttpInfo
      *
-     * 
-     *
+     * @see self::getCategoryTree()
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\CategoryTreeCollectionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getCategoryTreeWithHttpInfo()
+    public function getCategoryTreeWithHttpInfo(array $params = [])
     {
+        
+
         // parse inputs
         $resourcePath = "/catalog/categories/tree";
         $httpBody = '';
@@ -6204,16 +6867,21 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -6225,60 +6893,67 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\CategoryTreeCollectionResponse',
                 '/catalog/categories/tree'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\CategoryTreeCollectionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\CategoryTreeCollectionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\CategoryTreeCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getComplexRuleById
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $complex_rule_id The ID of the &#x60;ComplexRule&#x60;. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\ComplexRuleResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getComplexRuleById($product_id, $complex_rule_id, $include_fields = null, $exclude_fields = null)
+    public function getComplexRuleById($product_id, $complex_rule_id, array $params = [])
     {
-        list($response) = $this->getComplexRuleByIdWithHttpInfo($product_id, $complex_rule_id, $include_fields, $exclude_fields);
+        list($response) = $this->getComplexRuleByIdWithHttpInfo($product_id, $complex_rule_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getComplexRuleByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::getComplexRuleById()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $complex_rule_id The ID of the &#x60;ComplexRule&#x60;. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ComplexRuleResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getComplexRuleByIdWithHttpInfo($product_id, $complex_rule_id, $include_fields = null, $exclude_fields = null)
+    public function getComplexRuleByIdWithHttpInfo($product_id, $complex_rule_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getComplexRuleById');
         }
+        
         // verify the required parameter 'complex_rule_id' is set
-        if ($complex_rule_id === null) {
+        if (!isset($complex_rule_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $complex_rule_id when calling getComplexRuleById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/complex-rules/{complex_rule_id}";
         $httpBody = '';
@@ -6292,15 +6967,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -6308,7 +6982,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($complex_rule_id !== null) {
+
+
+        if (isset($complex_rule_id)) {
             $resourcePath = str_replace(
                 "{" . "complex_rule_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($complex_rule_id),
@@ -6318,13 +6994,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -6336,58 +7012,65 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ComplexRuleResponse',
                 '/catalog/products/{product_id}/complex-rules/{complex_rule_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ComplexRuleResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ComplexRuleResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ComplexRuleResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getComplexRules
-     *
      * 
      *
+     *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\ComplexRuleCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getComplexRules($product_id, $include_fields = null, $exclude_fields = null)
+    public function getComplexRules($product_id, array $params = [])
     {
-        list($response) = $this->getComplexRulesWithHttpInfo($product_id, $include_fields, $exclude_fields);
+        list($response) = $this->getComplexRulesWithHttpInfo($product_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getComplexRulesWithHttpInfo
      *
-     * 
-     *
+     * @see self::getComplexRules()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ComplexRuleCollectionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getComplexRulesWithHttpInfo($product_id, $include_fields = null, $exclude_fields = null)
+    public function getComplexRulesWithHttpInfo($product_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getComplexRules');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/complex-rules";
         $httpBody = '';
@@ -6401,15 +7084,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -6419,13 +7101,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -6437,60 +7119,67 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ComplexRuleCollectionResponse',
                 '/catalog/products/{product_id}/complex-rules'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ComplexRuleCollectionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ComplexRuleCollectionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ComplexRuleCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getConfigurableFieldById
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $configurable_field_id The ID of the &#x60;ConfigurableField&#x60;. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\ConfigurableFieldResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getConfigurableFieldById($product_id, $configurable_field_id, $include_fields = null, $exclude_fields = null)
+    public function getConfigurableFieldById($product_id, $configurable_field_id, array $params = [])
     {
-        list($response) = $this->getConfigurableFieldByIdWithHttpInfo($product_id, $configurable_field_id, $include_fields, $exclude_fields);
+        list($response) = $this->getConfigurableFieldByIdWithHttpInfo($product_id, $configurable_field_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getConfigurableFieldByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::getConfigurableFieldById()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $configurable_field_id The ID of the &#x60;ConfigurableField&#x60;. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ConfigurableFieldResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getConfigurableFieldByIdWithHttpInfo($product_id, $configurable_field_id, $include_fields = null, $exclude_fields = null)
+    public function getConfigurableFieldByIdWithHttpInfo($product_id, $configurable_field_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getConfigurableFieldById');
         }
+        
         // verify the required parameter 'configurable_field_id' is set
-        if ($configurable_field_id === null) {
+        if (!isset($configurable_field_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $configurable_field_id when calling getConfigurableFieldById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/configurable-fields/{configurable_field_id}";
         $httpBody = '';
@@ -6504,15 +7193,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -6520,7 +7208,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($configurable_field_id !== null) {
+
+
+        if (isset($configurable_field_id)) {
             $resourcePath = str_replace(
                 "{" . "configurable_field_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($configurable_field_id),
@@ -6530,13 +7220,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -6548,62 +7238,67 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ConfigurableFieldResponse',
                 '/catalog/products/{product_id}/configurable-fields/{configurable_field_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ConfigurableFieldResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ConfigurableFieldResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ConfigurableFieldResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getConfigurableFields
-     *
      * 
      *
+     *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     *     - page int Specifies the page number in a limited (paginated) list of products. (optional)
+     *     - limit int Controls the number of items per page in a limited (paginated) list of products. (optional)
      * @return \BigCommerce\Api\v3\Model\ConfigurableFieldCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getConfigurableFields($product_id, $include_fields = null, $exclude_fields = null, $page = null, $limit = null)
+    public function getConfigurableFields($product_id, array $params = [])
     {
-        list($response) = $this->getConfigurableFieldsWithHttpInfo($product_id, $include_fields, $exclude_fields, $page, $limit);
+        list($response) = $this->getConfigurableFieldsWithHttpInfo($product_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getConfigurableFieldsWithHttpInfo
      *
-     * 
-     *
+     * @see self::getConfigurableFields()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ConfigurableFieldCollectionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getConfigurableFieldsWithHttpInfo($product_id, $include_fields = null, $exclude_fields = null, $page = null, $limit = null)
+    public function getConfigurableFieldsWithHttpInfo($product_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getConfigurableFields');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/configurable-fields";
         $httpBody = '';
@@ -6617,23 +7312,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
-        // query params
-        if ($page !== null) {
-            $queryParams['page'] = $this->apiClient->getSerializer()->toQueryValue($page);
-        }
-        // query params
-        if ($limit !== null) {
-            $queryParams['limit'] = $this->apiClient->getSerializer()->toQueryValue($limit);
-        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -6643,13 +7329,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -6661,60 +7347,67 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ConfigurableFieldCollectionResponse',
                 '/catalog/products/{product_id}/configurable-fields'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ConfigurableFieldCollectionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ConfigurableFieldCollectionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ConfigurableFieldCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getCustomFieldById
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $custom_field_id The ID of the &#x60;CustomField&#x60;. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\CustomFieldResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getCustomFieldById($product_id, $custom_field_id, $include_fields = null, $exclude_fields = null)
+    public function getCustomFieldById($product_id, $custom_field_id, array $params = [])
     {
-        list($response) = $this->getCustomFieldByIdWithHttpInfo($product_id, $custom_field_id, $include_fields, $exclude_fields);
+        list($response) = $this->getCustomFieldByIdWithHttpInfo($product_id, $custom_field_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getCustomFieldByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::getCustomFieldById()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $custom_field_id The ID of the &#x60;CustomField&#x60;. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\CustomFieldResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getCustomFieldByIdWithHttpInfo($product_id, $custom_field_id, $include_fields = null, $exclude_fields = null)
+    public function getCustomFieldByIdWithHttpInfo($product_id, $custom_field_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getCustomFieldById');
         }
+        
         // verify the required parameter 'custom_field_id' is set
-        if ($custom_field_id === null) {
+        if (!isset($custom_field_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $custom_field_id when calling getCustomFieldById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/custom-fields/{custom_field_id}";
         $httpBody = '';
@@ -6728,15 +7421,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -6744,7 +7436,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($custom_field_id !== null) {
+
+
+        if (isset($custom_field_id)) {
             $resourcePath = str_replace(
                 "{" . "custom_field_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($custom_field_id),
@@ -6754,13 +7448,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -6772,62 +7466,67 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\CustomFieldResponse',
                 '/catalog/products/{product_id}/custom-fields/{custom_field_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\CustomFieldResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\CustomFieldResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\CustomFieldResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getCustomFields
-     *
      * 
      *
+     *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     *     - page int Specifies the page number in a limited (paginated) list of products. (optional)
+     *     - limit int Controls the number of items per page in a limited (paginated) list of products. (optional)
      * @return \BigCommerce\Api\v3\Model\CustomFieldCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getCustomFields($product_id, $include_fields = null, $exclude_fields = null, $page = null, $limit = null)
+    public function getCustomFields($product_id, array $params = [])
     {
-        list($response) = $this->getCustomFieldsWithHttpInfo($product_id, $include_fields, $exclude_fields, $page, $limit);
+        list($response) = $this->getCustomFieldsWithHttpInfo($product_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getCustomFieldsWithHttpInfo
      *
-     * 
-     *
+     * @see self::getCustomFields()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\CustomFieldCollectionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getCustomFieldsWithHttpInfo($product_id, $include_fields = null, $exclude_fields = null, $page = null, $limit = null)
+    public function getCustomFieldsWithHttpInfo($product_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getCustomFields');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/custom-fields";
         $httpBody = '';
@@ -6841,23 +7540,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
-        // query params
-        if ($page !== null) {
-            $queryParams['page'] = $this->apiClient->getSerializer()->toQueryValue($page);
-        }
-        // query params
-        if ($limit !== null) {
-            $queryParams['limit'] = $this->apiClient->getSerializer()->toQueryValue($limit);
-        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -6867,13 +7557,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -6885,60 +7575,67 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\CustomFieldCollectionResponse',
                 '/catalog/products/{product_id}/custom-fields'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\CustomFieldCollectionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\CustomFieldCollectionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\CustomFieldCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getModifierById
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $modifier_id The ID of the &#x60;Modifier&#x60;. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\ModifierResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getModifierById($product_id, $modifier_id, $include_fields = null, $exclude_fields = null)
+    public function getModifierById($product_id, $modifier_id, array $params = [])
     {
-        list($response) = $this->getModifierByIdWithHttpInfo($product_id, $modifier_id, $include_fields, $exclude_fields);
+        list($response) = $this->getModifierByIdWithHttpInfo($product_id, $modifier_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getModifierByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::getModifierById()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $modifier_id The ID of the &#x60;Modifier&#x60;. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ModifierResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getModifierByIdWithHttpInfo($product_id, $modifier_id, $include_fields = null, $exclude_fields = null)
+    public function getModifierByIdWithHttpInfo($product_id, $modifier_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getModifierById');
         }
+        
         // verify the required parameter 'modifier_id' is set
-        if ($modifier_id === null) {
+        if (!isset($modifier_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $modifier_id when calling getModifierById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/modifiers/{modifier_id}";
         $httpBody = '';
@@ -6952,15 +7649,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -6968,7 +7664,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($modifier_id !== null) {
+
+
+        if (isset($modifier_id)) {
             $resourcePath = str_replace(
                 "{" . "modifier_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($modifier_id),
@@ -6978,13 +7676,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -6996,70 +7694,79 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ModifierResponse',
                 '/catalog/products/{product_id}/modifiers/{modifier_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ModifierResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ModifierResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ModifierResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getModifierValueById
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $modifier_id The ID of the &#x60;Modifier&#x60;. (required)
      * @param int $value_id The ID of the &#x60;Modifier/Option Value&#x60;. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\ModifierValueResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getModifierValueById($product_id, $modifier_id, $value_id, $include_fields = null, $exclude_fields = null)
+    public function getModifierValueById($product_id, $modifier_id, $value_id, array $params = [])
     {
-        list($response) = $this->getModifierValueByIdWithHttpInfo($product_id, $modifier_id, $value_id, $include_fields, $exclude_fields);
+        list($response) = $this->getModifierValueByIdWithHttpInfo($product_id, $modifier_id, $value_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getModifierValueByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::getModifierValueById()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $modifier_id The ID of the &#x60;Modifier&#x60;. (required)
      * @param int $value_id The ID of the &#x60;Modifier/Option Value&#x60;. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ModifierValueResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getModifierValueByIdWithHttpInfo($product_id, $modifier_id, $value_id, $include_fields = null, $exclude_fields = null)
+    public function getModifierValueByIdWithHttpInfo($product_id, $modifier_id, $value_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getModifierValueById');
         }
+        
         // verify the required parameter 'modifier_id' is set
-        if ($modifier_id === null) {
+        if (!isset($modifier_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $modifier_id when calling getModifierValueById');
         }
+        
         // verify the required parameter 'value_id' is set
-        if ($value_id === null) {
+        if (!isset($value_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $value_id when calling getModifierValueById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/modifiers/{modifier_id}/values/{value_id}";
         $httpBody = '';
@@ -7073,15 +7780,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -7089,7 +7795,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($modifier_id !== null) {
+
+
+        if (isset($modifier_id)) {
             $resourcePath = str_replace(
                 "{" . "modifier_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($modifier_id),
@@ -7097,7 +7805,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($value_id !== null) {
+
+
+        if (isset($value_id)) {
             $resourcePath = str_replace(
                 "{" . "value_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($value_id),
@@ -7107,13 +7817,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -7125,64 +7835,72 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ModifierValueResponse',
                 '/catalog/products/{product_id}/modifiers/{modifier_id}/values/{value_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ModifierValueResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ModifierValueResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ModifierValueResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getModifierValues
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $modifier_id The ID of the &#x60;Modifier&#x60;. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\ModifierValueCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getModifierValues($product_id, $modifier_id, $include_fields = null, $exclude_fields = null)
+    public function getModifierValues($product_id, $modifier_id, array $params = [])
     {
-        list($response) = $this->getModifierValuesWithHttpInfo($product_id, $modifier_id, $include_fields, $exclude_fields);
+        list($response) = $this->getModifierValuesWithHttpInfo($product_id, $modifier_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getModifierValuesWithHttpInfo
      *
-     * 
-     *
+     * @see self::getModifierValues()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $modifier_id The ID of the &#x60;Modifier&#x60;. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ModifierValueCollectionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getModifierValuesWithHttpInfo($product_id, $modifier_id, $include_fields = null, $exclude_fields = null)
+    public function getModifierValuesWithHttpInfo($product_id, $modifier_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getModifierValues');
         }
+        
         // verify the required parameter 'modifier_id' is set
-        if ($modifier_id === null) {
+        if (!isset($modifier_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $modifier_id when calling getModifierValues');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/modifiers/{modifier_id}/values";
         $httpBody = '';
@@ -7196,15 +7914,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -7212,7 +7929,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($modifier_id !== null) {
+
+
+        if (isset($modifier_id)) {
             $resourcePath = str_replace(
                 "{" . "modifier_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($modifier_id),
@@ -7222,13 +7941,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -7240,58 +7959,62 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ModifierValueCollectionResponse',
                 '/catalog/products/{product_id}/modifiers/{modifier_id}/values'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ModifierValueCollectionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ModifierValueCollectionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ModifierValueCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getModifiers
-     *
      * 
      *
+     *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - page int Specifies the page number in a limited (paginated) list of products. (optional)
+     *     - limit int Controls the number of items per page in a limited (paginated) list of products. (optional)
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\ModifierCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getModifiers($product_id, $page = null, $limit = null, $include_fields = null, $exclude_fields = null)
+    public function getModifiers($product_id, array $params = [])
     {
-        list($response) = $this->getModifiersWithHttpInfo($product_id, $page, $limit, $include_fields, $exclude_fields);
+        list($response) = $this->getModifiersWithHttpInfo($product_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getModifiersWithHttpInfo
      *
-     * 
-     *
+     * @see self::getModifiers()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ModifierCollectionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getModifiersWithHttpInfo($product_id, $page = null, $limit = null, $include_fields = null, $exclude_fields = null)
+    public function getModifiersWithHttpInfo($product_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getModifiers');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/modifiers";
         $httpBody = '';
@@ -7305,23 +8028,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($page !== null) {
-            $queryParams['page'] = $this->apiClient->getSerializer()->toQueryValue($page);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($limit !== null) {
-            $queryParams['limit'] = $this->apiClient->getSerializer()->toQueryValue($limit);
-        }
-        // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
-        }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -7331,13 +8045,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -7349,60 +8063,67 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ModifierCollectionResponse',
                 '/catalog/products/{product_id}/modifiers'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ModifierCollectionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ModifierCollectionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ModifierCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getOptionById
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $option_id The ID of the &#x60;Option&#x60;. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\OptionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getOptionById($product_id, $option_id, $include_fields = null, $exclude_fields = null)
+    public function getOptionById($product_id, $option_id, array $params = [])
     {
-        list($response) = $this->getOptionByIdWithHttpInfo($product_id, $option_id, $include_fields, $exclude_fields);
+        list($response) = $this->getOptionByIdWithHttpInfo($product_id, $option_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getOptionByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::getOptionById()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $option_id The ID of the &#x60;Option&#x60;. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\OptionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getOptionByIdWithHttpInfo($product_id, $option_id, $include_fields = null, $exclude_fields = null)
+    public function getOptionByIdWithHttpInfo($product_id, $option_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getOptionById');
         }
+        
         // verify the required parameter 'option_id' is set
-        if ($option_id === null) {
+        if (!isset($option_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $option_id when calling getOptionById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/options/{option_id}";
         $httpBody = '';
@@ -7416,15 +8137,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -7432,7 +8152,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($option_id !== null) {
+
+
+        if (isset($option_id)) {
             $resourcePath = str_replace(
                 "{" . "option_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($option_id),
@@ -7442,13 +8164,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -7460,70 +8182,79 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\OptionResponse',
                 '/catalog/products/{product_id}/options/{option_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\OptionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\OptionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\OptionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getOptionValueById
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $option_id The ID of the &#x60;Option&#x60;. (required)
      * @param int $value_id The ID of the &#x60;Modifier/Option Value&#x60;. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\OptionValueResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getOptionValueById($product_id, $option_id, $value_id, $include_fields = null, $exclude_fields = null)
+    public function getOptionValueById($product_id, $option_id, $value_id, array $params = [])
     {
-        list($response) = $this->getOptionValueByIdWithHttpInfo($product_id, $option_id, $value_id, $include_fields, $exclude_fields);
+        list($response) = $this->getOptionValueByIdWithHttpInfo($product_id, $option_id, $value_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getOptionValueByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::getOptionValueById()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $option_id The ID of the &#x60;Option&#x60;. (required)
      * @param int $value_id The ID of the &#x60;Modifier/Option Value&#x60;. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\OptionValueResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getOptionValueByIdWithHttpInfo($product_id, $option_id, $value_id, $include_fields = null, $exclude_fields = null)
+    public function getOptionValueByIdWithHttpInfo($product_id, $option_id, $value_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getOptionValueById');
         }
+        
         // verify the required parameter 'option_id' is set
-        if ($option_id === null) {
+        if (!isset($option_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $option_id when calling getOptionValueById');
         }
+        
         // verify the required parameter 'value_id' is set
-        if ($value_id === null) {
+        if (!isset($value_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $value_id when calling getOptionValueById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/options/{option_id}/values/{value_id}";
         $httpBody = '';
@@ -7537,15 +8268,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -7553,7 +8283,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($option_id !== null) {
+
+
+        if (isset($option_id)) {
             $resourcePath = str_replace(
                 "{" . "option_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($option_id),
@@ -7561,7 +8293,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($value_id !== null) {
+
+
+        if (isset($value_id)) {
             $resourcePath = str_replace(
                 "{" . "value_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($value_id),
@@ -7571,13 +8305,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -7589,64 +8323,72 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\OptionValueResponse',
                 '/catalog/products/{product_id}/options/{option_id}/values/{value_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\OptionValueResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\OptionValueResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\OptionValueResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getOptionValues
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $option_id The ID of the &#x60;Option&#x60;. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\OptionValueCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getOptionValues($product_id, $option_id, $include_fields = null, $exclude_fields = null)
+    public function getOptionValues($product_id, $option_id, array $params = [])
     {
-        list($response) = $this->getOptionValuesWithHttpInfo($product_id, $option_id, $include_fields, $exclude_fields);
+        list($response) = $this->getOptionValuesWithHttpInfo($product_id, $option_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getOptionValuesWithHttpInfo
      *
-     * 
-     *
+     * @see self::getOptionValues()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $option_id The ID of the &#x60;Option&#x60;. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\OptionValueCollectionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getOptionValuesWithHttpInfo($product_id, $option_id, $include_fields = null, $exclude_fields = null)
+    public function getOptionValuesWithHttpInfo($product_id, $option_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getOptionValues');
         }
+        
         // verify the required parameter 'option_id' is set
-        if ($option_id === null) {
+        if (!isset($option_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $option_id when calling getOptionValues');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/options/{option_id}/values";
         $httpBody = '';
@@ -7660,15 +8402,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -7676,7 +8417,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($option_id !== null) {
+
+
+        if (isset($option_id)) {
             $resourcePath = str_replace(
                 "{" . "option_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($option_id),
@@ -7686,13 +8429,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -7704,58 +8447,62 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\OptionValueCollectionResponse',
                 '/catalog/products/{product_id}/options/{option_id}/values'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\OptionValueCollectionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\OptionValueCollectionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\OptionValueCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getOptions
-     *
      * 
      *
+     *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - page int Specifies the page number in a limited (paginated) list of products. (optional)
+     *     - limit int Controls the number of items per page in a limited (paginated) list of products. (optional)
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\OptionCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getOptions($product_id, $page = null, $limit = null, $include_fields = null, $exclude_fields = null)
+    public function getOptions($product_id, array $params = [])
     {
-        list($response) = $this->getOptionsWithHttpInfo($product_id, $page, $limit, $include_fields, $exclude_fields);
+        list($response) = $this->getOptionsWithHttpInfo($product_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getOptionsWithHttpInfo
      *
-     * 
-     *
+     * @see self::getOptions()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\OptionCollectionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getOptionsWithHttpInfo($product_id, $page = null, $limit = null, $include_fields = null, $exclude_fields = null)
+    public function getOptionsWithHttpInfo($product_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getOptions');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/options";
         $httpBody = '';
@@ -7769,23 +8516,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($page !== null) {
-            $queryParams['page'] = $this->apiClient->getSerializer()->toQueryValue($page);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($limit !== null) {
-            $queryParams['limit'] = $this->apiClient->getSerializer()->toQueryValue($limit);
-        }
-        // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
-        }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -7795,13 +8533,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -7813,62 +8551,67 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\OptionCollectionResponse',
                 '/catalog/products/{product_id}/options'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\OptionCollectionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\OptionCollectionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\OptionCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getProductById
-     *
      * 
      *
+     *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
-     * @param string $include Sub-resources to include on a product, in a comma-separated list. Valid expansions currently include &#x60;variants&#x60;, &#x60;images&#x60;, &#39;primary_image&#x60;, &#x60;custom_fields&#x60;, and &#x60;bulk_pricing_rules&#x60;. (optional)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @param int $price_list_id The ID of the &#x60;Price List&#x60;. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - include string Sub-resources to include on a product, in a comma-separated list. Valid expansions currently include &#x60;variants&#x60;, &#x60;images&#x60;, &#39;primary_image&#x60;, &#x60;custom_fields&#x60;, and &#x60;bulk_pricing_rules&#x60;. (optional)
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     *     - price_list_id int The ID of the &#x60;Price List&#x60;. (optional)
      * @return \BigCommerce\Api\v3\Model\ProductResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getProductById($product_id, $include = null, $include_fields = null, $exclude_fields = null, $price_list_id = null)
+    public function getProductById($product_id, array $params = [])
     {
-        list($response) = $this->getProductByIdWithHttpInfo($product_id, $include, $include_fields, $exclude_fields, $price_list_id);
+        list($response) = $this->getProductByIdWithHttpInfo($product_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getProductByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::getProductById()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
-     * @param string $include Sub-resources to include on a product, in a comma-separated list. Valid expansions currently include &#x60;variants&#x60;, &#x60;images&#x60;, &#39;primary_image&#x60;, &#x60;custom_fields&#x60;, and &#x60;bulk_pricing_rules&#x60;. (optional)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @param int $price_list_id The ID of the &#x60;Price List&#x60;. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ProductResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getProductByIdWithHttpInfo($product_id, $include = null, $include_fields = null, $exclude_fields = null, $price_list_id = null)
+    public function getProductByIdWithHttpInfo($product_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getProductById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}";
         $httpBody = '';
@@ -7882,23 +8625,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($include !== null) {
-            $queryParams['include'] = $this->apiClient->getSerializer()->toQueryValue($include);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
-        }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
-        // query params
-        if ($price_list_id !== null) {
-            $queryParams['price_list_id'] = $this->apiClient->getSerializer()->toQueryValue($price_list_id);
-        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -7908,13 +8642,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -7926,64 +8660,72 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ProductResponse',
                 '/catalog/products/{product_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ProductResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getProductImageById
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $image_id The ID of the &#x60;Image&#x60; that is being operated on. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\ProductImageResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getProductImageById($product_id, $image_id, $include_fields = null, $exclude_fields = null)
+    public function getProductImageById($product_id, $image_id, array $params = [])
     {
-        list($response) = $this->getProductImageByIdWithHttpInfo($product_id, $image_id, $include_fields, $exclude_fields);
+        list($response) = $this->getProductImageByIdWithHttpInfo($product_id, $image_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getProductImageByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::getProductImageById()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $image_id The ID of the &#x60;Image&#x60; that is being operated on. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ProductImageResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getProductImageByIdWithHttpInfo($product_id, $image_id, $include_fields = null, $exclude_fields = null)
+    public function getProductImageByIdWithHttpInfo($product_id, $image_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getProductImageById');
         }
+        
         // verify the required parameter 'image_id' is set
-        if ($image_id === null) {
+        if (!isset($image_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $image_id when calling getProductImageById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/images/{image_id}";
         $httpBody = '';
@@ -7997,15 +8739,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -8013,7 +8754,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($image_id !== null) {
+
+
+        if (isset($image_id)) {
             $resourcePath = str_replace(
                 "{" . "image_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($image_id),
@@ -8023,13 +8766,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -8041,62 +8784,67 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ProductImageResponse',
                 '/catalog/products/{product_id}/images/{image_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ProductImageResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductImageResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductImageResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getProductImages
-     *
      * 
      *
+     *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - page int Specifies the page number in a limited (paginated) list of products. (optional)
+     *     - limit int Controls the number of items per page in a limited (paginated) list of products. (optional)
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\ProductImageCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getProductImages($product_id, $page = null, $limit = null, $include_fields = null, $exclude_fields = null)
+    public function getProductImages($product_id, array $params = [])
     {
-        list($response) = $this->getProductImagesWithHttpInfo($product_id, $page, $limit, $include_fields, $exclude_fields);
+        list($response) = $this->getProductImagesWithHttpInfo($product_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getProductImagesWithHttpInfo
      *
-     * 
-     *
+     * @see self::getProductImages()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ProductImageCollectionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getProductImagesWithHttpInfo($product_id, $page = null, $limit = null, $include_fields = null, $exclude_fields = null)
+    public function getProductImagesWithHttpInfo($product_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getProductImages');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/images";
         $httpBody = '';
@@ -8110,23 +8858,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($page !== null) {
-            $queryParams['page'] = $this->apiClient->getSerializer()->toQueryValue($page);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($limit !== null) {
-            $queryParams['limit'] = $this->apiClient->getSerializer()->toQueryValue($limit);
-        }
-        // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
-        }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -8136,13 +8875,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -8154,64 +8893,72 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ProductImageCollectionResponse',
                 '/catalog/products/{product_id}/images'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ProductImageCollectionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductImageCollectionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductImageCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getProductMetafieldByProductId
-     *
      * 
+     *
      *
      * @param int $metafield_id The ID of the &#x60;Metafield&#x60;. (required)
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\MetafieldResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getProductMetafieldByProductId($metafield_id, $product_id, $include_fields = null, $exclude_fields = null)
+    public function getProductMetafieldByProductId($metafield_id, $product_id, array $params = [])
     {
-        list($response) = $this->getProductMetafieldByProductIdWithHttpInfo($metafield_id, $product_id, $include_fields, $exclude_fields);
+        list($response) = $this->getProductMetafieldByProductIdWithHttpInfo($metafield_id, $product_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getProductMetafieldByProductIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::getProductMetafieldByProductId()
      * @param int $metafield_id The ID of the &#x60;Metafield&#x60;. (required)
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\MetafieldResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getProductMetafieldByProductIdWithHttpInfo($metafield_id, $product_id, $include_fields = null, $exclude_fields = null)
+    public function getProductMetafieldByProductIdWithHttpInfo($metafield_id, $product_id, array $params = [])
     {
+        
         // verify the required parameter 'metafield_id' is set
-        if ($metafield_id === null) {
+        if (!isset($metafield_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $metafield_id when calling getProductMetafieldByProductId');
         }
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getProductMetafieldByProductId');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/metafields/{metafield_id}";
         $httpBody = '';
@@ -8225,15 +8972,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($metafield_id !== null) {
+
+
+        if (isset($metafield_id)) {
             $resourcePath = str_replace(
                 "{" . "metafield_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($metafield_id),
@@ -8241,7 +8987,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -8251,13 +8999,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -8269,66 +9017,69 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\MetafieldResponse',
                 '/catalog/products/{product_id}/metafields/{metafield_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\MetafieldResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetafieldResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetafieldResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getProductMetafieldsByProductId
-     *
      * 
      *
+     *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $key Filter based on a metafield&#39;s key. (optional)
-     * @param string $namespace Filter based on a metafield&#39;s key. (optional)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - page int Specifies the page number in a limited (paginated) list of products. (optional)
+     *     - limit int Controls the number of items per page in a limited (paginated) list of products. (optional)
+     *     - key string Filter based on a metafield&#39;s key. (optional)
+     *     - namespace string Filter based on a metafield&#39;s key. (optional)
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\MetaFieldCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getProductMetafieldsByProductId($product_id, $page = null, $limit = null, $key = null, $namespace = null, $include_fields = null, $exclude_fields = null)
+    public function getProductMetafieldsByProductId($product_id, array $params = [])
     {
-        list($response) = $this->getProductMetafieldsByProductIdWithHttpInfo($product_id, $page, $limit, $key, $namespace, $include_fields, $exclude_fields);
+        list($response) = $this->getProductMetafieldsByProductIdWithHttpInfo($product_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getProductMetafieldsByProductIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::getProductMetafieldsByProductId()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $key Filter based on a metafield&#39;s key. (optional)
-     * @param string $namespace Filter based on a metafield&#39;s key. (optional)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\MetaFieldCollectionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getProductMetafieldsByProductIdWithHttpInfo($product_id, $page = null, $limit = null, $key = null, $namespace = null, $include_fields = null, $exclude_fields = null)
+    public function getProductMetafieldsByProductIdWithHttpInfo($product_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getProductMetafieldsByProductId');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/metafields";
         $httpBody = '';
@@ -8342,31 +9093,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($page !== null) {
-            $queryParams['page'] = $this->apiClient->getSerializer()->toQueryValue($page);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($limit !== null) {
-            $queryParams['limit'] = $this->apiClient->getSerializer()->toQueryValue($limit);
-        }
-        // query params
-        if ($key !== null) {
-            $queryParams['key'] = $this->apiClient->getSerializer()->toQueryValue($key);
-        }
-        // query params
-        if ($namespace !== null) {
-            $queryParams['namespace'] = $this->apiClient->getSerializer()->toQueryValue($namespace);
-        }
-        // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
-        }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -8376,13 +9110,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -8394,64 +9128,72 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\MetaFieldCollectionResponse',
                 '/catalog/products/{product_id}/metafields'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\MetaFieldCollectionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetaFieldCollectionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetaFieldCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getProductReviewById
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $review_id The ID of the &#x60;review&#x60; that is being operated on. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\ProductReviewResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getProductReviewById($product_id, $review_id, $include_fields = null, $exclude_fields = null)
+    public function getProductReviewById($product_id, $review_id, array $params = [])
     {
-        list($response) = $this->getProductReviewByIdWithHttpInfo($product_id, $review_id, $include_fields, $exclude_fields);
+        list($response) = $this->getProductReviewByIdWithHttpInfo($product_id, $review_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getProductReviewByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::getProductReviewById()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $review_id The ID of the &#x60;review&#x60; that is being operated on. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ProductReviewResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getProductReviewByIdWithHttpInfo($product_id, $review_id, $include_fields = null, $exclude_fields = null)
+    public function getProductReviewByIdWithHttpInfo($product_id, $review_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getProductReviewById');
         }
+        
         // verify the required parameter 'review_id' is set
-        if ($review_id === null) {
+        if (!isset($review_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $review_id when calling getProductReviewById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/reviews/{review_id}";
         $httpBody = '';
@@ -8465,15 +9207,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -8481,7 +9222,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($review_id !== null) {
+
+
+        if (isset($review_id)) {
             $resourcePath = str_replace(
                 "{" . "review_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($review_id),
@@ -8491,13 +9234,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -8509,62 +9252,67 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ProductReviewResponse',
                 '/catalog/products/{product_id}/reviews/{review_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ProductReviewResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductReviewResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductReviewResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getProductReviews
-     *
      * 
      *
+     *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     *     - page int Specifies the page number in a limited (paginated) list of products. (optional)
+     *     - limit int Controls the number of items per page in a limited (paginated) list of products. (optional)
      * @return \BigCommerce\Api\v3\Model\ProductReviewCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getProductReviews($product_id, $include_fields = null, $exclude_fields = null, $page = null, $limit = null)
+    public function getProductReviews($product_id, array $params = [])
     {
-        list($response) = $this->getProductReviewsWithHttpInfo($product_id, $include_fields, $exclude_fields, $page, $limit);
+        list($response) = $this->getProductReviewsWithHttpInfo($product_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getProductReviewsWithHttpInfo
      *
-     * 
-     *
+     * @see self::getProductReviews()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ProductReviewCollectionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getProductReviewsWithHttpInfo($product_id, $include_fields = null, $exclude_fields = null, $page = null, $limit = null)
+    public function getProductReviewsWithHttpInfo($product_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getProductReviews');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/reviews";
         $httpBody = '';
@@ -8578,23 +9326,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
-        // query params
-        if ($page !== null) {
-            $queryParams['page'] = $this->apiClient->getSerializer()->toQueryValue($page);
-        }
-        // query params
-        if ($limit !== null) {
-            $queryParams['limit'] = $this->apiClient->getSerializer()->toQueryValue($limit);
-        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -8604,13 +9343,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -8622,64 +9361,72 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ProductReviewCollectionResponse',
                 '/catalog/products/{product_id}/reviews'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ProductReviewCollectionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductReviewCollectionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductReviewCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getProductVideoById
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param string $video_id The ID of the &#x60;Video&#x60; that is being operated on. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\ProductVideoResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getProductVideoById($product_id, $video_id, $include_fields = null, $exclude_fields = null)
+    public function getProductVideoById($product_id, $video_id, array $params = [])
     {
-        list($response) = $this->getProductVideoByIdWithHttpInfo($product_id, $video_id, $include_fields, $exclude_fields);
+        list($response) = $this->getProductVideoByIdWithHttpInfo($product_id, $video_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getProductVideoByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::getProductVideoById()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param string $video_id The ID of the &#x60;Video&#x60; that is being operated on. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ProductVideoResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getProductVideoByIdWithHttpInfo($product_id, $video_id, $include_fields = null, $exclude_fields = null)
+    public function getProductVideoByIdWithHttpInfo($product_id, $video_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getProductVideoById');
         }
+        
         // verify the required parameter 'video_id' is set
-        if ($video_id === null) {
+        if (!isset($video_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $video_id when calling getProductVideoById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/videos/{video_id}";
         $httpBody = '';
@@ -8693,15 +9440,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -8709,7 +9455,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($video_id !== null) {
+
+
+        if (isset($video_id)) {
             $resourcePath = str_replace(
                 "{" . "video_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($video_id),
@@ -8719,13 +9467,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -8737,58 +9485,65 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ProductVideoResponse',
                 '/catalog/products/{product_id}/videos/{video_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ProductVideoResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductVideoResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductVideoResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getProductVideos
-     *
      * 
      *
+     *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\ProductVideoCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getProductVideos($product_id, $include_fields = null, $exclude_fields = null)
+    public function getProductVideos($product_id, array $params = [])
     {
-        list($response) = $this->getProductVideosWithHttpInfo($product_id, $include_fields, $exclude_fields);
+        list($response) = $this->getProductVideosWithHttpInfo($product_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getProductVideosWithHttpInfo
      *
-     * 
-     *
+     * @see self::getProductVideos()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ProductVideoCollectionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getProductVideosWithHttpInfo($product_id, $include_fields = null, $exclude_fields = null)
+    public function getProductVideosWithHttpInfo($product_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getProductVideos');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/videos";
         $httpBody = '';
@@ -8802,15 +9557,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -8820,13 +9574,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -8838,106 +9592,82 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ProductVideoCollectionResponse',
                 '/catalog/products/{product_id}/videos'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ProductVideoCollectionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductVideoCollectionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductVideoCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getProducts
-     *
      * 
      *
-     * @param int $id Filter items by id. (optional)
-     * @param string $name Filter items by name. (optional)
-     * @param string $sku Filter items by sku. (optional)
-     * @param string $upc Filter items by upc. (optional)
-     * @param float $price Filter items by price. (optional)
-     * @param float $weight Filter items by weight. (optional)
-     * @param int $condition Filter items by condition. (optional)
-     * @param int $brand_id Filter items by brand_id. (optional)
-     * @param \DateTime $date_modified Filter items by date_modified. (optional)
-     * @param \DateTime $date_last_imported Filter items by date_last_imported. (optional)
-     * @param int $is_visible Filter items by is_visible. (optional)
-     * @param int $is_featured Filter items by is_featured. (optional)
-     * @param int $is_free_shipping Filter items by is_free_shipping. (optional)
-     * @param int $inventory_level Filter items by inventory_level. (optional)
-     * @param int $inventory_low Filter items by inventory_low. Values: 1, 0. (optional)
-     * @param int $out_of_stock Filter items by out_of_stock. To enable the filter, pass &#x60;out_of_stock&#x60;&#x3D;&#x60;1&#x60;. (optional)
-     * @param int $total_sold Filter items by total_sold. (optional)
-     * @param string $type Filter items by type: &#x60;physical&#x60; or &#x60;digital&#x60;. (optional)
-     * @param int $categories Filter items by categories. (optional)
-     * @param string $keyword Filter items by keywords found in the &#x60;name&#x60;, &#x60;description&#x60;, or &#x60;sku&#x60; fields, or in the brand name. (optional)
-     * @param string $keyword_context Set context for a product search. (optional)
-     * @param int $status Filter items by status. (optional)
-     * @param string $include Sub-resources to include on a product, in a comma-separated list. Valid expansions currently include &#x60;variants&#x60;, &#x60;images&#x60;, &#39;primary_image&#x60;, &#x60;custom_fields&#x60;, and &#x60;bulk_pricing_rules&#x60;. (optional)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @param string $availability Filter items by availability. Values are: available, disabled, preorder. (optional)
-     * @param int $price_list_id The ID of the &#x60;Price List&#x60;. (optional)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $direction Sort direction. Acceptable values are: &#x60;asc&#x60;, &#x60;desc&#x60;. (optional)
-     * @param string $sort Field name to sort by. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     *
+     * @param array $params = []
+     *     - id int Filter items by id. (optional)
+     *     - name string Filter items by name. (optional)
+     *     - sku string Filter items by sku. (optional)
+     *     - upc string Filter items by upc. (optional)
+     *     - price float Filter items by price. (optional)
+     *     - weight float Filter items by weight. (optional)
+     *     - condition int Filter items by condition. (optional)
+     *     - brand_id int Filter items by brand_id. (optional)
+     *     - date_modified \DateTime Filter items by date_modified. (optional)
+     *     - date_last_imported \DateTime Filter items by date_last_imported. (optional)
+     *     - is_visible int Filter items by is_visible. (optional)
+     *     - is_featured int Filter items by is_featured. (optional)
+     *     - is_free_shipping int Filter items by is_free_shipping. (optional)
+     *     - inventory_level int Filter items by inventory_level. (optional)
+     *     - inventory_low int Filter items by inventory_low. Values: 1, 0. (optional)
+     *     - out_of_stock int Filter items by out_of_stock. To enable the filter, pass &#x60;out_of_stock&#x60;&#x3D;&#x60;1&#x60;. (optional)
+     *     - total_sold int Filter items by total_sold. (optional)
+     *     - type string Filter items by type: &#x60;physical&#x60; or &#x60;digital&#x60;. (optional)
+     *     - categories int Filter items by categories. (optional)
+     *     - keyword string Filter items by keywords found in the &#x60;name&#x60;, &#x60;description&#x60;, or &#x60;sku&#x60; fields, or in the brand name. (optional)
+     *     - keyword_context string Set context for a product search. (optional)
+     *     - status int Filter items by status. (optional)
+     *     - include string Sub-resources to include on a product, in a comma-separated list. Valid expansions currently include &#x60;variants&#x60;, &#x60;images&#x60;, &#39;primary_image&#x60;, &#x60;custom_fields&#x60;, and &#x60;bulk_pricing_rules&#x60;. (optional)
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     *     - availability string Filter items by availability. Values are: available, disabled, preorder. (optional)
+     *     - price_list_id int The ID of the &#x60;Price List&#x60;. (optional)
+     *     - page int Specifies the page number in a limited (paginated) list of products. (optional)
+     *     - limit int Controls the number of items per page in a limited (paginated) list of products. (optional)
+     *     - direction string Sort direction. Acceptable values are: &#x60;asc&#x60;, &#x60;desc&#x60;. (optional)
+     *     - sort string Field name to sort by. (optional)
      * @return \BigCommerce\Api\v3\Model\ProductCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getProducts($id = null, $name = null, $sku = null, $upc = null, $price = null, $weight = null, $condition = null, $brand_id = null, $date_modified = null, $date_last_imported = null, $is_visible = null, $is_featured = null, $is_free_shipping = null, $inventory_level = null, $inventory_low = null, $out_of_stock = null, $total_sold = null, $type = null, $categories = null, $keyword = null, $keyword_context = null, $status = null, $include = null, $include_fields = null, $exclude_fields = null, $availability = null, $price_list_id = null, $page = null, $limit = null, $direction = null, $sort = null)
+    public function getProducts(array $params = [])
     {
-        list($response) = $this->getProductsWithHttpInfo($id, $name, $sku, $upc, $price, $weight, $condition, $brand_id, $date_modified, $date_last_imported, $is_visible, $is_featured, $is_free_shipping, $inventory_level, $inventory_low, $out_of_stock, $total_sold, $type, $categories, $keyword, $keyword_context, $status, $include, $include_fields, $exclude_fields, $availability, $price_list_id, $page, $limit, $direction, $sort);
+        list($response) = $this->getProductsWithHttpInfo($params);
         return $response;
     }
+
 
     /**
      * Operation getProductsWithHttpInfo
      *
-     * 
-     *
-     * @param int $id Filter items by id. (optional)
-     * @param string $name Filter items by name. (optional)
-     * @param string $sku Filter items by sku. (optional)
-     * @param string $upc Filter items by upc. (optional)
-     * @param float $price Filter items by price. (optional)
-     * @param float $weight Filter items by weight. (optional)
-     * @param int $condition Filter items by condition. (optional)
-     * @param int $brand_id Filter items by brand_id. (optional)
-     * @param \DateTime $date_modified Filter items by date_modified. (optional)
-     * @param \DateTime $date_last_imported Filter items by date_last_imported. (optional)
-     * @param int $is_visible Filter items by is_visible. (optional)
-     * @param int $is_featured Filter items by is_featured. (optional)
-     * @param int $is_free_shipping Filter items by is_free_shipping. (optional)
-     * @param int $inventory_level Filter items by inventory_level. (optional)
-     * @param int $inventory_low Filter items by inventory_low. Values: 1, 0. (optional)
-     * @param int $out_of_stock Filter items by out_of_stock. To enable the filter, pass &#x60;out_of_stock&#x60;&#x3D;&#x60;1&#x60;. (optional)
-     * @param int $total_sold Filter items by total_sold. (optional)
-     * @param string $type Filter items by type: &#x60;physical&#x60; or &#x60;digital&#x60;. (optional)
-     * @param int $categories Filter items by categories. (optional)
-     * @param string $keyword Filter items by keywords found in the &#x60;name&#x60;, &#x60;description&#x60;, or &#x60;sku&#x60; fields, or in the brand name. (optional)
-     * @param string $keyword_context Set context for a product search. (optional)
-     * @param int $status Filter items by status. (optional)
-     * @param string $include Sub-resources to include on a product, in a comma-separated list. Valid expansions currently include &#x60;variants&#x60;, &#x60;images&#x60;, &#39;primary_image&#x60;, &#x60;custom_fields&#x60;, and &#x60;bulk_pricing_rules&#x60;. (optional)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @param string $availability Filter items by availability. Values are: available, disabled, preorder. (optional)
-     * @param int $price_list_id The ID of the &#x60;Price List&#x60;. (optional)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $direction Sort direction. Acceptable values are: &#x60;asc&#x60;, &#x60;desc&#x60;. (optional)
-     * @param string $sort Field name to sort by. (optional)
+     * @see self::getProducts()
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ProductCollectionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getProductsWithHttpInfo($id = null, $name = null, $sku = null, $upc = null, $price = null, $weight = null, $condition = null, $brand_id = null, $date_modified = null, $date_last_imported = null, $is_visible = null, $is_featured = null, $is_free_shipping = null, $inventory_level = null, $inventory_low = null, $out_of_stock = null, $total_sold = null, $type = null, $categories = null, $keyword = null, $keyword_context = null, $status = null, $include = null, $include_fields = null, $exclude_fields = null, $availability = null, $price_list_id = null, $page = null, $limit = null, $direction = null, $sort = null)
+    public function getProductsWithHttpInfo(array $params = [])
     {
+        
+
         // parse inputs
         $resourcePath = "/catalog/products";
         $httpBody = '';
@@ -8951,139 +9681,20 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($id !== null) {
-            $queryParams['id'] = $this->apiClient->getSerializer()->toQueryValue($id);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($name !== null) {
-            $queryParams['name'] = $this->apiClient->getSerializer()->toQueryValue($name);
-        }
-        // query params
-        if ($sku !== null) {
-            $queryParams['sku'] = $this->apiClient->getSerializer()->toQueryValue($sku);
-        }
-        // query params
-        if ($upc !== null) {
-            $queryParams['upc'] = $this->apiClient->getSerializer()->toQueryValue($upc);
-        }
-        // query params
-        if ($price !== null) {
-            $queryParams['price'] = $this->apiClient->getSerializer()->toQueryValue($price);
-        }
-        // query params
-        if ($weight !== null) {
-            $queryParams['weight'] = $this->apiClient->getSerializer()->toQueryValue($weight);
-        }
-        // query params
-        if ($condition !== null) {
-            $queryParams['condition'] = $this->apiClient->getSerializer()->toQueryValue($condition);
-        }
-        // query params
-        if ($brand_id !== null) {
-            $queryParams['brand_id'] = $this->apiClient->getSerializer()->toQueryValue($brand_id);
-        }
-        // query params
-        if ($date_modified !== null) {
-            $queryParams['date_modified'] = $this->apiClient->getSerializer()->toQueryValue($date_modified);
-        }
-        // query params
-        if ($date_last_imported !== null) {
-            $queryParams['date_last_imported'] = $this->apiClient->getSerializer()->toQueryValue($date_last_imported);
-        }
-        // query params
-        if ($is_visible !== null) {
-            $queryParams['is_visible'] = $this->apiClient->getSerializer()->toQueryValue($is_visible);
-        }
-        // query params
-        if ($is_featured !== null) {
-            $queryParams['is_featured'] = $this->apiClient->getSerializer()->toQueryValue($is_featured);
-        }
-        // query params
-        if ($is_free_shipping !== null) {
-            $queryParams['is_free_shipping'] = $this->apiClient->getSerializer()->toQueryValue($is_free_shipping);
-        }
-        // query params
-        if ($inventory_level !== null) {
-            $queryParams['inventory_level'] = $this->apiClient->getSerializer()->toQueryValue($inventory_level);
-        }
-        // query params
-        if ($inventory_low !== null) {
-            $queryParams['inventory_low'] = $this->apiClient->getSerializer()->toQueryValue($inventory_low);
-        }
-        // query params
-        if ($out_of_stock !== null) {
-            $queryParams['out_of_stock'] = $this->apiClient->getSerializer()->toQueryValue($out_of_stock);
-        }
-        // query params
-        if ($total_sold !== null) {
-            $queryParams['total_sold'] = $this->apiClient->getSerializer()->toQueryValue($total_sold);
-        }
-        // query params
-        if ($type !== null) {
-            $queryParams['type'] = $this->apiClient->getSerializer()->toQueryValue($type);
-        }
-        // query params
-        if ($categories !== null) {
-            $queryParams['categories'] = $this->apiClient->getSerializer()->toQueryValue($categories);
-        }
-        // query params
-        if ($keyword !== null) {
-            $queryParams['keyword'] = $this->apiClient->getSerializer()->toQueryValue($keyword);
-        }
-        // query params
-        if ($keyword_context !== null) {
-            $queryParams['keyword_context'] = $this->apiClient->getSerializer()->toQueryValue($keyword_context);
-        }
-        // query params
-        if ($status !== null) {
-            $queryParams['status'] = $this->apiClient->getSerializer()->toQueryValue($status);
-        }
-        // query params
-        if ($include !== null) {
-            $queryParams['include'] = $this->apiClient->getSerializer()->toQueryValue($include);
-        }
-        // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
-        }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
-        // query params
-        if ($availability !== null) {
-            $queryParams['availability'] = $this->apiClient->getSerializer()->toQueryValue($availability);
-        }
-        // query params
-        if ($price_list_id !== null) {
-            $queryParams['price_list_id'] = $this->apiClient->getSerializer()->toQueryValue($price_list_id);
-        }
-        // query params
-        if ($page !== null) {
-            $queryParams['page'] = $this->apiClient->getSerializer()->toQueryValue($page);
-        }
-        // query params
-        if ($limit !== null) {
-            $queryParams['limit'] = $this->apiClient->getSerializer()->toQueryValue($limit);
-        }
-        // query params
-        if ($direction !== null) {
-            $queryParams['direction'] = $this->apiClient->getSerializer()->toQueryValue($direction);
-        }
-        // query params
-        if ($sort !== null) {
-            $queryParams['sort'] = $this->apiClient->getSerializer()->toQueryValue($sort);
-        }
+
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -9095,60 +9706,67 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ProductCollectionResponse',
                 '/catalog/products'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ProductCollectionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductCollectionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getVariantById
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $variant_id ID of the variant on a product, or on an associated Price List Record. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\VariantResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getVariantById($product_id, $variant_id, $include_fields = null, $exclude_fields = null)
+    public function getVariantById($product_id, $variant_id, array $params = [])
     {
-        list($response) = $this->getVariantByIdWithHttpInfo($product_id, $variant_id, $include_fields, $exclude_fields);
+        list($response) = $this->getVariantByIdWithHttpInfo($product_id, $variant_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getVariantByIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::getVariantById()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $variant_id ID of the variant on a product, or on an associated Price List Record. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\VariantResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getVariantByIdWithHttpInfo($product_id, $variant_id, $include_fields = null, $exclude_fields = null)
+    public function getVariantByIdWithHttpInfo($product_id, $variant_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getVariantById');
         }
+        
         // verify the required parameter 'variant_id' is set
-        if ($variant_id === null) {
+        if (!isset($variant_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $variant_id when calling getVariantById');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/variants/{variant_id}";
         $httpBody = '';
@@ -9162,15 +9780,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -9178,7 +9795,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($variant_id !== null) {
+
+
+        if (isset($variant_id)) {
             $resourcePath = str_replace(
                 "{" . "variant_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($variant_id),
@@ -9188,13 +9807,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -9206,70 +9825,79 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\VariantResponse',
                 '/catalog/products/{product_id}/variants/{variant_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\VariantResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\VariantResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\VariantResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getVariantMetafieldByProductIdAndVariantId
-     *
      * 
+     *
      *
      * @param int $metafield_id The ID of the &#x60;Metafield&#x60;. (required)
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $variant_id ID of the variant on a product, or on an associated Price List Record. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\MetafieldResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getVariantMetafieldByProductIdAndVariantId($metafield_id, $product_id, $variant_id, $include_fields = null, $exclude_fields = null)
+    public function getVariantMetafieldByProductIdAndVariantId($metafield_id, $product_id, $variant_id, array $params = [])
     {
-        list($response) = $this->getVariantMetafieldByProductIdAndVariantIdWithHttpInfo($metafield_id, $product_id, $variant_id, $include_fields, $exclude_fields);
+        list($response) = $this->getVariantMetafieldByProductIdAndVariantIdWithHttpInfo($metafield_id, $product_id, $variant_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getVariantMetafieldByProductIdAndVariantIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::getVariantMetafieldByProductIdAndVariantId()
      * @param int $metafield_id The ID of the &#x60;Metafield&#x60;. (required)
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $variant_id ID of the variant on a product, or on an associated Price List Record. (required)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\MetafieldResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getVariantMetafieldByProductIdAndVariantIdWithHttpInfo($metafield_id, $product_id, $variant_id, $include_fields = null, $exclude_fields = null)
+    public function getVariantMetafieldByProductIdAndVariantIdWithHttpInfo($metafield_id, $product_id, $variant_id, array $params = [])
     {
+        
         // verify the required parameter 'metafield_id' is set
-        if ($metafield_id === null) {
+        if (!isset($metafield_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $metafield_id when calling getVariantMetafieldByProductIdAndVariantId');
         }
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getVariantMetafieldByProductIdAndVariantId');
         }
+        
         // verify the required parameter 'variant_id' is set
-        if ($variant_id === null) {
+        if (!isset($variant_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $variant_id when calling getVariantMetafieldByProductIdAndVariantId');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/variants/{variant_id}/metafields/{metafield_id}";
         $httpBody = '';
@@ -9283,15 +9911,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($metafield_id !== null) {
+
+
+        if (isset($metafield_id)) {
             $resourcePath = str_replace(
                 "{" . "metafield_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($metafield_id),
@@ -9299,7 +9926,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -9307,7 +9936,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($variant_id !== null) {
+
+
+        if (isset($variant_id)) {
             $resourcePath = str_replace(
                 "{" . "variant_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($variant_id),
@@ -9317,13 +9948,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -9335,72 +9966,76 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\MetafieldResponse',
                 '/catalog/products/{product_id}/variants/{variant_id}/metafields/{metafield_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\MetafieldResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetafieldResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetafieldResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getVariantMetafieldsByProductIdAndVariantId
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $variant_id ID of the variant on a product, or on an associated Price List Record. (required)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $key Filter based on a metafield&#39;s key. (optional)
-     * @param string $namespace Filter based on a metafield&#39;s key. (optional)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - page int Specifies the page number in a limited (paginated) list of products. (optional)
+     *     - limit int Controls the number of items per page in a limited (paginated) list of products. (optional)
+     *     - key string Filter based on a metafield&#39;s key. (optional)
+     *     - namespace string Filter based on a metafield&#39;s key. (optional)
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\MetaFieldCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getVariantMetafieldsByProductIdAndVariantId($product_id, $variant_id, $page = null, $limit = null, $key = null, $namespace = null, $include_fields = null, $exclude_fields = null)
+    public function getVariantMetafieldsByProductIdAndVariantId($product_id, $variant_id, array $params = [])
     {
-        list($response) = $this->getVariantMetafieldsByProductIdAndVariantIdWithHttpInfo($product_id, $variant_id, $page, $limit, $key, $namespace, $include_fields, $exclude_fields);
+        list($response) = $this->getVariantMetafieldsByProductIdAndVariantIdWithHttpInfo($product_id, $variant_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getVariantMetafieldsByProductIdAndVariantIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::getVariantMetafieldsByProductIdAndVariantId()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $variant_id ID of the variant on a product, or on an associated Price List Record. (required)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $key Filter based on a metafield&#39;s key. (optional)
-     * @param string $namespace Filter based on a metafield&#39;s key. (optional)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\MetaFieldCollectionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getVariantMetafieldsByProductIdAndVariantIdWithHttpInfo($product_id, $variant_id, $page = null, $limit = null, $key = null, $namespace = null, $include_fields = null, $exclude_fields = null)
+    public function getVariantMetafieldsByProductIdAndVariantIdWithHttpInfo($product_id, $variant_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getVariantMetafieldsByProductIdAndVariantId');
         }
+        
         // verify the required parameter 'variant_id' is set
-        if ($variant_id === null) {
+        if (!isset($variant_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $variant_id when calling getVariantMetafieldsByProductIdAndVariantId');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/variants/{variant_id}/metafields";
         $httpBody = '';
@@ -9414,31 +10049,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($page !== null) {
-            $queryParams['page'] = $this->apiClient->getSerializer()->toQueryValue($page);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($limit !== null) {
-            $queryParams['limit'] = $this->apiClient->getSerializer()->toQueryValue($limit);
-        }
-        // query params
-        if ($key !== null) {
-            $queryParams['key'] = $this->apiClient->getSerializer()->toQueryValue($key);
-        }
-        // query params
-        if ($namespace !== null) {
-            $queryParams['namespace'] = $this->apiClient->getSerializer()->toQueryValue($namespace);
-        }
-        // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
-        }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -9446,7 +10064,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($variant_id !== null) {
+
+
+        if (isset($variant_id)) {
             $resourcePath = str_replace(
                 "{" . "variant_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($variant_id),
@@ -9456,13 +10076,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -9474,60 +10094,62 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\MetaFieldCollectionResponse',
                 '/catalog/products/{product_id}/variants/{variant_id}/metafields'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\MetaFieldCollectionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetaFieldCollectionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetaFieldCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getVariants
-     *
      * 
      *
-     * @param int $id Filter items by id. (optional)
-     * @param string $sku Filter items by sku. (optional)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     *
+     * @param array $params = []
+     *     - id int Filter items by id. (optional)
+     *     - sku string Filter items by sku. (optional)
+     *     - page int Specifies the page number in a limited (paginated) list of products. (optional)
+     *     - limit int Controls the number of items per page in a limited (paginated) list of products. (optional)
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\VariantCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getVariants($id = null, $sku = null, $page = null, $limit = null, $include_fields = null, $exclude_fields = null)
+    public function getVariants(array $params = [])
     {
-        list($response) = $this->getVariantsWithHttpInfo($id, $sku, $page, $limit, $include_fields, $exclude_fields);
+        list($response) = $this->getVariantsWithHttpInfo($params);
         return $response;
     }
+
 
     /**
      * Operation getVariantsWithHttpInfo
      *
-     * 
-     *
-     * @param int $id Filter items by id. (optional)
-     * @param string $sku Filter items by sku. (optional)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @see self::getVariants()
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\VariantCollectionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getVariantsWithHttpInfo($id = null, $sku = null, $page = null, $limit = null, $include_fields = null, $exclude_fields = null)
+    public function getVariantsWithHttpInfo(array $params = [])
     {
+        
+
         // parse inputs
         $resourcePath = "/catalog/variants";
         $httpBody = '';
@@ -9541,39 +10163,20 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($id !== null) {
-            $queryParams['id'] = $this->apiClient->getSerializer()->toQueryValue($id);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($sku !== null) {
-            $queryParams['sku'] = $this->apiClient->getSerializer()->toQueryValue($sku);
-        }
-        // query params
-        if ($page !== null) {
-            $queryParams['page'] = $this->apiClient->getSerializer()->toQueryValue($page);
-        }
-        // query params
-        if ($limit !== null) {
-            $queryParams['limit'] = $this->apiClient->getSerializer()->toQueryValue($limit);
-        }
-        // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
-        }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -9585,62 +10188,67 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\VariantCollectionResponse',
                 '/catalog/variants'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\VariantCollectionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\VariantCollectionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\VariantCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation getVariantsByProductId
-     *
      * 
      *
+     *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
+     *     - page int Specifies the page number in a limited (paginated) list of products. (optional)
+     *     - limit int Controls the number of items per page in a limited (paginated) list of products. (optional)
+     *     - include_fields string Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
+     *     - exclude_fields string Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
      * @return \BigCommerce\Api\v3\Model\VariantCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function getVariantsByProductId($product_id, $page = null, $limit = null, $include_fields = null, $exclude_fields = null)
+    public function getVariantsByProductId($product_id, array $params = [])
     {
-        list($response) = $this->getVariantsByProductIdWithHttpInfo($product_id, $page, $limit, $include_fields, $exclude_fields);
+        list($response) = $this->getVariantsByProductIdWithHttpInfo($product_id, $params);
         return $response;
     }
+
 
     /**
      * Operation getVariantsByProductIdWithHttpInfo
      *
-     * 
-     *
+     * @see self::getVariantsByProductId()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
-     * @param int $page Specifies the page number in a limited (paginated) list of products. (optional)
-     * @param int $limit Controls the number of items per page in a limited (paginated) list of products. (optional)
-     * @param string $include_fields Fields to include, in a comma-separated list. The ID and the specified fields will be returned. (optional)
-     * @param string $exclude_fields Fields to exclude, in a comma-separated list. The specified fields will be excluded from a response. The ID cannot be excluded. (optional)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\VariantCollectionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getVariantsByProductIdWithHttpInfo($product_id, $page = null, $limit = null, $include_fields = null, $exclude_fields = null)
+    public function getVariantsByProductIdWithHttpInfo($product_id, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling getVariantsByProductId');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/variants";
         $httpBody = '';
@@ -9654,23 +10262,14 @@ class CatalogApi
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
         // query params
-        if ($page !== null) {
-            $queryParams['page'] = $this->apiClient->getSerializer()->toQueryValue($page);
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
         }
-        // query params
-        if ($limit !== null) {
-            $queryParams['limit'] = $this->apiClient->getSerializer()->toQueryValue($limit);
-        }
-        // query params
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $this->apiClient->getSerializer()->toQueryValue($include_fields);
-        }
-        // query params
-        if ($exclude_fields !== null) {
-            $queryParams['exclude_fields'] = $this->apiClient->getSerializer()->toQueryValue($exclude_fields);
-        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -9680,13 +10279,13 @@ class CatalogApi
         // default format to json
         $resourcePath = str_replace("{format}", "json", $resourcePath);
 
-        
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -9698,60 +10297,70 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\VariantCollectionResponse',
                 '/catalog/products/{product_id}/variants'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\VariantCollectionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\VariantCollectionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\VariantCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation updateBrand
-     *
      * 
+     *
      *
      * @param int $brand_id The ID of the &#x60;Brand&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\BrandPut $brand Returns a &#x60;Brand&#x60; from the BigCommerce Catalog. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\BrandResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function updateBrand($brand_id, $brand)
+    public function updateBrand($brand_id, $brand, array $params = [])
     {
-        list($response) = $this->updateBrandWithHttpInfo($brand_id, $brand);
+        list($response) = $this->updateBrandWithHttpInfo($brand_id,  $brand, $params);
         return $response;
     }
+
 
     /**
      * Operation updateBrandWithHttpInfo
      *
-     * 
-     *
+     * @see self::updateBrand()
      * @param int $brand_id The ID of the &#x60;Brand&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\BrandPut $brand Returns a &#x60;Brand&#x60; from the BigCommerce Catalog. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\BrandResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updateBrandWithHttpInfo($brand_id, $brand)
+    public function updateBrandWithHttpInfo($brand_id,  $brand, array $params = [])
     {
+        
         // verify the required parameter 'brand_id' is set
-        if ($brand_id === null) {
+        if (!isset($brand_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $brand_id when calling updateBrand');
         }
+        
         // verify the required parameter 'brand' is set
-        if ($brand === null) {
+        if (!isset($brand)) {
             throw new \InvalidArgumentException('Missing the required parameter $brand when calling updateBrand');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/brands/{brand_id}";
         $httpBody = '';
@@ -9764,8 +10373,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($brand_id !== null) {
+
+
+        if (isset($brand_id)) {
             $resourcePath = str_replace(
                 "{" . "brand_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($brand_id),
@@ -9778,15 +10394,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($brand)) {
-            $_tempBody = $brand;
+        $_tempBody = $brand;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -9798,74 +10414,87 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\BrandResponse',
                 '/catalog/brands/{brand_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\BrandResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\BrandResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\BrandResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 409:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation updateBrandMetafield
-     *
      * 
+     *
      *
      * @param int $metafield_id The ID of the &#x60;Metafield&#x60;. (required)
      * @param int $brand_id The ID of the &#x60;Brand&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\MetafieldPut $metafield A &#x60;Metafield&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\MetafieldResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function updateBrandMetafield($metafield_id, $brand_id, $metafield)
+    public function updateBrandMetafield($metafield_id, $brand_id, $metafield, array $params = [])
     {
-        list($response) = $this->updateBrandMetafieldWithHttpInfo($metafield_id, $brand_id, $metafield);
+        list($response) = $this->updateBrandMetafieldWithHttpInfo($metafield_id, $brand_id,  $metafield, $params);
         return $response;
     }
+
 
     /**
      * Operation updateBrandMetafieldWithHttpInfo
      *
-     * 
-     *
+     * @see self::updateBrandMetafield()
      * @param int $metafield_id The ID of the &#x60;Metafield&#x60;. (required)
      * @param int $brand_id The ID of the &#x60;Brand&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\MetafieldPut $metafield A &#x60;Metafield&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\MetafieldResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updateBrandMetafieldWithHttpInfo($metafield_id, $brand_id, $metafield)
+    public function updateBrandMetafieldWithHttpInfo($metafield_id, $brand_id,  $metafield, array $params = [])
     {
+        
         // verify the required parameter 'metafield_id' is set
-        if ($metafield_id === null) {
+        if (!isset($metafield_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $metafield_id when calling updateBrandMetafield');
         }
+        
         // verify the required parameter 'brand_id' is set
-        if ($brand_id === null) {
+        if (!isset($brand_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $brand_id when calling updateBrandMetafield');
         }
+        
         // verify the required parameter 'metafield' is set
-        if ($metafield === null) {
+        if (!isset($metafield)) {
             throw new \InvalidArgumentException('Missing the required parameter $metafield when calling updateBrandMetafield');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/brands/{brand_id}/metafields/{metafield_id}";
         $httpBody = '';
@@ -9878,8 +10507,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($metafield_id !== null) {
+
+
+        if (isset($metafield_id)) {
             $resourcePath = str_replace(
                 "{" . "metafield_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($metafield_id),
@@ -9887,7 +10523,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($brand_id !== null) {
+
+
+        if (isset($brand_id)) {
             $resourcePath = str_replace(
                 "{" . "brand_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($brand_id),
@@ -9900,15 +10538,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($metafield)) {
-            $_tempBody = $metafield;
+        $_tempBody = $metafield;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -9920,66 +10558,77 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\MetafieldResponse',
                 '/catalog/brands/{brand_id}/metafields/{metafield_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\MetafieldResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetafieldResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetafieldResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation updateBulkPricingRule
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $bulk_pricing_rule_id The ID of the &#x60;BulkPricingRule&#x60;. (required)
      * @param \BigCommerce\Api\v3\Model\BulkPricingRulePut $bulk_pricing_rule &#x60;BulkPricingRule&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\BulkPricingRuleResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function updateBulkPricingRule($product_id, $bulk_pricing_rule_id, $bulk_pricing_rule)
+    public function updateBulkPricingRule($product_id, $bulk_pricing_rule_id, $bulk_pricing_rule, array $params = [])
     {
-        list($response) = $this->updateBulkPricingRuleWithHttpInfo($product_id, $bulk_pricing_rule_id, $bulk_pricing_rule);
+        list($response) = $this->updateBulkPricingRuleWithHttpInfo($product_id, $bulk_pricing_rule_id,  $bulk_pricing_rule, $params);
         return $response;
     }
+
 
     /**
      * Operation updateBulkPricingRuleWithHttpInfo
      *
-     * 
-     *
+     * @see self::updateBulkPricingRule()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $bulk_pricing_rule_id The ID of the &#x60;BulkPricingRule&#x60;. (required)
      * @param \BigCommerce\Api\v3\Model\BulkPricingRulePut $bulk_pricing_rule &#x60;BulkPricingRule&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\BulkPricingRuleResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updateBulkPricingRuleWithHttpInfo($product_id, $bulk_pricing_rule_id, $bulk_pricing_rule)
+    public function updateBulkPricingRuleWithHttpInfo($product_id, $bulk_pricing_rule_id,  $bulk_pricing_rule, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling updateBulkPricingRule');
         }
+        
         // verify the required parameter 'bulk_pricing_rule_id' is set
-        if ($bulk_pricing_rule_id === null) {
+        if (!isset($bulk_pricing_rule_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $bulk_pricing_rule_id when calling updateBulkPricingRule');
         }
+        
         // verify the required parameter 'bulk_pricing_rule' is set
-        if ($bulk_pricing_rule === null) {
+        if (!isset($bulk_pricing_rule)) {
             throw new \InvalidArgumentException('Missing the required parameter $bulk_pricing_rule when calling updateBulkPricingRule');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/bulk-pricing-rules/{bulk_pricing_rule_id}";
         $httpBody = '';
@@ -9992,8 +10641,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -10001,7 +10657,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($bulk_pricing_rule_id !== null) {
+
+
+        if (isset($bulk_pricing_rule_id)) {
             $resourcePath = str_replace(
                 "{" . "bulk_pricing_rule_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($bulk_pricing_rule_id),
@@ -10014,15 +10672,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($bulk_pricing_rule)) {
-            $_tempBody = $bulk_pricing_rule;
+        $_tempBody = $bulk_pricing_rule;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -10034,68 +10692,80 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\BulkPricingRuleResponse',
                 '/catalog/products/{product_id}/bulk-pricing-rules/{bulk_pricing_rule_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\BulkPricingRuleResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\BulkPricingRuleResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\BulkPricingRuleResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 409:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation updateCategory
-     *
      * 
+     *
      *
      * @param int $category_id The ID of the &#x60;Category&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\CategoryPut $category A BigCommerce &#x60;Category&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\CategoryResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function updateCategory($category_id, $category)
+    public function updateCategory($category_id, $category, array $params = [])
     {
-        list($response) = $this->updateCategoryWithHttpInfo($category_id, $category);
+        list($response) = $this->updateCategoryWithHttpInfo($category_id,  $category, $params);
         return $response;
     }
+
 
     /**
      * Operation updateCategoryWithHttpInfo
      *
-     * 
-     *
+     * @see self::updateCategory()
      * @param int $category_id The ID of the &#x60;Category&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\CategoryPut $category A BigCommerce &#x60;Category&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\CategoryResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updateCategoryWithHttpInfo($category_id, $category)
+    public function updateCategoryWithHttpInfo($category_id,  $category, array $params = [])
     {
+        
         // verify the required parameter 'category_id' is set
-        if ($category_id === null) {
+        if (!isset($category_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $category_id when calling updateCategory');
         }
+        
         // verify the required parameter 'category' is set
-        if ($category === null) {
+        if (!isset($category)) {
             throw new \InvalidArgumentException('Missing the required parameter $category when calling updateCategory');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/categories/{category_id}";
         $httpBody = '';
@@ -10108,8 +10778,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($category_id !== null) {
+
+
+        if (isset($category_id)) {
             $resourcePath = str_replace(
                 "{" . "category_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($category_id),
@@ -10122,15 +10799,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($category)) {
-            $_tempBody = $category;
+        $_tempBody = $category;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -10142,74 +10819,87 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\CategoryResponse',
                 '/catalog/categories/{category_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\CategoryResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\CategoryResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\CategoryResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 409:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation updateCategoryMetafield
-     *
      * 
+     *
      *
      * @param int $metafield_id The ID of the &#x60;Metafield&#x60;. (required)
      * @param int $category_id The ID of the &#x60;Category&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\MetafieldPut $metafield A &#x60;Metafield&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\MetafieldResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function updateCategoryMetafield($metafield_id, $category_id, $metafield)
+    public function updateCategoryMetafield($metafield_id, $category_id, $metafield, array $params = [])
     {
-        list($response) = $this->updateCategoryMetafieldWithHttpInfo($metafield_id, $category_id, $metafield);
+        list($response) = $this->updateCategoryMetafieldWithHttpInfo($metafield_id, $category_id,  $metafield, $params);
         return $response;
     }
+
 
     /**
      * Operation updateCategoryMetafieldWithHttpInfo
      *
-     * 
-     *
+     * @see self::updateCategoryMetafield()
      * @param int $metafield_id The ID of the &#x60;Metafield&#x60;. (required)
      * @param int $category_id The ID of the &#x60;Category&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\MetafieldPut $metafield A &#x60;Metafield&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\MetafieldResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updateCategoryMetafieldWithHttpInfo($metafield_id, $category_id, $metafield)
+    public function updateCategoryMetafieldWithHttpInfo($metafield_id, $category_id,  $metafield, array $params = [])
     {
+        
         // verify the required parameter 'metafield_id' is set
-        if ($metafield_id === null) {
+        if (!isset($metafield_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $metafield_id when calling updateCategoryMetafield');
         }
+        
         // verify the required parameter 'category_id' is set
-        if ($category_id === null) {
+        if (!isset($category_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $category_id when calling updateCategoryMetafield');
         }
+        
         // verify the required parameter 'metafield' is set
-        if ($metafield === null) {
+        if (!isset($metafield)) {
             throw new \InvalidArgumentException('Missing the required parameter $metafield when calling updateCategoryMetafield');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/categories/{category_id}/metafields/{metafield_id}";
         $httpBody = '';
@@ -10222,8 +10912,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($metafield_id !== null) {
+
+
+        if (isset($metafield_id)) {
             $resourcePath = str_replace(
                 "{" . "metafield_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($metafield_id),
@@ -10231,7 +10928,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($category_id !== null) {
+
+
+        if (isset($category_id)) {
             $resourcePath = str_replace(
                 "{" . "category_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($category_id),
@@ -10244,15 +10943,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($metafield)) {
-            $_tempBody = $metafield;
+        $_tempBody = $metafield;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -10264,66 +10963,77 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\MetafieldResponse',
                 '/catalog/categories/{category_id}/metafields/{metafield_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\MetafieldResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetafieldResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetafieldResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation updateComplexRule
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $complex_rule_id The ID of the &#x60;ComplexRule&#x60;. (required)
      * @param \BigCommerce\Api\v3\Model\ComplexRulePut $complex_rule &#x60;ComplexRule&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\ComplexRuleResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function updateComplexRule($product_id, $complex_rule_id, $complex_rule)
+    public function updateComplexRule($product_id, $complex_rule_id, $complex_rule, array $params = [])
     {
-        list($response) = $this->updateComplexRuleWithHttpInfo($product_id, $complex_rule_id, $complex_rule);
+        list($response) = $this->updateComplexRuleWithHttpInfo($product_id, $complex_rule_id,  $complex_rule, $params);
         return $response;
     }
+
 
     /**
      * Operation updateComplexRuleWithHttpInfo
      *
-     * 
-     *
+     * @see self::updateComplexRule()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $complex_rule_id The ID of the &#x60;ComplexRule&#x60;. (required)
      * @param \BigCommerce\Api\v3\Model\ComplexRulePut $complex_rule &#x60;ComplexRule&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ComplexRuleResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updateComplexRuleWithHttpInfo($product_id, $complex_rule_id, $complex_rule)
+    public function updateComplexRuleWithHttpInfo($product_id, $complex_rule_id,  $complex_rule, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling updateComplexRule');
         }
+        
         // verify the required parameter 'complex_rule_id' is set
-        if ($complex_rule_id === null) {
+        if (!isset($complex_rule_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $complex_rule_id when calling updateComplexRule');
         }
+        
         // verify the required parameter 'complex_rule' is set
-        if ($complex_rule === null) {
+        if (!isset($complex_rule)) {
             throw new \InvalidArgumentException('Missing the required parameter $complex_rule when calling updateComplexRule');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/complex-rules/{complex_rule_id}";
         $httpBody = '';
@@ -10336,8 +11046,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -10345,7 +11062,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($complex_rule_id !== null) {
+
+
+        if (isset($complex_rule_id)) {
             $resourcePath = str_replace(
                 "{" . "complex_rule_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($complex_rule_id),
@@ -10358,15 +11077,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($complex_rule)) {
-            $_tempBody = $complex_rule;
+        $_tempBody = $complex_rule;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -10378,70 +11097,82 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ComplexRuleResponse',
                 '/catalog/products/{product_id}/complex-rules/{complex_rule_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ComplexRuleResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ComplexRuleResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ComplexRuleResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 409:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation updateConfigurableField
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $configurable_field_id The ID of the &#x60;ConfigurableField&#x60;. (required)
      * @param \BigCommerce\Api\v3\Model\ConfigurableFieldPut $configurable_field &#x60;ConfigurableField&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\ConfigurableFieldResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function updateConfigurableField($product_id, $configurable_field_id, $configurable_field)
+    public function updateConfigurableField($product_id, $configurable_field_id, $configurable_field, array $params = [])
     {
-        list($response) = $this->updateConfigurableFieldWithHttpInfo($product_id, $configurable_field_id, $configurable_field);
+        list($response) = $this->updateConfigurableFieldWithHttpInfo($product_id, $configurable_field_id,  $configurable_field, $params);
         return $response;
     }
+
 
     /**
      * Operation updateConfigurableFieldWithHttpInfo
      *
-     * 
-     *
+     * @see self::updateConfigurableField()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $configurable_field_id The ID of the &#x60;ConfigurableField&#x60;. (required)
      * @param \BigCommerce\Api\v3\Model\ConfigurableFieldPut $configurable_field &#x60;ConfigurableField&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ConfigurableFieldResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updateConfigurableFieldWithHttpInfo($product_id, $configurable_field_id, $configurable_field)
+    public function updateConfigurableFieldWithHttpInfo($product_id, $configurable_field_id,  $configurable_field, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling updateConfigurableField');
         }
+        
         // verify the required parameter 'configurable_field_id' is set
-        if ($configurable_field_id === null) {
+        if (!isset($configurable_field_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $configurable_field_id when calling updateConfigurableField');
         }
+        
         // verify the required parameter 'configurable_field' is set
-        if ($configurable_field === null) {
+        if (!isset($configurable_field)) {
             throw new \InvalidArgumentException('Missing the required parameter $configurable_field when calling updateConfigurableField');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/configurable-fields/{configurable_field_id}";
         $httpBody = '';
@@ -10454,8 +11185,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -10463,7 +11201,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($configurable_field_id !== null) {
+
+
+        if (isset($configurable_field_id)) {
             $resourcePath = str_replace(
                 "{" . "configurable_field_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($configurable_field_id),
@@ -10476,15 +11216,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($configurable_field)) {
-            $_tempBody = $configurable_field;
+        $_tempBody = $configurable_field;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -10496,70 +11236,82 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ConfigurableFieldResponse',
                 '/catalog/products/{product_id}/configurable-fields/{configurable_field_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ConfigurableFieldResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ConfigurableFieldResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ConfigurableFieldResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation updateCustomField
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $custom_field_id The ID of the &#x60;CustomField&#x60;. (required)
      * @param \BigCommerce\Api\v3\Model\CustomFieldPut $custom_field &#x60;CustomField&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\CustomFieldResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function updateCustomField($product_id, $custom_field_id, $custom_field)
+    public function updateCustomField($product_id, $custom_field_id, $custom_field, array $params = [])
     {
-        list($response) = $this->updateCustomFieldWithHttpInfo($product_id, $custom_field_id, $custom_field);
+        list($response) = $this->updateCustomFieldWithHttpInfo($product_id, $custom_field_id,  $custom_field, $params);
         return $response;
     }
+
 
     /**
      * Operation updateCustomFieldWithHttpInfo
      *
-     * 
-     *
+     * @see self::updateCustomField()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $custom_field_id The ID of the &#x60;CustomField&#x60;. (required)
      * @param \BigCommerce\Api\v3\Model\CustomFieldPut $custom_field &#x60;CustomField&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\CustomFieldResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updateCustomFieldWithHttpInfo($product_id, $custom_field_id, $custom_field)
+    public function updateCustomFieldWithHttpInfo($product_id, $custom_field_id,  $custom_field, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling updateCustomField');
         }
+        
         // verify the required parameter 'custom_field_id' is set
-        if ($custom_field_id === null) {
+        if (!isset($custom_field_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $custom_field_id when calling updateCustomField');
         }
+        
         // verify the required parameter 'custom_field' is set
-        if ($custom_field === null) {
+        if (!isset($custom_field)) {
             throw new \InvalidArgumentException('Missing the required parameter $custom_field when calling updateCustomField');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/custom-fields/{custom_field_id}";
         $httpBody = '';
@@ -10572,8 +11324,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -10581,7 +11340,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($custom_field_id !== null) {
+
+
+        if (isset($custom_field_id)) {
             $resourcePath = str_replace(
                 "{" . "custom_field_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($custom_field_id),
@@ -10594,15 +11355,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($custom_field)) {
-            $_tempBody = $custom_field;
+        $_tempBody = $custom_field;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -10614,70 +11375,82 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\CustomFieldResponse',
                 '/catalog/products/{product_id}/custom-fields/{custom_field_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\CustomFieldResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\CustomFieldResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\CustomFieldResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation updateModifier
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $modifier_id The ID of the &#x60;Modifier&#x60;. (required)
      * @param \BigCommerce\Api\v3\Model\ModifierPut $modifier A BigCommerce &#x60;Modifier&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\ModifierResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function updateModifier($product_id, $modifier_id, $modifier)
+    public function updateModifier($product_id, $modifier_id, $modifier, array $params = [])
     {
-        list($response) = $this->updateModifierWithHttpInfo($product_id, $modifier_id, $modifier);
+        list($response) = $this->updateModifierWithHttpInfo($product_id, $modifier_id,  $modifier, $params);
         return $response;
     }
+
 
     /**
      * Operation updateModifierWithHttpInfo
      *
-     * 
-     *
+     * @see self::updateModifier()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $modifier_id The ID of the &#x60;Modifier&#x60;. (required)
      * @param \BigCommerce\Api\v3\Model\ModifierPut $modifier A BigCommerce &#x60;Modifier&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ModifierResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updateModifierWithHttpInfo($product_id, $modifier_id, $modifier)
+    public function updateModifierWithHttpInfo($product_id, $modifier_id,  $modifier, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling updateModifier');
         }
+        
         // verify the required parameter 'modifier_id' is set
-        if ($modifier_id === null) {
+        if (!isset($modifier_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $modifier_id when calling updateModifier');
         }
+        
         // verify the required parameter 'modifier' is set
-        if ($modifier === null) {
+        if (!isset($modifier)) {
             throw new \InvalidArgumentException('Missing the required parameter $modifier when calling updateModifier');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/modifiers/{modifier_id}";
         $httpBody = '';
@@ -10690,8 +11463,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -10699,7 +11479,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($modifier_id !== null) {
+
+
+        if (isset($modifier_id)) {
             $resourcePath = str_replace(
                 "{" . "modifier_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($modifier_id),
@@ -10712,15 +11494,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($modifier)) {
-            $_tempBody = $modifier;
+        $_tempBody = $modifier;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -10732,76 +11514,89 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ModifierResponse',
                 '/catalog/products/{product_id}/modifiers/{modifier_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ModifierResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ModifierResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ModifierResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 409:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation updateModifierValue
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $modifier_id The ID of the &#x60;Modifier&#x60;. (required)
      * @param int $value_id The ID of the &#x60;Modifier/Option Value&#x60;. (required)
      * @param \BigCommerce\Api\v3\Model\ModifierValuePut $modifier_value A BigCommerce &#x60;ModifierValue&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\ModifierValueResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function updateModifierValue($product_id, $modifier_id, $value_id, $modifier_value)
+    public function updateModifierValue($product_id, $modifier_id, $value_id, $modifier_value, array $params = [])
     {
-        list($response) = $this->updateModifierValueWithHttpInfo($product_id, $modifier_id, $value_id, $modifier_value);
+        list($response) = $this->updateModifierValueWithHttpInfo($product_id, $modifier_id, $value_id,  $modifier_value, $params);
         return $response;
     }
+
 
     /**
      * Operation updateModifierValueWithHttpInfo
      *
-     * 
-     *
+     * @see self::updateModifierValue()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $modifier_id The ID of the &#x60;Modifier&#x60;. (required)
      * @param int $value_id The ID of the &#x60;Modifier/Option Value&#x60;. (required)
      * @param \BigCommerce\Api\v3\Model\ModifierValuePut $modifier_value A BigCommerce &#x60;ModifierValue&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ModifierValueResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updateModifierValueWithHttpInfo($product_id, $modifier_id, $value_id, $modifier_value)
+    public function updateModifierValueWithHttpInfo($product_id, $modifier_id, $value_id,  $modifier_value, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling updateModifierValue');
         }
+        
         // verify the required parameter 'modifier_id' is set
-        if ($modifier_id === null) {
+        if (!isset($modifier_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $modifier_id when calling updateModifierValue');
         }
+        
         // verify the required parameter 'value_id' is set
-        if ($value_id === null) {
+        if (!isset($value_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $value_id when calling updateModifierValue');
         }
+        
         // verify the required parameter 'modifier_value' is set
-        if ($modifier_value === null) {
+        if (!isset($modifier_value)) {
             throw new \InvalidArgumentException('Missing the required parameter $modifier_value when calling updateModifierValue');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/modifiers/{modifier_id}/values/{value_id}";
         $httpBody = '';
@@ -10814,8 +11609,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -10823,7 +11625,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($modifier_id !== null) {
+
+
+        if (isset($modifier_id)) {
             $resourcePath = str_replace(
                 "{" . "modifier_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($modifier_id),
@@ -10831,7 +11635,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($value_id !== null) {
+
+
+        if (isset($value_id)) {
             $resourcePath = str_replace(
                 "{" . "value_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($value_id),
@@ -10844,15 +11650,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($modifier_value)) {
-            $_tempBody = $modifier_value;
+        $_tempBody = $modifier_value;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -10864,66 +11670,77 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ModifierValueResponse',
                 '/catalog/products/{product_id}/modifiers/{modifier_id}/values/{value_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ModifierValueResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ModifierValueResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ModifierValueResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation updateOption
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $option_id The ID of the &#x60;Option&#x60;. (required)
      * @param \BigCommerce\Api\v3\Model\OptionPut $option A BigCommerce &#x60;Option&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\OptionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function updateOption($product_id, $option_id, $option)
+    public function updateOption($product_id, $option_id, $option, array $params = [])
     {
-        list($response) = $this->updateOptionWithHttpInfo($product_id, $option_id, $option);
+        list($response) = $this->updateOptionWithHttpInfo($product_id, $option_id,  $option, $params);
         return $response;
     }
+
 
     /**
      * Operation updateOptionWithHttpInfo
      *
-     * 
-     *
+     * @see self::updateOption()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $option_id The ID of the &#x60;Option&#x60;. (required)
      * @param \BigCommerce\Api\v3\Model\OptionPut $option A BigCommerce &#x60;Option&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\OptionResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updateOptionWithHttpInfo($product_id, $option_id, $option)
+    public function updateOptionWithHttpInfo($product_id, $option_id,  $option, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling updateOption');
         }
+        
         // verify the required parameter 'option_id' is set
-        if ($option_id === null) {
+        if (!isset($option_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $option_id when calling updateOption');
         }
+        
         // verify the required parameter 'option' is set
-        if ($option === null) {
+        if (!isset($option)) {
             throw new \InvalidArgumentException('Missing the required parameter $option when calling updateOption');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/options/{option_id}";
         $httpBody = '';
@@ -10936,8 +11753,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -10945,7 +11769,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($option_id !== null) {
+
+
+        if (isset($option_id)) {
             $resourcePath = str_replace(
                 "{" . "option_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($option_id),
@@ -10958,15 +11784,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($option)) {
-            $_tempBody = $option;
+        $_tempBody = $option;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -10978,76 +11804,89 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\OptionResponse',
                 '/catalog/products/{product_id}/options/{option_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\OptionResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\OptionResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\OptionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 409:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation updateOptionValue
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $option_id The ID of the &#x60;Option&#x60;. (required)
      * @param int $value_id The ID of the &#x60;Modifier/Option Value&#x60;. (required)
      * @param \BigCommerce\Api\v3\Model\OptionValuePut $option_value A BigCommerce &#x60;OptionValue&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\OptionValueResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function updateOptionValue($product_id, $option_id, $value_id, $option_value)
+    public function updateOptionValue($product_id, $option_id, $value_id, $option_value, array $params = [])
     {
-        list($response) = $this->updateOptionValueWithHttpInfo($product_id, $option_id, $value_id, $option_value);
+        list($response) = $this->updateOptionValueWithHttpInfo($product_id, $option_id, $value_id,  $option_value, $params);
         return $response;
     }
+
 
     /**
      * Operation updateOptionValueWithHttpInfo
      *
-     * 
-     *
+     * @see self::updateOptionValue()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $option_id The ID of the &#x60;Option&#x60;. (required)
      * @param int $value_id The ID of the &#x60;Modifier/Option Value&#x60;. (required)
      * @param \BigCommerce\Api\v3\Model\OptionValuePut $option_value A BigCommerce &#x60;OptionValue&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\OptionValueResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updateOptionValueWithHttpInfo($product_id, $option_id, $value_id, $option_value)
+    public function updateOptionValueWithHttpInfo($product_id, $option_id, $value_id,  $option_value, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling updateOptionValue');
         }
+        
         // verify the required parameter 'option_id' is set
-        if ($option_id === null) {
+        if (!isset($option_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $option_id when calling updateOptionValue');
         }
+        
         // verify the required parameter 'value_id' is set
-        if ($value_id === null) {
+        if (!isset($value_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $value_id when calling updateOptionValue');
         }
+        
         // verify the required parameter 'option_value' is set
-        if ($option_value === null) {
+        if (!isset($option_value)) {
             throw new \InvalidArgumentException('Missing the required parameter $option_value when calling updateOptionValue');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/options/{option_id}/values/{value_id}";
         $httpBody = '';
@@ -11060,8 +11899,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -11069,7 +11915,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($option_id !== null) {
+
+
+        if (isset($option_id)) {
             $resourcePath = str_replace(
                 "{" . "option_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($option_id),
@@ -11077,7 +11925,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($value_id !== null) {
+
+
+        if (isset($value_id)) {
             $resourcePath = str_replace(
                 "{" . "value_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($value_id),
@@ -11090,15 +11940,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($option_value)) {
-            $_tempBody = $option_value;
+        $_tempBody = $option_value;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -11110,60 +11960,70 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\OptionValueResponse',
                 '/catalog/products/{product_id}/options/{option_id}/values/{value_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\OptionValueResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\OptionValueResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\OptionValueResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation updateProduct
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\ProductPut $product A BigCommerce &#x60;Product&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\ProductResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function updateProduct($product_id, $product)
+    public function updateProduct($product_id, $product, array $params = [])
     {
-        list($response) = $this->updateProductWithHttpInfo($product_id, $product);
+        list($response) = $this->updateProductWithHttpInfo($product_id,  $product, $params);
         return $response;
     }
+
 
     /**
      * Operation updateProductWithHttpInfo
      *
-     * 
-     *
+     * @see self::updateProduct()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\ProductPut $product A BigCommerce &#x60;Product&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ProductResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updateProductWithHttpInfo($product_id, $product)
+    public function updateProductWithHttpInfo($product_id,  $product, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling updateProduct');
         }
+        
         // verify the required parameter 'product' is set
-        if ($product === null) {
+        if (!isset($product)) {
             throw new \InvalidArgumentException('Missing the required parameter $product when calling updateProduct');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}";
         $httpBody = '';
@@ -11176,8 +12036,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -11190,15 +12057,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($product)) {
-            $_tempBody = $product;
+        $_tempBody = $product;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -11210,74 +12077,87 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ProductResponse',
                 '/catalog/products/{product_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ProductResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 409:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 422:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation updateProductImage
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $image_id The ID of the &#x60;Image&#x60; that is being operated on. (required)
      * @param \BigCommerce\Api\v3\Model\ProductImagePut $product_image A BigCommerce &#x60;ProductImage&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\ProductImageResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function updateProductImage($product_id, $image_id, $product_image)
+    public function updateProductImage($product_id, $image_id, $product_image, array $params = [])
     {
-        list($response) = $this->updateProductImageWithHttpInfo($product_id, $image_id, $product_image);
+        list($response) = $this->updateProductImageWithHttpInfo($product_id, $image_id,  $product_image, $params);
         return $response;
     }
+
 
     /**
      * Operation updateProductImageWithHttpInfo
      *
-     * 
-     *
+     * @see self::updateProductImage()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $image_id The ID of the &#x60;Image&#x60; that is being operated on. (required)
      * @param \BigCommerce\Api\v3\Model\ProductImagePut $product_image A BigCommerce &#x60;ProductImage&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ProductImageResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updateProductImageWithHttpInfo($product_id, $image_id, $product_image)
+    public function updateProductImageWithHttpInfo($product_id, $image_id,  $product_image, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling updateProductImage');
         }
+        
         // verify the required parameter 'image_id' is set
-        if ($image_id === null) {
+        if (!isset($image_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $image_id when calling updateProductImage');
         }
+        
         // verify the required parameter 'product_image' is set
-        if ($product_image === null) {
+        if (!isset($product_image)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_image when calling updateProductImage');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/images/{image_id}";
         $httpBody = '';
@@ -11290,8 +12170,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -11299,7 +12186,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($image_id !== null) {
+
+
+        if (isset($image_id)) {
             $resourcePath = str_replace(
                 "{" . "image_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($image_id),
@@ -11312,15 +12201,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($product_image)) {
-            $_tempBody = $product_image;
+        $_tempBody = $product_image;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -11332,66 +12221,77 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ProductImageResponse',
                 '/catalog/products/{product_id}/images/{image_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ProductImageResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductImageResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductImageResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation updateProductMetafield
-     *
      * 
+     *
      *
      * @param int $metafield_id The ID of the &#x60;Metafield&#x60;. (required)
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\MetafieldPut $metafield A &#x60;Metafield&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\MetafieldResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function updateProductMetafield($metafield_id, $product_id, $metafield)
+    public function updateProductMetafield($metafield_id, $product_id, $metafield, array $params = [])
     {
-        list($response) = $this->updateProductMetafieldWithHttpInfo($metafield_id, $product_id, $metafield);
+        list($response) = $this->updateProductMetafieldWithHttpInfo($metafield_id, $product_id,  $metafield, $params);
         return $response;
     }
+
 
     /**
      * Operation updateProductMetafieldWithHttpInfo
      *
-     * 
-     *
+     * @see self::updateProductMetafield()
      * @param int $metafield_id The ID of the &#x60;Metafield&#x60;. (required)
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param \BigCommerce\Api\v3\Model\MetafieldPut $metafield A &#x60;Metafield&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\MetafieldResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updateProductMetafieldWithHttpInfo($metafield_id, $product_id, $metafield)
+    public function updateProductMetafieldWithHttpInfo($metafield_id, $product_id,  $metafield, array $params = [])
     {
+        
         // verify the required parameter 'metafield_id' is set
-        if ($metafield_id === null) {
+        if (!isset($metafield_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $metafield_id when calling updateProductMetafield');
         }
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling updateProductMetafield');
         }
+        
         // verify the required parameter 'metafield' is set
-        if ($metafield === null) {
+        if (!isset($metafield)) {
             throw new \InvalidArgumentException('Missing the required parameter $metafield when calling updateProductMetafield');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/metafields/{metafield_id}";
         $httpBody = '';
@@ -11404,8 +12304,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($metafield_id !== null) {
+
+
+        if (isset($metafield_id)) {
             $resourcePath = str_replace(
                 "{" . "metafield_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($metafield_id),
@@ -11413,7 +12320,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -11426,15 +12335,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($metafield)) {
-            $_tempBody = $metafield;
+        $_tempBody = $metafield;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -11446,66 +12355,77 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\MetafieldResponse',
                 '/catalog/products/{product_id}/metafields/{metafield_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\MetafieldResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetafieldResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetafieldResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation updateProductReview
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $review_id The ID of the &#x60;review&#x60; that is being operated on. (required)
      * @param \BigCommerce\Api\v3\Model\ProductReviewPut $product_review A BigCommerce &#x60;ProductReview&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\ProductReviewResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function updateProductReview($product_id, $review_id, $product_review)
+    public function updateProductReview($product_id, $review_id, $product_review, array $params = [])
     {
-        list($response) = $this->updateProductReviewWithHttpInfo($product_id, $review_id, $product_review);
+        list($response) = $this->updateProductReviewWithHttpInfo($product_id, $review_id,  $product_review, $params);
         return $response;
     }
+
 
     /**
      * Operation updateProductReviewWithHttpInfo
      *
-     * 
-     *
+     * @see self::updateProductReview()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $review_id The ID of the &#x60;review&#x60; that is being operated on. (required)
      * @param \BigCommerce\Api\v3\Model\ProductReviewPut $product_review A BigCommerce &#x60;ProductReview&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ProductReviewResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updateProductReviewWithHttpInfo($product_id, $review_id, $product_review)
+    public function updateProductReviewWithHttpInfo($product_id, $review_id,  $product_review, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling updateProductReview');
         }
+        
         // verify the required parameter 'review_id' is set
-        if ($review_id === null) {
+        if (!isset($review_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $review_id when calling updateProductReview');
         }
+        
         // verify the required parameter 'product_review' is set
-        if ($product_review === null) {
+        if (!isset($product_review)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_review when calling updateProductReview');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/reviews/{review_id}";
         $httpBody = '';
@@ -11518,8 +12438,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -11527,7 +12454,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($review_id !== null) {
+
+
+        if (isset($review_id)) {
             $resourcePath = str_replace(
                 "{" . "review_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($review_id),
@@ -11540,15 +12469,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($product_review)) {
-            $_tempBody = $product_review;
+        $_tempBody = $product_review;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -11560,66 +12489,77 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ProductReviewResponse',
                 '/catalog/products/{product_id}/reviews/{review_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ProductReviewResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductReviewResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductReviewResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation updateProductVideo
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param string $video_id The ID of the &#x60;Video&#x60; that is being operated on. (required)
      * @param \BigCommerce\Api\v3\Model\ProductVideoPut $product_video A BigCommerce &#x60;ProductVideo&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\ProductVideoResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function updateProductVideo($product_id, $video_id, $product_video)
+    public function updateProductVideo($product_id, $video_id, $product_video, array $params = [])
     {
-        list($response) = $this->updateProductVideoWithHttpInfo($product_id, $video_id, $product_video);
+        list($response) = $this->updateProductVideoWithHttpInfo($product_id, $video_id,  $product_video, $params);
         return $response;
     }
+
 
     /**
      * Operation updateProductVideoWithHttpInfo
      *
-     * 
-     *
+     * @see self::updateProductVideo()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param string $video_id The ID of the &#x60;Video&#x60; that is being operated on. (required)
      * @param \BigCommerce\Api\v3\Model\ProductVideoPut $product_video A BigCommerce &#x60;ProductVideo&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\ProductVideoResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updateProductVideoWithHttpInfo($product_id, $video_id, $product_video)
+    public function updateProductVideoWithHttpInfo($product_id, $video_id,  $product_video, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling updateProductVideo');
         }
+        
         // verify the required parameter 'video_id' is set
-        if ($video_id === null) {
+        if (!isset($video_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $video_id when calling updateProductVideo');
         }
+        
         // verify the required parameter 'product_video' is set
-        if ($product_video === null) {
+        if (!isset($product_video)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_video when calling updateProductVideo');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/videos/{video_id}";
         $httpBody = '';
@@ -11632,8 +12572,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -11641,7 +12588,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($video_id !== null) {
+
+
+        if (isset($video_id)) {
             $resourcePath = str_replace(
                 "{" . "video_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($video_id),
@@ -11654,15 +12603,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($product_video)) {
-            $_tempBody = $product_video;
+        $_tempBody = $product_video;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -11674,66 +12623,77 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\ProductVideoResponse',
                 '/catalog/products/{product_id}/videos/{video_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\ProductVideoResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductVideoResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ProductVideoResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation updateVariant
-     *
      * 
+     *
      *
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $variant_id ID of the variant on a product, or on an associated Price List Record. (required)
      * @param \BigCommerce\Api\v3\Model\VariantPut $variant A &#x60;Variant&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\VariantResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function updateVariant($product_id, $variant_id, $variant)
+    public function updateVariant($product_id, $variant_id, $variant, array $params = [])
     {
-        list($response) = $this->updateVariantWithHttpInfo($product_id, $variant_id, $variant);
+        list($response) = $this->updateVariantWithHttpInfo($product_id, $variant_id,  $variant, $params);
         return $response;
     }
+
 
     /**
      * Operation updateVariantWithHttpInfo
      *
-     * 
-     *
+     * @see self::updateVariant()
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $variant_id ID of the variant on a product, or on an associated Price List Record. (required)
      * @param \BigCommerce\Api\v3\Model\VariantPut $variant A &#x60;Variant&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\VariantResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updateVariantWithHttpInfo($product_id, $variant_id, $variant)
+    public function updateVariantWithHttpInfo($product_id, $variant_id,  $variant, array $params = [])
     {
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling updateVariant');
         }
+        
         // verify the required parameter 'variant_id' is set
-        if ($variant_id === null) {
+        if (!isset($variant_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $variant_id when calling updateVariant');
         }
+        
         // verify the required parameter 'variant' is set
-        if ($variant === null) {
+        if (!isset($variant)) {
             throw new \InvalidArgumentException('Missing the required parameter $variant when calling updateVariant');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/variants/{variant_id}";
         $httpBody = '';
@@ -11746,8 +12706,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -11755,7 +12722,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($variant_id !== null) {
+
+
+        if (isset($variant_id)) {
             $resourcePath = str_replace(
                 "{" . "variant_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($variant_id),
@@ -11768,15 +12737,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($variant)) {
-            $_tempBody = $variant;
+        $_tempBody = $variant;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -11788,72 +12757,84 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\VariantResponse',
                 '/catalog/products/{product_id}/variants/{variant_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\VariantResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\VariantResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\VariantResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
         }
     }
-
     /**
      * Operation updateVariantMetafield
-     *
      * 
+     *
      *
      * @param int $metafield_id The ID of the &#x60;Metafield&#x60;. (required)
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $variant_id ID of the variant on a product, or on an associated Price List Record. (required)
      * @param \BigCommerce\Api\v3\Model\MetafieldPut $metafield A &#x60;Metafield&#x60; object. (required)
-     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @param array $params = []
      * @return \BigCommerce\Api\v3\Model\MetafieldResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      */
-    public function updateVariantMetafield($metafield_id, $product_id, $variant_id, $metafield)
+    public function updateVariantMetafield($metafield_id, $product_id, $variant_id, $metafield, array $params = [])
     {
-        list($response) = $this->updateVariantMetafieldWithHttpInfo($metafield_id, $product_id, $variant_id, $metafield);
+        list($response) = $this->updateVariantMetafieldWithHttpInfo($metafield_id, $product_id, $variant_id,  $metafield, $params);
         return $response;
     }
+
 
     /**
      * Operation updateVariantMetafieldWithHttpInfo
      *
-     * 
-     *
+     * @see self::updateVariantMetafield()
      * @param int $metafield_id The ID of the &#x60;Metafield&#x60;. (required)
      * @param int $product_id The ID of the &#x60;Product&#x60; to which the resource belongs. (required)
      * @param int $variant_id ID of the variant on a product, or on an associated Price List Record. (required)
      * @param \BigCommerce\Api\v3\Model\MetafieldPut $metafield A &#x60;Metafield&#x60; object. (required)
+     * @param array $params = []
      * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
      * @return array of \BigCommerce\Api\v3\Model\MetafieldResponse, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updateVariantMetafieldWithHttpInfo($metafield_id, $product_id, $variant_id, $metafield)
+    public function updateVariantMetafieldWithHttpInfo($metafield_id, $product_id, $variant_id,  $metafield, array $params = [])
     {
+        
         // verify the required parameter 'metafield_id' is set
-        if ($metafield_id === null) {
+        if (!isset($metafield_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $metafield_id when calling updateVariantMetafield');
         }
+        
         // verify the required parameter 'product_id' is set
-        if ($product_id === null) {
+        if (!isset($product_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $product_id when calling updateVariantMetafield');
         }
+        
         // verify the required parameter 'variant_id' is set
-        if ($variant_id === null) {
+        if (!isset($variant_id)) {
             throw new \InvalidArgumentException('Missing the required parameter $variant_id when calling updateVariantMetafield');
         }
+        
         // verify the required parameter 'metafield' is set
-        if ($metafield === null) {
+        if (!isset($metafield)) {
             throw new \InvalidArgumentException('Missing the required parameter $metafield when calling updateVariantMetafield');
         }
+        
+
         // parse inputs
         $resourcePath = "/catalog/products/{product_id}/variants/{variant_id}/metafields/{metafield_id}";
         $httpBody = '';
@@ -11866,8 +12847,15 @@ class CatalogApi
         }
         $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
 
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
         // path params
-        if ($metafield_id !== null) {
+
+
+        if (isset($metafield_id)) {
             $resourcePath = str_replace(
                 "{" . "metafield_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($metafield_id),
@@ -11875,7 +12863,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($product_id !== null) {
+
+
+        if (isset($product_id)) {
             $resourcePath = str_replace(
                 "{" . "product_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($product_id),
@@ -11883,7 +12873,9 @@ class CatalogApi
             );
         }
         // path params
-        if ($variant_id !== null) {
+
+
+        if (isset($variant_id)) {
             $resourcePath = str_replace(
                 "{" . "variant_id" . "}",
                 $this->apiClient->getSerializer()->toPathValue($variant_id),
@@ -11896,15 +12888,15 @@ class CatalogApi
         // body params
         $_tempBody = null;
         if (isset($metafield)) {
-            $_tempBody = $metafield;
+        $_tempBody = $metafield;
         }
-
         // for model (json/xml)
         if (isset($_tempBody)) {
             $httpBody = $_tempBody; // $_tempBody is the method argument, if present
         } elseif (count($formParams) > 0) {
             $httpBody = $formParams; // for HTTP post (form)
         }
+        
         // make the API Call
         try {
             list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
@@ -11916,18 +12908,21 @@ class CatalogApi
                 '\BigCommerce\Api\v3\Model\MetafieldResponse',
                 '/catalog/products/{product_id}/variants/{variant_id}/metafields/{metafield_id}'
             );
-
             return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\MetafieldResponse', $httpHeader), $statusCode, $httpHeader];
-        } catch (ApiException $e) {
+
+         } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetafieldResponse', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\MetafieldResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
                 case 404:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
-                    $e->setResponseObject($data);
-                    break;
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\NotFound', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
             }
 
             throw $e;
