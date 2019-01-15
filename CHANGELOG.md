@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1]
+
+### Fixed
+
+- Fixed PHP fatal error that would occur intermittently when adding items
+  to the cart.
+
 ## [1.4.0]
 
 ### Added
@@ -273,6 +280,7 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[1.4.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.4.0...1.4.1
 [1.4.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.3.0...1.4.0
 [1.3.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.2.0...1.3.0
 [1.2.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.1.0...1.2.0

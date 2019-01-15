@@ -4,7 +4,7 @@
 namespace BigCommerce\Cart;
 
 use BigCommerce\Api\v3\Model\BaseItem;
-use BigCommerce\Api\v3\Model\Cart;
+use BigCommerce\Api\v3\Model\Cart as BigCommerce_Cart;
 use BigCommerce\Api\v3\Model\ItemGiftCertificate;
 use BigCommerce\Api\v3\Model\ProductOption;
 use BigCommerce\Post_Types\Product\Product;
@@ -25,11 +25,11 @@ use BigCommerce\Util\Cart_Item_Iterator;
  */
 class Cart_Mapper {
 	/**
-	 * @var Cart
+	 * @var BigCommerce_Cart
 	 */
 	private $cart;
 
-	public function __construct( Cart $cart ) {
+	public function __construct( BigCommerce_Cart $cart ) {
 		$this->cart = $cart;
 	}
 
