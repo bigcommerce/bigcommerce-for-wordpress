@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.2]
+
+### Fixed
+
+- Fixed inconsistent defaults for ajax cart setting.
+
 ## [1.4.1]
 
 ### Fixed
@@ -280,6 +286,7 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[1.4.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.4.1...1.4.2
 [1.4.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.4.0...1.4.1
 [1.4.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.3.0...1.4.0
 [1.3.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.2.0...1.3.0

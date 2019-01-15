@@ -40,7 +40,7 @@ class Product_Form extends Controller {
 			self::MAX_QUANTITY        => $this->get_max_quantity( (int) $product->order_quantity_maximum, $product->get_inventory_level() ),
 			self::OPTIONS             => $this->options[ self::SHOW_OPTIONS ] ? $this->get_options( $product ) : '',
 			self::MODIFIERS           => $this->options[ self::SHOW_OPTIONS ] ? $this->get_modifiers( $product ) : '',
-			self::AJAX_ADD_TO_CART    => (bool) get_option( Cart::OPTION_AJAX_CART, false ),
+			self::AJAX_ADD_TO_CART    => (bool) get_option( Cart::OPTION_AJAX_CART, true ),
 			self::QUANTITY_FIELD_TYPE => $this->options[ self::SHOW_OPTIONS ] ? 'number' : 'hidden',
 		];
 	}
