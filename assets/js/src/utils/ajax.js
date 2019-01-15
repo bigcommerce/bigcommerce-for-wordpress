@@ -23,7 +23,7 @@ export const wpAPIAddToCartAjax = (cartURL, querySrting = '') => request
 	.post(cartURL)
 	.query(querySrting)
 	.timeout({
-		response: 5000,  // Wait 5 seconds for the server to start sending,
+		response: 15000,  // Wait 5 seconds for the server to start sending,
 		deadline: 60000, // but allow 1 minute for the file to finish loading.
 	});
 
