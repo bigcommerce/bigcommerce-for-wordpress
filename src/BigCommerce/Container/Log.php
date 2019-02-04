@@ -43,9 +43,11 @@ class Log extends Provider {
 				$container[ self::LOGGER ]->init_log();
 			} ), 10, 0 );
 
-			add_action( "bigcommerce/import/run/status=" . Status::STARTED, $this->create_callback( 'truncate_log', function () use ( $container ) {
-				$container[ self::LOGGER ]->truncate_log();
-			} ), 10, 0 );
+			add_action( 'bigcommerce/import/run', $this->create_callback( 'truncate_log', function ( $status ) use ( $container ) {
+				if ( $status === Status::STARTED ) {
+					$container[ self::LOGGER ]->truncate_log();
+				}
+			} ), 9, 0 );
 
 			add_action( 'bigcommerce/import/product/error', $this->create_callback( 'log_product_import_error', function ( $product_id, CatalogApi $catalog_api, \Exception $exception ) use ( $container ) {
 				$container[ self::LOGGER ]->log_product_import_error( $product_id, $catalog_api, $exception );

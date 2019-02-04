@@ -119,7 +119,8 @@ class Order_Summary extends Controller {
 			return 0;
 		}
 		// loop through until we find one with a featured image
-		$product_ids = wp_list_pluck( $products, 'product_id' );
+		// filter the array, because some items (e.g., gift certificates) won't have a product ID
+		$product_ids = array_filter( wp_list_pluck( $products, 'product_id' ) );
 		foreach ( $product_ids as $product_id ) {
 			/*
 			 * Yes, this is inefficient if many products are lacking

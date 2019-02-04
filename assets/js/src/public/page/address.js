@@ -107,19 +107,19 @@ const handleDeleteAddress = (e) => {
  * @param dialogID
  */
 const handleDialogWithErrors = (dialogID) => {
-	const dialog = instances.dialogs[dialogID];
-
 	//remove transitions so display is instant
+	const dialog = instances.dialogs[dialogID];
 	dialog.options.effectSpeed = 0;
 	el.addressList.style.transitionDuration = '0';
 
-	dialog.on('show', (dialogEl) => {
-		//disallow close when form has errors, must re-save
-		const cancelBtn = tools.getNodes('bc-account-address-form-cancel', false, dialogEl)[0];
-		cancelBtn.setAttribute('disabled', 'disabled');
-	});
-
+	//  Show the dialog
 	dialog.show();
+	tools.addClass(el.addressList, 'bc-account-address--form-active');
+
+	// Delay the activation of the cancel button so we can ensure the dialog is rendered.
+	_.delay(() => {
+		initHideDialog(dialog.node, dialogID);
+	}, 50);
 };
 
 /**
@@ -144,13 +144,20 @@ const initDialogs = () => {
 				handleDialogWithErrors(dialogID);
 			}
 
-			instances.dialogs[dialogID].on('render', (dialogEl) => {
-				tools.addClass(el.addressList, 'bc-account-address--form-active');
-
+			instances.dialogs[dialogID].on('render', () => {
+				// On the first time this dialog is rendered, perform these actions.
 				const alertSuccess = tools.getNodes('.bc-alert-group--success', false, el.container.parentElement, true)[0];
+
+				// On successful update, remove the success message when the next dialog is rendered.
+				// Note: Since this is a page refresh, no dialogs have been rendered yet if success occurs.
 				if (alertSuccess) {
-					alertSuccess.remove();
+					alertSuccess.parentNode.removeChild(alertSuccess);
 				}
+			});
+
+			instances.dialogs[dialogID].on('show', (dialogEl) => {
+				// Every time a dialog is shown, perform these actions.
+				tools.addClass(el.addressList, 'bc-account-address--form-active');
 
 				_.delay(() => {
 					initHideDialog(dialogEl, dialogID);
@@ -159,6 +166,7 @@ const initDialogs = () => {
 			});
 
 			instances.dialogs[dialogID].on('hide', () => {
+				// Every time a dialog is closed, perform these actions.
 				tools.removeClass(el.addressList, 'bc-account-address--form-active');
 			});
 		});

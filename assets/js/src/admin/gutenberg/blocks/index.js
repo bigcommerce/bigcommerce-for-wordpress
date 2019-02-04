@@ -39,10 +39,10 @@ const blocks = [
 
 const initBlocks = () => {
 	blocks.forEach((block) => {
-		const blockName = `${block.id}`;
-		if (blockName) {
-			registerBlockType(blockName, block);
+		if (!block.id) {
+			return;
 		}
+		registerBlockType(`${block.id}`, block);
 	});
 };
 

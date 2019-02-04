@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit8f7fd79f651f54307ed496fe06946c44
+class ComposerStaticInitdcbb281cb8f080a95fd623739ccf6b9f
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -402,6 +402,7 @@ class ComposerStaticInit8f7fd79f651f54307ed496fe06946c44
         'BigCommerce\\Container\\Import' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Import.php',
         'BigCommerce\\Container\\Log' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Log.php',
         'BigCommerce\\Container\\Merchant' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Merchant.php',
+        'BigCommerce\\Container\\Nav_Menu' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Nav_Menu.php',
         'BigCommerce\\Container\\Pages' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Pages.php',
         'BigCommerce\\Container\\Post_Meta' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Post_Meta.php',
         'BigCommerce\\Container\\Post_Types' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Post_Types.php',
@@ -512,6 +513,10 @@ class ComposerStaticInit8f7fd79f651f54307ed496fe06946c44
         'BigCommerce\\Merchant\\Onboarding_Api' => __DIR__ . '/../..' . '/src/BigCommerce/Merchant/Onboarding_Api.php',
         'BigCommerce\\Merchant\\Routes' => __DIR__ . '/../..' . '/src/BigCommerce/Merchant/Routes.php',
         'BigCommerce\\Meta_Boxes\\Meta_Box' => __DIR__ . '/../..' . '/src/BigCommerce/Meta_Boxes/Meta_Box.php',
+        'BigCommerce\\Meta_Boxes\\Post_Meta_Box' => __DIR__ . '/../..' . '/src/BigCommerce/Meta_Boxes/Post_Meta_Box.php',
+        'BigCommerce\\Nav_Menu\\Dynamic_Menu_Items' => __DIR__ . '/../..' . '/src/BigCommerce/Nav_Menu/Dynamic_Menu_Items.php',
+        'BigCommerce\\Nav_Menu\\Nav_Items_Customizer' => __DIR__ . '/../..' . '/src/BigCommerce/Nav_Menu/Nav_Items_Customizer.php',
+        'BigCommerce\\Nav_Menu\\Nav_Items_Meta_Box' => __DIR__ . '/../..' . '/src/BigCommerce/Nav_Menu/Nav_Items_Meta_Box.php',
         'BigCommerce\\Pages\\Account_Page' => __DIR__ . '/../..' . '/src/BigCommerce/Pages/Account_Page.php',
         'BigCommerce\\Pages\\Address_Page' => __DIR__ . '/../..' . '/src/BigCommerce/Pages/Address_Page.php',
         'BigCommerce\\Pages\\Cart_Page' => __DIR__ . '/../..' . '/src/BigCommerce/Pages/Cart_Page.php',
@@ -905,10 +910,10 @@ class ComposerStaticInit8f7fd79f651f54307ed496fe06946c44
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->firstCharsPsr4 = ComposerStaticInit8f7fd79f651f54307ed496fe06946c44::$firstCharsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit8f7fd79f651f54307ed496fe06946c44::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit8f7fd79f651f54307ed496fe06946c44::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit8f7fd79f651f54307ed496fe06946c44::$classMap;
+            $loader->firstCharsPsr4 = ComposerStaticInitdcbb281cb8f080a95fd623739ccf6b9f::$firstCharsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitdcbb281cb8f080a95fd623739ccf6b9f::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitdcbb281cb8f080a95fd623739ccf6b9f::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitdcbb281cb8f080a95fd623739ccf6b9f::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -5,8 +5,8 @@
 
 import _ from 'lodash';
 import delegate from 'delegate';
+import Cookie from 'js-cookie';
 import * as tools from '../../utils/tools';
-import { getCookie } from '../../utils/storage/cookie';
 import { CART_API_BASE, AJAX_CART_ENABLED, AJAX_CART_NONCE } from '../config/wp-settings';
 import { wpAPIAddToCartAjax } from '../../utils/ajax';
 import { NLS } from '../config/i18n';
@@ -88,7 +88,7 @@ const handleProductOptions = (form, variants) => {
  */
 const handleProductModifiers = (modifiers = {}) => {
 	modifiers.forEach((field, index) => {
-		if (!field.value) {
+		if (!field.value || (field.type === 'checkbox' && !field.checked)) {
 			return;
 		}
 
@@ -232,7 +232,7 @@ const handleAjaxAddToCartRequest = (e) => {
 		return;
 	}
 
-	const cartID = getCookie('bigcommerce_cart_id');
+	const cartID = Cookie.get('bigcommerce_cart_id');
 	const url = cartID ? `${CART_API_BASE}/${cartID}` : CART_API_BASE;
 	const query = getAjaxQueryString(cartButton);
 

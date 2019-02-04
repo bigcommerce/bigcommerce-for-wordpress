@@ -14,6 +14,9 @@ class Analytics extends Settings_Section {
 	const GOOGLE_ANALYTICS = 'bigcommerce_google_analytics_id';
 	const SEGMENT          = 'bigcommerce_segment_key';
 
+	const FACEBOOK_PIXEL_NAME   = 'Facebook Pixel';
+	const GOOGLE_ANALYTICS_NAME = 'Google Analytics';
+
 	/**
 	 * @var Store_Api
 	 */
@@ -87,7 +90,7 @@ class Analytics extends Settings_Section {
 		}
 		$settings = $this->api->get_analytics_settings();
 		foreach ( $settings as &$account ) {
-			if ( $account[ 'name' ] == 'Facebook Pixel' ) {
+			if ( $account[ 'name' ] == self::FACEBOOK_PIXEL_NAME ) {
 				$account[ 'code' ]    = $new_value;
 				$account[ 'enabled' ] = ! empty( $new_value );
 				$this->api->update_analytics_settings( $account[ 'id' ], $account );
@@ -109,6 +112,16 @@ class Analytics extends Settings_Section {
 		if ( $old_value == $new_value ) {
 			return;
 		}
-		// TODO
+		$settings = $this->api->get_analytics_settings();
+		foreach ( $settings as &$account ) {
+			if ( $account[ 'name' ] == self::GOOGLE_ANALYTICS_NAME ) {
+				if (strpos($account[ 'code' ], 'script') === false) {
+					$account[ 'code' ]    = $new_value;
+					$account[ 'enabled' ] = ! empty( $new_value );
+					$this->api->update_analytics_settings( $account[ 'id' ], $account );
+				}
+				return;
+			}
+		}
 	}
 }

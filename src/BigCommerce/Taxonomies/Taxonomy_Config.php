@@ -79,4 +79,22 @@ abstract class Taxonomy_Config {
 		}
 		return sanitize_title( trim( $slug, '/') );
 	}
+
+	protected function get_caps() {
+		$caps = [
+			'manage_terms' => 'manage_categories',
+			'edit_terms'   => 'do_not_allow', // prevent editing, because it will be overwritten on next import
+			'delete_terms' => 'manage_categories',
+			'assign_terms' => 'edit_posts',
+		];
+		/**
+		 * Filter the default capabilities for taxonomy terms.
+		 *
+		 * The dynamic portion of the hook is the name of the taxonomy.
+		 *
+		 * @param array $caps The capabilities array for the taxonomy
+		 */
+		$caps = apply_filters( 'bigcommerce/taxonomy/' . $this->taxonomy . '/capabilities', $caps );
+		return $caps;
+	}
 }
