@@ -72,8 +72,8 @@ class Import extends Provider {
 			}
 		} ), 10, 2 );
 
-		add_action( 'bigcommerce/import/run/status=' . Runner\Status::STARTED, $this->create_callback( 'cron_unschedule_start', function () use ( $container ) {
-			$container[ self::CRON_MONITOR ]->listen_for_import_start();
+		add_action( 'bigcommerce/import/run', $this->create_callback( 'cron_unschedule_start', function ( $status ) use ( $container ) {
+			$container[ self::CRON_MONITOR ]->listen_for_import_start( $status );
 		} ), 9, 1 );
 
 		add_action( Runner\Cron_Runner::START_CRON, $this->create_callback( 'cron_start', function () use ( $container ) {

@@ -80,9 +80,11 @@ class Cron_Monitor {
 	 * Usually means that an import is running from the CLI.
 	 *
 	 * @return void
-	 * @action bigcommerce/import/run/status= . Status::STARTED
+	 * @action bigcommerce/import/run
 	 */
-	public function listen_for_import_start() {
-		wp_unschedule_hook( Cron_Runner::START_CRON );
+	public function listen_for_import_start( $status ) {
+		if ( $status === Status::STARTED ) {
+			wp_unschedule_hook( Cron_Runner::START_CRON );
+		}
 	}
 }

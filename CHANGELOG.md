@@ -1,5 +1,41 @@
 # Changelog
 
+## [1.5.0]
+
+### Added
+- The product selection popup in the admin for the products shortcode/Gutenberg
+  block will now load additional pages of products as you scroll past the initially
+  loaded products matching your query.
+- When completing an embedded checkout, the customer's cart cookie is now
+  cleared out so the cart menu item no longer shows items in the cart.
+- Product Categories and Brands have new dynamic nav menu items to show top
+  level terms in those taxonomies.
+- Added synchronization back to BigCommerce when updating the Google Analytics
+  tracking ID when GAEE is enabled.
+- Added product categories and thumbnails to the admin list table for Products.
+- Product Categories and Brands are visible (but not editable) in the WordPress admin.
+
+### Fixed
+- Fixed a JavaScript console error when initializing Gutenberg blocks, when
+  some of those blocks should be disabled.
+- Fixed the broken cancel button when reloading the customer address form
+  after validation errors.
+- Fixed styles in the products Gutenberg block, because WordPress doesn't
+  call it Gutenberg anymore.
+- Fixed broken synchronization of Facebook Pixel configuration between WordPress
+  and BigCommerce.
+- The product sync should no longer show a success message if an import failed.
+- Fixed the featured image displayed for gift certificates in a customer's order history.
+- Removed the "Required" asterisk from the Company Name field in the address form.
+  It is not, in fact, required.
+
+### Changed
+- Changed the polling logic for the product import to prevent running multiple
+  requests at the same time from a single browser window.
+- The Product Category dropdown on the Products archive will now show hierarchical
+  terms nested under their parents.
+
+
 ## [1.4.2]
 
 ### Fixed
@@ -286,8 +322,9 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
-[1.4.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.4.1...1.4.2
-[1.4.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.4.0...1.4.1
+[1.5.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.4.2...1.5.0
+[1.4.2]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.4.1...1.4.2
+[1.4.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.4.0...1.4.1
 [1.4.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.3.0...1.4.0
 [1.3.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.2.0...1.3.0
 [1.2.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.1.0...1.2.0

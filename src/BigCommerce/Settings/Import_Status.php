@@ -107,10 +107,11 @@ class Import_Status {
 			return [
 				'message'  => '',
 				'status'   => $current[ 'status' ],
+				'previous' => $previous[ 'status' ],
 				'products' => [
 					'total'     => (int) $total,
 					'completed' => (int) $completed,
-					'status'    => sprintf( _n( '%s Product Successfully Synced', '%s Products Successfully Synced', $total, 'bigcommerce' ), $total ),
+					'status'    => ( $previous[ 'status' ] === Status::FAILED ) ? '' : sprintf( _n( '%s Product Successfully Synced', '%s Products Successfully Synced', $total, 'bigcommerce' ), $total ),
 				],
 			];
 		}

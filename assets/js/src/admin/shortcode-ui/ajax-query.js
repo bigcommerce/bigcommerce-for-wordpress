@@ -4,16 +4,18 @@
  */
 
 import delegate from 'delegate';
+import _ from 'lodash';
 import { Spinner } from 'spin.js';
 import shortcodeState from '../config/shortcode-state';
 import * as tools from '../../utils/tools';
 import { productTemplate } from './product-template';
 import { I18N } from '../config/i18n';
-import { wpAPIProductLookup } from '../../utils/ajax';
+import { wpAPIProductLookup, wpAPIPagedProductLookup } from '../../utils/ajax';
 import { ADMIN_ICONS } from '../config/wp-settings';
 import { on } from '../../utils/events';
 
 const el = {};
+const waypoints = [];
 
 /**
  * @function createSpinner
@@ -123,8 +125,66 @@ const handleAjaxResponse = (res) => {
 	}
 
 	res.forEach(product => renderProductTemplate(product));
-	el.productGrid.insertAdjacentHTML('afterbegin', shortcodeState.productHTML);
+	el.productGrid.insertAdjacentHTML('beforeend', shortcodeState.productHTML);
 	shortcodeState.productHTML = '';
+};
+
+/**
+ * @function handleAjaxPagination
+ * @description Adds AJAX pagination on scroll using Waypoints JS.
+ * @param nextPage
+ */
+const handleAjaxPagination = (nextPage = '') => {
+	if (!nextPage) {
+		return;
+	}
+
+	const currentWaypoints = tools.getNodes('bc-products-has-next', true, el.productGrid);
+	const container = document.createElement('div');
+
+	currentWaypoints.forEach((currentWaypoint) => {
+		currentWaypoint.parentNode.removeChild(currentWaypoint);
+	});
+
+	container.setAttribute('data-next', nextPage);
+	container.setAttribute('data-js', 'bc-products-has-next');
+	el.productGrid.appendChild(container);
+
+	const way = new Waypoint({
+		element: document.querySelector('[data-js="bc-products-has-next"]'),
+		context: el.productGrid,
+		offset: '100%',
+		handler: () => {
+			// 1. Disable the waypoint while we attempt an endpoint fetch.
+			way.disable();
+			shortcodeState.isFetching = true;
+			dimTheHouseLights();
+			// 2. Run the query to get the next page of products and populate the grid.
+			wpAPIPagedProductLookup(nextPage)
+				.end((err, res) => {
+					shortcodeState.isFetching = false;
+					dimTheHouseLights();
+
+					if (err) {
+						el.productGrid.innerHTML = I18N.messages.ajax_error;
+						console.error(err);
+						return;
+					}
+
+					// 3. Check if we got a proper response, print the results, and then destroy the waypoint.
+					way.destroy();
+					if (container && container.parentNode) {
+						container.parentNode.removeChild(container);
+					}
+
+					// 4. Get and print the cards markup from the response.
+					handleAjaxResponse(res.body);
+					// 5. Recursively create the new waypoint if the next page link exists.
+					_.delay(() => handleAjaxPagination(res.links.next), 100);
+				});
+		},
+	});
+	waypoints.push(way);
 };
 
 /**
@@ -135,6 +195,10 @@ const wpAPIGetRequest = () => {
 	shortcodeState.isFetching = true;
 	dimTheHouseLights();
 	el.productGrid.textContent = '';
+
+	waypoints.forEach((way) => {
+		way.destroy();
+	});
 
 	const queryString = queryObjectToString();
 
@@ -150,6 +214,7 @@ const wpAPIGetRequest = () => {
 			}
 
 			handleAjaxResponse(res.body);
+			_.delay(() => handleAjaxPagination(res.links.next), 100);
 		});
 };
 

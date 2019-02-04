@@ -7,24 +7,20 @@ namespace BigCommerce\Meta_Boxes;
 abstract class Meta_Box {
 
 	/**
-	 * @param string   $post_type
-	 * @param \WP_Post $post
 	 *
 	 * @return void
-	 * @action add_meta_boxes
+	 * @action load-{$page_hook}
 	 */
-	public function register( $post_type, $post ) {
-		if ( in_array( $post_type, $this->get_post_types() ) ) {
-			add_meta_box(
-				$this->get_name(),
-				$this->get_title(),
-				[ $this, 'render' ],
-				null,
-				$this->get_context(),
-				$this->get_priority(),
-				$this->get_callback_args()
-			);
-		}
+	public function register() {
+		add_meta_box(
+			$this->get_name(),
+			$this->get_title(),
+			[ $this, 'render' ],
+			$this->get_screen(),
+			$this->get_context(),
+			$this->get_priority(),
+			$this->get_callback_args()
+		);
 	}
 
 	/**
@@ -40,24 +36,18 @@ abstract class Meta_Box {
 	/**
 	 * Render the metabox contents
 	 *
-	 * @param \WP_Post $post
+	 * @param object $object
 	 *
 	 * @return void
 	 */
-	abstract public function render( $post );
+	abstract public function render( $object );
 
 	/**
-	 * @param int      $post_id
-	 * @param \WP_Post $post
-	 *
-	 * @return void
+	 * @return string|array|null The screens on which to display the metabox
 	 */
-	abstract public function save_post( $post_id, $post );
-
-	/**
-	 * @return string[] The post types to which this metabox applies
-	 */
-	abstract protected function get_post_types();
+	protected function get_screen() {
+		return null;
+	}
 
 	/**
 	 * @return string One of 'normal', 'side', or 'advanced'

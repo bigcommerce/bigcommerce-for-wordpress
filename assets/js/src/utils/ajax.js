@@ -11,6 +11,9 @@ export const wpAPIProductLookup = (queryString = '') => request
 	.get(PRODUCTS_ENDPOINT)
 	.query(queryString);
 
+export const wpAPIPagedProductLookup = URL => request
+	.get(URL);
+
 export const wpAPIShortcodeBuilder = (queryString = '') => request
 	.get(SHORTCODE_ENDPOINT)
 	.query(queryString);

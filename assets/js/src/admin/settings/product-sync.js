@@ -72,10 +72,6 @@ const importError = (node, icon) => {
  * @param response
  */
 const handleStatusMessage = (response = '') => {
-	if (!response) {
-		return;
-	}
-
 	const currentMessage = tools.getNodes('.bc-import-status-message', false, el.container, true)[0];
 	const icon = tools.getNodes('.icon-bc-sync', false, el.container, true)[0];
 
@@ -84,9 +80,14 @@ const handleStatusMessage = (response = '') => {
 		return;
 	}
 
+	if (!response || !response.data) {
+		importError(currentMessage, icon);
+		return;
+	}
+
 
 	if (response.data.status === 'not_started') {
-		if (response.success) {
+		if (response.success && response.data.previous !== 'failed') {
 			importSuccess(response, currentMessage, icon);
 			return;
 		}
@@ -179,34 +180,37 @@ const pollProductSyncWatcher = () => {
 		.end((err, res) => {
 			state.isFetching = false;
 
+			_.delay(() => {
+				pollProductSyncWatcher();
+			}, 1000); // Check after 1 second for a new cron update.
+
 			if (err) {
 				if (err.timeout) {
-					pollProductSyncWatcher();
+					return; // try again next time
+				}
+				console.error(err);
+				state.syncCompleted = true;
+				state.syncFailed = true;
+			}
+
+			if (!res || !res.body) {
+				return;
+			}
+
+			handleStatusMessage(res.body);
+
+			const data = res.body.data;
+			if (data.status === 'processing_queue') {
+				handleProgressBar(data.products.total, data.products.completed, data.products.status);
+			} else if (data.status === 'not_started') {
+				state.syncCompleted = true;
+				if (data.previous !== 'failed') {
+					handleProgressBar(data.products.total, data.products.total, data.products.status);
 				} else {
-					console.error(err);
-					state.syncCompleted = true;
 					state.syncFailed = true;
 				}
 			}
-
-			const data = res.body.data;
-			handleStatusMessage(res.body);
-
-			switch (data.status) {
-			case 'processing_queue':
-				handleProgressBar(data.products.total, data.products.completed, data.products.status);
-				break;
-			case 'not_started':
-				handleProgressBar(data.products.total, data.products.total, data.products.status);
-				break;
-			default:
-				break;
-			}
 		});
-
-	_.delay(() => {
-		pollProductSyncWatcher();
-	}, 2000); // Check every 2 seconds for a new cron update.
 };
 
 const bindEvents = () => {

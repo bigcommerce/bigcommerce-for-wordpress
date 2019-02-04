@@ -148,11 +148,16 @@ class Post_Types extends Provider {
 
 		// Admin extra columns list
 		add_filter('manage_bigcommerce_product_posts_columns', $this->create_callback( 'add_bigcommerce_product_id_column', function ( $columns ) use ( $container ) {
-			return $container[ self::PRODUCT_ADMIN_LIST ]->add_bigcommerce_product_id_column( $columns );
+			return $container[ self::PRODUCT_ADMIN_LIST ]->add_product_list_columns( $columns );
 		} ), 5, 1 );
 
 		add_action('manage_bigcommerce_product_posts_custom_column', $this->create_callback( 'add_bigcommerce_product_id_values', function ( $columns, $post_id ) use ( $container ) {
 			$container[ self::PRODUCT_ADMIN_LIST ]->get_bigcommerce_product_id_value( $columns, $post_id );
 		} ), 5, 2 );
+
+		add_action('manage_bigcommerce_product_posts_custom_column', $this->create_callback( 'add_bigcommerce_product_thumbnail_image', function ( $columns, $post_id ) use ( $container ) {
+			$container[ self::PRODUCT_ADMIN_LIST ]->get_bigcommerce_product_thumbnail_value( $columns, $post_id );
+		} ), 5, 2 );
+
 	}
 }

@@ -36,7 +36,7 @@ $error_class = 'bc-form__control--error'; // REQUIRED
 	</label>
 
 	<label for="bc-account-address-company" class="bc-form__control bc-form-2col__control bc-form-2col__control--left <?php if ( in_array( 'company', $errors ) ) { echo $error_class; } ?>">
-		<span class="bc-form__label bc-account-address__form-label bc-form-control-required"><?php echo esc_html( __( 'Company:', 'bigcommerce' ) ); ?></span>
+		<span class="bc-form__label bc-account-address__form-label"><?php echo esc_html( __( 'Company:', 'bigcommerce' ) ); ?></span>
 		<input type="text" name="bc-address[company]" id="bc-account-address-company" value="<?php echo esc_attr( $company ); ?>" data-form-field="bc-form-field-company">
 	</label>
 

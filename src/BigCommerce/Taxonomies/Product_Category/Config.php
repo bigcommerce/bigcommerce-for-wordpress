@@ -21,13 +21,15 @@ class Config extends Taxonomy_Config {
 		return [
 			'hierarchical'      => true,
 			'public'            => true,
-			'show_ui'           => false,
+			'show_ui'           => true,
 			'show_in_nav_menus' => true,
 			'labels'            => $this->get_labels(),
+			'show_admin_column' => true,
 			'rewrite'           => [
 				'slug'       => $this->get_slug(),
 				'with_front' => false,
 			],
+			'capabilities' => $this->get_caps(),
 		];
 	}
 

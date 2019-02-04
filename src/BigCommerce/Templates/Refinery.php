@@ -15,8 +15,14 @@ class Refinery extends Controller {
 	const FILTERS = 'filters';
 	const ACTION  = 'action';
 
+
 	protected $template = 'components/catalog/refinery.php';
 
+	/**
+	 * @param array $options
+	 *
+	 * @return array
+	 */
 	protected function parse_options( array $options ) {
 		$defaults = [
 			self::QUERY => null, // \WP_Query
@@ -25,6 +31,9 @@ class Refinery extends Controller {
 		return wp_parse_args( $options, $defaults );
 	}
 
+	/**
+	 * @return array
+	 */
 	public function get_data() {
 		/** @var \WP_Query $query */
 		$query = $this->options[ self::QUERY ];
@@ -38,8 +47,13 @@ class Refinery extends Controller {
 	}
 
 
+	/**
+	 * @param \WP_Query $query
+	 *
+	 * @return string
+	 */
 	private function get_search( \WP_Query $query ) {
-		$search    = $query->is_search() && isset( $query->query[ 's' ] ) ? stripslashes( $query->query[ 's' ] ) : '';
+		$search    = $query->is_search() && isset( $query->query['s'] ) ? stripslashes( $query->query['s'] ) : '';
 		$component = Search_Box::factory( [
 			Search_Box::NAME           => 's',
 			Search_Box::VALUE          => $search,
@@ -49,6 +63,11 @@ class Refinery extends Controller {
 		return $component->render();
 	}
 
+	/**
+	 * @param \WP_Query $query
+	 *
+	 * @return string
+	 */
 	private function get_sort( \WP_Query $query ) {
 		$choices         = Customizer\Sections\Product_Archive::sort_choices();
 		$enabled_choices = get_option( Customizer\Sections\Product_Archive::SORT_OPTIONS, array_keys( $choices ) );
@@ -68,8 +87,8 @@ class Refinery extends Controller {
 		 * @param string $sort The sorting method to use
 		 */
 		$default_sort = apply_filters( 'bigcommerce/template/product/archive/default_sort', Customizer\Sections\Product_Archive::SORT_TITLE_ASC );
-		if ( array_key_exists( 'bc-sort', $_GET ) && array_key_exists( $_GET[ 'bc-sort' ], $choices ) ) {
-			$sort = $_GET[ 'bc-sort' ];
+		if ( array_key_exists( 'bc-sort', $_GET ) && array_key_exists( $_GET['bc-sort'], $choices ) ) {
+			$sort = $_GET['bc-sort'];
 		} else {
 			$sort = $default_sort;
 		}
@@ -85,6 +104,11 @@ class Refinery extends Controller {
 		return $component->render();
 	}
 
+	/**
+	 * @param \WP_Query $query
+	 *
+	 * @return array
+	 */
 	private function get_filters( \WP_Query $query ) {
 		$filters = [];
 
@@ -105,16 +129,19 @@ class Refinery extends Controller {
 				continue;
 			}
 			$tax_object = get_taxonomy( $taxonomy );
-			$terms      = get_terms( [
+			$terms = get_terms( [
 				'taxonomy'   => $taxonomy,
-				'hide_empty' => true,
-				'orderby'    => 'name',
-				'order'      => 'ASC',
+				'hide_empty' => true
 			] );
-			$choices    = [];
+
+			$terms_by_parent = [];
+			$choices = [];
+
 			foreach ( $terms as $term ) {
-				$choices[ $term->slug ] = $term->name;
+				$terms_by_parent[ $term->parent ][] = $term;
 			}
+			$choices = $this->get_choices( 0, $terms_by_parent, 0 );
+
 			if ( empty( $choices ) ) {
 				continue;
 			}
@@ -133,6 +160,33 @@ class Refinery extends Controller {
 		return $filters;
 	}
 
+    /**
+     * Sorts the categories array nesting child under parent with a preceding '-' for each level
+     * 
+     * @param $parent_id
+     * @param $terms_by_parent
+     * @param $depth
+     *
+     * @return array
+     */
+	private function get_choices( $parent_id, $terms_by_parent, $depth ) {
+		if ( empty( $terms_by_parent[ $parent_id ] ) ) {
+			return [];
+		}
+		$prefix = implode( ' ', array_fill( 0, $depth, '- ' ) );
+		foreach ( $terms_by_parent[ $parent_id ] as $term ) {
+			$choices[ $term->slug ] = $prefix . $term->name;
+			$choices = array_merge( $choices, $this->get_choices( $term->term_id, $terms_by_parent, $depth + 1 ));
+		}
+		return $choices;
+	}
+
+
+	/**
+	 * @param \WP_Query $query
+	 *
+	 * @return string|void|\WP_Error
+	 */
 	private function get_action( \WP_Query $query ) {
 		if ( $query->is_post_type_archive( Product::NAME ) ) {
 			return get_post_type_archive_link( Product::NAME ) ?: home_url( '/' );

@@ -1,4 +1,4 @@
-.gutenberg {
+.wp-block-bigcommerce-products {
 
 	.bc-product-gallery--has-carousel {
 
@@ -14,5 +14,39 @@
 	.bc-quickview-trigger {
 		border: 0;
 		outline: none;
+	}
+
+	.bc-product-card--single {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		margin: 0;
+		padding: 30px 0;
+
+		.bc-product__gallery {
+			position: relative;
+			height: auto;
+			width: 100%;
+			left: auto;
+			top: auto;
+
+			@media (--viewport-large) {
+				width: calc(50% - 30px);
+			}
+		}
+
+		.bc-product__meta {
+			align-self: flex-start;
+			width: 100%;
+
+			@media (--viewport-large) {
+				width: calc(50% - 30px);
+			}
+		}
+	}
+
+	.bc-product-grid {
+		padding: 40px 15px;
 	}
 }

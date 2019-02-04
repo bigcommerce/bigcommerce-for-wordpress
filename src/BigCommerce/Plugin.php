@@ -4,7 +4,7 @@
 namespace BigCommerce;
 
 class Plugin {
-	const VERSION = '1.4.2';
+	const VERSION = '1.5.0';
 
 	protected static $_instance;
 
@@ -42,9 +42,9 @@ class Plugin {
 
 	private function load_functions() {
 		// Get relative path to this file
-		$reviews_file = dirname( __FILE__ ). '/Functions/reviews.php';
+		$reviews_file = __DIR__ . '/Functions/reviews.php';
 
-		require_once $reviews_file ;
+		require_once $reviews_file;
 	}
 
 	private function load_service_providers() {
@@ -65,6 +65,7 @@ class Plugin {
 		$this->providers[ 'forms' ]             = new Container\Forms();
 		$this->providers[ 'gift_certificates' ] = new Container\Gift_Certificates();
 		$this->providers[ 'import' ]            = new Container\Import();
+		$this->providers[ 'nav' ]               = new Container\Nav_Menu();
 		$this->providers[ 'pages' ]             = new Container\Pages();
 		$this->providers[ 'post_types' ]        = new Container\Post_Types();
 		$this->providers[ 'post_meta' ]         = new Container\Post_Meta();

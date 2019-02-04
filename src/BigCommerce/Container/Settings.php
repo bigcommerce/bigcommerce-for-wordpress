@@ -287,8 +287,12 @@ class Settings extends Provider {
 			$container[ self::ANALYTICS_SECTION ]->register_settings_section();
 		} ), 60, 0 );
 
-		add_action( 'update_option_' . Analytics::FACEBOOK_PIXEL, $this->create_callback( 'update_pixel_id', function ( $old_value, $new_value ) use ( $container ) {
+		add_action( 'update_option_' . Analytics_Settings::FACEBOOK_PIXEL, $this->create_callback( 'update_pixel_id', function ( $old_value, $new_value ) use ( $container ) {
 			$container[ self::ANALYTICS_SECTION ]->update_pixel_option( $old_value, $new_value );
+		} ), 10, 2 );
+
+		add_action( 'update_option_' . Analytics_Settings::GOOGLE_ANALYTICS, $this->create_callback( 'update_google_option', function ( $old_value, $new_value ) use ( $container ) {
+			$container[ self::ANALYTICS_SECTION ]->update_google_option( $old_value, $new_value );
 		} ), 10, 2 );
 	}
 
