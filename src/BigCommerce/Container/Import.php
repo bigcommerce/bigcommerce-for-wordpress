@@ -4,6 +4,7 @@
 namespace BigCommerce\Container;
 
 
+use BigCommerce\Import\Cache_Cleanup;
 use BigCommerce\Import\Processors;
 use BigCommerce\Import\Runner;
 use BigCommerce\Import\Task_Definition;
@@ -13,12 +14,14 @@ use BigCommerce\Settings\Sections\Import as Import_Settings;
 use Pimple\Container;
 
 class Import extends Provider {
-	const CRON_MONITOR = 'cron.monitor';
-	const CRON_RUNNER  = 'cron.runner';
+	const CRON_MONITOR = 'import.cron.monitor';
+	const CRON_RUNNER  = 'import.cron.runner';
+	const LOCK_MONITOR = 'import.lock.monitor';
 	const TIMEOUT      = 'timeout';
 
-	const TASK_MANAGER = 'import.task_manager';
-	const TASK_LIST    = 'import.task_list';
+	const TASK_MANAGER  = 'import.task_manager';
+	const TASK_LIST     = 'import.task_list';
+	const CACHE_CLEANUP = 'import.cache_cleanup';
 
 	const BATCH_SIZE       = 'import.batch_size';
 	const LARGE_BATCH_SIZE = 'import.large_batch_size';
@@ -53,7 +56,7 @@ class Import extends Provider {
 		};
 
 		$container[ self::CRON_MONITOR ] = function ( Container $container ) {
-			return new Runner\Cron_Monitor( $container[ self::TIMEOUT ] );
+			return new Runner\Cron_Monitor();
 		};
 
 		$container[ self::CRON_RUNNER ] = function ( Container $container ) {
@@ -65,6 +68,14 @@ class Import extends Provider {
 				$container[ self::CRON_MONITOR ]->check_for_scheduled_crons();
 			}
 		} ), 10, 0 );
+
+		$container[ self::LOCK_MONITOR ] = function ( Container $container ) {
+			return new Runner\Lock_Monitor( $container[ self::TIMEOUT ] );
+		};
+
+		add_action( 'init', $this->create_callback( 'lock_expiration', function () use ( $container ) {
+			$container[ self::LOCK_MONITOR ]->check_for_expired_lock();
+		} ), 0, 0 );
 
 		add_action( 'update_option_' . Import_Settings::OPTION_FREQUENCY, $this->create_callback( 'cron_schedule_update', function ( $old_value, $new_value ) use ( $container ) {
 			if ( $container[ Settings::CONFIG_STATUS ] >= Settings::STATUS_CHANNEL_CONNECTED ) {
@@ -98,15 +109,12 @@ class Import extends Provider {
 			if ( $batch < 1 ) {
 				return 1;
 			}
-			if ( $batch > 250 ) {
-				return 250;
-			}
 
-			return $batch;
+			return min( $batch, 25 );
 		};
 
 		$container[ self::LARGE_BATCH_SIZE ] = function ( Container $container ) {
-			return min( $container[ self::BATCH_SIZE ] * 20, 250 );
+			return min( $container[ self::BATCH_SIZE ] * 10, 200 );
 		};
 
 		$container[ self::START ] = function ( Container $container ) {
@@ -208,7 +216,7 @@ class Import extends Provider {
 			new Task_Definition( $channel, 40, Runner\Status::INITIALIZED_CHANNEL, [ Runner\Status::INITIALIZING_CHANNEL ], __( 'Adding listings to the channel', 'bigcommerce' ) ),
 			new Task_Definition( $categories, 44, Runner\Status::UPDATED_CATEGORIES, [ Runner\Status::UPDATING_CATEGORIES ], __( 'Updating Categories', 'bigcommerce' ) ),
 			new Task_Definition( $brands, 46, Runner\Status::UPDATED_BRANDS, [ Runner\Status::UPDATING_BRANDS ], __( 'Updating Brands', 'bigcommerce' ) ),
-			new Task_Definition( $fetch, 50, Runner\Status::FETCHED_PRODUCT_IDS, [ Runner\Status::FETCHING_PRODUCT_IDS ], __( 'Identifying products to import from the BigCommerce API', 'bigcommerce' ) ),
+			new Task_Definition( $fetch, 50, Runner\Status::FETCHED_PRODUCT_IDS, [ Runner\Status::FETCHING_PRODUCT_IDS ], __( 'Fetching product data from the BigCommerce API', 'bigcommerce' ) ),
 			new Task_Definition( $mark, 60, Runner\Status::MARKED_DELETED_PRODUCTS, [ Runner\Status::MARKING_DELETED_PRODUCTS ], __( 'Identifying products to remove from WordPress', 'bigcommerce' ) ),
 			new Task_Definition( $queue, 70, Runner\Status::PROCESSED_QUEUE, [ Runner\Status::PROCESSING_QUEUE ], __( 'Importing products', 'bigcommerce' ) ),
 			new Task_Definition( $cleanup, 100, Runner\Status::COMPLETED, [ Runner\Status::CLEANING ], __( 'Wrapping up', 'bigcommerce' ) ),
@@ -233,6 +241,18 @@ class Import extends Provider {
 			$container[ self::ERROR ]->run();
 		} );
 		add_action( 'bigcommerce/import/error', $error, 10, 0 );
+
+
+		$container[ self::CACHE_CLEANUP ] = function( Container $container ) {
+			return new Cache_Cleanup();
+		};
+
+		$flush_option_caches = $this->create_callback( 'flush_option_caches', function() use ( $container ) {
+			$container[ self::CACHE_CLEANUP ]->flush_caches();
+		} );
+
+		add_action( 'bigcommerce/import/before', $flush_option_caches, 0, 0 );
+		add_action( 'bigcommerce/import/after', $flush_option_caches, 0, 0 );
 
 	}
 }

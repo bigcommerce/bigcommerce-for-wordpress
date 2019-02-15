@@ -6,6 +6,7 @@ namespace BigCommerce\Import\Processors;
 
 use BigCommerce\Import\Runner\Cron_Runner;
 use BigCommerce\Import\Runner\Status;
+use BigCommerce\Logging\Error_Log;
 
 class Cleanup implements Import_Processor {
 	public function run() {
@@ -23,5 +24,7 @@ class Cleanup implements Import_Processor {
 		wp_unschedule_hook( Cron_Runner::CONTINUE_CRON );
 
 		$status->rotate_logs(); // must rotate _after_ status set to complete
+
+		do_action( 'bigcommerce/log', Error_Log::INFO, __( 'Import complete', 'bigcommerce' ), [] );
 	}
 }

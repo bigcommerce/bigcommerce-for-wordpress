@@ -107,3 +107,77 @@
 		float: none;
 	}
 }
+
+/* Account Reset */
+.bc-welcome-reset {
+	margin-top: 30px;
+
+	@media (--viewport-large) {
+		margin-left: calc(8.33333% + 1.66667px);
+	}
+}
+
+.bc-welcome__account-reset-wrapper {
+	position: fixed;
+	top: 0;
+	right: 0;
+	height: 100vh;
+	width: 100vw;
+	z-index: 159000;
+
+	&[aria-hidden='true'] {
+		display: none;
+	}
+}
+
+.bc-welcome__account-reset-overlay {
+	position: fixed;
+	top: 0;
+	right: 0;
+	height: 100vh;
+	width: 100vw;
+	background: var(--color-black-a-70);
+}
+
+.bc-welcome__account-reset-content {
+	background-color: var(--color-white);
+	width: 100%;
+	max-width: 500px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate3d(-50%, -50%, 0);
+	padding: 30px;
+}
+
+p.bc-welcome__account-reseet-message {
+	font-size: 16px;
+	margin-top: 0;
+}
+
+.bc-welcome__account-reset-actions {
+	margin-top: 20px;
+
+	.bc-admin-btn {
+		margin-right: 10px;
+	}
+}
+
+.bc-welcome__account-reset-close-button {
+	position: absolute;
+	right: 0;
+	top: 0;
+	font-size: 25px;
+	background-color: transparent;
+	border: 0;
+	padding: 8px;
+	z-index: 20;
+	cursor: pointer;
+	opacity: 0.6;
+	transition: var(--transition-opacity);
+
+	&:hover,
+	&:focus {
+		opacity: 1;
+	}
+}

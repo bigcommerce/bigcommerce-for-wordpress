@@ -2,23 +2,12 @@
 
 namespace BigCommerce\Import\Runner;
 
-use BigCommerce\Settings\Sections\Import;
-
 /**
  * Class Cron_Monitor
  *
- * Makes sure that the import tasks are schedule appropriately
+ * Makes sure that the import tasks are scheduled appropriately
  */
 class Cron_Monitor {
-	/**
-	 * @var int Number of seconds to wait before an import is considered
-	 *          to have timed out.
-	 */
-	private $timeout;
-
-	public function __construct( $timeout ) {
-		$this->timeout = $timeout;
-	}
 
 	/**
 	 * @return void
@@ -39,16 +28,14 @@ class Cron_Monitor {
 
 		$status  = new Status();
 		$current = $status->current_status();
-		if ( $current[ 'status' ] == Status::NOT_STARTED ) {
+		if ( $current[ 'status' ] === Status::NOT_STARTED ) {
 			$scheduler->schedule_next_import();
-			$lock->release_lock();
 
 			return;
 		}
 
-		if ( ! $lock->get_lock() || $current[ 'timestamp' ] < time() - $this->timeout ) {
+		if ( ! $lock->get_lock() ) {
 			$scheduler->schedule_next_batch();
-			$lock->release_lock();
 
 			return;
 		}

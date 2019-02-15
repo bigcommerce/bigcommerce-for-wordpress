@@ -4,18 +4,36 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitdcbb281cb8f080a95fd623739ccf6b9f
+class ComposerStaticInitd7d8ab7a37b4d60cce66289f84867415
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
     );
 
-    public static $firstCharsPsr4 = array (
-        'P' => true,
-        'M' => true,
-        'F' => true,
-        'D' => true,
-        'B' => true,
+    public static $prefixLengthsPsr4 = array (
+        'P' => 
+        array (
+            'Psr\\Log\\' => 8,
+            'Psr\\Container\\' => 14,
+        ),
+        'M' => 
+        array (
+            'Monolog\\' => 8,
+        ),
+        'F' => 
+        array (
+            'Firebase\\JWT\\' => 13,
+        ),
+        'D' => 
+        array (
+            'Dotenv\\' => 7,
+        ),
+        'B' => 
+        array (
+            'Bigcommerce\\Test\\' => 17,
+            'BigCommerce\\Api\\v3\\' => 19,
+            'BigCommerce\\' => 12,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -460,6 +478,7 @@ class ComposerStaticInitdcbb281cb8f080a95fd623739ccf6b9f
         'BigCommerce\\Forms\\Update_Address_Handler' => __DIR__ . '/../..' . '/src/BigCommerce/Forms/Update_Address_Handler.php',
         'BigCommerce\\Forms\\Update_Profile_Handler' => __DIR__ . '/../..' . '/src/BigCommerce/Forms/Update_Profile_Handler.php',
         'BigCommerce\\Gift_Certificates\\Sub_Nav' => __DIR__ . '/../..' . '/src/BigCommerce/Gift_Certificates/Sub_Nav.php',
+        'BigCommerce\\Import\\Cache_Cleanup' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Cache_Cleanup.php',
         'BigCommerce\\Import\\Image_Importer' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Image_Importer.php',
         'BigCommerce\\Import\\Import_Strategy' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Import_Strategy.php',
         'BigCommerce\\Import\\Importers\\Products\\Product_Builder' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Importers/Products/Product_Builder.php',
@@ -477,6 +496,7 @@ class ComposerStaticInitdcbb281cb8f080a95fd623739ccf6b9f
         'BigCommerce\\Import\\Mappers\\Brand_Mapper' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Mappers/Brand_Mapper.php',
         'BigCommerce\\Import\\Mappers\\Product_Category_Mapper' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Mappers/Product_Category_Mapper.php',
         'BigCommerce\\Import\\Mappers\\Term_Mapper' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Mappers/Term_Mapper.php',
+        'BigCommerce\\Import\\No_Cache_Options' => __DIR__ . '/../..' . '/src/BigCommerce/Import/No_Cache_Options.php',
         'BigCommerce\\Import\\Processors\\Brand_Import' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Processors/Brand_Import.php',
         'BigCommerce\\Import\\Processors\\Category_Import' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Processors/Category_Import.php',
         'BigCommerce\\Import\\Processors\\Channel_Initializer' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Processors/Channel_Initializer.php',
@@ -498,6 +518,7 @@ class ComposerStaticInitdcbb281cb8f080a95fd623739ccf6b9f
         'BigCommerce\\Import\\Runner\\Cron_Runner' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Runner/Cron_Runner.php',
         'BigCommerce\\Import\\Runner\\Cron_Scheduler' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Runner/Cron_Scheduler.php',
         'BigCommerce\\Import\\Runner\\Lock' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Runner/Lock.php',
+        'BigCommerce\\Import\\Runner\\Lock_Monitor' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Runner/Lock_Monitor.php',
         'BigCommerce\\Import\\Runner\\Status' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Runner/Status.php',
         'BigCommerce\\Import\\Task_Definition' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Task_Definition.php',
         'BigCommerce\\Import\\Task_Manager' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Task_Manager.php',
@@ -565,6 +586,7 @@ class ComposerStaticInitdcbb281cb8f080a95fd623739ccf6b9f
         'BigCommerce\\Settings\\Screens\\Api_Credentials_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Api_Credentials_Screen.php',
         'BigCommerce\\Settings\\Screens\\Connect_Channel_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Connect_Channel_Screen.php',
         'BigCommerce\\Settings\\Screens\\Create_Account_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Create_Account_Screen.php',
+        'BigCommerce\\Settings\\Screens\\Nav_Menu_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Nav_Menu_Screen.php',
         'BigCommerce\\Settings\\Screens\\Pending_Account_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Pending_Account_Screen.php',
         'BigCommerce\\Settings\\Screens\\Settings_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Settings_Screen.php',
         'BigCommerce\\Settings\\Screens\\Welcome_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Welcome_Screen.php',
@@ -577,12 +599,14 @@ class ComposerStaticInitdcbb281cb8f080a95fd623739ccf6b9f
         'BigCommerce\\Settings\\Sections\\Currency' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Currency.php',
         'BigCommerce\\Settings\\Sections\\Gift_Certificates' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Gift_Certificates.php',
         'BigCommerce\\Settings\\Sections\\Import' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Import.php',
+        'BigCommerce\\Settings\\Sections\\Nav_Menu_Options' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Nav_Menu_Options.php',
         'BigCommerce\\Settings\\Sections\\New_Account_Section' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/New_Account_Section.php',
         'BigCommerce\\Settings\\Sections\\Reviews' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Reviews.php',
         'BigCommerce\\Settings\\Sections\\Settings_Section' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Settings_Section.php',
         'BigCommerce\\Settings\\Sections\\Troubleshooting_Diagnostics' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Troubleshooting_Diagnostics.php',
         'BigCommerce\\Settings\\Sections\\Units' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Units.php',
         'BigCommerce\\Settings\\Sections\\WithPages' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/WithPages.php',
+        'BigCommerce\\Settings\\Start_Over' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Start_Over.php',
         'BigCommerce\\Shortcodes\\Account_Profile' => __DIR__ . '/../..' . '/src/BigCommerce/Shortcodes/Account_Profile.php',
         'BigCommerce\\Shortcodes\\Address_List' => __DIR__ . '/../..' . '/src/BigCommerce/Shortcodes/Address_List.php',
         'BigCommerce\\Shortcodes\\Cart' => __DIR__ . '/../..' . '/src/BigCommerce/Shortcodes/Cart.php',
@@ -910,10 +934,10 @@ class ComposerStaticInitdcbb281cb8f080a95fd623739ccf6b9f
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->firstCharsPsr4 = ComposerStaticInitdcbb281cb8f080a95fd623739ccf6b9f::$firstCharsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitdcbb281cb8f080a95fd623739ccf6b9f::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitdcbb281cb8f080a95fd623739ccf6b9f::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitdcbb281cb8f080a95fd623739ccf6b9f::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitd7d8ab7a37b4d60cce66289f84867415::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitd7d8ab7a37b4d60cce66289f84867415::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitd7d8ab7a37b4d60cce66289f84867415::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitd7d8ab7a37b4d60cce66289f84867415::$classMap;
 
         }, null, ClassLoader::class);
     }

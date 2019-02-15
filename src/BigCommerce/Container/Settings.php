@@ -14,6 +14,7 @@ use BigCommerce\Settings\Screens\Abstract_Screen;
 use BigCommerce\Settings\Screens\Api_Credentials_Screen;
 use BigCommerce\Settings\Screens\Connect_Channel_Screen;
 use BigCommerce\Settings\Screens\Create_Account_Screen;
+use BigCommerce\Settings\Screens\Nav_Menu_Screen;
 use BigCommerce\Settings\Screens\Pending_Account_Screen;
 use BigCommerce\Settings\Screens\Settings_Screen;
 use BigCommerce\Settings\Screens\Welcome_Screen;
@@ -25,9 +26,11 @@ use BigCommerce\Settings\Sections\Channels as Channel_Settings;
 use BigCommerce\Settings\Sections\Cart as Cart_Settings;
 use BigCommerce\Settings\Sections\Gift_Certificates as Gift_Ceritifcate_Settings;
 use BigCommerce\Settings\Sections\Import as Import_Settings;
+use BigCommerce\Settings\Sections\Nav_Menu_Options;
 use BigCommerce\Settings\Sections\New_Account_Section;
 use BigCommerce\Settings\Sections\Reviews;
 use BigCommerce\Settings\Sections\Troubleshooting_Diagnostics;
+use BigCommerce\Settings\Start_Over;
 use Pimple\Container;
 use \BigCommerce\Container\Log;
 
@@ -38,6 +41,7 @@ class Settings extends Provider {
 	const CHANNEL_SCREEN     = 'settings.screen.channel';
 	const PENDING_SCREEN     = 'settings.screen.pending';
 	const CREDENTIALS_SCREEN = 'settings.screen.credentials';
+	const MENU_SETUP_SCREEN  = 'settings.screen.nav_menu';
 
 	const API_SECTION              = 'settings.section.api';
 	const CONNECT_ACCOUNT_SECTION  = 'settings.section.connect_account';
@@ -52,11 +56,13 @@ class Settings extends Provider {
 	const SELECT_CHANNEL_SECTION   = 'settings.section.select_channel';
 	const CHANNEL_SECTION          = 'settings.section.channel';
 	const DIAGNOSTICS_SECTION      = 'settings.section.diagnostics';
+	const MENU_OPTIONS_SECTION     = 'settings.section.nav_menu_options';
 
 	const API_STATUS         = 'settings.api_status';
 	const IMPORT_NOW         = 'settings.import_now';
 	const IMPORT_STATUS      = 'settings.import_status';
 	const IMPORT_LIVE_STATUS = 'settings.import_status_live';
+	const START_OVER         = 'settings.start_over';
 
 	const CONFIG_STATUS            = 'settings.configuration_status';
 	const STATUS_NEW               = 0;
@@ -319,6 +325,7 @@ class Settings extends Provider {
 			return $container[ self::WELCOME_SCREEN ]->get_url();
 		} );
 		add_filter( 'bigcommerce/onboarding/error_redirect', $welcome_screen_url, 10, 1 );
+		add_filter( 'bigcommerce/onboarding/reset', $welcome_screen_url, 10, 1 );
 
 		$container[ self::CREATE_SCREEN ] = function ( Container $container ) {
 			return new Create_Account_Screen( $container[ self::CONFIG_STATUS ], $container[ Assets::PATH ] );
@@ -389,9 +396,28 @@ class Settings extends Provider {
 			$container[ self::CREDENTIALS_SCREEN ]->validate_credentials();
 		} ), 10, 0 );
 
-		add_action( 'bigcommerce/settings/unregistered_screen', $this->create_callback( 'redirect_unregistered_screen', function ( $screen ) use ( $container ) {
+		$container[ self::MENU_SETUP_SCREEN ] = function ( Container $container ) {
+			return new Nav_Menu_Screen( $container[ self::CONFIG_STATUS ], $container[ Assets::PATH ] );
+		};
+		add_action( 'admin_menu', $this->create_callback( 'nav_menu_screen_admin_menu', function () use ( $container ) {
+			$container[ self::MENU_SETUP_SCREEN ]->register_settings_page();
+		} ), 10, 0 );
+
+		$container[ self::MENU_OPTIONS_SECTION ] = function ( Container $container ) {
+			return new Nav_Menu_Options();
+		};
+		add_action( 'bigcommerce/settings/register/screen=' . Nav_Menu_Screen::NAME, $this->create_callback( 'menu_options_section_register', function () use ( $container ) {
+			$container[ self::MENU_OPTIONS_SECTION ]->register_settings_section();
+		} ), 10, 0 );
+
+		add_action( 'admin_post_' . Nav_Menu_Screen::NAME, $this->create_callback( 'handle_setup_nav_menu', function () use ( $container ) {
+			$container[ self::MENU_SETUP_SCREEN ]->handle_submission();
+		} ), 10, 0 );
+
+		add_action( 'bigcommerce/settings/unregistered_screen', $this->create_callback( 'redirect_unregistered_screen', function ( $unregistered_screen ) use ( $container ) {
 			/** @var Abstract_Screen[] $possible_screens */
 			$possible_screens = [
+				$container[ self::MENU_SETUP_SCREEN ],
 				$container[ self::SETTINGS_SCREEN ],
 				$container[ self::WELCOME_SCREEN ],
 				$container[ self::CHANNEL_SCREEN ],
@@ -403,6 +429,23 @@ class Settings extends Provider {
 				}
 			}
 		} ), 10, 1 );
+
+
+		$container[ self::START_OVER ] = function ( Container $container ) {
+			return new Start_Over();
+		};
+
+		$start_over_link = $this->create_callback( 'start_over_link', function () use ( $container ) {
+			$container[ self::START_OVER ]->add_link_to_settings_screen();
+		} );
+		add_action( 'bigcommerce/settings/before_end_form/page=' . Api_Credentials_Screen::NAME, $start_over_link );
+		add_action( 'bigcommerce/settings/before_end_form/page=' . Create_Account_Screen::NAME, $start_over_link );
+		add_action( 'bigcommerce/settings/before_end_form/page=' . Connect_Channel_Screen::NAME, $start_over_link );
+		add_action( 'bigcommerce/settings/after_content/page=' . Pending_Account_Screen::NAME, $start_over_link );
+
+		add_action( 'admin_post_' . Start_Over::ACTION, function () use ( $container ) {
+			$container[ self::START_OVER ]->reset_credentials();
+		}, 10, 0 );
 	}
 
 	/**

@@ -42,19 +42,17 @@ class Error_Log {
 
 	/**
 	 * Set up the import errors log
-	 *
-	 * @action bigcommerce/import/before
 	 */
 	public function init_log() {
 		$this->init_log_dir();
 
 		// Format lines as json objects
-		$formatter = apply_filters( 'bigcommerce/logger/formatter', new \Monolog\Formatter\JsonFormatter() );
+		$formatter = apply_filters( 'bigcommerce/logger/formatter', new \Monolog\Formatter\LineFormatter() );
 
 		// Logger message
-		$logger_name  = apply_filters( 'bigcommerce/logger/channel', __( 'Import error', 'bigcommerce' ) );
+		$logger_name  = apply_filters( 'bigcommerce/logger/channel', 'BigCommerce' );
 		$this->log    = new Logger( $logger_name );
-		$logger_level = apply_filters( 'bigcommerce/logger/level', Logger::DEBUG );
+		$logger_level = $this->log_level();
 
 		try {
 			$handler = apply_filters( 'bigcommerce/logger/handler', new StreamHandler( $this->log_path, $logger_level ) );
@@ -66,6 +64,38 @@ class Error_Log {
 		} catch ( \Exception $e ) {
 			// log is not writeable
 			error_log( __( 'Unable to initialize import error log', 'bigcommerce' ) );
+		}
+	}
+
+	private function log_level() {
+		/**
+		 * Filter the logging level. Defaults to 'debug'.
+		 *
+		 * @param string|int The logging level, as either a PSR-3 LogLevel string or a Monolog integer.
+		 */
+		$level = apply_filters( 'bigcommerce/logger/level', self::DEBUG );
+		switch ( $level ) {
+			case self::DEBUG:
+				return Logger::DEBUG;
+			case self::INFO:
+				return Logger::INFO;
+			case self::NOTICE:
+				return Logger::NOTICE;
+			case self::WARNING:
+				return Logger::WARNING;
+			case self::ERROR:
+				return Logger::ERROR;
+			case self::CRITICAL:
+				return Logger::CRITICAL;
+			case self::ALERT:
+				return Logger::ALERT;
+			case self::EMERGENCY:
+				return Logger::EMERGENCY;
+			default:
+				if ( is_numeric( $level ) ) {
+					return (int) $level;
+				}
+				return Logger::DEBUG;
 		}
 	}
 
@@ -160,10 +190,13 @@ HTACCESS;
 	public function log_product_import_error( $product_id, CatalogApi $catalog_api, \Exception $exception ) {
 		$message = __( 'Product import error', 'bigcommerce' );
 		$context = [ $product_id, $catalog_api, $exception ];
-		$this->log->warn( $message, $context );
+		$this->log( self::WARNING, $message, $context );
 	}
 
 	public function log( $level, $message, $context ) {
+		if ( ! isset( $this->log ) ) {
+			$this->init_log();
+		}
 		if ( ! is_array( $context ) ) {
 			$context = [];
 		}

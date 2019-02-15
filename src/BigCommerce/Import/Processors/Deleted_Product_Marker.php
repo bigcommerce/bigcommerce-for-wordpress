@@ -5,6 +5,7 @@ namespace BigCommerce\Import\Processors;
 
 
 use BigCommerce\Import\Runner\Status;
+use BigCommerce\Logging\Error_Log;
 
 class Deleted_Product_Marker implements Import_Processor {
 	public function run() {
@@ -24,6 +25,9 @@ class Deleted_Product_Marker implements Import_Processor {
 
 		$count = 0;
 		if ( ! empty( $inserts ) ) {
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, sprintf( __( 'Queuing %d products for deletion', 'bigcommerce' ), count( $ids ) ), [
+				'product_ids' => $ids,
+			] );
 			$values = implode( ', ', $inserts );
 			$count  = $wpdb->query( "INSERT IGNORE INTO {$wpdb->bc_import_queue} ( bc_id, date_modified, import_action, date_created ) VALUES $values" );
 		}

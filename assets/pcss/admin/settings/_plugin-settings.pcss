@@ -185,6 +185,13 @@
 	.bc-settings-section--open & .bc-icon--settings {
 		color: var(--color-white);
 	}
+
+	.icon-bc-nav_menu {
+
+		&:before {
+			content: "\e911";
+		}
+	}
 }
 
 .bc-settings-section__title {
@@ -255,6 +262,17 @@
 		vertical-align: middle;
 		position: relative;
 		top: -3px;
+	}
+}
+
+.bc-settings-section--nav_menu {
+
+	.bc-settings-section__nav-menu-item-label {
+		margin-left: 20px;
+
+		&:first-child {
+			margin-left: 0;
+		}
 	}
 }
 

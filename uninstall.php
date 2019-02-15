@@ -142,6 +142,7 @@ function delete_options() {
 		Settings\Sections\Channels::CHANNEL_NAME,
 		Settings\Sections\New_Account_Section::STORE_INFO,
 		Settings\Screens\Create_Account_Screen::SUBMITTED_DATA,
+		Settings\Screens\Nav_Menu_Screen::COMPLETE_FLAG,
 		Settings\Sections\Cart::OPTION_ENABLE_CART,
 		Settings\Sections\Cart::OPTION_AJAX_CART,
 		Settings\Sections\Cart::OPTION_CART_PAGE_ID,

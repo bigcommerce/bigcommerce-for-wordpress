@@ -4,7 +4,11 @@
 namespace BigCommerce\Import\Runner;
 
 
+use BigCommerce\Import\No_Cache_Options;
+
 class Status {
+	use No_Cache_Options;
+
 	const NOT_STARTED              = 'not_started';
 	const STARTED                  = 'started';
 	const FETCHING_LISTING_IDS     = 'fetching_listing_ids';
@@ -57,7 +61,7 @@ class Status {
 
 		// cast timestamp to string to preserve microtime
 		$log[ (string) microtime( true ) ] = $status;
-		update_option( self::CURRENT_LOG, $log, false );
+		$this->update_option( self::CURRENT_LOG, $log, false );
 		do_action( 'bigcommerce/import/set_status', $status );
 	}
 
@@ -74,8 +78,8 @@ class Status {
 		 * @param array $log The current log
 		 */
 		do_action( 'bigcommerce/import/logs/rotate', $log );
-		update_option( self::PREVIOUS_LOG, $log, false );
-		update_option( self::CURRENT_LOG, [], false );
+		$this->update_option( self::PREVIOUS_LOG, $log, false );
+		$this->update_option( self::CURRENT_LOG, [], false );
 		/**
 		 * Logs have been rotated
 		 *
@@ -128,7 +132,7 @@ class Status {
 	 * @return array
 	 */
 	private function get_log( $which ) {
-		$log = get_option( $which, [] );
+		$log = $this->get_option( $which, [] );
 		if ( ! is_array( $log ) ) {
 			$log = [];
 		}

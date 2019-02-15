@@ -106,6 +106,7 @@ const toggleShortcodeUIDialog = (event) => {
 
 	if (state.rendered && event.detail.hide) {
 		hideDialog();
+		trigger({ event: 'bigcommerce/hide_shortcode_ui', native: false });
 		return;
 	}
 
