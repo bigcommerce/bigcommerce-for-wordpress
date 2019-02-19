@@ -6,8 +6,8 @@
  *
  * @var \WP_Term|false $featured
  * @var \WP_Term|false $sale
- * @var \WP_Term[]     $brands
- * @var \WP_Term[]     $categories
+ * @var array     $brands
+ * @var array     $categories
  */
 
 use BigCommerce\Taxonomies\Brand\Brand;
@@ -25,32 +25,35 @@ use BigCommerce\Taxonomies\Product_Category\Product_Category;
 	<ul class="bc-shortcode-ui__query-builder-list" data-js="bcqb-list">
 		<li class="bc-shortcode-ui__query-builder-list-item">
 			<a
-					href="#"
-					class="bc-shortcode-ui__query-builder-anchor"
-					data-key="recent"
-					data-value="1"
-					data-slug="<?php esc_html_e( 'recent', 'bigcommerce' ); ?>"
+				href="#"
+				class="bc-shortcode-ui__query-builder-anchor"
+				data-key="recent"
+				data-value="1"
+				data-slug="<?php esc_html_e( 'recent', 'bigcommerce' ); ?>"
+				data-depth="0"
 			><?php esc_html_e( 'Recent', 'bigcommerce' ); ?></a>
 		</li>
 		<?php if ( $featured ) { ?>
 			<li class="bc-shortcode-ui__query-builder-list-item">
 				<a
-						href="#"
-						class="bc-shortcode-ui__query-builder-anchor"
-						data-key="<?php echo esc_attr( Flag::NAME ); ?>"
-						data-value="<?php echo intval( $featured->term_id ); ?>"
-						data-slug="<?php echo esc_attr( $featured->slug ); ?>"
+				    href="#"
+				    class="bc-shortcode-ui__query-builder-anchor"
+				    data-key="<?php echo esc_attr( Flag::NAME ); ?>"
+				    data-value="<?php echo intval( $featured->term_id ); ?>"
+				    data-slug="<?php echo esc_attr( $featured->slug ); ?>"
+				    data-depth="0"
 				><?php esc_html_e( 'Featured', 'bigcommerce' ); ?></a>
 			</li>
 		<?php } ?>
 		<?php if ( $sale ) { ?>
 			<li class="bc-shortcode-ui__query-builder-list-item">
 				<a
-						href="#"
-						class="bc-shortcode-ui__query-builder-anchor"
-						data-key="<?php echo esc_attr( Flag::NAME ); ?>"
-						data-value="<?php echo intval( $sale->term_id ); ?>"
-						data-slug="<?php echo esc_attr( $sale->slug ); ?>"
+				    href="#"
+				    class="bc-shortcode-ui__query-builder-anchor"
+				    data-key="<?php echo esc_attr( Flag::NAME ); ?>"
+				    data-value="<?php echo intval( $sale->term_id ); ?>"
+				    data-slug="<?php echo esc_attr( $sale->slug ); ?>"
+				    data-depth="0"
 				><?php esc_html_e( 'On Sale', 'bigcommerce' ); ?></a>
 			</li>
 		<?php } ?>
@@ -63,12 +66,13 @@ use BigCommerce\Taxonomies\Product_Category\Product_Category;
 					<?php foreach ( $brands as $term ) { ?>
 						<li class="bc-shortcode-ui__query-builder-list-item">
 							<a
-									href="#"
-									class="bc-shortcode-ui__query-builder-anchor"
-									data-key="<?php echo esc_attr( Brand::NAME ); ?>"
-									data-value="<?php echo intval( $term->term_id ); ?>"
-									data-slug="<?php echo esc_attr( $term->slug ); ?>"
-							><?php echo esc_html( $term->name ); ?></a>
+								href="#"
+								class="bc-shortcode-ui__query-builder-anchor"
+								data-key="<?php echo esc_attr( Brand::NAME ); ?>"
+								data-value="<?php echo intval( $term['id'] ); ?>"
+								data-slug="<?php echo esc_attr( $term['slug'] ); ?>"
+								data-depth="<?php echo esc_attr( $term['depth'] ); ?>"
+							><?php echo esc_html( $term['name'] ); ?></a>
 						</li>
 					<?php } ?>
 				</ul>
@@ -83,12 +87,13 @@ use BigCommerce\Taxonomies\Product_Category\Product_Category;
 					<?php foreach ( $categories as $term ) { ?>
 						<li class="bc-shortcode-ui__query-builder-list-item">
 							<a
-									href="#"
-									class="bc-shortcode-ui__query-builder-anchor"
-									data-key="<?php echo esc_attr( Product_Category::NAME ); ?>"
-									data-value="<?php echo intval( $term->term_id ); ?>"
-									data-slug="<?php echo esc_attr( $term->slug ); ?>"
-							><?php echo esc_html( $term->name ); ?></a>
+								href="#"
+								class="bc-shortcode-ui__query-builder-anchor"
+								data-key="<?php echo esc_attr( Product_Category::NAME ); ?>"
+								data-value="<?php echo intval( $term['id'] ); ?>"
+								data-slug="<?php echo esc_attr( $term['slug'] ); ?>"
+								data-depth="<?php echo esc_attr( $term['depth'] ); ?>"
+							><?php echo esc_html( $term['name'] ); ?></a>
 						</li>
 					<?php } ?>
 				</ul>

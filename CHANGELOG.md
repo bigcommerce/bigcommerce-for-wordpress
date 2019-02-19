@@ -1,5 +1,31 @@
 # Changelog
 
+## [1.6.0]
+
+### Added
+- Added a Menu Setup screen to the onboarding flow, giving merchants an
+  opportunity to quickly add BigCommerce menu items to their navigation menu.
+- A "Start Over" button is available in the onboarding screens, enabling
+  the merchant to go back to the beginning of the account connection process.
+- All option caches are flushed before and after running an import batch
+  to avoid cache corruption from longer-running processes.
+- The import log records more extensive debugging information. Use the
+  `bigcommerce/logger/level` filter to change the logging level.
+- Added hooks to render HTML inside the form tags on the plugin settings pages.
+- Added child categories to the filter options in the product block/shortcode UI.
+
+### Changed
+- The import debug log moved from `uploads/logs/bigcommerce/import.log` to
+  `uploads/logs/bigcommerce/debug.log`.
+
+### Fixed
+- Cleaned up a small memory leak in the product block/shortcode UI pagination.
+- Fixed the check for an expired import lock when running an import via ajax.
+- Fixed arguments to Channel Listings API requests to ensure that all products
+  are returned even with larger batch sizes.
+- Fixed a fatal error when intializing an import on PHP 7.0+.
+
+
 ## [1.5.0]
 
 ### Added
@@ -322,6 +348,7 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[1.6.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.5.0...1.6.0
 [1.5.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.4.2...1.5.0
 [1.4.2]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.4.1...1.4.2
 [1.4.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.4.0...1.4.1

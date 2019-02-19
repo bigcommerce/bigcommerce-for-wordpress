@@ -91,7 +91,7 @@ const showPopup = (url) => {
 		const element = document.createElement('button');
 		el.connectionError.innerHTML = '';
 		tools.addClass(element, 'bc-account-connection-button');
-		tools.addClass(element, 'button-primary');
+		tools.addClass(element, 'bc-admin-btn');
 		element.textContent = I18N.buttons.oauth_popup_trigger;
 		el.connectionError.appendChild(element);
 		element.addEventListener('click', () => {

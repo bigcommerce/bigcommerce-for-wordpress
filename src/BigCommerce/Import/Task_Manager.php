@@ -5,6 +5,7 @@ namespace BigCommerce\Import;
 
 use BigCommerce\Exceptions\No_Task_Found_Exception;
 use BigCommerce\Import\Runner\Status;
+use BigCommerce\Logging\Error_Log;
 
 /**
  * Class Task_Manager
@@ -84,10 +85,21 @@ class Task_Manager {
 	 */
 	public function run_next( $state ) {
 		try {
-			$task = $this->get_task( $state );
-			call_user_func( $task->get_callback(), $state );
+			$task     = $this->get_task( $state );
+			$callback = $task->get_callback();
+			do_action( 'bigcommerce/log', Error_Log::INFO, __( 'Running import task', 'bigcommerce' ), [
+				'state'       => $state,
+				'description' => $task->get_description(),
+			] );
+			$callback( $state );
+
 			return true;
 		} catch ( No_Task_Found_Exception $e ) {
+			do_action( 'bigcommerce/log', Error_Log::NOTICE, __( 'No handler found for current import state', 'bigcommerce' ), [
+				'state'     => $state,
+				'exception' => $e,
+			] );
+
 			return false;
 		}
 	}
@@ -123,7 +135,7 @@ class Task_Manager {
 				} elseif ( $state === $task->get_completion_state() ) {
 					return $count + 1;
 				}
-				$count++;
+				$count ++;
 			}
 		}
 

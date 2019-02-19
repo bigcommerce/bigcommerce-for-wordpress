@@ -8,6 +8,7 @@ use BigCommerce\Api\Store_Api;
 use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api\v3\Model\CartRequestData;
 use BigCommerce\Import\Runner\Status;
+use BigCommerce\Logging\Error_Log;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Settings;
 
@@ -26,6 +27,9 @@ class Store_Settings implements Import_Processor {
 		$status->set_status( Status::FETCHING_STORE );
 
 		try {
+
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Requesting store settings', 'bigcommerce' ), [] );
+
 			$store     = $this->store_api->getStore();
 			$analytics = $this->store_api->get_analytics_settings();
 
@@ -46,6 +50,10 @@ class Store_Settings implements Import_Processor {
 				Settings\Sections\Analytics::FACEBOOK_PIXEL   => $this->extract_facebook_pixel_id( $analytics ),
 				Settings\Sections\Analytics::GOOGLE_ANALYTICS => $this->extract_google_analytics_id( $analytics ),
 			];
+
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Retrieved store settings', 'bigcommerce' ), [
+				'settings' => $settings,
+			] );
 
 			foreach ( $settings as $key => $value ) {
 				if ( $value !== false ) {

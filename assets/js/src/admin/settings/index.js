@@ -11,6 +11,7 @@ import channels from './channels';
 import productSync from './product-sync';
 import dynamicStateField from './dynamicStateField';
 import diagnostics from './diagnostics';
+import accountReset from './account-reset';
 
 const init = () => {
 	settings();
@@ -21,6 +22,7 @@ const init = () => {
 	productSync();
 	dynamicStateField();
 	diagnostics();
+	accountReset();
 };
 
 export default init;

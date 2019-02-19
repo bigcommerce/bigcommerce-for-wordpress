@@ -54,6 +54,9 @@
 }
 
 .bc-shortcode-ui__query-builder-anchor {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
 
 	.bc-shortcode-ui__query-builder-child-list & {
 		font-weight: var(--font-weight-regular);
@@ -73,6 +76,27 @@
 				background-color: var(--color-bc-blue-turquoise);
 			}
 		}
+	}
+
+	&:not([data-depth="0"]) {
+
+		&:after {
+			content: '\2013';
+			margin-right: 3px;
+			order: -1;
+		}
+	}
+
+	&[data-depth="1"] {
+		margin-left: 10px;
+	}
+
+	&[data-depth="2"] {
+		margin-left: 20px;
+	}
+
+	&[data-depth="3"] {
+		margin-left: 30px;
 	}
 }
 

@@ -77,7 +77,7 @@ class Import extends Settings_Section {
 			self::NAME,
 			[
 				'min'         => 1,
-				'max'         => 250,
+				'max'         => 25,
 				'option'      => self::BATCH_SIZE,
 				'default'     => 5,
 				'description' => __( 'How many products to import in each batch. If your import is hitting system limits, consider lowering this number.', 'bigcommerce' ),

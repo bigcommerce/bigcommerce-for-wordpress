@@ -12,6 +12,7 @@ use BigCommerce\Api\v3\ObjectSerializer;
 use BigCommerce\Import\Importers\Products\Product_Importer;
 use BigCommerce\Import\Importers\Products\Product_Remover;
 use BigCommerce\Import\Runner\Status;
+use BigCommerce\Logging\Error_Log;
 use BigCommerce\Settings\Sections\Channels;
 
 class Queue_Runner implements Import_Processor {
@@ -64,9 +65,8 @@ class Queue_Runner implements Import_Processor {
 		/** @var \wpdb $wpdb */
 		global $wpdb;
 
-		$query   = "SELECT SQL_CALC_FOUND_ROWS * FROM {$wpdb->bc_import_queue} ORDER BY attempts ASC, priority DESC, date_created ASC, date_modified ASC LIMIT {$this->batch}";
+		$query   = "SELECT * FROM {$wpdb->bc_import_queue} ORDER BY attempts ASC, priority DESC, date_created ASC, date_modified ASC LIMIT {$this->batch}";
 		$records = $wpdb->get_results( $query );
-		$total   = $wpdb->get_var( 'SELECT FOUND_ROWS()' );
 
 		foreach ( $records as $import ) {
 			if ( function_exists( 'set_time_limit' ) && false === strpos( ini_get( 'disable_functions' ), 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
@@ -80,6 +80,13 @@ class Queue_Runner implements Import_Processor {
 				[ '%d', '%s' ],
 				[ '%d' ]
 			);
+
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Handling product from import queue', 'bigcommerce' ), [
+				'product_id' => $import->bc_id,
+				'attempt'    => $import->attempts,
+				'action'     => $import->import_action,
+			] );
+
 			switch ( $import->import_action ) {
 				case 'update':
 				case 'ignore':
@@ -87,10 +94,29 @@ class Queue_Runner implements Import_Processor {
 					$product = ObjectSerializer::deserialize( json_decode( $import->product_data ), Product::class );
 					/** @var Listing $listing */
 					$listing = ObjectSerializer::deserialize( json_decode( $import->listing_data ), Listing::class );
-					$importer = new Product_Importer( $product, $listing, $this->catalog, $this->channels, $channel_id );
-					$post_id  = $importer->import();
-					if ( ! empty( $post_id ) || $import->attempts > $this->max_attempts ) {
+
+					if ( ! $product || ! $listing ) {
+						do_action( 'bigcommerce/log', Error_Log::WARNING, __( 'Unable to parse product data, removing from queue', 'bigcommerce' ), [
+							'product_id' => $import->bc_id,
+						] );
 						$wpdb->delete( $wpdb->bc_import_queue, [ 'bc_id' => $import->bc_id ], [ '%d' ] );
+					} else {
+						$importer = new Product_Importer( $product, $listing, $this->catalog, $this->channels, $channel_id );
+						$post_id  = $importer->import();
+						if ( ! empty( $post_id ) || $import->attempts > $this->max_attempts ) {
+							if ( ! empty( $post_id ) ) {
+								do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Product imported successfully', 'bigcommerce' ), [
+									'product_id' => $import->bc_id,
+									'action'     => $import->import_action,
+								] );
+							} else {
+								do_action( 'bigcommerce/log', Error_Log::WARNING, __( 'Too many failed attempts, removing from queue', 'bigcommerce' ), [
+									'product_id' => $import->bc_id,
+									'action'     => $import->import_action,
+								] );
+							}
+							$wpdb->delete( $wpdb->bc_import_queue, [ 'bc_id' => $import->bc_id ], [ '%d' ] );
+						}
 					}
 					break;
 				case 'delete':
@@ -100,13 +126,22 @@ class Queue_Runner implements Import_Processor {
 					break;
 				default:
 					// how did we get here?
+					do_action( 'bigcommerce/log', Error_Log::NOTICE, __( 'Unexpected import action', 'bigcommerce' ), [
+						'product_id' => $import->bc_id,
+						'action'     => $import->import_action,
+					] );
 					$wpdb->delete( $wpdb->bc_import_queue, [ 'bc_id' => $import->bc_id ], [ '%d' ] );
 					break;
 			}
 
 		}
 
-		if ( $total <= count( $records ) ) {
+		$remaining = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->bc_import_queue}" );
+		do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Completed import bach', 'bigcommerce' ), [
+			'count'     => count( $records ),
+			'remaining' => $remaining,
+		] );
+		if ( $remaining < 1 ) {
 			$status->set_status( Status::PROCESSED_QUEUE );
 		}
 

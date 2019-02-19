@@ -10,10 +10,14 @@ use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Api\v3\Model\Listing;
 use BigCommerce\Api\v3\Model\ListingCollectionResponse;
 use BigCommerce\Api\v3\ObjectSerializer;
+use BigCommerce\Import\No_Cache_Options;
 use BigCommerce\Import\Runner\Status;
+use BigCommerce\Logging\Error_Log;
 use BigCommerce\Settings\Sections\Channels;
 
 class Product_ID_Fetcher implements Import_Processor {
+	use No_Cache_Options;
+
 	const STATE_OPTION = 'bigcommerce_import_product_id_fetcher_state';
 
 	/**
@@ -56,6 +60,11 @@ class Product_ID_Fetcher implements Import_Processor {
 
 		$next = $this->get_next();
 
+		do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Retrieving listings', 'bigcommerce' ), [
+			'limit' => $this->limit,
+			'after' => $next ?: null,
+		] );
+
 		try {
 			$listings_response = $this->channels->listChannelListings( $channel_id, [
 				'limit' => $this->limit,
@@ -75,10 +84,16 @@ class Product_ID_Fetcher implements Import_Processor {
 			return (int) $listing->getProductId();
 		}, $listings );
 
+
+		do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Retrieving products found in listings', 'bigcommerce' ), [
+			'limit' => $this->limit,
+			'ids'   => $product_ids,
+		] );
 		try {
 			$products_response = $this->catalog->getProducts( [
 				'id:in'   => $product_ids,
 				'include' => [ 'variants', 'custom_fields', 'images', 'bulk_pricing_rules' ],
+				'limit'   => $this->limit,
 			] );
 			$products          = [];
 			foreach ( $products_response->getData() as $product ) {
@@ -117,6 +132,9 @@ class Product_ID_Fetcher implements Import_Processor {
 
 		$count = 0;
 		if ( ! empty( $inserts ) ) {
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Adding products to the import queue', 'bigcommerce' ), [
+				'count' => count( $inserts ),
+			] );
 			$values = implode( ', ', $inserts );
 			$count  = $wpdb->query( "INSERT IGNORE INTO {$wpdb->bc_import_queue} ( bc_id, listing_id, date_modified, import_action, date_created, product_data, listing_data ) VALUES $values" );
 		}
@@ -125,6 +143,9 @@ class Product_ID_Fetcher implements Import_Processor {
 
 		$next = $this->extract_next_from_response( $listings_response );
 		if ( $next ) {
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Ready for next page of products', 'bigcommerce' ), [
+				'next' => $next,
+			] );
 			$this->set_next( $next );
 		} else {
 			$status->set_status( Status::FETCHED_PRODUCT_IDS );
@@ -168,7 +189,7 @@ class Product_ID_Fetcher implements Import_Processor {
 	}
 
 	private function get_state() {
-		$state = get_option( self::STATE_OPTION, [] );
+		$state = $this->get_option( self::STATE_OPTION, [] );
 		if ( ! is_array( $state ) ) {
 			return [];
 		}
@@ -177,10 +198,10 @@ class Product_ID_Fetcher implements Import_Processor {
 	}
 
 	private function set_state( array $state ) {
-		update_option( self::STATE_OPTION, $state, false );
+		$this->update_option( self::STATE_OPTION, $state, false );
 	}
 
 	private function clear_state() {
-		delete_option( self::STATE_OPTION );
+		$this->delete_option( self::STATE_OPTION );
 	}
 }

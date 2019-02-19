@@ -10,7 +10,9 @@ use BigCommerce\Api\v3\Model\Listing;
 use BigCommerce\Api\v3\Model\ListingVariant;
 use BigCommerce\Api\v3\Model\Product;
 use BigCommerce\Api\v3\Model\Variant;
+use BigCommerce\Import\No_Cache_Options;
 use BigCommerce\Import\Runner\Status;
+use BigCommerce\Logging\Error_Log;
 use BigCommerce\Settings\Sections\Channels;
 use BigCommerce\Settings\Sections\Import;
 
@@ -20,6 +22,8 @@ use BigCommerce\Settings\Sections\Import;
  * Populates an empty channel with the full product catalog
  */
 class Channel_Initializer implements Import_Processor {
+	use No_Cache_Options;
+
 	const STATE_OPTION = 'bigcommerce_import_channel_init_state';
 
 	/**
@@ -65,6 +69,7 @@ class Channel_Initializer implements Import_Processor {
 		$page = $this->get_page();
 		if ( empty( $page ) ) {
 			if ( ! get_option( Import::OPTION_NEW_PRODUCTS, 1 ) && $this->channel_has_listings( $channel_id ) ) {
+				do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Skipping channel initialization due to settings', 'bigcommerce' ), [] );
 				$status->set_status( Status::INITIALIZED_CHANNEL );
 				$this->clear_state();
 
@@ -74,6 +79,10 @@ class Channel_Initializer implements Import_Processor {
 			}
 		}
 
+		do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Retrieving products', 'bigcommerce' ), [
+			'limit' => $this->limit,
+			'page'  => $page,
+		] );
 
 		try {
 			$response = $this->catalog->getProducts( [
@@ -91,10 +100,14 @@ class Channel_Initializer implements Import_Processor {
 			return;
 		}
 
-		$id_map = get_option( Listing_ID_Fetcher::PRODUCT_LISTING_MAP, [] ) ?: [];
+		$id_map = $this->get_option( Listing_ID_Fetcher::PRODUCT_LISTING_MAP, [] ) ?: [];
 
 		$listing_requests = array_values( array_filter( array_map( function ( Product $product ) use ( $channel_id, $id_map ) {
 			if ( array_key_exists( $product->getId(), $id_map ) ) {
+				do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Product already linked to channel. Skipping.', 'bigcommerce' ), [
+					'product_id' => $product->getId(),
+					'channel_id' => $channel_id,
+				] );
 				return false;
 			}
 
@@ -116,6 +129,9 @@ class Channel_Initializer implements Import_Processor {
 
 
 		if ( ! empty( $listing_requests ) ) {
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Adding products to channel', 'bigcommerce' ), [
+				'count' => count( $listing_requests ),
+			] );
 			try {
 				$this->channels->createChannelListings( $channel_id, $listing_requests );
 			} catch ( ApiException $e ) {
@@ -130,6 +146,9 @@ class Channel_Initializer implements Import_Processor {
 
 		$total_pages = $response->getMeta()->getPagination()->getTotalPages();
 		if ( $total_pages > $page ) {
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Channel initialization ready for next page of products', 'bigcommerce' ), [
+				'next' => $page + 1,
+			] );
 			$this->set_page( $page + 1 );
 		} else {
 			$status->set_status( Status::INITIALIZED_CHANNEL );
@@ -171,7 +190,7 @@ class Channel_Initializer implements Import_Processor {
 	}
 
 	private function get_state() {
-		$state = get_option( self::STATE_OPTION, [] );
+		$state = $this->get_option( self::STATE_OPTION, [] );
 		if ( ! is_array( $state ) ) {
 			return [];
 		}
@@ -180,10 +199,10 @@ class Channel_Initializer implements Import_Processor {
 	}
 
 	private function set_state( array $state ) {
-		update_option( self::STATE_OPTION, $state, false );
+		$this->update_option( self::STATE_OPTION, $state, false );
 	}
 
 	private function clear_state() {
-		delete_option( self::STATE_OPTION );
+		$this->delete_option( self::STATE_OPTION );
 	}
 }

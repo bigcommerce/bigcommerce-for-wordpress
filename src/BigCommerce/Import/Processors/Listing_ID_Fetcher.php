@@ -9,10 +9,14 @@ use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Api\v3\Model\Listing;
 use BigCommerce\Api\v3\Model\ListingCollectionResponse;
+use BigCommerce\Import\No_Cache_Options;
 use BigCommerce\Import\Runner\Status;
+use BigCommerce\Logging\Error_Log;
 use BigCommerce\Settings\Sections\Channels;
 
 class Listing_ID_Fetcher implements Import_Processor {
+	use No_Cache_Options;
+
 	const STATE_OPTION        = 'bigcommerce_import_listing_id_fetcher_state';
 	const PRODUCT_LISTING_MAP = 'bigcommerce_product_listing_map';
 
@@ -50,8 +54,12 @@ class Listing_ID_Fetcher implements Import_Processor {
 
 		$next = $this->get_next();
 		if ( empty( $next ) ) {
-			update_option( self::PRODUCT_LISTING_MAP, [], false );
+			$this->update_option( self::PRODUCT_LISTING_MAP, [], false );
 		}
+		do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Retrieving listings', 'bigcommerce' ), [
+			'limit' => $this->limit,
+			'after' => $next ?: null,
+		] );
 
 		try {
 			$response = $this->channels->listChannelListings( $channel_id, [
@@ -67,14 +75,17 @@ class Listing_ID_Fetcher implements Import_Processor {
 			return;
 		}
 
-		$id_map = get_option( self::PRODUCT_LISTING_MAP, [] ) ?: [];
+		$id_map = $this->get_option( self::PRODUCT_LISTING_MAP, [] ) ?: [];
 		foreach ( $response->getData() as $listing ) {
 			$id_map[ (int) $listing->getProductId() ] = (int) $listing->getListingId();
 		}
-		update_option( self::PRODUCT_LISTING_MAP, $id_map, false );
+		$this->update_option( self::PRODUCT_LISTING_MAP, $id_map, false );
 
 		$next = $this->extract_next_from_response( $response );
 		if ( $next ) {
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Ready for next page of listings', 'bigcommerce' ), [
+				'next' => $next,
+			] );
 			$this->set_next( $next );
 		} else {
 			$status->set_status( Status::FETCHED_LISTING_IDS );
@@ -118,7 +129,7 @@ class Listing_ID_Fetcher implements Import_Processor {
 	}
 
 	private function get_state() {
-		$state = get_option( self::STATE_OPTION, [] );
+		$state = $this->get_option( self::STATE_OPTION, [] );
 		if ( ! is_array( $state ) ) {
 			return [];
 		}
@@ -127,10 +138,10 @@ class Listing_ID_Fetcher implements Import_Processor {
 	}
 
 	private function set_state( array $state ) {
-		update_option( self::STATE_OPTION, $state, false );
+		$this->update_option( self::STATE_OPTION, $state, false );
 	}
 
 	private function clear_state() {
-		delete_option( self::STATE_OPTION );
+		$this->delete_option( self::STATE_OPTION );
 	}
 }

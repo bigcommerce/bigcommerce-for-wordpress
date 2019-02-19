@@ -109,15 +109,37 @@ abstract class Abstract_Screen {
 		ob_start();
 		settings_errors();
 		$this->before_form();
-		printf( '<form action="%1$s" method="post" class="bc-settings-form bc-settings-form--%2$s" data-js="%2$s">', esc_url( $this->form_action_url() ), static::NAME );
+		$this->start_form();
 		$this->settings_fields();
 		$this->do_settings_sections( static::NAME );
 		$this->submit_button();
-		echo '</form>';
+		$this->end_form();
 		$this->after_form();
 		$content = ob_get_clean();
 
 		printf( '<div class="wrap bc-settings bc-settings-%s">%s%s</div>', static::NAME, $this->get_header(), $content );
+	}
+
+	protected function start_form() {
+		printf( '<form action="%1$s" method="post" class="bc-settings-form bc-settings-form--%2$s" data-js="%2$s">', esc_url( $this->form_action_url() ), static::NAME );
+		/**
+		 * Triggered after the opening <form> tag on the settings screen form finishes rendering.
+		 * The dynamic portion of the hook is the identifier of the settings screen.
+		 *
+		 * @param string $hook_suffix The hook suffix generated for the screen
+		 */
+		do_action( 'bigcommerce/settings/after_start_form/page=' . static::NAME, $this->hook_suffix );
+	}
+
+	protected function end_form() {
+		/**
+		 * Triggered before the closing </form> tag on the settings screen form finishes rendering.
+		 * The dynamic portion of the hook is the identifier of the settings screen.
+		 *
+		 * @param string $hook_suffix The hook suffix generated for the screen
+		 */
+		do_action( 'bigcommerce/settings/before_end_form/page=' . static::NAME, $this->hook_suffix );
+		echo '</form>';
 	}
 
 	/**
@@ -318,6 +340,12 @@ abstract class Abstract_Screen {
 		exit();
 	}
 
+	/**
+	 * Indicates if this screen should be registered, given the
+	 * current state of the WordPress installation.
+	 *
+	 * @return bool
+	 */
 	public function should_register() {
 		return true;
 	}

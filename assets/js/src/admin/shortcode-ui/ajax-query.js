@@ -15,7 +15,9 @@ import { ADMIN_ICONS } from '../config/wp-settings';
 import { on } from '../../utils/events';
 
 const el = {};
-const waypoints = [];
+const instances = {
+	waypoints: [],
+};
 
 /**
  * @function createSpinner
@@ -28,6 +30,30 @@ const createSpinLoader = () => {
 	};
 
 	return new Spinner(options).spin(el.loader);
+};
+
+/**
+ * @function handleExistingWaypoints
+ * @description Destroy and remove existing waypoints. Clear out the waypoints array.
+ */
+const handleExistingWaypoints = () => {
+	// If we have any waypoints cached, destroy them and clear the instances object.
+	if (instances.waypoints.length > 0) {
+		instances.waypoints.forEach((way) => {
+			// Destroy waypoints before removing the node to avoid errors.
+			way.destroy();
+		});
+		// Clear the waypoints array.
+		instances.waypoints = [];
+	}
+
+	// If we have any waypoint DOM nodes, remove them.
+	const currentWaypoints = tools.getNodes('bc-products-has-next', true, el.productGrid);
+	if (currentWaypoints) {
+		currentWaypoints.forEach((currentWaypoint) => {
+			currentWaypoint.parentNode.removeChild(currentWaypoint);
+		});
+	}
 };
 
 /**
@@ -139,13 +165,9 @@ const handleAjaxPagination = (nextPage = '') => {
 		return;
 	}
 
-	const currentWaypoints = tools.getNodes('bc-products-has-next', true, el.productGrid);
+	handleExistingWaypoints();
+
 	const container = document.createElement('div');
-
-	currentWaypoints.forEach((currentWaypoint) => {
-		currentWaypoint.parentNode.removeChild(currentWaypoint);
-	});
-
 	container.setAttribute('data-next', nextPage);
 	container.setAttribute('data-js', 'bc-products-has-next');
 	el.productGrid.appendChild(container);
@@ -171,12 +193,8 @@ const handleAjaxPagination = (nextPage = '') => {
 						return;
 					}
 
-					// 3. Check if we got a proper response, print the results, and then destroy the waypoint.
-					way.destroy();
-					if (container && container.parentNode) {
-						container.parentNode.removeChild(container);
-					}
-
+					// 3. Assumes a successful response. It is safe to destroy the waypoint(s).
+					handleExistingWaypoints();
 					// 4. Get and print the cards markup from the response.
 					handleAjaxResponse(res.body);
 					// 5. Recursively create the new waypoint if the next page link exists.
@@ -184,7 +202,9 @@ const handleAjaxPagination = (nextPage = '') => {
 				});
 		},
 	});
-	waypoints.push(way);
+
+	// Add this waypoint to the instances cache. Used to destroy and clear stale waypoints.
+	instances.waypoints.push(way);
 };
 
 /**
@@ -194,11 +214,9 @@ const handleAjaxPagination = (nextPage = '') => {
 const wpAPIGetRequest = () => {
 	shortcodeState.isFetching = true;
 	dimTheHouseLights();
-	el.productGrid.textContent = '';
+	handleExistingWaypoints();
 
-	waypoints.forEach((way) => {
-		way.destroy();
-	});
+	el.productGrid.textContent = '';
 
 	const queryString = queryObjectToString();
 
@@ -229,6 +247,7 @@ const cacheElements = () => {
 const bindEvents = () => {
 	delegate(el.searchForm, '[data-js="bcqb-submit"]', 'click', wpAPIGetRequest);
 	on(document, 'bigcommerce/shortcode_ui_state_ready', wpAPIGetRequest);
+	on(document, 'bigcommerce/hide_shortcode_ui', handleExistingWaypoints);
 };
 
 const init = () => {
