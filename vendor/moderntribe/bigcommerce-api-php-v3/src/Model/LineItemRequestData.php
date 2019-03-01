@@ -2,12 +2,7 @@
 /**
  * LineItemRequestData
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * LineItemRequestData Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class LineItemRequestData implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -79,7 +65,6 @@ class LineItemRequestData implements ArrayAccess
         'option_selections' => 'option_selections'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -91,7 +76,6 @@ class LineItemRequestData implements ArrayAccess
         'list_price' => 'setListPrice',
         'option_selections' => 'setOptionSelections'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -134,13 +118,22 @@ class LineItemRequestData implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['quantity'] = isset($data['quantity']) ? $data['quantity'] : null;
-        $this->container['product_id'] = isset($data['product_id']) ? $data['product_id'] : null;
-        $this->container['variant_id'] = isset($data['variant_id']) ? $data['variant_id'] : null;
-        $this->container['list_price'] = isset($data['list_price']) ? $data['list_price'] : null;
-        $this->container['option_selections'] = isset($data['option_selections']) ? $data['option_selections'] : null;
+        $this->container['quantity'] = array_key_exists('quantity', $data) ? $data['quantity'] : null;
+        $this->container['product_id'] = array_key_exists('product_id', $data) ? $data['product_id'] : null;
+        $this->container['variant_id'] = array_key_exists('variant_id', $data) ? $data['variant_id'] : null;
+        $this->container['list_price'] = array_key_exists('list_price', $data) ? $data['list_price'] : null;
+        $this->container['option_selections'] = array_key_exists('option_selections', $data) ? $data['option_selections'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

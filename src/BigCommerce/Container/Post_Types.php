@@ -95,6 +95,9 @@ class Post_Types extends Provider {
 		add_filter( 'views_edit-' . Product\Product::NAME, $this->create_callback( 'list_table_import_status', function ( $views ) use ( $container ) {
 			return $container[ self::PRODUCT_ADMIN ]->list_table_import_status( $views );
 		} ), 10, 1 );
+		add_filter( 'views_edit-' . Product\Product::NAME, $this->create_callback( 'list_table_manage_link', function ( $views ) use ( $container ) {
+			return $container[ self::PRODUCT_ADMIN ]->list_table_manage_link( $views );
+		} ), 2, 1 );
 
 		add_filter( 'map_meta_cap', $this->create_callback( 'unsupported_meta_caps', function ( $caps, $cap, $user_id, $args ) use ( $container ) {
 			return $container[ self::PRODUCT_UNSUPPORTED ]->disallow_publication( $caps, $cap, $user_id, $args );

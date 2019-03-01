@@ -1,5 +1,77 @@
 # Changelog
 
+## [2.0.0]
+
+### Added
+- Added new links and buttons to the Products custom post type edit screen 
+  and the BigCommerce Settings page for managing your products on BigCommerce 
+  and logging in to your account
+- Added a Resources page to the BigCommerce admin section. The Resources page
+  contains tab separated content that provides users with a repository of
+  themes, plugins, apps, and support links to enhance or extend their
+  BigCommerce for WordPress installation.
+- Added an option to create a new menu in addition to selecting a preexisting
+  menu on the Menu Select screen during on-boarding.
+- Added an option to configure channel settings for new products during
+  on-boarding. The channel selection screen is always shown now, even
+  for new accounts that don't yet have a channel.
+- Added an option to the on-boarding process to choose between a
+  full-featured store and one directed more towards bloggers. This
+  sets default settings depending on your choice.
+- Added a filter for customer profile fields fetched from the API: 
+  `bigcommerce/customer/empty_profile`
+- Added a filter to wrap the output of a template. Can be used to prepend
+  or append content to the template:
+  `bigcommerce/template={$template}/output`
+- Added a template for the checkout button on the cart
+
+### Changed
+- Updated the error handling and response messages related to the product 
+  sync feature. We now provide more information to the user based on the
+  type of error that has occurred.
+- Added the product SKU to post meta, so that catalog searches can use
+  WordPress meta queries.
+- If the option to automatically add products to the channel is disabled,
+  it will be honored even on the initial import when the channel has no
+  products.
+- Removed product pick list options for products that are out of stock.
+- Changed how option and modifier fields are rendered and treated on
+  the product single and Quick View modals. Modifiers using select/radio
+  fields are now supported, using the same templates as the option fields.
+  
+  **NOTE:** Please take note of the changes to the option field templates and
+  adjust your custom templates as needed.
+  
+  `components/modifier-types/modifier-checkbox.php` → `components/option-types/option-checkbox.php`
+  
+  `components/modifier-types/modifier-date.php` → `components/option-types/option-date.php`
+  
+  `components/modifier-types/modifier-number.php` → `components/option-types/option-number.php`
+  
+  `components/modifier-types/modifier-text.php` → `components/option-types/option-text.php`
+- The template `components/cart/cart-actions.php` now takes an array of
+  rendered `$actions` that will be echoed into the template.
+- The template `components/products/product-card.php` requires a new
+  attribute on the Quick View template wrapper: `data-quick-view-script=""`
+
+### Fixed
+- Fixed a typo on the Create New Account screen during on-boarding
+- Fixed an issue with Quick View modal boxes in product cards where removing 
+  the quick-view feature would break the JS and the page.
+- The nonce for an ajax import request is validated before triggering the
+  import cron action.
+- Fixed an extra quote rendered in template wrappers.
+- Fixed Flatpickr library issue with quick-view modal. **NOTE:** This changes the position
+  of the date picker to inline with the date field. Update your CSS as needed.
+  
+### Deprecated
+- The `modifiers` parameter to the cart REST controller is no longer used
+  and will be removed in a future version.
+- The `modifiers` variable in the template `components/products/product-form.php`
+  is no longer used and will be removed in a future version.
+- The template `components/products/product-modifiers.php` is no longer used.
+
+
 ## [1.6.0]
 
 ### Added
@@ -348,6 +420,7 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[2.0.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.6.0...2.0.0
 [1.6.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.5.0...1.6.0
 [1.5.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.4.2...1.5.0
 [1.4.2]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.4.1...1.4.2

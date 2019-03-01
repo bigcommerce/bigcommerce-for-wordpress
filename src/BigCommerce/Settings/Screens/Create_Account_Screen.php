@@ -28,7 +28,7 @@ class Create_Account_Screen extends Abstract_Screen {
 			$notices_placeholder,
 			trailingslashit( $this->assets_url ) . 'img/admin/big-commerce-logo.svg',
 			__( 'BigCommerce', 'bigcommerce' ),
-			__( 'We just need a few details to create to your store.', 'bigcommerce' )
+			__( 'We just need a few details to create your store.', 'bigcommerce' )
 		);
 	}
 

@@ -161,7 +161,7 @@ abstract class Abstract_Screen {
 	}
 
 	protected function submit_button() {
-		echo '<div class="bc-settings-save">';
+		echo '<div class="bc-plugin-page-header">';
 		submit_button();
 		echo '</div>';
 	}
@@ -336,7 +336,10 @@ abstract class Abstract_Screen {
 
 	public function redirect_to_screen() {
 		$url = $this->get_url();
-		wp_safe_redirect( $url, 303 );
+		if ( ! empty( $_GET[ 'settings-updated' ] ) ) {
+			$url = add_query_arg( [ 'settings-updated' => 1 ], $url );
+		}
+		wp_safe_redirect( esc_url_raw( $url ), 303 );
 		exit();
 	}
 

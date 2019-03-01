@@ -2,12 +2,7 @@
 /**
  * WidgetTemplatePreviewResponseData
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * WidgetTemplatePreviewResponseData Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class WidgetTemplatePreviewResponseData implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -71,7 +57,6 @@ class WidgetTemplatePreviewResponseData implements ArrayAccess
         'html' => 'html'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -79,7 +64,6 @@ class WidgetTemplatePreviewResponseData implements ArrayAccess
     protected static $setters = [
         'html' => 'setHtml'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -118,9 +102,18 @@ class WidgetTemplatePreviewResponseData implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['html'] = isset($data['html']) ? $data['html'] : null;
+        $this->container['html'] = array_key_exists('html', $data) ? $data['html'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

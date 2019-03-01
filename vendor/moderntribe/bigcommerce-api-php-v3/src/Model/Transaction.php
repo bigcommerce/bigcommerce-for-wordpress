@@ -2,12 +2,7 @@
 /**
  * Transaction
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,17 +26,7 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * Transaction Class Doc Comment
- *
- * @category    Class */
- // @description A BigCommerce Transaction object describes a single transaction.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
-class Transaction implements ArrayAccess
+class Transaction extends TransactionPost implements ArrayAccess
 {
     const DISCRIMINATOR = null;
 
@@ -112,7 +97,6 @@ class Transaction implements ArrayAccess
         'store_credit' => 'store_credit'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -140,7 +124,6 @@ class Transaction implements ArrayAccess
         'gift_certificate' => 'setGiftCertificate',
         'store_credit' => 'setStoreCredit'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -335,29 +318,38 @@ class Transaction implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['event'] = isset($data['event']) ? $data['event'] : null;
-        $this->container['method'] = isset($data['method']) ? $data['method'] : null;
-        $this->container['amount'] = isset($data['amount']) ? $data['amount'] : null;
-        $this->container['currency'] = isset($data['currency']) ? $data['currency'] : null;
-        $this->container['gateway'] = isset($data['gateway']) ? $data['gateway'] : null;
-        $this->container['gateway_transaction_id'] = isset($data['gateway_transaction_id']) ? $data['gateway_transaction_id'] : null;
-        $this->container['date_created'] = isset($data['date_created']) ? $data['date_created'] : null;
-        $this->container['test'] = isset($data['test']) ? $data['test'] : null;
-        $this->container['status'] = isset($data['status']) ? $data['status'] : null;
-        $this->container['fraud_review'] = isset($data['fraud_review']) ? $data['fraud_review'] : null;
-        $this->container['reference_transaction_id'] = isset($data['reference_transaction_id']) ? $data['reference_transaction_id'] : null;
-        $this->container['offline'] = isset($data['offline']) ? $data['offline'] : null;
-        $this->container['custom'] = isset($data['custom']) ? $data['custom'] : null;
-        $this->container['id'] = isset($data['id']) ? $data['id'] : null;
-        $this->container['order_id'] = isset($data['order_id']) ? $data['order_id'] : null;
-        $this->container['payment_instrument_token'] = isset($data['payment_instrument_token']) ? $data['payment_instrument_token'] : null;
-        $this->container['avs_result'] = isset($data['avs_result']) ? $data['avs_result'] : null;
-        $this->container['cvv_result'] = isset($data['cvv_result']) ? $data['cvv_result'] : null;
-        $this->container['credit_card'] = isset($data['credit_card']) ? $data['credit_card'] : null;
-        $this->container['gift_certificate'] = isset($data['gift_certificate']) ? $data['gift_certificate'] : null;
-        $this->container['store_credit'] = isset($data['store_credit']) ? $data['store_credit'] : null;
+        $this->container['event'] = array_key_exists('event', $data) ? $data['event'] : null;
+        $this->container['method'] = array_key_exists('method', $data) ? $data['method'] : null;
+        $this->container['amount'] = array_key_exists('amount', $data) ? $data['amount'] : null;
+        $this->container['currency'] = array_key_exists('currency', $data) ? $data['currency'] : null;
+        $this->container['gateway'] = array_key_exists('gateway', $data) ? $data['gateway'] : null;
+        $this->container['gateway_transaction_id'] = array_key_exists('gateway_transaction_id', $data) ? $data['gateway_transaction_id'] : null;
+        $this->container['date_created'] = array_key_exists('date_created', $data) ? $data['date_created'] : null;
+        $this->container['test'] = array_key_exists('test', $data) ? $data['test'] : null;
+        $this->container['status'] = array_key_exists('status', $data) ? $data['status'] : null;
+        $this->container['fraud_review'] = array_key_exists('fraud_review', $data) ? $data['fraud_review'] : null;
+        $this->container['reference_transaction_id'] = array_key_exists('reference_transaction_id', $data) ? $data['reference_transaction_id'] : null;
+        $this->container['offline'] = array_key_exists('offline', $data) ? $data['offline'] : null;
+        $this->container['custom'] = array_key_exists('custom', $data) ? $data['custom'] : null;
+        $this->container['id'] = array_key_exists('id', $data) ? $data['id'] : null;
+        $this->container['order_id'] = array_key_exists('order_id', $data) ? $data['order_id'] : null;
+        $this->container['payment_instrument_token'] = array_key_exists('payment_instrument_token', $data) ? $data['payment_instrument_token'] : null;
+        $this->container['avs_result'] = array_key_exists('avs_result', $data) ? $data['avs_result'] : null;
+        $this->container['cvv_result'] = array_key_exists('cvv_result', $data) ? $data['cvv_result'] : null;
+        $this->container['credit_card'] = array_key_exists('credit_card', $data) ? $data['credit_card'] : null;
+        $this->container['gift_certificate'] = array_key_exists('gift_certificate', $data) ? $data['gift_certificate'] : null;
+        $this->container['store_credit'] = array_key_exists('store_credit', $data) ? $data['store_credit'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -375,7 +367,6 @@ class Transaction implements ArrayAccess
         if (!in_array($this->container['event'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'event', must be one of #{allowed_values}.";
         }
-
         if ($this->container['method'] === null) {
             $invalid_properties[] = "'method' can't be null";
         }
@@ -383,7 +374,6 @@ class Transaction implements ArrayAccess
         if (!in_array($this->container['method'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'method', must be one of #{allowed_values}.";
         }
-
         if ($this->container['amount'] === null) {
             $invalid_properties[] = "'amount' can't be null";
         }
@@ -397,12 +387,10 @@ class Transaction implements ArrayAccess
         if (!in_array($this->container['gateway'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'gateway', must be one of #{allowed_values}.";
         }
-
         $allowed_values = ["ok", "error"];
         if (!in_array($this->container['status'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'status', must be one of #{allowed_values}.";
         }
-
         return $invalid_properties;
     }
 
@@ -465,8 +453,8 @@ class Transaction implements ArrayAccess
      */
     public function setEvent($event)
     {
-        $allowed_values = array('purchase', 'authorization', 'capture', 'refund', 'void', 'pending', 'settled');
-        if ((!in_array($event, $allowed_values))) {
+        $allowed_values = ['purchase', 'authorization', 'capture', 'refund', 'void', 'pending', 'settled'];
+        if (!is_null($event) && (!in_array($event, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'event', must be one of 'purchase', 'authorization', 'capture', 'refund', 'void', 'pending', 'settled'");
         }
         $this->container['event'] = $event;
@@ -490,8 +478,8 @@ class Transaction implements ArrayAccess
      */
     public function setMethod($method)
     {
-        $allowed_values = array('credit_card', 'electronic_wallet', 'gift_certificate', 'store_credit', 'apple_pay_card', 'apple_pay_token', 'token', 'custom', 'offsite', 'offline', 'nonce');
-        if ((!in_array($method, $allowed_values))) {
+        $allowed_values = ['credit_card', 'electronic_wallet', 'gift_certificate', 'store_credit', 'apple_pay_card', 'apple_pay_token', 'token', 'custom', 'offsite', 'offline', 'nonce'];
+        if (!is_null($method) && (!in_array($method, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'method', must be one of 'credit_card', 'electronic_wallet', 'gift_certificate', 'store_credit', 'apple_pay_card', 'apple_pay_token', 'token', 'custom', 'offsite', 'offline', 'nonce'");
         }
         $this->container['method'] = $method;
@@ -557,8 +545,8 @@ class Transaction implements ArrayAccess
      */
     public function setGateway($gateway)
     {
-        $allowed_values = array('2checkout', 'adyen', 'amazon', 'authorizenet', 'bankdeposit', 'braintree', 'cheque', 'cod', 'custom', 'firstdatagge4', 'giftcertificate', 'hps', 'instore', 'klarna', 'migs', 'moneyorder', 'nmi', 'paypalexpress', 'paypalpaymentsprous', 'paypalpaymentsprouk', 'plugnpay', 'qbmsv2', 'securenet', 'square', 'storecredit', 'stripe', 'testgateway', 'usaepay');
-        if ((!in_array($gateway, $allowed_values))) {
+        $allowed_values = ['2checkout', 'adyen', 'amazon', 'authorizenet', 'bankdeposit', 'braintree', 'cheque', 'cod', 'custom', 'firstdatagge4', 'giftcertificate', 'hps', 'instore', 'klarna', 'migs', 'moneyorder', 'nmi', 'paypalexpress', 'paypalpaymentsprous', 'paypalpaymentsprouk', 'plugnpay', 'qbmsv2', 'securenet', 'square', 'storecredit', 'stripe', 'testgateway', 'usaepay'];
+        if (!is_null($gateway) && (!in_array($gateway, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'gateway', must be one of '2checkout', 'adyen', 'amazon', 'authorizenet', 'bankdeposit', 'braintree', 'cheque', 'cod', 'custom', 'firstdatagge4', 'giftcertificate', 'hps', 'instore', 'klarna', 'migs', 'moneyorder', 'nmi', 'paypalexpress', 'paypalpaymentsprous', 'paypalpaymentsprouk', 'plugnpay', 'qbmsv2', 'securenet', 'square', 'storecredit', 'stripe', 'testgateway', 'usaepay'");
         }
         $this->container['gateway'] = $gateway;
@@ -645,7 +633,7 @@ class Transaction implements ArrayAccess
      */
     public function setStatus($status)
     {
-        $allowed_values = array('ok', 'error');
+        $allowed_values = ['ok', 'error'];
         if (!is_null($status) && (!in_array($status, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'status', must be one of 'ok', 'error'");
         }

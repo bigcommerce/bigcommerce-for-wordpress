@@ -2,12 +2,7 @@
 /**
  * AVSResult
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * AVSResult Class Doc Comment
- *
- * @category    Class */
- // @description Address Verification Service (AVS) result from the payment gateway.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class AVSResult implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -78,7 +63,6 @@ class AVSResult implements ArrayAccess
         'postal_match' => 'postal_match'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -89,7 +73,6 @@ class AVSResult implements ArrayAccess
         'street_match' => 'setStreetMatch',
         'postal_match' => 'setPostalMatch'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -131,12 +114,21 @@ class AVSResult implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['code'] = isset($data['code']) ? $data['code'] : null;
-        $this->container['message'] = isset($data['message']) ? $data['message'] : null;
-        $this->container['street_match'] = isset($data['street_match']) ? $data['street_match'] : null;
-        $this->container['postal_match'] = isset($data['postal_match']) ? $data['postal_match'] : null;
+        $this->container['code'] = array_key_exists('code', $data) ? $data['code'] : null;
+        $this->container['message'] = array_key_exists('message', $data) ? $data['message'] : null;
+        $this->container['street_match'] = array_key_exists('street_match', $data) ? $data['street_match'] : null;
+        $this->container['postal_match'] = array_key_exists('postal_match', $data) ? $data['postal_match'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

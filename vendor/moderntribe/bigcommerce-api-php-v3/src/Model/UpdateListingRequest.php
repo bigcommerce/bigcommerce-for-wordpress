@@ -2,12 +2,7 @@
 /**
  * UpdateListingRequest
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,7 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * UpdateListingRequest Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
-class UpdateListingRequest implements ArrayAccess
+class UpdateListingRequest extends Listing implements ArrayAccess
 {
     const DISCRIMINATOR = null;
 
@@ -89,7 +75,6 @@ class UpdateListingRequest implements ArrayAccess
         'variants' => 'variants'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -106,7 +91,6 @@ class UpdateListingRequest implements ArrayAccess
         'date_modified' => 'setDateModified',
         'variants' => 'setVariants'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -186,18 +170,27 @@ class UpdateListingRequest implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['channel_id'] = isset($data['channel_id']) ? $data['channel_id'] : null;
-        $this->container['listing_id'] = isset($data['listing_id']) ? $data['listing_id'] : null;
-        $this->container['product_id'] = isset($data['product_id']) ? $data['product_id'] : null;
-        $this->container['state'] = isset($data['state']) ? $data['state'] : null;
-        $this->container['name'] = isset($data['name']) ? $data['name'] : null;
-        $this->container['description'] = isset($data['description']) ? $data['description'] : null;
-        $this->container['external_id'] = isset($data['external_id']) ? $data['external_id'] : null;
-        $this->container['date_created'] = isset($data['date_created']) ? $data['date_created'] : null;
-        $this->container['date_modified'] = isset($data['date_modified']) ? $data['date_modified'] : null;
-        $this->container['variants'] = isset($data['variants']) ? $data['variants'] : null;
+        $this->container['channel_id'] = array_key_exists('channel_id', $data) ? $data['channel_id'] : null;
+        $this->container['listing_id'] = array_key_exists('listing_id', $data) ? $data['listing_id'] : null;
+        $this->container['product_id'] = array_key_exists('product_id', $data) ? $data['product_id'] : null;
+        $this->container['state'] = array_key_exists('state', $data) ? $data['state'] : null;
+        $this->container['name'] = array_key_exists('name', $data) ? $data['name'] : null;
+        $this->container['description'] = array_key_exists('description', $data) ? $data['description'] : null;
+        $this->container['external_id'] = array_key_exists('external_id', $data) ? $data['external_id'] : null;
+        $this->container['date_created'] = array_key_exists('date_created', $data) ? $data['date_created'] : null;
+        $this->container['date_modified'] = array_key_exists('date_modified', $data) ? $data['date_modified'] : null;
+        $this->container['variants'] = array_key_exists('variants', $data) ? $data['variants'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -221,7 +214,6 @@ class UpdateListingRequest implements ArrayAccess
         if (!in_array($this->container['state'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'state', must be one of #{allowed_values}.";
         }
-
         return $invalid_properties;
     }
 
@@ -329,8 +321,8 @@ class UpdateListingRequest implements ArrayAccess
      */
     public function setState($state)
     {
-        $allowed_values = array('active', 'disabled', 'error', 'pending', 'pending_disable', 'pending_delete', 'queued', 'rejected', 'submitted', 'deleted', 'unknown');
-        if ((!in_array($state, $allowed_values))) {
+        $allowed_values = ['active', 'disabled', 'error', 'pending', 'pending_disable', 'pending_delete', 'queued', 'rejected', 'submitted', 'deleted', 'unknown'];
+        if (!is_null($state) && (!in_array($state, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'state', must be one of 'active', 'disabled', 'error', 'pending', 'pending_disable', 'pending_delete', 'queued', 'rejected', 'submitted', 'deleted', 'unknown'");
         }
         $this->container['state'] = $state;

@@ -2,12 +2,7 @@
 /**
  * WidgetPut
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * WidgetPut Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class WidgetPut implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -77,7 +63,6 @@ class WidgetPut implements ArrayAccess
         'widget_template_uuid' => 'widget_template_uuid'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -88,7 +73,6 @@ class WidgetPut implements ArrayAccess
         'widget_configuration' => 'setWidgetConfiguration',
         'widget_template_uuid' => 'setWidgetTemplateUuid'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -130,12 +114,21 @@ class WidgetPut implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['name'] = isset($data['name']) ? $data['name'] : null;
-        $this->container['description'] = isset($data['description']) ? $data['description'] : null;
-        $this->container['widget_configuration'] = isset($data['widget_configuration']) ? $data['widget_configuration'] : null;
-        $this->container['widget_template_uuid'] = isset($data['widget_template_uuid']) ? $data['widget_template_uuid'] : null;
+        $this->container['name'] = array_key_exists('name', $data) ? $data['name'] : null;
+        $this->container['description'] = array_key_exists('description', $data) ? $data['description'] : null;
+        $this->container['widget_configuration'] = array_key_exists('widget_configuration', $data) ? $data['widget_configuration'] : null;
+        $this->container['widget_template_uuid'] = array_key_exists('widget_template_uuid', $data) ? $data['widget_template_uuid'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

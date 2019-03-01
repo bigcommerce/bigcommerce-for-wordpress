@@ -2,12 +2,7 @@
 /**
  * JobId
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * JobId Class Doc Comment
- *
- * @category    Class */
- // @description The job identifier.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class JobId implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -72,7 +57,6 @@ class JobId implements ArrayAccess
         'job_id' => 'job_id'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -80,7 +64,6 @@ class JobId implements ArrayAccess
     protected static $setters = [
         'job_id' => 'setJobId'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -119,9 +102,18 @@ class JobId implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['job_id'] = isset($data['job_id']) ? $data['job_id'] : null;
+        $this->container['job_id'] = array_key_exists('job_id', $data) ? $data['job_id'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

@@ -2,12 +2,7 @@
 /**
  * OptionValueProductBase
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * OptionValueProductBase Class Doc Comment
- *
- * @category    Class */
- // @description Common OptionValueProduct properties.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class OptionValueProductBase implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -74,7 +59,6 @@ class OptionValueProductBase implements ArrayAccess
         'label' => 'label'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -83,7 +67,6 @@ class OptionValueProductBase implements ArrayAccess
         'option_display_name' => 'setOptionDisplayName',
         'label' => 'setLabel'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -123,10 +106,19 @@ class OptionValueProductBase implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['option_display_name'] = isset($data['option_display_name']) ? $data['option_display_name'] : null;
-        $this->container['label'] = isset($data['label']) ? $data['label'] : null;
+        $this->container['option_display_name'] = array_key_exists('option_display_name', $data) ? $data['option_display_name'] : null;
+        $this->container['label'] = array_key_exists('label', $data) ? $data['label'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -137,22 +129,18 @@ class OptionValueProductBase implements ArrayAccess
     public function listInvalidProperties()
     {
         $invalid_properties = [];
-        if (!is_null($this->container['option_display_name']) && (strlen($this->container['option_display_name']) > 255)) {
+        if (strlen($this->container['option_display_name']) > 255) {
             $invalid_properties[] = "invalid value for 'option_display_name', the character length must be smaller than or equal to 255.";
         }
-
-        if (!is_null($this->container['option_display_name']) && (strlen($this->container['option_display_name']) < 1)) {
+        if (strlen($this->container['option_display_name']) < 1) {
             $invalid_properties[] = "invalid value for 'option_display_name', the character length must be bigger than or equal to 1.";
         }
-
-        if (!is_null($this->container['label']) && (strlen($this->container['label']) > 255)) {
+        if (strlen($this->container['label']) > 255) {
             $invalid_properties[] = "invalid value for 'label', the character length must be smaller than or equal to 255.";
         }
-
-        if (!is_null($this->container['label']) && (strlen($this->container['label']) < 1)) {
+        if (strlen($this->container['label']) < 1) {
             $invalid_properties[] = "invalid value for 'label', the character length must be bigger than or equal to 1.";
         }
-
         return $invalid_properties;
     }
 
@@ -196,13 +184,12 @@ class OptionValueProductBase implements ArrayAccess
      */
     public function setOptionDisplayName($option_display_name)
     {
-        if (!is_null($option_display_name) && (strlen($option_display_name) > 255)) {
+        if (strlen($option_display_name) > 255) {
             throw new \InvalidArgumentException('invalid length for $option_display_name when calling OptionValueProductBase., must be smaller than or equal to 255.');
         }
-        if (!is_null($option_display_name) && (strlen($option_display_name) < 1)) {
+        if (strlen($option_display_name) < 1) {
             throw new \InvalidArgumentException('invalid length for $option_display_name when calling OptionValueProductBase., must be bigger than or equal to 1.');
         }
-
         $this->container['option_display_name'] = $option_display_name;
 
         return $this;
@@ -224,13 +211,12 @@ class OptionValueProductBase implements ArrayAccess
      */
     public function setLabel($label)
     {
-        if (!is_null($label) && (strlen($label) > 255)) {
+        if (strlen($label) > 255) {
             throw new \InvalidArgumentException('invalid length for $label when calling OptionValueProductBase., must be smaller than or equal to 255.');
         }
-        if (!is_null($label) && (strlen($label) < 1)) {
+        if (strlen($label) < 1) {
             throw new \InvalidArgumentException('invalid length for $label when calling OptionValueProductBase., must be bigger than or equal to 1.');
         }
-
         $this->container['label'] = $label;
 
         return $this;

@@ -2,12 +2,7 @@
 /**
  * CustomUrlCategory
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * CustomUrlCategory Class Doc Comment
- *
- * @category    Class */
- // @description The custom URL for the category on the storefront.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class CustomUrlCategory implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -74,7 +59,6 @@ class CustomUrlCategory implements ArrayAccess
         'is_customized' => 'is_customized'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -83,7 +67,6 @@ class CustomUrlCategory implements ArrayAccess
         'url' => 'setUrl',
         'is_customized' => 'setIsCustomized'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -123,10 +106,19 @@ class CustomUrlCategory implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['url'] = isset($data['url']) ? $data['url'] : null;
-        $this->container['is_customized'] = isset($data['is_customized']) ? $data['is_customized'] : null;
+        $this->container['url'] = array_key_exists('url', $data) ? $data['url'] : null;
+        $this->container['is_customized'] = array_key_exists('is_customized', $data) ? $data['is_customized'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -137,14 +129,12 @@ class CustomUrlCategory implements ArrayAccess
     public function listInvalidProperties()
     {
         $invalid_properties = [];
-        if (!is_null($this->container['url']) && (strlen($this->container['url']) > 255)) {
+        if (strlen($this->container['url']) > 255) {
             $invalid_properties[] = "invalid value for 'url', the character length must be smaller than or equal to 255.";
         }
-
-        if (!is_null($this->container['url']) && (strlen($this->container['url']) < 0)) {
+        if (strlen($this->container['url']) < 0) {
             $invalid_properties[] = "invalid value for 'url', the character length must be bigger than or equal to 0.";
         }
-
         return $invalid_properties;
     }
 
@@ -182,13 +172,12 @@ class CustomUrlCategory implements ArrayAccess
      */
     public function setUrl($url)
     {
-        if (!is_null($url) && (strlen($url) > 255)) {
+        if (strlen($url) > 255) {
             throw new \InvalidArgumentException('invalid length for $url when calling CustomUrlCategory., must be smaller than or equal to 255.');
         }
-        if (!is_null($url) && (strlen($url) < 0)) {
+        if (strlen($url) < 0) {
             throw new \InvalidArgumentException('invalid length for $url when calling CustomUrlCategory., must be bigger than or equal to 0.');
         }
-
         $this->container['url'] = $url;
 
         return $this;

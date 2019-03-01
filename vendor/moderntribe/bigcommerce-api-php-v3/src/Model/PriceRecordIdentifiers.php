@@ -2,12 +2,7 @@
 /**
  * PriceRecordIdentifiers
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * PriceRecordIdentifiers Class Doc Comment
- *
- * @category    Class */
- // @description &#x60;Price Record&#x60; object used in batch create or update.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class PriceRecordIdentifiers implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -78,7 +63,6 @@ class PriceRecordIdentifiers implements ArrayAccess
         'currency' => 'currency'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -89,7 +73,6 @@ class PriceRecordIdentifiers implements ArrayAccess
         'sku' => 'setSku',
         'currency' => 'setCurrency'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -131,12 +114,21 @@ class PriceRecordIdentifiers implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['price_list_id'] = isset($data['price_list_id']) ? $data['price_list_id'] : null;
-        $this->container['variant_id'] = isset($data['variant_id']) ? $data['variant_id'] : null;
-        $this->container['sku'] = isset($data['sku']) ? $data['sku'] : null;
-        $this->container['currency'] = isset($data['currency']) ? $data['currency'] : null;
+        $this->container['price_list_id'] = array_key_exists('price_list_id', $data) ? $data['price_list_id'] : null;
+        $this->container['variant_id'] = array_key_exists('variant_id', $data) ? $data['variant_id'] : null;
+        $this->container['sku'] = array_key_exists('sku', $data) ? $data['sku'] : null;
+        $this->container['currency'] = array_key_exists('currency', $data) ? $data['currency'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

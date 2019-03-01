@@ -17,8 +17,8 @@ import applyBrowserClasses from '../../utils/dom/apply-browser-classes';
 import { on, ready } from '../../utils/events';
 import shortcodeUI from '../shortcode-ui/index';
 import settings from '../settings/index';
+import resources from '../resources/index';
 import customizer from '../customizer/index';
-import postTypes from '../post-type/index';
 
 /**
  * @function bindEvents
@@ -55,13 +55,13 @@ const init = () => {
 
 	shortcodeUI();
 	settings();
-	postTypes();
+	resources();
 
 	// initialize theme customizer scripts
 
 	customizer();
 
-	console.info('Big Commerce BE: Initialized all javascript that targeted document ready.');
+	console.info('BigCommerce BE: Initialized all javascript that targeted document ready.');
 };
 
 /**

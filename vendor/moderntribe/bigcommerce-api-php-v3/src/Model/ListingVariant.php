@@ -2,12 +2,7 @@
 /**
  * ListingVariant
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * ListingVariant Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class ListingVariant implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -81,7 +67,6 @@ class ListingVariant implements ArrayAccess
         'date_modified' => 'date_modified'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -94,7 +79,6 @@ class ListingVariant implements ArrayAccess
         'date_created' => 'setDateCreated',
         'date_modified' => 'setDateModified'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -170,14 +154,23 @@ class ListingVariant implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['product_id'] = isset($data['product_id']) ? $data['product_id'] : null;
-        $this->container['variant_id'] = isset($data['variant_id']) ? $data['variant_id'] : null;
-        $this->container['external_id'] = isset($data['external_id']) ? $data['external_id'] : null;
-        $this->container['state'] = isset($data['state']) ? $data['state'] : null;
-        $this->container['date_created'] = isset($data['date_created']) ? $data['date_created'] : null;
-        $this->container['date_modified'] = isset($data['date_modified']) ? $data['date_modified'] : null;
+        $this->container['product_id'] = array_key_exists('product_id', $data) ? $data['product_id'] : null;
+        $this->container['variant_id'] = array_key_exists('variant_id', $data) ? $data['variant_id'] : null;
+        $this->container['external_id'] = array_key_exists('external_id', $data) ? $data['external_id'] : null;
+        $this->container['state'] = array_key_exists('state', $data) ? $data['state'] : null;
+        $this->container['date_created'] = array_key_exists('date_created', $data) ? $data['date_created'] : null;
+        $this->container['date_modified'] = array_key_exists('date_modified', $data) ? $data['date_modified'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -201,7 +194,6 @@ class ListingVariant implements ArrayAccess
         if (!in_array($this->container['state'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'state', must be one of #{allowed_values}.";
         }
-
         return $invalid_properties;
     }
 
@@ -309,8 +301,8 @@ class ListingVariant implements ArrayAccess
      */
     public function setState($state)
     {
-        $allowed_values = array('active', 'disabled', 'error', 'pending', 'pending_disable', 'pending_delete', 'queued', 'rejected', 'submitted', 'deleted', 'unknown');
-        if ((!in_array($state, $allowed_values))) {
+        $allowed_values = ['active', 'disabled', 'error', 'pending', 'pending_disable', 'pending_delete', 'queued', 'rejected', 'submitted', 'deleted', 'unknown'];
+        if (!is_null($state) && (!in_array($state, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'state', must be one of 'active', 'disabled', 'error', 'pending', 'pending_disable', 'pending_delete', 'queued', 'rejected', 'submitted', 'deleted', 'unknown'");
         }
         $this->container['state'] = $state;

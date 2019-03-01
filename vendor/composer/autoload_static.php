@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitd7d8ab7a37b4d60cce66289f84867415
+class ComposerStaticInit97fd0ff133d8e9954fc81186a73d62e5
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -393,6 +393,10 @@ class ComposerStaticInitd7d8ab7a37b4d60cce66289f84867415
         'BigCommerce\\CLI\\Documentation\\Data_Importer' => __DIR__ . '/../..' . '/src/BigCommerce/CLI/Documentation/Data_Importer.php',
         'BigCommerce\\CLI\\Documentation\\Import_Docs' => __DIR__ . '/../..' . '/src/BigCommerce/CLI/Documentation/Import_Docs.php',
         'BigCommerce\\CLI\\Import_Products' => __DIR__ . '/../..' . '/src/BigCommerce/CLI/Import_Products.php',
+        'BigCommerce\\CLI\\Reset_Plugin' => __DIR__ . '/../..' . '/src/BigCommerce/CLI/Reset_Plugin.php',
+        'BigCommerce\\CLI\\Resources\\Build_Resources' => __DIR__ . '/../..' . '/src/BigCommerce/CLI/Resources/Build_Resources.php',
+        'BigCommerce\\CLI\\Resources\\Resource' => __DIR__ . '/../..' . '/src/BigCommerce/CLI/Resources/Resource.php',
+        'BigCommerce\\CLI\\Resources\\Resource_Group' => __DIR__ . '/../..' . '/src/BigCommerce/CLI/Resources/Resource_Group.php',
         'BigCommerce\\CLI\\Update_Country_Cache' => __DIR__ . '/../..' . '/src/BigCommerce/CLI/Update_Country_Cache.php',
         'BigCommerce\\Cart\\Add_To_Cart' => __DIR__ . '/../..' . '/src/BigCommerce/Cart/Add_To_Cart.php',
         'BigCommerce\\Cart\\Buy_Now' => __DIR__ . '/../..' . '/src/BigCommerce/Cart/Buy_Now.php',
@@ -464,6 +468,7 @@ class ComposerStaticInitd7d8ab7a37b4d60cce66289f84867415
         'BigCommerce\\Editor\\Gutenberg\\Blocks\\Registration_Form' => __DIR__ . '/../..' . '/src/BigCommerce/Editor/Gutenberg/Blocks/Registration_Form.php',
         'BigCommerce\\Editor\\Gutenberg\\Blocks\\Shortcode_Block' => __DIR__ . '/../..' . '/src/BigCommerce/Editor/Gutenberg/Blocks/Shortcode_Block.php',
         'BigCommerce\\Editor\\Gutenberg\\Migrate_Blocks' => __DIR__ . '/../..' . '/src/BigCommerce/Editor/Gutenberg/Migrate_Blocks.php',
+        'BigCommerce\\Exceptions\\Component_Not_Found_Exception' => __DIR__ . '/../..' . '/src/BigCommerce/Exceptions/Component_Not_Found_Exception.php',
         'BigCommerce\\Exceptions\\No_Task_Found_Exception' => __DIR__ . '/../..' . '/src/BigCommerce/Exceptions/No_Task_Found_Exception.php',
         'BigCommerce\\Exceptions\\Product_Not_Found_Exception' => __DIR__ . '/../..' . '/src/BigCommerce/Exceptions/Product_Not_Found_Exception.php',
         'BigCommerce\\Forms\\Delete_Address_Handler' => __DIR__ . '/../..' . '/src/BigCommerce/Forms/Delete_Address_Handler.php',
@@ -588,7 +593,9 @@ class ComposerStaticInitd7d8ab7a37b4d60cce66289f84867415
         'BigCommerce\\Settings\\Screens\\Create_Account_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Create_Account_Screen.php',
         'BigCommerce\\Settings\\Screens\\Nav_Menu_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Nav_Menu_Screen.php',
         'BigCommerce\\Settings\\Screens\\Pending_Account_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Pending_Account_Screen.php',
+        'BigCommerce\\Settings\\Screens\\Resources_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Resources_Screen.php',
         'BigCommerce\\Settings\\Screens\\Settings_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Settings_Screen.php',
+        'BigCommerce\\Settings\\Screens\\Store_Type_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Store_Type_Screen.php',
         'BigCommerce\\Settings\\Screens\\Welcome_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Welcome_Screen.php',
         'BigCommerce\\Settings\\Sections\\Account_Settings' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Account_Settings.php',
         'BigCommerce\\Settings\\Sections\\Analytics' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Analytics.php',
@@ -642,6 +649,7 @@ class ComposerStaticInitd7d8ab7a37b4d60cce66289f84867415
         'BigCommerce\\Templates\\Amp_Cart_Items' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Amp_Cart_items.php',
         'BigCommerce\\Templates\\Amp_Cart_Summary' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Amp_Cart_Summary.php',
         'BigCommerce\\Templates\\Cart' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Cart.php',
+        'BigCommerce\\Templates\\Cart_Action_Checkout' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Cart_Action_Checkout.php',
         'BigCommerce\\Templates\\Cart_Actions' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Cart_Actions.php',
         'BigCommerce\\Templates\\Cart_Empty' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Cart_Empty.php',
         'BigCommerce\\Templates\\Cart_Error_Message' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Cart_Error_Message.php',
@@ -664,18 +672,18 @@ class ComposerStaticInitd7d8ab7a37b4d60cce66289f84867415
         'BigCommerce\\Templates\\Lost_Password_Form' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Lost_Password_Form.php',
         'BigCommerce\\Templates\\Message' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Message.php',
         'BigCommerce\\Templates\\Message_Group' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Message_Group.php',
-        'BigCommerce\\Templates\\Modifier_Types\\Modifier_Checkbox' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Modifier_Types/Modifier_Checkbox.php',
-        'BigCommerce\\Templates\\Modifier_Types\\Modifier_Date' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Modifier_Types/Modifier_Date.php',
-        'BigCommerce\\Templates\\Modifier_Types\\Modifier_Number' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Modifier_Types/Modifier_Number.php',
-        'BigCommerce\\Templates\\Modifier_Types\\Modifier_Text' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Modifier_Types/Modifier_Text.php',
-        'BigCommerce\\Templates\\Modifier_Types\\Modifier_Textarea' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Modifier_Types/Modifier_Textarea.php',
-        'BigCommerce\\Templates\\Modifier_Types\\Modifier_Type' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Modifier_Types/Modifier_Type.php',
         'BigCommerce\\Templates\\No_Results' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/No_Results.php',
+        'BigCommerce\\Templates\\Option_Types\\Option_Checkbox' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Option_Types/Option_Checkbox.php',
+        'BigCommerce\\Templates\\Option_Types\\Option_Date' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Option_Types/Option_Date.php',
         'BigCommerce\\Templates\\Option_Types\\Option_Dropdown' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Option_Types/Option_Dropdown.php',
+        'BigCommerce\\Templates\\Option_Types\\Option_Number' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Option_Types/Option_Number.php',
+        'BigCommerce\\Templates\\Option_Types\\Option_Product_List' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Option_Types/Option_Product_List.php',
         'BigCommerce\\Templates\\Option_Types\\Option_Product_List_With_Images' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Option_Types/Option_Product_List_With_Images.php',
         'BigCommerce\\Templates\\Option_Types\\Option_Radios' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Option_Types/Option_Radios.php',
         'BigCommerce\\Templates\\Option_Types\\Option_Rectangles' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Option_Types/Option_Rectangles.php',
         'BigCommerce\\Templates\\Option_Types\\Option_Swatch' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Option_Types/Option_Swatch.php',
+        'BigCommerce\\Templates\\Option_Types\\Option_Text' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Option_Types/Option_Text.php',
+        'BigCommerce\\Templates\\Option_Types\\Option_Textarea' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Option_Types/Option_Textarea.php',
         'BigCommerce\\Templates\\Option_Types\\Option_Type' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Option_Types/Option_Type.php',
         'BigCommerce\\Templates\\Order_Details' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Order_Details.php',
         'BigCommerce\\Templates\\Order_History' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Order_History.php',
@@ -934,10 +942,10 @@ class ComposerStaticInitd7d8ab7a37b4d60cce66289f84867415
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitd7d8ab7a37b4d60cce66289f84867415::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitd7d8ab7a37b4d60cce66289f84867415::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitd7d8ab7a37b4d60cce66289f84867415::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitd7d8ab7a37b4d60cce66289f84867415::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit97fd0ff133d8e9954fc81186a73d62e5::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit97fd0ff133d8e9954fc81186a73d62e5::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit97fd0ff133d8e9954fc81186a73d62e5::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit97fd0ff133d8e9954fc81186a73d62e5::$classMap;
 
         }, null, ClassLoader::class);
     }

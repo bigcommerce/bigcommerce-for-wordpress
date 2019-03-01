@@ -2,12 +2,7 @@
 /**
  * ProductOptionSelection
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * ProductOptionSelection Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class ProductOptionSelection implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -73,7 +59,6 @@ class ProductOptionSelection implements ArrayAccess
         'option_value' => 'option_value'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -82,7 +67,6 @@ class ProductOptionSelection implements ArrayAccess
         'option_id' => 'setOptionId',
         'option_value' => 'setOptionValue'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -122,10 +106,19 @@ class ProductOptionSelection implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['option_id'] = isset($data['option_id']) ? $data['option_id'] : null;
-        $this->container['option_value'] = isset($data['option_value']) ? $data['option_value'] : null;
+        $this->container['option_id'] = array_key_exists('option_id', $data) ? $data['option_id'] : null;
+        $this->container['option_value'] = array_key_exists('option_value', $data) ? $data['option_value'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

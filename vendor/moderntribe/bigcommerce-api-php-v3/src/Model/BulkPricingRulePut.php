@@ -2,12 +2,7 @@
 /**
  * BulkPricingRulePut
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,17 +26,7 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * BulkPricingRulePut Class Doc Comment
- *
- * @category    Class */
- // @description The model for a PUT to update bulk pricing rules on a product.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
-class BulkPricingRulePut implements ArrayAccess
+class BulkPricingRulePut extends BulkPricingRule implements ArrayAccess
 {
     const DISCRIMINATOR = null;
 
@@ -80,7 +65,6 @@ class BulkPricingRulePut implements ArrayAccess
         'id' => 'id'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -92,7 +76,6 @@ class BulkPricingRulePut implements ArrayAccess
         'amount' => 'setAmount',
         'id' => 'setId'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -151,13 +134,22 @@ class BulkPricingRulePut implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['quantity_min'] = isset($data['quantity_min']) ? $data['quantity_min'] : null;
-        $this->container['quantity_max'] = isset($data['quantity_max']) ? $data['quantity_max'] : null;
-        $this->container['type'] = isset($data['type']) ? $data['type'] : null;
-        $this->container['amount'] = isset($data['amount']) ? $data['amount'] : null;
-        $this->container['id'] = isset($data['id']) ? $data['id'] : null;
+        $this->container['quantity_min'] = array_key_exists('quantity_min', $data) ? $data['quantity_min'] : null;
+        $this->container['quantity_max'] = array_key_exists('quantity_max', $data) ? $data['quantity_max'] : null;
+        $this->container['type'] = array_key_exists('type', $data) ? $data['type'] : null;
+        $this->container['amount'] = array_key_exists('amount', $data) ? $data['amount'] : null;
+        $this->container['id'] = array_key_exists('id', $data) ? $data['id'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -168,27 +160,22 @@ class BulkPricingRulePut implements ArrayAccess
     public function listInvalidProperties()
     {
         $invalid_properties = [];
-        if (!is_null($this->container['quantity_min']) && ($this->container['quantity_min'] < 0)) {
+        if ($this->container['quantity_min'] < 0) {
             $invalid_properties[] = "invalid value for 'quantity_min', must be bigger than or equal to 0.";
         }
-
-        if (!is_null($this->container['quantity_max']) && ($this->container['quantity_max'] < 0)) {
+        if ($this->container['quantity_max'] < 0) {
             $invalid_properties[] = "invalid value for 'quantity_max', must be bigger than or equal to 0.";
         }
-
         $allowed_values = ["price", "percent", "fixed"];
         if (!in_array($this->container['type'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'type', must be one of #{allowed_values}.";
         }
-
-        if (!is_null($this->container['amount']) && ($this->container['amount'] < 0)) {
+        if ($this->container['amount'] < 0) {
             $invalid_properties[] = "invalid value for 'amount', must be bigger than or equal to 0.";
         }
-
-        if (!is_null($this->container['id']) && ($this->container['id'] < 1)) {
+        if ($this->container['id'] < 1) {
             $invalid_properties[] = "invalid value for 'id', must be bigger than or equal to 1.";
         }
-
         return $invalid_properties;
     }
 
@@ -237,10 +224,9 @@ class BulkPricingRulePut implements ArrayAccess
     public function setQuantityMin($quantity_min)
     {
 
-        if (!is_null($quantity_min) && ($quantity_min < 0)) {
+        if ($quantity_min < 0) {
             throw new \InvalidArgumentException('invalid value for $quantity_min when calling BulkPricingRulePut., must be bigger than or equal to 0.');
         }
-
         $this->container['quantity_min'] = $quantity_min;
 
         return $this;
@@ -263,10 +249,9 @@ class BulkPricingRulePut implements ArrayAccess
     public function setQuantityMax($quantity_max)
     {
 
-        if (!is_null($quantity_max) && ($quantity_max < 0)) {
+        if ($quantity_max < 0) {
             throw new \InvalidArgumentException('invalid value for $quantity_max when calling BulkPricingRulePut., must be bigger than or equal to 0.');
         }
-
         $this->container['quantity_max'] = $quantity_max;
 
         return $this;
@@ -288,7 +273,7 @@ class BulkPricingRulePut implements ArrayAccess
      */
     public function setType($type)
     {
-        $allowed_values = array('price', 'percent', 'fixed');
+        $allowed_values = ['price', 'percent', 'fixed'];
         if (!is_null($type) && (!in_array($type, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'type', must be one of 'price', 'percent', 'fixed'");
         }
@@ -314,10 +299,9 @@ class BulkPricingRulePut implements ArrayAccess
     public function setAmount($amount)
     {
 
-        if (!is_null($amount) && ($amount < 0)) {
+        if ($amount < 0) {
             throw new \InvalidArgumentException('invalid value for $amount when calling BulkPricingRulePut., must be bigger than or equal to 0.');
         }
-
         $this->container['amount'] = $amount;
 
         return $this;
@@ -340,10 +324,9 @@ class BulkPricingRulePut implements ArrayAccess
     public function setId($id)
     {
 
-        if (!is_null($id) && ($id < 1)) {
+        if ($id < 1) {
             throw new \InvalidArgumentException('invalid value for $id when calling BulkPricingRulePut., must be bigger than or equal to 1.');
         }
-
         $this->container['id'] = $id;
 
         return $this;

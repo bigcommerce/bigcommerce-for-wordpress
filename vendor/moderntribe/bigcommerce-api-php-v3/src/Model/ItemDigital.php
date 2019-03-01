@@ -2,12 +2,7 @@
 /**
  * ItemDigital
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * ItemDigital Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class ItemDigital extends BaseItem implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -113,7 +99,6 @@ class ItemDigital extends BaseItem implements ArrayAccess
         'download_size' => 'download_size'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -142,7 +127,6 @@ class ItemDigital extends BaseItem implements ArrayAccess
         'download_page_url' => 'setDownloadPageUrl',
         'download_size' => 'setDownloadSize'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -202,30 +186,39 @@ class ItemDigital extends BaseItem implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['id'] = isset($data['id']) ? $data['id'] : null;
-        $this->container['parent_id'] = isset($data['parent_id']) ? $data['parent_id'] : null;
-        $this->container['variant_id'] = isset($data['variant_id']) ? $data['variant_id'] : null;
-        $this->container['product_id'] = isset($data['product_id']) ? $data['product_id'] : null;
-        $this->container['sku'] = isset($data['sku']) ? $data['sku'] : null;
-        $this->container['name'] = isset($data['name']) ? $data['name'] : null;
-        $this->container['url'] = isset($data['url']) ? $data['url'] : null;
-        $this->container['quantity'] = isset($data['quantity']) ? $data['quantity'] : null;
-        $this->container['is_taxable'] = isset($data['is_taxable']) ? $data['is_taxable'] : null;
-        $this->container['image_url'] = isset($data['image_url']) ? $data['image_url'] : null;
-        $this->container['discounts'] = isset($data['discounts']) ? $data['discounts'] : null;
-        $this->container['coupons'] = isset($data['coupons']) ? $data['coupons'] : null;
-        $this->container['discount_amount'] = isset($data['discount_amount']) ? $data['discount_amount'] : null;
-        $this->container['coupon_amount'] = isset($data['coupon_amount']) ? $data['coupon_amount'] : null;
-        $this->container['list_price'] = isset($data['list_price']) ? $data['list_price'] : null;
-        $this->container['sale_price'] = isset($data['sale_price']) ? $data['sale_price'] : null;
-        $this->container['extended_list_price'] = isset($data['extended_list_price']) ? $data['extended_list_price'] : null;
-        $this->container['extended_sale_price'] = isset($data['extended_sale_price']) ? $data['extended_sale_price'] : null;
-        $this->container['options'] = isset($data['options']) ? $data['options'] : null;
-        $this->container['download_file_urls'] = isset($data['download_file_urls']) ? $data['download_file_urls'] : null;
-        $this->container['download_page_url'] = isset($data['download_page_url']) ? $data['download_page_url'] : null;
-        $this->container['download_size'] = isset($data['download_size']) ? $data['download_size'] : null;
+        $this->container['id'] = array_key_exists('id', $data) ? $data['id'] : null;
+        $this->container['parent_id'] = array_key_exists('parent_id', $data) ? $data['parent_id'] : null;
+        $this->container['variant_id'] = array_key_exists('variant_id', $data) ? $data['variant_id'] : null;
+        $this->container['product_id'] = array_key_exists('product_id', $data) ? $data['product_id'] : null;
+        $this->container['sku'] = array_key_exists('sku', $data) ? $data['sku'] : null;
+        $this->container['name'] = array_key_exists('name', $data) ? $data['name'] : null;
+        $this->container['url'] = array_key_exists('url', $data) ? $data['url'] : null;
+        $this->container['quantity'] = array_key_exists('quantity', $data) ? $data['quantity'] : null;
+        $this->container['is_taxable'] = array_key_exists('is_taxable', $data) ? $data['is_taxable'] : null;
+        $this->container['image_url'] = array_key_exists('image_url', $data) ? $data['image_url'] : null;
+        $this->container['discounts'] = array_key_exists('discounts', $data) ? $data['discounts'] : null;
+        $this->container['coupons'] = array_key_exists('coupons', $data) ? $data['coupons'] : null;
+        $this->container['discount_amount'] = array_key_exists('discount_amount', $data) ? $data['discount_amount'] : null;
+        $this->container['coupon_amount'] = array_key_exists('coupon_amount', $data) ? $data['coupon_amount'] : null;
+        $this->container['list_price'] = array_key_exists('list_price', $data) ? $data['list_price'] : null;
+        $this->container['sale_price'] = array_key_exists('sale_price', $data) ? $data['sale_price'] : null;
+        $this->container['extended_list_price'] = array_key_exists('extended_list_price', $data) ? $data['extended_list_price'] : null;
+        $this->container['extended_sale_price'] = array_key_exists('extended_sale_price', $data) ? $data['extended_sale_price'] : null;
+        $this->container['options'] = array_key_exists('options', $data) ? $data['options'] : null;
+        $this->container['download_file_urls'] = array_key_exists('download_file_urls', $data) ? $data['download_file_urls'] : null;
+        $this->container['download_page_url'] = array_key_exists('download_page_url', $data) ? $data['download_page_url'] : null;
+        $this->container['download_size'] = array_key_exists('download_size', $data) ? $data['download_size'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

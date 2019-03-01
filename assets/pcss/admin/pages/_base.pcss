@@ -1,0 +1,33 @@
+/* Base styles for all Plugin pages. */
+.bc-plugin-page-header {
+	background: var(--color-white);
+	box-sizing: border-box;
+	margin-top: 30px;
+
+	@media (--viewport-wpadmin) {
+		box-shadow: 0 3px 0 0 #eef0f2;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		margin-top: 0;
+		position: fixed;
+		top: 31px;
+		right: 0;
+		padding: 10px 20px;
+		width: calc(100% - 36px);
+		z-index: 3;
+	}
+
+	@media (--viewport-full) {
+		width: calc(100% - 160px);
+	}
+}
+
+.bc-plugin-page-header__logo {
+	display: none;
+
+	@media (--viewport-wpadmin) {
+		display: block;
+	}
+}

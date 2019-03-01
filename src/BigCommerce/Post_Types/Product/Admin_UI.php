@@ -75,11 +75,10 @@ class Admin_UI {
 	 * @param array $views
 	 *
 	 * @return array
-	 * @filter views_edit-bigcommerce_product
+	 * @filter views_edit-bigcommerce_product 10
 	 */
 	public function list_table_import_status( $views = [] ) {
 		$last_import = $this->last_import_date();
-
 		if ( $last_import ) {
 			$views[ 'bc-import-status' ] = sprintf(
 				__( 'Last Import %s', 'bigcommerce' ),
@@ -88,6 +87,29 @@ class Admin_UI {
 		}
 
 		return $views;
+	}
+
+	/**
+	 * Add a link to manage products in BigCommerce to the top
+	 * of the products list table
+	 *
+	 * @param array $views
+	 *
+	 * @return array
+	 * @filter views_edit-bigcommerce_product 2
+	 */
+	public function list_table_manage_link( $views = [] ) {
+		$views[ 'bc-manage-products' ] = sprintf(
+			'<a href="%s" target="_blank" rel="noopener">%s</a>',
+			esc_url( $this->get_manage_products_url() ),
+			__( 'Manage on BigCommerce', 'bigcommerce' )
+		);
+
+		return $views;
+	}
+
+	private function get_manage_products_url() {
+		return 'https://login.bigcommerce.com/deep-links/manage/products';
 	}
 
 	/**

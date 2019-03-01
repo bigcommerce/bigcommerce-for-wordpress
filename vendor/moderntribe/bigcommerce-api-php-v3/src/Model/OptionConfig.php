@@ -2,12 +2,7 @@
 /**
  * OptionConfig
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * OptionConfig Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class OptionConfig implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -117,7 +103,6 @@ class OptionConfig implements ArrayAccess
         'product_list_shipping_calc' => 'product_list_shipping_calc'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -148,7 +133,6 @@ class OptionConfig implements ArrayAccess
         'product_list_adjusts_pricing' => 'setProductListAdjustsPricing',
         'product_list_shipping_calc' => 'setProductListShippingCalc'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -201,6 +185,7 @@ class OptionConfig implements ArrayAccess
     const DATE_LIMIT_MODE_LATEST = 'latest';
     const FILE_TYPES_MODE_SPECIFIC = 'specific';
     const FILE_TYPES_MODE_ALL = 'all';
+    const NUMBER_LIMIT_MODE_ = '';
     const NUMBER_LIMIT_MODE_LOWEST = 'lowest';
     const NUMBER_LIMIT_MODE_HIGHEST = 'highest';
     const NUMBER_LIMIT_MODE_RANGE = 'range';
@@ -242,6 +227,7 @@ class OptionConfig implements ArrayAccess
     public function getNumberLimitModeAllowableValues()
     {
         return [
+            self::NUMBER_LIMIT_MODE_,
             self::NUMBER_LIMIT_MODE_LOWEST,
             self::NUMBER_LIMIT_MODE_HIGHEST,
             self::NUMBER_LIMIT_MODE_RANGE,
@@ -272,32 +258,41 @@ class OptionConfig implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['default_value'] = isset($data['default_value']) ? $data['default_value'] : null;
-        $this->container['checked_by_default'] = isset($data['checked_by_default']) ? $data['checked_by_default'] : null;
-        $this->container['checkbox_label'] = isset($data['checkbox_label']) ? $data['checkbox_label'] : null;
-        $this->container['date_limited'] = isset($data['date_limited']) ? $data['date_limited'] : null;
-        $this->container['date_limit_mode'] = isset($data['date_limit_mode']) ? $data['date_limit_mode'] : null;
-        $this->container['date_earliest_value'] = isset($data['date_earliest_value']) ? $data['date_earliest_value'] : null;
-        $this->container['date_latest_value'] = isset($data['date_latest_value']) ? $data['date_latest_value'] : null;
-        $this->container['file_types_mode'] = isset($data['file_types_mode']) ? $data['file_types_mode'] : null;
-        $this->container['file_types_supported'] = isset($data['file_types_supported']) ? $data['file_types_supported'] : null;
-        $this->container['file_types_other'] = isset($data['file_types_other']) ? $data['file_types_other'] : null;
-        $this->container['file_max_size'] = isset($data['file_max_size']) ? $data['file_max_size'] : null;
-        $this->container['text_characters_limited'] = isset($data['text_characters_limited']) ? $data['text_characters_limited'] : null;
-        $this->container['text_min_length'] = isset($data['text_min_length']) ? $data['text_min_length'] : null;
-        $this->container['text_max_length'] = isset($data['text_max_length']) ? $data['text_max_length'] : null;
-        $this->container['text_lines_limited'] = isset($data['text_lines_limited']) ? $data['text_lines_limited'] : null;
-        $this->container['text_max_lines'] = isset($data['text_max_lines']) ? $data['text_max_lines'] : null;
-        $this->container['number_limited'] = isset($data['number_limited']) ? $data['number_limited'] : null;
-        $this->container['number_limit_mode'] = isset($data['number_limit_mode']) ? $data['number_limit_mode'] : null;
-        $this->container['number_lowest_value'] = isset($data['number_lowest_value']) ? $data['number_lowest_value'] : null;
-        $this->container['number_highest_value'] = isset($data['number_highest_value']) ? $data['number_highest_value'] : null;
-        $this->container['number_integers_only'] = isset($data['number_integers_only']) ? $data['number_integers_only'] : null;
-        $this->container['product_list_adjusts_inventory'] = isset($data['product_list_adjusts_inventory']) ? $data['product_list_adjusts_inventory'] : null;
-        $this->container['product_list_adjusts_pricing'] = isset($data['product_list_adjusts_pricing']) ? $data['product_list_adjusts_pricing'] : null;
-        $this->container['product_list_shipping_calc'] = isset($data['product_list_shipping_calc']) ? $data['product_list_shipping_calc'] : null;
+        $this->container['default_value'] = array_key_exists('default_value', $data) ? $data['default_value'] : null;
+        $this->container['checked_by_default'] = array_key_exists('checked_by_default', $data) ? $data['checked_by_default'] : null;
+        $this->container['checkbox_label'] = array_key_exists('checkbox_label', $data) ? $data['checkbox_label'] : null;
+        $this->container['date_limited'] = array_key_exists('date_limited', $data) ? $data['date_limited'] : null;
+        $this->container['date_limit_mode'] = array_key_exists('date_limit_mode', $data) ? $data['date_limit_mode'] : null;
+        $this->container['date_earliest_value'] = array_key_exists('date_earliest_value', $data) ? $data['date_earliest_value'] : null;
+        $this->container['date_latest_value'] = array_key_exists('date_latest_value', $data) ? $data['date_latest_value'] : null;
+        $this->container['file_types_mode'] = array_key_exists('file_types_mode', $data) ? $data['file_types_mode'] : null;
+        $this->container['file_types_supported'] = array_key_exists('file_types_supported', $data) ? $data['file_types_supported'] : null;
+        $this->container['file_types_other'] = array_key_exists('file_types_other', $data) ? $data['file_types_other'] : null;
+        $this->container['file_max_size'] = array_key_exists('file_max_size', $data) ? $data['file_max_size'] : null;
+        $this->container['text_characters_limited'] = array_key_exists('text_characters_limited', $data) ? $data['text_characters_limited'] : null;
+        $this->container['text_min_length'] = array_key_exists('text_min_length', $data) ? $data['text_min_length'] : null;
+        $this->container['text_max_length'] = array_key_exists('text_max_length', $data) ? $data['text_max_length'] : null;
+        $this->container['text_lines_limited'] = array_key_exists('text_lines_limited', $data) ? $data['text_lines_limited'] : null;
+        $this->container['text_max_lines'] = array_key_exists('text_max_lines', $data) ? $data['text_max_lines'] : null;
+        $this->container['number_limited'] = array_key_exists('number_limited', $data) ? $data['number_limited'] : null;
+        $this->container['number_limit_mode'] = array_key_exists('number_limit_mode', $data) ? $data['number_limit_mode'] : null;
+        $this->container['number_lowest_value'] = array_key_exists('number_lowest_value', $data) ? $data['number_lowest_value'] : null;
+        $this->container['number_highest_value'] = array_key_exists('number_highest_value', $data) ? $data['number_highest_value'] : null;
+        $this->container['number_integers_only'] = array_key_exists('number_integers_only', $data) ? $data['number_integers_only'] : null;
+        $this->container['product_list_adjusts_inventory'] = array_key_exists('product_list_adjusts_inventory', $data) ? $data['product_list_adjusts_inventory'] : null;
+        $this->container['product_list_adjusts_pricing'] = array_key_exists('product_list_adjusts_pricing', $data) ? $data['product_list_adjusts_pricing'] : null;
+        $this->container['product_list_shipping_calc'] = array_key_exists('product_list_shipping_calc', $data) ? $data['product_list_shipping_calc'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -312,22 +307,18 @@ class OptionConfig implements ArrayAccess
         if (!in_array($this->container['date_limit_mode'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'date_limit_mode', must be one of #{allowed_values}.";
         }
-
         $allowed_values = ["specific", "all"];
         if (!in_array($this->container['file_types_mode'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'file_types_mode', must be one of #{allowed_values}.";
         }
-
-        $allowed_values = ["lowest", "highest", "range"];
+        $allowed_values = ["", "lowest", "highest", "range"];
         if (!in_array($this->container['number_limit_mode'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'number_limit_mode', must be one of #{allowed_values}.";
         }
-
         $allowed_values = ["none", "weight", "package"];
         if (!in_array($this->container['product_list_shipping_calc'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'product_list_shipping_calc', must be one of #{allowed_values}.";
         }
-
         return $invalid_properties;
     }
 
@@ -347,7 +338,7 @@ class OptionConfig implements ArrayAccess
         if (!in_array($this->container['file_types_mode'], $allowed_values)) {
             return false;
         }
-        $allowed_values = ["lowest", "highest", "range"];
+        $allowed_values = ["", "lowest", "highest", "range"];
         if (!in_array($this->container['number_limit_mode'], $allowed_values)) {
             return false;
         }
@@ -459,7 +450,7 @@ class OptionConfig implements ArrayAccess
      */
     public function setDateLimitMode($date_limit_mode)
     {
-        $allowed_values = array('earliest', 'range', 'latest');
+        $allowed_values = ['earliest', 'range', 'latest'];
         if (!is_null($date_limit_mode) && (!in_array($date_limit_mode, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'date_limit_mode', must be one of 'earliest', 'range', 'latest'");
         }
@@ -526,7 +517,7 @@ class OptionConfig implements ArrayAccess
      */
     public function setFileTypesMode($file_types_mode)
     {
-        $allowed_values = array('specific', 'all');
+        $allowed_values = ['specific', 'all'];
         if (!is_null($file_types_mode) && (!in_array($file_types_mode, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'file_types_mode', must be one of 'specific', 'all'");
         }
@@ -740,9 +731,9 @@ class OptionConfig implements ArrayAccess
      */
     public function setNumberLimitMode($number_limit_mode)
     {
-        $allowed_values = array('lowest', 'highest', 'range');
+        $allowed_values = ['', 'lowest', 'highest', 'range'];
         if (!is_null($number_limit_mode) && (!in_array($number_limit_mode, $allowed_values))) {
-            throw new \InvalidArgumentException("Invalid value for 'number_limit_mode', must be one of 'lowest', 'highest', 'range'");
+            throw new \InvalidArgumentException("Invalid value for 'number_limit_mode', must be one of '', 'lowest', 'highest', 'range'");
         }
         $this->container['number_limit_mode'] = $number_limit_mode;
 
@@ -870,7 +861,7 @@ class OptionConfig implements ArrayAccess
      */
     public function setProductListShippingCalc($product_list_shipping_calc)
     {
-        $allowed_values = array('none', 'weight', 'package');
+        $allowed_values = ['none', 'weight', 'package'];
         if (!is_null($product_list_shipping_calc) && (!in_array($product_list_shipping_calc, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'product_list_shipping_calc', must be one of 'none', 'weight', 'package'");
         }

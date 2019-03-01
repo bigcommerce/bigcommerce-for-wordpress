@@ -2,12 +2,7 @@
 /**
  * CartCreateRequestData
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * CartCreateRequestData Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class CartCreateRequestData implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -77,7 +63,6 @@ class CartCreateRequestData implements ArrayAccess
         'gift_certificates' => 'gift_certificates'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -88,7 +73,6 @@ class CartCreateRequestData implements ArrayAccess
         'line_items' => 'setLineItems',
         'gift_certificates' => 'setGiftCertificates'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -130,12 +114,21 @@ class CartCreateRequestData implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['customer_id'] = isset($data['customer_id']) ? $data['customer_id'] : null;
-        $this->container['channel_id'] = isset($data['channel_id']) ? $data['channel_id'] : null;
-        $this->container['line_items'] = isset($data['line_items']) ? $data['line_items'] : null;
-        $this->container['gift_certificates'] = isset($data['gift_certificates']) ? $data['gift_certificates'] : null;
+        $this->container['customer_id'] = array_key_exists('customer_id', $data) ? $data['customer_id'] : null;
+        $this->container['channel_id'] = array_key_exists('channel_id', $data) ? $data['channel_id'] : null;
+        $this->container['line_items'] = array_key_exists('line_items', $data) ? $data['line_items'] : null;
+        $this->container['gift_certificates'] = array_key_exists('gift_certificates', $data) ? $data['gift_certificates'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

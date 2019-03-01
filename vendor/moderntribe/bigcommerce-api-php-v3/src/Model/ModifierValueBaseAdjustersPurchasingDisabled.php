@@ -2,12 +2,7 @@
 /**
  * ModifierValueBaseAdjustersPurchasingDisabled
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * ModifierValueBaseAdjustersPurchasingDisabled Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class ModifierValueBaseAdjustersPurchasingDisabled implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -73,7 +59,6 @@ class ModifierValueBaseAdjustersPurchasingDisabled implements ArrayAccess
         'message' => 'message'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -82,7 +67,6 @@ class ModifierValueBaseAdjustersPurchasingDisabled implements ArrayAccess
         'status' => 'setStatus',
         'message' => 'setMessage'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -122,10 +106,19 @@ class ModifierValueBaseAdjustersPurchasingDisabled implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['status'] = isset($data['status']) ? $data['status'] : null;
-        $this->container['message'] = isset($data['message']) ? $data['message'] : null;
+        $this->container['status'] = array_key_exists('status', $data) ? $data['status'] : null;
+        $this->container['message'] = array_key_exists('message', $data) ? $data['message'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

@@ -2,12 +2,7 @@
 /**
  * ContactEntity
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * ContactEntity Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class ContactEntity implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -73,7 +59,6 @@ class ContactEntity implements ArrayAccess
         'email' => 'email'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -82,7 +67,6 @@ class ContactEntity implements ArrayAccess
         'name' => 'setName',
         'email' => 'setEmail'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -122,10 +106,19 @@ class ContactEntity implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['name'] = isset($data['name']) ? $data['name'] : null;
-        $this->container['email'] = isset($data['email']) ? $data['email'] : null;
+        $this->container['name'] = array_key_exists('name', $data) ? $data['name'] : null;
+        $this->container['email'] = array_key_exists('email', $data) ? $data['email'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

@@ -2,12 +2,7 @@
 /**
  * CustomField
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,17 +26,7 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * CustomField Class Doc Comment
- *
- * @category    Class */
- // @description Gets custom fields associated with a product. These allow you to specify additional information that will appear on the product&#39;s page, such as a book&#39;s ISBN or a DVD&#39;s release date.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
-class CustomField implements ArrayAccess
+class CustomField extends CustomFieldBase implements ArrayAccess
 {
     const DISCRIMINATOR = null;
 
@@ -76,7 +61,6 @@ class CustomField implements ArrayAccess
         'id' => 'id'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -86,7 +70,6 @@ class CustomField implements ArrayAccess
         'value' => 'setValue',
         'id' => 'setId'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -127,11 +110,20 @@ class CustomField implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['name'] = isset($data['name']) ? $data['name'] : null;
-        $this->container['value'] = isset($data['value']) ? $data['value'] : null;
-        $this->container['id'] = isset($data['id']) ? $data['id'] : null;
+        $this->container['name'] = array_key_exists('name', $data) ? $data['name'] : null;
+        $this->container['value'] = array_key_exists('value', $data) ? $data['value'] : null;
+        $this->container['id'] = array_key_exists('id', $data) ? $data['id'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -142,26 +134,21 @@ class CustomField implements ArrayAccess
     public function listInvalidProperties()
     {
         $invalid_properties = [];
-        if (!is_null($this->container['name']) && (strlen($this->container['name']) > 250)) {
+        if (strlen($this->container['name']) > 250) {
             $invalid_properties[] = "invalid value for 'name', the character length must be smaller than or equal to 250.";
         }
-
-        if (!is_null($this->container['name']) && (strlen($this->container['name']) < 1)) {
+        if (strlen($this->container['name']) < 1) {
             $invalid_properties[] = "invalid value for 'name', the character length must be bigger than or equal to 1.";
         }
-
-        if (!is_null($this->container['value']) && (strlen($this->container['value']) > 250)) {
+        if (strlen($this->container['value']) > 250) {
             $invalid_properties[] = "invalid value for 'value', the character length must be smaller than or equal to 250.";
         }
-
-        if (!is_null($this->container['value']) && (strlen($this->container['value']) < 1)) {
+        if (strlen($this->container['value']) < 1) {
             $invalid_properties[] = "invalid value for 'value', the character length must be bigger than or equal to 1.";
         }
-
-        if (!is_null($this->container['id']) && ($this->container['id'] < 1)) {
+        if ($this->container['id'] < 1) {
             $invalid_properties[] = "invalid value for 'id', must be bigger than or equal to 1.";
         }
-
         return $invalid_properties;
     }
 
@@ -208,13 +195,12 @@ class CustomField implements ArrayAccess
      */
     public function setName($name)
     {
-        if (!is_null($name) && (strlen($name) > 250)) {
+        if (strlen($name) > 250) {
             throw new \InvalidArgumentException('invalid length for $name when calling CustomField., must be smaller than or equal to 250.');
         }
-        if (!is_null($name) && (strlen($name) < 1)) {
+        if (strlen($name) < 1) {
             throw new \InvalidArgumentException('invalid length for $name when calling CustomField., must be bigger than or equal to 1.');
         }
-
         $this->container['name'] = $name;
 
         return $this;
@@ -236,13 +222,12 @@ class CustomField implements ArrayAccess
      */
     public function setValue($value)
     {
-        if (!is_null($value) && (strlen($value) > 250)) {
+        if (strlen($value) > 250) {
             throw new \InvalidArgumentException('invalid length for $value when calling CustomField., must be smaller than or equal to 250.');
         }
-        if (!is_null($value) && (strlen($value) < 1)) {
+        if (strlen($value) < 1) {
             throw new \InvalidArgumentException('invalid length for $value when calling CustomField., must be bigger than or equal to 1.');
         }
-
         $this->container['value'] = $value;
 
         return $this;
@@ -265,10 +250,9 @@ class CustomField implements ArrayAccess
     public function setId($id)
     {
 
-        if (!is_null($id) && ($id < 1)) {
+        if ($id < 1) {
             throw new \InvalidArgumentException('invalid value for $id when calling CustomField., must be bigger than or equal to 1.');
         }
-
         $this->container['id'] = $id;
 
         return $this;

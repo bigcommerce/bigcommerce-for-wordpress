@@ -2,12 +2,7 @@
 /**
  * CartRedirectUrls
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * CartRedirectUrls Class Doc Comment
- *
- * @category    Class */
- // @description The object that contains the &#x60;redirect_urls&#x60;.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class CartRedirectUrls implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -76,7 +61,6 @@ class CartRedirectUrls implements ArrayAccess
         'embedded_checkout_url' => 'embedded_checkout_url'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -86,7 +70,6 @@ class CartRedirectUrls implements ArrayAccess
         'checkout_url' => 'setCheckoutUrl',
         'embedded_checkout_url' => 'setEmbeddedCheckoutUrl'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -127,11 +110,20 @@ class CartRedirectUrls implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['cart_url'] = isset($data['cart_url']) ? $data['cart_url'] : null;
-        $this->container['checkout_url'] = isset($data['checkout_url']) ? $data['checkout_url'] : null;
-        $this->container['embedded_checkout_url'] = isset($data['embedded_checkout_url']) ? $data['embedded_checkout_url'] : null;
+        $this->container['cart_url'] = array_key_exists('cart_url', $data) ? $data['cart_url'] : null;
+        $this->container['checkout_url'] = array_key_exists('checkout_url', $data) ? $data['checkout_url'] : null;
+        $this->container['embedded_checkout_url'] = array_key_exists('embedded_checkout_url', $data) ? $data['embedded_checkout_url'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

@@ -8,6 +8,7 @@ use BigCommerce\Settings\Screens\Nav_Menu_Screen;
 class Nav_Menu_Options extends Settings_Section {
 	const NAME         = 'nav_menu';
 	const MENU_SELECT  = 'bigcommerce_select_nav_menu';
+	const MENU_NAME    = 'bigcommerce_nav_menu_name';
 	const ITEMS_SELECT = 'bigcommerce_select_menu_items';
 
 	/**
@@ -35,7 +36,20 @@ class Nav_Menu_Options extends Settings_Section {
 			[
 				'option'    => self::MENU_SELECT,
 				'label_for' => 'field-' . self::MENU_SELECT,
-				'classes' => 'regular-text bc-field-choices'
+			]
+		);
+
+		add_settings_field(
+			self::MENU_NAME,
+			esc_html( __( 'New Menu Name', 'bigcommerce' ) ),
+			[ $this, 'render_field', ],
+			$screen,
+			self::NAME,
+			[
+				'option'    => self::MENU_NAME,
+				'label_for' => 'field-' . self::MENU_NAME,
+				'type'      => 'text',
+				'class'     => 'bc-settings-new-menu-field',
 			]
 		);
 
@@ -125,12 +139,9 @@ class Nav_Menu_Options extends Settings_Section {
 		$options = array_map( function ( $menu ) use ( $default ) {
 			return sprintf( '<option value="%d" %s>%s</option>', (int) $menu->term_id, selected( $default, $menu->term_id, false ), esc_html( $menu->name ) );
 		}, $menus );
-		printf( '<select name="%s" id="%s" class="%s" required>', esc_attr( $args[ 'option' ] ), esc_attr( $args[ 'label_for' ] ), esc_attr( $args[ 'classes' ] ) );
-		if ( empty( $options ) ) {
-			printf( '<option value="">%s</option>', esc_html( __( ' — No Menus Available — ', 'bigcommerce' ) ) );
-		} else {
-			echo implode( "\n", $options );
-		}
+		printf( '<select name="%s" id="%s" class="regular-text bc-field-choices" data-js="bc-settings-select-menu-field" required>', esc_attr( $args[ 'option' ] ), esc_attr( $args[ 'label_for' ] ) );
+		printf( '<option value="new">%s</option>', esc_html( __( ' — Create a New Menu — ', 'bigcommerce' ) ) );
+		echo implode( "\n", $options );
 		echo '</select>';
 	}
 

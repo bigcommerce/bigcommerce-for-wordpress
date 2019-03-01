@@ -2,12 +2,7 @@
 /**
  * CartUpdateRequest
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * CartUpdateRequest Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class CartUpdateRequest implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -73,7 +59,6 @@ class CartUpdateRequest implements ArrayAccess
         'gift_certificate' => 'gift_certificate'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -82,7 +67,6 @@ class CartUpdateRequest implements ArrayAccess
         'line_item' => 'setLineItem',
         'gift_certificate' => 'setGiftCertificate'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -122,10 +106,19 @@ class CartUpdateRequest implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['line_item'] = isset($data['line_item']) ? $data['line_item'] : null;
-        $this->container['gift_certificate'] = isset($data['gift_certificate']) ? $data['gift_certificate'] : null;
+        $this->container['line_item'] = array_key_exists('line_item', $data) ? $data['line_item'] : null;
+        $this->container['gift_certificate'] = array_key_exists('gift_certificate', $data) ? $data['gift_certificate'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

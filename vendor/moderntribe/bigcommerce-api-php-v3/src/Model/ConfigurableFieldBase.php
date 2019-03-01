@@ -2,12 +2,7 @@
 /**
  * ConfigurableFieldBase
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * ConfigurableFieldBase Class Doc Comment
- *
- * @category    Class */
- // @description Common ConfigurableField properties.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class ConfigurableFieldBase implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -84,7 +69,6 @@ class ConfigurableFieldBase implements ArrayAccess
         'sort_order' => 'sort_order'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -98,7 +82,6 @@ class ConfigurableFieldBase implements ArrayAccess
         'required' => 'setRequired',
         'sort_order' => 'setSortOrder'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -163,15 +146,24 @@ class ConfigurableFieldBase implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['name'] = isset($data['name']) ? $data['name'] : null;
-        $this->container['type'] = isset($data['type']) ? $data['type'] : null;
-        $this->container['file_allowed_types'] = isset($data['file_allowed_types']) ? $data['file_allowed_types'] : null;
-        $this->container['file_max_size'] = isset($data['file_max_size']) ? $data['file_max_size'] : null;
-        $this->container['select_options'] = isset($data['select_options']) ? $data['select_options'] : null;
-        $this->container['required'] = isset($data['required']) ? $data['required'] : null;
-        $this->container['sort_order'] = isset($data['sort_order']) ? $data['sort_order'] : null;
+        $this->container['name'] = array_key_exists('name', $data) ? $data['name'] : null;
+        $this->container['type'] = array_key_exists('type', $data) ? $data['type'] : null;
+        $this->container['file_allowed_types'] = array_key_exists('file_allowed_types', $data) ? $data['file_allowed_types'] : null;
+        $this->container['file_max_size'] = array_key_exists('file_max_size', $data) ? $data['file_max_size'] : null;
+        $this->container['select_options'] = array_key_exists('select_options', $data) ? $data['select_options'] : null;
+        $this->container['required'] = array_key_exists('required', $data) ? $data['required'] : null;
+        $this->container['sort_order'] = array_key_exists('sort_order', $data) ? $data['sort_order'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -182,27 +174,22 @@ class ConfigurableFieldBase implements ArrayAccess
     public function listInvalidProperties()
     {
         $invalid_properties = [];
-        if (!is_null($this->container['name']) && (strlen($this->container['name']) > 255)) {
+        if (strlen($this->container['name']) > 255) {
             $invalid_properties[] = "invalid value for 'name', the character length must be smaller than or equal to 255.";
         }
-
-        if (!is_null($this->container['name']) && (strlen($this->container['name']) < 1)) {
+        if (strlen($this->container['name']) < 1) {
             $invalid_properties[] = "invalid value for 'name', the character length must be bigger than or equal to 1.";
         }
-
         $allowed_values = ["text", "textarea", "checkbox", "file", "select"];
         if (!in_array($this->container['type'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'type', must be one of #{allowed_values}.";
         }
-
-        if (!is_null($this->container['sort_order']) && ($this->container['sort_order'] > 2147483647)) {
+        if ($this->container['sort_order'] > 2147483647) {
             $invalid_properties[] = "invalid value for 'sort_order', must be smaller than or equal to 2147483647.";
         }
-
-        if (!is_null($this->container['sort_order']) && ($this->container['sort_order'] < -2147483648)) {
+        if ($this->container['sort_order'] < -2147483648) {
             $invalid_properties[] = "invalid value for 'sort_order', must be bigger than or equal to -2147483648.";
         }
-
         return $invalid_properties;
     }
 
@@ -250,13 +237,12 @@ class ConfigurableFieldBase implements ArrayAccess
      */
     public function setName($name)
     {
-        if (!is_null($name) && (strlen($name) > 255)) {
+        if (strlen($name) > 255) {
             throw new \InvalidArgumentException('invalid length for $name when calling ConfigurableFieldBase., must be smaller than or equal to 255.');
         }
-        if (!is_null($name) && (strlen($name) < 1)) {
+        if (strlen($name) < 1) {
             throw new \InvalidArgumentException('invalid length for $name when calling ConfigurableFieldBase., must be bigger than or equal to 1.');
         }
-
         $this->container['name'] = $name;
 
         return $this;
@@ -278,7 +264,7 @@ class ConfigurableFieldBase implements ArrayAccess
      */
     public function setType($type)
     {
-        $allowed_values = array('text', 'textarea', 'checkbox', 'file', 'select');
+        $allowed_values = ['text', 'textarea', 'checkbox', 'file', 'select'];
         if (!is_null($type) && (!in_array($type, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'type', must be one of 'text', 'textarea', 'checkbox', 'file', 'select'");
         }
@@ -388,13 +374,12 @@ class ConfigurableFieldBase implements ArrayAccess
     public function setSortOrder($sort_order)
     {
 
-        if (!is_null($sort_order) && ($sort_order > 2147483647)) {
+        if ($sort_order > 2147483647) {
             throw new \InvalidArgumentException('invalid value for $sort_order when calling ConfigurableFieldBase., must be smaller than or equal to 2147483647.');
         }
-        if (!is_null($sort_order) && ($sort_order < -2147483648)) {
+        if ($sort_order < -2147483648) {
             throw new \InvalidArgumentException('invalid value for $sort_order when calling ConfigurableFieldBase., must be bigger than or equal to -2147483648.');
         }
-
         $this->container['sort_order'] = $sort_order;
 
         return $this;

@@ -39,12 +39,17 @@ class Product_Form extends Controller {
 			self::MIN_QUANTITY        => max( (int) $product->order_quantity_minimum, 1 ),
 			self::MAX_QUANTITY        => $this->get_max_quantity( (int) $product->order_quantity_maximum, $product->get_inventory_level() ),
 			self::OPTIONS             => $this->options[ self::SHOW_OPTIONS ] ? $this->get_options( $product ) : '',
-			self::MODIFIERS           => $this->options[ self::SHOW_OPTIONS ] ? $this->get_modifiers( $product ) : '',
+			self::MODIFIERS           => '', // left for backwards compatibility - 1.7.0
 			self::AJAX_ADD_TO_CART    => (bool) get_option( Cart::OPTION_AJAX_CART, true ),
 			self::QUANTITY_FIELD_TYPE => $this->options[ self::SHOW_OPTIONS ] ? 'number' : 'hidden',
 		];
 	}
 
+	/**
+	 * @param Product $product
+	 *
+	 * @return string The rendered option and modifier fields for the product
+	 */
 	protected function get_options( Product $product ) {
 		$component = Product_Options::factory( [
 			Product_Options::PRODUCT => $product,
@@ -53,12 +58,12 @@ class Product_Form extends Controller {
 		return $component->render();
 	}
 
-	protected function get_modifiers( Product $product ) {
-		$component = Product_Modifiers::factory( [
-			Product_Modifiers::PRODUCT => $product,
-		] );
-
-		return $component->render();
+	/**
+	 * @return string
+	 * @deprecated Modifiers are combined with options as of version 1.7.0
+	 */
+	protected function get_modifiers() {
+		return '';
 	}
 
 	private function get_max_quantity( $order_max, $inventory ) {

@@ -2,12 +2,7 @@
 /**
  * Placement
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * Placement Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class Placement implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -87,7 +73,6 @@ class Placement implements ArrayAccess
         'date_modified' => 'date_modified'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -103,7 +88,6 @@ class Placement implements ArrayAccess
         'date_created' => 'setDateCreated',
         'date_modified' => 'setDateModified'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -164,17 +148,26 @@ class Placement implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['uuid'] = isset($data['uuid']) ? $data['uuid'] : null;
-        $this->container['entity_id'] = isset($data['entity_id']) ? $data['entity_id'] : null;
-        $this->container['status'] = isset($data['status']) ? $data['status'] : null;
-        $this->container['template_file'] = isset($data['template_file']) ? $data['template_file'] : null;
-        $this->container['region'] = isset($data['region']) ? $data['region'] : null;
-        $this->container['sort_order'] = isset($data['sort_order']) ? $data['sort_order'] : null;
-        $this->container['widget'] = isset($data['widget']) ? $data['widget'] : null;
-        $this->container['date_created'] = isset($data['date_created']) ? $data['date_created'] : null;
-        $this->container['date_modified'] = isset($data['date_modified']) ? $data['date_modified'] : null;
+        $this->container['uuid'] = array_key_exists('uuid', $data) ? $data['uuid'] : null;
+        $this->container['entity_id'] = array_key_exists('entity_id', $data) ? $data['entity_id'] : null;
+        $this->container['status'] = array_key_exists('status', $data) ? $data['status'] : null;
+        $this->container['template_file'] = array_key_exists('template_file', $data) ? $data['template_file'] : null;
+        $this->container['region'] = array_key_exists('region', $data) ? $data['region'] : null;
+        $this->container['sort_order'] = array_key_exists('sort_order', $data) ? $data['sort_order'] : null;
+        $this->container['widget'] = array_key_exists('widget', $data) ? $data['widget'] : null;
+        $this->container['date_created'] = array_key_exists('date_created', $data) ? $data['date_created'] : null;
+        $this->container['date_modified'] = array_key_exists('date_modified', $data) ? $data['date_modified'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -189,7 +182,6 @@ class Placement implements ArrayAccess
         if (!in_array($this->container['status'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'status', must be one of #{allowed_values}.";
         }
-
         return $invalid_properties;
     }
 
@@ -267,7 +259,7 @@ class Placement implements ArrayAccess
      */
     public function setStatus($status)
     {
-        $allowed_values = array('inactive', 'active');
+        $allowed_values = ['inactive', 'active'];
         if (!is_null($status) && (!in_array($status, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'status', must be one of 'inactive', 'active'");
         }

@@ -2,12 +2,7 @@
 /**
  * Adjuster
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * Adjuster Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class Adjuster implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -73,7 +59,6 @@ class Adjuster implements ArrayAccess
         'adjuster_value' => 'adjuster_value'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -82,7 +67,6 @@ class Adjuster implements ArrayAccess
         'adjuster' => 'setAdjuster',
         'adjuster_value' => 'setAdjusterValue'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -136,10 +120,19 @@ class Adjuster implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['adjuster'] = isset($data['adjuster']) ? $data['adjuster'] : null;
-        $this->container['adjuster_value'] = isset($data['adjuster_value']) ? $data['adjuster_value'] : null;
+        $this->container['adjuster'] = array_key_exists('adjuster', $data) ? $data['adjuster'] : null;
+        $this->container['adjuster_value'] = array_key_exists('adjuster_value', $data) ? $data['adjuster_value'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -154,7 +147,6 @@ class Adjuster implements ArrayAccess
         if (!in_array($this->container['adjuster'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'adjuster', must be one of #{allowed_values}.";
         }
-
         return $invalid_properties;
     }
 
@@ -190,7 +182,7 @@ class Adjuster implements ArrayAccess
      */
     public function setAdjuster($adjuster)
     {
-        $allowed_values = array('relative', 'percentage');
+        $allowed_values = ['relative', 'percentage'];
         if (!is_null($adjuster) && (!in_array($adjuster, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'adjuster', must be one of 'relative', 'percentage'");
         }

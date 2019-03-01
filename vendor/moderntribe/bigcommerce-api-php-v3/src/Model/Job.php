@@ -2,12 +2,7 @@
 /**
  * Job
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * Job Class Doc Comment
- *
- * @category    Class */
- // @description A job.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class Job implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -84,7 +69,6 @@ class Job implements ArrayAccess
         'warnings' => 'warnings'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -98,7 +82,6 @@ class Job implements ArrayAccess
         'time' => 'setTime',
         'warnings' => 'setWarnings'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -143,15 +126,24 @@ class Job implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['errors'] = isset($data['errors']) ? $data['errors'] : null;
-        $this->container['id'] = isset($data['id']) ? $data['id'] : null;
-        $this->container['percent_complete'] = isset($data['percent_complete']) ? $data['percent_complete'] : null;
-        $this->container['result'] = isset($data['result']) ? $data['result'] : null;
-        $this->container['status'] = isset($data['status']) ? $data['status'] : null;
-        $this->container['time'] = isset($data['time']) ? $data['time'] : null;
-        $this->container['warnings'] = isset($data['warnings']) ? $data['warnings'] : null;
+        $this->container['errors'] = array_key_exists('errors', $data) ? $data['errors'] : null;
+        $this->container['id'] = array_key_exists('id', $data) ? $data['id'] : null;
+        $this->container['percent_complete'] = array_key_exists('percent_complete', $data) ? $data['percent_complete'] : null;
+        $this->container['result'] = array_key_exists('result', $data) ? $data['result'] : null;
+        $this->container['status'] = array_key_exists('status', $data) ? $data['status'] : null;
+        $this->container['time'] = array_key_exists('time', $data) ? $data['time'] : null;
+        $this->container['warnings'] = array_key_exists('warnings', $data) ? $data['warnings'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

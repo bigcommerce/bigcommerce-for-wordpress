@@ -84,28 +84,30 @@ class Product_ID_Fetcher implements Import_Processor {
 			return (int) $listing->getProductId();
 		}, $listings );
 
+		$products = [];
 
-		do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Retrieving products found in listings', 'bigcommerce' ), [
-			'limit' => $this->limit,
-			'ids'   => $product_ids,
-		] );
-		try {
-			$products_response = $this->catalog->getProducts( [
-				'id:in'   => $product_ids,
-				'include' => [ 'variants', 'custom_fields', 'images', 'bulk_pricing_rules' ],
-				'limit'   => $this->limit,
+		if ( ! empty( $product_ids ) ) {
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Retrieving products found in listings', 'bigcommerce' ), [
+				'limit' => $this->limit,
+				'ids'   => $product_ids,
 			] );
-			$products          = [];
-			foreach ( $products_response->getData() as $product ) {
-				$products[ $product->getId() ] = $product;
+			try {
+				$products_response = $this->catalog->getProducts( [
+					'id:in'   => $product_ids,
+					'include' => [ 'variants', 'custom_fields', 'images', 'bulk_pricing_rules' ],
+					'limit'   => $this->limit,
+				] );
+				foreach ( $products_response->getData() as $product ) {
+					$products[ $product->getId() ] = $product;
+				}
+			} catch ( ApiException $e ) {
+				do_action( 'bigcommerce/import/error', $e->getMessage(), [
+					'response' => $e->getResponseBody(),
+					'headers'  => $e->getResponseHeaders(),
+				] );
+
+				return;
 			}
-		} catch ( ApiException $e ) {
-			do_action( 'bigcommerce/import/error', $e->getMessage(), [
-				'response' => $e->getResponseBody(),
-				'headers'  => $e->getResponseHeaders(),
-			] );
-
-			return;
 		}
 
 		/** @var \wpdb $wpdb */

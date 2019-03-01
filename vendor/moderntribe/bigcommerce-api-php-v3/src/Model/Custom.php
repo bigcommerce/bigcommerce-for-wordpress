@@ -2,12 +2,7 @@
 /**
  * Custom
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * Custom Class Doc Comment
- *
- * @category    Class */
- // @description Custom payment from manual order.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class Custom implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -72,7 +57,6 @@ class Custom implements ArrayAccess
         'payment_method' => 'payment_method'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -80,7 +64,6 @@ class Custom implements ArrayAccess
     protected static $setters = [
         'payment_method' => 'setPaymentMethod'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -119,9 +102,18 @@ class Custom implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['payment_method'] = isset($data['payment_method']) ? $data['payment_method'] : null;
+        $this->container['payment_method'] = array_key_exists('payment_method', $data) ? $data['payment_method'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

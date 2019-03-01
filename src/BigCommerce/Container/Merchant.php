@@ -93,14 +93,6 @@ class Merchant extends Provider {
 		$container[ self::CHANNEL_CONNECTOR ] = function ( Container $container ) {
 			return new Channel_Connector( $container[ Api::FACTORY ]->channels() );
 		};
-		add_action( 'admin_menu', $this->create_callback( 'create_first_channel', function () use ( $container ) {
-			if ( wp_doing_ajax() ) {
-				return;
-			}
-			if ( $container[ Settings::CONFIG_STATUS ] < Settings::STATUS_CHANNEL_CONNECTED && $container[ Settings::CONFIG_STATUS ] >= Settings::STATUS_API_CONNECTED ) {
-				$container[ self::CHANNEL_CONNECTOR ]->create_first_channel();
-			}
-		} ), 0, 0 ); // run before menu items are set up
 
 		add_filter( 'sanitize_option_' . Channel_Settings::CHANNEL_ID, $this->create_callback( 'save_channel_id_handler', function ( $value ) use ( $container ) {
 			return $container[ self::CHANNEL_CONNECTOR ]->handle_connect_request( $value );

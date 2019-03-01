@@ -2,12 +2,7 @@
 /**
  * Subscriber
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,7 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * Subscriber Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
-class Subscriber implements ArrayAccess
+class Subscriber extends SubscriberBase implements ArrayAccess
 {
     const DISCRIMINATOR = null;
 
@@ -85,7 +71,6 @@ class Subscriber implements ArrayAccess
         'date_created' => 'date_created'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -100,7 +85,6 @@ class Subscriber implements ArrayAccess
         'date_modified' => 'setDateModified',
         'date_created' => 'setDateCreated'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -146,16 +130,25 @@ class Subscriber implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['id'] = isset($data['id']) ? $data['id'] : null;
-        $this->container['email'] = isset($data['email']) ? $data['email'] : null;
-        $this->container['first_name'] = isset($data['first_name']) ? $data['first_name'] : null;
-        $this->container['last_name'] = isset($data['last_name']) ? $data['last_name'] : null;
-        $this->container['source'] = isset($data['source']) ? $data['source'] : null;
-        $this->container['order_id'] = isset($data['order_id']) ? $data['order_id'] : null;
-        $this->container['date_modified'] = isset($data['date_modified']) ? $data['date_modified'] : null;
-        $this->container['date_created'] = isset($data['date_created']) ? $data['date_created'] : null;
+        $this->container['id'] = array_key_exists('id', $data) ? $data['id'] : null;
+        $this->container['email'] = array_key_exists('email', $data) ? $data['email'] : null;
+        $this->container['first_name'] = array_key_exists('first_name', $data) ? $data['first_name'] : null;
+        $this->container['last_name'] = array_key_exists('last_name', $data) ? $data['last_name'] : null;
+        $this->container['source'] = array_key_exists('source', $data) ? $data['source'] : null;
+        $this->container['order_id'] = array_key_exists('order_id', $data) ? $data['order_id'] : null;
+        $this->container['date_modified'] = array_key_exists('date_modified', $data) ? $data['date_modified'] : null;
+        $this->container['date_created'] = array_key_exists('date_created', $data) ? $data['date_created'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -166,38 +159,30 @@ class Subscriber implements ArrayAccess
     public function listInvalidProperties()
     {
         $invalid_properties = [];
-        if (!is_null($this->container['first_name']) && (strlen($this->container['first_name']) > 255)) {
+        if (strlen($this->container['first_name']) > 255) {
             $invalid_properties[] = "invalid value for 'first_name', the character length must be smaller than or equal to 255.";
         }
-
-        if (!is_null($this->container['first_name']) && (strlen($this->container['first_name']) < 0)) {
+        if (strlen($this->container['first_name']) < 0) {
             $invalid_properties[] = "invalid value for 'first_name', the character length must be bigger than or equal to 0.";
         }
-
-        if (!is_null($this->container['last_name']) && (strlen($this->container['last_name']) > 255)) {
+        if (strlen($this->container['last_name']) > 255) {
             $invalid_properties[] = "invalid value for 'last_name', the character length must be smaller than or equal to 255.";
         }
-
-        if (!is_null($this->container['last_name']) && (strlen($this->container['last_name']) < 0)) {
+        if (strlen($this->container['last_name']) < 0) {
             $invalid_properties[] = "invalid value for 'last_name', the character length must be bigger than or equal to 0.";
         }
-
-        if (!is_null($this->container['source']) && (strlen($this->container['source']) > 255)) {
+        if (strlen($this->container['source']) > 255) {
             $invalid_properties[] = "invalid value for 'source', the character length must be smaller than or equal to 255.";
         }
-
-        if (!is_null($this->container['source']) && (strlen($this->container['source']) < 0)) {
+        if (strlen($this->container['source']) < 0) {
             $invalid_properties[] = "invalid value for 'source', the character length must be bigger than or equal to 0.";
         }
-
-        if (!is_null($this->container['order_id']) && ($this->container['order_id'] > 2147483647)) {
+        if ($this->container['order_id'] > 2147483647) {
             $invalid_properties[] = "invalid value for 'order_id', must be smaller than or equal to 2147483647.";
         }
-
-        if (!is_null($this->container['order_id']) && ($this->container['order_id'] < 1)) {
+        if ($this->container['order_id'] < 1) {
             $invalid_properties[] = "invalid value for 'order_id', must be bigger than or equal to 1.";
         }
-
         return $invalid_properties;
     }
 
@@ -295,13 +280,12 @@ class Subscriber implements ArrayAccess
      */
     public function setFirstName($first_name)
     {
-        if (!is_null($first_name) && (strlen($first_name) > 255)) {
+        if (strlen($first_name) > 255) {
             throw new \InvalidArgumentException('invalid length for $first_name when calling Subscriber., must be smaller than or equal to 255.');
         }
-        if (!is_null($first_name) && (strlen($first_name) < 0)) {
+        if (strlen($first_name) < 0) {
             throw new \InvalidArgumentException('invalid length for $first_name when calling Subscriber., must be bigger than or equal to 0.');
         }
-
         $this->container['first_name'] = $first_name;
 
         return $this;
@@ -323,13 +307,12 @@ class Subscriber implements ArrayAccess
      */
     public function setLastName($last_name)
     {
-        if (!is_null($last_name) && (strlen($last_name) > 255)) {
+        if (strlen($last_name) > 255) {
             throw new \InvalidArgumentException('invalid length for $last_name when calling Subscriber., must be smaller than or equal to 255.');
         }
-        if (!is_null($last_name) && (strlen($last_name) < 0)) {
+        if (strlen($last_name) < 0) {
             throw new \InvalidArgumentException('invalid length for $last_name when calling Subscriber., must be bigger than or equal to 0.');
         }
-
         $this->container['last_name'] = $last_name;
 
         return $this;
@@ -351,13 +334,12 @@ class Subscriber implements ArrayAccess
      */
     public function setSource($source)
     {
-        if (!is_null($source) && (strlen($source) > 255)) {
+        if (strlen($source) > 255) {
             throw new \InvalidArgumentException('invalid length for $source when calling Subscriber., must be smaller than or equal to 255.');
         }
-        if (!is_null($source) && (strlen($source) < 0)) {
+        if (strlen($source) < 0) {
             throw new \InvalidArgumentException('invalid length for $source when calling Subscriber., must be bigger than or equal to 0.');
         }
-
         $this->container['source'] = $source;
 
         return $this;
@@ -380,13 +362,12 @@ class Subscriber implements ArrayAccess
     public function setOrderId($order_id)
     {
 
-        if (!is_null($order_id) && ($order_id > 2147483647)) {
+        if ($order_id > 2147483647) {
             throw new \InvalidArgumentException('invalid value for $order_id when calling Subscriber., must be smaller than or equal to 2147483647.');
         }
-        if (!is_null($order_id) && ($order_id < 1)) {
+        if ($order_id < 1) {
             throw new \InvalidArgumentException('invalid value for $order_id when calling Subscriber., must be bigger than or equal to 1.');
         }
-
         $this->container['order_id'] = $order_id;
 
         return $this;

@@ -17,6 +17,8 @@ const el = {
 const state = {
 	isFetching: false,
 	syncCompleted: false,
+	syncError: false,
+	pollingDelay: 1000,
 };
 
 /**
@@ -30,12 +32,11 @@ const dismissImportNotice = () => {
 /**
  * @function importSuccess
  * @description Handle the creation and display of the successful import message.
- * @param response
  * @param node
  * @param icon
+ * @param response
  */
-const importSuccess = (response, node, icon) => {
-	state.syncCompleted = true;
+const importSuccess = (node, icon, response = '') => {
 	let messageWrapper = tools.getNodes('.bc-import-progress-bar__wrapper', false, document, true)[0];
 
 	if (!messageWrapper) {
@@ -48,7 +49,23 @@ const importSuccess = (response, node, icon) => {
 	tools.removeClass(icon, 'icon-bc-sync');
 	tools.addClass(icon, 'icon-bc-check');
 	tools.addClass(el.container, 'bigcommerce-notice__import-status--success');
-	node.textContent = response.data.products.status;
+	node.textContent = response;
+};
+
+/**
+ * @function importInProgress
+ * @description Handle the display of the ongoing import messages.
+ * @param node
+ * @param icon
+ * @param response
+ */
+const importInProgress = (node, icon, response = '') => {
+	tools.addClass(icon, 'icon-bc-sync');
+	tools.addClass(icon, 'bc-icon');
+	tools.removeClass(icon, 'dashicons');
+	tools.removeClass(icon, 'dashicons-warning');
+	tools.removeClass(el.container, 'bigcommerce-notice__import-status--error');
+	node.textContent = response;
 };
 
 /**
@@ -56,14 +73,17 @@ const importSuccess = (response, node, icon) => {
  * @description Handle the creation and display of the error message on failed imports.
  * @param node
  * @param icon
+ * @param error
  */
-const importError = (node, icon) => {
+const importError = (node, icon, error = '') => {
+	const errorMessage = error.length > 0 ? error : I18N.messages.sync.error;
+
 	tools.removeClass(icon, 'icon-bc-sync');
 	tools.removeClass(icon, 'bc-icon');
 	tools.addClass(icon, 'dashicons');
 	tools.addClass(icon, 'dashicons-warning');
 	tools.addClass(el.container, 'bigcommerce-notice__import-status--error');
-	node.textContent = I18N.messages.sync_error;
+	node.textContent = errorMessage;
 };
 
 /**
@@ -73,35 +93,28 @@ const importError = (node, icon) => {
  */
 const handleStatusMessage = (response = '') => {
 	const currentMessage = tools.getNodes('.bc-import-status-message', false, el.container, true)[0];
-	const icon = tools.getNodes('.icon-bc-sync', false, el.container, true)[0];
+	const icon = tools.getNodes('bc-import-status-icon', false, el.container)[0];
 
-	if (state.syncFailed) {
-		importError(currentMessage, icon);
+	if (state.syncError) {
+		// We have an error and need to create an error message.
+		importError(currentMessage, icon, response);
 		return;
 	}
 
-	if (!response || !response.data) {
-		importError(currentMessage, icon);
+	if (state.syncCompleted) {
+		// We have a successfully completed sync and need to create a success message.
+		importSuccess(currentMessage, icon, response);
 		return;
 	}
 
-
-	if (response.data.status === 'not_started') {
-		if (response.success && response.data.previous !== 'failed') {
-			importSuccess(response, currentMessage, icon);
-			return;
-		}
-
-		importError(currentMessage, icon);
-		return;
-	}
-
-	currentMessage.textContent = response.data.message;
+	// We're still processing the sync procedure and need to print messages regarding the current steps.
+	importInProgress(currentMessage, icon, response);
 };
 
 /**
  * @function updateProgressBar
- * @description use the current values returned from the bron job for total and completed products to move, update and animate the progress bar.
+ * @description use the current values returned from the bron job for total and completed products to move, update and
+ *     animate the progress bar.
  * @param progressBar
  * @param status
  * @param position
@@ -126,7 +139,7 @@ const updateProgressBar = (progressBar, status, position, percent) => {
  * @param status
  */
 const handleProgressBar = (total = '', completed = '', status = '') => {
-	if ((!total && !completed) || state.syncCompleted) {
+	if ((!total && !completed)) {
 		return;
 	}
 
@@ -148,30 +161,19 @@ const handleProgressBar = (total = '', completed = '', status = '') => {
 };
 
 /**
- * @function removeImportErrorNotice
- * @description If an import error notice exists at the time a new sync is triggered, hide the previous error notice.
- */
-const removeImportErrorNotice = () => {
-	const notice = tools.getNodes('.bigcommerce-notice__import-status--error', false, document, true)[0];
-	if (!notice) {
-		return;
-	}
-
-	notice.parentNode.removeChild(notice);
-};
-
-/**
  * @function pollProductSyncWatcher
  * @description Function to recursively ping the ajax action to check the progress of the import cron job process.
  */
 const pollProductSyncWatcher = () => {
 	if (state.syncCompleted) {
+		// The sync process had completed and should not be run again.
 		return;
 	}
 
+	// Begin the sync polling AJAX process.
 	state.isFetching = true;
-	removeImportErrorNotice();
 
+	// Query the admin ajax SuperAgent call to the product sync action.
 	wpAdminAjax({ action: IMPORT_PROGRESS_ACTION, _wpnonce: IMPORT_PROGRESS_NONCE })
 		.timeout({
 			response: 15000,  // Wait 15 seconds for the server to start sending,
@@ -180,36 +182,62 @@ const pollProductSyncWatcher = () => {
 		.end((err, res) => {
 			state.isFetching = false;
 
+			if (err) {
+				// We have an error with the AJAX call and will handle the status codes.
+				state.syncError = true;
+				const errCode = parseFloat(err.status);
+
+				if (err.timeout) {
+					state.syncCompleted = false;
+					handleStatusMessage(I18N.messages.sync.timeout);
+				} else if (errCode >= 500) {
+					const errorMessage = err.response.body ? err.response.body.data.message : I18N.messages.sync.server_error;
+					state.syncCompleted = false;
+					handleStatusMessage(errorMessage);
+				} else if (errCode >= 400 && errCode < 500) {
+					state.syncCompleted = true;
+					handleStatusMessage(I18N.messages.sync.unauthorized);
+				} else {
+					state.syncCompleted = true;
+					handleStatusMessage(I18N.messages.sync.error);
+				}
+			} else if (!res.body) {
+				// Here we have a 200 response from the server but an empty AJAX JSON response.
+				state.syncCompleted = false;
+				state.syncError = true;
+				handleStatusMessage(I18N.messages.sync.server_error);
+			} else {
+				// Here we have good response from the AJAX call and handle the data accordingly.
+				state.syncError = false;
+				// Handle the messaging for all steps.
+				handleStatusMessage(res.body.data.message);
+
+				// Once we reach the products step, handle the progress bar and messaging.
+				const data = res.body.data;
+				if (data.status === 'processing_queue') {
+					// Still working on the products queue.
+					state.syncCompleted = false;
+					handleProgressBar(data.products.total, data.products.completed, data.products.status);
+				} else if (data.status === 'not_started') {
+					// The import is done.
+					state.syncCompleted = true;
+					if (data.previous !== 'failed') {
+						// The sync has not failed and still contains a status response.
+						handleStatusMessage(data.products.status);
+					} else {
+						// The sync has failed.
+						state.syncError = true;
+						handleStatusMessage(I18N.messages.sync.error);
+					}
+				}
+			}
+
+			// Set the delay for the next call based on syncError status.
+			state.pollingDelay = state.syncError ? 20000 : 1000;
+
 			_.delay(() => {
 				pollProductSyncWatcher();
-			}, 1000); // Check after 1 second for a new cron update.
-
-			if (err) {
-				if (err.timeout) {
-					return; // try again next time
-				}
-				console.error(err);
-				state.syncCompleted = true;
-				state.syncFailed = true;
-			}
-
-			if (!res || !res.body) {
-				return;
-			}
-
-			handleStatusMessage(res.body);
-
-			const data = res.body.data;
-			if (data.status === 'processing_queue') {
-				handleProgressBar(data.products.total, data.products.completed, data.products.status);
-			} else if (data.status === 'not_started') {
-				state.syncCompleted = true;
-				if (data.previous !== 'failed') {
-					handleProgressBar(data.products.total, data.products.total, data.products.status);
-				} else {
-					state.syncFailed = true;
-				}
-			}
+			}, state.pollingDelay); // Check after 1 second for a new cron update.
 		});
 };
 

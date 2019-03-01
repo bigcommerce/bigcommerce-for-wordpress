@@ -2,12 +2,7 @@
 /**
  * WhichThemeToDownload
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * WhichThemeToDownload Class Doc Comment
- *
- * @category    Class */
- // @description An object specifying which theme to download. One of: &#x60;original&#x60;: the original Marketplace or uploaded custom theme; &#x60;last_activated&#x60;: the theme version most recently applied to the store; &#x60;last_created&#x60;: the theme version most recently created.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class WhichThemeToDownload implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -72,7 +57,6 @@ class WhichThemeToDownload implements ArrayAccess
         'which' => 'which'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -80,7 +64,6 @@ class WhichThemeToDownload implements ArrayAccess
     protected static $setters = [
         'which' => 'setWhich'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -135,9 +118,18 @@ class WhichThemeToDownload implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['which'] = isset($data['which']) ? $data['which'] : null;
+        $this->container['which'] = array_key_exists('which', $data) ? $data['which'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -152,7 +144,6 @@ class WhichThemeToDownload implements ArrayAccess
         if (!in_array($this->container['which'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'which', must be one of #{allowed_values}.";
         }
-
         return $invalid_properties;
     }
 
@@ -188,7 +179,7 @@ class WhichThemeToDownload implements ArrayAccess
      */
     public function setWhich($which)
     {
-        $allowed_values = array('original', 'last_activated', 'last_created');
+        $allowed_values = ['original', 'last_activated', 'last_created'];
         if (!is_null($which) && (!in_array($which, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'which', must be one of 'original', 'last_activated', 'last_created'");
         }

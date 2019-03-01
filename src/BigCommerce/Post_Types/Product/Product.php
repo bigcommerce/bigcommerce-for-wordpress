@@ -17,6 +17,8 @@ use BigCommerce\Taxonomies\Product_Category\Product_Category;
 class Product {
 	const NAME = 'bigcommerce_product';
 
+	const BIGCOMMERCE_ID            = 'bigcommerce_id';
+	const SKU                       = 'bigcommerce_sku';
 	const SOURCE_DATA_META_KEY      = 'bigcommerce_source_data';
 	const LISTING_DATA_META_KEY     = 'bigcommerce_listing_data';
 	const MODIFIER_DATA_META_KEY    = 'bigcommerce_modifier_data';
@@ -156,6 +158,8 @@ class Product {
 				'type'          => '',
 				'sort_order'    => 0,
 				'option_values' => [],
+				'required'      => true,
+				'config'        => [],
 			] );
 		}, $data );
 
@@ -230,9 +234,13 @@ class Product {
 	 * @return bool
 	 */
 	public function has_options() {
-		$data = $this->get_source_data();
+		$options   = $this->options();
+		$modifiers = $this->modifiers();
+		if ( count( $options ) > 0 || count( $modifiers ) > 0 ) {
+			return true;
+		}
 
-		return count( $data->variants ) > 1;
+		return false;
 	}
 
 

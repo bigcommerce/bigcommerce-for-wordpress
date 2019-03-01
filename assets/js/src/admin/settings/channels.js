@@ -1,6 +1,6 @@
 /**
  * @module Channels Settings
- * @description JS needed for Channels Settings section of Big Commerce Plugin Settings
+ * @description JS needed for Channels Settings section of BigCommerce Plugin Settings
  */
 
 import delegate from 'delegate';

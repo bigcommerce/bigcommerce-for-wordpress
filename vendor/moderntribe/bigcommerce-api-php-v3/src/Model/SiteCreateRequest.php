@@ -2,12 +2,7 @@
 /**
  * SiteCreateRequest
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * SiteCreateRequest Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class SiteCreateRequest implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -73,7 +59,6 @@ class SiteCreateRequest implements ArrayAccess
         'channel_id' => 'channel_id'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -82,7 +67,6 @@ class SiteCreateRequest implements ArrayAccess
         'url' => 'setUrl',
         'channel_id' => 'setChannelId'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -122,10 +106,19 @@ class SiteCreateRequest implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['url'] = isset($data['url']) ? $data['url'] : null;
-        $this->container['channel_id'] = isset($data['channel_id']) ? $data['channel_id'] : null;
+        $this->container['url'] = array_key_exists('url', $data) ? $data['url'] : null;
+        $this->container['channel_id'] = array_key_exists('channel_id', $data) ? $data['channel_id'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

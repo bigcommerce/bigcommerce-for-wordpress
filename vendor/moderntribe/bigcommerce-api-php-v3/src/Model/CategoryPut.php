@@ -2,12 +2,7 @@
 /**
  * CategoryPut
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,17 +26,7 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * CategoryPut Class Doc Comment
- *
- * @category    Class */
- // @description The model for a PUT to update category.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
-class CategoryPut implements ArrayAccess
+class CategoryPut extends CategoryBase implements ArrayAccess
 {
     const DISCRIMINATOR = null;
 
@@ -98,7 +83,6 @@ class CategoryPut implements ArrayAccess
         'custom_url' => 'custom_url'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -119,7 +103,6 @@ class CategoryPut implements ArrayAccess
         'image_url' => 'setImageUrl',
         'custom_url' => 'setCustomUrl'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -199,22 +182,31 @@ class CategoryPut implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['parent_id'] = isset($data['parent_id']) ? $data['parent_id'] : null;
-        $this->container['name'] = isset($data['name']) ? $data['name'] : null;
-        $this->container['description'] = isset($data['description']) ? $data['description'] : null;
-        $this->container['views'] = isset($data['views']) ? $data['views'] : null;
-        $this->container['sort_order'] = isset($data['sort_order']) ? $data['sort_order'] : null;
-        $this->container['page_title'] = isset($data['page_title']) ? $data['page_title'] : null;
-        $this->container['search_keywords'] = isset($data['search_keywords']) ? $data['search_keywords'] : null;
-        $this->container['meta_keywords'] = isset($data['meta_keywords']) ? $data['meta_keywords'] : null;
-        $this->container['meta_description'] = isset($data['meta_description']) ? $data['meta_description'] : null;
-        $this->container['layout_file'] = isset($data['layout_file']) ? $data['layout_file'] : null;
-        $this->container['is_visible'] = isset($data['is_visible']) ? $data['is_visible'] : null;
-        $this->container['default_product_sort'] = isset($data['default_product_sort']) ? $data['default_product_sort'] : null;
-        $this->container['image_url'] = isset($data['image_url']) ? $data['image_url'] : null;
-        $this->container['custom_url'] = isset($data['custom_url']) ? $data['custom_url'] : null;
+        $this->container['parent_id'] = array_key_exists('parent_id', $data) ? $data['parent_id'] : null;
+        $this->container['name'] = array_key_exists('name', $data) ? $data['name'] : null;
+        $this->container['description'] = array_key_exists('description', $data) ? $data['description'] : null;
+        $this->container['views'] = array_key_exists('views', $data) ? $data['views'] : null;
+        $this->container['sort_order'] = array_key_exists('sort_order', $data) ? $data['sort_order'] : null;
+        $this->container['page_title'] = array_key_exists('page_title', $data) ? $data['page_title'] : null;
+        $this->container['search_keywords'] = array_key_exists('search_keywords', $data) ? $data['search_keywords'] : null;
+        $this->container['meta_keywords'] = array_key_exists('meta_keywords', $data) ? $data['meta_keywords'] : null;
+        $this->container['meta_description'] = array_key_exists('meta_description', $data) ? $data['meta_description'] : null;
+        $this->container['layout_file'] = array_key_exists('layout_file', $data) ? $data['layout_file'] : null;
+        $this->container['is_visible'] = array_key_exists('is_visible', $data) ? $data['is_visible'] : null;
+        $this->container['default_product_sort'] = array_key_exists('default_product_sort', $data) ? $data['default_product_sort'] : null;
+        $this->container['image_url'] = array_key_exists('image_url', $data) ? $data['image_url'] : null;
+        $this->container['custom_url'] = array_key_exists('custom_url', $data) ? $data['custom_url'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -225,59 +217,46 @@ class CategoryPut implements ArrayAccess
     public function listInvalidProperties()
     {
         $invalid_properties = [];
-        if (!is_null($this->container['name']) && (strlen($this->container['name']) > 50)) {
+        if (strlen($this->container['name']) > 50) {
             $invalid_properties[] = "invalid value for 'name', the character length must be smaller than or equal to 50.";
         }
-
-        if (!is_null($this->container['name']) && (strlen($this->container['name']) < 1)) {
+        if (strlen($this->container['name']) < 1) {
             $invalid_properties[] = "invalid value for 'name', the character length must be bigger than or equal to 1.";
         }
-
-        if (!is_null($this->container['sort_order']) && ($this->container['sort_order'] > 2147483647)) {
+        if ($this->container['sort_order'] > 2147483647) {
             $invalid_properties[] = "invalid value for 'sort_order', must be smaller than or equal to 2147483647.";
         }
-
-        if (!is_null($this->container['sort_order']) && ($this->container['sort_order'] < -2147483648)) {
+        if ($this->container['sort_order'] < -2147483648) {
             $invalid_properties[] = "invalid value for 'sort_order', must be bigger than or equal to -2147483648.";
         }
-
-        if (!is_null($this->container['page_title']) && (strlen($this->container['page_title']) > 255)) {
+        if (strlen($this->container['page_title']) > 255) {
             $invalid_properties[] = "invalid value for 'page_title', the character length must be smaller than or equal to 255.";
         }
-
-        if (!is_null($this->container['page_title']) && (strlen($this->container['page_title']) < 0)) {
+        if (strlen($this->container['page_title']) < 0) {
             $invalid_properties[] = "invalid value for 'page_title', the character length must be bigger than or equal to 0.";
         }
-
-        if (!is_null($this->container['search_keywords']) && (strlen($this->container['search_keywords']) > 65535)) {
+        if (strlen($this->container['search_keywords']) > 65535) {
             $invalid_properties[] = "invalid value for 'search_keywords', the character length must be smaller than or equal to 65535.";
         }
-
-        if (!is_null($this->container['search_keywords']) && (strlen($this->container['search_keywords']) < 0)) {
+        if (strlen($this->container['search_keywords']) < 0) {
             $invalid_properties[] = "invalid value for 'search_keywords', the character length must be bigger than or equal to 0.";
         }
-
-        if (!is_null($this->container['meta_description']) && (strlen($this->container['meta_description']) > 65535)) {
+        if (strlen($this->container['meta_description']) > 65535) {
             $invalid_properties[] = "invalid value for 'meta_description', the character length must be smaller than or equal to 65535.";
         }
-
-        if (!is_null($this->container['meta_description']) && (strlen($this->container['meta_description']) < 0)) {
+        if (strlen($this->container['meta_description']) < 0) {
             $invalid_properties[] = "invalid value for 'meta_description', the character length must be bigger than or equal to 0.";
         }
-
-        if (!is_null($this->container['layout_file']) && (strlen($this->container['layout_file']) > 500)) {
+        if (strlen($this->container['layout_file']) > 500) {
             $invalid_properties[] = "invalid value for 'layout_file', the character length must be smaller than or equal to 500.";
         }
-
-        if (!is_null($this->container['layout_file']) && (strlen($this->container['layout_file']) < 0)) {
+        if (strlen($this->container['layout_file']) < 0) {
             $invalid_properties[] = "invalid value for 'layout_file', the character length must be bigger than or equal to 0.";
         }
-
         $allowed_values = ["use_store_settings", "featured", "newest", "best_selling", "alpha_asc", "alpha_desc", "avg_customer_review", "price_asc", "price_desc"];
         if (!in_array($this->container['default_product_sort'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'default_product_sort', must be one of #{allowed_values}.";
         }
-
         return $invalid_properties;
     }
 
@@ -370,13 +349,12 @@ class CategoryPut implements ArrayAccess
      */
     public function setName($name)
     {
-        if (!is_null($name) && (strlen($name) > 50)) {
+        if (strlen($name) > 50) {
             throw new \InvalidArgumentException('invalid length for $name when calling CategoryPut., must be smaller than or equal to 50.');
         }
-        if (!is_null($name) && (strlen($name) < 1)) {
+        if (strlen($name) < 1) {
             throw new \InvalidArgumentException('invalid length for $name when calling CategoryPut., must be bigger than or equal to 1.');
         }
-
         $this->container['name'] = $name;
 
         return $this;
@@ -441,13 +419,12 @@ class CategoryPut implements ArrayAccess
     public function setSortOrder($sort_order)
     {
 
-        if (!is_null($sort_order) && ($sort_order > 2147483647)) {
+        if ($sort_order > 2147483647) {
             throw new \InvalidArgumentException('invalid value for $sort_order when calling CategoryPut., must be smaller than or equal to 2147483647.');
         }
-        if (!is_null($sort_order) && ($sort_order < -2147483648)) {
+        if ($sort_order < -2147483648) {
             throw new \InvalidArgumentException('invalid value for $sort_order when calling CategoryPut., must be bigger than or equal to -2147483648.');
         }
-
         $this->container['sort_order'] = $sort_order;
 
         return $this;
@@ -469,13 +446,12 @@ class CategoryPut implements ArrayAccess
      */
     public function setPageTitle($page_title)
     {
-        if (!is_null($page_title) && (strlen($page_title) > 255)) {
+        if (strlen($page_title) > 255) {
             throw new \InvalidArgumentException('invalid length for $page_title when calling CategoryPut., must be smaller than or equal to 255.');
         }
-        if (!is_null($page_title) && (strlen($page_title) < 0)) {
+        if (strlen($page_title) < 0) {
             throw new \InvalidArgumentException('invalid length for $page_title when calling CategoryPut., must be bigger than or equal to 0.');
         }
-
         $this->container['page_title'] = $page_title;
 
         return $this;
@@ -497,13 +473,12 @@ class CategoryPut implements ArrayAccess
      */
     public function setSearchKeywords($search_keywords)
     {
-        if (!is_null($search_keywords) && (strlen($search_keywords) > 65535)) {
+        if (strlen($search_keywords) > 65535) {
             throw new \InvalidArgumentException('invalid length for $search_keywords when calling CategoryPut., must be smaller than or equal to 65535.');
         }
-        if (!is_null($search_keywords) && (strlen($search_keywords) < 0)) {
+        if (strlen($search_keywords) < 0) {
             throw new \InvalidArgumentException('invalid length for $search_keywords when calling CategoryPut., must be bigger than or equal to 0.');
         }
-
         $this->container['search_keywords'] = $search_keywords;
 
         return $this;
@@ -546,13 +521,12 @@ class CategoryPut implements ArrayAccess
      */
     public function setMetaDescription($meta_description)
     {
-        if (!is_null($meta_description) && (strlen($meta_description) > 65535)) {
+        if (strlen($meta_description) > 65535) {
             throw new \InvalidArgumentException('invalid length for $meta_description when calling CategoryPut., must be smaller than or equal to 65535.');
         }
-        if (!is_null($meta_description) && (strlen($meta_description) < 0)) {
+        if (strlen($meta_description) < 0) {
             throw new \InvalidArgumentException('invalid length for $meta_description when calling CategoryPut., must be bigger than or equal to 0.');
         }
-
         $this->container['meta_description'] = $meta_description;
 
         return $this;
@@ -574,13 +548,12 @@ class CategoryPut implements ArrayAccess
      */
     public function setLayoutFile($layout_file)
     {
-        if (!is_null($layout_file) && (strlen($layout_file) > 500)) {
+        if (strlen($layout_file) > 500) {
             throw new \InvalidArgumentException('invalid length for $layout_file when calling CategoryPut., must be smaller than or equal to 500.');
         }
-        if (!is_null($layout_file) && (strlen($layout_file) < 0)) {
+        if (strlen($layout_file) < 0) {
             throw new \InvalidArgumentException('invalid length for $layout_file when calling CategoryPut., must be bigger than or equal to 0.');
         }
-
         $this->container['layout_file'] = $layout_file;
 
         return $this;
@@ -623,7 +596,7 @@ class CategoryPut implements ArrayAccess
      */
     public function setDefaultProductSort($default_product_sort)
     {
-        $allowed_values = array('use_store_settings', 'featured', 'newest', 'best_selling', 'alpha_asc', 'alpha_desc', 'avg_customer_review', 'price_asc', 'price_desc');
+        $allowed_values = ['use_store_settings', 'featured', 'newest', 'best_selling', 'alpha_asc', 'alpha_desc', 'avg_customer_review', 'price_asc', 'price_desc'];
         if (!is_null($default_product_sort) && (!in_array($default_product_sort, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'default_product_sort', must be one of 'use_store_settings', 'featured', 'newest', 'best_selling', 'alpha_asc', 'alpha_desc', 'avg_customer_review', 'price_asc', 'price_desc'");
         }

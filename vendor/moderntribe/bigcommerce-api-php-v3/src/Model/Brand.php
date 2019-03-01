@@ -2,12 +2,7 @@
 /**
  * Brand
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,7 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * Brand Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
-class Brand implements ArrayAccess
+class Brand extends BrandBase implements ArrayAccess
 {
     const DISCRIMINATOR = null;
 
@@ -85,7 +71,6 @@ class Brand implements ArrayAccess
         'id' => 'id'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -100,7 +85,6 @@ class Brand implements ArrayAccess
         'custom_url' => 'setCustomUrl',
         'id' => 'setId'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -146,16 +130,25 @@ class Brand implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['name'] = isset($data['name']) ? $data['name'] : null;
-        $this->container['page_title'] = isset($data['page_title']) ? $data['page_title'] : null;
-        $this->container['meta_keywords'] = isset($data['meta_keywords']) ? $data['meta_keywords'] : null;
-        $this->container['meta_description'] = isset($data['meta_description']) ? $data['meta_description'] : null;
-        $this->container['search_keywords'] = isset($data['search_keywords']) ? $data['search_keywords'] : null;
-        $this->container['image_url'] = isset($data['image_url']) ? $data['image_url'] : null;
-        $this->container['custom_url'] = isset($data['custom_url']) ? $data['custom_url'] : null;
-        $this->container['id'] = isset($data['id']) ? $data['id'] : null;
+        $this->container['name'] = array_key_exists('name', $data) ? $data['name'] : null;
+        $this->container['page_title'] = array_key_exists('page_title', $data) ? $data['page_title'] : null;
+        $this->container['meta_keywords'] = array_key_exists('meta_keywords', $data) ? $data['meta_keywords'] : null;
+        $this->container['meta_description'] = array_key_exists('meta_description', $data) ? $data['meta_description'] : null;
+        $this->container['search_keywords'] = array_key_exists('search_keywords', $data) ? $data['search_keywords'] : null;
+        $this->container['image_url'] = array_key_exists('image_url', $data) ? $data['image_url'] : null;
+        $this->container['custom_url'] = array_key_exists('custom_url', $data) ? $data['custom_url'] : null;
+        $this->container['id'] = array_key_exists('id', $data) ? $data['id'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -166,38 +159,30 @@ class Brand implements ArrayAccess
     public function listInvalidProperties()
     {
         $invalid_properties = [];
-        if (!is_null($this->container['name']) && (strlen($this->container['name']) > 255)) {
+        if (strlen($this->container['name']) > 255) {
             $invalid_properties[] = "invalid value for 'name', the character length must be smaller than or equal to 255.";
         }
-
-        if (!is_null($this->container['name']) && (strlen($this->container['name']) < 1)) {
+        if (strlen($this->container['name']) < 1) {
             $invalid_properties[] = "invalid value for 'name', the character length must be bigger than or equal to 1.";
         }
-
-        if (!is_null($this->container['page_title']) && (strlen($this->container['page_title']) > 255)) {
+        if (strlen($this->container['page_title']) > 255) {
             $invalid_properties[] = "invalid value for 'page_title', the character length must be smaller than or equal to 255.";
         }
-
-        if (!is_null($this->container['page_title']) && (strlen($this->container['page_title']) < 0)) {
+        if (strlen($this->container['page_title']) < 0) {
             $invalid_properties[] = "invalid value for 'page_title', the character length must be bigger than or equal to 0.";
         }
-
-        if (!is_null($this->container['meta_description']) && (strlen($this->container['meta_description']) > 65535)) {
+        if (strlen($this->container['meta_description']) > 65535) {
             $invalid_properties[] = "invalid value for 'meta_description', the character length must be smaller than or equal to 65535.";
         }
-
-        if (!is_null($this->container['meta_description']) && (strlen($this->container['meta_description']) < 0)) {
+        if (strlen($this->container['meta_description']) < 0) {
             $invalid_properties[] = "invalid value for 'meta_description', the character length must be bigger than or equal to 0.";
         }
-
-        if (!is_null($this->container['search_keywords']) && (strlen($this->container['search_keywords']) > 65535)) {
+        if (strlen($this->container['search_keywords']) > 65535) {
             $invalid_properties[] = "invalid value for 'search_keywords', the character length must be smaller than or equal to 65535.";
         }
-
-        if (!is_null($this->container['search_keywords']) && (strlen($this->container['search_keywords']) < 0)) {
+        if (strlen($this->container['search_keywords']) < 0) {
             $invalid_properties[] = "invalid value for 'search_keywords', the character length must be bigger than or equal to 0.";
         }
-
         return $invalid_properties;
     }
 
@@ -253,13 +238,12 @@ class Brand implements ArrayAccess
      */
     public function setName($name)
     {
-        if (!is_null($name) && (strlen($name) > 255)) {
+        if (strlen($name) > 255) {
             throw new \InvalidArgumentException('invalid length for $name when calling Brand., must be smaller than or equal to 255.');
         }
-        if (!is_null($name) && (strlen($name) < 1)) {
+        if (strlen($name) < 1) {
             throw new \InvalidArgumentException('invalid length for $name when calling Brand., must be bigger than or equal to 1.');
         }
-
         $this->container['name'] = $name;
 
         return $this;
@@ -281,13 +265,12 @@ class Brand implements ArrayAccess
      */
     public function setPageTitle($page_title)
     {
-        if (!is_null($page_title) && (strlen($page_title) > 255)) {
+        if (strlen($page_title) > 255) {
             throw new \InvalidArgumentException('invalid length for $page_title when calling Brand., must be smaller than or equal to 255.');
         }
-        if (!is_null($page_title) && (strlen($page_title) < 0)) {
+        if (strlen($page_title) < 0) {
             throw new \InvalidArgumentException('invalid length for $page_title when calling Brand., must be bigger than or equal to 0.');
         }
-
         $this->container['page_title'] = $page_title;
 
         return $this;
@@ -330,13 +313,12 @@ class Brand implements ArrayAccess
      */
     public function setMetaDescription($meta_description)
     {
-        if (!is_null($meta_description) && (strlen($meta_description) > 65535)) {
+        if (strlen($meta_description) > 65535) {
             throw new \InvalidArgumentException('invalid length for $meta_description when calling Brand., must be smaller than or equal to 65535.');
         }
-        if (!is_null($meta_description) && (strlen($meta_description) < 0)) {
+        if (strlen($meta_description) < 0) {
             throw new \InvalidArgumentException('invalid length for $meta_description when calling Brand., must be bigger than or equal to 0.');
         }
-
         $this->container['meta_description'] = $meta_description;
 
         return $this;
@@ -358,13 +340,12 @@ class Brand implements ArrayAccess
      */
     public function setSearchKeywords($search_keywords)
     {
-        if (!is_null($search_keywords) && (strlen($search_keywords) > 65535)) {
+        if (strlen($search_keywords) > 65535) {
             throw new \InvalidArgumentException('invalid length for $search_keywords when calling Brand., must be smaller than or equal to 65535.');
         }
-        if (!is_null($search_keywords) && (strlen($search_keywords) < 0)) {
+        if (strlen($search_keywords) < 0) {
             throw new \InvalidArgumentException('invalid length for $search_keywords when calling Brand., must be bigger than or equal to 0.');
         }
-
         $this->container['search_keywords'] = $search_keywords;
 
         return $this;

@@ -2,12 +2,7 @@
 /**
  * VariantProductPost
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,17 +26,7 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * VariantProductPost Class Doc Comment
- *
- * @category    Class */
- // @description The model for a POST to create variants on a product.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
-class VariantProductPost implements ArrayAccess
+class VariantProductPost extends VariantBase implements ArrayAccess
 {
     const DISCRIMINATOR = null;
 
@@ -110,7 +95,6 @@ class VariantProductPost implements ArrayAccess
         'option_values' => 'option_values'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -137,7 +121,6 @@ class VariantProductPost implements ArrayAccess
         'sku' => 'setSku',
         'option_values' => 'setOptionValues'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -195,28 +178,37 @@ class VariantProductPost implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['cost_price'] = isset($data['cost_price']) ? $data['cost_price'] : null;
-        $this->container['price'] = isset($data['price']) ? $data['price'] : null;
-        $this->container['sale_price'] = isset($data['sale_price']) ? $data['sale_price'] : null;
-        $this->container['retail_price'] = isset($data['retail_price']) ? $data['retail_price'] : null;
-        $this->container['weight'] = isset($data['weight']) ? $data['weight'] : null;
-        $this->container['width'] = isset($data['width']) ? $data['width'] : null;
-        $this->container['height'] = isset($data['height']) ? $data['height'] : null;
-        $this->container['depth'] = isset($data['depth']) ? $data['depth'] : null;
-        $this->container['is_free_shipping'] = isset($data['is_free_shipping']) ? $data['is_free_shipping'] : null;
-        $this->container['fixed_cost_shipping_price'] = isset($data['fixed_cost_shipping_price']) ? $data['fixed_cost_shipping_price'] : null;
-        $this->container['purchasing_disabled'] = isset($data['purchasing_disabled']) ? $data['purchasing_disabled'] : null;
-        $this->container['purchasing_disabled_message'] = isset($data['purchasing_disabled_message']) ? $data['purchasing_disabled_message'] : null;
-        $this->container['image_url'] = isset($data['image_url']) ? $data['image_url'] : null;
-        $this->container['upc'] = isset($data['upc']) ? $data['upc'] : null;
-        $this->container['inventory_level'] = isset($data['inventory_level']) ? $data['inventory_level'] : null;
-        $this->container['inventory_warning_level'] = isset($data['inventory_warning_level']) ? $data['inventory_warning_level'] : null;
-        $this->container['bin_picking_number'] = isset($data['bin_picking_number']) ? $data['bin_picking_number'] : null;
-        $this->container['product_id'] = isset($data['product_id']) ? $data['product_id'] : null;
-        $this->container['sku'] = isset($data['sku']) ? $data['sku'] : null;
-        $this->container['option_values'] = isset($data['option_values']) ? $data['option_values'] : null;
+        $this->container['cost_price'] = array_key_exists('cost_price', $data) ? $data['cost_price'] : null;
+        $this->container['price'] = array_key_exists('price', $data) ? $data['price'] : null;
+        $this->container['sale_price'] = array_key_exists('sale_price', $data) ? $data['sale_price'] : null;
+        $this->container['retail_price'] = array_key_exists('retail_price', $data) ? $data['retail_price'] : null;
+        $this->container['weight'] = array_key_exists('weight', $data) ? $data['weight'] : null;
+        $this->container['width'] = array_key_exists('width', $data) ? $data['width'] : null;
+        $this->container['height'] = array_key_exists('height', $data) ? $data['height'] : null;
+        $this->container['depth'] = array_key_exists('depth', $data) ? $data['depth'] : null;
+        $this->container['is_free_shipping'] = array_key_exists('is_free_shipping', $data) ? $data['is_free_shipping'] : null;
+        $this->container['fixed_cost_shipping_price'] = array_key_exists('fixed_cost_shipping_price', $data) ? $data['fixed_cost_shipping_price'] : null;
+        $this->container['purchasing_disabled'] = array_key_exists('purchasing_disabled', $data) ? $data['purchasing_disabled'] : null;
+        $this->container['purchasing_disabled_message'] = array_key_exists('purchasing_disabled_message', $data) ? $data['purchasing_disabled_message'] : null;
+        $this->container['image_url'] = array_key_exists('image_url', $data) ? $data['image_url'] : null;
+        $this->container['upc'] = array_key_exists('upc', $data) ? $data['upc'] : null;
+        $this->container['inventory_level'] = array_key_exists('inventory_level', $data) ? $data['inventory_level'] : null;
+        $this->container['inventory_warning_level'] = array_key_exists('inventory_warning_level', $data) ? $data['inventory_warning_level'] : null;
+        $this->container['bin_picking_number'] = array_key_exists('bin_picking_number', $data) ? $data['bin_picking_number'] : null;
+        $this->container['product_id'] = array_key_exists('product_id', $data) ? $data['product_id'] : null;
+        $this->container['sku'] = array_key_exists('sku', $data) ? $data['sku'] : null;
+        $this->container['option_values'] = array_key_exists('option_values', $data) ? $data['option_values'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -227,66 +219,51 @@ class VariantProductPost implements ArrayAccess
     public function listInvalidProperties()
     {
         $invalid_properties = [];
-        if (!is_null($this->container['cost_price']) && ($this->container['cost_price'] < 0)) {
+        if ($this->container['cost_price'] < 0) {
             $invalid_properties[] = "invalid value for 'cost_price', must be bigger than or equal to 0.";
         }
-
-        if (!is_null($this->container['price']) && ($this->container['price'] < 0)) {
+        if ($this->container['price'] < 0) {
             $invalid_properties[] = "invalid value for 'price', must be bigger than or equal to 0.";
         }
-
-        if (!is_null($this->container['sale_price']) && ($this->container['sale_price'] < 0)) {
+        if ($this->container['sale_price'] < 0) {
             $invalid_properties[] = "invalid value for 'sale_price', must be bigger than or equal to 0.";
         }
-
-        if (!is_null($this->container['retail_price']) && ($this->container['retail_price'] < 0)) {
+        if ($this->container['retail_price'] < 0) {
             $invalid_properties[] = "invalid value for 'retail_price', must be bigger than or equal to 0.";
         }
-
-        if (!is_null($this->container['weight']) && ($this->container['weight'] < 0)) {
+        if ($this->container['weight'] < 0) {
             $invalid_properties[] = "invalid value for 'weight', must be bigger than or equal to 0.";
         }
-
-        if (!is_null($this->container['width']) && ($this->container['width'] < 0)) {
+        if ($this->container['width'] < 0) {
             $invalid_properties[] = "invalid value for 'width', must be bigger than or equal to 0.";
         }
-
-        if (!is_null($this->container['height']) && ($this->container['height'] < 0)) {
+        if ($this->container['height'] < 0) {
             $invalid_properties[] = "invalid value for 'height', must be bigger than or equal to 0.";
         }
-
-        if (!is_null($this->container['depth']) && ($this->container['depth'] < 0)) {
+        if ($this->container['depth'] < 0) {
             $invalid_properties[] = "invalid value for 'depth', must be bigger than or equal to 0.";
         }
-
-        if (!is_null($this->container['fixed_cost_shipping_price']) && ($this->container['fixed_cost_shipping_price'] < 0)) {
+        if ($this->container['fixed_cost_shipping_price'] < 0) {
             $invalid_properties[] = "invalid value for 'fixed_cost_shipping_price', must be bigger than or equal to 0.";
         }
-
-        if (!is_null($this->container['purchasing_disabled_message']) && (strlen($this->container['purchasing_disabled_message']) > 255)) {
+        if (strlen($this->container['purchasing_disabled_message']) > 255) {
             $invalid_properties[] = "invalid value for 'purchasing_disabled_message', the character length must be smaller than or equal to 255.";
         }
-
-        if (!is_null($this->container['purchasing_disabled_message']) && (strlen($this->container['purchasing_disabled_message']) < 0)) {
+        if (strlen($this->container['purchasing_disabled_message']) < 0) {
             $invalid_properties[] = "invalid value for 'purchasing_disabled_message', the character length must be bigger than or equal to 0.";
         }
-
-        if (!is_null($this->container['bin_picking_number']) && (strlen($this->container['bin_picking_number']) > 255)) {
+        if (strlen($this->container['bin_picking_number']) > 255) {
             $invalid_properties[] = "invalid value for 'bin_picking_number', the character length must be smaller than or equal to 255.";
         }
-
-        if (!is_null($this->container['bin_picking_number']) && (strlen($this->container['bin_picking_number']) < 0)) {
+        if (strlen($this->container['bin_picking_number']) < 0) {
             $invalid_properties[] = "invalid value for 'bin_picking_number', the character length must be bigger than or equal to 0.";
         }
-
-        if (!is_null($this->container['sku']) && (strlen($this->container['sku']) > 255)) {
+        if (strlen($this->container['sku']) > 255) {
             $invalid_properties[] = "invalid value for 'sku', the character length must be smaller than or equal to 255.";
         }
-
-        if (!is_null($this->container['sku']) && (strlen($this->container['sku']) < 1)) {
+        if (strlen($this->container['sku']) < 1) {
             $invalid_properties[] = "invalid value for 'sku', the character length must be bigger than or equal to 1.";
         }
-
         return $invalid_properties;
     }
 
@@ -364,10 +341,9 @@ class VariantProductPost implements ArrayAccess
     public function setCostPrice($cost_price)
     {
 
-        if (!is_null($cost_price) && ($cost_price < 0)) {
+        if ($cost_price < 0) {
             throw new \InvalidArgumentException('invalid value for $cost_price when calling VariantProductPost., must be bigger than or equal to 0.');
         }
-
         $this->container['cost_price'] = $cost_price;
 
         return $this;
@@ -390,10 +366,9 @@ class VariantProductPost implements ArrayAccess
     public function setPrice($price)
     {
 
-        if (!is_null($price) && ($price < 0)) {
+        if ($price < 0) {
             throw new \InvalidArgumentException('invalid value for $price when calling VariantProductPost., must be bigger than or equal to 0.');
         }
-
         $this->container['price'] = $price;
 
         return $this;
@@ -416,10 +391,9 @@ class VariantProductPost implements ArrayAccess
     public function setSalePrice($sale_price)
     {
 
-        if (!is_null($sale_price) && ($sale_price < 0)) {
+        if ($sale_price < 0) {
             throw new \InvalidArgumentException('invalid value for $sale_price when calling VariantProductPost., must be bigger than or equal to 0.');
         }
-
         $this->container['sale_price'] = $sale_price;
 
         return $this;
@@ -442,10 +416,9 @@ class VariantProductPost implements ArrayAccess
     public function setRetailPrice($retail_price)
     {
 
-        if (!is_null($retail_price) && ($retail_price < 0)) {
+        if ($retail_price < 0) {
             throw new \InvalidArgumentException('invalid value for $retail_price when calling VariantProductPost., must be bigger than or equal to 0.');
         }
-
         $this->container['retail_price'] = $retail_price;
 
         return $this;
@@ -468,10 +441,9 @@ class VariantProductPost implements ArrayAccess
     public function setWeight($weight)
     {
 
-        if (!is_null($weight) && ($weight < 0)) {
+        if ($weight < 0) {
             throw new \InvalidArgumentException('invalid value for $weight when calling VariantProductPost., must be bigger than or equal to 0.');
         }
-
         $this->container['weight'] = $weight;
 
         return $this;
@@ -494,10 +466,9 @@ class VariantProductPost implements ArrayAccess
     public function setWidth($width)
     {
 
-        if (!is_null($width) && ($width < 0)) {
+        if ($width < 0) {
             throw new \InvalidArgumentException('invalid value for $width when calling VariantProductPost., must be bigger than or equal to 0.');
         }
-
         $this->container['width'] = $width;
 
         return $this;
@@ -520,10 +491,9 @@ class VariantProductPost implements ArrayAccess
     public function setHeight($height)
     {
 
-        if (!is_null($height) && ($height < 0)) {
+        if ($height < 0) {
             throw new \InvalidArgumentException('invalid value for $height when calling VariantProductPost., must be bigger than or equal to 0.');
         }
-
         $this->container['height'] = $height;
 
         return $this;
@@ -546,10 +516,9 @@ class VariantProductPost implements ArrayAccess
     public function setDepth($depth)
     {
 
-        if (!is_null($depth) && ($depth < 0)) {
+        if ($depth < 0) {
             throw new \InvalidArgumentException('invalid value for $depth when calling VariantProductPost., must be bigger than or equal to 0.');
         }
-
         $this->container['depth'] = $depth;
 
         return $this;
@@ -593,10 +562,9 @@ class VariantProductPost implements ArrayAccess
     public function setFixedCostShippingPrice($fixed_cost_shipping_price)
     {
 
-        if (!is_null($fixed_cost_shipping_price) && ($fixed_cost_shipping_price < 0)) {
+        if ($fixed_cost_shipping_price < 0) {
             throw new \InvalidArgumentException('invalid value for $fixed_cost_shipping_price when calling VariantProductPost., must be bigger than or equal to 0.');
         }
-
         $this->container['fixed_cost_shipping_price'] = $fixed_cost_shipping_price;
 
         return $this;
@@ -639,13 +607,12 @@ class VariantProductPost implements ArrayAccess
      */
     public function setPurchasingDisabledMessage($purchasing_disabled_message)
     {
-        if (!is_null($purchasing_disabled_message) && (strlen($purchasing_disabled_message) > 255)) {
+        if (strlen($purchasing_disabled_message) > 255) {
             throw new \InvalidArgumentException('invalid length for $purchasing_disabled_message when calling VariantProductPost., must be smaller than or equal to 255.');
         }
-        if (!is_null($purchasing_disabled_message) && (strlen($purchasing_disabled_message) < 0)) {
+        if (strlen($purchasing_disabled_message) < 0) {
             throw new \InvalidArgumentException('invalid length for $purchasing_disabled_message when calling VariantProductPost., must be bigger than or equal to 0.');
         }
-
         $this->container['purchasing_disabled_message'] = $purchasing_disabled_message;
 
         return $this;
@@ -751,13 +718,12 @@ class VariantProductPost implements ArrayAccess
      */
     public function setBinPickingNumber($bin_picking_number)
     {
-        if (!is_null($bin_picking_number) && (strlen($bin_picking_number) > 255)) {
+        if (strlen($bin_picking_number) > 255) {
             throw new \InvalidArgumentException('invalid length for $bin_picking_number when calling VariantProductPost., must be smaller than or equal to 255.');
         }
-        if (!is_null($bin_picking_number) && (strlen($bin_picking_number) < 0)) {
+        if (strlen($bin_picking_number) < 0) {
             throw new \InvalidArgumentException('invalid length for $bin_picking_number when calling VariantProductPost., must be bigger than or equal to 0.');
         }
-
         $this->container['bin_picking_number'] = $bin_picking_number;
 
         return $this;
@@ -800,13 +766,12 @@ class VariantProductPost implements ArrayAccess
      */
     public function setSku($sku)
     {
-        if (!is_null($sku) && (strlen($sku) > 255)) {
+        if (strlen($sku) > 255) {
             throw new \InvalidArgumentException('invalid length for $sku when calling VariantProductPost., must be smaller than or equal to 255.');
         }
-        if (!is_null($sku) && (strlen($sku) < 1)) {
+        if (strlen($sku) < 1) {
             throw new \InvalidArgumentException('invalid length for $sku when calling VariantProductPost., must be bigger than or equal to 1.');
         }
-
         $this->container['sku'] = $sku;
 
         return $this;

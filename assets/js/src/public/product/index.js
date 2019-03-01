@@ -4,7 +4,6 @@
 
 import * as tools from '../../utils/tools';
 import variants from './variants';
-import modifiers from './modifiers';
 import reviews from './reviews';
 
 const el = {
@@ -13,7 +12,6 @@ const el = {
 
 const init = () => {
 	variants(el.container);
-	modifiers(el.container);
 	reviews(el.container);
 };
 

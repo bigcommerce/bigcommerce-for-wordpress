@@ -2,12 +2,7 @@
 /**
  * StoreCredit
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * StoreCredit Class Doc Comment
- *
- * @category    Class */
- // @description A store credit model.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class StoreCredit implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -72,7 +57,6 @@ class StoreCredit implements ArrayAccess
         'remaining_balance' => 'remaining_balance'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -80,7 +64,6 @@ class StoreCredit implements ArrayAccess
     protected static $setters = [
         'remaining_balance' => 'setRemainingBalance'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -119,9 +102,18 @@ class StoreCredit implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['remaining_balance'] = isset($data['remaining_balance']) ? $data['remaining_balance'] : null;
+        $this->container['remaining_balance'] = array_key_exists('remaining_balance', $data) ? $data['remaining_balance'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

@@ -2,12 +2,7 @@
 /**
  * UpdateChannelRequest
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * UpdateChannelRequest Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class UpdateChannelRequest implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -77,7 +63,6 @@ class UpdateChannelRequest implements ArrayAccess
         'external_id' => 'external_id'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -88,7 +73,6 @@ class UpdateChannelRequest implements ArrayAccess
         'name' => 'setName',
         'external_id' => 'setExternalId'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -164,12 +148,21 @@ class UpdateChannelRequest implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['type'] = isset($data['type']) ? $data['type'] : null;
-        $this->container['platform'] = isset($data['platform']) ? $data['platform'] : null;
-        $this->container['name'] = isset($data['name']) ? $data['name'] : null;
-        $this->container['external_id'] = isset($data['external_id']) ? $data['external_id'] : null;
+        $this->container['type'] = array_key_exists('type', $data) ? $data['type'] : null;
+        $this->container['platform'] = array_key_exists('platform', $data) ? $data['platform'] : null;
+        $this->container['name'] = array_key_exists('name', $data) ? $data['name'] : null;
+        $this->container['external_id'] = array_key_exists('external_id', $data) ? $data['external_id'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -187,7 +180,6 @@ class UpdateChannelRequest implements ArrayAccess
         if (!in_array($this->container['type'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'type', must be one of #{allowed_values}.";
         }
-
         if ($this->container['platform'] === null) {
             $invalid_properties[] = "'platform' can't be null";
         }
@@ -195,7 +187,6 @@ class UpdateChannelRequest implements ArrayAccess
         if (!in_array($this->container['platform'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'platform', must be one of #{allowed_values}.";
         }
-
         if ($this->container['name'] === null) {
             $invalid_properties[] = "'name' can't be null";
         }
@@ -247,8 +238,8 @@ class UpdateChannelRequest implements ArrayAccess
      */
     public function setType($type)
     {
-        $allowed_values = array('pos', 'marketplace', 'storefront', 'marketing', 'custom');
-        if ((!in_array($type, $allowed_values))) {
+        $allowed_values = ['pos', 'marketplace', 'storefront', 'marketing', 'custom'];
+        if (!is_null($type) && (!in_array($type, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'type', must be one of 'pos', 'marketplace', 'storefront', 'marketing', 'custom'");
         }
         $this->container['type'] = $type;
@@ -272,8 +263,8 @@ class UpdateChannelRequest implements ArrayAccess
      */
     public function setPlatform($platform)
     {
-        $allowed_values = array('wordpress', 'bigcommerce');
-        if ((!in_array($platform, $allowed_values))) {
+        $allowed_values = ['wordpress', 'bigcommerce'];
+        if (!is_null($platform) && (!in_array($platform, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'platform', must be one of 'wordpress', 'bigcommerce'");
         }
         $this->container['platform'] = $platform;

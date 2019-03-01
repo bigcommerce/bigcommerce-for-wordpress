@@ -7,7 +7,6 @@ namespace BigCommerce\Cart;
 use BigCommerce\Accounts\Login;
 use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api\v3\Api\CartApi;
-use BigCommerce\Api\v3\Model\BaseItem;
 use BigCommerce\Api\v3\Model\CartRequestData;
 use BigCommerce\Api\v3\Model\LineItemGiftCertificateRequestData;
 use BigCommerce\Api\v3\Model\LineItemRequestData;
@@ -60,10 +59,10 @@ class Cart {
 	}
 
 	/**
-	 * @param int   $product_id
-	 * @param array $options
-	 * @param int   $quantity
-	 * @param array $modifiers
+	 * @param int   $product_id The BigCommerce ID of the product
+	 * @param array $options    All options and modifiers for the line item
+	 * @param int   $quantity   How many to add to the cart
+	 * @param array $modifiers  Deprecated in 1.7.0, all values should be passed in $options
 	 *
 	 * @return \BigCommerce\Api\v3\Model\Cart|null
 	 */
@@ -78,12 +77,17 @@ class Cart {
 			] );
 		}
 
+		/*
+		 * Kept for backwards compatibility. Modifiers are treated
+		 * the same as options when submitting a line item.
+		 */
 		foreach ( $modifiers as $modifier_key => $modifier_value ) {
 			$option_selections[] = new ProductOptionSelection( [
 				'option_id'    => $modifier_key,
 				'option_value' => $modifier_value,
 			] );
 		}
+
 		$request_data->setLineItems( [
 			new LineItemRequestData( [
 				'quantity'          => $quantity,
@@ -131,15 +135,16 @@ class Cart {
 		} catch ( ApiException $e ) {
 			try {
 				// request failed. Check if the original cart exists
-				$cart = $this->api->cartsCartIdGet( $cart_id,[
+				$cart = $this->api->cartsCartIdGet( $cart_id, [
 					'line_items.physical_items.options',
 					'line_items.digital_items.options',
 					'redirect_urls',
 				] )->getData();
+
 				return null; // indicates that the request failed
 			} catch ( ApiException $e ) {
 				// request failed. Cart no longer exists, but we can try to make a new one
-				$cart = null;
+				$cart    = null;
 				$cart_id = '';
 			}
 		}
@@ -169,7 +174,7 @@ class Cart {
 
 		if ( $cart_id ) {
 			try {
-				$cart = $this->api->cartsCartIdGet( $cart_id,[
+				$cart = $this->api->cartsCartIdGet( $cart_id, [
 					'line_items.physical_items.options',
 					'line_items.digital_items.options',
 					'redirect_urls',

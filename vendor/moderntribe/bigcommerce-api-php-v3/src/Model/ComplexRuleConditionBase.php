@@ -2,12 +2,7 @@
 /**
  * ComplexRuleConditionBase
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * ComplexRuleConditionBase Class Doc Comment
- *
- * @category    Class */
- // @description Common ComplexRuleCondition properties.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class ComplexRuleConditionBase implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -80,7 +65,6 @@ class ComplexRuleConditionBase implements ArrayAccess
         'variant_id' => 'variant_id'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -92,7 +76,6 @@ class ComplexRuleConditionBase implements ArrayAccess
         'modifier_value_id' => 'setModifierValueId',
         'variant_id' => 'setVariantId'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -135,13 +118,22 @@ class ComplexRuleConditionBase implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['id'] = isset($data['id']) ? $data['id'] : null;
-        $this->container['rule_id'] = isset($data['rule_id']) ? $data['rule_id'] : null;
-        $this->container['modifier_id'] = isset($data['modifier_id']) ? $data['modifier_id'] : null;
-        $this->container['modifier_value_id'] = isset($data['modifier_value_id']) ? $data['modifier_value_id'] : null;
-        $this->container['variant_id'] = isset($data['variant_id']) ? $data['variant_id'] : null;
+        $this->container['id'] = array_key_exists('id', $data) ? $data['id'] : null;
+        $this->container['rule_id'] = array_key_exists('rule_id', $data) ? $data['rule_id'] : null;
+        $this->container['modifier_id'] = array_key_exists('modifier_id', $data) ? $data['modifier_id'] : null;
+        $this->container['modifier_value_id'] = array_key_exists('modifier_value_id', $data) ? $data['modifier_value_id'] : null;
+        $this->container['variant_id'] = array_key_exists('variant_id', $data) ? $data['variant_id'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

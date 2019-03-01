@@ -32,39 +32,43 @@ class Add_To_Cart {
 		$product    = new Product( $post_id );
 		$product_id = $product->bc_id();
 		$variant_id = $this->get_variant_id( $product, $_POST );
-		$options    = empty( $_POST[ 'option' ] ) ? [] : (array) $_POST[ 'option' ];
-		$options = array_map( 'absint', $options );
 
-		$submitted_modifiers  = empty( $_POST[ 'modifier' ] ) ? [] : (array) $_POST[ 'modifier' ];
-		$modifiers = [];
+		$options = [];
+
+		$submitted_options  = empty( $_POST[ 'option' ] ) ? [] : (array) $_POST[ 'option' ];
+		$option_config = $product->options();
 		$modifier_config = $product->modifiers();
+		foreach ( $option_config as $config ) {
+			if ( array_key_exists( $config[ 'id' ], $submitted_options ) ) {
+				$options[ $config[ 'id' ] ] = absint( $submitted_options[ $config[ 'id' ] ] );
+			}
+		}
 		foreach ( $modifier_config as $config ) {
-			if ( array_key_exists( $config[ 'id' ], $submitted_modifiers ) ) {
-				$modifiers[ $config[ 'id' ] ] = $this->sanitize_modifier( $submitted_modifiers[ $config[ 'id' ] ], $config );
+			if ( array_key_exists( $config[ 'id' ], $submitted_options ) ) {
+				$options[ $config[ 'id' ] ] = $this->sanitize_option( $submitted_options[ $config[ 'id' ] ], $config );
 			}
 		}
 
 		$quantity = array_key_exists( 'quantity', $_POST ) ? absint( $_POST[ 'quantity' ] ) : 1;
 
 		$cart     = new Cart( $cart_api );
-		$response = $cart->add_line_item( $product_id, $options, $quantity, $modifiers );
+		$response = $cart->add_line_item( $product_id, $options, $quantity );
 
 		$this->handle_response( $response, $cart, $post_id, $product_id, $variant_id );
 	}
 
-	private function sanitize_modifier( $value, $config ) {
+	private function sanitize_option( $value, $config ) {
 		switch ( $config[ 'type' ] ) {
 			case 'date':
 				return strtotime( $value );
-			case 'checkbox':
-				return intval( $value );
 			case 'multi_line_text':
 				return sanitize_textarea_field( $value );
 			case 'numbers_only_text':
 				return filter_var( $value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION|FILTER_FLAG_ALLOW_THOUSAND );
 			case 'text':
-			default:
 				return sanitize_text_field( $value );
+			default: // checkboxes, selects, and radios
+				return (int) $value;
 		}
 	}
 

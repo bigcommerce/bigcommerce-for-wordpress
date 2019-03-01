@@ -18,7 +18,6 @@ const state = {
 		product_id: '',
 		variant_id: '',
 		options: {},
-		modifiers: {},
 		quantity: 1,
 	},
 };
@@ -40,7 +39,7 @@ const buildAjaxQueryString = () => {
 			return;
 		}
 
-		if (key === 'options' || key === 'modifiers') {
+		if (key === 'options') {
 			Object.entries(value).forEach(([objectKey, objectValue], index) => {
 				Object.entries(objectValue).forEach(([objKey, objValue]) => {
 					const k = encodeURIComponent(objKey);
@@ -59,41 +58,19 @@ const buildAjaxQueryString = () => {
 };
 
 /**
- * @function handleProductOptions
- * @description Parse the options object for a selected variant and set it to the cartItem state.
- * @param form
- * @param variants
- */
-const handleProductOptions = (form, variants) => {
-	const variantID = tools.getNodes('variant_id', false, form)[0].value;
-
-	Object.values(variants).forEach((variantObject) => {
-		if (variantObject.variant_id.toString() !== variantID.toString()) {
-			return;
-		}
-
-		Object.values(variantObject.options).forEach((optionValue, index) => {
-			state.cartItem.options[index] = {
-				id: optionValue.option_id,
-				value: optionValue.id,
-			};
-		});
-	});
-};
-
-/**
  * @function handleProductModifiers
  * @description Parse the modifiers object for a selected variant and set it to the cartItem state.
  * @param modifiers
  */
-const handleProductModifiers = (modifiers = {}) => {
+const handleProductModifiers = (modifiers = []) => {
 	modifiers.forEach((field, index) => {
-		if (!field.value || (field.type === 'checkbox' && !field.checked)) {
+		// If a checkbox field is not checked, or a text/textarea field is blank, do not submit that data.
+		if (!field.value || ((field.type === 'checkbox' || field.type === 'radio') && !field.checked)) {
 			return;
 		}
 
-		state.cartItem.modifiers[index] = {
-			id: field.dataset.modifierId,
+		state.cartItem.options[index] = {
+			id: parseFloat(field.dataset.optionId),
 			value: field.value,
 		};
 	});
@@ -110,12 +87,10 @@ const getAjaxQueryString = (button) => {
 	state.cartItem.product_id = '';
 	state.cartItem.variant = '';
 	state.cartItem.options = {};
-	state.cartItem.modifiers = {};
 	state.cartItem.quantity = 1;
 
 	const form = tools.closest(button, '.bc-product-form');
-	const hasOptions = tools.getNodes('product-variants-object', false, form)[0];
-	const hasModifiers = tools.getNodes('bc-product-modifier-field', true, form);
+	const hasOptions = tools.getNodes('bc-product-option-field', true, form);
 	const qty = tools.getNodes('.bc-product-form__quantity-input', false, form, true)[0];
 
 	// Always need a product_id
@@ -125,23 +100,12 @@ const getAjaxQueryString = (button) => {
 	state.cartItem.quantity = qty ? qty.value : 1;
 
 	// Product Card or product without options.
-	if (!hasOptions && !hasModifiers) {
+	if (!hasOptions || !hasOptions.length) {
 		return buildAjaxQueryString();
 	}
 
 	// Handle Options
-	if (hasOptions) {
-		const variants = JSON.parse(hasOptions.dataset.variants);
-		if (variants.length > 1) {
-			handleProductOptions(form, variants);
-		}
-	}
-
-	// Handle Modifiers
-	if (hasModifiers) {
-		handleProductModifiers(hasModifiers);
-	}
-
+	handleProductModifiers(hasOptions);
 	return buildAjaxQueryString();
 };
 

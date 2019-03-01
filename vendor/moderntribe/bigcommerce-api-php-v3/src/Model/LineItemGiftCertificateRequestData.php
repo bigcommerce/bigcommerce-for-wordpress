@@ -2,12 +2,7 @@
 /**
  * LineItemGiftCertificateRequestData
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * LineItemGiftCertificateRequestData Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class LineItemGiftCertificateRequestData implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -83,7 +69,6 @@ class LineItemGiftCertificateRequestData implements ArrayAccess
         'message' => 'message'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -97,7 +82,6 @@ class LineItemGiftCertificateRequestData implements ArrayAccess
         'recipient' => 'setRecipient',
         'message' => 'setMessage'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -142,15 +126,24 @@ class LineItemGiftCertificateRequestData implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['name'] = isset($data['name']) ? $data['name'] : null;
-        $this->container['theme'] = isset($data['theme']) ? $data['theme'] : null;
-        $this->container['amount'] = isset($data['amount']) ? $data['amount'] : null;
-        $this->container['quantity'] = isset($data['quantity']) ? $data['quantity'] : null;
-        $this->container['sender'] = isset($data['sender']) ? $data['sender'] : null;
-        $this->container['recipient'] = isset($data['recipient']) ? $data['recipient'] : null;
-        $this->container['message'] = isset($data['message']) ? $data['message'] : null;
+        $this->container['name'] = array_key_exists('name', $data) ? $data['name'] : null;
+        $this->container['theme'] = array_key_exists('theme', $data) ? $data['theme'] : null;
+        $this->container['amount'] = array_key_exists('amount', $data) ? $data['amount'] : null;
+        $this->container['quantity'] = array_key_exists('quantity', $data) ? $data['quantity'] : null;
+        $this->container['sender'] = array_key_exists('sender', $data) ? $data['sender'] : null;
+        $this->container['recipient'] = array_key_exists('recipient', $data) ? $data['recipient'] : null;
+        $this->container['message'] = array_key_exists('message', $data) ? $data['message'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -170,21 +163,18 @@ class LineItemGiftCertificateRequestData implements ArrayAccess
         if ($this->container['amount'] === null) {
             $invalid_properties[] = "'amount' can't be null";
         }
-        if (($this->container['amount'] > 1000.0)) {
+        if ($this->container['amount'] > 1000.0) {
             $invalid_properties[] = "invalid value for 'amount', must be smaller than or equal to 1000.0.";
         }
-
-        if (($this->container['amount'] < 1.0)) {
+        if ($this->container['amount'] < 1.0) {
             $invalid_properties[] = "invalid value for 'amount', must be bigger than or equal to 1.0.";
         }
-
         if ($this->container['quantity'] === null) {
             $invalid_properties[] = "'quantity' can't be null";
         }
-        if (($this->container['quantity'] < 1)) {
+        if ($this->container['quantity'] < 1) {
             $invalid_properties[] = "invalid value for 'quantity', must be bigger than or equal to 1.";
         }
-
         if ($this->container['sender'] === null) {
             $invalid_properties[] = "'sender' can't be null";
         }
@@ -292,13 +282,12 @@ class LineItemGiftCertificateRequestData implements ArrayAccess
     public function setAmount($amount)
     {
 
-        if (($amount > 1000.0)) {
+        if ($amount > 1000.0) {
             throw new \InvalidArgumentException('invalid value for $amount when calling LineItemGiftCertificateRequestData., must be smaller than or equal to 1000.0.');
         }
-        if (($amount < 1.0)) {
+        if ($amount < 1.0) {
             throw new \InvalidArgumentException('invalid value for $amount when calling LineItemGiftCertificateRequestData., must be bigger than or equal to 1.0.');
         }
-
         $this->container['amount'] = $amount;
 
         return $this;
@@ -321,10 +310,9 @@ class LineItemGiftCertificateRequestData implements ArrayAccess
     public function setQuantity($quantity)
     {
 
-        if (($quantity < 1)) {
+        if ($quantity < 1) {
             throw new \InvalidArgumentException('invalid value for $quantity when calling LineItemGiftCertificateRequestData., must be bigger than or equal to 1.');
         }
-
         $this->container['quantity'] = $quantity;
 
         return $this;

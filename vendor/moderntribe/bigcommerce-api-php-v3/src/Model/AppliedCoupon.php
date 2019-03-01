@@ -2,12 +2,7 @@
 /**
  * AppliedCoupon
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * AppliedCoupon Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class AppliedCoupon implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -81,7 +67,6 @@ class AppliedCoupon implements ArrayAccess
         'discounted_amount' => 'discounted_amount'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -94,7 +79,6 @@ class AppliedCoupon implements ArrayAccess
         'coupon_type' => 'setCouponType',
         'discounted_amount' => 'setDiscountedAmount'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -138,14 +122,23 @@ class AppliedCoupon implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['id'] = isset($data['id']) ? $data['id'] : null;
-        $this->container['code'] = isset($data['code']) ? $data['code'] : null;
-        $this->container['name'] = isset($data['name']) ? $data['name'] : null;
-        $this->container['slug'] = isset($data['slug']) ? $data['slug'] : null;
-        $this->container['coupon_type'] = isset($data['coupon_type']) ? $data['coupon_type'] : null;
-        $this->container['discounted_amount'] = isset($data['discounted_amount']) ? $data['discounted_amount'] : null;
+        $this->container['id'] = array_key_exists('id', $data) ? $data['id'] : null;
+        $this->container['code'] = array_key_exists('code', $data) ? $data['code'] : null;
+        $this->container['name'] = array_key_exists('name', $data) ? $data['name'] : null;
+        $this->container['slug'] = array_key_exists('slug', $data) ? $data['slug'] : null;
+        $this->container['coupon_type'] = array_key_exists('coupon_type', $data) ? $data['coupon_type'] : null;
+        $this->container['discounted_amount'] = array_key_exists('discounted_amount', $data) ? $data['discounted_amount'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

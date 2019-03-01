@@ -2,12 +2,7 @@
 /**
  * ModifierValuePost
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,17 +26,7 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * ModifierValuePost Class Doc Comment
- *
- * @category    Class */
- // @description The model for a POST to create a modifier value on a product.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
-class ModifierValuePost implements ArrayAccess
+class ModifierValuePost extends ModifierValueBase implements ArrayAccess
 {
     const DISCRIMINATOR = null;
 
@@ -80,7 +65,6 @@ class ModifierValuePost implements ArrayAccess
         'adjusters' => 'adjusters'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -92,7 +76,6 @@ class ModifierValuePost implements ArrayAccess
         'value_data' => 'setValueData',
         'adjusters' => 'setAdjusters'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -135,13 +118,22 @@ class ModifierValuePost implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['is_default'] = isset($data['is_default']) ? $data['is_default'] : null;
-        $this->container['label'] = isset($data['label']) ? $data['label'] : null;
-        $this->container['sort_order'] = isset($data['sort_order']) ? $data['sort_order'] : null;
-        $this->container['value_data'] = isset($data['value_data']) ? $data['value_data'] : null;
-        $this->container['adjusters'] = isset($data['adjusters']) ? $data['adjusters'] : null;
+        $this->container['is_default'] = array_key_exists('is_default', $data) ? $data['is_default'] : null;
+        $this->container['label'] = array_key_exists('label', $data) ? $data['label'] : null;
+        $this->container['sort_order'] = array_key_exists('sort_order', $data) ? $data['sort_order'] : null;
+        $this->container['value_data'] = array_key_exists('value_data', $data) ? $data['value_data'] : null;
+        $this->container['adjusters'] = array_key_exists('adjusters', $data) ? $data['adjusters'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -152,14 +144,12 @@ class ModifierValuePost implements ArrayAccess
     public function listInvalidProperties()
     {
         $invalid_properties = [];
-        if (!is_null($this->container['sort_order']) && ($this->container['sort_order'] > 2147483647)) {
+        if ($this->container['sort_order'] > 2147483647) {
             $invalid_properties[] = "invalid value for 'sort_order', must be smaller than or equal to 2147483647.";
         }
-
-        if (!is_null($this->container['sort_order']) && ($this->container['sort_order'] < -2147483648)) {
+        if ($this->container['sort_order'] < -2147483648) {
             $invalid_properties[] = "invalid value for 'sort_order', must be bigger than or equal to -2147483648.";
         }
-
         return $invalid_properties;
     }
 
@@ -240,13 +230,12 @@ class ModifierValuePost implements ArrayAccess
     public function setSortOrder($sort_order)
     {
 
-        if (!is_null($sort_order) && ($sort_order > 2147483647)) {
+        if ($sort_order > 2147483647) {
             throw new \InvalidArgumentException('invalid value for $sort_order when calling ModifierValuePost., must be smaller than or equal to 2147483647.');
         }
-        if (!is_null($sort_order) && ($sort_order < -2147483648)) {
+        if ($sort_order < -2147483648) {
             throw new \InvalidArgumentException('invalid value for $sort_order when calling ModifierValuePost., must be bigger than or equal to -2147483648.');
         }
-
         $this->container['sort_order'] = $sort_order;
 
         return $this;

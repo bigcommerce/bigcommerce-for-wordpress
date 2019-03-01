@@ -24,7 +24,7 @@ class Nav_Menu_Screen extends Abstract_Screen {
 	}
 
 	protected function get_menu_title() {
-		return __( 'Menu Setup', 'bigcommerce' );
+		return __( 'Welcome', 'bigcommerce' );
 	}
 
 	protected function before_form() {
@@ -83,15 +83,28 @@ class Nav_Menu_Screen extends Abstract_Screen {
 
 		$submission = $_POST;
 		unset( $submission[ 'action' ], $submission[ '_wpnonce' ] );
+		$menu_id = 0;
+		$message = '';
 
-		$menu_id = absint( $submission[ Nav_Menu_Options::MENU_SELECT ] );
+		// Create the new nav menu if requested
+		try {
+			if ( 'new' === $submission[ Nav_Menu_Options::MENU_SELECT ] ) {
+				$menu_id = $this->create_nav_menu( $submission[ Nav_Menu_Options::MENU_NAME ] );
+				$message = __( 'Nav menu created. You can edit it through the Customizer or at Appearance ➔ Menus.', 'bigcommerce' );
+			}
+		} catch ( \Exception $e ) {
+
+			$this->do_error_redirect( $e->getMessage() );
+
+			return;
+		}
+
+		$menu_id = $menu_id ?: absint( $submission[ Nav_Menu_Options::MENU_SELECT ] );
 		$items   = $submission[ Nav_Menu_Options::ITEMS_SELECT ];
 
 		// there has to be a nav menu to add the menu items to
 		if ( empty( $menu_id ) || ! wp_get_nav_menu_object( $menu_id ) ) {
-			add_settings_error( Nav_Menu_Options::MENU_SELECT, 'no-menu', __( 'Please select a navigation menu', 'bigcommerce' ), 'error' );
-			set_transient( 'settings_errors', get_settings_errors(), 30 );
-			$this->do_redirect();
+			$this->do_error_redirect( __( 'Please select a navigation menu', 'bigcommerce' ) );
 
 			return;
 		}
@@ -131,8 +144,38 @@ class Nav_Menu_Screen extends Abstract_Screen {
 			$this->create_products_menu_item( $menu_id );
 		}
 
+		if ( empty( $message ) ) {
+			$message = __( 'Nav menu updated. You can edit it through the Customizer or at Appearance ➔ Menus.', 'bigcommerce' );
+		}
+
 		$this->mark_complete();
-		$this->do_redirect();
+		$this->do_redirect( $message );
+	}
+
+	/**
+	 * Create a new nav menu
+	 *
+	 * @param string $name The name to give the menu. Value is unescaped user input.
+	 *
+	 * @return int The ID of the created menu
+	 */
+	private function create_nav_menu( $name ) {
+		$name = sanitize_text_field( $name );
+		if ( empty( $name ) ) {
+			/**
+			 * Filter the default name to give to an automatically generated
+			 * navigation menu when the user does not provide a value.
+			 *
+			 * @param string $name The menu name
+			 */
+			$name = apply_filters( 'bigcommerce/settings/default_new_menu_name', __( 'BigCommerce', 'bigcommerce' ) );
+		}
+		$menu_id = wp_create_nav_menu( $name );
+		if ( is_wp_error( $menu_id ) ) {
+			throw new \RuntimeException( sprintf( __( 'Error creating navigation menu. %s', 'bigcommerce' ), $menu_id->get_error_message() ) );
+		}
+
+		return $menu_id;
 	}
 
 	/**
@@ -149,10 +192,35 @@ class Nav_Menu_Screen extends Abstract_Screen {
 	 * Reloads the same admin screen, but will most likely
 	 * be redirected on reload.
 	 *
+	 * @param string $message
+	 *
 	 * @return void
 	 */
-	private function do_redirect() {
-		wp_safe_redirect( esc_url_raw( $this->get_url() ) );
+	private function do_redirect( $message = '' ) {
+		$url = $this->get_url();
+		if ( $message ) {
+			add_settings_error( self::NAME, 'updated', $message, 'updated' );
+			set_transient( 'settings_errors', get_settings_errors(), 30 );
+			$url = add_query_arg( [ 'settings-updated' => 1 ], $url );
+		}
+		wp_safe_redirect( esc_url_raw( $url ) );
+		exit();
+	}
+
+	/**
+	 * Set the error message and reload the page
+	 *
+	 * @param string $message The error message to display
+	 *
+	 * @return void
+	 */
+	private function do_error_redirect( $message = '' ) {
+		$message = $message ?: __( 'We encountered an unexpected error setting up your menu. Please try again.', 'bigcommerce' );
+		add_settings_error( self::NAME, 'error', $message, 'error' );
+		set_transient( 'settings_errors', get_settings_errors(), 30 );
+		$url = add_query_arg( [ 'settings-updated' => 1 ], $this->get_url() );
+
+		wp_safe_redirect( esc_url_raw( $url ) );
 		exit();
 	}
 
@@ -163,28 +231,22 @@ class Nav_Menu_Screen extends Abstract_Screen {
 	 * @return bool
 	 */
 	public function should_register() {
-		if ( $this->configuration_status < Settings::STATUS_CHANNEL_CONNECTED ) {
+		if ( $this->configuration_status < Settings::STATUS_STORE_TYPE_SELECTED ) {
 			return false;
 		}
 
-		$complete = get_option( self::COMPLETE_FLAG, 0 );
-		if ( $complete ) {
-			return false;
+		if ( $this->configuration_status < Settings::STATUS_MENUS_CREATED ) {
+			return true;
 		}
 
-		$menus = wp_get_nav_menus();
-		if ( empty( $menus ) ) {
-			return false;
-		}
-
-		return true;
+		return false;
 	}
 
 	/**
 	 * Adds the menu item to the given menu. Defaults
 	 * to creating published menu items.
-	 * 
-	 * @param int $menu_id
+	 *
+	 * @param int   $menu_id
 	 * @param array $item_args
 	 *
 	 * @return int|\WP_Error

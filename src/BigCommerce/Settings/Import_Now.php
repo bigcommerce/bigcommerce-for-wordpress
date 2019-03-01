@@ -28,7 +28,7 @@ class Import_Now {
 	 * @param string $redirect The redirect destination after starting the import. Defaults to the settings page.
 	 *
 	 * @return void
-	 * @action bigcommerce/settings/render/frequency
+	 * @action bigcommerce/settings/render/import_status
 	 */
 	public function render_button( $label = '', $redirect = '' ) {
 		if ( ! $this->current_user_can_start_import() ) {
@@ -36,8 +36,31 @@ class Import_Now {
 		}
 		$label  = $label ?: __( 'Sync Products', 'bigcommerce' );
 		$button = '<a href="%s" class="bc-admin-btn bc-admin-btn--outline">%s</a>';
-		$button = sprintf( $button, esc_url( $this->get_import_url( $redirect ) ), $label );
-		printf( '<div class="bc-settings-header__cta-btn" data-js="bc-product-sync-button">%s</div>', $button );
+		printf( $button, esc_url( $this->get_import_url( $redirect ) ), $label );
+	}
+
+
+	/**
+	 * Add the sync link to the views above the products
+	 * list table. While not exactly a view, it's a reasonable place
+	 * to inject the status into the UI.
+	 *
+	 * @param array $views
+	 *
+	 * @return array
+	 * @filter views_edit-bigcommerce_product 5
+	 */
+	public function list_table_link( $views = [] ) {
+		ob_start();
+		$this->render_button(
+			sprintf( '<i class="bc-icon icon-bc-sync"></i> %s', __( 'Sync Products', 'bigcommerce' ) ),
+			add_query_arg( [ 'post_type' => Product::NAME ], admin_url( 'edit.php' ) )
+		);
+		$sync_button = ob_get_clean();
+		if ( $sync_button ) {
+			$views[ 'bc-sync-products' ] = $sync_button;
+		}
+		return $views;
 	}
 
 	/**
@@ -80,6 +103,14 @@ class Import_Now {
 		exit();
 	}
 
+	private function current_user_can_start_import() {
+		$post_type = get_post_type_object( Product::NAME );
+		if ( $post_type && current_user_can( $post_type->cap->edit_posts ) ) {
+			return true;
+		}
+
+		return false;
+	}
 	/**
 	 * Print the import button into the notices section
 	 * of the products admin list table.
@@ -91,12 +122,8 @@ class Import_Now {
 		if ( ! $this->on_products_list_table() ) {
 			return;
 		}
-
-		$this->render_button( '', add_query_arg( [ 'post_type' => Product::NAME ], admin_url( 'edit.php' ) ) );
 		do_action( 'bigcommerce/settings/import/product_list_table_notice' );
-
 	}
-
 	/**
 	 * @return bool Whether the current screen is the products list table
 	 */
@@ -108,16 +135,6 @@ class Import_Now {
 		if ( ! $screen || $screen->base !== 'edit' || $screen->post_type !== Product::NAME ) {
 			return false;
 		}
-
 		return true;
-	}
-
-	private function current_user_can_start_import() {
-		$post_type = get_post_type_object( Product::NAME );
-		if ( $post_type && current_user_can( $post_type->cap->edit_posts ) ) {
-			return true;
-		}
-
-		return false;
 	}
 }

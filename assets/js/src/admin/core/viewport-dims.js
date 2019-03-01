@@ -7,13 +7,13 @@
 
 import verge from 'verge';
 import state from '../config/state';
-import { MOBILE_BREAKPOINT } from '../config/options';
+import { WP_ADMIN_BREAKPOINT } from '../config/options';
 
 const viewportDims = () => {
 	state.v_height = verge.viewportH();
 	state.v_width = verge.viewportW();
 
-	if (state.v_width >= MOBILE_BREAKPOINT) {
+	if (state.v_width >= WP_ADMIN_BREAKPOINT) {
 		state.is_desktop = true;
 		state.is_mobile = false;
 	} else {

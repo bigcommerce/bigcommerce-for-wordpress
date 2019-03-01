@@ -2,12 +2,7 @@
 /**
  * Cart
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * Cart Class Doc Comment
- *
- * @category    Class */
- // @description A cart contains a collection of items, prices, discounts, etc.. It does not contain customer-related data.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class Cart implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -98,7 +83,6 @@ class Cart implements ArrayAccess
         'updated_time' => 'updated_time'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -119,7 +103,6 @@ class Cart implements ArrayAccess
         'created_time' => 'setCreatedTime',
         'updated_time' => 'setUpdatedTime'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -171,22 +154,31 @@ class Cart implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['id'] = isset($data['id']) ? $data['id'] : null;
-        $this->container['customer_id'] = isset($data['customer_id']) ? $data['customer_id'] : null;
-        $this->container['channel_id'] = isset($data['channel_id']) ? $data['channel_id'] : null;
-        $this->container['email'] = isset($data['email']) ? $data['email'] : null;
-        $this->container['currency'] = isset($data['currency']) ? $data['currency'] : null;
-        $this->container['tax_included'] = isset($data['tax_included']) ? $data['tax_included'] : null;
-        $this->container['base_amount'] = isset($data['base_amount']) ? $data['base_amount'] : null;
-        $this->container['discount_amount'] = isset($data['discount_amount']) ? $data['discount_amount'] : null;
-        $this->container['cart_amount'] = isset($data['cart_amount']) ? $data['cart_amount'] : null;
-        $this->container['coupons'] = isset($data['coupons']) ? $data['coupons'] : null;
-        $this->container['discounts'] = isset($data['discounts']) ? $data['discounts'] : null;
-        $this->container['line_items'] = isset($data['line_items']) ? $data['line_items'] : null;
-        $this->container['created_time'] = isset($data['created_time']) ? $data['created_time'] : null;
-        $this->container['updated_time'] = isset($data['updated_time']) ? $data['updated_time'] : null;
+        $this->container['id'] = array_key_exists('id', $data) ? $data['id'] : null;
+        $this->container['customer_id'] = array_key_exists('customer_id', $data) ? $data['customer_id'] : null;
+        $this->container['channel_id'] = array_key_exists('channel_id', $data) ? $data['channel_id'] : null;
+        $this->container['email'] = array_key_exists('email', $data) ? $data['email'] : null;
+        $this->container['currency'] = array_key_exists('currency', $data) ? $data['currency'] : null;
+        $this->container['tax_included'] = array_key_exists('tax_included', $data) ? $data['tax_included'] : null;
+        $this->container['base_amount'] = array_key_exists('base_amount', $data) ? $data['base_amount'] : null;
+        $this->container['discount_amount'] = array_key_exists('discount_amount', $data) ? $data['discount_amount'] : null;
+        $this->container['cart_amount'] = array_key_exists('cart_amount', $data) ? $data['cart_amount'] : null;
+        $this->container['coupons'] = array_key_exists('coupons', $data) ? $data['coupons'] : null;
+        $this->container['discounts'] = array_key_exists('discounts', $data) ? $data['discounts'] : null;
+        $this->container['line_items'] = array_key_exists('line_items', $data) ? $data['line_items'] : null;
+        $this->container['created_time'] = array_key_exists('created_time', $data) ? $data['created_time'] : null;
+        $this->container['updated_time'] = array_key_exists('updated_time', $data) ? $data['updated_time'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

@@ -31,7 +31,7 @@ const init = () => {
 
 	bindEvents();
 
-	console.info('Big Commerce: Initialized Shortcode UI Scripts.');
+	console.info('BigCommerce: Initialized Shortcode UI Scripts.');
 };
 
 export default init;

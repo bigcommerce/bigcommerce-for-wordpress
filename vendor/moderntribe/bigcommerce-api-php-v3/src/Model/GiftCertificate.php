@@ -2,12 +2,7 @@
 /**
  * GiftCertificate
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * GiftCertificate Class Doc Comment
- *
- * @category    Class */
- // @description A gift-certificate model.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class GiftCertificate implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -80,7 +65,6 @@ class GiftCertificate implements ArrayAccess
         'status' => 'status'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -92,7 +76,6 @@ class GiftCertificate implements ArrayAccess
         'remaining_balance' => 'setRemainingBalance',
         'status' => 'setStatus'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -153,13 +136,22 @@ class GiftCertificate implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['code'] = isset($data['code']) ? $data['code'] : null;
-        $this->container['original_balance'] = isset($data['original_balance']) ? $data['original_balance'] : null;
-        $this->container['starting_balance'] = isset($data['starting_balance']) ? $data['starting_balance'] : null;
-        $this->container['remaining_balance'] = isset($data['remaining_balance']) ? $data['remaining_balance'] : null;
-        $this->container['status'] = isset($data['status']) ? $data['status'] : null;
+        $this->container['code'] = array_key_exists('code', $data) ? $data['code'] : null;
+        $this->container['original_balance'] = array_key_exists('original_balance', $data) ? $data['original_balance'] : null;
+        $this->container['starting_balance'] = array_key_exists('starting_balance', $data) ? $data['starting_balance'] : null;
+        $this->container['remaining_balance'] = array_key_exists('remaining_balance', $data) ? $data['remaining_balance'] : null;
+        $this->container['status'] = array_key_exists('status', $data) ? $data['status'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -174,7 +166,6 @@ class GiftCertificate implements ArrayAccess
         if (!in_array($this->container['status'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'status', must be one of #{allowed_values}.";
         }
-
         return $invalid_properties;
     }
 
@@ -294,7 +285,7 @@ class GiftCertificate implements ArrayAccess
      */
     public function setStatus($status)
     {
-        $allowed_values = array('active', 'pending', 'disabled', 'expired');
+        $allowed_values = ['active', 'pending', 'disabled', 'expired'];
         if (!is_null($status) && (!in_array($status, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'status', must be one of 'active', 'pending', 'disabled', 'expired'");
         }

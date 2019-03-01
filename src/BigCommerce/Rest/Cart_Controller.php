@@ -10,6 +10,7 @@ use BigCommerce\Api\v3\Model\CartResponse;
 use BigCommerce\Api\v3\Model\CartUpdateRequest;
 use BigCommerce\Cart\Cart;
 use BigCommerce\Cart\Cart_Mapper;
+use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Taxonomies\Availability\Availability;
 use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Condition\Condition;
@@ -238,7 +239,7 @@ class Cart_Controller extends Rest_Controller {
 
 	private function modifiers_param( $required = false ) {
 		return [
-			'description'       => __( 'The modifier values for the product to add to the cart', 'bigcommerce' ),
+			'description'       => __( 'The modifier values for the product to add to the cart. Deprecated since 1.7.0.', 'bigcommerce' ),
 			'validate_callback' => 'rest_validate_request_arg',
 			'required'          => $required,
 			'type'              => 'array',
@@ -324,20 +325,45 @@ class Cart_Controller extends Rest_Controller {
 
 		$product_id = $request->get_param( 'product_id' );
 		$quantity   = $request->get_param( 'quantity' );
-		$options    = [];
-		foreach ( (array) $request->get_param( 'options' ) as $option ) {
-			$option = (array) $option;
+		$options = [];
 
-			$options[ $option[ 'id' ] ] = $option[ 'value' ];
-		}
-		$modifiers = [];
-		foreach ( (array) $request->get_param( 'modifiers' ) as $modifier ) {
-			$modifier = (array) $modifier;
-
-			$modifiers[ $modifier[ 'id' ] ] = $modifier[ 'value' ];
+		try {
+			$product = Product::by_product_id( $product_id );
+		} catch ( \Exception $e ) {
+			return null;
 		}
 
-		return $cart->add_line_item( $product_id, $options, $quantity, $modifiers );
+		$submitted_options = wp_list_pluck( (array) $request->get_param( 'options' ), 'value', 'id' );
+
+		$option_config = $product->options();
+		$modifier_config = $product->modifiers();
+		foreach ( $option_config as $config ) {
+			if ( array_key_exists( $config[ 'id' ], $submitted_options ) ) {
+				$options[ $config[ 'id' ] ] = absint( $submitted_options[ $config[ 'id' ] ] );
+			}
+		}
+		foreach ( $modifier_config as $config ) {
+			if ( array_key_exists( $config[ 'id' ], $submitted_options ) ) {
+				$options[ $config[ 'id' ] ] = $this->sanitize_option( $submitted_options[ $config[ 'id' ] ], $config );
+			}
+		}
+
+		return $cart->add_line_item( $product_id, $options, $quantity );
+	}
+
+	private function sanitize_option( $value, $config ) {
+		switch ( $config[ 'type' ] ) {
+			case 'date':
+				return strtotime( $value );
+			case 'multi_line_text':
+				return sanitize_textarea_field( $value );
+			case 'numbers_only_text':
+				return filter_var( $value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION|FILTER_FLAG_ALLOW_THOUSAND );
+			case 'text':
+				return sanitize_text_field( $value );
+			default: // checkboxes, selects, and radios
+				return (int) $value;
+		}
 	}
 
 	protected function create_postable_line_item( \WP_REST_Request $request ) {

@@ -2,12 +2,7 @@
 /**
  * ProductVideoPost
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,17 +26,7 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * ProductVideoPost Class Doc Comment
- *
- * @category    Class */
- // @description The model for a POST to create a video on a product.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
-class ProductVideoPost implements ArrayAccess
+class ProductVideoPost extends ProductVideoBase implements ArrayAccess
 {
     const DISCRIMINATOR = null;
 
@@ -80,7 +65,6 @@ class ProductVideoPost implements ArrayAccess
         'video_id' => 'video_id'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -92,7 +76,6 @@ class ProductVideoPost implements ArrayAccess
         'type' => 'setType',
         'video_id' => 'setVideoId'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -147,13 +130,22 @@ class ProductVideoPost implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['title'] = isset($data['title']) ? $data['title'] : null;
-        $this->container['description'] = isset($data['description']) ? $data['description'] : null;
-        $this->container['sort_order'] = isset($data['sort_order']) ? $data['sort_order'] : null;
-        $this->container['type'] = isset($data['type']) ? $data['type'] : null;
-        $this->container['video_id'] = isset($data['video_id']) ? $data['video_id'] : null;
+        $this->container['title'] = array_key_exists('title', $data) ? $data['title'] : null;
+        $this->container['description'] = array_key_exists('description', $data) ? $data['description'] : null;
+        $this->container['sort_order'] = array_key_exists('sort_order', $data) ? $data['sort_order'] : null;
+        $this->container['type'] = array_key_exists('type', $data) ? $data['type'] : null;
+        $this->container['video_id'] = array_key_exists('video_id', $data) ? $data['video_id'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -164,35 +156,28 @@ class ProductVideoPost implements ArrayAccess
     public function listInvalidProperties()
     {
         $invalid_properties = [];
-        if (!is_null($this->container['title']) && (strlen($this->container['title']) > 255)) {
+        if (strlen($this->container['title']) > 255) {
             $invalid_properties[] = "invalid value for 'title', the character length must be smaller than or equal to 255.";
         }
-
-        if (!is_null($this->container['title']) && (strlen($this->container['title']) < 0)) {
+        if (strlen($this->container['title']) < 0) {
             $invalid_properties[] = "invalid value for 'title', the character length must be bigger than or equal to 0.";
         }
-
-        if (!is_null($this->container['sort_order']) && ($this->container['sort_order'] > 2147483647)) {
+        if ($this->container['sort_order'] > 2147483647) {
             $invalid_properties[] = "invalid value for 'sort_order', must be smaller than or equal to 2147483647.";
         }
-
-        if (!is_null($this->container['sort_order']) && ($this->container['sort_order'] < -2147483648)) {
+        if ($this->container['sort_order'] < -2147483648) {
             $invalid_properties[] = "invalid value for 'sort_order', must be bigger than or equal to -2147483648.";
         }
-
         $allowed_values = ["youtube"];
         if (!in_array($this->container['type'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'type', must be one of #{allowed_values}.";
         }
-
-        if (!is_null($this->container['video_id']) && (strlen($this->container['video_id']) > 25)) {
+        if (strlen($this->container['video_id']) > 25) {
             $invalid_properties[] = "invalid value for 'video_id', the character length must be smaller than or equal to 25.";
         }
-
-        if (!is_null($this->container['video_id']) && (strlen($this->container['video_id']) < 0)) {
+        if (strlen($this->container['video_id']) < 0) {
             $invalid_properties[] = "invalid value for 'video_id', the character length must be bigger than or equal to 0.";
         }
-
         return $invalid_properties;
     }
 
@@ -246,13 +231,12 @@ class ProductVideoPost implements ArrayAccess
      */
     public function setTitle($title)
     {
-        if (!is_null($title) && (strlen($title) > 255)) {
+        if (strlen($title) > 255) {
             throw new \InvalidArgumentException('invalid length for $title when calling ProductVideoPost., must be smaller than or equal to 255.');
         }
-        if (!is_null($title) && (strlen($title) < 0)) {
+        if (strlen($title) < 0) {
             throw new \InvalidArgumentException('invalid length for $title when calling ProductVideoPost., must be bigger than or equal to 0.');
         }
-
         $this->container['title'] = $title;
 
         return $this;
@@ -296,13 +280,12 @@ class ProductVideoPost implements ArrayAccess
     public function setSortOrder($sort_order)
     {
 
-        if (!is_null($sort_order) && ($sort_order > 2147483647)) {
+        if ($sort_order > 2147483647) {
             throw new \InvalidArgumentException('invalid value for $sort_order when calling ProductVideoPost., must be smaller than or equal to 2147483647.');
         }
-        if (!is_null($sort_order) && ($sort_order < -2147483648)) {
+        if ($sort_order < -2147483648) {
             throw new \InvalidArgumentException('invalid value for $sort_order when calling ProductVideoPost., must be bigger than or equal to -2147483648.');
         }
-
         $this->container['sort_order'] = $sort_order;
 
         return $this;
@@ -324,7 +307,7 @@ class ProductVideoPost implements ArrayAccess
      */
     public function setType($type)
     {
-        $allowed_values = array('youtube');
+        $allowed_values = ['youtube'];
         if (!is_null($type) && (!in_array($type, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'type', must be one of 'youtube'");
         }
@@ -349,13 +332,12 @@ class ProductVideoPost implements ArrayAccess
      */
     public function setVideoId($video_id)
     {
-        if (!is_null($video_id) && (strlen($video_id) > 25)) {
+        if (strlen($video_id) > 25) {
             throw new \InvalidArgumentException('invalid length for $video_id when calling ProductVideoPost., must be smaller than or equal to 25.');
         }
-        if (!is_null($video_id) && (strlen($video_id) < 0)) {
+        if (strlen($video_id) < 0) {
             throw new \InvalidArgumentException('invalid length for $video_id when calling ProductVideoPost., must be bigger than or equal to 0.');
         }
-
         $this->container['video_id'] = $video_id;
 
         return $this;

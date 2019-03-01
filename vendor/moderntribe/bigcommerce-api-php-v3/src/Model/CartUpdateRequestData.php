@@ -2,12 +2,7 @@
 /**
  * CartUpdateRequestData
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * CartUpdateRequestData Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class CartUpdateRequestData implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -71,7 +57,6 @@ class CartUpdateRequestData implements ArrayAccess
         'customer_id' => 'customer_id'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -79,7 +64,6 @@ class CartUpdateRequestData implements ArrayAccess
     protected static $setters = [
         'customer_id' => 'setCustomerId'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -118,9 +102,18 @@ class CartUpdateRequestData implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['customer_id'] = isset($data['customer_id']) ? $data['customer_id'] : null;
+        $this->container['customer_id'] = array_key_exists('customer_id', $data) ? $data['customer_id'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

@@ -2,12 +2,7 @@
 /**
  * ComplexRulePut
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,17 +26,7 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * ComplexRulePut Class Doc Comment
- *
- * @category    Class */
- // @description The model for a PUT to update a complex rule on a product.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
-class ComplexRulePut implements ArrayAccess
+class ComplexRulePut extends ComplexRuleBase implements ArrayAccess
 {
     const DISCRIMINATOR = null;
 
@@ -92,7 +77,6 @@ class ComplexRulePut implements ArrayAccess
         'conditions' => 'conditions'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -110,7 +94,6 @@ class ComplexRulePut implements ArrayAccess
         'id' => 'setId',
         'conditions' => 'setConditions'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -159,19 +142,28 @@ class ComplexRulePut implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['product_id'] = isset($data['product_id']) ? $data['product_id'] : null;
-        $this->container['sort_order'] = isset($data['sort_order']) ? $data['sort_order'] : null;
-        $this->container['enabled'] = isset($data['enabled']) ? $data['enabled'] : null;
-        $this->container['stop'] = isset($data['stop']) ? $data['stop'] : null;
-        $this->container['purchasing_disabled'] = isset($data['purchasing_disabled']) ? $data['purchasing_disabled'] : null;
-        $this->container['purchasing_disabled_message'] = isset($data['purchasing_disabled_message']) ? $data['purchasing_disabled_message'] : null;
-        $this->container['purchasing_hidden'] = isset($data['purchasing_hidden']) ? $data['purchasing_hidden'] : null;
-        $this->container['price_adjuster'] = isset($data['price_adjuster']) ? $data['price_adjuster'] : null;
-        $this->container['weight_adjuster'] = isset($data['weight_adjuster']) ? $data['weight_adjuster'] : null;
-        $this->container['id'] = isset($data['id']) ? $data['id'] : null;
-        $this->container['conditions'] = isset($data['conditions']) ? $data['conditions'] : null;
+        $this->container['product_id'] = array_key_exists('product_id', $data) ? $data['product_id'] : null;
+        $this->container['sort_order'] = array_key_exists('sort_order', $data) ? $data['sort_order'] : null;
+        $this->container['enabled'] = array_key_exists('enabled', $data) ? $data['enabled'] : null;
+        $this->container['stop'] = array_key_exists('stop', $data) ? $data['stop'] : null;
+        $this->container['purchasing_disabled'] = array_key_exists('purchasing_disabled', $data) ? $data['purchasing_disabled'] : null;
+        $this->container['purchasing_disabled_message'] = array_key_exists('purchasing_disabled_message', $data) ? $data['purchasing_disabled_message'] : null;
+        $this->container['purchasing_hidden'] = array_key_exists('purchasing_hidden', $data) ? $data['purchasing_hidden'] : null;
+        $this->container['price_adjuster'] = array_key_exists('price_adjuster', $data) ? $data['price_adjuster'] : null;
+        $this->container['weight_adjuster'] = array_key_exists('weight_adjuster', $data) ? $data['weight_adjuster'] : null;
+        $this->container['id'] = array_key_exists('id', $data) ? $data['id'] : null;
+        $this->container['conditions'] = array_key_exists('conditions', $data) ? $data['conditions'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -182,22 +174,18 @@ class ComplexRulePut implements ArrayAccess
     public function listInvalidProperties()
     {
         $invalid_properties = [];
-        if (!is_null($this->container['sort_order']) && ($this->container['sort_order'] > 2147483647)) {
+        if ($this->container['sort_order'] > 2147483647) {
             $invalid_properties[] = "invalid value for 'sort_order', must be smaller than or equal to 2147483647.";
         }
-
-        if (!is_null($this->container['sort_order']) && ($this->container['sort_order'] < -2147483648)) {
+        if ($this->container['sort_order'] < -2147483648) {
             $invalid_properties[] = "invalid value for 'sort_order', must be bigger than or equal to -2147483648.";
         }
-
-        if (!is_null($this->container['purchasing_disabled_message']) && (strlen($this->container['purchasing_disabled_message']) > 255)) {
+        if (strlen($this->container['purchasing_disabled_message']) > 255) {
             $invalid_properties[] = "invalid value for 'purchasing_disabled_message', the character length must be smaller than or equal to 255.";
         }
-
-        if (!is_null($this->container['purchasing_disabled_message']) && (strlen($this->container['purchasing_disabled_message']) < 0)) {
+        if (strlen($this->container['purchasing_disabled_message']) < 0) {
             $invalid_properties[] = "invalid value for 'purchasing_disabled_message', the character length must be bigger than or equal to 0.";
         }
-
         return $invalid_properties;
     }
 
@@ -263,13 +251,12 @@ class ComplexRulePut implements ArrayAccess
     public function setSortOrder($sort_order)
     {
 
-        if (!is_null($sort_order) && ($sort_order > 2147483647)) {
+        if ($sort_order > 2147483647) {
             throw new \InvalidArgumentException('invalid value for $sort_order when calling ComplexRulePut., must be smaller than or equal to 2147483647.');
         }
-        if (!is_null($sort_order) && ($sort_order < -2147483648)) {
+        if ($sort_order < -2147483648) {
             throw new \InvalidArgumentException('invalid value for $sort_order when calling ComplexRulePut., must be bigger than or equal to -2147483648.');
         }
-
         $this->container['sort_order'] = $sort_order;
 
         return $this;
@@ -354,13 +341,12 @@ class ComplexRulePut implements ArrayAccess
      */
     public function setPurchasingDisabledMessage($purchasing_disabled_message)
     {
-        if (!is_null($purchasing_disabled_message) && (strlen($purchasing_disabled_message) > 255)) {
+        if (strlen($purchasing_disabled_message) > 255) {
             throw new \InvalidArgumentException('invalid length for $purchasing_disabled_message when calling ComplexRulePut., must be smaller than or equal to 255.');
         }
-        if (!is_null($purchasing_disabled_message) && (strlen($purchasing_disabled_message) < 0)) {
+        if (strlen($purchasing_disabled_message) < 0) {
             throw new \InvalidArgumentException('invalid length for $purchasing_disabled_message when calling ComplexRulePut., must be bigger than or equal to 0.');
         }
-
         $this->container['purchasing_disabled_message'] = $purchasing_disabled_message;
 
         return $this;

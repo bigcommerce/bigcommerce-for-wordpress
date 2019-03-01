@@ -28,32 +28,6 @@ class Channel_Connector {
 		$this->channels = $channels_api;
 	}
 
-	public function create_first_channel() {
-		$channel_id = get_option( Channels::CHANNEL_ID, 0 );
-		if ( ! empty( $channel_id ) ) {
-			return; // Already connected to a channel
-		}
-		try {
-			$channels = $this->channels->listChannels()->getData();
-		} catch ( ApiException $e ) {
-			$channels = [];
-		}
-		$channels = array_filter( $channels, function ( Channel $channel ) {
-			return $channel->getPlatform() === "wordpress";
-		} );
-		if ( count( $channels ) > 0 ) {
-			return; // A channel already exists. Do not automatically create one.
-		}
-		/**
-		 * Filter the name given to the auto-created channel.
-		 * Defaults to the blog's domain name.
-		 *
-		 * @param string $name The default channel name
-		 */
-		$channel_name = apply_filters( 'bigcommerce/channel/default_name', parse_url( home_url(), PHP_URL_HOST ) );
-		$this->create_channel( $channel_name );
-	}
-
 	private function create_channel( $name ) {
 		$request = new CreateChannelRequest( [
 			'type'     => 'storefront',

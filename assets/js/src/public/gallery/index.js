@@ -1,5 +1,5 @@
 /**
- * @module Big Commerce Product Gallery Sliders
+ * @module BigCommerce Product Gallery Sliders
  * @description Clearinghouse for loading all gallery JS.
  */
 

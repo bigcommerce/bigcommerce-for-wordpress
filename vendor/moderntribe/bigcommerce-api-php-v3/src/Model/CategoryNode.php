@@ -2,12 +2,7 @@
 /**
  * CategoryNode
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * CategoryNode Class Doc Comment
- *
- * @category    Class */
- // @description A BigCommerce category node object. Used to reflect parent &lt;&gt; child category relationships.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class CategoryNode implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -82,7 +67,6 @@ class CategoryNode implements ArrayAccess
         'children' => 'children'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -95,7 +79,6 @@ class CategoryNode implements ArrayAccess
         'url' => 'setUrl',
         'children' => 'setChildren'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -139,14 +122,23 @@ class CategoryNode implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['id'] = isset($data['id']) ? $data['id'] : null;
-        $this->container['parent_id'] = isset($data['parent_id']) ? $data['parent_id'] : null;
-        $this->container['name'] = isset($data['name']) ? $data['name'] : null;
-        $this->container['is_visible'] = isset($data['is_visible']) ? $data['is_visible'] : null;
-        $this->container['url'] = isset($data['url']) ? $data['url'] : null;
-        $this->container['children'] = isset($data['children']) ? $data['children'] : null;
+        $this->container['id'] = array_key_exists('id', $data) ? $data['id'] : null;
+        $this->container['parent_id'] = array_key_exists('parent_id', $data) ? $data['parent_id'] : null;
+        $this->container['name'] = array_key_exists('name', $data) ? $data['name'] : null;
+        $this->container['is_visible'] = array_key_exists('is_visible', $data) ? $data['is_visible'] : null;
+        $this->container['url'] = array_key_exists('url', $data) ? $data['url'] : null;
+        $this->container['children'] = array_key_exists('children', $data) ? $data['children'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

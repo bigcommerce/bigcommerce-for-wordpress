@@ -1,0 +1,240 @@
+.bigcommerce_product_page_bigcommerce_resources {
+
+	.bc-plugin-page-header__logo {
+		display: block;
+	}
+
+	#wpbody-content {
+		@media (--viewport-medium) {
+			margin-top: 86px;
+		}
+	}
+}
+
+.bc-resources-content {
+	padding-bottom: 20px;
+	overflow: hidden;
+}
+
+.bc-resources {
+	margin: 10px 20px 0 2px;
+	font-size: 16px;
+}
+
+.bc-resources-tabs__max-width {
+	width: 100%;
+	max-width: 940px;
+	margin: 0 auto;
+}
+
+.bc-resources-header {
+	position: relative;
+	min-height: 276px;
+	margin-top: 0;
+	display: flex;
+	flex-direction: row;
+
+	&:after {
+		opacity: 0;
+		transition: var(--transition-opacity);
+
+		@media (--viewport-medium) {
+			opacity: 1;
+		}
+	}
+}
+
+.bc-resources-header--inner {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	align-items: flex-start;
+	justify-content: space-between;
+	overflow: hidden;
+}
+
+.bc-resources-heading {
+	color: var(--color-bc-black);
+	font-size: 2.5em;
+	line-height: 1.1;
+	font-weight: var(--font-weight-light);
+	margin: 1.6em auto 0;
+	padding-right: 300px;
+	max-width: 640px;
+	width: 100%;
+
+	@media (--viewport-medium) {
+		font-size: 3em;
+	}
+}
+
+.bc-resources-tabs {
+	flex: 0;
+	width: 100%;
+}
+
+.bc-resources-tabs__header {
+
+	&:after {
+		content: '';
+		height: 1px;
+		position: absolute;
+		bottom: 0;
+		width: 1000%;
+		right: -20px;
+		background-color: var(--color-bc-light-grey);
+	}
+}
+
+.bc-resources-tabs__list {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: flex-start;
+}
+
+.bc-resources-tabs__list-item {
+	flex: 0 1 auto;
+	margin-bottom: 0;
+	margin-left: 38px;
+
+	&:first-child {
+		margin-left: 0;
+	}
+}
+
+.bc-resources-tab-button {
+	position: relative;
+	background-color: transparent;
+	border: 0;
+	color: var(--color-bc-grey-medium);
+	transition: var(--transition);
+	cursor: pointer;
+	padding: 9px 0;
+	z-index: 1;
+
+	&:before {
+		content: '';
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		height: 2px;
+		width: 100%;
+		background-color: transparent;
+		transition: background-color 0.15s ease-in-out;
+	}
+
+	&:hover,
+	&:focus {
+		outline: none;
+		color: var(--color-bc-blue-turquoise);
+	}
+
+	.bc-tab-active & {
+		color: var(--color-bc-doger-blue);
+
+		&:before {
+			content: '';
+			background-color: var(--color-bc-doger-blue);
+		}
+	}
+}
+
+.bc-resources-tabs__content {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	min-height: 500px;
+}
+
+.bc-resources-tabs__tab-content-container {
+	visibility: hidden;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+	z-index: 0;
+	background-color: var(--color-white);
+	transition: var(--transition-opacity);
+	padding-top: 58px;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+
+	&.bc-tab-active {
+		position: relative;
+		visibility: visible;
+		opacity: 1;
+		z-index: 1;
+	}
+}
+
+.bc-resources-tabs__paged-cards {
+	visibility: hidden;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+	z-index: 0;
+	background-color: var(--color-white);
+	transition: var(--transition-opacity);
+
+	&.bc-cards-page-active {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		align-items: stretch;
+		justify-content: space-between;
+		position: relative;
+		visibility: visible;
+		opacity: 1;
+		z-index: 1;
+		order: 0;
+	}
+}
+
+/* Pagination */
+.bc-resources-pagination-wrapper {
+	order: 1;
+	text-align: right;
+	margin-top: 20px;
+}
+
+.bc-resources-pagination-button {
+	color: var(--color-bc-grey);
+	background-color: transparent;
+	border: 1px solid var(--color-bc-grey);
+	cursor: pointer;
+	transition: var(--transition);
+	font-size: 0.775em;
+	height: 26px;
+	width: 26px;
+
+	&:hover,
+	&:focus,
+	&.bc-resources-page-active {
+		background-color: var(--color-bc-doger-blue);
+		border: 1px solid var(--color-bc-doger-blue);
+		color: var(--color-white);
+	}
+
+	&:hover {
+		outline: none;
+	}
+}
+
+.bc-resources-no-data {
+	padding-top: 28px;
+}
+
+.bc-resources-no-data-heading {
+	margin: 1.6em auto 0;
+	max-width: 940px;
+	width: 100%;
+	line-height: 1.25em;
+}

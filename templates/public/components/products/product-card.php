@@ -3,6 +3,7 @@
  * Product Card used in loops and grids.
  *
  * @package BigCommerce
+ * @since v1.7
  *
  * @var Product $product
  * @var string  $title
@@ -34,8 +35,8 @@ use BigCommerce\Post_Types\Product\Product;
 	<?php } ?>
 </button>
 <?php if ( $quick_view ) { ?>
-<!-- data-js="" is required -->
-<script data-js="" type="text/template">
+<!-- data-quick-view-script="" is required -->
+<script data-quick-view-script="" type="text/template">
 	<!-- data-js="bc-product-quick-view-content" is required -->
 	<section class="bc-product-quick-view__content-inner" data-js="bc-product-quick-view-content">
 		<?php echo $quick_view; ?>

@@ -69,7 +69,9 @@ class Channel_Select extends Settings_Section {
 		$selected = 0;
 		$options  = $this->get_channel_list();
 		array_unshift( $options, [ 'id' => 'create', 'name' => __( 'Create a New Channel', 'bigcommerce' ) ] );
-		array_unshift( $options, [ 'id' => 0, 'name' => __( 'Select a channel', 'bigcommerce' ) ] );
+		if ( count( $options ) > 1 ) {
+			array_unshift( $options, [ 'id' => 0, 'name' => __( 'Select a channel', 'bigcommerce' ) ] );
+		}
 		$options = array_map( function ( $channel ) use ( $selected ) {
 			return sprintf( '<option value="%s" %s>%s</option>', $channel[ 'id' ], selected( $channel[ 'id' ], $selected, false ), esc_html( $channel[ 'name' ] ) );
 		}, $options );

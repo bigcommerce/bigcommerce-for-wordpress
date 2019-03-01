@@ -2,12 +2,7 @@
 /**
  * Activate
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * Activate Class Doc Comment
- *
- * @category    Class */
- // @description Request definition for activation endpoint.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class Activate implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -74,7 +59,6 @@ class Activate implements ArrayAccess
         'which' => 'which'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -83,7 +67,6 @@ class Activate implements ArrayAccess
         'variation_id' => 'setVariationId',
         'which' => 'setWhich'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -139,10 +122,19 @@ class Activate implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['variation_id'] = isset($data['variation_id']) ? $data['variation_id'] : null;
-        $this->container['which'] = isset($data['which']) ? $data['which'] : null;
+        $this->container['variation_id'] = array_key_exists('variation_id', $data) ? $data['variation_id'] : null;
+        $this->container['which'] = array_key_exists('which', $data) ? $data['which'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -163,7 +155,6 @@ class Activate implements ArrayAccess
         if (!in_array($this->container['which'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'which', must be one of #{allowed_values}.";
         }
-
         return $invalid_properties;
     }
 
@@ -226,8 +217,8 @@ class Activate implements ArrayAccess
      */
     public function setWhich($which)
     {
-        $allowed_values = array('original', 'last_activated', 'last_created');
-        if ((!in_array($which, $allowed_values))) {
+        $allowed_values = ['original', 'last_activated', 'last_created'];
+        if (!is_null($which) && (!in_array($which, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'which', must be one of 'original', 'last_activated', 'last_created'");
         }
         $this->container['which'] = $which;
