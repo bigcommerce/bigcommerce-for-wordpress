@@ -2,12 +2,7 @@
 /**
  * ScriptPost
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * ScriptPost Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class ScriptPost implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -87,7 +73,6 @@ class ScriptPost implements ArrayAccess
         'kind' => 'kind'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -103,7 +88,6 @@ class ScriptPost implements ArrayAccess
         'visibility' => 'setVisibility',
         'kind' => 'setKind'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -212,17 +196,26 @@ class ScriptPost implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['name'] = isset($data['name']) ? $data['name'] : null;
-        $this->container['description'] = isset($data['description']) ? $data['description'] : null;
-        $this->container['html'] = isset($data['html']) ? $data['html'] : null;
-        $this->container['src'] = isset($data['src']) ? $data['src'] : null;
-        $this->container['auto_uninstall'] = isset($data['auto_uninstall']) ? $data['auto_uninstall'] : true;
-        $this->container['load_method'] = isset($data['load_method']) ? $data['load_method'] : 'defer';
-        $this->container['location'] = isset($data['location']) ? $data['location'] : 'footer';
-        $this->container['visibility'] = isset($data['visibility']) ? $data['visibility'] : 'storefront';
-        $this->container['kind'] = isset($data['kind']) ? $data['kind'] : 'src';
+        $this->container['name'] = array_key_exists('name', $data) ? $data['name'] : null;
+        $this->container['description'] = array_key_exists('description', $data) ? $data['description'] : null;
+        $this->container['html'] = array_key_exists('html', $data) ? $data['html'] : null;
+        $this->container['src'] = array_key_exists('src', $data) ? $data['src'] : null;
+        $this->container['auto_uninstall'] = array_key_exists('auto_uninstall', $data) ? $data['auto_uninstall'] : true;
+        $this->container['load_method'] = array_key_exists('load_method', $data) ? $data['load_method'] : 'defer';
+        $this->container['location'] = array_key_exists('location', $data) ? $data['location'] : 'footer';
+        $this->container['visibility'] = array_key_exists('visibility', $data) ? $data['visibility'] : 'storefront';
+        $this->container['kind'] = array_key_exists('kind', $data) ? $data['kind'] : 'src';
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -236,46 +229,37 @@ class ScriptPost implements ArrayAccess
         if ($this->container['name'] === null) {
             $invalid_properties[] = "'name' can't be null";
         }
-        if ((strlen($this->container['name']) > 255)) {
+        if (strlen($this->container['name']) > 255) {
             $invalid_properties[] = "invalid value for 'name', the character length must be smaller than or equal to 255.";
         }
-
-        if ((strlen($this->container['name']) < 1)) {
+        if (strlen($this->container['name']) < 1) {
             $invalid_properties[] = "invalid value for 'name', the character length must be bigger than or equal to 1.";
         }
-
-        if (!is_null($this->container['description']) && (strlen($this->container['description']) > 255)) {
+        if (strlen($this->container['description']) > 255) {
             $invalid_properties[] = "invalid value for 'description', the character length must be smaller than or equal to 255.";
         }
-
-        if (!is_null($this->container['html']) && (strlen($this->container['html']) > 65535)) {
+        if (strlen($this->container['html']) > 65535) {
             $invalid_properties[] = "invalid value for 'html', the character length must be smaller than or equal to 65535.";
         }
-
-        if (!is_null($this->container['src']) && (strlen($this->container['src']) > 255)) {
+        if (strlen($this->container['src']) > 255) {
             $invalid_properties[] = "invalid value for 'src', the character length must be smaller than or equal to 255.";
         }
-
         $allowed_values = ["default", "async", "defer"];
         if (!in_array($this->container['load_method'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'load_method', must be one of #{allowed_values}.";
         }
-
         $allowed_values = ["head", "footer"];
         if (!in_array($this->container['location'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'location', must be one of #{allowed_values}.";
         }
-
         $allowed_values = ["storefront", "all_pages", "checkout", "order_confirmation"];
         if (!in_array($this->container['visibility'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'visibility', must be one of #{allowed_values}.";
         }
-
         $allowed_values = ["src", "html"];
         if (!in_array($this->container['kind'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'kind', must be one of #{allowed_values}.";
         }
-
         return $invalid_properties;
     }
 
@@ -341,13 +325,12 @@ class ScriptPost implements ArrayAccess
      */
     public function setName($name)
     {
-        if ((strlen($name) > 255)) {
+        if (strlen($name) > 255) {
             throw new \InvalidArgumentException('invalid length for $name when calling ScriptPost., must be smaller than or equal to 255.');
         }
-        if ((strlen($name) < 1)) {
+        if (strlen($name) < 1) {
             throw new \InvalidArgumentException('invalid length for $name when calling ScriptPost., must be bigger than or equal to 1.');
         }
-
         $this->container['name'] = $name;
 
         return $this;
@@ -369,10 +352,9 @@ class ScriptPost implements ArrayAccess
      */
     public function setDescription($description)
     {
-        if (!is_null($description) && (strlen($description) > 255)) {
+        if (strlen($description) > 255) {
             throw new \InvalidArgumentException('invalid length for $description when calling ScriptPost., must be smaller than or equal to 255.');
         }
-
         $this->container['description'] = $description;
 
         return $this;
@@ -394,10 +376,9 @@ class ScriptPost implements ArrayAccess
      */
     public function setHtml($html)
     {
-        if (!is_null($html) && (strlen($html) > 65535)) {
+        if (strlen($html) > 65535) {
             throw new \InvalidArgumentException('invalid length for $html when calling ScriptPost., must be smaller than or equal to 65535.');
         }
-
         $this->container['html'] = $html;
 
         return $this;
@@ -419,10 +400,9 @@ class ScriptPost implements ArrayAccess
      */
     public function setSrc($src)
     {
-        if (!is_null($src) && (strlen($src) > 255)) {
+        if (strlen($src) > 255) {
             throw new \InvalidArgumentException('invalid length for $src when calling ScriptPost., must be smaller than or equal to 255.');
         }
-
         $this->container['src'] = $src;
 
         return $this;
@@ -465,7 +445,7 @@ class ScriptPost implements ArrayAccess
      */
     public function setLoadMethod($load_method)
     {
-        $allowed_values = array('default', 'async', 'defer');
+        $allowed_values = ['default', 'async', 'defer'];
         if (!is_null($load_method) && (!in_array($load_method, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'load_method', must be one of 'default', 'async', 'defer'");
         }
@@ -490,7 +470,7 @@ class ScriptPost implements ArrayAccess
      */
     public function setLocation($location)
     {
-        $allowed_values = array('head', 'footer');
+        $allowed_values = ['head', 'footer'];
         if (!is_null($location) && (!in_array($location, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'location', must be one of 'head', 'footer'");
         }
@@ -515,7 +495,7 @@ class ScriptPost implements ArrayAccess
      */
     public function setVisibility($visibility)
     {
-        $allowed_values = array('storefront', 'all_pages', 'checkout', 'order_confirmation');
+        $allowed_values = ['storefront', 'all_pages', 'checkout', 'order_confirmation'];
         if (!is_null($visibility) && (!in_array($visibility, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'visibility', must be one of 'storefront', 'all_pages', 'checkout', 'order_confirmation'");
         }
@@ -540,7 +520,7 @@ class ScriptPost implements ArrayAccess
      */
     public function setKind($kind)
     {
-        $allowed_values = array('src', 'html');
+        $allowed_values = ['src', 'html'];
         if (!is_null($kind) && (!in_array($kind, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'kind', must be one of 'src', 'html'");
         }

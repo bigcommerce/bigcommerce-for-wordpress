@@ -12,7 +12,7 @@
 <div class="bc-welcome">
 	<div class="bc-welcome__content">
 		<div class="bc-welcome__content-wrap">
-			<img src="<?php echo esc_url( bigcommerce()->plugin_dir_url() . '/assets/img/admin/big-commerce-logo.svg' ); ?>" alt="<?php esc_attr_e('Big Commerce', 'bigcommerce'); ?>">
+			<img src="<?php echo esc_url( bigcommerce()->plugin_dir_url() . '/assets/img/admin/big-commerce-logo.svg' ); ?>" alt="<?php esc_attr_e('BigCommerce', 'bigcommerce'); ?>">
 			<h1 class="bc-welcome__content-title"><?php esc_html_e( 'Build your online store with BigCommerce', 'bigcommerce' ); ?></h1>
 			<p><?php esc_html_e( 'Customize your site, manage shipping and payments, and list your products on Amazon, eBay, and Facebook with the #1 ecommerce platform. Try it free, no credit card required.', 'bigcommerce' ); ?></p>
 		</div>

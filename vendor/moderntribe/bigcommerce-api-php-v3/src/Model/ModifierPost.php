@@ -2,12 +2,7 @@
 /**
  * ModifierPost
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,17 +26,7 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * ModifierPost Class Doc Comment
- *
- * @category    Class */
- // @description The model for a POST to create a modifier on a product.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
-class ModifierPost implements ArrayAccess
+class ModifierPost extends ModifierBase implements ArrayAccess
 {
     const DISCRIMINATOR = null;
 
@@ -80,7 +65,6 @@ class ModifierPost implements ArrayAccess
         'display_name' => 'display_name'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -92,7 +76,6 @@ class ModifierPost implements ArrayAccess
         'option_values' => 'setOptionValues',
         'display_name' => 'setDisplayName'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -169,13 +152,22 @@ class ModifierPost implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['type'] = isset($data['type']) ? $data['type'] : null;
-        $this->container['required'] = isset($data['required']) ? $data['required'] : null;
-        $this->container['config'] = isset($data['config']) ? $data['config'] : null;
-        $this->container['option_values'] = isset($data['option_values']) ? $data['option_values'] : null;
-        $this->container['display_name'] = isset($data['display_name']) ? $data['display_name'] : null;
+        $this->container['type'] = array_key_exists('type', $data) ? $data['type'] : null;
+        $this->container['required'] = array_key_exists('required', $data) ? $data['required'] : null;
+        $this->container['config'] = array_key_exists('config', $data) ? $data['config'] : null;
+        $this->container['option_values'] = array_key_exists('option_values', $data) ? $data['option_values'] : null;
+        $this->container['display_name'] = array_key_exists('display_name', $data) ? $data['display_name'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -190,7 +182,6 @@ class ModifierPost implements ArrayAccess
         if (!in_array($this->container['type'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'type', must be one of #{allowed_values}.";
         }
-
         return $invalid_properties;
     }
 
@@ -226,7 +217,7 @@ class ModifierPost implements ArrayAccess
      */
     public function setType($type)
     {
-        $allowed_values = array('date', 'checkbox', 'file', 'text', 'multi_line_text', 'numbers_only_text', 'radio_buttons', 'rectangles', 'dropdown', 'product_list', 'product_list_with_images', 'swatch');
+        $allowed_values = ['date', 'checkbox', 'file', 'text', 'multi_line_text', 'numbers_only_text', 'radio_buttons', 'rectangles', 'dropdown', 'product_list', 'product_list_with_images', 'swatch'];
         if (!is_null($type) && (!in_array($type, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'type', must be one of 'date', 'checkbox', 'file', 'text', 'multi_line_text', 'numbers_only_text', 'radio_buttons', 'rectangles', 'dropdown', 'product_list', 'product_list_with_images', 'swatch'");
         }

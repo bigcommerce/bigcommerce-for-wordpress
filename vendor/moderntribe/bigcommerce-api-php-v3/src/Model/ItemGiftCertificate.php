@@ -2,12 +2,7 @@
 /**
  * ItemGiftCertificate
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * ItemGiftCertificate Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class ItemGiftCertificate implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -87,7 +73,6 @@ class ItemGiftCertificate implements ArrayAccess
         'message' => 'message'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -103,7 +88,6 @@ class ItemGiftCertificate implements ArrayAccess
         'recipient' => 'setRecipient',
         'message' => 'setMessage'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -150,17 +134,26 @@ class ItemGiftCertificate implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['id'] = isset($data['id']) ? $data['id'] : null;
-        $this->container['name'] = isset($data['name']) ? $data['name'] : null;
-        $this->container['theme'] = isset($data['theme']) ? $data['theme'] : null;
-        $this->container['amount'] = isset($data['amount']) ? $data['amount'] : null;
-        $this->container['quantity'] = isset($data['quantity']) ? $data['quantity'] : null;
-        $this->container['is_taxable'] = isset($data['is_taxable']) ? $data['is_taxable'] : null;
-        $this->container['sender'] = isset($data['sender']) ? $data['sender'] : null;
-        $this->container['recipient'] = isset($data['recipient']) ? $data['recipient'] : null;
-        $this->container['message'] = isset($data['message']) ? $data['message'] : null;
+        $this->container['id'] = array_key_exists('id', $data) ? $data['id'] : null;
+        $this->container['name'] = array_key_exists('name', $data) ? $data['name'] : null;
+        $this->container['theme'] = array_key_exists('theme', $data) ? $data['theme'] : null;
+        $this->container['amount'] = array_key_exists('amount', $data) ? $data['amount'] : null;
+        $this->container['quantity'] = array_key_exists('quantity', $data) ? $data['quantity'] : null;
+        $this->container['is_taxable'] = array_key_exists('is_taxable', $data) ? $data['is_taxable'] : null;
+        $this->container['sender'] = array_key_exists('sender', $data) ? $data['sender'] : null;
+        $this->container['recipient'] = array_key_exists('recipient', $data) ? $data['recipient'] : null;
+        $this->container['message'] = array_key_exists('message', $data) ? $data['message'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

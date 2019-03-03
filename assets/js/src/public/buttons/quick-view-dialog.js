@@ -8,7 +8,6 @@ import _ from 'lodash';
 import * as tools from '../../utils/tools';
 import gallery from '../gallery/productGallery';
 import variants from '../product/variants';
-import modifiers from '../product/modifiers';
 
 const container = tools.getNodes('bc-product-loop-card');
 
@@ -36,8 +35,12 @@ const getOptions = dialogID => ({
 const initDialogs = () => {
 	tools.getNodes('[data-js="bc-product-loop-card"]:not(.initialized)', true, document, true).forEach((dialog) => {
 		const dialogID = _.uniqueId('bc-product-quick-view-dialog-');
-		const trigger = tools.getChildren(dialog)[0];
-		const target = tools.getChildren(dialog)[1];
+		const trigger = tools.getNodes('bc-product-quick-view-dialog-trigger', false, dialog)[0];
+		const target = tools.getNodes('[data-quick-view-script]', false, dialog, true)[0];
+
+		if (!trigger || !target) {
+			return;
+		}
 
 		dialog.classList.add('initialized');
 		trigger.setAttribute('data-content', dialogID);
@@ -48,7 +51,6 @@ const initDialogs = () => {
 		instances.dialogs[dialogID].on('render', () => {
 			_.delay(() => gallery(), state.delay);
 			_.delay(() => variants(dialog), state.delay);
-			_.delay(() => modifiers(dialog), state.delay);
 		});
 	});
 };

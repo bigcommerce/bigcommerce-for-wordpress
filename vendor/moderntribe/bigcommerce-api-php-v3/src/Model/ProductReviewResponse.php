@@ -2,12 +2,7 @@
 /**
  * ProductReviewResponse
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * ProductReviewResponse Class Doc Comment
- *
- * @category    Class */
- // @description Response payload for the BigCommerce API.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class ProductReviewResponse implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -74,7 +59,6 @@ class ProductReviewResponse implements ArrayAccess
         'meta' => 'meta'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -83,7 +67,6 @@ class ProductReviewResponse implements ArrayAccess
         'data' => 'setData',
         'meta' => 'setMeta'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -123,10 +106,19 @@ class ProductReviewResponse implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['data'] = isset($data['data']) ? $data['data'] : null;
-        $this->container['meta'] = isset($data['meta']) ? $data['meta'] : null;
+        $this->container['data'] = array_key_exists('data', $data) ? $data['data'] : null;
+        $this->container['meta'] = array_key_exists('meta', $data) ? $data['meta'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

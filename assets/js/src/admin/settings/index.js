@@ -12,6 +12,7 @@ import productSync from './product-sync';
 import dynamicStateField from './dynamicStateField';
 import diagnostics from './diagnostics';
 import accountReset from './account-reset';
+import navMenuSetup from './nav-menus';
 
 const init = () => {
 	settings();
@@ -23,6 +24,7 @@ const init = () => {
 	dynamicStateField();
 	diagnostics();
 	accountReset();
+	navMenuSetup();
 };
 
 export default init;

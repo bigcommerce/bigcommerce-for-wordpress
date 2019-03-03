@@ -62,7 +62,7 @@ const init = () => {
 	page();
 	product();
 
-	console.info('Big Commerce FE: Initialized all javascript that targeted document ready.');
+	console.info('BigCommerce FE: Initialized all javascript that targeted document ready.');
 };
 
 /**

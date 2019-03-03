@@ -4,6 +4,7 @@
 namespace BigCommerce\Settings\Sections;
 
 
+use BigCommerce\Settings\Screens\Connect_Channel_Screen;
 use BigCommerce\Settings\Screens\Settings_Screen;
 
 class Import extends Settings_Section {
@@ -113,6 +114,29 @@ class Import extends Settings_Section {
 		);*/
 	}
 
+	/**
+	 * We want just the automatic list setting to show up in the channel
+	 * selection screen during onboarding, to give the merchant a chance
+	 * to change it before the first import.
+	 *
+	 * @return void
+	 * @action bigcommerce/settings/register/screen= . Connect_Channel_Screen::NAME
+	 */
+	public function register_connect_channel_fields() {
+		add_settings_field(
+			self::OPTION_NEW_PRODUCTS,
+			__( 'Automatic Listing', 'bigcommerce' ),
+			[ $this, 'new_products_toggle' ],
+			Connect_Channel_Screen::NAME,
+			Channel_Select::NAME
+		);
+
+		register_setting(
+			Connect_Channel_Screen::NAME,
+			self::OPTION_NEW_PRODUCTS
+		);
+	}
+
 	public function section_description() {
 		printf( '<p class="description">%s</p>', esc_html__( 'We will check for new products and updates to existing products and import them for you automatically.', 'bigcommerce' ) );
 	}
@@ -142,6 +166,8 @@ class Import extends Settings_Section {
 
 	public function new_products_toggle() {
 		$current = get_option( self::OPTION_NEW_PRODUCTS, 1 );
+
+		printf( '<p class="description">%s</p>', __( 'Would you like the listings in your channel automatically populated?', 'bigcommerce' ) );
 
 		echo '<fieldset>';
 		printf(

@@ -2,12 +2,7 @@
 /**
  * BaseError
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * BaseError Class Doc Comment
- *
- * @category    Class */
- // @description Error payload for the BigCommerce API.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class BaseError implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -78,7 +63,6 @@ class BaseError implements ArrayAccess
         'instance' => 'instance'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -89,7 +73,6 @@ class BaseError implements ArrayAccess
         'type' => 'setType',
         'instance' => 'setInstance'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -131,12 +114,21 @@ class BaseError implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['status'] = isset($data['status']) ? $data['status'] : null;
-        $this->container['title'] = isset($data['title']) ? $data['title'] : null;
-        $this->container['type'] = isset($data['type']) ? $data['type'] : null;
-        $this->container['instance'] = isset($data['instance']) ? $data['instance'] : null;
+        $this->container['status'] = array_key_exists('status', $data) ? $data['status'] : null;
+        $this->container['title'] = array_key_exists('title', $data) ? $data['title'] : null;
+        $this->container['type'] = array_key_exists('type', $data) ? $data['type'] : null;
+        $this->container['instance'] = array_key_exists('instance', $data) ? $data['instance'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

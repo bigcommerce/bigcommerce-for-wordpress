@@ -1,0 +1,18 @@
+.bg-geometric-bg {
+
+	&:after {
+		background: transparent url("../img/admin/bc-bg-geometric.svg") no-repeat bottom right/contain;
+		content: '';
+		position: absolute;
+		height: 220px;
+		width: 75%;
+		bottom: 1px;
+		right: -20px;
+		z-index: -1;
+
+		@media (--viewport-medium) {
+			height: 220px;
+			width: 50%;
+		}
+	}
+}

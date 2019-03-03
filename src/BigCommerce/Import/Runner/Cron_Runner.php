@@ -65,15 +65,26 @@ class Cron_Runner {
 	 * @action Import_Status::AJAX_ACTION_IMPORT_STATUS 5
 	 */
 	public function ajax_continue_import() {
-		// in case there's already an event scheduled, remove it
-		wp_unschedule_hook( self::CONTINUE_CRON );
+		try {
+			// in case there's already an event scheduled, remove it
+			wp_unschedule_hook( self::CONTINUE_CRON );
 
-		// Then fire the action that the cron would have fired on the schedule.
-		do_action( self::CONTINUE_CRON );
+			// Then fire the action that the cron would have fired on the schedule.
+			do_action( self::CONTINUE_CRON );
 
-		// This will have the side effect of scheduling the next run, so the
-		// cron can continue to run if the user leaves the page and the Ajax
-		// requests stop coming.
+			// This will have the side effect of scheduling the next run, so the
+			// cron can continue to run if the user leaves the page and the Ajax
+			// requests stop coming.
+		} catch ( \Exception $e ) {
+			$message = __( 'The server sent an unexpected response. We’ll keep trying, but it may take a few minutes to get things moving again. If the problem persists, try turning on error logging in the Diagnostics settings panel.', 'bigcommerce' );
+			if ( WP_DEBUG && $e->getMessage() ) {
+				$message .= ' ' . sprintf( __( 'Error message: %s', 'bigcommerce' ), $e->getMessage() );
+			}
+			wp_send_json_error( [
+				'code'    => 'internal_server_error',
+				'message' => $message,
+			], 500 );
+		}
 	}
 
 	private function schedule_next() {

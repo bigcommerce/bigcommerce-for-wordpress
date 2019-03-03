@@ -2,12 +2,7 @@
 /**
  * LineItems
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * LineItems Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class LineItems implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -75,7 +61,6 @@ class LineItems implements ArrayAccess
         'gift_certificates' => 'gift_certificates'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -85,7 +70,6 @@ class LineItems implements ArrayAccess
         'digital_items' => 'setDigitalItems',
         'gift_certificates' => 'setGiftCertificates'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -126,11 +110,20 @@ class LineItems implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['physical_items'] = isset($data['physical_items']) ? $data['physical_items'] : null;
-        $this->container['digital_items'] = isset($data['digital_items']) ? $data['digital_items'] : null;
-        $this->container['gift_certificates'] = isset($data['gift_certificates']) ? $data['gift_certificates'] : null;
+        $this->container['physical_items'] = array_key_exists('physical_items', $data) ? $data['physical_items'] : null;
+        $this->container['digital_items'] = array_key_exists('digital_items', $data) ? $data['digital_items'] : null;
+        $this->container['gift_certificates'] = array_key_exists('gift_certificates', $data) ? $data['gift_certificates'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

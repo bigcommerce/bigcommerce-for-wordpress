@@ -2,12 +2,7 @@
 /**
  * PriceRecordBatchErrorSet
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * PriceRecordBatchErrorSet Class Doc Comment
- *
- * @category    Class */
- // @description Error during &#x60;Price Record&#x60; batch PUT.  Includes data sent in the request and errors.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class PriceRecordBatchErrorSet implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -74,7 +59,6 @@ class PriceRecordBatchErrorSet implements ArrayAccess
         'field_errors' => 'field_errors'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -83,7 +67,6 @@ class PriceRecordBatchErrorSet implements ArrayAccess
         'data' => 'setData',
         'field_errors' => 'setFieldErrors'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -123,10 +106,19 @@ class PriceRecordBatchErrorSet implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['data'] = isset($data['data']) ? $data['data'] : null;
-        $this->container['field_errors'] = isset($data['field_errors']) ? $data['field_errors'] : null;
+        $this->container['data'] = array_key_exists('data', $data) ? $data['data'] : null;
+        $this->container['field_errors'] = array_key_exists('field_errors', $data) ? $data['field_errors'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

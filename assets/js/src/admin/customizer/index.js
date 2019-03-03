@@ -17,7 +17,7 @@ const init = () => {
 
 	multiCheckboxes(el.customizer);
 
-	console.info('Big Commerce: Initialized Theme Customizer Scripts.');
+	console.info('BigCommerce: Initialized Theme Customizer Scripts.');
 };
 
 export default init;

@@ -2,12 +2,7 @@
 /**
  * DetailedErrors
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * DetailedErrors Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class DetailedErrors implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -71,7 +57,6 @@ class DetailedErrors implements ArrayAccess
         
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -79,7 +64,6 @@ class DetailedErrors implements ArrayAccess
     protected static $setters = [
         
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -118,8 +102,17 @@ class DetailedErrors implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

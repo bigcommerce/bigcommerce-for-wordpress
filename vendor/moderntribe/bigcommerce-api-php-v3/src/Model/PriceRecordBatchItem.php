@@ -2,12 +2,7 @@
 /**
  * PriceRecordBatchItem
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,17 +26,7 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * PriceRecordBatchItem Class Doc Comment
- *
- * @category    Class */
- // @description &#x60;Price Record&#x60; object used in batch create or update.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
-class PriceRecordBatchItem implements ArrayAccess
+class PriceRecordBatchItem extends PriceRecordBase implements ArrayAccess
 {
     const DISCRIMINATOR = null;
 
@@ -86,7 +71,6 @@ class PriceRecordBatchItem implements ArrayAccess
         'currency' => 'currency'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -101,7 +85,6 @@ class PriceRecordBatchItem implements ArrayAccess
         'variant_id' => 'setVariantId',
         'currency' => 'setCurrency'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -147,16 +130,25 @@ class PriceRecordBatchItem implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['price'] = isset($data['price']) ? $data['price'] : null;
-        $this->container['sale_price'] = isset($data['sale_price']) ? $data['sale_price'] : null;
-        $this->container['retail_price'] = isset($data['retail_price']) ? $data['retail_price'] : null;
-        $this->container['map_price'] = isset($data['map_price']) ? $data['map_price'] : null;
-        $this->container['bulk_pricing_tiers'] = isset($data['bulk_pricing_tiers']) ? $data['bulk_pricing_tiers'] : null;
-        $this->container['sku'] = isset($data['sku']) ? $data['sku'] : null;
-        $this->container['variant_id'] = isset($data['variant_id']) ? $data['variant_id'] : null;
-        $this->container['currency'] = isset($data['currency']) ? $data['currency'] : null;
+        $this->container['price'] = array_key_exists('price', $data) ? $data['price'] : null;
+        $this->container['sale_price'] = array_key_exists('sale_price', $data) ? $data['sale_price'] : null;
+        $this->container['retail_price'] = array_key_exists('retail_price', $data) ? $data['retail_price'] : null;
+        $this->container['map_price'] = array_key_exists('map_price', $data) ? $data['map_price'] : null;
+        $this->container['bulk_pricing_tiers'] = array_key_exists('bulk_pricing_tiers', $data) ? $data['bulk_pricing_tiers'] : null;
+        $this->container['sku'] = array_key_exists('sku', $data) ? $data['sku'] : null;
+        $this->container['variant_id'] = array_key_exists('variant_id', $data) ? $data['variant_id'] : null;
+        $this->container['currency'] = array_key_exists('currency', $data) ? $data['currency'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

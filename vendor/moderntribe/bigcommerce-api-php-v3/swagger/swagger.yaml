@@ -7220,6 +7220,7 @@ definitions:
         description: |
           (numbers_only_text) The type of limit on values entered for a number option.
         enum:
+          - ''
           - lowest
           - highest
           - range

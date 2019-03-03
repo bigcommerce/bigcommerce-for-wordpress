@@ -2,12 +2,7 @@
 /**
  * ProductOption
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * ProductOption Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class ProductOption implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -77,7 +63,6 @@ class ProductOption implements ArrayAccess
         'value_id' => 'value_id'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -88,7 +73,6 @@ class ProductOption implements ArrayAccess
         'value' => 'setValue',
         'value_id' => 'setValueId'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -130,12 +114,21 @@ class ProductOption implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['name'] = isset($data['name']) ? $data['name'] : null;
-        $this->container['name_id'] = isset($data['name_id']) ? $data['name_id'] : null;
-        $this->container['value'] = isset($data['value']) ? $data['value'] : null;
-        $this->container['value_id'] = isset($data['value_id']) ? $data['value_id'] : null;
+        $this->container['name'] = array_key_exists('name', $data) ? $data['name'] : null;
+        $this->container['name_id'] = array_key_exists('name_id', $data) ? $data['name_id'] : null;
+        $this->container['value'] = array_key_exists('value', $data) ? $data['value'] : null;
+        $this->container['value_id'] = array_key_exists('value_id', $data) ? $data['value_id'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

@@ -68,15 +68,14 @@ class Channel_Initializer implements Import_Processor {
 
 		$page = $this->get_page();
 		if ( empty( $page ) ) {
-			if ( ! get_option( Import::OPTION_NEW_PRODUCTS, 1 ) && $this->channel_has_listings( $channel_id ) ) {
+			if ( ! get_option( Import::OPTION_NEW_PRODUCTS, 1 ) ) {
 				do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Skipping channel initialization due to settings', 'bigcommerce' ), [] );
 				$status->set_status( Status::INITIALIZED_CHANNEL );
 				$this->clear_state();
 
 				return;
-			} else {
-				$page = 1;
 			}
+			$page = 1;
 		}
 
 		do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Retrieving products', 'bigcommerce' ), [

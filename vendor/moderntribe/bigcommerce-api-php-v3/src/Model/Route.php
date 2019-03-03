@@ -2,12 +2,7 @@
 /**
  * Route
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * Route Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class Route implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -77,7 +63,6 @@ class Route implements ArrayAccess
         'route' => 'route'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -88,7 +73,6 @@ class Route implements ArrayAccess
         'matching' => 'setMatching',
         'route' => 'setRoute'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -166,12 +150,21 @@ class Route implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['id'] = isset($data['id']) ? $data['id'] : null;
-        $this->container['type'] = isset($data['type']) ? $data['type'] : null;
-        $this->container['matching'] = isset($data['matching']) ? $data['matching'] : null;
-        $this->container['route'] = isset($data['route']) ? $data['route'] : null;
+        $this->container['id'] = array_key_exists('id', $data) ? $data['id'] : null;
+        $this->container['type'] = array_key_exists('type', $data) ? $data['type'] : null;
+        $this->container['matching'] = array_key_exists('matching', $data) ? $data['matching'] : null;
+        $this->container['route'] = array_key_exists('route', $data) ? $data['route'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -186,7 +179,6 @@ class Route implements ArrayAccess
         if (!in_array($this->container['type'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'type', must be one of #{allowed_values}.";
         }
-
         return $invalid_properties;
     }
 
@@ -243,7 +235,7 @@ class Route implements ArrayAccess
      */
     public function setType($type)
     {
-        $allowed_values = array('product', 'brand', 'category', 'page', 'blog', 'home', 'cart', 'checkout', 'search', 'account', 'login', 'returns', 'static');
+        $allowed_values = ['product', 'brand', 'category', 'page', 'blog', 'home', 'cart', 'checkout', 'search', 'account', 'login', 'returns', 'static'];
         if (!is_null($type) && (!in_array($type, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'type', must be one of 'product', 'brand', 'category', 'page', 'blog', 'home', 'cart', 'checkout', 'search', 'account', 'login', 'returns', 'static'");
         }

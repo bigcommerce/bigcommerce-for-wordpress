@@ -2,12 +2,7 @@
 /**
  * ProductImageBase
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * ProductImageBase Class Doc Comment
- *
- * @category    Class */
- // @description Common ProductImage properties.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class ProductImageBase implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -76,7 +61,6 @@ class ProductImageBase implements ArrayAccess
         'description' => 'description'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -86,7 +70,6 @@ class ProductImageBase implements ArrayAccess
         'sort_order' => 'setSortOrder',
         'description' => 'setDescription'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -127,11 +110,20 @@ class ProductImageBase implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['is_thumbnail'] = isset($data['is_thumbnail']) ? $data['is_thumbnail'] : null;
-        $this->container['sort_order'] = isset($data['sort_order']) ? $data['sort_order'] : null;
-        $this->container['description'] = isset($data['description']) ? $data['description'] : null;
+        $this->container['is_thumbnail'] = array_key_exists('is_thumbnail', $data) ? $data['is_thumbnail'] : null;
+        $this->container['sort_order'] = array_key_exists('sort_order', $data) ? $data['sort_order'] : null;
+        $this->container['description'] = array_key_exists('description', $data) ? $data['description'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -142,14 +134,12 @@ class ProductImageBase implements ArrayAccess
     public function listInvalidProperties()
     {
         $invalid_properties = [];
-        if (!is_null($this->container['sort_order']) && ($this->container['sort_order'] > 2147483647)) {
+        if ($this->container['sort_order'] > 2147483647) {
             $invalid_properties[] = "invalid value for 'sort_order', must be smaller than or equal to 2147483647.";
         }
-
-        if (!is_null($this->container['sort_order']) && ($this->container['sort_order'] < -2147483648)) {
+        if ($this->container['sort_order'] < -2147483648) {
             $invalid_properties[] = "invalid value for 'sort_order', must be bigger than or equal to -2147483648.";
         }
-
         return $invalid_properties;
     }
 
@@ -209,13 +199,12 @@ class ProductImageBase implements ArrayAccess
     public function setSortOrder($sort_order)
     {
 
-        if (!is_null($sort_order) && ($sort_order > 2147483647)) {
+        if ($sort_order > 2147483647) {
             throw new \InvalidArgumentException('invalid value for $sort_order when calling ProductImageBase., must be smaller than or equal to 2147483647.');
         }
-        if (!is_null($sort_order) && ($sort_order < -2147483648)) {
+        if ($sort_order < -2147483648) {
             throw new \InvalidArgumentException('invalid value for $sort_order when calling ProductImageBase., must be bigger than or equal to -2147483648.');
         }
-
         $this->container['sort_order'] = $sort_order;
 
         return $this;

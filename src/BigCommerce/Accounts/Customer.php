@@ -144,38 +144,42 @@ class Customer {
 	}
 
 	public function get_order_details( $order_id ) {
-		$order    = Client::getOrder( $order_id );
+		$order = Client::getOrder( $order_id );
 		if ( empty( $order ) || $order->customer_id != $this->get_customer_id() ) {
 			return false;
 		}
-		$data = $this->flatten_resource( $order );
-		$data[ 'products' ] = $this->get_order_products( $order_id );
+		$data                         = $this->flatten_resource( $order );
+		$data[ 'products' ]           = $this->get_order_products( $order_id );
 		$data[ 'shipping_addresses' ] = $this->get_order_shipping_addresses( $order_id );
-		$data[ 'shipments' ] = $order->shipments() ?: [];
-		$data[ 'coupons' ] = $order->coupons() ?: [];
+		$data[ 'shipments' ]          = $order->shipments() ?: [];
+		$data[ 'coupons' ]            = $order->coupons() ?: [];
 
 		return $data;
 	}
 
 	private function get_order_products( $order_id ) {
 		$products = Client::getOrderProducts( $order_id ) ?: [];
-		$products = array_filter( $products, function( OrderProduct $product ) {
+		$products = array_filter( $products, function ( OrderProduct $product ) {
 			$parent_product = $product->parent_order_product_id;
+
 			return empty( $parent_product );
-		});
+		} );
 		$products = array_map( [ $this, 'flatten_resource' ], $products );
+
 		return apply_filters( 'bigcommerce/order/products', $products, $order_id, $this );
 	}
 
 	private function get_order_shipping_addresses( $order_id ) {
 		$addresses = Client::getOrderShippingAddresses( $order_id ) ?: [];
 		$addresses = array_map( [ $this, 'flatten_resource' ], $addresses );
+
 		return apply_filters( 'bigcommerce/order/shipping_addresses', $addresses, $order_id, $this );
 	}
 
 	private function flatten_resource( Resource $resource ) {
-		$item = get_object_vars( $resource->getCreateFields() );
+		$item         = get_object_vars( $resource->getCreateFields() );
 		$item[ 'id' ] = $resource->id;
+
 		return $item;
 	}
 
@@ -184,21 +188,26 @@ class Customer {
 		if ( ! $customer_id ) {
 			return [];
 		}
-		$empty_profile = [
+		/**
+		 * Filter the base fields found in a customer profile
+		 *
+		 * @param array $fields
+		 */
+		$empty_profile = apply_filters( 'bigcommerce/customer/empty_profile', [
 			'first_name' => '',
 			'last_name'  => '',
 			'company'    => '',
 			'email'      => '',
 			'phone'      => '',
-		];
+		] );
 		try {
 			$profile = Client::getCustomer( $customer_id );
 			if ( ! $profile ) {
 				return $empty_profile;
 			}
 
-			return array_filter( get_object_vars( $profile->getCreateFields() ), function ( $key ) {
-				return in_array( $key, [ 'first_name', 'last_name', 'company', 'email', 'phone' ] );
+			return array_filter( get_object_vars( $profile->getCreateFields() ), function ( $key ) use ( $empty_profile ) {
+				return array_key_exists( $key, $empty_profile );
 			}, ARRAY_FILTER_USE_KEY );
 		} catch ( \Exception $e ) {
 			return $empty_profile;

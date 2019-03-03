@@ -8,7 +8,7 @@ import storeLink from './store-link';
 const initPlugins = () => {
 	storeLink();
 
-	console.info('Big Commerce: Initialized Gutenberg plugin scripts.');
+	console.info('BigCommerce: Initialized Gutenberg plugin scripts.');
 };
 
 const init = () => {

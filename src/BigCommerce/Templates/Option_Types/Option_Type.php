@@ -6,16 +6,20 @@ namespace BigCommerce\Templates\Option_Types;
 use BigCommerce\Templates\Controller;
 
 abstract class Option_Type extends Controller {
-	const LABEL   = 'label';
-	const OPTIONS = 'options';
-	const ID      = 'id';
-	const POST_ID = 'post_id';
+	const LABEL    = 'label';
+	const OPTIONS  = 'options';
+	const ID       = 'id';
+	const POST_ID  = 'post_id';
+	const REQUIRED = 'required';
+	const CONFIG   = 'config';
 
 	protected function parse_options( array $options ) {
 		$defaults = [
-			self::LABEL   => '',
-			self::OPTIONS => [],
-			self::ID      => 0,
+			self::LABEL    => '',
+			self::OPTIONS  => [],
+			self::ID       => 0,
+			self::REQUIRED => 0,
+			self::CONFIG   => [],
 		];
 
 		return wp_parse_args( $options, $defaults );
@@ -23,14 +27,16 @@ abstract class Option_Type extends Controller {
 
 	public function get_data() {
 		$data = [
-			self::ID      => $this->get_id(),
-			self::LABEL   => $this->get_label(),
-			self::OPTIONS => $this->get_options(),
+			self::ID       => $this->get_id(),
+			self::LABEL    => $this->get_label(),
+			self::OPTIONS  => $this->get_options(),
+			self::REQUIRED => (bool) $this->options[ self::REQUIRED ],
 		];
 		$post = get_post();
 		if ( $post ) {
 			$data[ self::POST_ID ] = $post->ID;
 		}
+
 		return $data;
 	}
 

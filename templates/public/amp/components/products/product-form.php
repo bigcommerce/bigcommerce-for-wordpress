@@ -6,7 +6,7 @@
  *
  * @var Product $product
  * @var string  $options
- * @var string  $modifiers
+ * @var string  $modifiers @deprecated
  * @var string  $button
  * @var int     $min_quantity
  * @var int     $max_quantity

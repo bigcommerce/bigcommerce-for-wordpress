@@ -2,12 +2,7 @@
 /**
  * Script
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * Script Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class Script implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -95,7 +81,6 @@ class Script implements ArrayAccess
         'date_modified' => 'date_modified'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -115,7 +100,6 @@ class Script implements ArrayAccess
         'date_created' => 'setDateCreated',
         'date_modified' => 'setDateModified'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -228,21 +212,30 @@ class Script implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['uuid'] = isset($data['uuid']) ? $data['uuid'] : null;
-        $this->container['name'] = isset($data['name']) ? $data['name'] : null;
-        $this->container['description'] = isset($data['description']) ? $data['description'] : null;
-        $this->container['html'] = isset($data['html']) ? $data['html'] : null;
-        $this->container['src'] = isset($data['src']) ? $data['src'] : null;
-        $this->container['auto_uninstall'] = isset($data['auto_uninstall']) ? $data['auto_uninstall'] : null;
-        $this->container['load_method'] = isset($data['load_method']) ? $data['load_method'] : null;
-        $this->container['location'] = isset($data['location']) ? $data['location'] : null;
-        $this->container['visibility'] = isset($data['visibility']) ? $data['visibility'] : null;
-        $this->container['kind'] = isset($data['kind']) ? $data['kind'] : null;
-        $this->container['api_client_id'] = isset($data['api_client_id']) ? $data['api_client_id'] : null;
-        $this->container['date_created'] = isset($data['date_created']) ? $data['date_created'] : null;
-        $this->container['date_modified'] = isset($data['date_modified']) ? $data['date_modified'] : null;
+        $this->container['uuid'] = array_key_exists('uuid', $data) ? $data['uuid'] : null;
+        $this->container['name'] = array_key_exists('name', $data) ? $data['name'] : null;
+        $this->container['description'] = array_key_exists('description', $data) ? $data['description'] : null;
+        $this->container['html'] = array_key_exists('html', $data) ? $data['html'] : null;
+        $this->container['src'] = array_key_exists('src', $data) ? $data['src'] : null;
+        $this->container['auto_uninstall'] = array_key_exists('auto_uninstall', $data) ? $data['auto_uninstall'] : null;
+        $this->container['load_method'] = array_key_exists('load_method', $data) ? $data['load_method'] : null;
+        $this->container['location'] = array_key_exists('location', $data) ? $data['location'] : null;
+        $this->container['visibility'] = array_key_exists('visibility', $data) ? $data['visibility'] : null;
+        $this->container['kind'] = array_key_exists('kind', $data) ? $data['kind'] : null;
+        $this->container['api_client_id'] = array_key_exists('api_client_id', $data) ? $data['api_client_id'] : null;
+        $this->container['date_created'] = array_key_exists('date_created', $data) ? $data['date_created'] : null;
+        $this->container['date_modified'] = array_key_exists('date_modified', $data) ? $data['date_modified'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -257,22 +250,18 @@ class Script implements ArrayAccess
         if (!in_array($this->container['load_method'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'load_method', must be one of #{allowed_values}.";
         }
-
         $allowed_values = ["head", "footer"];
         if (!in_array($this->container['location'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'location', must be one of #{allowed_values}.";
         }
-
         $allowed_values = ["storefront", "all_pages", "checkout", "order_confirmation"];
         if (!in_array($this->container['visibility'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'visibility', must be one of #{allowed_values}.";
         }
-
         $allowed_values = ["src", "script_tag"];
         if (!in_array($this->container['kind'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'kind', must be one of #{allowed_values}.";
         }
-
         return $invalid_properties;
     }
 
@@ -446,7 +435,7 @@ class Script implements ArrayAccess
      */
     public function setLoadMethod($load_method)
     {
-        $allowed_values = array('default', 'async', 'defer');
+        $allowed_values = ['default', 'async', 'defer'];
         if (!is_null($load_method) && (!in_array($load_method, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'load_method', must be one of 'default', 'async', 'defer'");
         }
@@ -471,7 +460,7 @@ class Script implements ArrayAccess
      */
     public function setLocation($location)
     {
-        $allowed_values = array('head', 'footer');
+        $allowed_values = ['head', 'footer'];
         if (!is_null($location) && (!in_array($location, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'location', must be one of 'head', 'footer'");
         }
@@ -496,7 +485,7 @@ class Script implements ArrayAccess
      */
     public function setVisibility($visibility)
     {
-        $allowed_values = array('storefront', 'all_pages', 'checkout', 'order_confirmation');
+        $allowed_values = ['storefront', 'all_pages', 'checkout', 'order_confirmation'];
         if (!is_null($visibility) && (!in_array($visibility, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'visibility', must be one of 'storefront', 'all_pages', 'checkout', 'order_confirmation'");
         }
@@ -521,7 +510,7 @@ class Script implements ArrayAccess
      */
     public function setKind($kind)
     {
-        $allowed_values = array('src', 'script_tag');
+        $allowed_values = ['src', 'script_tag'];
         if (!is_null($kind) && (!in_array($kind, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'kind', must be one of 'src', 'script_tag'");
         }

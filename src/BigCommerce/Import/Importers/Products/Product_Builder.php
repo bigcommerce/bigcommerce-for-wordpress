@@ -65,6 +65,7 @@ class Product_Builder extends Record_Builder {
 
 	private function get_post_title() {
 		$title = $this->listing->getName() ?: $this->product->getName();
+
 		return $this->sanitize_title( $title );
 	}
 
@@ -74,6 +75,7 @@ class Product_Builder extends Record_Builder {
 
 	private function get_post_content() {
 		$content = $this->listing->getDescription() ?: $this->product->getDescription();
+
 		return $this->sanitize_content( $content );
 	}
 
@@ -85,8 +87,10 @@ class Product_Builder extends Record_Builder {
 		$custom_url = $this->product->getCustomUrl();
 		if ( $custom_url ) {
 			$slug = trim( $custom_url->getUrl(), '/' );
+
 			return sanitize_title( $slug );
 		}
+
 		return sanitize_title( $this->get_post_title() );
 	}
 
@@ -95,9 +99,9 @@ class Product_Builder extends Record_Builder {
 			$modifier_response = $this->catalog->getModifiers( $this->product[ 'id' ] );
 			$modifiers         = $modifier_response->getData();
 			if ( is_array( $modifiers ) ) {
-				$unsupported = array_filter( $modifiers, function( Modifier $modifier ) {
+				$unsupported = array_filter( $modifiers, function ( Modifier $modifier ) {
 					return $modifier->getType() == 'file';
-				});
+				} );
 				if ( count( $unsupported ) > 0 ) {
 					return 'draft';
 				}
@@ -317,7 +321,8 @@ class Product_Builder extends Record_Builder {
 		$meta = [];
 
 		$meta[ Product::IMPORTER_VERSION_META_KEY ] = Import_Strategy::VERSION;
-		$meta[ 'bigcommerce_id' ]                   = $this->product[ 'id' ];
+		$meta[ Product::BIGCOMMERCE_ID ]            = $this->sanitize_int( $this->product[ 'id' ] );
+		$meta[ Product::SKU ]                       = $this->sanitize_string( $this->product[ 'sku' ] );
 		$meta[ Product::RATING_META_KEY ]           = $this->get_avg_rating();
 		$meta[ Product::SALES_META_KEY ]            = $this->sanitize_int( $this->product[ 'total_sold' ] );
 		$meta[ Product::PRICE_META_KEY ]            = $this->sanitize_double( $this->product[ 'calculated_price' ] );

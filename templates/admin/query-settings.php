@@ -28,7 +28,7 @@
 
 		<div class="bc-shortcode-ui__manual-listing-header">
 			<h4 class="bc-shortcode-ui__settings-title"><?php echo esc_html_x( 'Manual Selection', 'header for selected products sidebar', 'bigcommerce' ); ?></h4>
-			<p><?php echo esc_html_x( 'Manually embed products from your Big Commerce inventory.', 'description for dynamic listing terms sidebar', 'bigcommerce' ); ?></p>
+			<p><?php echo esc_html_x( 'Manually embed products from your BigCommerce inventory.', 'description for dynamic listing terms sidebar', 'bigcommerce' ); ?></p>
 		</div>
 	</section>
 

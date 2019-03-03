@@ -2,12 +2,7 @@
 /**
  * Theme
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * Theme Class Doc Comment
- *
- * @category    Class */
- // @description A theme.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class Theme implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -78,7 +63,6 @@ class Theme implements ArrayAccess
         'is_private' => 'is_private'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -89,7 +73,6 @@ class Theme implements ArrayAccess
         'name' => 'setName',
         'is_private' => 'setIsPrivate'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -131,12 +114,21 @@ class Theme implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['variations'] = isset($data['variations']) ? $data['variations'] : null;
-        $this->container['uuid'] = isset($data['uuid']) ? $data['uuid'] : null;
-        $this->container['name'] = isset($data['name']) ? $data['name'] : null;
-        $this->container['is_private'] = isset($data['is_private']) ? $data['is_private'] : null;
+        $this->container['variations'] = array_key_exists('variations', $data) ? $data['variations'] : null;
+        $this->container['uuid'] = array_key_exists('uuid', $data) ? $data['uuid'] : null;
+        $this->container['name'] = array_key_exists('name', $data) ? $data['name'] : null;
+        $this->container['is_private'] = array_key_exists('is_private', $data) ? $data['is_private'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

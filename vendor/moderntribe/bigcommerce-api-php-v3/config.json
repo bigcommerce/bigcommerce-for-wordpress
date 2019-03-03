@@ -1,0 +1,10 @@
+{
+  "variableNamingConvention": "snake_case",
+  "invokerPackage": "BigCommerce\\Api\\v3",
+  "apiPackage": "BigCommerce\\Api\\v3\\Api",
+  "modelPackage": "BigCommerce\\Api\\v3\\Model",
+  "packagePath": "Client",
+  "srcBasePath": "src",
+  "gitUserId": "moderntribe",
+  "gitRepoId": "bigcommerce-api-php-v3"
+}

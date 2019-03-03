@@ -2,12 +2,7 @@
 /**
  * ProductReviewBase
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * ProductReviewBase Class Doc Comment
- *
- * @category    Class */
- // @description Common ProductReview properties.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class ProductReviewBase implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -84,7 +69,6 @@ class ProductReviewBase implements ArrayAccess
         'date_reviewed' => 'date_reviewed'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -98,7 +82,6 @@ class ProductReviewBase implements ArrayAccess
         'name' => 'setName',
         'date_reviewed' => 'setDateReviewed'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -143,15 +126,24 @@ class ProductReviewBase implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['title'] = isset($data['title']) ? $data['title'] : null;
-        $this->container['text'] = isset($data['text']) ? $data['text'] : null;
-        $this->container['status'] = isset($data['status']) ? $data['status'] : null;
-        $this->container['rating'] = isset($data['rating']) ? $data['rating'] : null;
-        $this->container['email'] = isset($data['email']) ? $data['email'] : null;
-        $this->container['name'] = isset($data['name']) ? $data['name'] : null;
-        $this->container['date_reviewed'] = isset($data['date_reviewed']) ? $data['date_reviewed'] : null;
+        $this->container['title'] = array_key_exists('title', $data) ? $data['title'] : null;
+        $this->container['text'] = array_key_exists('text', $data) ? $data['text'] : null;
+        $this->container['status'] = array_key_exists('status', $data) ? $data['status'] : null;
+        $this->container['rating'] = array_key_exists('rating', $data) ? $data['rating'] : null;
+        $this->container['email'] = array_key_exists('email', $data) ? $data['email'] : null;
+        $this->container['name'] = array_key_exists('name', $data) ? $data['name'] : null;
+        $this->container['date_reviewed'] = array_key_exists('date_reviewed', $data) ? $data['date_reviewed'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -162,22 +154,18 @@ class ProductReviewBase implements ArrayAccess
     public function listInvalidProperties()
     {
         $invalid_properties = [];
-        if (!is_null($this->container['title']) && (strlen($this->container['title']) > 255)) {
+        if (strlen($this->container['title']) > 255) {
             $invalid_properties[] = "invalid value for 'title', the character length must be smaller than or equal to 255.";
         }
-
-        if (!is_null($this->container['title']) && (strlen($this->container['title']) < 0)) {
+        if (strlen($this->container['title']) < 0) {
             $invalid_properties[] = "invalid value for 'title', the character length must be bigger than or equal to 0.";
         }
-
-        if (!is_null($this->container['name']) && (strlen($this->container['name']) > 255)) {
+        if (strlen($this->container['name']) > 255) {
             $invalid_properties[] = "invalid value for 'name', the character length must be smaller than or equal to 255.";
         }
-
-        if (!is_null($this->container['name']) && (strlen($this->container['name']) < 0)) {
+        if (strlen($this->container['name']) < 0) {
             $invalid_properties[] = "invalid value for 'name', the character length must be bigger than or equal to 0.";
         }
-
         return $invalid_properties;
     }
 
@@ -221,13 +209,12 @@ class ProductReviewBase implements ArrayAccess
      */
     public function setTitle($title)
     {
-        if (!is_null($title) && (strlen($title) > 255)) {
+        if (strlen($title) > 255) {
             throw new \InvalidArgumentException('invalid length for $title when calling ProductReviewBase., must be smaller than or equal to 255.');
         }
-        if (!is_null($title) && (strlen($title) < 0)) {
+        if (strlen($title) < 0) {
             throw new \InvalidArgumentException('invalid length for $title when calling ProductReviewBase., must be bigger than or equal to 0.');
         }
-
         $this->container['title'] = $title;
 
         return $this;
@@ -333,13 +320,12 @@ class ProductReviewBase implements ArrayAccess
      */
     public function setName($name)
     {
-        if (!is_null($name) && (strlen($name) > 255)) {
+        if (strlen($name) > 255) {
             throw new \InvalidArgumentException('invalid length for $name when calling ProductReviewBase., must be smaller than or equal to 255.');
         }
-        if (!is_null($name) && (strlen($name) < 0)) {
+        if (strlen($name) < 0) {
             throw new \InvalidArgumentException('invalid length for $name when calling ProductReviewBase., must be bigger than or equal to 0.');
         }
-
         $this->container['name'] = $name;
 
         return $this;

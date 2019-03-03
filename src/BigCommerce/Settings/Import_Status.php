@@ -60,23 +60,35 @@ class Import_Status {
 	public function current_status_notice() {
 		$current = $this->current_status();
 		if ( $current[ 'message' ] ) {
-			printf( '<div class="notice notice-info bigcommerce-notice bigcommerce-notice__import-status" data-js="bc-import-progress-status"><div class="import-status import-status-current"><i class="bc-icon icon-bc-sync"></i> <p class="bc-import-status-message">%s</p></div></div>', $current[ 'message' ] );
+			printf( '<div class="notice notice-info bigcommerce-notice bigcommerce-notice__import-status" data-js="bc-import-progress-status"><div class="import-status import-status-current"><i class="bc-icon icon-bc-sync" data-js="bc-import-status-icon"></i> <p class="bc-import-status-message">%s</p></div></div>', $current[ 'message' ] );
+		}
+	}
+
+
+	/**
+	 * Validates the nonce for the ajax request before any
+	 * more processing begins
+	 *
+	 * @return void
+	 * @action self::AJAX_ACTION_IMPORT_STATUS 0
+	 */
+	public function validate_ajax_current_status_request() {
+		$nonce = filter_input( INPUT_GET, '_wpnonce' );
+		if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, self::AJAX_ACTION_IMPORT_STATUS ) ) {
+			wp_send_json_error( [
+				'code'    => 'invalid_nonce',
+				'message' => __( 'An error occurred while validating your request. Please refresh the page and try again.', 'bigcommerce' ),
+			], 403 );
 		}
 	}
 
 	/**
-	 * Returns current status and pushes next cron task to run
+	 * Returns current status as a json response
 	 *
-	 * returns wp_send_json response
+	 * @return void
+	 * @action self::AJAX_ACTION_IMPORT_STATUS 10
 	 */
 	public function ajax_current_status() {
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( [ 'code' => 'unauthorized' ], 403 );
-		}
-		$nonce = filter_input( INPUT_GET, '_wpnonce' );
-		if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, self::AJAX_ACTION_IMPORT_STATUS ) ) {
-			wp_send_json_error( [ 'code' => 'invalid_nonce' ], 403 );
-		}
 		// return current status
 		wp_send_json_success( $this->current_status() );
 
@@ -101,7 +113,7 @@ class Import_Status {
 		$total     = max( $remaining, $total ); // just in case the option isn't set.
 		$completed = $total - $remaining;
 
-		$response  = [];
+		$response = [];
 
 		if ( $current[ 'status' ] === Status::NOT_STARTED ) {
 			return [

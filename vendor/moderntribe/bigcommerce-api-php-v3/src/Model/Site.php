@@ -2,12 +2,7 @@
 /**
  * Site
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * Site Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class Site implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -81,7 +67,6 @@ class Site implements ArrayAccess
         'routes' => 'routes'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -94,7 +79,6 @@ class Site implements ArrayAccess
         'updated_at' => 'setUpdatedAt',
         'routes' => 'setRoutes'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -138,14 +122,23 @@ class Site implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['id'] = isset($data['id']) ? $data['id'] : null;
-        $this->container['url'] = isset($data['url']) ? $data['url'] : null;
-        $this->container['channel_id'] = isset($data['channel_id']) ? $data['channel_id'] : null;
-        $this->container['created_at'] = isset($data['created_at']) ? $data['created_at'] : null;
-        $this->container['updated_at'] = isset($data['updated_at']) ? $data['updated_at'] : null;
-        $this->container['routes'] = isset($data['routes']) ? $data['routes'] : null;
+        $this->container['id'] = array_key_exists('id', $data) ? $data['id'] : null;
+        $this->container['url'] = array_key_exists('url', $data) ? $data['url'] : null;
+        $this->container['channel_id'] = array_key_exists('channel_id', $data) ? $data['channel_id'] : null;
+        $this->container['created_at'] = array_key_exists('created_at', $data) ? $data['created_at'] : null;
+        $this->container['updated_at'] = array_key_exists('updated_at', $data) ? $data['updated_at'] : null;
+        $this->container['routes'] = array_key_exists('routes', $data) ? $data['routes'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

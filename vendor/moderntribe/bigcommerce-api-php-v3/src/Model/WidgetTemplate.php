@@ -2,12 +2,7 @@
 /**
  * WidgetTemplate
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * WidgetTemplate Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class WidgetTemplate implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -83,7 +69,6 @@ class WidgetTemplate implements ArrayAccess
         'date_modified' => 'date_modified'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -97,7 +82,6 @@ class WidgetTemplate implements ArrayAccess
         'date_created' => 'setDateCreated',
         'date_modified' => 'setDateModified'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -142,15 +126,24 @@ class WidgetTemplate implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['uuid'] = isset($data['uuid']) ? $data['uuid'] : null;
-        $this->container['name'] = isset($data['name']) ? $data['name'] : null;
-        $this->container['kind'] = isset($data['kind']) ? $data['kind'] : null;
-        $this->container['schema'] = isset($data['schema']) ? $data['schema'] : null;
-        $this->container['template'] = isset($data['template']) ? $data['template'] : null;
-        $this->container['date_created'] = isset($data['date_created']) ? $data['date_created'] : null;
-        $this->container['date_modified'] = isset($data['date_modified']) ? $data['date_modified'] : null;
+        $this->container['uuid'] = array_key_exists('uuid', $data) ? $data['uuid'] : null;
+        $this->container['name'] = array_key_exists('name', $data) ? $data['name'] : null;
+        $this->container['kind'] = array_key_exists('kind', $data) ? $data['kind'] : null;
+        $this->container['schema'] = array_key_exists('schema', $data) ? $data['schema'] : null;
+        $this->container['template'] = array_key_exists('template', $data) ? $data['template'] : null;
+        $this->container['date_created'] = array_key_exists('date_created', $data) ? $data['date_created'] : null;
+        $this->container['date_modified'] = array_key_exists('date_modified', $data) ? $data['date_modified'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

@@ -2,12 +2,7 @@
 /**
  * PriceRecordBatchErrorResponse
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * PriceRecordBatchErrorResponse Class Doc Comment
- *
- * @category    Class */
- // @description Errors during batch usage for the BigCommerce API.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class PriceRecordBatchErrorResponse implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -72,7 +57,6 @@ class PriceRecordBatchErrorResponse implements ArrayAccess
         'batch_errors' => 'batch_errors'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -80,7 +64,6 @@ class PriceRecordBatchErrorResponse implements ArrayAccess
     protected static $setters = [
         'batch_errors' => 'setBatchErrors'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -119,9 +102,18 @@ class PriceRecordBatchErrorResponse implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['batch_errors'] = isset($data['batch_errors']) ? $data['batch_errors'] : null;
+        $this->container['batch_errors'] = array_key_exists('batch_errors', $data) ? $data['batch_errors'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

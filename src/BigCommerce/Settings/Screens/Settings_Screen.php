@@ -53,7 +53,7 @@ class Settings_Screen extends Abstract_Screen {
 		$last_import_date = $this->last_import_date();
 
 
-		echo '<div class="bc-settings-header">';
+		echo '<div class="bc-settings-header bg-geometric-bg">';
 
 		echo '<div class="wp-header-end"></div>'; // placeholder to tell WP where to put notices
 
@@ -63,20 +63,27 @@ class Settings_Screen extends Abstract_Screen {
 		echo '</div>'; // bc-settings__welcome
 
 		echo '<div class="bc-settings-header__cta">';
-		printf( '<h2 class="bc-settings-header__cta-title">%s</h2>', __( 'Sync your products.', 'bigcommerce' ) );
+		printf( '<h2 class="bc-settings-header__cta-title">%s</h2>', __( 'Manage your products.', 'bigcommerce' ) );
 		if ( $last_import_date ) {
 			printf( '<p class="bc-settings-header__cta-text">%s</p>', sprintf(
 				__( 'Your last sync was on %s', 'bigcommerce' ),
 				$last_import_date
 			) );
 		}
+		echo '<div class="bc-settings-header__cta-btn" data-js="bc-product-sync-button">';
+		printf( '<a href="%s" target="_blank" rel="noopener" class="bc-admin-btn bc-settings-header__manage-button">%s</a>',
+			esc_url( $this->manage_products_url() ),
+			__( 'Manage on BigCommerce', 'bigcommerce' )
+		);
 
 		/**
 		 * Triggered after rendering the last import date in the settings header
 		 */
 		do_action( 'bigcommerce/settings/header/import_status' );
 
-		echo '</div>'; // bc-settings__status
+		echo '</div>'; // bc-settings__cta-buttons
+
+		echo '</div>'; // bc-settings__cta
 
 		echo '</div>'; // bc-settings__header
 
@@ -84,8 +91,8 @@ class Settings_Screen extends Abstract_Screen {
 	}
 
 	protected function submit_button() {
-		echo '<div class="bc-settings-save">';
-		printf( '<img class="bc-settings-save__logo" src="%s" alt="%s" />', trailingslashit( $this->assets_url ) . 'img/admin/big-commerce-logo.svg', __( 'BigCommerce', 'bigcommerce' ) );
+		echo '<div class="bc-plugin-page-header">';
+		printf( '<a href="%s" target="_blank" rel="noopener"><img class="bc-settings-save__logo" src="%s" alt="%s" /></a>', esc_url( $this->login_url() ), trailingslashit( $this->assets_url ) . 'img/admin/big-commerce-logo.svg', __( 'BigCommerce', 'bigcommerce' ) );
 		submit_button();
 		echo '</div>';
 	}
@@ -108,6 +115,14 @@ class Settings_Screen extends Abstract_Screen {
 		}
 	}
 
+	private function login_url() {
+		return 'https://login.bigcommerce.com/';
+	}
+
+	private function manage_products_url() {
+		return 'https://login.bigcommerce.com/deep-links/manage/products';
+	}
+
 	/**
 	 * Render a link to support documentation at BigCommerce
 	 *
@@ -124,6 +139,6 @@ class Settings_Screen extends Abstract_Screen {
 	}
 
 	public function should_register() {
-		return $this->configuration_status >= Settings::STATUS_CHANNEL_CONNECTED;
+		return $this->configuration_status >= Settings::STATUS_COMPLETE;
 	}
 }

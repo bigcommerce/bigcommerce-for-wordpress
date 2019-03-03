@@ -2,12 +2,7 @@
 /**
  * CreditCard
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * CreditCard Class Doc Comment
- *
- * @category    Class */
- // @description A credit-card model.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class CreditCard implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -76,7 +61,6 @@ class CreditCard implements ArrayAccess
         'card_last4' => 'card_last4'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -86,7 +70,6 @@ class CreditCard implements ArrayAccess
         'card_iin' => 'setCardIin',
         'card_last4' => 'setCardLast4'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -127,11 +110,20 @@ class CreditCard implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['card_type'] = isset($data['card_type']) ? $data['card_type'] : null;
-        $this->container['card_iin'] = isset($data['card_iin']) ? $data['card_iin'] : null;
-        $this->container['card_last4'] = isset($data['card_last4']) ? $data['card_last4'] : null;
+        $this->container['card_type'] = array_key_exists('card_type', $data) ? $data['card_type'] : null;
+        $this->container['card_iin'] = array_key_exists('card_iin', $data) ? $data['card_iin'] : null;
+        $this->container['card_last4'] = array_key_exists('card_last4', $data) ? $data['card_last4'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

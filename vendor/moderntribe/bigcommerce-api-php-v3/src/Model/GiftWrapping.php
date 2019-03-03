@@ -2,12 +2,7 @@
 /**
  * GiftWrapping
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * GiftWrapping Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class GiftWrapping implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -77,7 +63,6 @@ class GiftWrapping implements ArrayAccess
         'amount_as_integer' => 'amount_as_integer'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -88,7 +73,6 @@ class GiftWrapping implements ArrayAccess
         'amount' => 'setAmount',
         'amount_as_integer' => 'setAmountAsInteger'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -130,12 +114,21 @@ class GiftWrapping implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['name'] = isset($data['name']) ? $data['name'] : null;
-        $this->container['message'] = isset($data['message']) ? $data['message'] : null;
-        $this->container['amount'] = isset($data['amount']) ? $data['amount'] : null;
-        $this->container['amount_as_integer'] = isset($data['amount_as_integer']) ? $data['amount_as_integer'] : null;
+        $this->container['name'] = array_key_exists('name', $data) ? $data['name'] : null;
+        $this->container['message'] = array_key_exists('message', $data) ? $data['message'] : null;
+        $this->container['amount'] = array_key_exists('amount', $data) ? $data['amount'] : null;
+        $this->container['amount_as_integer'] = array_key_exists('amount_as_integer', $data) ? $data['amount_as_integer'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

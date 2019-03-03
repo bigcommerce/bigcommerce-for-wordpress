@@ -2,12 +2,7 @@
 /**
  * CatalogSummary
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * CatalogSummary Class Doc Comment
- *
- * @category    Class */
- // @description A BigCommerce Catalog Summary object describes a lightweight summary of the catalog.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class CatalogSummary implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -78,7 +63,6 @@ class CatalogSummary implements ArrayAccess
         'primary_category_name' => 'primary_category_name'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -89,7 +73,6 @@ class CatalogSummary implements ArrayAccess
         'primary_category_id' => 'setPrimaryCategoryId',
         'primary_category_name' => 'setPrimaryCategoryName'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -131,12 +114,21 @@ class CatalogSummary implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['inventory_count'] = isset($data['inventory_count']) ? $data['inventory_count'] : null;
-        $this->container['inventory_value'] = isset($data['inventory_value']) ? $data['inventory_value'] : null;
-        $this->container['primary_category_id'] = isset($data['primary_category_id']) ? $data['primary_category_id'] : null;
-        $this->container['primary_category_name'] = isset($data['primary_category_name']) ? $data['primary_category_name'] : null;
+        $this->container['inventory_count'] = array_key_exists('inventory_count', $data) ? $data['inventory_count'] : null;
+        $this->container['inventory_value'] = array_key_exists('inventory_value', $data) ? $data['inventory_value'] : null;
+        $this->container['primary_category_id'] = array_key_exists('primary_category_id', $data) ? $data['primary_category_id'] : null;
+        $this->container['primary_category_name'] = array_key_exists('primary_category_name', $data) ? $data['primary_category_name'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

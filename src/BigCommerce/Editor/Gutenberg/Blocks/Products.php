@@ -50,7 +50,7 @@ class Products extends Shortcode_Block {
 		$config[ 'preview_url' ] = $this->get_preview_url();
 
 		$config[ 'inspector' ] = [
-			'title' => __( 'Add Big Commerce Products', 'bigcommerce' ),
+			'title' => __( 'Add BigCommerce Products', 'bigcommerce' ),
 			'button_title' => __( 'Edit Products', 'bigcommerce' ),
 		];
 		return $config;

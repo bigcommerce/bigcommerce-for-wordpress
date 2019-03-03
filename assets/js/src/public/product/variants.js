@@ -5,6 +5,7 @@
 
 import _ from 'lodash';
 import delegate from 'delegate';
+import flatpickr from 'flatpickr';
 import * as tools from '../../utils/tools';
 import queryToJson from '../../utils/data/query-to-json';
 import updateQueryVar from '../../utils/data/update-query-var';
@@ -175,7 +176,7 @@ const parseVariants = (variants, choices) => {
 	}
 
 	// Try to match the selections to the option_ids in a variant.
-	const variantIndex = _.findIndex(variants, variant => _.isEmpty(_.difference(variant.option_ids, choices)) && _.isEmpty(_.difference(choices, variant.option_ids)));
+	const variantIndex = _.findIndex(variants, variant => _.isEmpty(_.difference(variant.option_ids, choices)));
 
 	// Case: The current selection(s) do not match any product variants.
 	if (variantIndex === -1) {
@@ -227,6 +228,53 @@ const setProductURLParameter = () => {
 
 	window.history.replaceState(null, null, updateQueryVar('variant_id'));
 	window.history.replaceState(null, null, updateQueryVar('sku', state.sku));
+};
+
+/**
+ * @function validateTextArea
+ * @description Listen for key presses and validate that the text meets the textarea's restrictions.
+ * @param e
+ */
+const validateTextArea = (e) => {
+	const maxRows = e.delegateTarget.dataset.maxrows;
+	const currentValue = e.delegateTarget.value;
+	const currentLineCount = currentValue.split(/\r*\n/).length;
+
+	if (e.which === 13 && currentLineCount >= maxRows) {
+		e.preventDefault();
+		return false;
+	}
+
+	return true;
+};
+
+/**
+ * @function handleModifierFields
+ * @description If there are fields present which allow manual user input (i.e. text, date, textarea A.K.A. Modifiers),
+ *     allow for additional validation beyond HTML5 and overrides.
+ * @param options
+ */
+const handleModifierFields = (options) => {
+	delegate(options, '.bc-product-form__control.bc-product-form__control--textarea textarea', 'keydown', validateTextArea);
+
+	tools.getNodes('.bc-product-form__control.bc-product-form__control--date', true, options, true).forEach((field) => {
+		const dateField = tools.getNodes('input[type="date"]', false, field, true)[0];
+		const defaultDate = dateField.value;
+		const minDate = dateField.getAttribute('min');
+		const maxDate = dateField.getAttribute('max');
+
+		const fpOptions = {
+			allowInput: false,
+			altInput: true,
+			altFormat: 'F j, Y',
+			defaultDate,
+			minDate,
+			maxDate,
+			static: true,
+		};
+
+		flatpickr(dateField, fpOptions);
+	});
 };
 
 /**
@@ -366,6 +414,7 @@ const initOptionsPickers = () => {
 		// On initialization, setup our form.
 		handleOptionClicks(options);
 		handleSelections(null, options);
+		handleModifierFields(options);
 	});
 };
 

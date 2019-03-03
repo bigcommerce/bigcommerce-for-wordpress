@@ -2,12 +2,7 @@
 /**
  * Option
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,7 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * Option Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
-class Option implements ArrayAccess
+class Option extends OptionBase implements ArrayAccess
 {
     const DISCRIMINATOR = null;
 
@@ -83,7 +69,6 @@ class Option implements ArrayAccess
         'name' => 'name'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -97,7 +82,6 @@ class Option implements ArrayAccess
         'option_values' => 'setOptionValues',
         'name' => 'setName'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -164,15 +148,24 @@ class Option implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['id'] = isset($data['id']) ? $data['id'] : null;
-        $this->container['product_id'] = isset($data['product_id']) ? $data['product_id'] : null;
-        $this->container['display_name'] = isset($data['display_name']) ? $data['display_name'] : null;
-        $this->container['type'] = isset($data['type']) ? $data['type'] : null;
-        $this->container['config'] = isset($data['config']) ? $data['config'] : null;
-        $this->container['option_values'] = isset($data['option_values']) ? $data['option_values'] : null;
-        $this->container['name'] = isset($data['name']) ? $data['name'] : null;
+        $this->container['id'] = array_key_exists('id', $data) ? $data['id'] : null;
+        $this->container['product_id'] = array_key_exists('product_id', $data) ? $data['product_id'] : null;
+        $this->container['display_name'] = array_key_exists('display_name', $data) ? $data['display_name'] : null;
+        $this->container['type'] = array_key_exists('type', $data) ? $data['type'] : null;
+        $this->container['config'] = array_key_exists('config', $data) ? $data['config'] : null;
+        $this->container['option_values'] = array_key_exists('option_values', $data) ? $data['option_values'] : null;
+        $this->container['name'] = array_key_exists('name', $data) ? $data['name'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -183,19 +176,16 @@ class Option implements ArrayAccess
     public function listInvalidProperties()
     {
         $invalid_properties = [];
-        if (!is_null($this->container['display_name']) && (strlen($this->container['display_name']) > 255)) {
+        if (strlen($this->container['display_name']) > 255) {
             $invalid_properties[] = "invalid value for 'display_name', the character length must be smaller than or equal to 255.";
         }
-
-        if (!is_null($this->container['display_name']) && (strlen($this->container['display_name']) < 1)) {
+        if (strlen($this->container['display_name']) < 1) {
             $invalid_properties[] = "invalid value for 'display_name', the character length must be bigger than or equal to 1.";
         }
-
         $allowed_values = ["radio_buttons", "rectangles", "dropdown", "product_list", "product_list_with_images", "swatch"];
         if (!in_array($this->container['type'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'type', must be one of #{allowed_values}.";
         }
-
         return $invalid_properties;
     }
 
@@ -279,13 +269,12 @@ class Option implements ArrayAccess
      */
     public function setDisplayName($display_name)
     {
-        if (!is_null($display_name) && (strlen($display_name) > 255)) {
+        if (strlen($display_name) > 255) {
             throw new \InvalidArgumentException('invalid length for $display_name when calling Option., must be smaller than or equal to 255.');
         }
-        if (!is_null($display_name) && (strlen($display_name) < 1)) {
+        if (strlen($display_name) < 1) {
             throw new \InvalidArgumentException('invalid length for $display_name when calling Option., must be bigger than or equal to 1.');
         }
-
         $this->container['display_name'] = $display_name;
 
         return $this;
@@ -307,7 +296,7 @@ class Option implements ArrayAccess
      */
     public function setType($type)
     {
-        $allowed_values = array('radio_buttons', 'rectangles', 'dropdown', 'product_list', 'product_list_with_images', 'swatch');
+        $allowed_values = ['radio_buttons', 'rectangles', 'dropdown', 'product_list', 'product_list_with_images', 'swatch'];
         if (!is_null($type) && (!in_array($type, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'type', must be one of 'radio_buttons', 'rectangles', 'dropdown', 'product_list', 'product_list_with_images', 'swatch'");
         }

@@ -2,12 +2,7 @@
 /**
  * CVVResult
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * CVVResult Class Doc Comment
- *
- * @category    Class */
- // @description Card Verification Value result from the payment gateway.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class CVVResult implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -74,7 +59,6 @@ class CVVResult implements ArrayAccess
         'message' => 'message'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -83,7 +67,6 @@ class CVVResult implements ArrayAccess
         'code' => 'setCode',
         'message' => 'setMessage'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -123,10 +106,19 @@ class CVVResult implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['code'] = isset($data['code']) ? $data['code'] : null;
-        $this->container['message'] = isset($data['message']) ? $data['message'] : null;
+        $this->container['code'] = array_key_exists('code', $data) ? $data['code'] : null;
+        $this->container['message'] = array_key_exists('message', $data) ? $data['message'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

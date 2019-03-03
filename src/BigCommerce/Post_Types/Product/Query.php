@@ -11,6 +11,7 @@ use BigCommerce\Taxonomies\Flag\Flag;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
 
 class Query {
+	const UNFILTERED_QUERY_FLAG = '_bigcommerce_unfiltered';
 
 	/**
 	 * @param \WP_Query $query
@@ -19,6 +20,10 @@ class Query {
 	 * @action pre_get_posts
 	 */
 	public function filter_queries( \WP_Query $query ) {
+		if ( $query->get( self::UNFILTERED_QUERY_FLAG ) ) {
+			return;
+		}
+
 		if ( ! $query->get( 'posts_per_page' ) && $this->is_product_query( $query ) ) {
 			$per_page = get_option( Product_Archive::PER_PAGE, Product_Archive::PER_PAGE_DEFAULT );
 			if ( $per_page ) {
@@ -40,11 +45,12 @@ class Query {
 					$query->set( 'orderby', [ 'date' => 'DESC', 'title' => 'ASC' ] );
 					break;
 				case Product_Archive::SORT_FEATURED:
-					$select_filter = function( $select, $wp_query ) use ( $query ) {
+					$select_filter  = function ( $select, $wp_query ) use ( $query ) {
 						if ( $wp_query !== $query ) {
 							return $select;
 						}
 						$select .= ", COUNT(bcfeatured_terms.name) AS bcfeatured";
+
 						return $select;
 					};
 					$join_filter    = function ( $join, $wp_query ) use ( $query ) {
@@ -70,7 +76,7 @@ class Query {
 							return $feature_sort . ', ' . $orderby;
 						}
 					};
-					$groupby_filter = function( $groupby, $wp_query ) use ( $query ) {
+					$groupby_filter = function ( $groupby, $wp_query ) use ( $query ) {
 						/** @var \wpdb $wpdb */
 						global $wpdb;
 						if ( $wp_query !== $query ) {
@@ -79,6 +85,7 @@ class Query {
 						if ( empty( $groupby ) ) {
 							$groupby = "{$wpdb->posts}.ID";
 						}
+
 						return $groupby;
 					};
 
@@ -154,7 +161,7 @@ class Query {
 		}
 		if ( $this->is_product_search( $query ) ) {
 			$search_in = $this->search_to_post_ids( $query->get( 's' ) );
-			$query->set( 's', null );
+			$query->set( 's', '' ); // set 's' back to the default value so WP doesn't turn it into another search
 			$in = $in ? array_intersect( $in, $search_in ) : $search_in;
 			$in = $in ?: [ 0 ];
 		}
@@ -189,7 +196,7 @@ class Query {
 	 *
 	 * @return string
 	 */
-	private function get_ordering_decimal_format(){
+	private function get_ordering_decimal_format() {
 		$decimals     = get_option( Currency::DECIMAL_UNITS ) ?: 2;
 		$integer      = get_option( Currency::INTEGER_UNITS ) ?: 16;
 		$max_length_m = $integer + $decimals;
@@ -215,6 +222,7 @@ class Query {
 				unset( $vars[ $query_var ] );
 			}
 		}
+
 		return $vars;
 	}
 
@@ -330,25 +338,38 @@ class Query {
 	 * @return array
 	 */
 	private function search_to_post_ids( $search_phrase ) {
-		/** @var \wpdb $wpdb */
-		global $wpdb;
-		$escaped_like = '%' . $wpdb->esc_like( $search_phrase ) . '%';
+		$query = new \WP_Query();
 
-		// title search
-		$searches[] = $wpdb->prepare( "(posts.post_title LIKE %s)", $escaped_like );
+		$matches = $query->query( [
+			'fields'                => 'ids',
+			'posts_per_page'        => - 1,
+			'post_type'             => Product::NAME,
+			'_bigcommerce_internal' => true,
+			'meta_query'            => [
+				'relation'        => 'OR',
+				'bigcommerce_id'  => [
+					'key'     => Product::BIGCOMMERCE_ID,
+					'value'   => $search_phrase,
+					'compare' => '=',
+				],
+				'bigcommerce_sku' => [
+					'key'     => Product::SKU,
+					'value'   => $search_phrase,
+					'compare' => '=',
+				],
+			],
+		] );
 
-		// ID search
-		if ( is_numeric( $search_phrase ) ) {
-			$searches[] = $wpdb->prepare( "(products.bc_id = %d)", $search_phrase );
+		if ( empty( $matches ) ) {
+			$matches = $query->query( [
+				's'                         => $search_phrase,
+				'fields'                    => 'ids',
+				'post_type'                 => Product::NAME,
+				'posts_per_page'            => - 1,
+				self::UNFILTERED_QUERY_FLAG => true,
+			] );
 		}
 
-		// SKU search
-		$searches[] = $wpdb->prepare( "(products.sku LIKE %s)", $escaped_like );
-
-		$search = implode( ' OR ', $searches );
-
-		$post_ids = $wpdb->get_col( "SELECT products.post_id FROM {$wpdb->bc_products} products INNER JOIN {$wpdb->posts} posts ON products.post_id=posts.ID WHERE ( $search )" );
-
-		return apply_filters( 'bigcommerce/query/search_post_ids', array_map( 'intval', $post_ids ), $search_phrase );
+		return apply_filters( 'bigcommerce/query/search_post_ids', array_map( 'intval', $matches ), $search_phrase );
 	}
 }

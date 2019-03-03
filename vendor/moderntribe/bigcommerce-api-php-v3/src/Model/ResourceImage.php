@@ -2,12 +2,7 @@
 /**
  * ResourceImage
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * ResourceImage Class Doc Comment
- *
- * @category    Class */
- // @description An object containing a publicly accessible image URL, or a form post that contains an image file.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class ResourceImage implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -72,7 +57,6 @@ class ResourceImage implements ArrayAccess
         'image_url' => 'image_url'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -80,7 +64,6 @@ class ResourceImage implements ArrayAccess
     protected static $setters = [
         'image_url' => 'setImageUrl'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -119,9 +102,18 @@ class ResourceImage implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['image_url'] = isset($data['image_url']) ? $data['image_url'] : null;
+        $this->container['image_url'] = array_key_exists('image_url', $data) ? $data['image_url'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**

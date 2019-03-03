@@ -105,7 +105,17 @@ abstract class Controller {
 		 */
 		$data = apply_filters( 'bigcommerce/template=' . $this->template . '/data', $data, $this->template, $this->options );
 
-		return $this->wrap( $template->render( $data ) );
+		/**
+		 * Filter the rendered output of the template
+		 *
+		 * @param string $output   The rendered template
+		 * @param string $template The template path
+		 * @param array  $data     The data passed to the template
+		 * @param array  $options  The options from the template controller
+		 */
+		$output = apply_filters( 'bigcommerce/template=' . $this->template . '/output', $template->render( $data ), $this->template, $data, $this->options );
+
+		return $this->wrap( $output );
 	}
 
 	/**
@@ -200,7 +210,7 @@ abstract class Controller {
 				return $attributes[ $key ] ? sanitize_title_with_dashes( $key ) : '';
 			}
 
-			return sanitize_title_with_dashes( $key ) . '="' . esc_attr( $attributes[ $key ] ) . '""';
+			return sanitize_title_with_dashes( $key ) . '="' . esc_attr( $attributes[ $key ] ) . '"';
 		}, array_keys( $attributes ) );
 
 		return sprintf( '<%s class="%s" %s>%s</%s>', $tag, implode( ' ', $classes ), implode( ' ', $attrs ), $html, $tag );

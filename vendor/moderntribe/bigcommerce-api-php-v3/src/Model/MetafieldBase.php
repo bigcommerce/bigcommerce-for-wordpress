@@ -2,12 +2,7 @@
 /**
  * MetafieldBase
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,16 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * MetafieldBase Class Doc Comment
- *
- * @category    Class */
- // @description Common Metafield properties.
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class MetafieldBase implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -84,7 +69,6 @@ class MetafieldBase implements ArrayAccess
         'resource_id' => 'resource_id'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -98,7 +82,6 @@ class MetafieldBase implements ArrayAccess
         'resource_type' => 'setResourceType',
         'resource_id' => 'setResourceId'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -177,15 +160,24 @@ class MetafieldBase implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['permission_set'] = isset($data['permission_set']) ? $data['permission_set'] : null;
-        $this->container['namespace'] = isset($data['namespace']) ? $data['namespace'] : null;
-        $this->container['key'] = isset($data['key']) ? $data['key'] : null;
-        $this->container['value'] = isset($data['value']) ? $data['value'] : null;
-        $this->container['description'] = isset($data['description']) ? $data['description'] : null;
-        $this->container['resource_type'] = isset($data['resource_type']) ? $data['resource_type'] : null;
-        $this->container['resource_id'] = isset($data['resource_id']) ? $data['resource_id'] : null;
+        $this->container['permission_set'] = array_key_exists('permission_set', $data) ? $data['permission_set'] : null;
+        $this->container['namespace'] = array_key_exists('namespace', $data) ? $data['namespace'] : null;
+        $this->container['key'] = array_key_exists('key', $data) ? $data['key'] : null;
+        $this->container['value'] = array_key_exists('value', $data) ? $data['value'] : null;
+        $this->container['description'] = array_key_exists('description', $data) ? $data['description'] : null;
+        $this->container['resource_type'] = array_key_exists('resource_type', $data) ? $data['resource_type'] : null;
+        $this->container['resource_id'] = array_key_exists('resource_id', $data) ? $data['resource_id'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -200,52 +192,40 @@ class MetafieldBase implements ArrayAccess
         if (!in_array($this->container['permission_set'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'permission_set', must be one of #{allowed_values}.";
         }
-
-        if (!is_null($this->container['namespace']) && (strlen($this->container['namespace']) > 64)) {
+        if (strlen($this->container['namespace']) > 64) {
             $invalid_properties[] = "invalid value for 'namespace', the character length must be smaller than or equal to 64.";
         }
-
-        if (!is_null($this->container['namespace']) && (strlen($this->container['namespace']) < 1)) {
+        if (strlen($this->container['namespace']) < 1) {
             $invalid_properties[] = "invalid value for 'namespace', the character length must be bigger than or equal to 1.";
         }
-
-        if (!is_null($this->container['key']) && (strlen($this->container['key']) > 64)) {
+        if (strlen($this->container['key']) > 64) {
             $invalid_properties[] = "invalid value for 'key', the character length must be smaller than or equal to 64.";
         }
-
-        if (!is_null($this->container['key']) && (strlen($this->container['key']) < 1)) {
+        if (strlen($this->container['key']) < 1) {
             $invalid_properties[] = "invalid value for 'key', the character length must be bigger than or equal to 1.";
         }
-
-        if (!is_null($this->container['value']) && (strlen($this->container['value']) > 65535)) {
+        if (strlen($this->container['value']) > 65535) {
             $invalid_properties[] = "invalid value for 'value', the character length must be smaller than or equal to 65535.";
         }
-
-        if (!is_null($this->container['value']) && (strlen($this->container['value']) < 1)) {
+        if (strlen($this->container['value']) < 1) {
             $invalid_properties[] = "invalid value for 'value', the character length must be bigger than or equal to 1.";
         }
-
-        if (!is_null($this->container['description']) && (strlen($this->container['description']) > 255)) {
+        if (strlen($this->container['description']) > 255) {
             $invalid_properties[] = "invalid value for 'description', the character length must be smaller than or equal to 255.";
         }
-
-        if (!is_null($this->container['description']) && (strlen($this->container['description']) < 0)) {
+        if (strlen($this->container['description']) < 0) {
             $invalid_properties[] = "invalid value for 'description', the character length must be bigger than or equal to 0.";
         }
-
         $allowed_values = ["category", "brand", "product", "variant"];
         if (!in_array($this->container['resource_type'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'resource_type', must be one of #{allowed_values}.";
         }
-
-        if (!is_null($this->container['resource_id']) && ($this->container['resource_id'] > 10000000000)) {
+        if ($this->container['resource_id'] > 10000000000) {
             $invalid_properties[] = "invalid value for 'resource_id', must be smaller than or equal to 10000000000.";
         }
-
-        if (!is_null($this->container['resource_id']) && ($this->container['resource_id'] < 0)) {
+        if ($this->container['resource_id'] < 0) {
             $invalid_properties[] = "invalid value for 'resource_id', must be bigger than or equal to 0.";
         }
-
         return $invalid_properties;
     }
 
@@ -315,7 +295,7 @@ class MetafieldBase implements ArrayAccess
      */
     public function setPermissionSet($permission_set)
     {
-        $allowed_values = array('app_only', 'read', 'write');
+        $allowed_values = ['app_only', 'read', 'write'];
         if (!is_null($permission_set) && (!in_array($permission_set, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'permission_set', must be one of 'app_only', 'read', 'write'");
         }
@@ -340,13 +320,12 @@ class MetafieldBase implements ArrayAccess
      */
     public function setNamespace($namespace)
     {
-        if (!is_null($namespace) && (strlen($namespace) > 64)) {
+        if (strlen($namespace) > 64) {
             throw new \InvalidArgumentException('invalid length for $namespace when calling MetafieldBase., must be smaller than or equal to 64.');
         }
-        if (!is_null($namespace) && (strlen($namespace) < 1)) {
+        if (strlen($namespace) < 1) {
             throw new \InvalidArgumentException('invalid length for $namespace when calling MetafieldBase., must be bigger than or equal to 1.');
         }
-
         $this->container['namespace'] = $namespace;
 
         return $this;
@@ -368,13 +347,12 @@ class MetafieldBase implements ArrayAccess
      */
     public function setKey($key)
     {
-        if (!is_null($key) && (strlen($key) > 64)) {
+        if (strlen($key) > 64) {
             throw new \InvalidArgumentException('invalid length for $key when calling MetafieldBase., must be smaller than or equal to 64.');
         }
-        if (!is_null($key) && (strlen($key) < 1)) {
+        if (strlen($key) < 1) {
             throw new \InvalidArgumentException('invalid length for $key when calling MetafieldBase., must be bigger than or equal to 1.');
         }
-
         $this->container['key'] = $key;
 
         return $this;
@@ -396,13 +374,12 @@ class MetafieldBase implements ArrayAccess
      */
     public function setValue($value)
     {
-        if (!is_null($value) && (strlen($value) > 65535)) {
+        if (strlen($value) > 65535) {
             throw new \InvalidArgumentException('invalid length for $value when calling MetafieldBase., must be smaller than or equal to 65535.');
         }
-        if (!is_null($value) && (strlen($value) < 1)) {
+        if (strlen($value) < 1) {
             throw new \InvalidArgumentException('invalid length for $value when calling MetafieldBase., must be bigger than or equal to 1.');
         }
-
         $this->container['value'] = $value;
 
         return $this;
@@ -424,13 +401,12 @@ class MetafieldBase implements ArrayAccess
      */
     public function setDescription($description)
     {
-        if (!is_null($description) && (strlen($description) > 255)) {
+        if (strlen($description) > 255) {
             throw new \InvalidArgumentException('invalid length for $description when calling MetafieldBase., must be smaller than or equal to 255.');
         }
-        if (!is_null($description) && (strlen($description) < 0)) {
+        if (strlen($description) < 0) {
             throw new \InvalidArgumentException('invalid length for $description when calling MetafieldBase., must be bigger than or equal to 0.');
         }
-
         $this->container['description'] = $description;
 
         return $this;
@@ -452,7 +428,7 @@ class MetafieldBase implements ArrayAccess
      */
     public function setResourceType($resource_type)
     {
-        $allowed_values = array('category', 'brand', 'product', 'variant');
+        $allowed_values = ['category', 'brand', 'product', 'variant'];
         if (!is_null($resource_type) && (!in_array($resource_type, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'resource_type', must be one of 'category', 'brand', 'product', 'variant'");
         }
@@ -478,13 +454,12 @@ class MetafieldBase implements ArrayAccess
     public function setResourceId($resource_id)
     {
 
-        if (!is_null($resource_id) && ($resource_id > 10000000000)) {
+        if ($resource_id > 10000000000) {
             throw new \InvalidArgumentException('invalid value for $resource_id when calling MetafieldBase., must be smaller than or equal to 10000000000.');
         }
-        if (!is_null($resource_id) && ($resource_id < 0)) {
+        if ($resource_id < 0) {
             throw new \InvalidArgumentException('invalid value for $resource_id when calling MetafieldBase., must be bigger than or equal to 0.');
         }
-
         $this->container['resource_id'] = $resource_id;
 
         return $this;

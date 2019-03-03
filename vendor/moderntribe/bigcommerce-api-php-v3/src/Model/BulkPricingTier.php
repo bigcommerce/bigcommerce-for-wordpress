@@ -2,12 +2,7 @@
 /**
  * BulkPricingTier
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * BulkPricingTier Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class BulkPricingTier implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -77,7 +63,6 @@ class BulkPricingTier implements ArrayAccess
         'amount' => 'amount'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -88,7 +73,6 @@ class BulkPricingTier implements ArrayAccess
         'type' => 'setType',
         'amount' => 'setAmount'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -146,12 +130,21 @@ class BulkPricingTier implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['quantity_min'] = isset($data['quantity_min']) ? $data['quantity_min'] : null;
-        $this->container['quantity_max'] = isset($data['quantity_max']) ? $data['quantity_max'] : null;
-        $this->container['type'] = isset($data['type']) ? $data['type'] : null;
-        $this->container['amount'] = isset($data['amount']) ? $data['amount'] : null;
+        $this->container['quantity_min'] = array_key_exists('quantity_min', $data) ? $data['quantity_min'] : null;
+        $this->container['quantity_max'] = array_key_exists('quantity_max', $data) ? $data['quantity_max'] : null;
+        $this->container['type'] = array_key_exists('type', $data) ? $data['type'] : null;
+        $this->container['amount'] = array_key_exists('amount', $data) ? $data['amount'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
@@ -166,7 +159,6 @@ class BulkPricingTier implements ArrayAccess
         if (!in_array($this->container['type'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'type', must be one of #{allowed_values}.";
         }
-
         return $invalid_properties;
     }
 
@@ -244,7 +236,7 @@ class BulkPricingTier implements ArrayAccess
      */
     public function setType($type)
     {
-        $allowed_values = array('fixed', 'price', 'percent');
+        $allowed_values = ['fixed', 'price', 'percent'];
         if (!is_null($type) && (!in_array($type, $allowed_values))) {
             throw new \InvalidArgumentException("Invalid value for 'type', must be one of 'fixed', 'price', 'percent'");
         }

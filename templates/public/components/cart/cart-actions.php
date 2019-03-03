@@ -5,6 +5,7 @@
  * @package BigCommerce
  *
  * @var array $cart
+ * @var array $actions
  */
 
 ?>
@@ -15,11 +16,8 @@
 			method="post"
 			enctype="multipart/form-data"
 	>
-		<!-- data-js="proceed-to-checkout" is required -->
-		<button
-				type="submit"
-				class="bc-btn bc-cart-actions__checkout-button"
-				data-js="proceed-to-checkout"
-		><?php esc_html_e( 'Proceed to Checkout', 'bigcommerce' ); ?></button>
+		<?php foreach ( $actions as $action ) {
+			echo $action;
+		} ?>
 	</form>
 </div>

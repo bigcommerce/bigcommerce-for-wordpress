@@ -2,12 +2,7 @@
 /**
  * ModifierValueBaseAdjusters
  *
- * PHP version 5
- *
- * @category Class
  * @package  BigCommerce\Api\v3
- * @author   Swaagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -31,15 +26,6 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-/**
- * ModifierValueBaseAdjusters Class Doc Comment
- *
- * @category    Class */
-/**
- * @package     BigCommerce\Api\v3
- * @author      Swagger Codegen team
- * @link        https://github.com/swagger-api/swagger-codegen
- */
 class ModifierValueBaseAdjusters implements ArrayAccess
 {
     const DISCRIMINATOR = null;
@@ -77,7 +63,6 @@ class ModifierValueBaseAdjusters implements ArrayAccess
         'purchasing_disabled' => 'purchasing_disabled'
     ];
 
-
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      * @var string[]
@@ -88,7 +73,6 @@ class ModifierValueBaseAdjusters implements ArrayAccess
         'image_url' => 'setImageUrl',
         'purchasing_disabled' => 'setPurchasingDisabled'
     ];
-
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -130,12 +114,21 @@ class ModifierValueBaseAdjusters implements ArrayAccess
      * Constructor
      * @param mixed[] $data Associated array of property values initializing the model
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = [])
     {
-        $this->container['price'] = isset($data['price']) ? $data['price'] : null;
-        $this->container['weight'] = isset($data['weight']) ? $data['weight'] : null;
-        $this->container['image_url'] = isset($data['image_url']) ? $data['image_url'] : null;
-        $this->container['purchasing_disabled'] = isset($data['purchasing_disabled']) ? $data['purchasing_disabled'] : null;
+        $this->container['price'] = array_key_exists('price', $data) ? $data['price'] : null;
+        $this->container['weight'] = array_key_exists('weight', $data) ? $data['weight'] : null;
+        $this->container['image_url'] = array_key_exists('image_url', $data) ? $data['image_url'] : null;
+        $this->container['purchasing_disabled'] = array_key_exists('purchasing_disabled', $data) ? $data['purchasing_disabled'] : null;
+    }
+
+    /**
+     * returns container
+     * @return array
+     */
+    public function get()
+    {
+        return $this->container;
     }
 
     /**
