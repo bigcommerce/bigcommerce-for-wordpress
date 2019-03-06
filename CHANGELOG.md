@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.1]
+
+### Fixed
+- Handled the new firing order of block-editor related hooks in transitioning
+  from the Gutenberg plugin to WordPress 5.0+. This fixes a PHP warning
+  and some odd behavior from other plugins that register meta areas
+  for the block editor.
+
 ## [2.0.0]
 
 ### Added
@@ -420,6 +428,7 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[2.0.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/2.0.0...2.0.1
 [2.0.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.6.0...2.0.0
 [1.6.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.5.0...1.6.0
 [1.5.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.4.2...1.5.0

@@ -48,8 +48,14 @@ class Editor extends Provider {
 		$render_callback = $this->create_callback( 'render_editor_dialog_template', function () use ( $container ) {
 			echo $container[ self::UI_DIALOG ]->render_dialog_once();
 		} );
-		add_action( 'enqueue_block_editor_assets', $render_callback, 10, 0 );
-		add_action( 'admin_print_footer_scripts', $render_callback, 10, 0 );
+		add_action( 'enqueue_block_editor_assets', $this->create_callback( 'block_editor_enqueue_dialog_template', function() use ( $container, $render_callback ) {
+			if ( did_action( 'admin_enqueue_scripts' ) ) { // if the Gutenberg plugin is enabled, the action will already be called
+				$render_callback();
+			} else { // if using the Block Editor in WP core, no HTML has been rendered, so delay the output
+				add_action( 'admin_enqueue_scripts', $render_callback, 10, 0 );
+			}
+		}), 10, 0 );
+		add_action( 'admin_print_footer_scripts', $render_callback, 10, 0 ); // if the block editor is disabled, print scripts in the footer
 
 		add_filter( 'bigcommerce/admin/js_config', $this->create_callback( 'editor_dialog_js_config', function ( $config ) use ( $container ) {
 			return $container[ self::UI_DIALOG ]->js_config( $config, $container[ Rest::PRODUCTS ], $container[ Rest::SHORTCODE ] );
