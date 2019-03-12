@@ -66,10 +66,11 @@ class Amp_Assets {
 	/**
 	 * Get AMP script handles.
 	 *
-     * This is only relevant in the Classic Mode, as component scripts are automatically in Native/Paired modes.
-     * This is used in an 'amp_post_template_data' filter.
-     *
+	 * This is only relevant in the Classic Mode, as component scripts are automatically in Native/Paired modes.
+	 * This is used in an 'amp_post_template_data' filter.
+	 *
 	 * @see amp_register_default_scripts()
+	 * @return string[] Script handles.
 	 */
 	public function scripts() {
 		$handles = array(
