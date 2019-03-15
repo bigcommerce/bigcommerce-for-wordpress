@@ -5,6 +5,8 @@ namespace BigCommerce\Checkout;
 
 use Bigcommerce\Api\Resources\ShippingZone;
 use BigCommerce\Api_Factory;
+use BigCommerce\Post_Types\Product\Product;
+use BigCommerce\Settings\Screens\Settings_Screen;
 
 /**
  * Class Requirements_Notice
@@ -33,8 +35,9 @@ class Requirements_Notice {
 	 * @action admin_notices
 	 */
 	public function check_requirements() {
-		$status  = $this->get_current_status();
-		$notices = [];
+		$status              = $this->get_current_status();
+		$notices             = [];
+
 		if ( empty( $status[ 'shipping_zones' ] ) ) {
 			$notices[] = sprintf(
 				__( 'Shipping has not been set up. %s', 'bigcommerce' ),
@@ -58,27 +61,37 @@ class Requirements_Notice {
 		//if ( empty( $status[ 'ssl' ] ) ) {
 		//	$notices[] = __( 'An SSL certificate on your domain is required.', 'bigcommerce' );
 		//}
-
+		
 		if ( empty( $notices ) ) {
 			return;
 		}
 
-		$list = sprintf( '<ul class="bigcommerce-notice__list">%s</ul>', implode( '', array_map( function ( $message ) {
-			return sprintf( '<li class="bigcommerce-notice__list-item">%s</li>', $message );
-		}, $notices ) ) );
-
-		printf(
-			'<div class="notice notice-error bigcommerce-notice"><p class="bigcommerce-notice__refresh"><a class="bigcommerce-notice__refresh-button" href="%s"><i class="bc-icon icon-bc-sync"></i> %s</a></p><h3 class="bigcommerce-notice__heading">%s</h3>%s</div>',
-			esc_url( $this->refresh_url() ),
-			__( 'Refresh', 'bigcommerce' ),
-			_n(
+		if ( get_current_screen()->post_type != Product::NAME ) {
+			$notice = sprintf(
+				__( 'Please complete the outstanding requirements to finish setting up your BigCommerce store. %s', 'bigcommerce' ),
+				sprintf( '<a href="%s">%s</a>', esc_url( $this->get_settings_dashboard_url()), __( 'View more', 'bigcommerce' ) )
+			);
+			printf(
+				'<div class="notice notice-error bigcommerce-notice">%s</div>',
+				$notice
+			);
+		} else {
+			$notice_header = _n(
 				'Checkout functionality will not work until this has been configured in BigCommerce.',
 				'Checkout functionality will not work until these have been configured in BigCommerce.',
 				count( $notices ),
-				'bigcommerce'
-			),
-			$list
-		);
+				'bigcommerce');
+			$list = sprintf( '<ul class="bigcommerce-notice__list">%s</ul>', implode( '', array_map( function ( $message ) {
+				return sprintf( '<li class="bigcommerce-notice__list-item">%s</li>', $message );
+			}, $notices ) ) );
+			printf(
+				'<div class="notice notice-error bigcommerce-notice"><p class="bigcommerce-notice__refresh"><a class="bigcommerce-notice__refresh-button" href="%s"><i class="bc-icon icon-bc-sync"></i> %s</a></p><h3 class="bigcommerce-notice__heading">%s</h3>%s</div>',
+				esc_url( $this->refresh_url() ),
+				__( 'Refresh', 'bigcommerce' ),
+				$notice_header,
+				$list
+			);
+		}
 	}
 
 	public function get_current_status() {
@@ -140,6 +153,10 @@ class Requirements_Notice {
 
 	private function get_shipping_configuration_url() {
 		return 'https://login.bigcommerce.com/deep-links/manage/settings/shipping';
+	}
+
+	private function get_settings_dashboard_url(){
+		return admin_url( 'edit.php?post_type=' . Product::NAME.'&page=' . Settings_Screen::NAME );
 	}
 
 	private function get_tax_configuration_url() {

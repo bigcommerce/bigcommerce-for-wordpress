@@ -75,7 +75,7 @@ class Assets extends Provider {
 		};
 
 		$container[ self::FRONTEND_CONFIG ] = function ( Container $container ) {
-			return new Theme\JS_Config( $container[ self::PATH ], $container[ Rest::CART ] );
+			return new Theme\JS_Config( $container[ self::PATH ] );
 		};
 
 		$container[ self::FRONTEND_LOCALIZATION ] = function( Container $container ) {

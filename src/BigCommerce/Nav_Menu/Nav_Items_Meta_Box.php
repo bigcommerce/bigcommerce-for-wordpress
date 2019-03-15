@@ -18,6 +18,8 @@ class Nav_Items_Meta_Box extends Meta_Box {
 	const CATEGORIES = 'bigcommerce_categories';
 	const BRANDS     = 'bigcommerce_brands';
 
+	const USER_INITIALIZED = 'bigcommerce_nav_settings_initialized';
+
 	protected function get_name() {
 		return self::NAME;
 	}
@@ -81,6 +83,30 @@ class Nav_Items_Meta_Box extends Meta_Box {
 		);
 		echo '<span class="spinner"></span>';
 		echo '</span></p></div>';
+	}
+
+	public function set_nav_menu_screen_options(){
+		$already_updated_user = get_user_option( self::USER_INITIALIZED );
+
+		if ( empty( $already_updated_user ) ) {
+			$user_id    = get_current_user_id();
+			$prev_value = get_user_option( 'metaboxhidden_nav-menus', $user_id );
+
+			$meta_value = $prev_value;
+
+			// Menus to be displayed by default
+			$options = [
+				self::NAME,
+				'add-' . Product_Category::NAME,
+				'add-' . Brand::NAME,
+				'add-post-type-' . Product::NAME
+			];
+
+			$meta_value = array_diff( $prev_value, $options );
+
+			update_user_option( $user_id, 'metaboxhidden_nav-menus', $meta_value, $prev_value );
+			update_user_option( $user_id, self::USER_INITIALIZED, 1, true );
+		}
 	}
 
 	protected function get_screen() {

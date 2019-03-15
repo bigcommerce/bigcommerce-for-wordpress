@@ -1,6 +1,42 @@
 .bc-product__pricing {
 	margin-bottom: 0;
 	font-weight: normal;
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+
+.bc-product__pricing--cached,
+.bc-product__pricing--api,
+.bc-get-prices-wrapper {
+	width: 0;
+	height: 0;
+	margin: 0;
+	opacity: 0;
+	visibility: hidden;
+	transition: var(--transition);
+
+	&.bc-product__pricing--visible,
+	&.bc-show-pricing-spinner {
+		width: auto;
+		height: auto;
+		visibility: visible;
+		opacity: 1;
+	}
+}
+
+.bc-get-prices-message {
+	font-size: 14px;
+	display: inline-block;
+	vertical-align: middle;
+	margin-left: 4px;
+}
+
+.bc-get-prices-loader {
+	display: inline-block;
+	vertical-align: middle;
+	margin: 0 16px;
 }
 
 .bc-product__price {
@@ -41,5 +77,16 @@
 
 	.bc-product__original-price {
 		margin-right: 20px;
+	}
+
+	.bc-product__pricing--api {
+
+		.bc-product__original-price {
+			margin-right: 0;
+
+			&.bc-show-current-price {
+				margin-right: 20px;
+			}
+		}
 	}
 }

@@ -14,10 +14,10 @@ class JS_Localization {
 	 */
 	public function get_data() {
 		$js_i18n_array = [
-			'operations' => [
+			'operations'  => [
 				'query_string_separator' => __( '&', 'bigcommerce' ),
 			],
-			'cart'       => [
+			'cart'        => [
 				'items_url_param'          => __( '/items/', 'bigcommerce' ),
 				'quantity_param'           => __( 'quantity', 'bigcommerce' ),
 				'message_empty'            => __( 'Your cart is empty.', 'bigcommerce' ),
@@ -28,14 +28,17 @@ class JS_Localization {
 				'ajax_add_to_cart_error'   => __( 'There was an error adding this product to your cart.', 'bigcommerce' ),
 				'ajax_add_to_cart_success' => __( 'Product successfully added to your cart.', 'bigcommerce' ),
 			],
-			'account'    => [
+			'account'     => [
 				'confirm_delete_message' => __( 'Are you sure you want to delete this address?', 'bigcommerce' ),
 				'confirm_delete_address' => __( 'Confirm', 'bigcommerce' ),
 				'cancel_delete_address'  => __( 'Cancel', 'bigcommerce' ),
 			],
-			'errors'     => [
+			'errors'      => [
 				'pagination_error'         => __( 'There was an error processing your request. Please try again.', 'bigcommerce' ),
 				'pagination_timeout_error' => __( 'The server took too long to complete this request. Please try again.', 'bigcommerce' ),
+			],
+			'pricing' => [
+				'loading_prices' => __( 'Retrieving current pricing data...', 'bigcommerce' ),
 			],
 		];
 

@@ -194,11 +194,12 @@ class Customer {
 		 * @param array $fields
 		 */
 		$empty_profile = apply_filters( 'bigcommerce/customer/empty_profile', [
-			'first_name' => '',
-			'last_name'  => '',
-			'company'    => '',
-			'email'      => '',
-			'phone'      => '',
+			'first_name'        => '',
+			'last_name'         => '',
+			'company'           => '',
+			'email'             => '',
+			'phone'             => '',
+			'customer_group_id' => 0,
 		] );
 		try {
 			$profile = Client::getCustomer( $customer_id );
@@ -244,5 +245,47 @@ class Customer {
 	 */
 	public function set_customer_id( $customer_id ) {
 		update_user_option( $this->wp_user_id, self::CUSTOMER_ID_META, $customer_id );
+	}
+
+	/**
+	 * Get the customer group ID assigned to the user.
+	 * Value will be fetched from cache if available,
+	 * otherwise from the API.
+	 *
+	 * @return int
+	 */
+	public function get_group_id() {
+		$customer_id = get_user_option( self::CUSTOMER_ID_META, $this->wp_user_id );
+		if ( ! $customer_id ) {
+			return 0;
+		}
+		$transient_key = sprintf( 'bccustomergroup%d', $customer_id );
+		$group_id      = get_transient( $transient_key );
+
+		if ( empty( $group_id ) ) {
+			// Couldn't find in cache, retrieve from the API
+			$profile    = $this->get_profile();
+			$group_id   = isset( $profile[ 'customer_group_id' ] ) ? absint( $profile[ 'customer_group_id' ] ) : 0;
+			$expiration = HOUR_IN_SECONDS; // TODO: a future webhook to flush this cache when the customer's gorup changes
+			if ( $group_id === 0 ) {
+				set_transient( $transient_key, 'zero', $expiration ); // workaround for storing empty values in cache
+			} else {
+				set_transient( $transient_key, $group_id, $expiration );
+			}
+		}
+
+		if ( $group_id === 'zero' ) {
+			$group_id = 0;
+		}
+
+		/**
+		 * Filter the group ID associated with the customer
+		 *
+		 * @param int      $group_id The customer's group ID
+		 * @param Customer $customer The Customer object
+		 */
+		$group_id = apply_filters( 'bigcommerce/customer/group_id', $group_id, $this );
+
+		return absint( $group_id );
 	}
 }

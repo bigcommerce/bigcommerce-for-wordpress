@@ -46,6 +46,10 @@ class Build_Resources extends Command {
 			\WP_CLI::error( __( 'Unable to read input file.', 'bigcommerce' ) );
 		}
 
+		if ( ! class_exists( 'League\Csv\Reader' ) ) {
+			\WP_CLI::error( __( 'Missing league/csv library. Unable to build resources json.', 'bigcommerce' ) );
+		}
+
 		$csv  = Reader::createFromPath( $path, 'r' );
 		$keys = $csv->fetchOne();
 		$csv->setOffset( 1 );

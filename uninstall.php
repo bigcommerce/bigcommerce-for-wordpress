@@ -13,6 +13,7 @@ use BigCommerce\Import\Runner\Lock;
 use BigCommerce\Import\Runner\Status;
 use BigCommerce\Logging\Error_Log;
 use BigCommerce\Merchant;
+use BigCommerce\Nav_Menu\Nav_Items_Meta_Box;
 use BigCommerce\Pages;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Schema;
@@ -24,6 +25,8 @@ use BigCommerce\Taxonomies\Flag\Flag;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
 use BigCommerce\Taxonomies\Product_Type\Product_Type;
 use BigCommerce\Webhooks\Product_Update_Webhook;
+use BigCommerce\Webhooks\Webhook;
+use BigCommerce\Webhooks\Webhook_Versioning;
 
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	die;
@@ -167,6 +170,7 @@ function delete_options() {
 		'schema-' . Schema\Reviews_Table::class,
 		'schema-' . Schema\Import_Queue_Table::class,
 		'schema-' . Schema\User_Roles::class,
+		'schema-' . Webhook_Versioning::class,
 		Status::CURRENT_LOG,
 		Status::PREVIOUS_LOG,
 		Lock::OPTION,
@@ -192,7 +196,11 @@ function delete_options() {
 		Customizer\Sections\Product_Single::DEFAULT_IMAGE,
 		'bigcommerce_flushed_rewrites',
 		md5( 'bc_webhook_' . Product_Update_Webhook::ACTION . Product_Update_Webhook::SCOPE ),
+		// removed in version 2.1
 		md5( 'bc_webhook_password_' . Product_Update_Webhook::ACTION . Product_Update_Webhook::SCOPE ),
+		// removed in version 2.1
+		Webhook::WEBHOOKS_OPTION,
+		Webhook::AUTH_KEY_OPTION,
 		Settings\Sections\Cart::OPTION_AJAX_CART,
 		Settings\Sections\Import::BATCH_SIZE,
 		Term_Import::STATE_OPTION,
@@ -209,11 +217,13 @@ function delete_options() {
 function delete_user_meta_data() {
 	global $wpdb;
 	$customer_id_meta_key = $wpdb->get_blog_prefix() . Customer::CUSTOMER_ID_META;
-	
+	$nav_init_meta_key    = $wpdb->get_blog_prefix() . Nav_Items_Meta_Box::USER_INITIALIZED;
+
 	// all meta-keys => value to be deleted
-	$meta_keys            = [
+	$meta_keys = [
 		$customer_id_meta_key                => '',
-		User_Profile_Settings::SYNC_PASSWORD => ''
+		$nav_init_meta_key                   => '',
+		User_Profile_Settings::SYNC_PASSWORD => '',
 	];
 
 	// Delete metadata

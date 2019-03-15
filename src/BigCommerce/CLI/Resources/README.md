@@ -70,3 +70,7 @@ and redirect the output to a JSON file.
 ```
 wp bigcommerce resources build --pretty /path/to/your/resources.csv > /path/to/your/resources.json
 ```
+
+This command only works when installing the plugin from source and running
+`composer install`, as it requires the `league/csv` library, which is not
+included in the official package.

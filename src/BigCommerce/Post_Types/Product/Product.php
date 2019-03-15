@@ -5,6 +5,7 @@ namespace BigCommerce\Post_Types\Product;
 
 
 use BigCommerce\Api\v3\ObjectSerializer;
+use BigCommerce\Currency\With_Currency;
 use BigCommerce\Customizer\Sections\Buttons;
 use BigCommerce\Customizer\Sections\Product_Single;
 use BigCommerce\Exceptions\Product_Not_Found_Exception;
@@ -15,6 +16,8 @@ use BigCommerce\Taxonomies\Flag\Flag;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
 
 class Product {
+	use With_Currency;
+
 	const NAME = 'bigcommerce_product';
 
 	const BIGCOMMERCE_ID            = 'bigcommerce_id';
@@ -102,7 +105,7 @@ class Product {
 		$sql    = "SELECT MIN(price) AS low, MAX(price) AS high FROM {$wpdb->bc_variants} WHERE price > 0 GROUP BY bc_id HAVING bc_id=%d";
 		$result = $wpdb->get_row( $wpdb->prepare( $sql, $bc_id ) );
 		if ( empty( $result ) ) {
-			return $this->format_currency( $original_price );
+			return $this->format_currency( $original_price, __( 'Free', 'bigcommerce' ) );
 		}
 		if ( $original_price && $original_price < $result->low ) {
 			$result->low = $original_price;
@@ -111,10 +114,10 @@ class Product {
 			$result->high = $original_price;
 		}
 		if ( $result->low == $result->high ) {
-			return $this->format_currency( $result->low );
+			return $this->format_currency( $result->low, __( 'Free', 'bigcommerce' ) );
 		}
 
-		return sprintf( _x( '%s - %s', 'price range low to high', 'bigcommerce' ), $this->format_currency( $result->low ), $this->format_currency( $result->high ) );
+		return sprintf( _x( '%s - %s', 'price range low to high', 'bigcommerce' ), $this->format_currency( $result->low, __( 'Free', 'bigcommerce' ) ), $this->format_currency( $result->high, __( 'Free', 'bigcommerce' ) ) );
 	}
 
 	public function calculated_price_range() {
@@ -127,21 +130,10 @@ class Product {
 			return '';
 		}
 		if ( $result->low == $result->high ) {
-			return $this->format_currency( $result->low );
+			return $this->format_currency( $result->low, __( 'Free', 'bigcommerce' ) );
 		}
 
-		return sprintf( _x( '%s - %s', 'price range low to high', 'bigcommerce' ), $this->format_currency( $result->low ), $this->format_currency( $result->high ) );
-	}
-
-	private function format_currency( $value ) {
-		if ( empty( $value ) ) {
-			return __( 'Free', 'bigcommerce' );
-		}
-
-		/**
-		 * This filter is documented in src/BigCommerce/Templates/Controller.php
-		 */
-		return apply_filters( 'bigcommerce/currency/format', sprintf( '¤%0.2f', $value ), $value );
+		return sprintf( _x( '%s - %s', 'price range low to high', 'bigcommerce' ), $this->format_currency( $result->low, __( 'Free', 'bigcommerce' ) ), $this->format_currency( $result->high, __( 'Free', 'bigcommerce' ) ) );
 	}
 
 	public function options() {

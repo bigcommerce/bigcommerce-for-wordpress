@@ -8,7 +8,8 @@ import _ from 'lodash';
 import delegate from 'delegate';
 import request from 'superagent';
 import { Spinner } from 'spin.js/spin';
-import * as tools from '../../utils/tools';
+import { trigger } from 'utils/events';
+import * as tools from 'utils/tools';
 import shortcodeState from '../../admin/config/shortcode-state';
 import quickViewDialog from './quick-view-dialog';
 import { NLS } from '../config/i18n';
@@ -78,6 +79,7 @@ const loadNextPageItems = (items = {}, itemContainer = '') => {
 		}
 
 		initializeItems(itemContainer);
+		trigger({ event: 'bigcommerce/get_pricing', native: false });
 	}, options.afterLoadDelay);
 };
 
