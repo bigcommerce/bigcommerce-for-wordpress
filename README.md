@@ -2,8 +2,6 @@
 
 ## Plugin Setup
 
-Download the latest plugin version: https://goo.gl/NxaSXv
-
 As with any WordPress plugin, upload the plugin ZIP file to the
 `plugins` directory and activate via the WordPress admin or WP-CLI.
 

@@ -18,7 +18,7 @@
 		<?php echo esc_html( $label ); ?>
 	</span>
 
-	<div class="bc-product-form__option-field">
+	<div class="bc-product-form__option-field" data-js="product-form-option" data-field="product-form-option-checkbox">
 
 		<label for="option-<?php echo esc_attr( $checkbox_value ); ?>" class="bc-product-option__label">
 			<input type="checkbox" name="option[<?php echo esc_attr( $id ); ?>]"

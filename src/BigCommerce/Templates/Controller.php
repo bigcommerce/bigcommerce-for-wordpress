@@ -4,7 +4,10 @@
 namespace BigCommerce\Templates;
 
 
+use BigCommerce\Currency\With_Currency;
+
 abstract class Controller {
+	use With_Currency;
 
 	protected $template = '';
 	protected $options  = [];
@@ -189,7 +192,7 @@ abstract class Controller {
 		 * @param string $tag      The tag name. Should be a valid HTML element, or an empty string
 		 * @param string $template The template path
 		 */
-		$tag = sanitize_html_class( apply_filters( 'bigcommerce/template/wrapper/tag', $this->wrapper_tag, $this->template ) );
+		$tag = sanitize_html_class( apply_filters( 'bigcommerce/template/wrapper/tag', $this->get_wrapper_tag(), $this->template ) );
 		if ( empty( $tag ) ) {
 			return $html;
 		}
@@ -200,10 +203,10 @@ abstract class Controller {
 		 * @param string[] $classes  An array of class names
 		 * @param string   $template The template path
 		 */
-		$classes = apply_filters( 'bigcommerce/template/wrapper/classes', $this->wrapper_classes, $this->template );
+		$classes = apply_filters( 'bigcommerce/template/wrapper/classes', $this->get_wrapper_classes(), $this->template );
 		$classes = array_filter( array_map( 'sanitize_html_class', $classes ) );
 
-		$attributes = apply_filters( 'bigcommerce/template/wrapper/attributes', $this->wrapper_attributes, $this->template );
+		$attributes = apply_filters( 'bigcommerce/template/wrapper/attributes', $this->get_wrapper_attributes(), $this->template );
 
 		$attrs = array_map( function ( $key ) use ( $attributes ) {
 			if ( is_bool( $attributes[ $key ] ) ) {
@@ -216,18 +219,16 @@ abstract class Controller {
 		return sprintf( '<%s class="%s" %s>%s</%s>', $tag, implode( ' ', $classes ), implode( ' ', $attrs ), $html, $tag );
 	}
 
-	protected function format_currency( $value, $return_empty_ammounts = true ) {
-		if ( ! (float) $value && ! $return_empty_ammounts ) {
-			return '';
-		}
+	protected function get_wrapper_tag() {
+		return $this->wrapper_tag;
+	}
 
-		/**
-		 * Format a price for the current currency and locale
-		 *
-		 * @param string $formatted The formatted currency string
-		 * @param float  $value     The price to format
-		 */
-		return apply_filters( 'bigcommerce/currency/format', sprintf( '¤%0.2f', $value ), $value );
+	protected function get_wrapper_classes() {
+		return $this->wrapper_classes;
+	}
+
+	protected function get_wrapper_attributes() {
+		return $this->wrapper_attributes;
 	}
 
 	/**

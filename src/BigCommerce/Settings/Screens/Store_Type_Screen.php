@@ -111,7 +111,7 @@ class Store_Type_Screen extends Abstract_Screen {
 		// Update the options
 		update_option( self::COMPLETE_FLAG, 1 );
 		update_option( Nav_Menu_Screen::COMPLETE_FLAG, 1 ); // skip nav menu setup
-		update_option( Cart::OPTION_ENABLE_CART, 1 );
+		update_option( Cart::OPTION_ENABLE_CART, 0 );
 		update_option( Cart::OPTION_AJAX_CART, 0 );
 		update_option( Cart::OPTION_EMBEDDED_CHECKOUT, 0 );
 

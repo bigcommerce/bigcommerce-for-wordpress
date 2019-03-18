@@ -1,0 +1,235 @@
+swagger: '2.0'
+host: "api.bigcommerce.com"
+basePath: "/stores/{{store_id}}/v3"
+info:
+  title: Product Pricing API
+  description: 'API to provide marketing/display pricing for products, variants, and partially configured selections.'
+  version: master
+tags:
+  - name: Pricing
+    description: BigCommerce Pricing API Definition.
+paths:
+  /pricing/products:
+    post:
+      summary: Get Prices
+      operationId: get-prices
+      parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/PricingRequest'
+      tags:
+        - Pricing
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/PricingResponse'
+          examples:
+            Example 1: |-
+              {
+                  "data": [
+                      {
+                          "product_id": 1,
+                          "variant_id": 1,
+                          "options": [
+                              {
+                                  "option_id": 1,
+                                  "value_id": 1
+                              }
+                          ],
+                          "retail_price": {
+                              "as_entered": 1.5,
+                              "entered_inclusive": true,
+                              "tax_exclusive": 1.1,
+                              "tax_inclusive": 1.5
+                          },
+                          "sale_price": {
+                              "as_entered": 1.5,
+                              "entered_inclusive": true,
+                              "tax_exclusive": 1.1,
+                              "tax_inclusive": 1.5
+                          },
+                          "minimum_advertised_price": {
+                              "as_entered": 1.5,
+                              "entered_inclusive": true,
+                              "tax_exclusive": 1.1,
+                              "tax_inclusive": 1.5
+                          },
+                          "price": {
+                              "as_entered": 1.5,
+                              "entered_inclusive": true,
+                              "tax_exclusive": 1.1,
+                              "tax_inclusive": 1.5
+                          },
+                          "calculated_price": {
+                              "as_entered": 1.5,
+                              "entered_inclusive": true,
+                              "tax_exclusive": 1.1,
+                              "tax_inclusive": 1.5
+                          },
+                          "price_range": {
+                              "minimum": {
+                                  "as_entered": 1.5,
+                                  "entered_inclusive": true,
+                                  "tax_exclusive": 1.1,
+                                  "tax_inclusive": 1.5
+                              },
+                              "maximum": {
+                                  "as_entered": 1.5,
+                                  "entered_inclusive": true,
+                                  "tax_exclusive": 1.1,
+                                  "tax_inclusive": 1.5
+                              }
+                          },
+                          "retail_price_range": {
+                              "minimum": {
+                                  "as_entered": 1.5,
+                                  "entered_inclusive": true,
+                                  "tax_exclusive": 1.1,
+                                  "tax_inclusive": 1.5
+                              },
+                              "maximum": {
+                                  "as_entered": 1.5,
+                                  "entered_inclusive": true,
+                                  "tax_exclusive": 1.1,
+                                  "tax_inclusive": 1.5
+                              }
+                          },
+                          "bulk_pricing": [
+                              {
+                                  "minimum": 1,
+                                  "maximum": 1,
+                                  "discount_amount": 1,
+                                  "discount_type": "PERCENT"
+                              }
+                          ]
+                      }
+                  ],
+                  "meta": {}
+              }
+definitions:
+  BulkPricingTier:
+    type: object
+    properties:
+      minimum:
+        type: integer
+        description: The minumum quantity required to trigger this bulk pricing discount
+      maximum:
+        type: integer
+        description: The maximum quantity (or 0 for unlimited) to trigger this bulk pricing discount
+      discount_amount:
+        type: number
+      discount_type:
+        enum: [price, percent, fixed]
+        type: string
+  PricingResponse:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/ItemPricing'
+      meta:
+        type: object
+  PriceRange:
+    type: object
+    description: For estimated prices, the minimum/maximum price that will typically apply to this product
+    properties:
+      minimum:
+        $ref: '#/definitions/TaxPrice'
+      maximum:
+        $ref: '#/definitions/TaxPrice'
+  TaxPrice:
+    type: object
+    description: The price for a product including estimates for tax
+    properties:
+      as_entered:
+        description: The price provided by the merchant as entered in their catalog/price list (may be inc or ex)
+        type: number
+      entered_inclusive:
+        description: Whether the `as_entered` price is inclusive or exclusive of tax, based on the stores tax jurisdiction
+        type: boolean
+      tax_exclusive:
+        description: The estimated tax exclusive price for this product based on the provided customer group
+        type: number
+      tax_inclusive:
+        description: The estimated tax inclusive price for this product based on the provided customer group
+        type: number
+  ItemPricing:
+    type: object
+    properties:
+      product_id:
+        type: integer
+        description: The product ID this price was generated for
+      variant_id:
+        type: integer
+        description: The (optional) variant ID this price was generated for
+      options:
+        type: array
+        description: The optional product option configuration this price was generated for
+        items:
+          $ref: '#/definitions/PricingRequestItemOption'
+      retail_price:
+        $ref: '#/definitions/TaxPrice'
+        description: The (optional) RRP/retail price configured for this product
+      sale_price:
+        $ref: '#/definitions/TaxPrice'
+      minimum_advertised_price:
+        $ref: '#/definitions/TaxPrice'
+      price:
+        $ref: '#/definitions/TaxPrice'
+      calculated_price:
+        $ref: '#/definitions/TaxPrice'
+      price_range:
+        $ref: '#/definitions/PriceRange'
+      retail_price_range:
+        $ref: '#/definitions/PriceRange'
+      bulk_pricing:
+        type: array
+        items:
+          $ref: '#/definitions/BulkPricingTier'
+  PricingRequestItem:
+    type: object
+    description: Details/configuration for the product to request a price for.
+    properties:
+      product_id:
+        type: integer
+        description: The (required) product ID of the item
+      variant_id:
+        type: number
+        description: The (optional) variant ID of the item
+      options:
+        type: array
+        description: The (optional) option configuration of the product. May be "partially" configured for estimates.
+        items:
+          $ref: '#/definitions/PricingRequestItemOption'
+  PricingRequestItemOption:
+    type: object
+    properties:
+      option_id:
+        type: integer
+        description: The ID of the option being configured for this product.
+      value_id:
+        type: integer
+        description: 'The ID of the value matching the option being configured. Note: must be ID, not the value.'
+  PricingRequest:
+    type: object
+    properties:
+      channel_id:
+        type: integer
+        description: The channel context that pricing should be evaluated within. The default BC storefront is channel 1
+        example: 1
+      currency_code:
+        type: string
+        description: The currency of prices to be returned for this request
+        example: 'USD'
+      customer_group_id:
+        type: integer
+        description: The customer group relevant for any customer group pricing, tax values, etc.
+      items:
+        type: array
+        description: The items to fetch prices for
+        items:
+          $ref: '#/definitions/PricingRequestItem'

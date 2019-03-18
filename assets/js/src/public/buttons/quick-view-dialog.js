@@ -5,6 +5,7 @@
 
 import A11yDialog from 'mt-a11y-dialog';
 import _ from 'lodash';
+import { trigger } from 'utils/events';
 import * as tools from '../../utils/tools';
 import gallery from '../gallery/productGallery';
 import variants from '../product/variants';
@@ -35,22 +36,23 @@ const getOptions = dialogID => ({
 const initDialogs = () => {
 	tools.getNodes('[data-js="bc-product-loop-card"]:not(.initialized)', true, document, true).forEach((dialog) => {
 		const dialogID = _.uniqueId('bc-product-quick-view-dialog-');
-		const trigger = tools.getNodes('bc-product-quick-view-dialog-trigger', false, dialog)[0];
+		const dialogTrigger = tools.getNodes('bc-product-quick-view-dialog-trigger', false, dialog)[0];
 		const target = tools.getNodes('[data-quick-view-script]', false, dialog, true)[0];
 
-		if (!trigger || !target) {
+		if (!dialogTrigger || !target) {
 			return;
 		}
 
 		dialog.classList.add('initialized');
-		trigger.setAttribute('data-content', dialogID);
-		trigger.setAttribute('data-trigger', dialogID);
+		dialogTrigger.setAttribute('data-content', dialogID);
+		dialogTrigger.setAttribute('data-trigger', dialogID);
 		target.setAttribute('data-js', dialogID);
 		instances.dialogs[dialogID] = new A11yDialog(getOptions(dialogID));
 
 		instances.dialogs[dialogID].on('render', () => {
 			_.delay(() => gallery(), state.delay);
 			_.delay(() => variants(dialog), state.delay);
+			_.delay(() => trigger({ event: 'bigcommerce/get_pricing', data: { quickView: true }, native: false }), state.delay);
 		});
 	});
 };

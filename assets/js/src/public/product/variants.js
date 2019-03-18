@@ -108,8 +108,12 @@ const setSelectedVariantPrice = (wrapper = '') => {
 		return;
 	}
 
-	const salePriceElement = wrapper.querySelector('.bc-product__original-price');
-	const priceElement = wrapper.querySelector('.bc-product__price');
+	const pricingWrapper = tools.getNodes('bc-cached-product-pricing', false, wrapper)[0];
+	if (!pricingWrapper) {
+		return;
+	}
+	const salePriceElement = pricingWrapper.querySelector('.bc-product__original-price');
+	const priceElement = pricingWrapper.querySelector('.bc-product__price');
 
 	if (salePriceElement) {
 		salePriceElement.parentNode.removeChild(salePriceElement);

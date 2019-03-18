@@ -9,9 +9,9 @@ use BigCommerce\Post_Types\Product\Product;
 class Product_Price extends Controller {
 	const PRODUCT = 'product';
 
-	protected $template = 'components/products/product-price.php';
-	protected $wrapper_tag = 'p';
-	protected $wrapper_classes = [ 'bc-product__pricing' ];
+	protected $template           = 'components/products/product-price.php';
+	protected $wrapper_tag        = 'div';
+	protected $wrapper_classes    = [ 'bc-product__pricing' ];
 	protected $wrapper_attributes = [ 'data-js' => 'bc-product-pricing' ];
 
 	protected function parse_options( array $options ) {
@@ -29,6 +29,14 @@ class Product_Price extends Controller {
 		return [
 			self::PRODUCT => $product,
 		];
+	}
+
+	protected function get_wrapper_attributes() {
+		$attributes = parent::get_wrapper_attributes();
+
+		$attributes[ 'data-product-price-id' ] = $this->options[ self::PRODUCT ]->bc_id();
+
+		return $attributes;
 	}
 
 

@@ -7,6 +7,7 @@ use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Import\Runner\Cron_Runner;
 use BigCommerce\Import\Runner\Status;
 use BigCommerce\Merchant\Onboarding_Api;
+use BigCommerce\Nav_Menu\Nav_Items_Meta_Box;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Settings\Connection_Status;
 use BigCommerce\Settings\Import_Now;
@@ -68,7 +69,9 @@ class Settings extends Provider {
 	const IMPORT_LIVE_STATUS = 'settings.import_status_live';
 	const START_OVER         = 'settings.start_over';
 
+
 	const CONFIG_STATUS              = 'settings.configuration_status';
+	const CONFIG_DISPLAY_MENUS       = 'settings.configuration_display_menus';
 	const STATUS_NEW                 = 0;
 	const STATUS_ACCOUNT_PENDING     = 10;
 	const STATUS_API_CONNECTED       = 20;
@@ -76,6 +79,7 @@ class Settings extends Provider {
 	const STATUS_STORE_TYPE_SELECTED = 50;
 	const STATUS_MENUS_CREATED       = 70;
 	const STATUS_COMPLETE            = 1000;
+
 
 	public function register( Container $container ) {
 		$this->settings_screen( $container );
@@ -90,7 +94,9 @@ class Settings extends Provider {
 		$this->reviews( $container );
 		$this->onboarding( $container );
 		$this->diagnostics( $container );
+		$this->set_menus_default_visibility( $container );
 		$this->resources( $container );
+
 	}
 
 	private function settings_screen( Container $container ) {
@@ -515,6 +521,21 @@ class Settings extends Provider {
 		add_action( 'admin_post_' . Start_Over::ACTION, function () use ( $container ) {
 			$container[ self::START_OVER ]->reset_credentials();
 		}, 10, 0 );
+
+	}
+
+	/**
+	 * Handles menus visibility  for the settings screen and nav menu page
+	 * @param Container $container
+	 */
+	private function set_menus_default_visibility( Container $container ){
+		$container[ self::CONFIG_DISPLAY_MENUS ] = function ( Container $container ) {
+			return new Nav_Items_Meta_Box();
+		};
+
+		add_action('load-nav-menus.php', $this->create_callback( 'display_nav_menus_by_default', function () use ( $container ) {
+			$container[ self::CONFIG_DISPLAY_MENUS ]->set_nav_menu_screen_options();
+		} ));
 	}
 
 	/**

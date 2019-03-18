@@ -11,6 +11,7 @@ use BigCommerce\Api\v3\Model\CartUpdateRequest;
 use BigCommerce\Cart\Cart;
 use BigCommerce\Cart\Cart_Mapper;
 use BigCommerce\Post_Types\Product\Product;
+use BigCommerce\Settings\Sections\Cart as Cart_Settings;
 use BigCommerce\Taxonomies\Availability\Availability;
 use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Condition\Condition;
@@ -25,6 +26,24 @@ class Cart_Controller extends Rest_Controller {
 	public function __construct( $namespace_base, $version, $rest_base, CartApi $cart_api ) {
 		parent::__construct( $namespace_base, $version, $rest_base );
 		$this->cart_api = $cart_api;
+	}
+
+	/**
+	 * Add data to the JS config to support cart ajax
+	 *
+	 * @param array $config
+	 *
+	 * @return array
+	 * @filter bigcommerce/js_config
+	 */
+	public function js_config( $config ) {
+		$config[ 'cart' ] = [
+			'api_url'         => $this->get_base_url(),
+			'ajax_enabled'    => (bool) get_option( Cart_Settings::OPTION_AJAX_CART, true ),
+			'ajax_cart_nonce' => wp_create_nonce( 'wp_rest' ),
+		];
+
+		return $config;
 	}
 
 
@@ -325,7 +344,7 @@ class Cart_Controller extends Rest_Controller {
 
 		$product_id = $request->get_param( 'product_id' );
 		$quantity   = $request->get_param( 'quantity' );
-		$options = [];
+		$options    = [];
 
 		try {
 			$product = Product::by_product_id( $product_id );
@@ -335,7 +354,7 @@ class Cart_Controller extends Rest_Controller {
 
 		$submitted_options = wp_list_pluck( (array) $request->get_param( 'options' ), 'value', 'id' );
 
-		$option_config = $product->options();
+		$option_config   = $product->options();
 		$modifier_config = $product->modifiers();
 		foreach ( $option_config as $config ) {
 			if ( array_key_exists( $config[ 'id' ], $submitted_options ) ) {
@@ -358,7 +377,7 @@ class Cart_Controller extends Rest_Controller {
 			case 'multi_line_text':
 				return sanitize_textarea_field( $value );
 			case 'numbers_only_text':
-				return filter_var( $value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION|FILTER_FLAG_ALLOW_THOUSAND );
+				return filter_var( $value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION | FILTER_FLAG_ALLOW_THOUSAND );
 			case 'text':
 				return sanitize_text_field( $value );
 			default: // checkboxes, selects, and radios
@@ -446,7 +465,7 @@ class Cart_Controller extends Rest_Controller {
 				'line_items.digital_items.options',
 				'redirect_urls',
 			];
-			$cart = $this->cart_api->cartsCartIdGet( $cart_id, [ 'include' => $include ] )->getData();
+			$cart    = $this->cart_api->cartsCartIdGet( $cart_id, [ 'include' => $include ] )->getData();
 		} catch ( ApiException $e ) {
 			return new \WP_Error( 'rest_cannot_update', __( 'Cannot update cart', 'bigcommerce' ), [ 'status' => 502 ] );
 		}

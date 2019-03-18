@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitae07110915ff3b8dd7e4be3956cac069
+class ComposerStaticInit6c97f5602e2b23320ebfc9800aa08d1c
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -133,6 +133,7 @@ class ComposerStaticInitae07110915ff3b8dd7e4be3956cac069
         'BigCommerce\\Api\\v3\\Api\\OrdersApi' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Api/OrdersApi.php',
         'BigCommerce\\Api\\v3\\Api\\PlacementApi' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Api/PlacementApi.php',
         'BigCommerce\\Api\\v3\\Api\\PriceListsApi' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Api/PriceListsApi.php',
+        'BigCommerce\\Api\\v3\\Api\\PricingApi' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Api/PricingApi.php',
         'BigCommerce\\Api\\v3\\Api\\ScriptApi' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Api/ScriptApi.php',
         'BigCommerce\\Api\\v3\\Api\\SitesApi' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Api/SitesApi.php',
         'BigCommerce\\Api\\v3\\Api\\ThemeRegionsApi' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Api/ThemeRegionsApi.php',
@@ -221,6 +222,7 @@ class ComposerStaticInitae07110915ff3b8dd7e4be3956cac069
         'BigCommerce\\Api\\v3\\Model\\ItemDigital' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/ItemDigital.php',
         'BigCommerce\\Api\\v3\\Model\\ItemGiftCertificate' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/ItemGiftCertificate.php',
         'BigCommerce\\Api\\v3\\Model\\ItemPhysical' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/ItemPhysical.php',
+        'BigCommerce\\Api\\v3\\Model\\ItemPricing' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/ItemPricing.php',
         'BigCommerce\\Api\\v3\\Model\\Job' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/Job.php',
         'BigCommerce\\Api\\v3\\Model\\JobErrors' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/JobErrors.php',
         'BigCommerce\\Api\\v3\\Model\\JobId' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/JobId.php',
@@ -287,6 +289,7 @@ class ComposerStaticInitae07110915ff3b8dd7e4be3956cac069
         'BigCommerce\\Api\\v3\\Model\\PriceListPost' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/PriceListPost.php',
         'BigCommerce\\Api\\v3\\Model\\PriceListPut' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/PriceListPut.php',
         'BigCommerce\\Api\\v3\\Model\\PriceListResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/PriceListResponse.php',
+        'BigCommerce\\Api\\v3\\Model\\PriceRange' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/PriceRange.php',
         'BigCommerce\\Api\\v3\\Model\\PriceRecord' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/PriceRecord.php',
         'BigCommerce\\Api\\v3\\Model\\PriceRecordBase' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/PriceRecordBase.php',
         'BigCommerce\\Api\\v3\\Model\\PriceRecordBatchErrorResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/PriceRecordBatchErrorResponse.php',
@@ -297,6 +300,10 @@ class ComposerStaticInitae07110915ff3b8dd7e4be3956cac069
         'BigCommerce\\Api\\v3\\Model\\PriceRecordIdentifiers' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/PriceRecordIdentifiers.php',
         'BigCommerce\\Api\\v3\\Model\\PriceRecordPut' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/PriceRecordPut.php',
         'BigCommerce\\Api\\v3\\Model\\PriceRecordResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/PriceRecordResponse.php',
+        'BigCommerce\\Api\\v3\\Model\\PricingRequest' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/PricingRequest.php',
+        'BigCommerce\\Api\\v3\\Model\\PricingRequestItem' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/PricingRequestItem.php',
+        'BigCommerce\\Api\\v3\\Model\\PricingRequestItemOption' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/PricingRequestItemOption.php',
+        'BigCommerce\\Api\\v3\\Model\\PricingResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/PricingResponse.php',
         'BigCommerce\\Api\\v3\\Model\\Product' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/Product.php',
         'BigCommerce\\Api\\v3\\Model\\ProductBase' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/ProductBase.php',
         'BigCommerce\\Api\\v3\\Model\\ProductCollectionResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/ProductCollectionResponse.php',
@@ -343,6 +350,7 @@ class ComposerStaticInitae07110915ff3b8dd7e4be3956cac069
         'BigCommerce\\Api\\v3\\Model\\SubscriberPut' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/SubscriberPut.php',
         'BigCommerce\\Api\\v3\\Model\\SubscriberResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/SubscriberResponse.php',
         'BigCommerce\\Api\\v3\\Model\\SuccessBatchResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/SuccessBatchResponse.php',
+        'BigCommerce\\Api\\v3\\Model\\TaxPrice' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/TaxPrice.php',
         'BigCommerce\\Api\\v3\\Model\\Theme' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/Theme.php',
         'BigCommerce\\Api\\v3\\Model\\ThemeRegion' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/ThemeRegion.php',
         'BigCommerce\\Api\\v3\\Model\\ThemeRegionsResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/ThemeRegionsResponse.php',
@@ -444,6 +452,7 @@ class ComposerStaticInitae07110915ff3b8dd7e4be3956cac069
         'BigCommerce\\Currency\\Currency_Formatter' => __DIR__ . '/../..' . '/src/BigCommerce/Currency/Currency_Formatter.php',
         'BigCommerce\\Currency\\Intl_Formatter' => __DIR__ . '/../..' . '/src/BigCommerce/Currency/Intl_Formatter.php',
         'BigCommerce\\Currency\\USD_Formatter' => __DIR__ . '/../..' . '/src/BigCommerce/Currency/USD_Formatter.php',
+        'BigCommerce\\Currency\\With_Currency' => __DIR__ . '/../..' . '/src/BigCommerce/Currency/With_Currency.php',
         'BigCommerce\\Customizer\\Controls\\Multiple_Checkboxes' => __DIR__ . '/../..' . '/src/BigCommerce/Customizer/Controls/Multiple_Checkboxes.php',
         'BigCommerce\\Customizer\\Panels\\Primary' => __DIR__ . '/../..' . '/src/BigCommerce/Customizer/Panels/Primary.php',
         'BigCommerce\\Customizer\\Sections\\Buttons' => __DIR__ . '/../..' . '/src/BigCommerce/Customizer/Sections/Buttons.php',
@@ -571,6 +580,7 @@ class ComposerStaticInitae07110915ff3b8dd7e4be3956cac069
         'BigCommerce\\Proxy\\Proxy_Controller' => __DIR__ . '/../..' . '/src/BigCommerce/Proxy/Proxy_Controller.php',
         'BigCommerce\\Rest\\Cart_Controller' => __DIR__ . '/../..' . '/src/BigCommerce/Rest/Cart_Controller.php',
         'BigCommerce\\Rest\\Orders_Shortcode_Controller' => __DIR__ . '/../..' . '/src/BigCommerce/Rest/Orders_Shortcode_Controller.php',
+        'BigCommerce\\Rest\\Pricing_Controller' => __DIR__ . '/../..' . '/src/BigCommerce/Rest/Pricing_Controller.php',
         'BigCommerce\\Rest\\Products_Controller' => __DIR__ . '/../..' . '/src/BigCommerce/Rest/Products_Controller.php',
         'BigCommerce\\Rest\\Rest_Controller' => __DIR__ . '/../..' . '/src/BigCommerce/Rest/Rest_Controller.php',
         'BigCommerce\\Rest\\Reviews_Listing_Controller' => __DIR__ . '/../..' . '/src/BigCommerce/Rest/Reviews_Listing_Controller.php',
@@ -731,8 +741,13 @@ class ComposerStaticInitae07110915ff3b8dd7e4be3956cac069
         'BigCommerce\\Templates\\Template_Override' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Template_Override.php',
         'BigCommerce\\Templates\\View_Product_Button' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/View_Product_Button.php',
         'BigCommerce\\Util\\Cart_Item_Iterator' => __DIR__ . '/../..' . '/src/BigCommerce/Util/Cart_Item_Iterator.php',
+        'BigCommerce\\Webhooks\\Product_Inventory_Update_Webhook' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Product_Inventory_Update_Webhook.php',
         'BigCommerce\\Webhooks\\Product_Update_Webhook' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Product_Update_Webhook.php',
+        'BigCommerce\\Webhooks\\Product_Updater' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Product_Updater.php',
         'BigCommerce\\Webhooks\\Webhook' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Webhook.php',
+        'BigCommerce\\Webhooks\\Webhook_Cron_Tasks' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Webhook_Cron_Tasks.php',
+        'BigCommerce\\Webhooks\\Webhook_Listener' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Webhook_Listener.php',
+        'BigCommerce\\Webhooks\\Webhook_Versioning' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Webhook_Versioning.php',
         'BigCommerce\\Widgets\\Product_Category_Widget' => __DIR__ . '/../..' . '/src/BigCommerce/Widgets/Product_Category_Widget.php',
         'Bigcommerce\\Api\\Client' => __DIR__ . '/..' . '/bigcommerce/api/src/Bigcommerce/Api/Client.php',
         'Bigcommerce\\Api\\ClientError' => __DIR__ . '/..' . '/bigcommerce/api/src/Bigcommerce/Api/ClientError.php',
@@ -942,10 +957,10 @@ class ComposerStaticInitae07110915ff3b8dd7e4be3956cac069
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitae07110915ff3b8dd7e4be3956cac069::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitae07110915ff3b8dd7e4be3956cac069::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitae07110915ff3b8dd7e4be3956cac069::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitae07110915ff3b8dd7e4be3956cac069::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit6c97f5602e2b23320ebfc9800aa08d1c::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit6c97f5602e2b23320ebfc9800aa08d1c::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit6c97f5602e2b23320ebfc9800aa08d1c::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit6c97f5602e2b23320ebfc9800aa08d1c::$classMap;
 
         }, null, ClassLoader::class);
     }

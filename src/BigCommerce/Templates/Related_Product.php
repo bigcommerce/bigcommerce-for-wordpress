@@ -16,6 +16,9 @@ class Related_Product extends Controller {
 	const FORM    = 'form';
 
 	protected $template = 'components/products/related-product-card.php';
+	protected $wrapper_tag = 'div';
+	protected $wrapper_classes = [ 'bc-product-card', 'bc-product-card--related' ];
+	protected $wrapper_attributes = [ 'data-js' => 'bc-product-loop-card' ];
 
 	protected function parse_options( array $options ) {
 		$defaults = [

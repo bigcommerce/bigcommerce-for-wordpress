@@ -6,7 +6,7 @@ SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 cd "$SCRIPTDIR"
 
-apis=("cart" "channels" "sites" "swagger")
+apis=("cart" "channels" "sites" "pricing" "swagger")
 
 maven_cache_repo="${SCRIPTDIR}/.swagger-codegen/.m2/repository"
 build_dir="${SCRIPTDIR}/.swagger-codegen/build"

@@ -36,7 +36,7 @@ const getCurrentSort = () => {
  * @description If `state.currentSort` is set, update the filter reset button `href` attribute to keep the current `bc-sort` query parameter.
  */
 const updateFilterReset = () => {
-	if (!state.currentSort.value) {
+	if (!state.currentSort.value || !el.resetButton) {
 		return;
 	}
 

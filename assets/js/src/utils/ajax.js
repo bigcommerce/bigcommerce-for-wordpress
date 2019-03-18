@@ -26,7 +26,7 @@ export const wpAPIAddToCartAjax = (cartURL, querySrting = '') => request
 	.post(cartURL)
 	.query(querySrting)
 	.timeout({
-		response: 15000,  // Wait 5 seconds for the server to start sending,
+		response: 15000,  // Wait 15 seconds for the server to start sending,
 		deadline: 60000, // but allow 1 minute for the file to finish loading.
 	});
 
@@ -41,6 +41,16 @@ export const wpAdminAjax = (queryObj = {}) => request
 	.get(ADMIN_AJAX)
 	.query(queryObj)
 	.timeout({
-		response: 20000,  // Wait 5 seconds for the server to start sending,
+		response: 20000,  // Wait 20 seconds for the server to start sending,
+		deadline: 60000, // but allow 1 minute for the file to finish loading.
+	});
+
+export const wpAPIProductPricing = (pricingURL = '', pricingNonce = '', productsObj = {}) => request
+	.post(pricingURL)
+	.set('Content-Type', 'application/json')
+	.set('X-WP-Nonce', pricingNonce)
+	.send(productsObj)
+	.timeout({
+		response: 15000,  // Wait 15 seconds for the server to start sending,
 		deadline: 60000, // but allow 1 minute for the file to finish loading.
 	});

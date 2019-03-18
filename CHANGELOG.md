@@ -1,5 +1,30 @@
 # Changelog
 
+## [2.1.0]
+
+### Added
+- Uses the new BigCommerce pricing API to retrieve more accurate pricing
+  data based on selected product variants, options, and customer groups.
+  The original price display feature still exists and is now the fallback
+  if unable to fetch live pricing.
+- Added a setting to determine whether prices should display with tax
+  included or excluded. This duplicates a setting from the BigCommerce
+  admin that is not available via the Store API.
+- Added the `customer_group_id` property to the customer profile object
+  retrieved from the Customer API.
+- Added a routine to make BigCommerce nav menu meta boxes visible to users
+  by default.
+- Added webhooks to listen for product inventory updates. A received webhook
+  will schedule an immediate cron job to pull updated product data from
+  the Catalog API. 
+
+### Changed
+- Upgraded Checkout SDK to version 1.18.5
+- Reduced the prominence of the checkout requirements notification when on
+  admin pages unrelated to the BigCommerce plugin.
+- Updated the template `components/products/product-price.php` with markup
+  to support Pricing API ajax requests.
+
 ## [2.0.1]
 
 ### Fixed
@@ -7,6 +32,7 @@
   from the Gutenberg plugin to WordPress 5.0+. This fixes a PHP warning
   and some odd behavior from other plugins that register meta areas
   for the block editor.
+
 
 ## [2.0.0]
 
@@ -428,6 +454,7 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[2.0.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/2.0.1...2.1.0
 [2.0.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/2.0.0...2.0.1
 [2.0.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.6.0...2.0.0
 [1.6.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.5.0...1.6.0

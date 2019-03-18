@@ -11,20 +11,18 @@ use BigCommerce\Post_Types\Product\Product;
 
 ?>
 
-<div class="bc-product-card bc-product-card--related">
-	<?php echo $image; ?>
+<?php echo $image; ?>
 
-	<div class="bc-product__meta">
-		<?php
-		echo $title;
-		echo $brand;
-		echo $price;
-		?>
-	</div>
-
-	<?php if ( ! empty( $form ) ) { ?>
-		<div class="bc-product__actions" data-js="bc-product-group-actions">
-			<?php echo $form; ?>
-		</div>
-	<?php } ?>
+<div class="bc-product__meta">
+	<?php
+	echo $title;
+	echo $brand;
+	echo $price;
+	?>
 </div>
+
+<?php if ( ! empty( $form ) ) { ?>
+	<div class="bc-product__actions" data-js="bc-product-group-actions">
+		<?php echo $form; ?>
+	</div>
+<?php } ?>

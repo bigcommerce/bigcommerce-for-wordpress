@@ -96,7 +96,7 @@ class Connection_Status {
 				return;
 			}
 		}
-		$message = __( 'Please connect to your BigCommerce account to start using products.', 'bigcommerce' );
+		$message = __( 'Please connect to your BigCommerce account to start selling products on your WordPress site.', 'bigcommerce' );
 		$message .= sprintf( ' <a href="%s">%s</a>', $target_screen->get_url(), __( 'Get Started →', 'bigcommerce' ) );
 		printf( '<div class="notice notice-info"><p>%s</p></div>', $message );
 	}

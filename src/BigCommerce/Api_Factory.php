@@ -11,6 +11,7 @@ use BigCommerce\Api\Payments_Api;
 use BigCommerce\Api\Shipping_Api;
 use BigCommerce\Api\Store_Api;
 use BigCommerce\Api\Tax_Class_Api;
+use BigCommerce\Api\v3\Api\PricingApi;
 use BigCommerce\Api\Webhooks_Api;
 use BigCommerce\Api\v3\Api\CartApi;
 use BigCommerce\Api\v3\Api\CatalogApi;
@@ -84,6 +85,13 @@ class Api_Factory {
 	 */
 	public function placement() {
 		return new PlacementApi( $this->api_client );
+	}
+
+	/**
+	 * @return PricingApi
+	 */
+	public function pricing() {
+		return new PricingApi( $this->api_client );
 	}
 
 	/**
