@@ -13,6 +13,6 @@ action "WordPress Plugin Deploy" {
   needs = ["tag"]
   secrets = ["SVN_USERNAME", "SVN_PASSWORD"]
   env = {
-    SLUG = "bigcommerce-for-wordpress"
+    SLUG = "bigcommerce"
   }
 }
