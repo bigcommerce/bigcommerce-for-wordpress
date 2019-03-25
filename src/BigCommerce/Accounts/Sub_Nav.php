@@ -64,6 +64,11 @@ class Sub_Nav {
 				];
 			}
 		}
+		$links[] = [
+			'url'     => wp_logout_url(),
+			'label'   => _e('Logout', 'bigcommerce'),
+			'current' => false,
+		];
 
 		/**
 		 * Filter the links that show in the account subnav.
