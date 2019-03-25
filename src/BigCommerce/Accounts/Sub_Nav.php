@@ -66,7 +66,7 @@ class Sub_Nav {
 		}
 		$links[] = [
 			'url'     => wp_logout_url(),
-			'label'   => _e('Logout', 'bigcommerce'),
+			'label'   => __('Logout', 'bigcommerce'),
 			'current' => false,
 		];
 
