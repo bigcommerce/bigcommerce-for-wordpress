@@ -5,7 +5,7 @@
 	}
 
 	#wpbody-content {
-		@media (--viewport-medium) {
+		@media (--viewport-wpadmin) {
 			margin-top: 86px;
 		}
 	}
@@ -17,8 +17,12 @@
 }
 
 .bc-resources {
-	margin: 10px 20px 0 2px;
+	margin: 10px 20px 10px 10px;
 	font-size: 16px;
+
+	@media (--viewport-wpadmin) {
+		margin: 10px 20px 0 0;
+	}
 }
 
 .bc-resources-tabs__max-width {
@@ -38,7 +42,7 @@
 		opacity: 0;
 		transition: var(--transition-opacity);
 
-		@media (--viewport-medium) {
+		@media (--viewport-wpadmin) {
 			opacity: 1;
 		}
 	}
@@ -63,7 +67,7 @@
 	max-width: 640px;
 	width: 100%;
 
-	@media (--viewport-medium) {
+	@media (--viewport-wpadmin) {
 		font-size: 3em;
 	}
 }
@@ -195,6 +199,10 @@
 		opacity: 1;
 		z-index: 1;
 		order: 0;
+
+		@media (--viewport-wpadmin) {
+			justify-content: flex-start;
+		}
 	}
 }
 

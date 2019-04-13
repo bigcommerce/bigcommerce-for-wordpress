@@ -64,32 +64,29 @@ class Amp_Assets {
 	}
 
 	/**
-	 * Add AMP scripts.
+	 * Get AMP script handles.
+	 *
+	 * This is only relevant in the Classic Mode, as component scripts are automatically in Native/Paired modes.
+	 * This is used in an 'amp_post_template_data' filter.
 	 *
 	 * @see amp_register_default_scripts()
+	 * @return string[] Script handles.
 	 */
 	public function scripts() {
 		$handles = array(
-			'carousel',
-			'form',
-			'bind',
-			'sidebar',
-			'list',
-			'mustache',
+			'amp-carousel',
+			'amp-form',
+			'amp-bind',
+			'amp-sidebar',
+			'amp-list',
+			'amp-mustache',
 		);
 
 		if ( is_archive() ) {
-			$handles[] = 'lightbox';
+			$handles[] = 'amp-lightbox';
 		}
 
-		foreach ( $handles as $handle ) {
-			if ( ! wp_script_is( 'amp-' . $handle, 'done' ) ) {
-				?>
-				<script async custom-element="amp-<?php echo esc_attr( $handle ); ?>" src="https://cdn.ampproject.org/v0/amp-<?php echo esc_attr( $handle ); ?>-latest.js"></script>
-				<?php
-			}
-		}
-
+		return $handles;
 	}
 
 	/**

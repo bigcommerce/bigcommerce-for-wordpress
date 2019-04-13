@@ -154,6 +154,13 @@ class Settings extends Provider {
 			return $status;
 		};
 
+		add_action( 'admin_init', $this->create_callback( 'activation_redirect', function () use ( $container ) {
+			if ( get_transient( 'bigcommerce_activation_redirect' ) ) {
+				delete_transient( 'bigcommerce_activation_redirect' );
+				wp_safe_redirect( $container[ self::SETTINGS_SCREEN ]->get_url(), 303 );
+			}
+		} ), 0, 0 );
+
 	}
 
 	private function api_credentials( Container $container ) {
@@ -370,7 +377,7 @@ class Settings extends Provider {
 
 	private function onboarding( Container $container ) {
 		$container[ self::WELCOME_SCREEN ] = function ( Container $container ) {
-			$path = dirname( $container[ 'plugin_file' ] ) . '/templates/admin';
+			$path = dirname( $container['plugin_file'] ) . '/templates/admin';
 
 			return new Welcome_Screen( $container[ self::CONFIG_STATUS ], $container[ Assets::PATH ], $path );
 		};
@@ -526,16 +533,17 @@ class Settings extends Provider {
 
 	/**
 	 * Handles menus visibility  for the settings screen and nav menu page
+	 *
 	 * @param Container $container
 	 */
-	private function set_menus_default_visibility( Container $container ){
+	private function set_menus_default_visibility( Container $container ) {
 		$container[ self::CONFIG_DISPLAY_MENUS ] = function ( Container $container ) {
 			return new Nav_Items_Meta_Box();
 		};
 
-		add_action('load-nav-menus.php', $this->create_callback( 'display_nav_menus_by_default', function () use ( $container ) {
+		add_action( 'load-nav-menus.php', $this->create_callback( 'display_nav_menus_by_default', function () use ( $container ) {
 			$container[ self::CONFIG_DISPLAY_MENUS ]->set_nav_menu_screen_options();
-		} ));
+		} ) );
 	}
 
 	/**
@@ -562,7 +570,7 @@ class Settings extends Provider {
 
 	private function resources( Container $container ) {
 		$container[ self::RESOURCES_SCREEN ] = function ( Container $container ) {
-			$path = dirname( $container[ 'plugin_file' ] ) . '/templates/admin';
+			$path = dirname( $container['plugin_file'] ) . '/templates/admin';
 
 			return new Resources_Screen( $container[ self::CONFIG_STATUS ], $container[ Assets::PATH ], $path );
 		};

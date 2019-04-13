@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.2.0]
+
+### Added
+- Added a redirect to the Welcome/Settings screen on plugin activation
+
+### Changed
+- Updated the BigCommerce Checkout SDK to version 1.18.10
+
+### Fixed
+- Fixed a layout issue on the WP Admin BigCommerce Resources page where 
+  resource cards were misaligned.
+- Fixed AMP validation errors from improperly included scripts. Thanks, @westonruter!
+
+
 ## [2.1.0]
 
 ### Added
@@ -454,7 +468,8 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
-[2.0.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/2.0.1...2.1.0
+[2.2.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/2.1.0...2.2.0
+[2.1.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/2.0.1...2.1.0
 [2.0.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/2.0.0...2.0.1
 [2.0.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.6.0...2.0.0
 [1.6.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/1.5.0...1.6.0

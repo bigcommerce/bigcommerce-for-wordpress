@@ -185,6 +185,14 @@ class Amp extends Provider {
 			$container[ self::CUSTOMIZER_STYLES ]->print_css();
 		} ), 10, 0 );
 
+		add_filter( 'amp_post_template_data', $this->create_callback( 'amp_post_template_data', function ( $data ) use ( $container ) {
+			$data['amp_component_scripts'] = array_merge(
+				$data['amp_component_scripts'],
+				array_fill_keys( $container[ self::ASSETS ]->scripts(), true )
+			);
+			return $data;
+		} ), 11, 1 );
+
 		add_action( 'amp_post_template_head', $this->create_callback( 'amp_post_template_head', function () use ( $container ) {
 			$container[ self::ASSETS ]->scripts();
 		} ), 11, 0 );
