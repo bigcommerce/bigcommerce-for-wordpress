@@ -4,7 +4,7 @@
 namespace BigCommerce;
 
 class Plugin {
-	const VERSION = '2.1.0';
+	const VERSION = '2.2.0';
 
 	protected static $_instance;
 
@@ -138,5 +138,19 @@ class Plugin {
 		}
 
 		return self::$_instance;
+	}
+
+	public static function activate() {
+		if ( is_network_admin() ) {
+			return; // network activated
+		}
+
+		$wp_list_table = _get_list_table( 'WP_Plugins_List_Table' );
+		$action = $wp_list_table->current_action();
+		if ( $action === 'activate-selected' ) {
+			return; // multiple plugins activated
+		}
+
+		set_transient( 'bigcommerce_activation_redirect', 1, 30 );
 	}
 }
