@@ -7,10 +7,8 @@ import _ from 'lodash';
 import delegate from 'delegate';
 import * as tools from 'utils/tools';
 import { on } from 'utils/events';
-import { Spinner } from 'spin.js';
 import { wpAPIProductPricing } from 'utils/ajax';
 import { PRICING_API_URL, PRICING_API_NONCE } from '../config/wp-settings';
-import { NLS } from '../config/i18n';
 
 const el = {
 	container: tools.getNodes('bc-api-product-pricing', true),
@@ -28,55 +26,17 @@ const state = {
 };
 
 /**
- * @function createSpinner
- * @description create a new spinner element.
- * @returns {*}
- */
-const createSpinLoader = (itemContainer = '') => {
-	if (!itemContainer) {
-		return;
-	}
-
-	const spinner = document.createElement('span');
-	const loadingMessage = document.createElement('span');
-	const spinnerWrapper = document.createElement('div');
-	tools.addClass(spinner, 'bc-get-prices-loader');
-	tools.addClass(loadingMessage, 'bc-get-prices-message');
-	tools.addClass(loadingMessage, 'u-bc-visual-hide');
-	tools.addClass(spinnerWrapper, 'bc-get-prices-wrapper');
-	spinner.style.position = 'relative';
-	loadingMessage.textContent = NLS.pricing.loading_prices;
-	spinnerWrapper.appendChild(spinner);
-	spinnerWrapper.appendChild(loadingMessage);
-	itemContainer.appendChild(spinnerWrapper);
-
-	const spinnerOptions = {
-		opacity: 0.5,
-		scale: 0.5,
-		lines: 12,
-	};
-
-	new Spinner(spinnerOptions).spin(spinner);
-};
-
-/**
- * @function maybeDisplayLoader
+ * @function maybePriceIsLoading
  * @description based on state.isFetching, show of hide the spinner element.
  * @param pricingContainer
  */
-const maybeDisplayLoader = (pricingContainer = '') => {
-	tools.getNodes('.bc-get-prices-wrapper', true, pricingContainer, true).forEach((spinner) => {
-		if (!spinner) {
-			return;
-		}
+const maybePriceIsLoading = (pricingContainer = '') => {
+	if (state.isFetching) {
+		tools.addClass(pricingContainer, 'bc-price-is-loading');
+		return;
+	}
 
-		if (state.isFetching) {
-			_.delay(() => tools.addClass(spinner, 'bc-show-pricing-spinner'), state.delay);
-			return;
-		}
-
-		_.delay(() => tools.removeClass(spinner, 'bc-show-pricing-spinner'), state.delay);
-	});
+	tools.removeClass(pricingContainer, 'bc-price-is-loading');
 };
 
 /**
@@ -174,7 +134,7 @@ const showCachedPricing = (products = []) => {
 			const priceWrapper = tools.getNodes(`[data-product-price-id="${product.product_id}"]`, false, document, true)[0];
 			const cachedPricingNode = tools.getNodes('bc-cached-product-pricing', true, priceWrapper)[0];
 			tools.addClass(cachedPricingNode, 'bc-product__pricing--visible');
-			maybeDisplayLoader(priceWrapper);
+			maybePriceIsLoading(priceWrapper);
 		});
 		return;
 	}
@@ -200,7 +160,14 @@ const filterAPIPricingData = (type = '', APIPricingNode = '', data = {}) => {
 	const pricingContainer = tools.closest(APIPricingNode, '[data-js="bc-product-pricing"]');
 
 	// This will hide the spinner because state.isFetching is false.
-	maybeDisplayLoader(pricingContainer);
+	maybePriceIsLoading(pricingContainer);
+
+	// If the cached pricing is visible, hide it now that we have data.
+	const cachedPricingNode = tools.getNodes('bc-cached-product-pricing', false, pricingContainer)[0];
+	if (cachedPricingNode) {
+		tools.removeClass(cachedPricingNode, 'bc-product__pricing--visible');
+	}
+
 	// Create an array of potential nodes to update relative to the container they belong to.
 	tools.addClass(APIPricingNode, 'bc-product__pricing--visible');
 	pricingNodes['price-node'] = APIPricingNode.querySelector('.bc-product__price--base');
@@ -333,7 +300,7 @@ const handleOptionChanges = (e) => {
 	state.optionTrigger = e.target;
 	handleOptionFieldsDuringSubmit(state.optionTrigger);
 	buildPricingObject(priceContainer);
-	maybeDisplayLoader(priceWrapper);
+	maybePriceIsLoading(priceWrapper);
 	submitAPIRequest();
 };
 
@@ -381,8 +348,7 @@ const initPricing = (e) => {
 
 		tools.addClass(pricingContainer, 'initialized');
 		buildPricingObject(pricingAPINode);
-		createSpinLoader(pricingContainer);
-		maybeDisplayLoader(pricingContainer);
+		maybePriceIsLoading(pricingContainer);
 		initOptionClicks(pricingContainer);
 	});
 

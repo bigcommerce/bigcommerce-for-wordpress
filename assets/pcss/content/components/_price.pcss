@@ -15,7 +15,7 @@
 	margin: 0;
 	opacity: 0;
 	visibility: hidden;
-	transition: var(--transition);
+	transition: var(--transition-opacity);
 
 	&.bc-product__pricing--visible,
 	&.bc-show-pricing-spinner {
@@ -24,6 +24,21 @@
 		visibility: visible;
 		opacity: 1;
 	}
+}
+
+.bc-product__pricing--cached,
+.bc-product__pricing--api {
+
+	.bc-price-is-loading & {
+		opacity: 0.2;
+	}
+}
+
+.bc-get-prices-wrapper {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate3d(-50%, -50%, 0);
 }
 
 .bc-get-prices-message {
