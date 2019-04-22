@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.2.1]
+
+### Changed
+- Updated the way cached pricing works while requesting new data from the
+  Pricing API. We're now displaying the cached pricing first. We've also
+  removed the spinner while loading pricing data and replaced with a simple
+  fade in/out of prices.
+
 ## [2.2.0]
 
 ### Added
