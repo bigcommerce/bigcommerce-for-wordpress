@@ -99,7 +99,7 @@ class Query {
 				case Product_Archive::SORT_PRICE_ASC:
 					$meta_query = $query->get( 'meta_query' ) ?: [];
 
-					$meta_query[ 'bigcommerce_price' ] = [
+					$meta_query['bigcommerce_price'] = [
 						'key'     => Product::PRICE_META_KEY,
 						'compare' => 'EXISTS',
 						'type'    => 'DECIMAL' . $this->get_ordering_decimal_format(),
@@ -110,7 +110,7 @@ class Query {
 				case Product_Archive::SORT_PRICE_DESC:
 					$meta_query = $query->get( 'meta_query' ) ?: [];
 
-					$meta_query[ 'bigcommerce_price' ] = [
+					$meta_query['bigcommerce_price'] = [
 						'key'     => Product::PRICE_META_KEY,
 						'compare' => 'EXISTS',
 						'type'    => 'DECIMAL' . $this->get_ordering_decimal_format(),
@@ -121,7 +121,7 @@ class Query {
 				case Product_Archive::SORT_REVIEWS:
 					$meta_query = $query->get( 'meta_query' ) ?: [];
 
-					$meta_query[ 'bigcommerce_rating' ] = [
+					$meta_query['bigcommerce_rating'] = [
 						'key'     => Product::RATING_META_KEY,
 						'compare' => 'EXISTS',
 					];
@@ -131,7 +131,7 @@ class Query {
 				case Product_Archive::SORT_SALES:
 					$meta_query = $query->get( 'meta_query' ) ?: [];
 
-					$meta_query[ 'bigcommerce_sales' ] = [
+					$meta_query['bigcommerce_sales'] = [
 						'key'     => Product::SALES_META_KEY,
 						'compare' => 'EXISTS',
 					];
@@ -262,12 +262,21 @@ class Query {
 			return [];
 		}
 
-		$id_list = implode( ',', array_map( 'absint', $bcids ) );
-		/** @var \wpdb $wpdb */
-		global $wpdb;
-		$results = $wpdb->get_col( "SELECT post_id FROM {$wpdb->bc_products} WHERE bc_id IN ( $id_list )" );
+		$post_ids = get_posts( [
+			self::UNFILTERED_QUERY_FLAG => true,
+			'post_type'                 => Product::NAME,
+			'posts_per_page'            => - 1,
+			'fields'                    => 'ids',
+			'meta_query'                => [
+				[
+					'key'     => Product::BIGCOMMERCE_ID,
+					'value'   => $bcids,
+					'compare' => 'IN',
+				],
+			],
+		] );
 
-		return array_map( 'intval', $results );
+		return array_map( 'intval', $post_ids );
 	}
 
 	/**
@@ -281,15 +290,22 @@ class Query {
 		if ( empty( $skus ) ) {
 			return [];
 		}
-		/** @var \wpdb $wpdb */
-		global $wpdb;
-		$sku_list = implode( ',', array_map( function ( $sku ) {
-			return sprintf( "'%s'", esc_sql( $sku ) );
-		}, $skus ) );
 
-		$results = $wpdb->get_col( "SELECT post_id FROM {$wpdb->bc_products} WHERE sku IN ( $sku_list )" );
+		$post_ids = get_posts( [
+			self::UNFILTERED_QUERY_FLAG => true,
+			'post_type'                 => Product::NAME,
+			'posts_per_page'            => - 1,
+			'fields'                    => 'ids',
+			'meta_query'                => [
+				[
+					'key'     => Product::SKU,
+					'value'   => $skus,
+					'compare' => 'IN',
+				],
+			],
+		] );
 
-		return array_map( 'intval', $results );
+		return array_map( 'intval', $post_ids );
 	}
 
 	/**

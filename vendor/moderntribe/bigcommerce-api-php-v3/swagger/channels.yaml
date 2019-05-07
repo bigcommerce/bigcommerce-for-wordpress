@@ -275,7 +275,7 @@ definitions:
         enum: [pos, marketplace, storefront, marketing, custom]
       platform:
         type: string
-        enum: [wordpress, bigcommerce]
+        enum: [wordpress, drupal, bigcommerce]
       name:
         type: string
       external_id:
@@ -293,7 +293,7 @@ definitions:
         enum: [pos, marketplace, storefront, marketing, custom]
       platform:
         type: string
-        enum: [wordpress, bigcommerce]
+        enum: [wordpress, drupal, bigcommerce]
       name:
         type: string
       external_id:

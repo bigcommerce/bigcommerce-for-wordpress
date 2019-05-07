@@ -9,6 +9,7 @@
  * @var string   $shipping
  * @var string   $tax
  * @var string   $subtotal
+ * @var string   $total_ex_tax
  * @var string   $total
  * @var int      $item_count
  * @var string   $payment_method
@@ -117,11 +118,13 @@
 						<dd class="bc-order-detail-totals__value">-<?php echo esc_html( $gift_certificate ); ?></dd>
 					</div>
 				<?php } ?>
-				<?php if ( $tax ) { ?>
+				<?php if( $total_ex_tax ){ ?>
 				<div class="bc-order-detail-totals__list-item">
 					<dt class="bc-order-detail-totals__label"><?php esc_html_e( 'Total Before Tax', 'bigcommerce' ); ?>: </dt>
 					<dd class="bc-order-detail-totals__value"><?php echo esc_html( $total_ex_tax ); ?></dd>
 				</div>
+				<?php } ?>
+				<?php if ( $tax ) { ?>
 				<div class="bc-order-detail-totals__list-item">
 					<dt class="bc-order-detail-totals__label"><?php esc_html_e( 'Estimated tax to be collected', 'bigcommerce' ); ?>: </dt>
 					<dd class="bc-order-detail-totals__value"><?php echo esc_html( $tax ); ?></dd>

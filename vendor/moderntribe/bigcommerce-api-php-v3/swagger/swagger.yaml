@@ -6439,6 +6439,14 @@ definitions:
           type: array
           items:
             $ref: "#/definitions/Variant"
+        options:
+          type: array
+          items:
+            $ref: "#/definitions/Option"
+        modifiers:
+          type: array
+          items:
+            $ref: "#/definitions/Modifier"
         base_variant_id:
           type: integer
           description: |

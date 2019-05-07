@@ -4,9 +4,22 @@
 namespace BigCommerce\Container;
 
 
+use BigCommerce\Customizer\Sections\Product_Archive;
 use BigCommerce\Post_Types\Product\Product;
+use BigCommerce\Post_Types\Queue_Task\Queue_Task;
+use BigCommerce\Settings\Screens\Connect_Channel_Screen;
+use BigCommerce\Settings\Screens\Settings_Screen;
+use BigCommerce\Settings\Sections\Api_Credentials;
+use BigCommerce\Settings\Sections\Channel_Select;
+use BigCommerce\Settings\Sections\Channels as Channel_Settings;
 use BigCommerce\Taxonomies\Availability;
 use BigCommerce\Taxonomies\Brand;
+use BigCommerce\Taxonomies\Channel;
+use BigCommerce\Pages\Account_Page;
+use BigCommerce\Pages\Cart_Page;
+use BigCommerce\Pages\Login_Page;
+use BigCommerce\Pages\Shipping_Returns_Page;
+use BigCommerce\Taxonomies\Channel\Channel_Connector;
 use BigCommerce\Taxonomies\Condition;
 use BigCommerce\Taxonomies\Flag;
 use BigCommerce\Taxonomies\Product_Category;
@@ -32,6 +45,15 @@ class Taxonomies extends Provider {
 	const FLAG        = 'taxonomy.flag';
 	const FLAG_CONFIG = 'taxonomy.flag.config';
 
+	const CHANNEL              = 'taxonomy.channel';
+	const CHANNEL_CONFIG       = 'taxonomy.channel.config';
+	const CHANNEL_SYNC         = 'taxonomy.channel.sync';
+	const CHANNEL_CONNECTOR    = 'taxonomy.channel.connector';
+	const CHANNEL_ADMIN_FILTER = 'taxonomy.channel.admin_products_filter';
+	const CHANNEL_QUERY_FILTER = 'taxonomy.channel.query_filter';
+
+	const ROUTES = 'taxonomy.channel.routes';
+
 	public function register( Container $container ) {
 		$this->product_category( $container );
 		$this->brand( $container );
@@ -39,6 +61,7 @@ class Taxonomies extends Provider {
 		$this->condition( $container );
 		$this->product_type( $container );
 		$this->flag( $container );
+		$this->channel( $container );
 
 		add_action( 'init', $this->create_callback( 'register', function () use ( $container ) {
 			$container[ self::PRODUCT_CATEGORY_CONFIG ]->register();
@@ -47,6 +70,7 @@ class Taxonomies extends Provider {
 			$container[ self::CONDITION_CONFIG ]->register();
 			$container[ self::PRODUCT_TYPE_CONFIG ]->register();
 			$container[ self::FLAG_CONFIG ]->register();
+			$container[ self::CHANNEL_CONFIG ]->register();
 		} ), 0, 0 );
 	}
 
@@ -84,5 +108,103 @@ class Taxonomies extends Provider {
 		$container[ self::FLAG_CONFIG ] = function ( Container $container ) {
 			return new Flag\Config( Flag\Flag::NAME, [ Product::NAME ] );
 		};
+	}
+
+	private function channel( Container $container ) {
+		$this->routes( $container );
+
+		$container[ self::CHANNEL_CONFIG ] = function ( Container $container ) {
+			return new Channel\Config( Channel\Channel::NAME, [ Product::NAME, Queue_Task::NAME ] );
+		};
+		$container[ self::CHANNEL_SYNC ]   = function ( Container $container ) {
+			return new Channel\Channel_Synchronizer( $container[ Api::FACTORY ]->channels() );
+		};
+
+		$channel_sync = $this->create_callback( 'channel_sync', function () use ( $container ) {
+			$container[ self::CHANNEL_SYNC ]->initial_sync();
+		} );
+		add_action( 'bigcommerce/settings/before_form/page=' . Settings_Screen::NAME, $channel_sync, 10, 0 );
+		add_action( 'bigcommerce/settings/before_form/page=' . Connect_Channel_Screen::NAME, $channel_sync, 10, 0 );
+		add_action( 'bigcommerce/import/start', $channel_sync, 10, 0 );
+
+		add_action( 'edited_' . Channel\Channel::NAME, $this->create_callback( 'handle_channel_name_change', function ( $term_id ) use ( $container ) {
+			$container[ self::CHANNEL_SYNC ]->handle_name_change( $term_id );
+		} ), 10, 1 );
+
+
+		$container[ self::CHANNEL_CONNECTOR ] = function ( Container $container ) {
+			return new Channel_Connector( $container[ Api::FACTORY ]->channels() );
+		};
+
+		add_filter( 'sanitize_option_' . Channel_Select::CHANNEL_TERM, $this->create_callback( 'handle_select_channel', function ( $value ) use ( $container ) {
+			return $container[ self::CHANNEL_CONNECTOR ]->handle_connect_request( $value );
+		} ), 100, 1 );
+
+		add_filter( 'sanitize_option_' . Channel_Settings::NEW_NAME, $this->create_callback( 'handle_create_channel', function ( $value ) use ( $container ) {
+			return $container[ self::CHANNEL_CONNECTOR ]->handle_create_request( $value );
+		} ), 100, 1 );
+
+		add_filter( 'bigcommerce/settings/api/disabled/field=' . Api_Credentials::OPTION_STORE_URL, $this->create_callback( 'prevent_store_url_changes', function ( $disabled ) use ( $container ) {
+			return $container[ self::CHANNEL_CONNECTOR ]->prevent_store_url_changes( $disabled );
+		} ), 10, 1 );
+
+		$container[ self::CHANNEL_ADMIN_FILTER ] = function ( Container $container ) {
+			return new Channel\Admin_Products_Filter();
+		};
+		add_action( 'load-edit.php', $this->create_callback( 'init_list_table_hooks', function () use ( $container ) {
+			if ( Channel\Channel::multichannel_enabled() ) {
+				add_filter( 'restrict_manage_posts', $this->create_callback( 'products_admin_channel_select', function ( $post_type, $which ) use ( $container ) {
+					$container[ self::CHANNEL_ADMIN_FILTER ]->display_channel_select( $post_type, $which );
+				} ), 10, 2 );
+				add_filter( 'parse_request', $this->create_callback( 'parse_products_admin_request', function ( \WP $wp ) use ( $container ) {
+					$container[ self::CHANNEL_ADMIN_FILTER ]->filter_list_table_request( $wp );
+				} ), 10, 1 );
+			}
+		} ), 10, 0 );
+
+		$container[ self::CHANNEL_QUERY_FILTER ] = function ( Container $container ) {
+			return new Channel\Query_Filter();
+		};
+		add_action( 'pre_get_posts', $this->create_callback( 'filter_query_by_channel', function ( $query ) use ( $container ) {
+			if ( ! is_admin() && Channel\Channel::multichannel_enabled() ) {
+				$container[ self::CHANNEL_QUERY_FILTER ]->apply( $query );
+			}
+		} ), 10, 1 );
+	}
+
+	private function routes( Container $container ) {
+		$container[ self::ROUTES ] = function ( Container $container ) {
+			return new Channel\Routes( $container[ Api::FACTORY ]->sites() );
+		};
+		add_action( 'bigcommerce/channel/updated_channel_id', $this->create_callback( 'set_routes_for_channel', function ( $channel_id ) use ( $container ) {
+			$container[ self::ROUTES ]->set_routes( $channel_id );
+		} ), 10, 1 );
+
+		$update_routes = $this->create_callback( 'update_routes', function () use ( $container ) {
+			$container[ self::ROUTES ]->update_routes();
+		} );
+
+		$route_changed = $this->create_callback( 'route_changed', function () use ( $update_routes ) {
+			add_action( 'shutdown', $update_routes, 10, 0 );
+		} );
+
+		add_action( 'update_option_show_on_front', $route_changed, 10, 0 );
+		add_action( 'update_option_permalink_structure', $route_changed, 10, 0 );
+		add_action( 'update_option_' . Cart_Page::NAME, $route_changed, 10, 0 );
+		add_action( 'update_option_' . Login_Page::NAME, $route_changed, 10, 0 );
+		add_action( 'update_option_' . Account_Page::NAME, $route_changed, 10, 0 );
+		add_action( 'update_option_' . Shipping_Returns_Page::NAME, $route_changed, 10, 0 );
+		add_action( 'update_option_' . Product_Archive::ARCHIVE_SLUG, $route_changed, 10, 0 );
+		add_action( 'bigcommerce/channel/connection_changed', $route_changed );
+
+		//for when site is updated
+		add_action( 'update_option_home', $this->create_callback( 'update_site_home', function () use ( $container ) {
+			$container[ self::ROUTES ]->update_site_home();
+		} ), 10, 0 );
+
+		//for when route assigned pages changed permalink
+		add_action( 'post_updated', $this->create_callback( 'update_route_permalink', function ( $post_id, $new_post, $old_post ) use ( $container ) {
+			$container[ self::ROUTES ]->update_route_permalink( $post_id, $new_post, $old_post );
+		} ), 10, 3 );
 	}
 }

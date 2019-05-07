@@ -10,11 +10,12 @@ use BigCommerce\Api\v3\Model\Listing;
 use BigCommerce\Api\v3\Model\ListingVariant;
 use BigCommerce\Api\v3\Model\Product;
 use BigCommerce\Api\v3\Model\Variant;
+use BigCommerce\Api\v3\ObjectSerializer;
 use BigCommerce\Import\No_Cache_Options;
 use BigCommerce\Import\Runner\Status;
 use BigCommerce\Logging\Error_Log;
-use BigCommerce\Settings\Sections\Channels;
 use BigCommerce\Settings\Sections\Import;
+use BigCommerce\Taxonomies\Channel\Channel;
 
 /**
  * Class Channel_Initializer
@@ -42,24 +43,31 @@ class Channel_Initializer implements Import_Processor {
 	private $limit;
 
 	/**
-	 * Product_ID_Fetcher constructor.
+	 * @var \WP_Term
+	 */
+	private $channel_term;
+
+	/**
+	 * Channel_Initializer constructor.
 	 *
 	 * @param ChannelsApi $channels
 	 * @param CatalogApi  $catalog
+	 * @param \WP_Term    $channel_term
 	 * @param int         $limit Number of product IDs to fetch per request
 	 */
-	public function __construct( ChannelsApi $channels, CatalogApi $catalog, $limit = 100 ) {
-		$this->channels = $channels;
-		$this->catalog  = $catalog;
-		$this->limit    = $limit;
+	public function __construct( ChannelsApi $channels, CatalogApi $catalog, \WP_Term $channel_term, $limit = 100 ) {
+		$this->channels     = $channels;
+		$this->catalog      = $catalog;
+		$this->channel_term = $channel_term;
+		$this->limit        = $limit;
 	}
 
 	public function run() {
 
 		$status = new Status();
-		$status->set_status( Status::INITIALIZING_CHANNEL );
+		$status->set_status( Status::INITIALIZING_CHANNEL . '-' . $this->channel_term->term_id );
 
-		$channel_id = (int) get_option( Channels::CHANNEL_ID, 0 );
+		$channel_id = get_term_meta( $this->channel_term->term_id, Channel::CHANNEL_ID, true );
 		if ( empty( $channel_id ) ) {
 			do_action( 'bigcommerce/import/error', __( 'Channel ID is not set. Product import canceled.', 'bigcommerce' ) );
 
@@ -70,7 +78,7 @@ class Channel_Initializer implements Import_Processor {
 		if ( empty( $page ) ) {
 			if ( ! get_option( Import::OPTION_NEW_PRODUCTS, 1 ) ) {
 				do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Skipping channel initialization due to settings', 'bigcommerce' ), [] );
-				$status->set_status( Status::INITIALIZED_CHANNEL );
+				$status->set_status( Status::INITIALIZED_CHANNEL . '-' . $this->channel_term->term_id );
 				$this->clear_state();
 
 				return;
@@ -99,14 +107,15 @@ class Channel_Initializer implements Import_Processor {
 			return;
 		}
 
-		$id_map = $this->get_option( Listing_ID_Fetcher::PRODUCT_LISTING_MAP, [] ) ?: [];
+		$id_map = $this->get_option( Listing_Fetcher::PRODUCT_LISTING_MAP, [] ) ?: [];
 
 		$listing_requests = array_values( array_filter( array_map( function ( Product $product ) use ( $channel_id, $id_map ) {
-			if ( array_key_exists( $product->getId(), $id_map ) ) {
+			if ( array_key_exists( $product->getId(), $id_map ) && array_key_exists( $this->channel_term->term_id, $id_map[ $product->getId() ] ) ) {
 				do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Product already linked to channel. Skipping.', 'bigcommerce' ), [
 					'product_id' => $product->getId(),
 					'channel_id' => $channel_id,
 				] );
+
 				return false;
 			}
 
@@ -132,7 +141,12 @@ class Channel_Initializer implements Import_Processor {
 				'count' => count( $listing_requests ),
 			] );
 			try {
-				$this->channels->createChannelListings( $channel_id, $listing_requests );
+				$create_response = $this->channels->createChannelListings( $channel_id, $listing_requests );
+				foreach ( $create_response->getData() as $listing ) {
+					$data = ObjectSerializer::sanitizeForSerialization( $listing );
+					$id_map[ (int) $listing->getProductId() ][ $this->channel_term->term_id ] = json_encode( $data );
+				}
+				$this->update_option( Listing_Fetcher::PRODUCT_LISTING_MAP, $id_map, false );
 			} catch ( ApiException $e ) {
 				do_action( 'bigcommerce/import/error', $e->getMessage(), [
 					'response' => $e->getResponseBody(),
@@ -150,28 +164,10 @@ class Channel_Initializer implements Import_Processor {
 			] );
 			$this->set_page( $page + 1 );
 		} else {
-			$status->set_status( Status::INITIALIZED_CHANNEL );
+			$status->set_status( Status::INITIALIZED_CHANNEL . '-' . $this->channel_term->term_id );
 			$this->clear_state();
 		}
 	}
-
-	/**
-	 * Determine if the given channel has any listings
-	 *
-	 * @param int $channel_id
-	 *
-	 * @return bool
-	 */
-	private function channel_has_listings( $channel_id ) {
-		try {
-			$response = $this->channels->listChannelListings( $channel_id, [ 'limit' => 1 ] );
-
-			return count( $response->getData() ) > 0;
-		} catch ( ApiException $e ) {
-			return false;
-		}
-	}
-
 
 	private function get_page() {
 		$state = $this->get_state();
@@ -179,17 +175,17 @@ class Channel_Initializer implements Import_Processor {
 			return 0;
 		}
 
-		return $state[ 'page' ];
+		return $state['page'];
 	}
 
 	private function set_page( $page ) {
-		$state           = $this->get_state();
-		$state[ 'page' ] = (int) $page;
+		$state         = $this->get_state();
+		$state['page'] = (int) $page;
 		$this->set_state( $state );
 	}
 
 	private function get_state() {
-		$state = $this->get_option( self::STATE_OPTION, [] );
+		$state = $this->get_option( $this->state_option(), [] );
 		if ( ! is_array( $state ) ) {
 			return [];
 		}
@@ -198,10 +194,14 @@ class Channel_Initializer implements Import_Processor {
 	}
 
 	private function set_state( array $state ) {
-		$this->update_option( self::STATE_OPTION, $state, false );
+		$this->update_option( $this->state_option(), $state, false );
 	}
 
 	private function clear_state() {
-		$this->delete_option( self::STATE_OPTION );
+		$this->delete_option( $this->state_option() );
+	}
+
+	private function state_option() {
+		return sprintf( '%s-%d', self::STATE_OPTION, $this->channel_term->term_id );
 	}
 }

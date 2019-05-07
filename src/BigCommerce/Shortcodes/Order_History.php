@@ -6,6 +6,7 @@ namespace BigCommerce\Shortcodes;
 use BigCommerce\Accounts\Customer;
 use BigCommerce\Customizer\Sections\Product_Archive;
 use BigCommerce\Rest\Orders_Shortcode_Controller;
+use BigCommerce\Settings\Sections\Currency;
 use BigCommerce\Templates;
 use BigCommerce\Templates\Order_Summary;
 
@@ -35,8 +36,8 @@ class Order_History implements Shortcode {
 			return '';
 		}
 
-		$attr               = shortcode_atts( self::default_attributes(), $attr, self::NAME );
-		$attr[ 'per_page' ] = $attr[ 'per_page' ] ?: $this->per_page_default();
+		$attr             = shortcode_atts( self::default_attributes(), $attr, self::NAME );
+		$attr['per_page'] = $attr['per_page'] ?: $this->per_page_default();
 
 		if ( empty( $_GET[ self::ORDER_ID_QUERY_ARG ] ) ) {
 			return $this->render_history_list( $attr );
@@ -48,12 +49,12 @@ class Order_History implements Shortcode {
 
 	private function render_history_list( $attr ) {
 		$orders      = $this->get_orders( $attr );
-		$total_pages = empty( $orders ) ? 0 : $this->get_total_pages( $attr[ 'per_page' ] );
+		$total_pages = empty( $orders ) ? 0 : $this->get_total_pages( $attr['per_page'] );
 
 		$controller = Templates\Order_History::factory( [
 			Templates\Order_History::ORDERS        => $orders,
 			Templates\Order_History::NEXT_PAGE_URL => $this->next_page_url( $attr, $total_pages ),
-			Templates\Order_History::WRAP          => intval( $attr[ 'ajax' ] ) !== 1,
+			Templates\Order_History::WRAP          => intval( $attr['ajax'] ) !== 1,
 		] );
 
 		return $controller->render();
@@ -68,19 +69,40 @@ class Order_History implements Shortcode {
 			return $controller->render();
 		}
 
-		$controller = Templates\Order_Details::factory( [ Templates\Order_Details::ORDER => $order ] );
+		$currency_filter = function ( $currency ) use ( $order ) {
+			if ( empty( $order['currency_code'] ) ) {
+				return $currency;
+			}
 
-		return $controller->render();
+			return $order['currency_code'];
+		};
+
+		add_filter( 'pre_option_' . Currency::CURRENCY_CODE, $currency_filter, 100, 1 );
+		$controller = Templates\Order_Details::factory( [ Templates\Order_Details::ORDER => $order ] );
+		$output = $controller->render();
+		remove_filter( 'pre_option_' . Currency::CURRENCY_CODE, $currency_filter, 100 );
+
+		return $output;
 	}
 
 	private function get_orders( $args ) {
 		$orders   = [];
 		$customer = new Customer( get_current_user_id() );
-		foreach ( $customer->get_orders( $args[ 'paged' ], $args[ 'per_page' ] ) as $order ) {
+		foreach ( $customer->get_orders( $args['paged'], $args['per_page'] ) as $order ) {
+			$currency_filter = function ( $currency ) use ( $order ) {
+				if ( empty( $order['currency_code'] ) ) {
+					return $currency;
+				}
+
+				return $order['currency_code'];
+			};
 			$component = Order_Summary::factory( [
 				Order_Summary::ORDER => $order,
 			] );
+
+			add_filter( 'pre_option_' . Currency::CURRENCY_CODE, $currency_filter, 100, 1 );
 			$orders[]  = $component->render();
+			remove_filter( 'pre_option_' . Currency::CURRENCY_CODE, $currency_filter, 100 );
 		}
 
 		return $orders;
@@ -94,15 +116,15 @@ class Order_History implements Shortcode {
 	}
 
 	private function next_page_url( array $attr, $max_pages ) {
-		$page = (int) $attr[ 'paged' ];
+		$page = (int) $attr['paged'];
 		if ( $page >= $max_pages ) {
 			return '';
 		}
 
 		$base_url = trailingslashit( $this->rest_controller->get_base_url() ) . 'html';
 
-		$attr[ 'paged' ] = $page + 1;
-		$attr[ 'ajax' ]  = 1;
+		$attr['paged'] = $page + 1;
+		$attr['ajax']  = 1;
 
 		$url = add_query_arg( array_filter( $attr ), $base_url );
 		$url = wp_nonce_url( $url, 'wp_rest' );

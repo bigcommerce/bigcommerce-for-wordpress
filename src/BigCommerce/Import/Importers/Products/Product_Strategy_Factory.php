@@ -7,6 +7,7 @@ namespace BigCommerce\Import\Importers\Products;
 use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Api\v3\Model;
 use BigCommerce\Api\v3\ObjectSerializer;
+use BigCommerce\Exceptions\Product_Not_Found_Exception;
 use BigCommerce\Import\Import_Strategy;
 use BigCommerce\Import\Importers\Products\Product_Creator;
 use BigCommerce\Import\Importers\Products\Product_Ignorer;
@@ -30,20 +31,26 @@ class Product_Strategy_Factory {
 	 * @var string
 	 */
 	private $version;
+	/**
+	 * @var \WP_Term
+	 */
+	private $channel_term;
 
 	/**
 	 * Product_Strategy_Factory constructor.
 	 *
 	 * @param Model\Product $product
 	 * @param Model\Listing $listing
+	 * @param \WP_Term      $channel_term
 	 * @param CatalogApi    $catalog
 	 * @param string        $version
 	 */
-	public function __construct( Model\Product $product, Model\Listing $listing, CatalogApi $catalog, $version ) {
-		$this->product = $product;
-		$this->listing = $listing;
-		$this->catalog = $catalog;
-		$this->version = $version;
+	public function __construct( Model\Product $product, Model\Listing $listing, \WP_Term $channel_term, CatalogApi $catalog, $version ) {
+		$this->product      = $product;
+		$this->listing      = $listing;
+		$this->catalog      = $catalog;
+		$this->version      = $version;
+		$this->channel_term = $channel_term;
 	}
 
 	/**
@@ -52,24 +59,45 @@ class Product_Strategy_Factory {
 	public function get_strategy() {
 		$matching_post_id = $this->get_matching_post();
 		if ( empty( $matching_post_id ) ) {
-			return new Product_Creator( $this->product, $this->listing, $this->catalog );
+			return new Product_Creator( $this->product, $this->listing, $this->channel_term, $this->catalog );
 		}
 
 		if ( ! $this->needs_refresh( $matching_post_id ) ) {
-			return new Product_Ignorer( $this->product, $this->listing, $this->catalog, $matching_post_id );
+			return new Product_Ignorer( $this->product, $this->listing, $this->channel_term, $this->catalog, $matching_post_id );
 		}
 
-		return new Product_Updater ( $this->product, $this->listing, $this->catalog, $matching_post_id );
+		return new Product_Updater ( $this->product, $this->listing, $this->channel_term, $this->catalog, $matching_post_id );
 
 	}
 
 	private function get_matching_post() {
-		/** @var \wpdb $wpdb */
-		global $wpdb;
 
-		$sql = "SELECT post_id FROM {$wpdb->bc_products} WHERE bc_id=%d";
+		$args = [
+			'meta_query'     => [
+				[
+					'key'   => 'bigcommerce_id',
+					'value' => absint( $this->product->getId() ),
+				],
+			],
+			'tax_query'      => [
+				[
+					'taxonomy' => $this->channel_term->taxonomy,
+					'field'    => 'term_id',
+					'terms'    => [ (int) $this->channel_term->term_id ],
+					'operator' => 'IN',
+				],
+			],
+			'post_type'      => Product::NAME,
+			'posts_per_page' => 1,
+			'fields'         => 'ids',
+		];
 
-		return (int) $wpdb->get_var( $wpdb->prepare( $sql, $this->product[ 'id' ] ) );
+		$posts = get_posts( $args );
+		if ( empty( $posts ) ) {
+			return 0;
+		}
+
+		return absint( reset( $posts ) );
 	}
 
 	private function needs_refresh( $post_id ) {
@@ -78,13 +106,9 @@ class Product_Strategy_Factory {
 		} elseif ( get_post_meta( $post_id, Product::IMPORTER_VERSION_META_KEY, true ) != $this->version ) {
 			$response = true;
 		} else {
-
-			$product    = new Product( $post_id );
-			$serializer = new ObjectSerializer();
-
-			$product_changed = $product->get_source_data() != $serializer->sanitizeForSerialization( $this->product );
-			$listing_changed = $product->get_listing_data() != $serializer->sanitizeForSerialization( $this->listing );
-			$response        = ( $product_changed || $listing_changed );
+			$new_hash = Product_Builder::hash( $this->product, $this->listing );
+			$old_hash = get_post_meta( $post_id, Product::DATA_HASH_META_KEY, true );
+			$response = $new_hash !== $old_hash;
 		}
 
 		/**

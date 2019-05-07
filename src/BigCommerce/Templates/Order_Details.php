@@ -23,10 +23,12 @@ class Order_Details extends Order_Summary {
 	}
 
 	protected function get_products( $order ) {
-		return array_map( function ( $product ) {
+		$channel = $this->identify_channel( $order );
+		return array_map( function ( $product ) use ( $channel ) {
 			$controller = Order_Product::factory( [
 				Order_Product::PRODUCT        => $product,
 				Order_Product::THUMBNAIL_SIZE => $this->options[ self::THUMBNAIL_SIZE ],
+				Order_Product::CHANNEL        => $channel,
 			] );
 
 			return $controller->render();

@@ -35,6 +35,7 @@ use BigCommerce\Settings\Sections\New_Account_Section;
 use BigCommerce\Settings\Sections\Reviews;
 use BigCommerce\Settings\Sections\Troubleshooting_Diagnostics;
 use BigCommerce\Settings\Start_Over;
+use BigCommerce\Taxonomies\Channel\Channel;
 use Pimple\Container;
 
 class Settings extends Provider {
@@ -438,7 +439,7 @@ class Settings extends Provider {
 		} ), 10, 0 );
 
 		$container [ self::SELECT_CHANNEL_SECTION ] = function ( Container $container ) {
-			return new Channel_Select( $container[ Api::FACTORY ]->channels() );
+			return new Channel_Select();
 		};
 		add_action( 'bigcommerce/settings/register/screen=' . Connect_Channel_Screen::NAME, $this->create_callback( 'select_channel_section_register', function () use ( $container ) {
 			$container[ self::SELECT_CHANNEL_SECTION ]->register_settings_section();
@@ -450,6 +451,14 @@ class Settings extends Provider {
 		add_action( 'bigcommerce/settings/register/screen=' . Settings_Screen::NAME, $this->create_callback( 'channel_section_register', function () use ( $container ) {
 			$container[ self::CHANNEL_SECTION ]->register_settings_section();
 		} ), 80, 0 );
+		add_action( 'admin_post_' . Channel_Settings::POST_ACTION, $this->create_callback( 'handle_channel_operation', function () use ( $container ) {
+			if ( Channel::multichannel_enabled() ) {
+				$container[ self::CHANNEL_SECTION ]->handle_action_submission( $container[ self::SETTINGS_SCREEN ]->get_url() . '#' . Channel_Settings::NAME );
+			}
+		} ), 10, 0 );
+		add_action( 'bigcommerce/channel/promote', $this->create_callback( 'promote_channel', function( \WP_Term $term ) use ( $container ) {
+			$container[ self::CHANNEL_SECTION ]->promote_channel( $term );
+		}), 10, 1 );
 
 		$container[ self::PENDING_SCREEN ] = function ( Container $container ) {
 			return new Pending_Account_Screen( $container[ self::CONFIG_STATUS ], $container[ Assets::PATH ] );

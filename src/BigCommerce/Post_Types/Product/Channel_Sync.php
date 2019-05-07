@@ -51,8 +51,9 @@ class Channel_Sync {
 			return;
 		}
 
-		$channel_id = (int) get_option( Channels::CHANNEL_ID, 0 );
-		$listing_id = (int) $this->get_listing_id( $post_id );
+		$product = new Product( $post_id );
+		$channel_id = $product->get_channel_id();
+		$listing_id = $product->get_listing_id();
 		if ( empty( $channel_id ) || empty( $listing_id ) ) {
 			return;
 		}
@@ -98,21 +99,6 @@ class Channel_Sync {
 
 			return;
 		}
-	}
-
-	/**
-	 * @param int $post_id
-	 *
-	 * @return int The ID of the listing associated with this product. 0 if none found.
-	 */
-	private function get_listing_id( $post_id ) {
-		$product = new Product( $post_id );
-		$listing = $product->get_listing_data();
-		if ( ! empty( $listing ) && isset( $listing->listing_id ) ) {
-			return (int) $listing->listing_id;
-		}
-
-		return 0;
 	}
 
 	/**
@@ -197,8 +183,9 @@ class Channel_Sync {
 			return;
 		}
 
-		$channel_id = get_option( Channels::CHANNEL_ID, 0 );
-		$listing_id = $this->get_listing_id( $post_id );
+		$product = new Product( $post_id );
+		$channel_id = $product->get_channel_id();
+		$listing_id = $product->get_listing_id();
 		if ( empty( $channel_id ) || empty( $listing_id ) ) {
 			return;
 		}

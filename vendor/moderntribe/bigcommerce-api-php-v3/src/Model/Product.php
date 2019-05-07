@@ -107,6 +107,8 @@ class Product extends ProductBase implements ArrayAccess
         'images' => '\BigCommerce\Api\v3\Model\ProductImage[]',
         'videos' => '\BigCommerce\Api\v3\Model\ProductVideo[]',
         'variants' => '\BigCommerce\Api\v3\Model\Variant[]',
+        'options' => '\BigCommerce\Api\v3\Model\Option[]',
+        'modifiers' => '\BigCommerce\Api\v3\Model\Modifier[]',
         'base_variant_id' => 'int'
     ];
 
@@ -186,6 +188,8 @@ class Product extends ProductBase implements ArrayAccess
         'images' => 'images',
         'videos' => 'videos',
         'variants' => 'variants',
+        'options' => 'options',
+        'modifiers' => 'modifiers',
         'base_variant_id' => 'base_variant_id'
     ];
 
@@ -260,6 +264,8 @@ class Product extends ProductBase implements ArrayAccess
         'images' => 'setImages',
         'videos' => 'setVideos',
         'variants' => 'setVariants',
+        'options' => 'setOptions',
+        'modifiers' => 'setModifiers',
         'base_variant_id' => 'setBaseVariantId'
     ];
 
@@ -334,6 +340,8 @@ class Product extends ProductBase implements ArrayAccess
         'images' => 'getImages',
         'videos' => 'getVideos',
         'variants' => 'getVariants',
+        'options' => 'getOptions',
+        'modifiers' => 'getModifiers',
         'base_variant_id' => 'getBaseVariantId'
     ];
 
@@ -540,6 +548,8 @@ class Product extends ProductBase implements ArrayAccess
         $this->container['images'] = array_key_exists('images', $data) ? $data['images'] : null;
         $this->container['videos'] = array_key_exists('videos', $data) ? $data['videos'] : null;
         $this->container['variants'] = array_key_exists('variants', $data) ? $data['variants'] : null;
+        $this->container['options'] = array_key_exists('options', $data) ? $data['options'] : null;
+        $this->container['modifiers'] = array_key_exists('modifiers', $data) ? $data['modifiers'] : null;
         $this->container['base_variant_id'] = array_key_exists('base_variant_id', $data) ? $data['base_variant_id'] : null;
     }
 
@@ -2541,6 +2551,48 @@ class Product extends ProductBase implements ArrayAccess
     public function setVariants($variants)
     {
         $this->container['variants'] = $variants;
+
+        return $this;
+    }
+
+    /**
+     * Gets options
+     * @return \BigCommerce\Api\v3\Model\Option[]
+     */
+    public function getOptions()
+    {
+        return $this->container['options'];
+    }
+
+    /**
+     * Sets options
+     * @param \BigCommerce\Api\v3\Model\Option[] $options
+     * @return $this
+     */
+    public function setOptions($options)
+    {
+        $this->container['options'] = $options;
+
+        return $this;
+    }
+
+    /**
+     * Gets modifiers
+     * @return \BigCommerce\Api\v3\Model\Modifier[]
+     */
+    public function getModifiers()
+    {
+        return $this->container['modifiers'];
+    }
+
+    /**
+     * Sets modifiers
+     * @param \BigCommerce\Api\v3\Model\Modifier[] $modifiers
+     * @return $this
+     */
+    public function setModifiers($modifiers)
+    {
+        $this->container['modifiers'] = $modifiers;
 
         return $this;
     }

@@ -6,6 +6,8 @@ namespace BigCommerce\Settings;
 use BigCommerce\Merchant\Onboarding_Api;
 use BigCommerce\Settings\Sections\Api_Credentials;
 use BigCommerce\Settings\Sections\Channels;
+use BigCommerce\Taxonomies\Channel\Channel;
+use BigCommerce\Taxonomies\Channel\Connections;
 
 /**
  * Class Start_Over
@@ -28,9 +30,10 @@ class Start_Over {
 		printf(
 			'
 			<div class="bc-welcome-reset">
-				<button type="button" class="bc-welcome-anchor--startover bc-admin-btn bc-admin-btn--outline" data-js="bc-welcome-start-over-trigger" data-content="bc-welcome-start-over">%s</button>
+				<button type="button" class="bc-welcome-anchor--startover" data-js="bc-welcome-start-over-trigger" data-content="bc-welcome-start-over"><i class="bc-icon icon-bc-undo"></i> %s</button>
 				<script data-js="bc-welcome-start-over" type="text/template">
-					<p class="bc-welcome__account-reseet-message">%s</p>
+					<i class="bc-icon icon-bc-undo bc-welcome-account-reset-icon"></i>
+					<p class="bc-welcome__account-reset-message">%s</p>
 					<div class="bc-welcome__account-reset-actions">
 						<button type="button" class="bc-admin-btn" data-js="bc-welcome-account-reset-confirm" data-url="%s">%s</button>
 						<button type="button" class="bc-admin-btn bc-admin-btn--outline" data-js="bc-welcome-account-reset-cancel">%s</button>
@@ -39,10 +42,10 @@ class Start_Over {
 			</div>
 			',
 			__( 'Start over', 'bigcommerce' ),
-			__( 'You are about to remove all of your account credentials stored in WordPress. Would you like to continue?', 'bigcommerce' ),
+			__( 'Are you sure you\'d like to start over?', 'bigcommerce' ),
 			esc_url( $url ),
-			__( 'Confirm', 'bigcommerce' ),
-			__( 'Cancel', 'bigcommerce' )
+			__( "Yes, I'm Sure", 'bigcommerce' ),
+			__( 'Nevermind', 'bigcommerce' )
 		);
 	}
 
@@ -65,6 +68,12 @@ class Start_Over {
 		];
 		foreach ( $options as $name ) {
 			delete_option( $name );
+		}
+
+		$connections = new Connections();
+		$connected = $connections->active();
+		foreach ( $connected as $channel ) {
+			update_post_meta( $channel->term_id, Channel::STATUS, Channel::STATUS_DISCONNECTED );
 		}
 
 		$redirect = apply_filters( 'bigcommerce/onboarding/reset', admin_url() );

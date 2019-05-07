@@ -6,10 +6,13 @@ namespace BigCommerce\Templates;
 
 use BigCommerce\Assets\Theme\Image_Sizes;
 use BigCommerce\Customizer\Sections;
+use BigCommerce\Exceptions\Channel_Not_Found_Exception;
+use BigCommerce\Exceptions\Product_Not_Found_Exception;
 use BigCommerce\Pages\Orders_Page;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Settings\Sections\Account_Settings;
 use BigCommerce\Shortcodes;
+use BigCommerce\Taxonomies\Channel\Channel;
 
 class Order_Summary extends Controller {
 	const ORDER          = 'order';
@@ -66,6 +69,11 @@ class Order_Summary extends Controller {
 		$order    = $this->options[ 'order' ];
 		$image_id = $this->get_image_id( $order[ 'products' ] );
 		$image    = $image_id ? wp_get_attachment_image( $image_id, $this->options[ self::THUMBNAIL_SIZE ] ) : $this->get_fallback_image( $this->options[ self::THUMBNAIL_SIZE ] );
+		if ( apply_filters( 'bigcommerce/order/include_tax_in_subtotal', true, $order ) ) {
+			$subtotal = $order[ 'subtotal_inc_tax' ];
+		} else {
+			$subtotal = $order[ 'subtotal_ex_tax' ];
+		}
 
 		return [
 			self::ORDER_ID         => $order[ 'id' ],
@@ -73,9 +81,9 @@ class Order_Summary extends Controller {
 			self::TAX              => $this->format_currency( $order[ 'total_tax' ], false ),
 			self::DISCOUNT         => $this->format_currency( $order[ 'discount_amount' ], false ),
 			self::COUPON           => $this->format_currency( $order[ 'coupon_discount' ], false ),
-			self::SUBTOTAL         => $this->format_currency( $order[ 'subtotal_inc_tax' ] ),
-			self::TOTAL_EX_TAX     => $this->format_currency( $order[ 'total_ex_tax' ] ),
-			self::TOTAL            => $this->format_currency( $order[ 'total_inc_tax' ] ),
+			self::SUBTOTAL         => $this->format_currency( $subtotal ),
+			self::TOTAL_EX_TAX     => $this->format_currency( max( $order[ 'total_ex_tax' ], 0 ) ),
+			self::TOTAL            => $this->format_currency( $order[ 'total_inc_tax' ], null ),
 			self::COUNT            => $order[ 'items_total' ],
 			self::PAYMENT_METHOD   => $this->get_payment_method( $order[ 'payment_method' ] ),
 			self::CREATED          => $this->format_gmt_date( $order[ 'date_created' ] ),
@@ -84,7 +92,7 @@ class Order_Summary extends Controller {
 			self::STATUS           => $order[ 'custom_status' ],
 			self::IMAGE_ID         => $image_id,
 			self::IMAGE            => $image,
-			self::DESCRIPTION      => $this->options[ self::DESCRIPTION ] ?: $this->build_description( $order[ 'products' ] ),
+			self::DESCRIPTION      => $this->options[ self::DESCRIPTION ] ?: $this->build_description( $order ),
 			self::DETAILS_URL      => $this->order_details_url( $order[ 'id' ] ),
 			self::STORE_CREDIT     => $this->format_currency( $order[ 'store_credit_amount' ], false ),
 			self::GIFT_CERTIFICATE => $this->format_currency( $order[ 'gift_certificate_amount' ], false ),
@@ -144,19 +152,41 @@ class Order_Summary extends Controller {
 		return 0;
 	}
 
-	private function build_description( $products ) {
+	private function build_description( $order ) {
+		$channel = $this->identify_channel( $order );
+		$products = $order[ 'products' ];
 		$count = count( $products );
-		$names = array_filter( wp_list_pluck( $products, 'name' ) );
-		if ( empty( $names ) ) {
-			return sprintf( _n( '%d item', '%d items', $count, 'bigcommerce' ), $count );
-		}
-		if ( $count == 1 ) {
-			return reset( $names );
+
+		$product_name = '';
+
+		// Try to find one of the products in the local DB to get the channel listing title
+		foreach ( $products as $line_item ) {
+			if ( empty( $line_item[ 'product_id' ] ) ) {
+				continue;
+			}
+			try {
+				$product = Product::by_product_id( $line_item[ 'product_id' ], $channel );
+				$product_name = get_the_title( $product->post_id() );
+				break;
+			} catch ( Product_Not_Found_Exception $e ) {
+				continue;
+			}
 		}
 
-		$first = reset( $names );
+		// If no product found, take the title from the line item
+		if ( empty( $product_name ) ) {
+			$names = array_filter( wp_list_pluck( $products, 'name' ) );
+			if ( empty( $names ) ) { // nothing has a name
+				return sprintf( _n( '%d item', '%d items', $count, 'bigcommerce' ), $count );
+			}
+			$product_name = reset( $names );
+		}
 
-		$description = sprintf( _n( '%s <span>and %d other item</span>', '%s <span>and %d other items</span>', $count - 1, 'bigcommerce' ), $first, $count - 1 );
+		if ( $count === 1 ) {
+			return $product_name;
+		}
+
+		$description = sprintf( _n( '%s <span>and %d other item</span>', '%s <span>and %d other items</span>', $count - 1, 'bigcommerce' ), $product_name, $count - 1 );
 
 		return $description;
 	}
@@ -213,6 +243,18 @@ class Order_Summary extends Controller {
 		}
 
 		return wp_get_attachment_image( $default, $size );
+	}
+
+	protected function identify_channel( $order ) {
+		$channel_id = array_key_exists( 'channel_id', $order ) ? $order[ 'channel_id' ] : 0;
+		if ( empty( $channel_id ) ) {
+			return null;
+		}
+		try {
+			return Channel::find_by_id( $channel_id );
+		} catch ( Channel_Not_Found_Exception $e ) {
+			return null;
+		}
 	}
 
 }

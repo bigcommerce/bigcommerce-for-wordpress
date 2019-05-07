@@ -6,15 +6,14 @@ namespace BigCommerce\Import\Processors;
 
 use BigCommerce\Api\v3\Api\ChannelsApi;
 use BigCommerce\Api\v3\ApiException;
-use BigCommerce\Api\v3\Api\CatalogApi;
-use BigCommerce\Api\v3\Model\Listing;
 use BigCommerce\Api\v3\Model\ListingCollectionResponse;
+use BigCommerce\Api\v3\ObjectSerializer;
 use BigCommerce\Import\No_Cache_Options;
 use BigCommerce\Import\Runner\Status;
 use BigCommerce\Logging\Error_Log;
-use BigCommerce\Settings\Sections\Channels;
+use BigCommerce\Taxonomies\Channel\Channel;
 
-class Listing_ID_Fetcher implements Import_Processor {
+class Listing_Fetcher implements Import_Processor {
 	use No_Cache_Options;
 
 	const STATE_OPTION        = 'bigcommerce_import_listing_id_fetcher_state';
@@ -31,31 +30,38 @@ class Listing_ID_Fetcher implements Import_Processor {
 	private $limit;
 
 	/**
-	 * Listing_ID_Fetcher constructor.
+	 * @var \WP_Term
+	 */
+	private $channel_term;
+
+	/**
+	 * Listing_Fetcher constructor.
 	 *
 	 * @param ChannelsApi $channels The Channels API connection to use for the import
+	 * @param \WP_Term    $channel_term
 	 * @param int         $limit    Number of listing IDs to fetch per request
 	 */
-	public function __construct( ChannelsApi $channels, $limit = 100 ) {
+	public function __construct( ChannelsApi $channels, \WP_Term $channel_term, $limit = 100 ) {
 		$this->limit    = $limit;
+		$this->channel_term = $channel_term;
 		$this->channels = $channels;
 	}
 
 	public function run() {
 		$status = new Status();
-		$status->set_status( Status::FETCHING_LISTING_IDS );
+		$status->set_status( Status::FETCHING_LISTINGS . '-' . $this->channel_term->term_id );
 
-		$channel_id = get_option( Channels::CHANNEL_ID, 0 );
+		$channel_id = get_term_meta( $this->channel_term->term_id, Channel::CHANNEL_ID, true );
 		if ( empty( $channel_id ) ) {
 			do_action( 'bigcommerce/import/error', __( 'Channel ID is not set. Product import canceled.', 'bigcommerce' ) );
 
 			return;
 		}
 
+		$id_map = $this->get_option( self::PRODUCT_LISTING_MAP, [] ) ?: [];
+
 		$next = $this->get_next();
-		if ( empty( $next ) ) {
-			$this->update_option( self::PRODUCT_LISTING_MAP, [], false );
-		}
+
 		do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Retrieving listings', 'bigcommerce' ), [
 			'limit' => $this->limit,
 			'after' => $next ?: null,
@@ -75,9 +81,9 @@ class Listing_ID_Fetcher implements Import_Processor {
 			return;
 		}
 
-		$id_map = $this->get_option( self::PRODUCT_LISTING_MAP, [] ) ?: [];
 		foreach ( $response->getData() as $listing ) {
-			$id_map[ (int) $listing->getProductId() ] = (int) $listing->getListingId();
+			$data = ObjectSerializer::sanitizeForSerialization( $listing );
+			$id_map[ (int) $listing->getProductId() ][ $this->channel_term->term_id ] = json_encode( $data );
 		}
 		$this->update_option( self::PRODUCT_LISTING_MAP, $id_map, false );
 
@@ -88,7 +94,7 @@ class Listing_ID_Fetcher implements Import_Processor {
 			] );
 			$this->set_next( $next );
 		} else {
-			$status->set_status( Status::FETCHED_LISTING_IDS );
+			$status->set_status( Status::FETCHED_LISTINGS . '-' . $this->channel_term->term_id );
 			$this->clear_state();
 		}
 	}
@@ -129,7 +135,7 @@ class Listing_ID_Fetcher implements Import_Processor {
 	}
 
 	private function get_state() {
-		$state = $this->get_option( self::STATE_OPTION, [] );
+		$state = $this->get_option( $this->state_option(), [] );
 		if ( ! is_array( $state ) ) {
 			return [];
 		}
@@ -138,10 +144,14 @@ class Listing_ID_Fetcher implements Import_Processor {
 	}
 
 	private function set_state( array $state ) {
-		$this->update_option( self::STATE_OPTION, $state, false );
+		$this->update_option( $this->state_option(), $state, false );
 	}
 
 	private function clear_state() {
-		$this->delete_option( self::STATE_OPTION );
+		$this->delete_option( $this->state_option() );
+	}
+
+	private function state_option() {
+		return sprintf( '%s-%d', self::STATE_OPTION, $this->channel_term->term_id );
 	}
 }

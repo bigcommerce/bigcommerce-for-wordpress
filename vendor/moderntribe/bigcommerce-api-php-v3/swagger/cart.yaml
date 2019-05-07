@@ -186,6 +186,8 @@ definitions:
           type: integer
       channel_id:
           type: integer
+      currency:
+          $ref: "#/definitions/Currency"
       line_items:
           type: array
           items:
@@ -209,6 +211,8 @@ definitions:
           type: integer
       channel_id:
           type: integer
+      currency:
+          $ref: "#/definitions/Currency"
   CartUpdateRequestData:
     type: object
     properties:

@@ -143,34 +143,86 @@
 
 .bc-welcome__account-reset-content {
 	background-color: var(--color-white);
-	width: 100%;
-	max-width: 500px;
+	width: calc(100vw - 120px);
+	max-width: 780px;
 	position: absolute;
 	top: 50%;
 	left: 50%;
 	transform: translate3d(-50%, -50%, 0);
-	padding: 30px;
+	padding: 40px;
+
+	@media (--viewport-wpadmin) {
+		padding: 80px;
+		width: calc(100vw - 380px);
+		left: 110px;
+		transform: translate3d(0, -50%, 0);
+		height: 100vh;
+		max-height: 260px;
+	}
+
+	@media (min-width: 961px) {
+		left: 190px;
+	}
+
+	@media (--viewport-large) {
+		width: calc(100vw - 520px);
+		left: 260px;
+	}
+
+	@media (--viewport-xlarge) {
+		width: 100%;
+		left: 50%;
+		transform: translate3d(-50%, -50%, 0);
+	}
+
+	> div {
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		flex-wrap: nowrap;
+		align-items: center;
+		justify-content: space-between;
+	}
 }
 
-p.bc-welcome__account-reseet-message {
-	font-size: 16px;
+.bc-welcome-account-reset-icon {
+	font-size: 38px;
+	margin-bottom: 10px;
+	color: var(--color-bc-doger-blue);
+}
+
+p.bc-welcome__account-reset-message {
+	font-size: 32px;
+	text-align: center;
 	margin-top: 0;
+	margin-bottom: 0;
+	line-height: 1em;
+	max-width: 490px;
+
+	@media (--viewport-wpadmin) {
+		font-size: 46px;
+	}
 }
 
 .bc-welcome__account-reset-actions {
 	margin-top: 20px;
+	width: 100%;
 
 	.bc-admin-btn {
-		margin-right: 10px;
+		display: block;
+		margin: 10px auto 0;
+		width: 100%;
+		max-width: 204px;
 	}
 }
 
 .bc-welcome__account-reset-close-button {
 	position: absolute;
 	right: 0;
-	top: 0;
-	font-size: 25px;
+	top: -42px;
+	font-size: 20px;
 	background-color: transparent;
+	color: var(--color-white);
 	border: 0;
 	padding: 8px;
 	z-index: 20;
@@ -217,6 +269,24 @@ p.bc-welcome__account-reseet-message {
 			margin-bottom: 0;
 			margin-right: 10px;
 		}
+	}
+}
+
+.bc-welcome-anchor--startover {
+	border: 0;
+	background: transparent;
+	color: var(--color-bc-doger-blue);
+	text-transform: uppercase;
+	font-weight: 700;
+	opacity: 1;
+	transition: var(--transition-opacity);
+	cursor: pointer;
+	padding-top: 13px;
+	padding-bottom: 12px;
+
+	&:hover,
+	&:focus {
+		opacity: 0.8;
 	}
 }
 

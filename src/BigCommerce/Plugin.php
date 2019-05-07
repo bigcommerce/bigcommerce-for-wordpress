@@ -4,7 +4,7 @@
 namespace BigCommerce;
 
 class Plugin {
-	const VERSION = '2.2.1';
+	const VERSION = '3.0.0';
 
 	protected static $_instance;
 
@@ -143,6 +143,9 @@ class Plugin {
 	public static function activate() {
 		if ( is_network_admin() ) {
 			return; // network activated
+		}
+		if ( ! is_admin() ) {
+			return; // not loaded via a normal admin screen
 		}
 
 		$wp_list_table = _get_list_table( 'WP_Plugins_List_Table' );

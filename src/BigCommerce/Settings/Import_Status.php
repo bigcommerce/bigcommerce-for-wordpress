@@ -7,6 +7,7 @@ namespace BigCommerce\Settings;
 use BigCommerce\Import\Runner\Cron_Runner;
 use BigCommerce\Import\Runner\Status;
 use BigCommerce\Import\Task_Manager;
+use BigCommerce\Post_Types\Queue_Task\Queue_Task;
 
 /**
  * Class Import_Status
@@ -217,7 +218,7 @@ class Import_Status {
 	 */
 	public function cache_queue_size() {
 		$count = $this->get_remaining_in_queue();
-		update_option( self::IMPORT_TOTAL_PRODUCTS, (int) $count );
+		update_option( self::IMPORT_TOTAL_PRODUCTS, $count );
 	}
 
 	/**
@@ -226,7 +227,10 @@ class Import_Status {
 	private function get_remaining_in_queue() {
 		/** @var \wpdb $wpdb */
 		global $wpdb;
-		$count = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->bc_import_queue}" );
+		$count = $wpdb->get_var( $wpdb->prepare(
+			"SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_type=%s AND post_status IN ( 'update', 'delete' )",
+			Queue_Task::NAME
+		) );
 
 		return (int) $count;
 	}

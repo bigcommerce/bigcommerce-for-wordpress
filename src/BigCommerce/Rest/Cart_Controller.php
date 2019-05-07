@@ -340,7 +340,6 @@ class Cart_Controller extends Rest_Controller {
 	 * @return \BigCommerce\Api\v3\Model\Cart|null
 	 */
 	private function add_to_cart( $request ) {
-		$cart = new Cart( $this->cart_api );
 
 		$product_id = $request->get_param( 'product_id' );
 		$quantity   = $request->get_param( 'quantity' );
@@ -367,6 +366,7 @@ class Cart_Controller extends Rest_Controller {
 			}
 		}
 
+		$cart = new Cart( $this->cart_api );
 		return $cart->add_line_item( $product_id, $options, $quantity );
 	}
 

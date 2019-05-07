@@ -1,0 +1,53 @@
+swagger: '2.0'
+info:
+  title: Data Model for BigCommerce's v3 Server-to-Server Abandoned  Cart API
+  version: v0.0.1
+host: "api.bigcommerce.com"
+basePath: "/stores/{store_id}/v3"
+tags:
+  - name: AbandonedCart
+    description: BigCommerce Abandoned Cart API Definition.
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /abandoned_cart/{token}:
+    get:
+      description: Returns abandoned cart id.
+      operationId: recover-cart
+      parameters:
+        - name: token
+          in: path
+          required: true
+          type: string
+          format: UUID
+          description: Unique token.
+      tags:
+        - AbandonedCart
+      responses:
+        200:
+          description: Returns Abandoned Cart Response Object.
+          schema:
+            $ref: "#/definitions/AbandonedCartResponse"
+        404:
+          description: Cart not found.
+definitions:
+# --------------  common   -----------
+  AbandonedCartResponse:
+    type: object
+    properties:
+      meta:
+        type: object
+        description: Empty object.
+      data:
+        type: object
+        items:
+          $ref: "#/definitions/AbandonedCartInfo"
+        description: Contain an AbandonedCartInfo object, which will have a single cart_id identifier .
+  AbandonedCartInfo:
+    type: object
+    properties:
+      cart_id:
+        type: string
+        description: Contains cart_id.

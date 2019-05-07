@@ -100,44 +100,8 @@ class Route implements ArrayAccess
         return self::$getters;
     }
 
-    const TYPE_PRODUCT = 'product';
-    const TYPE_BRAND = 'brand';
-    const TYPE_CATEGORY = 'category';
-    const TYPE_PAGE = 'page';
-    const TYPE_BLOG = 'blog';
-    const TYPE_HOME = 'home';
-    const TYPE_CART = 'cart';
-    const TYPE_CHECKOUT = 'checkout';
-    const TYPE_SEARCH = 'search';
-    const TYPE_ACCOUNT = 'account';
-    const TYPE_LOGIN = 'login';
-    const TYPE_RETURNS = 'returns';
-    const TYPE_STATIC = 'static';
     
 
-    
-    /**
-     * Gets allowable values of the enum
-     * @return string[]
-     */
-    public function getTypeAllowableValues()
-    {
-        return [
-            self::TYPE_PRODUCT,
-            self::TYPE_BRAND,
-            self::TYPE_CATEGORY,
-            self::TYPE_PAGE,
-            self::TYPE_BLOG,
-            self::TYPE_HOME,
-            self::TYPE_CART,
-            self::TYPE_CHECKOUT,
-            self::TYPE_SEARCH,
-            self::TYPE_ACCOUNT,
-            self::TYPE_LOGIN,
-            self::TYPE_RETURNS,
-            self::TYPE_STATIC,
-        ];
-    }
     
 
     /**
@@ -175,10 +139,6 @@ class Route implements ArrayAccess
     public function listInvalidProperties()
     {
         $invalid_properties = [];
-        $allowed_values = ["product", "brand", "category", "page", "blog", "home", "cart", "checkout", "search", "account", "login", "returns", "static"];
-        if (!in_array($this->container['type'], $allowed_values)) {
-            $invalid_properties[] = "invalid value for 'type', must be one of #{allowed_values}.";
-        }
         return $invalid_properties;
     }
 
@@ -190,10 +150,6 @@ class Route implements ArrayAccess
      */
     public function valid()
     {
-        $allowed_values = ["product", "brand", "category", "page", "blog", "home", "cart", "checkout", "search", "account", "login", "returns", "static"];
-        if (!in_array($this->container['type'], $allowed_values)) {
-            return false;
-        }
         return true;
     }
 
@@ -235,10 +191,6 @@ class Route implements ArrayAccess
      */
     public function setType($type)
     {
-        $allowed_values = ['product', 'brand', 'category', 'page', 'blog', 'home', 'cart', 'checkout', 'search', 'account', 'login', 'returns', 'static'];
-        if (!is_null($type) && (!in_array($type, $allowed_values))) {
-            throw new \InvalidArgumentException("Invalid value for 'type', must be one of 'product', 'brand', 'category', 'page', 'blog', 'home', 'cart', 'checkout', 'search', 'account', 'login', 'returns', 'static'");
-        }
         $this->container['type'] = $type;
 
         return $this;

@@ -118,7 +118,7 @@ class Store_Settings implements Import_Processor {
 			return '';
 		}
 
-		return $matches[ 0 ];
+		return $matches[0];
 	}
 
 	private function extract_analytics_code( $settings, $name ) {
@@ -126,8 +126,8 @@ class Store_Settings implements Import_Processor {
 			return '';
 		}
 		foreach ( $settings as $account ) {
-			if ( $account[ 'name' ] == $name ) {
-				return $account[ 'code' ];
+			if ( $account['name'] == $name ) {
+				return $account['code'];
 			}
 		}
 
@@ -141,7 +141,10 @@ class Store_Settings implements Import_Processor {
 	 */
 	private function get_max_integer_units() {
 		global $wpdb;
-		$max_length = $wpdb->get_var( "SELECT CHAR_LENGTH( MAX( FLOOR( calculated_price ) ) ) AS 'max_length' FROM {$wpdb->bc_products}" );
+		$max_length = $wpdb->get_var( $wpdb->prepare(
+			"SELECT CHAR_LENGTH( MAX( FLOOR( meta_value ) ) ) AS max_length FROM {$wpdb->postmeta} WHERE meta_key=%s",
+			Product::PRICE_META_KEY
+		) );
 
 		return min( (int) $max_length, 4 );
 	}

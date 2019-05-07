@@ -340,20 +340,6 @@ definitions:
         type: string
         description: |-
           What type of resource are we routing to?
-        enum:
-        - product
-        - brand
-        - category
-        - page
-        - blog
-        - home
-        - cart
-        - checkout
-        - search
-        - account
-        - login
-        - returns
-        - static
       matching:
         type: string
         description: |-

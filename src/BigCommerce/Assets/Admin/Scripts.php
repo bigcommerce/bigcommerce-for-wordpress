@@ -64,8 +64,8 @@ class Scripts {
 			'wp-components',
 			'bigcommerce-admin-scripts',
 		], $this->version, false );
-		add_action( 'enqueue_block_editor_assets', function() {
-			wp_add_inline_script( 'wp-edit-post', 'window._wpLoadGutenbergEditor.then( window.bigcommerce_gutenberg_config.initPlugins() );' );
+		add_action( 'admin_print_scripts-post.php', function() {
+			wp_add_inline_script( 'wp-edit-post', 'window._wpLoadBlockEditor.then( window.bigcommerce_gutenberg_config.initPlugins() );' );
 		});
 
 		wp_localize_script( 'bigcommerce-admin-scripts', 'bigcommerce_admin_config', $this->config->get_data() );

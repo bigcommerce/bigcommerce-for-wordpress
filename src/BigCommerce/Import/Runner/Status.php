@@ -11,12 +11,12 @@ class Status {
 
 	const NOT_STARTED              = 'not_started';
 	const STARTED                  = 'started';
-	const FETCHING_LISTING_IDS     = 'fetching_listing_ids';
-	const FETCHED_LISTING_IDS      = 'fetched_listing_ids';
+	const FETCHING_LISTINGS        = 'fetching_listings';
+	const FETCHED_LISTINGS         = 'fetched_listings';
 	const INITIALIZING_CHANNEL     = 'initializing_channel';
 	const INITIALIZED_CHANNEL      = 'initialized_channel';
-	const FETCHING_PRODUCT_IDS     = 'fetching_product_ids';
-	const FETCHED_PRODUCT_IDS      = 'fetched_product_ids';
+	const FETCHING_PRODUCTS        = 'fetching_products';
+	const FETCHED_PRODUCTS         = 'fetched_products';
 	const MARKING_DELETED_PRODUCTS = 'marking_deleted_products';
 	const MARKED_DELETED_PRODUCTS  = 'marked_deleted_products';
 	const PROCESSING_QUEUE         = 'processing_queue';

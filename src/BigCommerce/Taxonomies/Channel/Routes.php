@@ -1,7 +1,7 @@
 <?php
 
 
-namespace BigCommerce\Merchant;
+namespace BigCommerce\Taxonomies\Channel;
 
 
 use BigCommerce\Api\v3\Api\SitesApi;
@@ -14,7 +14,6 @@ use BigCommerce\Pages\Cart_Page;
 use BigCommerce\Pages\Login_Page;
 use BigCommerce\Pages\Shipping_Returns_Page;
 use BigCommerce\Post_Types\Product\Product;
-use BigCommerce\Settings\Sections\Channels;
 use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
 
@@ -32,7 +31,7 @@ class Routes {
 	private $sites;
 
 	public function __construct( SitesApi $sites_api ) {
-		$this->sites    = $sites_api;
+		$this->sites = $sites_api;
 	}
 
 	/**
@@ -60,11 +59,33 @@ class Routes {
 	 * @return void Set new routes whenever any of the route list element gets updated
 	 */
 	public function update_routes() {
-		$channel_id = get_option( Channels::CHANNEL_ID );
-
-		if (!empty($channel_id)) {
+		foreach ( $this->get_active_channel_ids() as $channel_id ) {
 			$this->set_routes( $channel_id );
 		}
+	}
+
+	/**
+	 * Get the IDs of all active channels (primary or connected)
+	 *
+	 * @return int[]
+	 */
+	private function get_active_channel_ids() {
+		/** @var \WP_Term[] $channels */
+		$channels = get_terms( [
+			'taxonomy'   => Channel::NAME,
+			'hide_empty' => false,
+			'meta_query' => [
+				[
+					'key'     => Channel::STATUS,
+					'value'   => [ Channel::STATUS_PRIMARY, Channel::STATUS_CONNECTED ],
+					'compare' => 'IN',
+				],
+			],
+		] );
+
+		return array_filter( array_map( function ( $term ) {
+			return (int) get_term_meta( $term->term_id, Channel::CHANNEL_ID, true );
+		}, $channels ) );
 	}
 
 	/**
@@ -72,17 +93,15 @@ class Routes {
 	 * @action update_option_home
 	 */
 	public function update_site_home() {
-		$channel_id = get_option( Channels::CHANNEL_ID );
-
-		if (!empty($channel_id)) {
+		foreach ( $this->get_active_channel_ids() as $channel_id ) {
 			$body = new Site( [
 				'url' => untrailingslashit( home_url() ),
 			] );
 			try {
-				$site_id  = $this->get_site_id( $channel_id );
+				$site_id = $this->get_site_id( $channel_id );
 				$this->sites->putSite( $site_id, $body );
 			} catch ( ApiException $e ) {
-				do_action('bigcommerce/update_site_home/error');
+				do_action( 'bigcommerce/update_site_home/error' );
 			}
 		}
 	}
@@ -91,29 +110,25 @@ class Routes {
 	 *
 	 * @action post_updated
 	 *
-	 * @param int     $post_id     Post ID.
-	 * @param \WP_Post $new_post    The Post Object
-	 * @param \WP_Post $old_post    The Previous Post Object
+	 * @param int      $post_id  Post ID.
+	 * @param \WP_Post $new_post The Post Object
+	 * @param \WP_Post $old_post The Previous Post Object
 	 */
-	function update_route_permalink($post_id, $new_post, $old_post) {
+	function update_route_permalink( $post_id, $new_post, $old_post ) {
 
 		//check if post slug has changed
 		if ( $new_post->post_name == $old_post->post_name ) {
-			return ; 
+			return;
 		}
 
 		$routes_posts   = [];
-		$routes_posts[] = get_option(Cart_Page::NAME);
-		$routes_posts[] = get_option(Login_Page::NAME);
-		$routes_posts[] = get_option(Account_Page::NAME);
-		$routes_posts[] = get_option(Shipping_Returns_Page::NAME);
+		$routes_posts[] = get_option( Cart_Page::NAME );
+		$routes_posts[] = get_option( Login_Page::NAME );
+		$routes_posts[] = get_option( Account_Page::NAME );
+		$routes_posts[] = get_option( Shipping_Returns_Page::NAME );
 
-		if (in_array($post_id, $routes_posts)){
-			$channel_id = get_option( Channels::CHANNEL_ID );
-
-			if (!empty($channel_id)) {
-				$this->set_routes( $channel_id );
-			}
+		if ( in_array( $post_id, $routes_posts ) ) {
+			$this->update_routes();
 		}
 	}
 

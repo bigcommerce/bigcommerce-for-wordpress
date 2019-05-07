@@ -1,6 +1,6 @@
 {
     "name": "moderntribe/bigcommerce-api-php-v3",
-    "version": "1.8.0",
+    "version": "1.12.0",
     "description": "",
     "keywords": [
         "swagger",
@@ -9,7 +9,7 @@
         "api"
     ],
     "homepage": "https://developer.bigcommerce.com/api/v3/",
-    "license": "Apache v2",
+    "license": "Apache-2.0",
     "authors": [
         {
             "name": "Bigcommerce",
