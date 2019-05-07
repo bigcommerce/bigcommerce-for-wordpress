@@ -43,6 +43,7 @@ class CartCreateRequestData implements ArrayAccess
     protected static $swaggerTypes = [
         'customer_id' => 'int',
         'channel_id' => 'int',
+        'currency' => '\BigCommerce\Api\v3\Model\Currency',
         'line_items' => '\BigCommerce\Api\v3\Model\LineItemRequestData[]',
         'gift_certificates' => '\BigCommerce\Api\v3\Model\LineItemGiftCertificateRequestData[]'
     ];
@@ -59,6 +60,7 @@ class CartCreateRequestData implements ArrayAccess
     protected static $attributeMap = [
         'customer_id' => 'customer_id',
         'channel_id' => 'channel_id',
+        'currency' => 'currency',
         'line_items' => 'line_items',
         'gift_certificates' => 'gift_certificates'
     ];
@@ -70,6 +72,7 @@ class CartCreateRequestData implements ArrayAccess
     protected static $setters = [
         'customer_id' => 'setCustomerId',
         'channel_id' => 'setChannelId',
+        'currency' => 'setCurrency',
         'line_items' => 'setLineItems',
         'gift_certificates' => 'setGiftCertificates'
     ];
@@ -81,6 +84,7 @@ class CartCreateRequestData implements ArrayAccess
     protected static $getters = [
         'customer_id' => 'getCustomerId',
         'channel_id' => 'getChannelId',
+        'currency' => 'getCurrency',
         'line_items' => 'getLineItems',
         'gift_certificates' => 'getGiftCertificates'
     ];
@@ -118,6 +122,7 @@ class CartCreateRequestData implements ArrayAccess
     {
         $this->container['customer_id'] = array_key_exists('customer_id', $data) ? $data['customer_id'] : null;
         $this->container['channel_id'] = array_key_exists('channel_id', $data) ? $data['channel_id'] : null;
+        $this->container['currency'] = array_key_exists('currency', $data) ? $data['currency'] : null;
         $this->container['line_items'] = array_key_exists('line_items', $data) ? $data['line_items'] : null;
         $this->container['gift_certificates'] = array_key_exists('gift_certificates', $data) ? $data['gift_certificates'] : null;
     }
@@ -192,6 +197,27 @@ class CartCreateRequestData implements ArrayAccess
     public function setChannelId($channel_id)
     {
         $this->container['channel_id'] = $channel_id;
+
+        return $this;
+    }
+
+    /**
+     * Gets currency
+     * @return \BigCommerce\Api\v3\Model\Currency
+     */
+    public function getCurrency()
+    {
+        return $this->container['currency'];
+    }
+
+    /**
+     * Sets currency
+     * @param \BigCommerce\Api\v3\Model\Currency $currency
+     * @return $this
+     */
+    public function setCurrency($currency)
+    {
+        $this->container['currency'] = $currency;
 
         return $this;
     }

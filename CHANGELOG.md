@@ -1,5 +1,109 @@
 # Changelog
 
+## [3.0.0]
+
+### Added
+- Added support for connecting to multiple BigCommerce channels. Since the
+  plugin can't know the particular use case a store has for using multiple
+  channels, we provide the base framework for site developers to extend
+  in a way that makes sense for their business. Multi-channel support
+  requires opt-in using a filter:
+  ```
+  add_filter( 'bigcommerce/channels/enable-multi-channel', '__return_true' );
+  ```
+  This will enable an admin to connect to multiple channels on the settings
+  screen. The primary channel will still be used for all front-end requests
+  unless filtered to use a different channel. Example:
+  ```
+  add_filter( 'bigcommerce/channel/current', function( $channel ) {
+    // do some logic here to determine what channel to use
+    return get_term( 697, \BigCommerce\Taxonomies\Channel\Channel::NAME );
+  });
+  ```
+- Created a taxonomy for storing channels. Most stores will only have one,
+  but a store with multi-channel enabled may have many. The taxonomy's UI
+  is hidden, and it is only exposed during onboarding (when selecting the
+  initial channel) and in the Channel Settings section when multi-channel
+  is enabled. All products are associated with a channel term on import.
+
+### Changed
+- Updated the position and design of the start-over button and confirmation
+  message for the on-boarding process.
+- Fixed display of tax and total price in order history when an order was
+  paid for entirely with store credit. It should no longer show a negative
+  subtotal, and the grand total should properly display as $0.00 (formatted
+  appropriately for the local currency).
+- Currency can now be filtered at any point in the request. Previously,
+  the currency would be locked in place when creating the formatter
+  in the Currency service provider. The service provider will now use
+  a factory method to return a formatter based on the current, possibly
+  filtered, value of the `\BigCommerce\Settings\Sections\Currency::CURRENCY_CODE`
+  option. Use the `pre_option_bigcommerce_currency_code` filter to adjust
+  the currency in use at any given point in the request.
+- The import process has changed to more efficiently support imports when
+  connected to multiple channels. After fetching listings for each channel,
+  products will be fetched from the Catalog API _once_. When fetching products
+  in bulk, we now also fetch options and modifiers, taking advantage of
+  new capabilities of the API. This limits the bulk import to 10 products
+  per request, but saves two additional queries per product later in the import.
+  The tasks to fetch listings and initialize channels now have a suffix
+  of the channel ID on the string used to trigger the task status.
+- The import queue is now stored as hidden posts in the `wp_posts` table,
+  using the post type `bigcommerce_task`.
+- Method signature for the `\BigCommerce\Import\Importers\Products\Product_Builder`
+  constructor has changed. It now expects a \WP_Term representing the channel
+  the product belongs to.
+- Method signature for the `\BigCommerce\Import\Importers\Products\Product_Importer`
+  constructor has changed. It now expects a \WP_Term representing the channel
+  the product belongs to instead of a channel ID and an instance of the Channels API.
+- Method signature for the `\BigCommerce\Import\Importers\Products\Product_Saver`
+  constructor has changed. It now expects a \WP_Term representing the channel
+  the product belongs to.
+- The order of operations in `\BigCommerce\Import\Importers\Products\Product_Saver`
+  has changed to assign terms to a product before setting its post data
+  or post meta. This is to support multiple products with the same slug
+  but in different channels.
+- Method signature for the `\BigCommerce\Import\Importers\Products\Product_Strategy_Factory`
+  constructor has changed. It now expects a \WP_Term representing the channel
+  the product belongs to.
+- Product price ranges are now calculated on import and stored in post meta
+  rather than relying on values from the bc_variants table on render.
+- Moved `\BigCommerce\Import\Review_Builder` to
+  `\BigCommerce\Import\Importers\Reviews\Review_Builder`.
+- Moved `\BigCommerce\Import\Review_Fetcher` to
+  `\BigCommerce\Import\Importers\Reviews\Review_Fetcher`.
+- Method signature for the `\BigCommerce\Import\Processors\Channel_Initializer`
+  constructor has changed. It now expects a \WP_Term representing the channel
+  to initialize.
+- Renamed `\BigCommerce\Import\Processors\Listing_ID_Fetcher` to
+  `\BigCommerce\Import\Processors\Listing_Fetcher` and changed its constructor
+  signature to require a \WP_Term representing the channel for the listings.
+- Renamed `\BigCommerce\Import\Processors\Product_ID_Fetcher` to
+  `\BigCommerce\Import\Processors\Product_Data_Fetcher`.
+- Changed the method signature for the `\BigCommerce\Import\Processors\Queue_Runner`
+  constructor. It no longer requires an instance of the Channels API.
+- Moved `\BigCommerce\Merchant\Routes` to `\BigCommerce\Taxonomies\Channels\Routes`
+
+### Fixed
+- Updated registration of block editor plugins to work with recent
+  versions of Gutenberg.
+  
+### Removed
+- Removed the `bc_products` table. All queries that used this table have been
+  updated to use post meta.
+- Removed the `bc_variants` table. All queries that used this table have been
+  updated to use post meta.
+- Removed the `bc_import_queue` table. All import tasks have been moved to
+  the `wp_posts` table.
+- Removed the `bigcommerce/pricing/channel_id` filter. The pricing API request
+  will now derive the value from the current channel.
+- Removed the `bigcommerce/pricing/currency_code` filter. The pricing API
+  request will now derive the value from the `bigcommerce_currency_code` option.
+
+### Deprecated
+- The `post_id` field in the `bc_reviews` table is no longer used and
+  will be removed in a future release.
+
 ## [2.2.1]
 
 ### Changed
@@ -476,6 +580,8 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[3.0.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/2.2.1...3.0.0
+[2.2.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/2.2.0...2.2.1
 [2.2.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/2.1.0...2.2.0
 [2.1.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/2.0.1...2.1.0
 [2.0.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/2.0.0...2.0.1

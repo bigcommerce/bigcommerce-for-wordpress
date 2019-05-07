@@ -13,6 +13,7 @@ import dynamicStateField from './dynamicStateField';
 import diagnostics from './diagnostics';
 import accountReset from './account-reset';
 import navMenuSetup from './nav-menus';
+import multiChannel from './multi-channel';
 
 const init = () => {
 	settings();
@@ -25,6 +26,7 @@ const init = () => {
 	diagnostics();
 	accountReset();
 	navMenuSetup();
+	multiChannel();
 };
 
 export default init;

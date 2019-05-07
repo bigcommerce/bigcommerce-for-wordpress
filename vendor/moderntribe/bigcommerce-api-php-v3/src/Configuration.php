@@ -63,6 +63,20 @@ class Configuration
     protected $accessToken = '';
 
     /**
+     * Client ID for OAuth
+     *
+     * @var string
+     */
+    protected $clientId = '';
+
+    /**
+     * Client Secret for OAuth
+     *
+     * @var string
+     */
+    protected $clientSecret = '';
+
+    /**
      * Username for HTTP basic authentication
      *
      * @var string
@@ -218,6 +232,52 @@ class Configuration
     }
 
     /**
+     * Sets the Client ID for OAuth
+     *
+     * @param string $clientId Client ID for OAuth
+     *
+     * @return Configuration
+     */
+    public function setClientId($clientId)
+    {
+        $this->clientId = $clientId;
+        return $this;
+    }
+
+    /**
+     * Gets the Client ID for OAuth
+     *
+     * @return string Client ID for OAuth
+     */
+    public function getClientId()
+    {
+        return $this->clientId;
+    }
+
+    /**
+     * Sets the client secret for OAuth
+     *
+     * @param string $clientSecret Client secret for OAuth
+     *
+     * @return Configuration
+     */
+    public function setClientSecret($clientSecret)
+    {
+        $this->clientSecret = $clientSecret;
+        return $this;
+    }
+
+    /**
+     * Gets the client secret for OAuth
+     *
+     * @return string Client secret for OAuth
+     */
+    public function getClientSecret()
+    {
+        return $this->clientSecret;
+    }
+
+    /**
      * Sets the username for HTTP basic authentication
      *
      * @param string $username Username for HTTP basic authentication
@@ -288,7 +348,10 @@ class Configuration
      */
     public function getDefaultHeaders()
     {
-        return $this->defaultHeaders;
+        return array_merge( $this->defaultHeaders, [
+            'X-Auth-Client' => $this->clientId,
+            'X-Auth-Token'  => $this->accessToken,
+        ] );
     }
 
     /**

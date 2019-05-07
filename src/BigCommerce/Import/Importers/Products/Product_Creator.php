@@ -8,10 +8,17 @@ use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Import\Importers\Products\Product_Builder;
 
 class Product_Creator extends Product_Saver {
+	public function do_import() {
+		$this->create_default_post();
+		return parent::do_import();
+	}
 
-	protected function save_wp_post( Product_Builder $builder ) {
-		$postarr       = $this->get_post_array( $builder );
-		$this->post_id = wp_insert_post( $postarr );
+	private function create_default_post() {
+		$this->post_id = wp_insert_post([
+			'post_title'  => __( 'Auto Draft' ),
+			'post_type'   => Product::NAME,
+			'post_status' => 'auto-draft',
+		]);
 	}
 
 	/**
@@ -28,30 +35,6 @@ class Product_Creator extends Product_Saver {
 		}
 
 		return $postarr;
-	}
-
-	protected function save_product_record( Product_Builder $builder ) {
-		/** @var \wpdb $wpdb */
-		global $wpdb;
-
-		// avoid errors from stray data that may have been left by careless DB admins (e.g., manually deleted posts)
-		$wpdb->delete( $wpdb->bc_products, [ 'bc_id' => $this->product[ 'id' ] ], [ '%d' ] );
-		$wpdb->delete( $wpdb->bc_variants, [ 'bc_id' => $this->product[ 'id' ] ], [ '%d' ] );
-
-		$product_array = $builder->build_product_array();
-
-		$product_array[ 'post_id' ] = $this->post_id;
-		$wpdb->insert( $wpdb->bc_products, $product_array );
-	}
-
-	protected function save_product_variants( Product_Builder $builder ) {
-		/** @var \wpdb $wpdb */
-		global $wpdb;
-
-		$variants = $builder->build_variants();
-		foreach ( $variants as $variant ) {
-			$wpdb->insert( $wpdb->bc_variants, $variant );
-		}
 	}
 
 	protected function send_notifications() {

@@ -1,7 +1,9 @@
 <?php
 
 
-namespace BigCommerce\Import;
+namespace BigCommerce\Import\Importers\Reviews;
+
+use BigCommerce\Import\Importers\Record_Builder;
 
 class Review_Builder extends Record_Builder {
 	private $data;
@@ -11,15 +13,14 @@ class Review_Builder extends Record_Builder {
 	}
 
 	/**
-	 * @param int $post_id    The ID of the WordPress post for the product
 	 * @param int $product_id The ID of the BigCommerce product
 	 *
 	 * @return array
 	 */
-	public function build_review_array( $post_id, $product_id ) {
+	public function build_review_array( $product_id ) {
 		$data = [
 			'review_id'     => $this->sanitize_int( $this->data[ 'id' ] ),
-			'post_id'       => $this->sanitize_int( $post_id ),
+			'post_id'       => 0, // removed in version 3.0, but left for schema backwards compat
 			'bc_id'         => $this->sanitize_int( $product_id ),
 			'title'         => wp_strip_all_tags( $this->sanitize_string( $this->data[ 'title' ] ) ),
 			'content'       => wp_strip_all_tags( $this->sanitize_string( $this->data[ 'text' ] ) ),

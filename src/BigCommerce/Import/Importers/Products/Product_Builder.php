@@ -9,14 +9,16 @@ use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Api\v3\Model;
 use BigCommerce\Api\v3\Model\Modifier;
 use BigCommerce\Api\v3\Model\ProductImage;
+use BigCommerce\Api\v3\ObjectSerializer;
 use BigCommerce\Import\Image_Importer;
 use BigCommerce\Import\Mappers\Brand_Mapper;
 use BigCommerce\Import\Mappers\Product_Category_Mapper;
-use BigCommerce\Import\Record_Builder;
+use BigCommerce\Import\Importers\Record_Builder;
 use BigCommerce\Import\Import_Strategy;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Taxonomies\Availability\Availability;
 use BigCommerce\Taxonomies\Brand\Brand;
+use BigCommerce\Taxonomies\Channel\Channel;
 use BigCommerce\Taxonomies\Condition\Condition;
 use BigCommerce\Taxonomies\Flag\Flag;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
@@ -35,18 +37,24 @@ class Product_Builder extends Record_Builder {
 	 * @var CatalogApi
 	 */
 	private $catalog;
+	/**
+	 * @var \WP_Term
+	 */
+	private $channel_term;
 
 	/**
 	 * Product_Builder constructor.
 	 *
 	 * @param Model\Product $product
 	 * @param Model\Listing $listing
+	 * @param \WP_Term      $channel_term
 	 * @param CatalogApi    $api
 	 */
-	public function __construct( Model\Product $product, Model\Listing $listing, CatalogApi $api ) {
+	public function __construct( Model\Product $product, Model\Listing $listing, \WP_Term $channel_term, CatalogApi $api ) {
 		$this->product = $product;
 		$this->catalog = $api;
 		$this->listing = $listing;
+		$this->channel_term = $channel_term;
 	}
 
 	public function build_post_array() {
@@ -182,6 +190,7 @@ class Product_Builder extends Record_Builder {
 		// term IDs
 		$terms[ Product_Category::NAME ] = array_filter( $this->map_product_categories( $this->product[ 'categories' ] ) );
 		$terms[ Brand::NAME ]            = array_filter( $this->map_brand( [ $this->product[ 'brand_id' ] ] ) );
+		$terms[ Channel::NAME ]          = [ (int) $this->channel_term->term_id ];
 
 		// strings
 		$terms[ Product_Type::NAME ] = [ $this->product[ 'type' ] ];
@@ -250,13 +259,13 @@ class Product_Builder extends Record_Builder {
 	}
 
 	private function map_product_categories( array $bc_category_ids ) {
-		$mapper = new Product_Category_Mapper( $this->catalog );
+		$mapper = new Product_Category_Mapper();
 
 		return array_map( [ $mapper, 'map' ], $bc_category_ids );
 	}
 
 	private function map_brand( array $bc_brand_ids ) {
-		$mapper = new Brand_Mapper( $this->catalog );
+		$mapper = new Brand_Mapper();
 
 		return array_map( [ $mapper, 'map' ], $bc_brand_ids );
 	}
@@ -321,11 +330,14 @@ class Product_Builder extends Record_Builder {
 		$meta = [];
 
 		$meta[ Product::IMPORTER_VERSION_META_KEY ] = Import_Strategy::VERSION;
-		$meta[ Product::BIGCOMMERCE_ID ]            = $this->sanitize_int( $this->product[ 'id' ] );
-		$meta[ Product::SKU ]                       = $this->sanitize_string( $this->product[ 'sku' ] );
+		$meta[ Product::BIGCOMMERCE_ID ]            = $this->sanitize_int( $this->product['id'] );
+		$meta[ Product::SKU ]                       = $this->sanitize_string( $this->product['sku'] );
 		$meta[ Product::RATING_META_KEY ]           = $this->get_avg_rating();
-		$meta[ Product::SALES_META_KEY ]            = $this->sanitize_int( $this->product[ 'total_sold' ] );
-		$meta[ Product::PRICE_META_KEY ]            = $this->sanitize_double( $this->product[ 'calculated_price' ] );
+		$meta[ Product::SALES_META_KEY ]            = $this->sanitize_int( $this->product['total_sold'] );
+		$meta[ Product::PRICE_META_KEY ]            = $this->sanitize_double( $this->product['calculated_price'] );
+		$meta[ Product::INVENTORY_META_KEY ]        = $this->sanitize_int( $this->product['inventory_level'] );
+		$meta[ Product::PRICE_RANGE_META_KEY ]      = $this->calculate_price_ranges();
+		$meta[ Product::DATA_HASH_META_KEY ]        = self::hash( $this->product, $this->listing );
 
 		return $meta;
 	}
@@ -339,5 +351,43 @@ class Product_Builder extends Record_Builder {
 		}
 
 		return $sum / $count;
+	}
+
+	private function calculate_price_ranges() {
+		$variants = array_map( function ( $data ) {
+			$variant = [
+				'price'            => $this->sanitize_double( $data['price'] ),
+				'calculated_price' => $this->sanitize_double( $data['calculated_price'] ),
+			];
+
+			return $variant;
+		}, (array) $this->product['variants'] );
+
+		$prices   = wp_list_pluck( $variants, 'price' );
+		$prices[] = $this->product['price'];
+		$prices   = array_filter( $prices );
+
+		$calculated   = wp_list_pluck( $variants, 'calculated_price' );
+		$calculated[] = $this->product['calculated_price'];
+		$calculated   = array_filter( $calculated );
+
+		$ranges = [
+			'price'      => [
+				'max' => max( $prices ),
+				'min' => min( $prices ),
+			],
+			'calculated' => [
+				'max' => max( $calculated ),
+				'min' => min( $calculated ),
+			],
+		];
+
+		return $ranges;
+	}
+
+	public static function hash( Model\Product $product, Model\Listing $listing ) {
+		$product_string = json_encode( ObjectSerializer::sanitizeForSerialization( $product ) );
+		$listing_string = json_encode( ObjectSerializer::sanitizeForSerialization( $listing ) );
+		return md5( $product_string . $listing_string );
 	}
 }

@@ -3,51 +3,42 @@
 
 namespace BigCommerce\Schema;
 
-
+/**
+ * Class Products_Table
+ *
+ * @deprecated since 3.0. Product data stored in post meta.
+ */
 class Products_Table extends Table_Maker {
 	const NAME = 'bc_products';
 
-	protected $schema_version = '0.13.0';
+	protected $schema_version = '3.0-dev1';
 
 	protected $tables = [ self::NAME ];
 
-	protected function get_table_definition( $table ) {
-
-		global $wpdb;
-		$table_name       = $wpdb->$table;
-		$charset_collate  = $wpdb->get_charset_collate();
-		switch ( $table ) {
-			case self::NAME:
-				return "CREATE TABLE {$table_name} (
-				        post_id BIGINT(20) unsigned NOT NULL,
-				        bc_id BIGINT(20) unsigned NOT NULL,
-				        listing_id BIGINT(20) unsigned NOT NULL DEFAULT 0,
-				        is_featured TINYINT DEFAULT 0,
-				        sku VARCHAR(255),
-				        upc VARCHAR(255),
-				        mpn VARCHAR(255),
-				        gtin VARCHAR(255),
-				        weight DOUBLE,
-				        width DOUBLE,
-				        depth DOUBLE,
-				        height DOUBLE,
-				        price DOUBLE,
-				        cost_price DOUBLE,
-				        retail_price DOUBLE,
-				        sale_price DOUBLE,
-				        product_tax_code VARCHAR(255) DEFAULT '',
-				        calculated_price DOUBLE,
-				        inventory_level BIGINT,
-				        inventory_tracking ENUM('none', 'product', 'variant'),
-				        PRIMARY KEY  (post_id),
-				        KEY bc_id (bc_id),
-				        KEY listing_id (listing_id),
-				        KEY is_featured (is_featured),
-				        KEY sku (sku(50)),
-				        KEY calculated_price (calculated_price),
-				        KEY sale_price (sale_price),
-				        KEY inventory (inventory_tracking,inventory_level)
-				        ) $charset_collate";
+	/**
+	 * Override for the table registration,
+	 * as it was removed in version 3.0
+	 *
+	 * @return void
+	 */
+	public function register_tables() {
+		// drop the tables
+		if ( $this->schema_update_required() ) {
+			foreach ( $this->tables as $table ) {
+				$this->drop_table( $table );
+			}
+			$this->mark_schema_update_complete();
 		}
+	}
+
+	private function drop_table( $table ) {
+		/** @var \wpdb $wpdb */
+		global $wpdb;
+		$blog_table = $wpdb->prefix . $table;
+		$wpdb->query( "DROP TABLE IF EXISTS `$blog_table`" );
+	}
+
+	protected function get_table_definition( $table ) {
+		return '';
 	}
 }

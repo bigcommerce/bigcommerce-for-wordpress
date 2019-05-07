@@ -236,10 +236,12 @@
 
 	.form-table {
 
-		p.description {
+		p.description,
+		span.description {
 			color: var(--color-grey-dark);
 			font-size: 0.857em;
 			font-style: italic;
+			display: block;
 		}
 	}
 }
@@ -388,4 +390,95 @@
 	@media (--viewport-wpadmin) {
 		margin-top: 86px;
 	}
+}
+
+.bc-settings-section--channel {
+
+	[data-js="bc-channel-action"] {
+		margin-top: 6px;
+	}
+
+	.bigcommerce-channel {
+		margin-top: 8px;
+
+		&:first-child {
+			margin-top: 0;
+		}
+	}
+
+	.bigcommerce-channel--connected {
+		margin-top: 20px;
+	}
+
+	.bigcommerce-channel-action {
+		text-decoration: none;
+		margin-left: 6px;
+
+		&.disabled {
+			cursor: not-allowed;
+			opacity: 0.8;
+			color: var(--color-bc-grey);
+
+			&:hover,
+			&:focus {
+				color: var(--color-bc-grey);
+			}
+		}
+
+		&:after {
+			content: '|';
+			font-size: 1.2em;
+			margin-left: 9px;
+			color: var(--color-bc-black);
+		}
+
+		&:only-child,
+		&:last-child,
+		&.bigcommerce-cancel-rename-channel,
+		&.bigcommerce-cancel-new-channel {
+
+			&:after {
+				content: '';
+			}
+		}
+	}
+
+	.bigcommerce-channel-action-rename {
+
+		i:before {
+			content: var(--icon-bc-product_reviews);
+		}
+	}
+
+	.bigcommerce-channel-action-disconnect {
+
+		i:before {
+			content: var(--icon-bc-minus);
+		}
+	}
+
+	.bigcommerce-channel-action-promote {
+
+		i:before {
+			content: var(--icon-bc-arrow-up);
+		}
+	}
+
+	.bigcommerce-channel-action-connect {
+
+		i:before {
+			content: var(--icon-bc-plus);
+		}
+	}
+
+	.bigcommerce-channel-action-create {
+		margin-left: 0;
+		font-size: 1.2em;
+	}
+}
+
+.bigcommerce-channel-create {
+	margin-top: 10px;
+	border-top: 1px solid var(--color-bc-light-grey);
+	padding-top: 10px;
 }

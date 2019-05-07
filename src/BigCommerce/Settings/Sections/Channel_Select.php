@@ -10,18 +10,10 @@ use BigCommerce\Api\v3\Model\Channel;
 use BigCommerce\Settings\Screens\Connect_Channel_Screen;
 
 class Channel_Select extends Settings_Section {
-	const NAME        = 'channel_select';
-	const NEW_CHANNEL = 'create';
-	const NEW_NAME    = 'bigcommerce_new_channel_name';
-
-	/**
-	 * @var ChannelsApi
-	 */
-	private $api;
-
-	public function __construct( ChannelsApi $api ) {
-		$this->api = $api;
-	}
+	const NAME         = 'channel_select';
+	const CHANNEL_TERM = 'bigcommerce_channel_term_id';
+	const NEW_CHANNEL  = 'create';
+	const NEW_NAME     = 'bigcommerce_new_channel_name';
 
 	public function register_settings_section() {
 
@@ -34,7 +26,7 @@ class Channel_Select extends Settings_Section {
 
 		register_setting(
 			Connect_Channel_Screen::NAME,
-			Channels::CHANNEL_ID
+			self::CHANNEL_TERM
 		);
 		register_setting(
 			Connect_Channel_Screen::NAME,
@@ -43,7 +35,7 @@ class Channel_Select extends Settings_Section {
 		);
 
 		add_settings_field(
-			Channels::CHANNEL_ID,
+			self::CHANNEL_TERM,
 			esc_html( __( 'Select Channel', 'bigcommerce' ) ),
 			[ $this, 'render_channel_select_field' ],
 			Connect_Channel_Screen::NAME,
@@ -73,30 +65,25 @@ class Channel_Select extends Settings_Section {
 			array_unshift( $options, [ 'id' => 0, 'name' => __( 'Select a channel', 'bigcommerce' ) ] );
 		}
 		$options = array_map( function ( $channel ) use ( $selected ) {
-			return sprintf( '<option value="%s" %s>%s</option>', $channel[ 'id' ], selected( $channel[ 'id' ], $selected, false ), esc_html( $channel[ 'name' ] ) );
+			return sprintf( '<option value="%s" %s>%s</option>', $channel['id'], selected( $channel['id'], $selected, false ), esc_html( $channel['name'] ) );
 		}, $options );
-		printf( '<p><select name="%s" class="regular-text" data-js="bc-settings__channel-select">%s</select></p>', esc_attr( Channels::CHANNEL_ID ), implode( $options ) );
+		printf( '<p><select name="%s" class="regular-text" data-js="bc-settings__channel-select">%s</select></p>', esc_attr( self::CHANNEL_TERM ), implode( $options ) );
 		do_action( 'bigcommerce/settings/render/channel_select' );
 	}
 
 	private function get_channel_list() {
-		try {
-			$channels = $this->api->listChannels()->getData();
-		} catch ( ApiException $e ) {
-			$channels = [];
-		}
-		$channels = array_filter( $channels, function ( Channel $channel ) {
-			return $channel->getPlatform() === "wordpress";
-		} );
-		$list     = array_map( function ( Channel $channel ) {
+		$terms = get_terms( [
+			'taxonomy'   => \BigCommerce\Taxonomies\Channel\Channel::NAME,
+			'hide_empty' => false,
+			'orderby'    => 'name',
+			'order'      => 'ASC',
+		] );
+		$list  = array_map( function ( \WP_Term $channel ) {
 			return [
-				'id'   => $channel->getId(),
-				'name' => $channel->getName(),
+				'id'   => $channel->term_id,
+				'name' => $channel->name,
 			];
-		}, $channels );
-		usort( $list, function ( $a, $b ) {
-			return strcmp( $a[ 'name' ], $b[ 'name' ] );
-		} );
+		}, $terms );
 
 		return $list;
 	}

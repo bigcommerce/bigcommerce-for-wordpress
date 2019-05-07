@@ -8,10 +8,14 @@ use BigCommerce\Accounts\Login;
 use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api\v3\Api\CartApi;
 use BigCommerce\Api\v3\Model\CartRequestData;
+use BigCommerce\Api\v3\Model\Currency;
 use BigCommerce\Api\v3\Model\LineItemGiftCertificateRequestData;
 use BigCommerce\Api\v3\Model\LineItemRequestData;
 use BigCommerce\Api\v3\Model\ProductOptionSelection;
+use BigCommerce\Exceptions\Channel_Not_Found_Exception;
 use BigCommerce\Settings;
+use BigCommerce\Taxonomies\Channel\Channel;
+use BigCommerce\Taxonomies\Channel\Connections;
 use BigCommerce\Util\Cart_Item_Iterator;
 
 class Cart {
@@ -154,9 +158,13 @@ class Cart {
 			if ( $customer_id ) {
 				$request->setCustomerId( $customer_id );
 			}
-			$channel_id = (int) get_option( Settings\Sections\Channels::CHANNEL_ID, 0 );
+			$channel_id = $this->get_channel_id();
 			if ( $channel_id ) {
 				$request->setChannelId( $channel_id );
+			}
+			$currency = $this->get_currency();
+			if ( $currency ) {
+				$request->setCurrency( new Currency( [ 'code' => $currency ] ) );
 			}
 			try {
 				$cart    = $this->api->cartsPost( $request )->getData();
@@ -265,7 +273,7 @@ class Cart {
 		} catch ( ApiException $e ) {
 			return '';
 		}
-		$checkout_url = $redirects[ 'checkout_url' ];
+		$checkout_url = $redirects['checkout_url'];
 		$checkout_url = apply_filters( 'bigcommerce/checkout/url', $checkout_url );
 
 		return $checkout_url;
@@ -281,9 +289,24 @@ class Cart {
 		} catch ( ApiException $e ) {
 			return '';
 		}
-		$checkout_url = $redirects[ 'embedded_checkout_url' ];
+		$checkout_url = $redirects['embedded_checkout_url'];
 		$checkout_url = apply_filters( 'bigcommerce/checkout/url', $checkout_url );
 
 		return $checkout_url;
+	}
+
+	private function get_channel_id() {
+		try {
+			$connections = new Connections();
+			$current     = $connections->current();
+
+			return (int) get_term_meta( $current->term_id, Channel::CHANNEL_ID, true );
+		} catch ( Channel_Not_Found_Exception $e ) {
+			return 0;
+		}
+	}
+
+	private function get_currency() {
+		return get_option( Settings\Sections\Currency::CURRENCY_CODE, 'USD' );
 	}
 }

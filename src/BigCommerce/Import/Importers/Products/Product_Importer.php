@@ -29,37 +29,30 @@ class Product_Importer {
 	private $catalog_api;
 
 	/**
-	 * @var ChannelsApi
+	 * @var \WP_Term
 	 */
-	private $channels_api;
-
-	/**
-	 * @var int
-	 */
-	private $channel_id;
+	private $channel_term;
 
 	/**
 	 * Product_Importer constructor.
 	 *
-	 * @param Product         $product
-	 * @param Listing         $listing
-	 * @param CatalogApi  $catalog_api
-	 * @param ChannelsApi $channels_api
-	 * @param int         $channel_id
+	 * @param Product    $product
+	 * @param Listing    $listing
+	 * @param CatalogApi $catalog_api
+	 * @param \WP_Term   $channel_term
 	 */
-	public function __construct( Product $product, Listing $listing, CatalogApi $catalog_api, ChannelsApi $channels_api, $channel_id ) {
+	public function __construct( Product $product, Listing $listing, CatalogApi $catalog_api, \WP_Term $channel_term ) {
 		$this->product      = $product;
 		$this->listing      = $listing;
 		$this->catalog_api  = $catalog_api;
-		$this->channels_api = $channels_api;
-		$this->channel_id   = $channel_id;
+		$this->channel_term = $channel_term;
 	}
 
 	/**
 	 * @return int The ID of the imported post
 	 */
 	public function import() {
-		$strategy_factory = new Product_Strategy_Factory( $this->product, $this->listing, $this->catalog_api, Import_Strategy::VERSION );
+		$strategy_factory = new Product_Strategy_Factory( $this->product, $this->listing, $this->channel_term, $this->catalog_api, Import_Strategy::VERSION );
 
 		$strategy = $strategy_factory->get_strategy();
 

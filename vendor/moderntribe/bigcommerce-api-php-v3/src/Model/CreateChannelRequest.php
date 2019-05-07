@@ -106,6 +106,7 @@ class CreateChannelRequest implements ArrayAccess
     const TYPE_MARKETING = 'marketing';
     const TYPE_CUSTOM = 'custom';
     const PLATFORM_WORDPRESS = 'wordpress';
+    const PLATFORM_DRUPAL = 'drupal';
     const PLATFORM_BIGCOMMERCE = 'bigcommerce';
     
 
@@ -133,6 +134,7 @@ class CreateChannelRequest implements ArrayAccess
     {
         return [
             self::PLATFORM_WORDPRESS,
+            self::PLATFORM_DRUPAL,
             self::PLATFORM_BIGCOMMERCE,
         ];
     }
@@ -183,7 +185,7 @@ class CreateChannelRequest implements ArrayAccess
         if ($this->container['platform'] === null) {
             $invalid_properties[] = "'platform' can't be null";
         }
-        $allowed_values = ["wordpress", "bigcommerce"];
+        $allowed_values = ["wordpress", "drupal", "bigcommerce"];
         if (!in_array($this->container['platform'], $allowed_values)) {
             $invalid_properties[] = "invalid value for 'platform', must be one of #{allowed_values}.";
         }
@@ -211,7 +213,7 @@ class CreateChannelRequest implements ArrayAccess
         if ($this->container['platform'] === null) {
             return false;
         }
-        $allowed_values = ["wordpress", "bigcommerce"];
+        $allowed_values = ["wordpress", "drupal", "bigcommerce"];
         if (!in_array($this->container['platform'], $allowed_values)) {
             return false;
         }
@@ -263,9 +265,9 @@ class CreateChannelRequest implements ArrayAccess
      */
     public function setPlatform($platform)
     {
-        $allowed_values = ['wordpress', 'bigcommerce'];
+        $allowed_values = ['wordpress', 'drupal', 'bigcommerce'];
         if (!is_null($platform) && (!in_array($platform, $allowed_values))) {
-            throw new \InvalidArgumentException("Invalid value for 'platform', must be one of 'wordpress', 'bigcommerce'");
+            throw new \InvalidArgumentException("Invalid value for 'platform', must be one of 'wordpress', 'drupal', 'bigcommerce'");
         }
         $this->container['platform'] = $platform;
 

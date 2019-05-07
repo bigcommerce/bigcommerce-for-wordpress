@@ -5,12 +5,14 @@ namespace BigCommerce\Templates;
 
 use BigCommerce\Assets\Theme\Image_Sizes;
 use BigCommerce\Customizer\Sections;
+use BigCommerce\Exceptions\Product_Not_Found_Exception;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Condition\Condition;
 
 class Order_Product extends Controller {
 	const PRODUCT        = 'product';
+	const CHANNEL        = 'channel';
 	const THUMBNAIL_SIZE = 'thumbnail_size';
 
 	const TITLE            = 'title';
@@ -29,6 +31,7 @@ class Order_Product extends Controller {
 	protected function parse_options( array $options ) {
 		$defaults = [
 			self::PRODUCT        => null,
+			self::CHANNEL        => null,
 			/**
 			 * Filter the image size for the order history page
 			 *
@@ -42,13 +45,13 @@ class Order_Product extends Controller {
 
 	public function get_data() {
 		$product = $this->options[ self::PRODUCT ];
-		$post_id = $product['product_id'] ? $this->get_product_post( $product['product_id'] ) : 0;
+		$post_id = $product['product_id'] ? $this->get_product_post( $product['product_id'], $this->options[ self::CHANNEL ] ) : 0;
 
 		$image_id = $post_id ? $this->get_image_id( $post_id ) : 0;
 		$image    = $image_id ? wp_get_attachment_image( $image_id, $this->options[ self::THUMBNAIL_SIZE ] ) : $this->get_fallback_image( $this->options[ self::THUMBNAIL_SIZE ] );
 
 		$data = [
-			self::TITLE            => $product['name'],
+			self::TITLE            => $post_id ? get_the_title( $post_id ) : $product['name'],
 			self::IMAGE_ID         => $image_id,
 			self::IMAGE            => $image,
 			Brand::NAME            => $this->get_terms( $post_id, Brand::NAME ),
@@ -66,25 +69,22 @@ class Order_Product extends Controller {
 	}
 
 	/**
-	 * @param int $product_id
+	 * @param int      $product_id
+	 * @param \WP_Term $channel
 	 *
 	 * @return int The ID of the WP post associated with the product ID
 	 */
-	private function get_product_post( $product_id ) {
+	private function get_product_post( $product_id, $channel = null ) {
 		if ( empty( $product_id ) ) {
 			return 0;
 		}
-		$posts = get_posts( [
-			'bigcommerce_id__in' => [ $product_id ],
-			'post_type'          => Product::NAME,
-			'post_status'        => 'publish',
-			'fields'             => 'ids',
-		] );
-		if ( empty( $posts ) ) {
+
+		try {
+			$product = Product::by_product_id( $product_id, $channel );
+			return $product->post_id();
+		} catch ( Product_Not_Found_Exception $e ) {
 			return 0;
 		}
-
-		return reset( $posts );
 	}
 
 	/**

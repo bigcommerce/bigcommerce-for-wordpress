@@ -15,6 +15,8 @@ const el = {
 const instances = {};
 
 const dialogSettings = {
+	appendTarget: '#wpwrap',
+	bodyLock: false,
 	trigger: el.container,
 	overlayClasses: 'bc-welcome__account-reset-overlay',
 	wrapperClasses: 'bc-welcome__account-reset-wrapper',

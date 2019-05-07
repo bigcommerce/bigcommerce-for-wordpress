@@ -7,9 +7,13 @@ use BigCommerce\Api\v3\Model\BaseItem;
 use BigCommerce\Api\v3\Model\Cart as BigCommerce_Cart;
 use BigCommerce\Api\v3\Model\ItemGiftCertificate;
 use BigCommerce\Api\v3\Model\ProductOption;
+use BigCommerce\Exceptions\Channel_Not_Found_Exception;
+use BigCommerce\Exceptions\Product_Not_Found_Exception;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Taxonomies\Availability\Availability;
 use BigCommerce\Taxonomies\Brand\Brand;
+use BigCommerce\Taxonomies\Channel\Channel;
+use BigCommerce\Taxonomies\Channel\Connections;
 use BigCommerce\Taxonomies\Condition\Condition;
 use BigCommerce\Taxonomies\Flag\Flag;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
@@ -29,6 +33,11 @@ class Cart_Mapper {
 	 */
 	private $cart;
 
+	/**
+	 * @var \WP_Term
+	 */
+	private $channel;
+
 	public function __construct( BigCommerce_Cart $cart ) {
 		$this->cart = $cart;
 	}
@@ -37,6 +46,7 @@ class Cart_Mapper {
 	 * @return array
 	 */
 	public function map() {
+		$this->identify_channel();
 		$cart = [
 			'cart_id'         => $this->cart->getId(),
 			'base_amount'     => [
@@ -105,17 +115,7 @@ class Cart_Mapper {
 	 */
 	private function get_product( $item ) {
 		$product_id = $item->getProductId();
-		$posts      = get_posts( [
-			'post_type'          => Product::NAME,
-			'bigcommerce_id__in' => $product_id,
-			'posts_per_page'     => 1,
-			'fields'             => 'ids',
-		] );
-		if ( count( $posts ) < 1 ) {
-			throw new \RuntimeException( 'Product not found' );
-		}
-
-		return new Product( reset( $posts ) );
+		return Product::by_product_id( $product_id, $this->channel );
 	}
 
 	private function get_terms( $post_id, $taxonomy ) {
@@ -263,6 +263,7 @@ class Cart_Mapper {
 		try {
 			$product                    = $this->get_product( $item );
 			$data[ 'post_id' ]          = $product->post_id();
+			$data[ 'name' ]             = get_the_title( $data[ 'post_id' ] );
 			$data[ 'thumbnail_id' ]     = get_post_thumbnail_id( $data[ 'post_id' ] );
 			$data[ 'is_featured' ]      = is_object_in_term( $data[ 'post_id' ], Flag::NAME, Flag::FEATURED );
 			$data[ 'on_sale' ]          = is_object_in_term( $data[ 'post_id' ], Flag::NAME, Flag::SALE );
@@ -285,7 +286,7 @@ class Cart_Mapper {
 			foreach ( $taxonomies as $tax ) {
 				$data[ $tax ] = $this->get_terms( $data[ 'post_id' ], $tax );
 			}
-		} catch ( \RuntimeException $e ) {
+		} catch ( Product_Not_Found_Exception $e ) {
 			// leave empty
 		}
 
@@ -357,5 +358,37 @@ class Cart_Mapper {
 		}, $items ) );
 
 		return $cart_amount + $discount_amount - $item_sum;
+	}
+
+	/**
+	 * Identify the channel associated with the cart
+	 *
+	 * @return void
+	 */
+	private function identify_channel() {
+		try {
+			$channel_id  = $this->cart->getChannelId();
+			$connections = new Connections();
+			$active      = $connections->active();
+			if ( count( $active ) === 1 ) {
+				$this->channel = reset( $active );
+				return;
+			}
+			/*
+			 * Choosing to loop through connected channels rather than a query,
+			 * based on the presumption that there will only ever be a small
+			 * handful of channels connected, and the loop will be more efficient.
+			 */
+			foreach ( $active as $term ) {
+				if ( get_term_meta( $term->term_id, Channel::CHANNEL_ID, true ) == $channel_id ) {
+					$this->channel = $term;
+					return;
+				}
+			}
+
+			$this->channel = $connections->current();
+		} catch ( Channel_Not_Found_Exception $e ) {
+			$this->channel = null;
+		}
 	}
 }

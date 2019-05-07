@@ -6,13 +6,13 @@ SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 cd "$SCRIPTDIR"
 
-apis=("cart" "channels" "sites" "pricing" "swagger")
+apis=("cart" "channels" "sites" "pricing" "abandoned_cart" "swagger")
 
 maven_cache_repo="${SCRIPTDIR}/.swagger-codegen/.m2/repository"
 build_dir="${SCRIPTDIR}/.swagger-codegen/build"
 codegen_dir="${SCRIPTDIR}/swagger-codegen"
 jar="modules/swagger-codegen-cli/target/swagger-codegen-cli.jar"
-cmd="java -DmodelTests=false -DmodelDocs=false -DapiTests=false -DapiDocs=false -Dapis -Dmodels -jar /gen/$jar"
+cmd="java -DmodelTests=false -DmodelDocs=false -DapiTests=false -DapiDocs=false -Dapis -Dmodels -DsupportingFiles -jar /gen/$jar"
 
 mkdir -p "${maven_cache_repo}"
 mkdir -p "${build_dir}"
@@ -39,5 +39,8 @@ done
 
 cp -R "${build_dir}/Client/src/Api/." "${SCRIPTDIR}/src/Api/"
 cp -R "${build_dir}/Client/src/Model/." "${SCRIPTDIR}/src/Model/"
+cp "${build_dir}/Client/src/ApiClient.php" "${SCRIPTDIR}/src/"
+cp "${build_dir}/Client/src/ApiException.php" "${SCRIPTDIR}/src/"
+cp "${build_dir}/Client/src/Configuration.php" "${SCRIPTDIR}/src/"
+cp "${build_dir}/Client/src/ObjectSerializer.php" "${SCRIPTDIR}/src/"
 rm -rf "${build_dir}"
-

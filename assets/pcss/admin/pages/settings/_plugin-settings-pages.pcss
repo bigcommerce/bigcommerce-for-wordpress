@@ -34,6 +34,11 @@
 		@mixin button-pill;
 	}
 
+	.bc-account-connection-button {
+		white-space: normal;
+		line-height: 1.4em;
+	}
+
 	.bc-admin-btn--outline {
 		background: transparent;
 		border: 1px solid var(--color-bc-doger-blue);
@@ -188,8 +193,7 @@
 
 	p.submit,
 	.bc-settings-save {
-		display: inline-block;
-		vertical-align: middle;
+		float: right;
 	}
 
 	.bc-welcome-reset,
@@ -201,6 +205,11 @@
 		padding-top: 10px;
 		padding-bottom: 1.5em;
 		font-size: 0.875em;
+	}
+
+	.bc-welcome-reset {
+		margin-left: 0;
+		margin-right: 0;
 	}
 }
 

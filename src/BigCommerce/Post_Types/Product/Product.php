@@ -8,9 +8,13 @@ use BigCommerce\Api\v3\ObjectSerializer;
 use BigCommerce\Currency\With_Currency;
 use BigCommerce\Customizer\Sections\Buttons;
 use BigCommerce\Customizer\Sections\Product_Single;
+use BigCommerce\Exceptions\Channel_Not_Found_Exception;
 use BigCommerce\Exceptions\Product_Not_Found_Exception;
 use BigCommerce\Settings\Sections\Cart;
+use BigCommerce\Settings\Sections\Channels;
 use BigCommerce\Taxonomies\Brand\Brand;
+use BigCommerce\Taxonomies\Channel\Channel;
+use BigCommerce\Taxonomies\Channel\Connections;
 use BigCommerce\Taxonomies\Condition\Condition;
 use BigCommerce\Taxonomies\Flag\Flag;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
@@ -21,6 +25,7 @@ class Product {
 	const NAME = 'bigcommerce_product';
 
 	const BIGCOMMERCE_ID            = 'bigcommerce_id';
+	const LISTING_ID                = 'bigcommerce_listing_id';
 	const SKU                       = 'bigcommerce_sku';
 	const SOURCE_DATA_META_KEY      = 'bigcommerce_source_data';
 	const LISTING_DATA_META_KEY     = 'bigcommerce_listing_data';
@@ -29,10 +34,13 @@ class Product {
 	const CUSTOM_FIELDS_META_KEY    = 'bigcommerce_custom_fields';
 	const REQUIRES_REFRESH_META_KEY = 'bigcommerce_force_refresh';
 	const IMPORTER_VERSION_META_KEY = 'bigcommerce_importer_version';
+	const DATA_HASH_META_KEY        = 'bigcommerce_data_hash';
 	const GALLERY_META_KEY          = 'bigcommerce_gallery';
 	const RATING_META_KEY           = 'bigcommerce_rating';
 	const SALES_META_KEY            = 'bigcommerce_sales';
 	const PRICE_META_KEY            = 'bigcommerce_calculated_price';
+	const PRICE_RANGE_META_KEY      = 'bigcommerce_price_range';
+	const INVENTORY_META_KEY        = 'bigcommerce_inventory_level';
 
 	private $post_id;
 	private $source_cache;
@@ -97,43 +105,34 @@ class Product {
 	}
 
 	public function price_range() {
-		/** @var \wpdb $wpdb */
-		global $wpdb;
-		$bc_id          = $this->bc_id();
 		$original_price = $this->get_property( 'price' );
+		$prices         = get_post_meta( $this->post_id, self::PRICE_RANGE_META_KEY, true );
+		$low            = isset( $prices['price']['min'] ) ? $prices['price']['min'] : 0;
+		$high           = isset( $prices['price']['max'] ) ? $prices['price']['max'] : 0;
 
-		$sql    = "SELECT MIN(price) AS low, MAX(price) AS high FROM {$wpdb->bc_variants} WHERE price > 0 GROUP BY bc_id HAVING bc_id=%d";
-		$result = $wpdb->get_row( $wpdb->prepare( $sql, $bc_id ) );
-		if ( empty( $result ) ) {
-			return $this->format_currency( $original_price, __( 'Free', 'bigcommerce' ) );
+		if ( $original_price && $original_price < $low ) {
+			$low = $original_price;
 		}
-		if ( $original_price && $original_price < $result->low ) {
-			$result->low = $original_price;
+		if ( $original_price && $original_price > $high ) {
+			$high = $original_price;
 		}
-		if ( $original_price && $original_price > $result->high ) {
-			$result->high = $original_price;
-		}
-		if ( $result->low == $result->high ) {
-			return $this->format_currency( $result->low, __( 'Free', 'bigcommerce' ) );
+		if ( $low == $high ) {
+			return $this->format_currency( $low, __( 'Free', 'bigcommerce' ) );
 		}
 
-		return sprintf( _x( '%s - %s', 'price range low to high', 'bigcommerce' ), $this->format_currency( $result->low, __( 'Free', 'bigcommerce' ) ), $this->format_currency( $result->high, __( 'Free', 'bigcommerce' ) ) );
+		return sprintf( _x( '%s - %s', 'price range low to high', 'bigcommerce' ), $this->format_currency( $low, __( 'Free', 'bigcommerce' ) ), $this->format_currency( $high, __( 'Free', 'bigcommerce' ) ) );
 	}
 
 	public function calculated_price_range() {
-		/** @var \wpdb $wpdb */
-		global $wpdb;
-		$bc_id  = $this->bc_id();
-		$sql    = "SELECT MIN(calculated_price) AS low, MAX(calculated_price) AS high FROM {$wpdb->bc_variants} GROUP BY bc_id HAVING bc_id=%d";
-		$result = $wpdb->get_row( $wpdb->prepare( $sql, $bc_id ) );
-		if ( empty( $result ) ) {
-			return '';
-		}
-		if ( $result->low == $result->high ) {
-			return $this->format_currency( $result->low, __( 'Free', 'bigcommerce' ) );
+		$prices = get_post_meta( $this->post_id, self::PRICE_RANGE_META_KEY, true );
+		$low    = isset( $prices['calculated']['min'] ) ? $prices['calculated']['min'] : 0;
+		$high   = isset( $prices['calculated']['max'] ) ? $prices['calculated']['max'] : 0;
+
+		if ( $low == $high ) {
+			return $this->format_currency( $low, __( 'Free', 'bigcommerce' ) );
 		}
 
-		return sprintf( _x( '%s - %s', 'price range low to high', 'bigcommerce' ), $this->format_currency( $result->low, __( 'Free', 'bigcommerce' ) ), $this->format_currency( $result->high, __( 'Free', 'bigcommerce' ) ) );
+		return sprintf( _x( '%s - %s', 'price range low to high', 'bigcommerce' ), $this->format_currency( $low, __( 'Free', 'bigcommerce' ) ), $this->format_currency( $high, __( 'Free', 'bigcommerce' ) ) );
 	}
 
 	public function options() {
@@ -165,10 +164,10 @@ class Product {
 		}
 		$variant_options = array_map( 'array_unique', $variant_options );
 		$data            = array_map( function ( $option ) use ( $variant_options ) {
-			$valid_values = isset( $variant_options[ $option[ 'id' ] ] ) ? $variant_options[ $option[ 'id' ] ] : [];
+			$valid_values = isset( $variant_options[ $option['id'] ] ) ? $variant_options[ $option['id'] ] : [];
 
-			$option[ 'option_values' ] = array_filter( $option[ 'option_values' ], function ( $value ) use ( $valid_values ) {
-				return in_array( $value[ 'id' ], $valid_values );
+			$option['option_values'] = array_filter( $option['option_values'], function ( $value ) use ( $valid_values ) {
+				return in_array( $value['id'], $valid_values );
 			} );
 
 			return $option;
@@ -176,11 +175,11 @@ class Product {
 
 		// respect the sorting set by the user
 		usort( $data, function ( $a, $b ) {
-			if ( $a[ 'sort_order' ] == $b[ 'sort_order' ] ) {
-				return ( $a[ 'display_name' ] < $b[ 'display_name' ] ) ? - 1 : 1;
+			if ( $a['sort_order'] == $b['sort_order'] ) {
+				return ( $a['display_name'] < $b['display_name'] ) ? - 1 : 1;
 			}
 
-			return ( $a[ 'sort_order' ] < $b[ 'sort_order' ] ) ? - 1 : 1;
+			return ( $a['sort_order'] < $b['sort_order'] ) ? - 1 : 1;
 		} );
 
 		return $data;
@@ -448,7 +447,7 @@ class Product {
 			return apply_filters( 'bigcommerce/product/related_products', $this->related_products_by_category( $args ), $this->post_id );
 		}
 
-		$args[ 'bigcommerce_id__in' ] = $related_meta;
+		$args['bigcommerce_id__in'] = $related_meta;
 
 		$related_products = array_map( 'intval', get_posts( $args ) );
 
@@ -474,8 +473,8 @@ class Product {
 			return []; // nothing to work with
 		}
 
-		$term_ids              = array_map( 'intval', wp_list_pluck( $categories, 'term_id' ) );
-		$args[ 'tax_query' ][] = [
+		$term_ids            = array_map( 'intval', wp_list_pluck( $categories, 'term_id' ) );
+		$args['tax_query'][] = [
 			'taxonomy' => Product_Category::NAME,
 			'field'    => 'term_id',
 			'terms'    => $term_ids,
@@ -504,24 +503,24 @@ class Product {
 			'order'    => 'DESC',
 		] );
 
-		$per_page = absint( $args[ 'per_page' ] ) ?: 12;
-		$offset   = ( absint( $args[ 'page' ] ) - 1 ) * $per_page;
+		$per_page = absint( $args['per_page'] ) ?: 12;
+		$offset   = ( absint( $args['page'] ) - 1 ) * $per_page;
 
-		$args[ 'order' ]   = ( strtoupper( $args[ 'order' ] ) === 'DESC' ? 'DESC' : 'ASC' );
-		$args[ 'orderby' ] = in_array( $args[ 'orderby' ], [
+		$args['order']   = ( strtoupper( $args['order'] ) === 'DESC' ? 'DESC' : 'ASC' );
+		$args['orderby'] = in_array( $args['orderby'], [
 			'date_reviewed',
 			'date_created',
 			'date_modified',
 			'author_name',
 			'title',
 			'rating',
-		] ) ? sanitize_key( $args[ 'orderby' ] ) : 'date_reviewed';
+		] ) ? sanitize_key( $args['orderby'] ) : 'date_reviewed';
 
-		$orderby = sprintf( "ORDER BY %s %s", $args[ 'orderby' ], $args[ 'order' ] );
+		$orderby = sprintf( "ORDER BY %s %s", $args['orderby'], $args['order'] );
 		$limit   = sprintf( "LIMIT %d, %d", $offset, $per_page );
 
-		$sql     = "SELECT * FROM {$wpdb->bc_reviews} WHERE post_id=%d AND status=%s $orderby $limit";
-		$sql     = $wpdb->prepare( $sql, $this->post_id, $args[ 'status' ] );
+		$sql     = "SELECT * FROM {$wpdb->bc_reviews} WHERE bc_id=%d AND status=%s $orderby $limit";
+		$sql     = $wpdb->prepare( $sql, $this->bc_id(), $args['status'] );
 		$results = $wpdb->get_results( $sql, ARRAY_A );
 
 		return $results ?: [];
@@ -538,21 +537,69 @@ class Product {
 		/** @var \wpdb $wpdb */
 		global $wpdb;
 
-		$sql   = "SELECT COUNT(*) FROM {$wpdb->bc_reviews} WHERE post_id=%d AND status=%s";
-		$sql   = $wpdb->prepare( $sql, $this->post_id, $status );
+		$sql   = "SELECT COUNT(*) FROM {$wpdb->bc_reviews} WHERE bc_id=%d AND status=%s";
+		$sql   = $wpdb->prepare( $sql, $this->bc_id(), $status );
 		$count = $wpdb->get_var( $sql );
 
 		return intval( $count );
 	}
 
 	/**
+	 * Get the channel ID associated with this post
+	 *
+	 * @return int The BigCommerce channel ID
+	 */
+	public function get_channel_id() {
+		try {
+			$channel    = $this->get_channel();
+			$channel_id = get_term_meta( $channel->term_id, Channel::CHANNEL_ID, true );
+
+			return (int) $channel_id;
+		} catch ( Channel_Not_Found_Exception $e ) {
+			return (int) get_option( Channels::CHANNEL_ID, 0 );
+		}
+	}
+
+	/**
+	 * Get the Channel term associated with this post
+	 *
+	 * @return \WP_Term The WordPress Channel term
+	 */
+	public function get_channel() {
+		$channels = get_the_terms( $this->post_id(), Channel::NAME );
+		if ( empty( $channels ) ) {
+			$connections = new Connections();
+
+			return $connections->current();
+		}
+
+		return reset( $channels );
+	}
+
+	/**
+	 * Get the Listing ID associated with this post
+	 *
+	 * @return int The BigCommerce Listing ID
+	 */
+	public function get_listing_id() {
+		$listing = $this->get_listing_data();
+		if ( ! empty( $listing ) && isset( $listing->listing_id ) ) {
+			return (int) $listing->listing_id;
+		}
+
+		return 0;
+	}
+
+	/**
 	 * Gets a BigCommerce Product ID and returns matching Product object
 	 *
-	 * @param $product_id
+	 * @param int           $product_id
+	 *
+	 * @param \WP_Term|null $channel
 	 *
 	 * @return Product|array
 	 */
-	public static function by_product_id( $product_id ) {
+	public static function by_product_id( $product_id, \WP_Term $channel = null ) {
 
 		if ( empty( $product_id ) ) {
 			throw new \InvalidArgumentException( __( 'Product ID must be a positive integer', 'bigcommerce' ) );
@@ -569,6 +616,23 @@ class Product {
 			'posts_per_page' => 1,
 		];
 
+		if ( $channel === null ) {
+			// use the current channel
+			$connections = new Connections();
+			$channel     = $connections->current();
+		}
+
+		if ( $channel ) {
+			$args['tax_query'] = [
+				[
+					'taxonomy' => Channel::NAME,
+					'field'    => 'term_id',
+					'terms'    => [ (int) $channel->term_id ],
+					'operator' => 'IN',
+				],
+			];
+		}
+
 		$posts = get_posts( $args );
 
 
@@ -576,6 +640,6 @@ class Product {
 			throw new Product_Not_Found_Exception( sprintf( __( 'No product found matching BigCommerce ID %d', 'bigcommerce' ), $product_id ) );
 		}
 
-		return new Product( $posts[ 0 ]->ID );
+		return new Product( $posts[0]->ID );
 	}
 }

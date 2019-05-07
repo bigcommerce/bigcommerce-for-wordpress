@@ -10,8 +10,11 @@ use BigCommerce\Api\v3\Model\ItemPricing;
 use BigCommerce\Api\v3\Model\PricingRequest;
 use BigCommerce\Api\v3\ObjectSerializer;
 use BigCommerce\Currency\With_Currency;
+use BigCommerce\Exceptions\Channel_Not_Found_Exception;
 use BigCommerce\Settings\Sections\Channels;
 use BigCommerce\Settings\Sections\Currency;
+use BigCommerce\Taxonomies\Channel\Channel;
+use BigCommerce\Taxonomies\Channel\Connections;
 
 class Pricing_Controller extends Rest_Controller {
 	use With_Currency;
@@ -32,7 +35,7 @@ class Pricing_Controller extends Rest_Controller {
 	 * @filter bigcommerce/js_config
 	 */
 	public function js_config( $config ) {
-		$config[ 'pricing' ] = [
+		$config['pricing'] = [
 			'api_url'            => $this->get_base_url(),
 			'ajax_pricing_nonce' => wp_create_nonce( 'wp_rest' ),
 		];
@@ -60,15 +63,23 @@ class Pricing_Controller extends Rest_Controller {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_items( $request ) {
-		$customer       = new Customer( get_current_user_id() );
-		$customer_group = $customer->get_group_id();
-		$args           = [
+		$customer = new Customer( get_current_user_id() );
+
+		/**
+		 * Filter the customer group ID passed to the BigCommerce API
+		 *
+		 * @param int The customer group ID
+		 */
+		$customer_group = (int) apply_filters( 'bigcommerce/pricing/customer_group_id', $customer->get_group_id() );
+		$currency_code  = get_option( Currency::CURRENCY_CODE, 'USD' );
+
+		$args = [
 			'items'             => $request->get_param( 'items' ),
-			'channel_id'        => (int) apply_filters( 'bigcommerce/pricing/channel_id', get_option( Channels::CHANNEL_ID, 0 ) ),
-			'currency_code'     => apply_filters( 'bigcommerce/pricing/currency_code', get_option( Currency::CURRENCY_CODE, 'USD' ) ),
-			'customer_group_id' => (int) apply_filters( 'bigcommerce/pricing/customer_group_id', $customer_group ),
+			'channel_id'        => $this->get_channel_id(),
+			'currency_code'     => $currency_code,
+			'customer_group_id' => $customer_group,
 		];
-		$args           = apply_filters( 'bigcommerce/pricing/request_args', $args, $request );
+		$args = apply_filters( 'bigcommerce/pricing/request_args', $args, $request );
 
 		try {
 			$pricing_request  = new PricingRequest( $args );
@@ -83,6 +94,17 @@ class Pricing_Controller extends Rest_Controller {
 			return rest_ensure_response( $response );
 		} catch ( \Exception $e ) {
 			return new \WP_Error( 'gateway_error', $e->getMessage(), [ 'exception' => $e ] );
+		}
+	}
+
+	private function get_channel_id() {
+		try {
+			$connections = new Connections();
+			$current     = $connections->current();
+
+			return (int) get_term_meta( $current->term_id, Channel::CHANNEL_ID, true );
+		} catch ( Channel_Not_Found_Exception $e ) {
+			return 0;
 		}
 	}
 
@@ -117,8 +139,8 @@ class Pricing_Controller extends Rest_Controller {
 		}
 
 		if ( $min_value != $max_value ) {
-			$return_data[ 'display_type' ] = 'price_range';
-			$return_data[ 'price_range' ]  = [
+			$return_data['display_type'] = 'price_range';
+			$return_data['price_range']  = [
 				'min' => [
 					'raw'       => $min_value,
 					'formatted' => $this->format_currency( $min_value ),
@@ -132,8 +154,8 @@ class Pricing_Controller extends Rest_Controller {
 			return $return_data;
 		}
 
-		$return_data[ 'display_type' ]     = 'simple';
-		$return_data[ 'calculated_price' ] = [
+		$return_data['display_type']     = 'simple';
+		$return_data['calculated_price'] = [
 			'raw'       => $calculated_value,
 			'formatted' => $this->format_currency( $calculated_value ),
 		];
@@ -142,8 +164,8 @@ class Pricing_Controller extends Rest_Controller {
 			// If the sale value and calculated value is different and less the original value, it's on sale.
 			// If it's more, we shouldn't display it as a sale.
 			// Calculated value might be different than Sale value if the customer is in a group with special pricing.
-			$return_data[ 'display_type' ]   = 'sale';
-			$return_data[ 'original_price' ] = [
+			$return_data['display_type']   = 'sale';
+			$return_data['original_price'] = [
 				'raw'       => $original_value,
 				'formatted' => $this->format_currency( $original_value ),
 			];

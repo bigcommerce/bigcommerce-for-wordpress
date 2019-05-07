@@ -3,6 +3,7 @@
 
 namespace BigCommerce\Templates\Option_Types;
 
+use BigCommerce\Exceptions\Product_Not_Found_Exception;
 use BigCommerce\Post_Types\Product\Product;
 
 class Option_Product_List extends Option_Radios {
@@ -53,11 +54,12 @@ class Option_Product_List extends Option_Radios {
 	 * @return int The WordPress post ID for the product
 	 */
 	protected function get_matching_post_id( $bc_id ) {
-		/** @var \wpdb $wpdb */
-		global $wpdb;
-		$sql = "SELECT post_id FROM {$wpdb->bc_products} WHERE bc_id=%d";
-
-		return (int) $wpdb->get_var( $wpdb->prepare( $sql, $bc_id ) );
+		try {
+			$product = Product::by_product_id( $bc_id );
+			return (int) $product->post_id();
+		} catch ( Product_Not_Found_Exception $e ) {
+			return 0;
+		}
 	}
 
 }

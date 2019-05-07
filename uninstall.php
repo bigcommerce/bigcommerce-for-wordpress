@@ -6,8 +6,8 @@ use BigCommerce\Accounts\Customer;
 use BigCommerce\Accounts\User_Profile_Settings;
 use BigCommerce\Customizer;
 use BigCommerce\Import\Processors\Channel_Initializer;
-use BigCommerce\Import\Processors\Listing_ID_Fetcher;
-use BigCommerce\Import\Processors\Product_ID_Fetcher;
+use BigCommerce\Import\Processors\Listing_Fetcher;
+use BigCommerce\Import\Processors\Product_Data_Fetcher;
 use BigCommerce\Import\Processors\Term_Import;
 use BigCommerce\Import\Runner\Lock;
 use BigCommerce\Import\Runner\Status;
@@ -175,9 +175,10 @@ function delete_options() {
 		Status::PREVIOUS_LOG,
 		Lock::OPTION,
 		Settings\Import_Status::IMPORT_TOTAL_PRODUCTS,
-		Listing_ID_Fetcher::STATE_OPTION,
+		Listing_Fetcher::STATE_OPTION,
+		Listing_Fetcher::PRODUCT_LISTING_MAP,
 		Channel_Initializer::STATE_OPTION,
-		Product_ID_Fetcher::STATE_OPTION,
+		Product_Data_Fetcher::STATE_OPTION,
 		Merchant\Onboarding_Api::ACCOUNT_ID,
 		Merchant\Onboarding_Api::STORE_ID,
 		Merchant\Onboarding_Api::AUTH_KEY,
@@ -195,10 +196,8 @@ function delete_options() {
 		Customizer\Sections\Product_Single::RELATED_COUNT,
 		Customizer\Sections\Product_Single::DEFAULT_IMAGE,
 		'bigcommerce_flushed_rewrites',
-		md5( 'bc_webhook_' . Product_Update_Webhook::ACTION . Product_Update_Webhook::SCOPE ),
-		// removed in version 2.1
-		md5( 'bc_webhook_password_' . Product_Update_Webhook::ACTION . Product_Update_Webhook::SCOPE ),
-		// removed in version 2.1
+		md5( 'bc_webhook_product_updatestore/product/*' ), // removed in version 2.1
+		md5( 'bc_webhook_password_product_updatestore/product/*' ), // removed in version 2.1
 		Webhook::WEBHOOKS_OPTION,
 		Webhook::AUTH_KEY_OPTION,
 		Settings\Sections\Cart::OPTION_AJAX_CART,

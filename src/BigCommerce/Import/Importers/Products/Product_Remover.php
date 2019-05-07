@@ -4,33 +4,50 @@
 namespace BigCommerce\Import\Importers\Products;
 
 
+use BigCommerce\Post_Types\Product\Product;
+
 class Product_Remover {
-	/**
-	 * @var int
-	 */
-	private $product_id;
 
-	/**
-	 * @param int $product_id
-	 */
-	public function __construct( $product_id ) {
-		$this->product_id = $product_id;
-	}
-
-	public function remove() {
-		$post_id = $this->get_post_id();
+	public function remove_by_post_id( $post_id ) {
 		if ( ! empty( $post_id ) ) {
 			$this->remove_images( $post_id );
 			$this->remove_post( $post_id );
 		}
 	}
 
-	private function get_post_id() {
-		/** @var \wpdb $wpdb */
-		global $wpdb;
-		$post_id = $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM {$wpdb->bc_products} WHERE bc_id=%d", $this->product_id ) );
+	public function remove_by_product_id( $product_id, \WP_Term $channel ) {
+		$post_id = $this->match_post_id( $product_id, $channel );
+		$this->remove_by_post_id( $post_id );
+	}
 
-		return (int) $post_id;
+	private function match_post_id( $product_id, \WP_Term $channel ) {
+		$args = [
+			'meta_query'     => [
+				[
+					'key'   => 'bigcommerce_id',
+					'value' => absint( $product_id ),
+				],
+			],
+			'tax_query'      => [
+				[
+					'taxonomy' => $channel->taxonomy,
+					'field'    => 'term_id',
+					'terms'    => [ (int) $channel->term_id ],
+					'operator' => 'IN',
+				],
+			],
+			'post_type'      => Product::NAME,
+			'post_status'    => 'any',
+			'posts_per_page' => 1,
+			'fields'         => 'ids',
+		];
+
+		$posts = get_posts( $args );
+		if ( empty( $posts ) ) {
+			return 0;
+		}
+
+		return absint( reset( $posts ) );
 	}
 
 	private function remove_images( $post_id ) {
@@ -46,7 +63,7 @@ class Product_Remover {
 			],
 			'fields'      => 'ids',
 		] );
-		foreach( $image_ids as $image ) {
+		foreach ( $image_ids as $image ) {
 			wp_delete_attachment( $image, true );
 		}
 	}

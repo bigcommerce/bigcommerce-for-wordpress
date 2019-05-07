@@ -6,10 +6,13 @@ namespace BigCommerce\Checkout;
 
 use BigCommerce\Accounts\Login;
 use BigCommerce\Api\Store_Api;
+use BigCommerce\Exceptions\Channel_Not_Found_Exception;
 use BigCommerce\Merchant\Models\Customer_Login_Request;
 use BigCommerce\Merchant\Onboarding_Api;
 use BigCommerce\Settings\Sections\Api_Credentials;
 use BigCommerce\Settings\Sections\Channels;
+use BigCommerce\Taxonomies\Channel\Channel;
+use BigCommerce\Taxonomies\Channel\Connections;
 
 class Customer_Login {
 	/**
@@ -38,7 +41,7 @@ class Customer_Login {
 		$customer_id = (int) ( is_user_logged_in() ? get_user_option( Login::CUSTOMER_ID_META, get_current_user_id() ) : 0 );
 		$hash = $this->get_store_hash();
 		$store_id = get_option( Onboarding_Api::STORE_ID, '' );
-		$channel_id = get_option( Channels::CHANNEL_ID, 0 );
+		$channel_id = $this->get_channel_id();
 
 		if ( ! $customer_id || ! $hash ) {
 			return $checkout_url;
@@ -82,6 +85,16 @@ class Customer_Login {
 			return '';
 		} else {
 			return $matches[ 1 ];
+		}
+	}
+
+	private function get_channel_id() {
+		try {
+			$connections = new Connections();
+			$current = $connections->current();
+			return (int) get_term_meta( $current->term_id, Channel::CHANNEL_ID, true );
+		} catch ( Channel_Not_Found_Exception $e ) {
+			return 0;
 		}
 	}
 }
