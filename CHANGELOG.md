@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.0.1]
+
+### Fixed
+- Fixed duplicate posts created in WordPress when importing products
+  in draft or pending status. 
+
 ## [3.0.0]
 
 ### Added
@@ -87,6 +93,7 @@
 ### Fixed
 - Updated registration of block editor plugins to work with recent
   versions of Gutenberg.
+- Fixed fatal error in the uninstaller from an undefined class constant.
   
 ### Removed
 - Removed the `bc_products` table. All queries that used this table have been
@@ -580,6 +587,7 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[3.0.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.0.0...3.0.1
 [3.0.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/2.2.1...3.0.0
 [2.2.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/2.2.0...2.2.1
 [2.2.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/2.1.0...2.2.0

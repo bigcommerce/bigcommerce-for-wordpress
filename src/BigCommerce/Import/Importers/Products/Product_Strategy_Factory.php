@@ -90,6 +90,7 @@ class Product_Strategy_Factory {
 			'post_type'      => Product::NAME,
 			'posts_per_page' => 1,
 			'fields'         => 'ids',
+			'post_status'    => 'any',
 		];
 
 		$posts = get_posts( $args );
