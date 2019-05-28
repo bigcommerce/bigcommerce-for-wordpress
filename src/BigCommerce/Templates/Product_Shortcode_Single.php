@@ -20,6 +20,16 @@ class Product_Shortcode_Single extends Controller {
 	const SPECS       = 'specs';
 
 	protected $template = 'components/products/product-shortcode-single.php';
+	protected $wrapper_tag        = 'div';
+	protected $wrapper_classes    = [ 'bc-product-card', 'bc-product-card--single' ];
+	protected $wrapper_attributes = [ 'data-js' => 'bc-product-single' ];
+
+
+	protected function get_wrapper_attributes() {
+		$attributes = $this->wrapper_attributes;
+		$attributes['id'] = sprintf( 'bc-product-%s', esc_attr( $this->options[ self::PRODUCT ]->sku() ) );
+		return $attributes;
+	}
 
 	protected function parse_options( array $options ) {
 		$defaults = [
@@ -35,7 +45,7 @@ class Product_Shortcode_Single extends Controller {
 
 		return [
 			self::PRODUCT     => $product,
-			self::SKU         => $product->sku(),
+			self::SKU         => $this->get_sku( $product ),
 			self::RATING      => $this->get_rating( $product ),
 			self::TITLE       => $this->get_title( $product ),
 			self::DESCRIPTION => $this->get_description( $product ),
@@ -49,7 +59,8 @@ class Product_Shortcode_Single extends Controller {
 
 	protected function get_title( Product $product ) {
 		$component = Product_Title::factory( [
-			Product_Title::PRODUCT => $product,
+			Product_Title::PRODUCT      => $product,
+			Product_Title::HEADER_LEVEL => 2,
 		] );
 
 		return $component->render();
@@ -108,6 +119,14 @@ class Product_Shortcode_Single extends Controller {
 	protected function get_specs( Product $product ) {
 		$component = Product_Specs::factory( [
 			Product_Specs::PRODUCT => $product,
+		] );
+
+		return $component->render();
+	}
+
+	protected function get_sku( Product $product ) {
+		$component = Product_Sku::factory( [
+			Product_Sku::PRODUCT => $product,
 		] );
 
 		return $component->render();

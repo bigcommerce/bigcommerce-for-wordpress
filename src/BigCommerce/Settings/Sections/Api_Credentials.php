@@ -61,9 +61,10 @@ class Api_Credentials extends Settings_Section {
 
 		foreach ( $options as $key => $args ) {
 			$args = wp_parse_args( $args, [
-				'option' => $key,
-				'label'  => '',
-				'type'   => 'text',
+				'option'       => $key,
+				'label'        => '',
+				'type'         => 'text',
+				'autocomplete' => 'off',
 			] );
 			add_settings_field(
 				$key,

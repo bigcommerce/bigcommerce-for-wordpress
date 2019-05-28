@@ -194,6 +194,41 @@ class Overrides {
 							'id'  => array(),
 							'src' => array(),
 						),
+						'amp-lightbox'    => array(
+							'on'         => array(),
+							'id'         => array(),
+							'scrollable' => array(),
+							'layout'     => array(),
+						),
+						'button'          => array(
+							'on'             => array(),
+							'type'           => array(),
+							'class'          => array(),
+							'tabindex'       => array(),
+							'aria-label'     => array(),
+							'data-productid' => array(),
+						),
+						'amp-carousel'    => array(
+							'id'     => array(),
+							'class'  => array(),
+							'width'  => array(),
+							'height' => array(),
+							'layout' => array(),
+							'type'   => array(),
+						),
+						'span'            => array(
+							'on'       => array(),
+							'class'    => array(),
+							'tabindex' => array(),
+							'role'     => array(),
+						),
+						'form'            => array(
+							'action-xhr' => array(),
+							'method'     => array(),
+							'enctype'    => array(),
+							'class'      => array(),
+							'target'     => array(),
+						),
 					)
 				)
 			);

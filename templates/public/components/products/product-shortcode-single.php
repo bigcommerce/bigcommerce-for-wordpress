@@ -5,7 +5,6 @@
  * @package BigCommerce
  *
  * @var Product $product
- * @var string  $sku
  * @var string  $gallery
  * @var string  $title
  * @var string  $brand
@@ -18,21 +17,20 @@ use BigCommerce\Post_Types\Product\Product;
 
 ?>
 
-<div id="bc-product-<?php echo esc_attr( $sku ); ?>" class="bc-product-card bc-product-card--single" data-js="bc-product-single">
-	<?php echo $gallery; ?>
 
-	<div class="bc-product__meta">
-		<?php
+<?php echo $gallery; ?>
 
-		echo $title;
-		echo $brand;
-		echo $price;
-		echo $description;
-		?>
+<div class="bc-product__meta">
+	<?php
 
-	</div>
+	echo $title;
+	echo $brand;
+	echo $price;
+	echo $description;
+	?>
 
-	<div class="bc-product__actions">
-		<?php echo $form; ?>
-	</div>
+</div>
+
+<div class="bc-product__actions">
+	<?php echo $form; ?>
 </div>

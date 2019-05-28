@@ -17,9 +17,9 @@ class Product_Card extends Controller {
 	const QUICK_VIEW = 'quick_view';
 	const ATTRIBUTES = 'attributes';
 
-	protected $template = 'components/products/product-card.php';
-	protected $wrapper_tag = 'div';
-	protected $wrapper_classes = [ 'bc-product-card' ];
+	protected $template           = 'components/products/product-card.php';
+	protected $wrapper_tag        = 'div';
+	protected $wrapper_classes    = [ 'bc-product-card' ];
 	protected $wrapper_attributes = [ 'data-js' => 'bc-product-loop-card' ];
 
 	protected function parse_options( array $options ) {
@@ -40,10 +40,10 @@ class Product_Card extends Controller {
 			self::TITLE      => $this->get_title( $product ),
 			self::PRICE      => $this->get_price( $product ),
 			self::BRAND      => $this->get_brand( $product ),
-			self::IMAGE      => $this->get_featured_image( $product ),
+			self::IMAGE      => $this->get_featured_image( $product, $this->options[ self::ATTRIBUTES ] ),
 			self::FORM       => $this->get_form( $product ),
-			self::QUICK_VIEW => $this->get_popup_template( $product ),
-			self::ATTRIBUTES => $this->build_attribute_string( $this->options[ self::ATTRIBUTES ] ),
+			self::QUICK_VIEW => '', // @deprecated since 3.1
+			self::ATTRIBUTES => '', // @deprecated since 3.1
 		];
 	}
 
@@ -71,12 +71,27 @@ class Product_Card extends Controller {
 		return $component->render();
 	}
 
-	protected function get_featured_image( Product $product ) {
-		$component = Product_Featured_Image::factory( [
+	protected function get_featured_image( Product $product, $attributes ) {
+		$quick_view = get_option( \BigCommerce\Customizer\Sections\Product_Archive::QUICK_VIEW, 'yes' );
+		if ( $quick_view === 'no' ) {
+			$image_component = Linked_Product_Featured_Image::factory( [
+				Product_Featured_Image::PRODUCT => $product,
+			] );
+
+			return $image_component->render();
+		}
+
+		$image_component = Product_Featured_Image::factory( [
 			Product_Featured_Image::PRODUCT => $product,
 		] );
 
-		return $component->render();
+		$quick_view_component = Quick_View_Image::factory( [
+			Quick_View_Image::PRODUCT    => $product,
+			Quick_View_Image::IMAGE      => $image_component->render(),
+			Quick_View_Image::ATTRIBUTES => $attributes,
+		] );
+
+		return $quick_view_component->render();
 	}
 
 	protected function get_form( Product $product ) {
@@ -94,14 +109,6 @@ class Product_Card extends Controller {
 				Product_Form::SHOW_OPTIONS => false,
 			] );
 		}
-
-		return $component->render();
-	}
-
-	protected function get_popup_template( Product $product ) {
-		$component = Product_Quick_View::factory( [
-			Product_Quick_View::PRODUCT => $product,
-		] );
 
 		return $component->render();
 	}

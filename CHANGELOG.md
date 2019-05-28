@@ -1,5 +1,65 @@
 # Changelog
 
+## [3.1.0]
+
+### Added
+- Added a button to reset channel listing overrides, enabling editors to
+  reconnect a product to the base product for future updates.
+- Added a button to immediately re-sync a product. Editors can import the
+  latest changes from the BigCommerce API for that product without running
+  a full import on the entire catalog.
+- Added a missing entry to the 3.0.0 changelog regarding fixing the uninstaller.
+- Added a method to fetch customer group info. `$customer->get_group()->get_info()`
+- Created an option to toggle synchronization of analytics settings.
+- Added a customizer option to disable Quick View on product cards. When disabled,
+  product card images are wrapped in a link to the product single.
+- Added a template for the sku component of a product, `components/products/product-sku.php`.
+- Added a new shortcode/block that allows selection of distinct product
+  components. Example usage: `[bc-component type="description" id="117"]`.
+  Valid types are: sku, description, image, title.
+- Added an option to disable sync of analytics IDs.
+
+### Fixed
+- Fixed missing markup for AMP templates. Some valid tags had been
+  erroneously stripped out.
+
+### Changed
+- Added a new parameter to the product title template (`components/products/product-title.php`)
+  to set the header level. It should set the header appropriately
+  for the context in which the component is loaded (h1 for the product
+  single, h2 for the shortcode/block single, and h3 for the product card).
+- Moved the Quick View markup from `components/products/product-card.php` to
+  a new template, `components/products/quick-view-image.php`.
+- Removed the wrapper div from the template `components/products/product-quick-view.php`.
+  The wrapper will be added by the template controller.
+- Changed the `assign_terms` capability for categories and brands to `do_not_allow`.
+  Assignments would be overwritten by the next import. This keeps it from
+  happening in the first place to avoid confusion.
+- Turned off the `autocomplete` attribute on API fields in the settings 
+  page. This will help to avoid an issue where autocomplete causes a change to
+  user credentials and causes the store to disconnect when settings are saved.
+- Updated the product quick view template, `components/products/product-quick-view.php`,
+  uses the new product sku component.
+- Updated the product shortcode single template, `components/products/product-shortcode-single.php`,
+  uses the new product sku component.
+- Updated the product single template, `components/products/product-single.php`,
+  uses the new product sku component.
+- Updated the onboarding flow to indicate where the user is in the setup process. Additionally,
+  some styles were updated on the content areas, buttons, and start-over feature.
+- Optimized the import process to avoid fetching data for products not listed
+  in any active channels.
+
+### Deprecated
+- Deprecated the `$quickview` and `$attributes` variables in the template
+  `components/products/product-card.php`. The variables are now empty, and
+  will be removed in a future version.
+
+## [3.0.2]
+
+### Fixed
+- Updated API client library to 1.12.1 to fix error in class definition
+  for PriceRecord.
+
 ## [3.0.1]
 
 ### Fixed
@@ -587,6 +647,8 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[3.1.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.0.2...3.1.0
+[3.0.2]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.0.1...3.0.2
 [3.0.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.0.0...3.0.1
 [3.0.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/2.2.1...3.0.0
 [2.2.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/2.2.0...2.2.1

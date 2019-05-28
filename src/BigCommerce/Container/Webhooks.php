@@ -112,8 +112,8 @@ class Webhooks extends Provider {
 		};
 
 		// Update product inventory webhook cron task
-		add_action( 'bigcommerce/webhooks/product_inventory_updated', $this->create_callback( 'check_and_update_product_inventory_task', function ( $product_id ) use ( $container ) {
-			$container[ self::WEBHOOKS_CRON_TASKS ]->set_product_update_cron_task( $product_id );
+		add_action( 'bigcommerce/webhooks/product_inventory_updated', $this->create_callback( 'check_and_update_product_inventory_task', function ( $params ) use ( $container ) {
+			$container[ self::WEBHOOKS_CRON_TASKS ]->set_product_update_cron_task( $params );
 		} ), 10, 1 );
 
 	}
@@ -123,8 +123,8 @@ class Webhooks extends Provider {
 			return new Product_Updater( $container[ Api::FACTORY ]->catalog(), $container[ Api::FACTORY ]->channels() );
 		};
 
-		add_action( Webhook_Cron_Tasks::UPDATE_PRODUCT, $this->create_callback( 'update_product_cron_handler', function ( $params ) use ( $container ) {
-			$container[ self::PRODUCT_UPDATER ]->update( $params );
+		add_action( Webhook_Cron_Tasks::UPDATE_PRODUCT, $this->create_callback( 'update_product_cron_handler', function ( $product_id ) use ( $container ) {
+			$container[ self::PRODUCT_UPDATER ]->update( $product_id );
 		} ), 10, 1 );
 	}
 }

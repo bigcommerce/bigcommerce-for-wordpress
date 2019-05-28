@@ -26,7 +26,7 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-class PriceRecord extends PriceRecordIdentifiers extends PriceRecordIdentifiers implements ArrayAccess
+class PriceRecord extends PriceRecordBase implements ArrayAccess
 {
     const DISCRIMINATOR = null;
 
@@ -41,15 +41,15 @@ class PriceRecord extends PriceRecordIdentifiers extends PriceRecordIdentifiers 
       * @var string[]
       */
     protected static $swaggerTypes = [
-        'price_list_id' => 'int',
-        'variant_id' => 'int',
-        'sku' => 'string',
-        'currency' => 'string',
         'price' => 'double',
         'sale_price' => 'double',
         'retail_price' => 'double',
         'map_price' => 'double',
         'bulk_pricing_tiers' => '\BigCommerce\Api\v3\Model\BulkPricingTier[]',
+        'sku' => 'string',
+        'price_list_id' => 'int',
+        'variant_id' => 'int',
+        'currency' => 'string',
         'calculated_price' => 'double',
         'date_created' => '\DateTime',
         'date_modified' => '\DateTime',
@@ -66,15 +66,15 @@ class PriceRecord extends PriceRecordIdentifiers extends PriceRecordIdentifiers 
      * @var string[]
      */
     protected static $attributeMap = [
-        'price_list_id' => 'price_list_id',
-        'variant_id' => 'variant_id',
-        'sku' => 'sku',
-        'currency' => 'currency',
         'price' => 'price',
         'sale_price' => 'sale_price',
         'retail_price' => 'retail_price',
         'map_price' => 'map_price',
         'bulk_pricing_tiers' => 'bulk_pricing_tiers',
+        'sku' => 'sku',
+        'price_list_id' => 'price_list_id',
+        'variant_id' => 'variant_id',
+        'currency' => 'currency',
         'calculated_price' => 'calculated_price',
         'date_created' => 'date_created',
         'date_modified' => 'date_modified',
@@ -86,15 +86,15 @@ class PriceRecord extends PriceRecordIdentifiers extends PriceRecordIdentifiers 
      * @var string[]
      */
     protected static $setters = [
-        'price_list_id' => 'setPriceListId',
-        'variant_id' => 'setVariantId',
-        'sku' => 'setSku',
-        'currency' => 'setCurrency',
         'price' => 'setPrice',
         'sale_price' => 'setSalePrice',
         'retail_price' => 'setRetailPrice',
         'map_price' => 'setMapPrice',
         'bulk_pricing_tiers' => 'setBulkPricingTiers',
+        'sku' => 'setSku',
+        'price_list_id' => 'setPriceListId',
+        'variant_id' => 'setVariantId',
+        'currency' => 'setCurrency',
         'calculated_price' => 'setCalculatedPrice',
         'date_created' => 'setDateCreated',
         'date_modified' => 'setDateModified',
@@ -106,15 +106,15 @@ class PriceRecord extends PriceRecordIdentifiers extends PriceRecordIdentifiers 
      * @var string[]
      */
     protected static $getters = [
-        'price_list_id' => 'getPriceListId',
-        'variant_id' => 'getVariantId',
-        'sku' => 'getSku',
-        'currency' => 'getCurrency',
         'price' => 'getPrice',
         'sale_price' => 'getSalePrice',
         'retail_price' => 'getRetailPrice',
         'map_price' => 'getMapPrice',
         'bulk_pricing_tiers' => 'getBulkPricingTiers',
+        'sku' => 'getSku',
+        'price_list_id' => 'getPriceListId',
+        'variant_id' => 'getVariantId',
+        'currency' => 'getCurrency',
         'calculated_price' => 'getCalculatedPrice',
         'date_created' => 'getDateCreated',
         'date_modified' => 'getDateModified',
@@ -152,15 +152,15 @@ class PriceRecord extends PriceRecordIdentifiers extends PriceRecordIdentifiers 
      */
     public function __construct(array $data = [])
     {
-        $this->container['price_list_id'] = array_key_exists('price_list_id', $data) ? $data['price_list_id'] : null;
-        $this->container['variant_id'] = array_key_exists('variant_id', $data) ? $data['variant_id'] : null;
-        $this->container['sku'] = array_key_exists('sku', $data) ? $data['sku'] : null;
-        $this->container['currency'] = array_key_exists('currency', $data) ? $data['currency'] : null;
         $this->container['price'] = array_key_exists('price', $data) ? $data['price'] : null;
         $this->container['sale_price'] = array_key_exists('sale_price', $data) ? $data['sale_price'] : null;
         $this->container['retail_price'] = array_key_exists('retail_price', $data) ? $data['retail_price'] : null;
         $this->container['map_price'] = array_key_exists('map_price', $data) ? $data['map_price'] : null;
         $this->container['bulk_pricing_tiers'] = array_key_exists('bulk_pricing_tiers', $data) ? $data['bulk_pricing_tiers'] : null;
+        $this->container['sku'] = array_key_exists('sku', $data) ? $data['sku'] : null;
+        $this->container['price_list_id'] = array_key_exists('price_list_id', $data) ? $data['price_list_id'] : null;
+        $this->container['variant_id'] = array_key_exists('variant_id', $data) ? $data['variant_id'] : null;
+        $this->container['currency'] = array_key_exists('currency', $data) ? $data['currency'] : null;
         $this->container['calculated_price'] = array_key_exists('calculated_price', $data) ? $data['calculated_price'] : null;
         $this->container['date_created'] = array_key_exists('date_created', $data) ? $data['date_created'] : null;
         $this->container['date_modified'] = array_key_exists('date_modified', $data) ? $data['date_modified'] : null;
@@ -198,90 +198,6 @@ class PriceRecord extends PriceRecordIdentifiers extends PriceRecordIdentifiers 
         return true;
     }
 
-
-    /**
-     * Gets price_list_id
-     * @return int
-     */
-    public function getPriceListId()
-    {
-        return $this->container['price_list_id'];
-    }
-
-    /**
-     * Sets price_list_id
-     * @param int $price_list_id The Price List with which this price set is associated.
-     * @return $this
-     */
-    public function setPriceListId($price_list_id)
-    {
-        $this->container['price_list_id'] = $price_list_id;
-
-        return $this;
-    }
-
-    /**
-     * Gets variant_id
-     * @return int
-     */
-    public function getVariantId()
-    {
-        return $this->container['variant_id'];
-    }
-
-    /**
-     * Sets variant_id
-     * @param int $variant_id The variant with which this price set is associated. Either variant_id or sku is required.
-     * @return $this
-     */
-    public function setVariantId($variant_id)
-    {
-        $this->container['variant_id'] = $variant_id;
-
-        return $this;
-    }
-
-    /**
-     * Gets sku
-     * @return string
-     */
-    public function getSku()
-    {
-        return $this->container['sku'];
-    }
-
-    /**
-     * Sets sku
-     * @param string $sku The SKU code associated with this `Price Record` if requested and it exists.
-     * @return $this
-     */
-    public function setSku($sku)
-    {
-        $this->container['sku'] = $sku;
-
-        return $this;
-    }
-
-    /**
-     * Gets currency
-     * @return string
-     */
-    public function getCurrency()
-    {
-        return $this->container['currency'];
-    }
-
-    /**
-     * Sets currency
-     * @param string $currency The 3-letter currency code with which this price set is associated.
-     * @return $this
-     */
-    public function setCurrency($currency)
-    {
-        $this->container['currency'] = $currency;
-
-        return $this;
-    }
 
     /**
      * Gets price
@@ -384,6 +300,90 @@ class PriceRecord extends PriceRecordIdentifiers extends PriceRecordIdentifiers 
     public function setBulkPricingTiers($bulk_pricing_tiers)
     {
         $this->container['bulk_pricing_tiers'] = $bulk_pricing_tiers;
+
+        return $this;
+    }
+
+    /**
+     * Gets sku
+     * @return string
+     */
+    public function getSku()
+    {
+        return $this->container['sku'];
+    }
+
+    /**
+     * Sets sku
+     * @param string $sku The variant with which this price set is associated. Either sku or variant_id is required.
+     * @return $this
+     */
+    public function setSku($sku)
+    {
+        $this->container['sku'] = $sku;
+
+        return $this;
+    }
+
+    /**
+     * Gets price_list_id
+     * @return int
+     */
+    public function getPriceListId()
+    {
+        return $this->container['price_list_id'];
+    }
+
+    /**
+     * Sets price_list_id
+     * @param int $price_list_id The Price List with which this price set is associated.
+     * @return $this
+     */
+    public function setPriceListId($price_list_id)
+    {
+        $this->container['price_list_id'] = $price_list_id;
+
+        return $this;
+    }
+
+    /**
+     * Gets variant_id
+     * @return int
+     */
+    public function getVariantId()
+    {
+        return $this->container['variant_id'];
+    }
+
+    /**
+     * Sets variant_id
+     * @param int $variant_id The variant with which this price set is associated. Either variant_id or sku is required.
+     * @return $this
+     */
+    public function setVariantId($variant_id)
+    {
+        $this->container['variant_id'] = $variant_id;
+
+        return $this;
+    }
+
+    /**
+     * Gets currency
+     * @return string
+     */
+    public function getCurrency()
+    {
+        return $this->container['currency'];
+    }
+
+    /**
+     * Sets currency
+     * @param string $currency The 3-letter currency code with which this price set is associated.
+     * @return $this
+     */
+    public function setCurrency($currency)
+    {
+        $this->container['currency'] = $currency;
 
         return $this;
     }

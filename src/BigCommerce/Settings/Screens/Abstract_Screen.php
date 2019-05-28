@@ -49,11 +49,15 @@ abstract class Abstract_Screen {
 			return '';
 		}
 
-		$notices_placeholder = '<div class="wp-header-end"></div>'; // placeholder to tell WP where to put notices
-
-		return $notices_placeholder . sprintf( '<h1>%s</h1>', $this->get_page_title() );
+		return $this->before_title() . sprintf( '<h1>%s</h1>', $this->get_page_title() );
 	}
 
+	protected function before_title() {
+		$before = '<div class="wp-header-end"></div>'; // placeholder to tell WP where to put notices
+		ob_start();
+		do_action( 'bigcommerce/settings/before_title/page=' . static::NAME );
+		return $before . ob_get_clean();
+	}
 
 	public function get_hook_suffix() {
 		return $this->hook_suffix;
@@ -117,7 +121,16 @@ abstract class Abstract_Screen {
 		$this->after_form();
 		$content = ob_get_clean();
 
-		printf( '<div class="wrap bc-settings bc-settings-%s">%s%s</div>', static::NAME, $this->get_header(), $content );
+		printf( '<div class="wrap bc-settings bc-settings-%s">%s<div class="bc-settings-content-wrap">%s%s</div></div>', static::NAME, $this->progress_bar(), $this->get_header(), $content );
+	}
+
+	/**
+	 * Renders the onboarding progress bar for the current screen
+	 *
+	 * @return string
+	 */
+	protected function progress_bar() {
+		return '';
 	}
 
 	protected function start_form() {

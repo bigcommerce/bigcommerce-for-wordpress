@@ -6,6 +6,7 @@
 import ShortcodeBlock from './shortcode-block/shortcode-block';
 import ProductsBlock from './products/products';
 import ProductReviewsBlock from './product-reviews/product-reviews';
+import ProductComponentsBlock from './product-components/product-components';
 
 import {
 	GUTENBERG_ACCOUNT,
@@ -16,6 +17,7 @@ import {
 	GUTENBERG_GIFT_CERTIFICATE_FORM,
 	GUTENBERG_LOGIN,
 	GUTENBERG_ORDERS,
+	GUTENBERG_PRODUCT_COMPONENTS,
 	GUTENBERG_PRODUCT_REVIEWS,
 	GUTENBERG_PRODUCTS,
 	GUTENBERG_REGISTER,
@@ -35,6 +37,7 @@ const blocks = [
 	new ShortcodeBlock(GUTENBERG_GIFT_CERTIFICATE_FORM),
 	new ShortcodeBlock(GUTENBERG_GIFT_CERTIFICATE_BALANCE),
 	new ProductReviewsBlock(GUTENBERG_PRODUCT_REVIEWS),
+	new ProductComponentsBlock(GUTENBERG_PRODUCT_COMPONENTS),
 ];
 
 const initBlocks = () => {

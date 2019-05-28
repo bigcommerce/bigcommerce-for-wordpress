@@ -14,22 +14,24 @@ class Config extends Taxonomy_Config {
 	 *
 	 * Filterable with register_taxonomy_args
 	 *
-	 * @see register_taxonomy() for accepted args.
 	 * @return array
+	 * @see register_taxonomy() for accepted args.
 	 */
 	public function get_args() {
 		return [
-			'hierarchical'      => true,
-			'public'            => true,
-			'show_ui'           => true,
-			'show_in_nav_menus' => true,
-			'labels'            => $this->get_labels(),
-			'show_admin_column' => true,
-			'rewrite'           => [
+			'hierarchical'       => true,
+			'public'             => true,
+			'show_ui'            => true,
+			'show_in_nav_menus'  => true,
+			'labels'             => $this->get_labels(),
+			'show_admin_column'  => true,
+			'show_in_quick_edit' => false,
+			'show_in_rest'       => true,
+			'rewrite'            => [
 				'slug'       => $this->get_slug(),
 				'with_front' => false,
 			],
-			'capabilities' => $this->get_caps(),
+			'capabilities'       => $this->get_caps(),
 		];
 	}
 

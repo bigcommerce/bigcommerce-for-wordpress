@@ -85,7 +85,7 @@ abstract class Taxonomy_Config {
 			'manage_terms' => 'manage_categories',
 			'edit_terms'   => 'do_not_allow', // prevent editing, because it will be overwritten on next import
 			'delete_terms' => 'manage_categories',
-			'assign_terms' => 'edit_posts',
+			'assign_terms' => 'do_not_allow', // prevent assignment, because it will be overwritten on next import
 		];
 		/**
 		 * Filter the default capabilities for taxonomy terms.

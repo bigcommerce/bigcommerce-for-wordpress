@@ -1,50 +1,28 @@
 .bc-welcome {
 	display: flex;
 	flex-direction: column;
-	lost-utility: clearfix;
-	margin-top: 10px;
-
-	@media (--viewport-medium) {
-		flex-direction: row;
-		justify-content: flex-start;
-		margin-top: 30px;
-	}
-
-	@media (--viewport-large) {
-		margin-top: 110px;
-	}
-}
-
-.bc-welcome__content,
-.bc-welcome__notices {
-	@media (--viewport-medium) {
-		lost-column: 6/12;
-	}
-
-	@media (--viewport-large) {
-		lost-column: 5/12;
-	}
+	max-width: 860px;
+	width: 100%;
+	margin: 0 auto;
 }
 
 .bc-welcome__content {
-	@media (--viewport-large) {
-		lost-offset: 1/12;
-	}
-}
+	padding: 20px;
+	background-color: var(--color-white);
+	position: relative;
 
-.bc-welcome__content-wrap {
-	@media (--viewport-large) {
-		margin-right: 12.5%;
-		max-width: 410px;
+	@media (--viewport-wpadmin) {
+		padding: 40px;
 	}
-}
 
-.bc-welcome__content {
+	@media (--viewport-xlarge) {
+		padding: 64px 60px;
+	}
 
 	&-title {
 		color: var(--color-bc-black);
 		font-size: 2em;
-		font-weight: var(--font-weight-regular);
+		font-weight: var(--font-weight-thin);
 		line-height: 1.25;
 		margin: 18px 0 22px;
 
@@ -58,10 +36,24 @@
 		font-size: 0.938em;
 		line-height: 1.44;
 		margin: 0;
+		font-weight: var(--font-weight-thin);
 
 		@media (--viewport-medium) {
-			font-size: var(--font-size-content-lg);
+			font-size: var(--font-size-content-xl);
 		}
+	}
+}
+
+.bc-welcome__content-wrap {
+	width: 100%;
+	box-sizing: border-box;
+
+	* {
+		box-sizing: border-box;
+	}
+
+	@media (--viewport-wpadmin) {
+		max-width: 410px;
 	}
 }
 
@@ -70,10 +62,13 @@
 	flex-wrap: wrap;
 
 	.bc-admin-btn {
+		margin-top: 30px;
 		margin-bottom: 20px;
+		padding-left: 18px;
+		padding-right: 18px;
 
 		&:not(:last-child) {
-			margin-right: 20px;
+			margin-right: 10px;
 		}
 	}
 
@@ -93,6 +88,34 @@
 
 .bc-welcome__alt-actions {
 	margin-top: 20px;
+}
+
+.bc-welcome--aside {
+	display: none;
+	position: absolute;
+	right: 0;
+	bottom: 0;
+
+	@media (--viewport-wpadmin) {
+		display: block;
+		width: 36%;
+	}
+
+	@media (min-width: 880px) {
+		max-width: 362px;
+		width: 40%;
+	}
+}
+
+.bc-welcome-image {
+	margin: 0;
+
+	img {
+		display: block;
+		max-width: 362px;
+		height: auto;
+		width: 100%;
+	}
 }
 
 .bc-welcome__notice {

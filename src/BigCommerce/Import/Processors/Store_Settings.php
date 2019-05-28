@@ -30,8 +30,7 @@ class Store_Settings implements Import_Processor {
 
 			do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Requesting store settings', 'bigcommerce' ), [] );
 
-			$store     = $this->store_api->getStore();
-			$analytics = $this->store_api->get_analytics_settings();
+			$store = $this->store_api->getStore();
 
 			if ( empty( $store ) ) { // v2 api client doesn't throw proper errors
 				throw new ApiException( __( 'Unable to retrieve store information', 'bigcommerce' ) );
@@ -46,10 +45,13 @@ class Store_Settings implements Import_Processor {
 
 				Settings\Sections\Units::MASS   => $this->sanitize_mass_unit( $store->weight_units ),
 				Settings\Sections\Units::LENGTH => $this->sanitize_length_unit( $store->dimension_units ),
-
-				Settings\Sections\Analytics::FACEBOOK_PIXEL   => $this->extract_facebook_pixel_id( $analytics ),
-				Settings\Sections\Analytics::GOOGLE_ANALYTICS => $this->extract_google_analytics_id( $analytics ),
 			];
+
+			if ( get_option( Settings\Sections\Analytics::SYNC_ANALYTICS, 1 ) ) {
+				$analytics                                                 = $this->store_api->get_analytics_settings();
+				$settings[ Settings\Sections\Analytics::FACEBOOK_PIXEL ]   = $this->extract_facebook_pixel_id( $analytics );
+				$settings[ Settings\Sections\Analytics::GOOGLE_ANALYTICS ] = $this->extract_google_analytics_id( $analytics );
+			}
 
 			do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Retrieved store settings', 'bigcommerce' ), [
 				'settings' => $settings,

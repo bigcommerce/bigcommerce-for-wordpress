@@ -4,21 +4,21 @@
 namespace BigCommerce\Container;
 
 use BigCommerce\Shortcodes as Codes;
-use BigCommerce\Templates\Product_Reviews;
 use Pimple\Container;
 
 class Shortcodes extends Provider {
-	const PRODUCTS        = 'shortcode.products';
-	const CART            = 'shortcode.cart';
-	const CHECKOUT        = 'shortcode.checkout';
-	const LOGIN           = 'shortcode.login';
-	const REGISTER        = 'shortcode.register';
-	const ACCOUNT         = 'shortcode.account';
-	const ADDRESS         = 'shortcode.address';
-	const ORDERS          = 'shortcode.orders';
-	const GIFT_FORM       = 'shortcode.gift_certificate.form';
-	const GIFT_BALANCE    = 'shortcode.gift_certificate.balance';
-	const PRODUCT_REVIEWS = 'shortcode.products_reviews';
+	const PRODUCTS           = 'shortcode.products';
+	const CART               = 'shortcode.cart';
+	const CHECKOUT           = 'shortcode.checkout';
+	const LOGIN              = 'shortcode.login';
+	const REGISTER           = 'shortcode.register';
+	const ACCOUNT            = 'shortcode.account';
+	const ADDRESS            = 'shortcode.address';
+	const ORDERS             = 'shortcode.orders';
+	const GIFT_FORM          = 'shortcode.gift_certificate.form';
+	const GIFT_BALANCE       = 'shortcode.gift_certificate.balance';
+	const PRODUCT_REVIEWS    = 'shortcode.products_reviews';
+	const PRODUCT_COMPONENTS = 'shortcode.products_components';
 
 	public function register( Container $container ) {
 		$container[ self::PRODUCTS ]        = function ( Container $container ) {
@@ -54,6 +54,9 @@ class Shortcodes extends Provider {
 		$container[ self::PRODUCT_REVIEWS ] = function ( Container $container ) {
 			return new Codes\Product_Reviews( $container );
 		};
+		$container[ self::PRODUCT_COMPONENTS ] = function () {
+			return new Codes\Product_Components();
+		};
 
 		add_action( 'after_setup_theme', $this->create_callback( 'register', function () use ( $container ) {
 			add_shortcode( Codes\Products::NAME, [ $container[ self::PRODUCTS ], 'render' ] );
@@ -67,6 +70,7 @@ class Shortcodes extends Provider {
 			add_shortcode( Codes\Gift_Certificate_Form::NAME, [ $container[ self::GIFT_FORM ], 'render' ] );
 			add_shortcode( Codes\Gift_Certificate_Balance::NAME, [ $container[ self::GIFT_BALANCE ], 'render' ] );
 			add_shortcode( Codes\Product_Reviews::NAME, [ $container[ self::PRODUCT_REVIEWS ], 'render' ] );
+			add_shortcode( Codes\Product_Components::NAME, [ $container[ self::PRODUCT_COMPONENTS ], 'render' ] );
 		} ), 10, 0 );
 	}
 }

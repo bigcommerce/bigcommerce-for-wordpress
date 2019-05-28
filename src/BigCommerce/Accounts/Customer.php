@@ -9,7 +9,6 @@ use Bigcommerce\Api\Resource;
 use Bigcommerce\Api\Resources\Address;
 use Bigcommerce\Api\Resources\Order;
 use Bigcommerce\Api\Resources\OrderProduct;
-use BigCommerce\Container\Cli;
 
 class Customer {
 	const CUSTOMER_ID_META = 'bigcommerce_customer_id';
@@ -107,12 +106,12 @@ class Customer {
 	 * WARNING: This function is heavy on API calls. One call for the
 	 * order list, plus another for each order in the list.
 	 *
-	 * @todo Optimize for scalability
-	 *
 	 * @param int $page
 	 * @param int $limit
 	 *
 	 * @return array
+	 * @todo Optimize for scalability
+	 *
 	 */
 	public function get_orders( $page = 1, $limit = 12 ) {
 		$customer_id = $this->get_customer_id();
@@ -132,7 +131,7 @@ class Customer {
 
 				$order = get_object_vars( $order->getCreateFields() );
 
-				$order[ 'products' ] = $products;
+				$order['products'] = $products;
 
 				return $order;
 			}, $orders );
@@ -148,11 +147,11 @@ class Customer {
 		if ( empty( $order ) || $order->customer_id != $this->get_customer_id() ) {
 			return false;
 		}
-		$data                         = $this->flatten_resource( $order );
-		$data[ 'products' ]           = $this->get_order_products( $order_id );
-		$data[ 'shipping_addresses' ] = $this->get_order_shipping_addresses( $order_id );
-		$data[ 'shipments' ]          = $order->shipments() ?: [];
-		$data[ 'coupons' ]            = $order->coupons() ?: [];
+		$data                       = $this->flatten_resource( $order );
+		$data['products']           = $this->get_order_products( $order_id );
+		$data['shipping_addresses'] = $this->get_order_shipping_addresses( $order_id );
+		$data['shipments']          = $order->shipments() ?: [];
+		$data['coupons']            = $order->coupons() ?: [];
 
 		return $data;
 	}
@@ -177,8 +176,8 @@ class Customer {
 	}
 
 	private function flatten_resource( Resource $resource ) {
-		$item         = get_object_vars( $resource->getCreateFields() );
-		$item[ 'id' ] = $resource->id;
+		$item       = get_object_vars( $resource->getCreateFields() );
+		$item['id'] = $resource->id;
 
 		return $item;
 	}
@@ -265,7 +264,7 @@ class Customer {
 		if ( empty( $group_id ) ) {
 			// Couldn't find in cache, retrieve from the API
 			$profile    = $this->get_profile();
-			$group_id   = isset( $profile[ 'customer_group_id' ] ) ? absint( $profile[ 'customer_group_id' ] ) : 0;
+			$group_id   = isset( $profile['customer_group_id'] ) ? absint( $profile['customer_group_id'] ) : 0;
 			$expiration = HOUR_IN_SECONDS; // TODO: a future webhook to flush this cache when the customer's gorup changes
 			if ( $group_id === 0 ) {
 				set_transient( $transient_key, 'zero', $expiration ); // workaround for storing empty values in cache
@@ -287,5 +286,14 @@ class Customer {
 		$group_id = apply_filters( 'bigcommerce/customer/group_id', $group_id, $this );
 
 		return absint( $group_id );
+	}
+
+	/**
+	 * Get the customer group associated with this customer
+	 *
+	 * @return Customer_Group
+	 */
+	public function get_group() {
+		return new Customer_Group( $this->get_group_id() );
 	}
 }

@@ -14,6 +14,7 @@ class Product_Shortcode_Single_Preview extends Product_Shortcode_Single {
 			Product_Title::SHOW_CONDITION => false,
 			Product_Title::SHOW_INVENTORY => false,
 			Product_Title::USE_PERMALINK  => false,
+			Product_Title::HEADER_LEVEL   => 2,
 		] );
 
 		return $component->render();

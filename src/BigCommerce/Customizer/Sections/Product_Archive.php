@@ -31,6 +31,7 @@ class Product_Archive {
 	const PER_PAGE_DEFAULT = 24;
 	const PER_PAGE         = 'bigcommerce_products_per_page';
 	const GRID_COLUMNS     = 'bigcommerce_catalog_grid_columns';
+	const QUICK_VIEW       = 'bigcommerce_enable_quick_view';
 
 	/**
 	 * @param \WP_Customize_Manager $wp_customize
@@ -50,6 +51,7 @@ class Product_Archive {
 		$this->filtering( $wp_customize );
 		$this->columns( $wp_customize );
 		$this->per_page( $wp_customize );
+		$this->quick_view( $wp_customize );
 	}
 
 	private function title( \WP_Customize_Manager $wp_customize ) {
@@ -234,5 +236,22 @@ class Product_Archive {
 				'max' => max( $range ),
 			],
 		] ) );
+	}
+
+	private function quick_view( \WP_Customize_Manager $wp_customize ) {
+		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::QUICK_VIEW, [
+			'type'              => 'option',
+			'default'           => 'yes',
+			'transport'         => 'refresh',
+		] ) );
+		$wp_customize->add_control( self::QUICK_VIEW, [
+			'section' => self::NAME,
+			'type'    => 'radio',
+			'label'   => __( 'Quick View', 'bigcommerce' ),
+			'choices' => [
+				'yes' => __( 'Enabled', 'bigcommerce' ),
+				'no'  => __( 'Disabled', 'bigcommerce' ),
+			],
+		] );
 	}
 }

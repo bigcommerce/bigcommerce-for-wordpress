@@ -18,6 +18,7 @@ class Product_Data_Fetcher implements Import_Processor {
 	use No_Cache_Options;
 
 	const STATE_OPTION = 'bigcommerce_import_product_id_fetcher_state';
+	const FILTERED_LISTING_MAP = 'bigcommerce_filtered_listing_map';
 
 	/**
 	 * @var int
@@ -50,7 +51,7 @@ class Product_Data_Fetcher implements Import_Processor {
 			'after' => $next ?: null,
 		] );
 
-		$map = (array) $this->get_option( Listing_Fetcher::PRODUCT_LISTING_MAP, [] );
+		$map = $this->get_filtered_listing_map();
 
 		$chunks      = array_chunk( array_keys( $map ), $this->limit );
 		$product_ids = isset( $chunks[ $next ] ) ? $chunks[ $next ] : [];
@@ -161,6 +162,23 @@ class Product_Data_Fetcher implements Import_Processor {
 			$status->set_status( Status::FETCHED_PRODUCTS );
 			$this->clear_state();
 		}
+	}
+
+	private function get_filtered_listing_map() {
+		$filtered = $this->get_option( self::FILTERED_LISTING_MAP, [] );
+		if ( ! empty( $filtered ) ) {
+			return $filtered;
+		}
+		$map = (array) $this->get_option( Listing_Fetcher::PRODUCT_LISTING_MAP, [] );
+		$map = array_filter( $map, function( $listings ) {
+			$listings = array_filter( $listings, function( $json ) {
+				$listing = json_decode( $json );
+				return $listing && isset( $listing->state ) && in_array( $listing->state, [ 'active', 'pending', 'disabled', 'unknown' ] );
+			});
+			return ! empty( $listings );
+		});
+		$this->update_option( self::FILTERED_LISTING_MAP, $map );
+		return $map;
 	}
 
 	private function get_next() {

@@ -1,4 +1,4 @@
-class {{classname}} {{#interfaces}}extends {{{interfaces.0}}} {{/interfaces}}implements ArrayAccess
+class {{classname}} {{#interfaces}}{{#-last}}extends {{interfaces.0}} {{/-last}}{{/interfaces}}implements ArrayAccess
 {
     const DISCRIMINATOR = null;
 

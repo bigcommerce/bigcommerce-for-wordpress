@@ -18,7 +18,7 @@ use BigCommerce\Assets\Theme\Image_Sizes;
 	<?php } ?>
 
 	<div class="bc-product-gallery--has-carousel">
-		<amp-carousel id="bc-product-gallery-<?php echo esc_attr( get_the_ID() ); ?>"
+		<amp-carousel id="bc-product-gallery-<?php echo esc_attr( $product->post_id() ); ?>"
 					  class="bc-product-gallery__carousel"
 					  width="370"
 					  height="370"
@@ -50,7 +50,7 @@ use BigCommerce\Assets\Theme\Image_Sizes;
 				$current_image       = wp_get_attachment_image_src( $image_id, Image_Sizes::BC_THUMB );
 				$current_image_large = wp_get_attachment_image_src( $image_id, Image_Sizes::BC_MEDIUM );
 				?>
-				<span on="tap:bc-product-gallery-<?php echo esc_attr( get_the_ID() ); ?>.goToSlide(index=<?php echo intval( $index ); ?>)" class="bc-product-gallery__thumb-slide" role="button" tabindex="0">
+				<span on="tap:bc-product-gallery-<?php echo esc_attr( $product->post_id() ); ?>.goToSlide(index=<?php echo intval( $index ); ?>)" class="bc-product-gallery__thumb-slide" role="button" tabindex="0">
 					<amp-img src="<?php echo esc_url( $current_image[0] ); ?>"
 							 width="<?php echo intval( $current_image[1] ); ?>"
 							 height="<?php echo intval( $current_image[2] ); ?>"

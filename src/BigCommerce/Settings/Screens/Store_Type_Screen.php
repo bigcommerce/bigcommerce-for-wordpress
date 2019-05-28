@@ -12,7 +12,7 @@ use BigCommerce\Settings\Sections\Cart;
  *
  * @package BigCommerce\Settings\Screens
  */
-class Store_Type_Screen extends Abstract_Screen {
+class Store_Type_Screen extends Onboarding_Screen {
 	const NAME              = 'bigcommerce_store_type';
 	const COMPLETE_FLAG     = 'bigcommerce_store_type_option_complete';
 	const ACTION_BLOG       = 'bigcommerce_set_store_type_blog';
@@ -38,12 +38,8 @@ class Store_Type_Screen extends Abstract_Screen {
 	 * @return string
 	 */
 	protected function get_header() {
-		$notices_placeholder = '<div class="wp-header-end"></div>'; // placeholder to tell WP where to put notices
-
-		return $notices_placeholder . sprintf(
-				'<header class="bc-connect__header"><img src="%s" alt="%s" /><h1 class="bc-settings-connect__title">%s</h1>%s</header>',
-				trailingslashit( $this->assets_url ) . 'img/admin/big-commerce-logo.svg',
-				__( 'BigCommerce', 'bigcommerce' ),
+		return $this->before_title() . sprintf(
+				'<header class="bc-connect__header"><h1 class="bc-settings-connect__title">%s</h1>%s</header>',
 				__( 'How do you want to use BigCommerce for WordPress?', 'bigcommerce' ),
 				$this->get_description()
 			);

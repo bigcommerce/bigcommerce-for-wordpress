@@ -18,6 +18,8 @@ class Product_Title extends Controller {
 	const SHOW_INVENTORY  = 'show_inventory';
 	const USE_PERMALINK   = 'use_permalink';
 	const LINK_ATTRIBUTES = 'link_attributes';
+	const HEADER_LEVEL    = 'header_level';
+	const HEADER_TAG      = 'header_tag';
 
 	protected $template = 'components/products/product-title.php';
 
@@ -29,6 +31,7 @@ class Product_Title extends Controller {
 			self::SHOW_INVENTORY  => true,
 			self::USE_PERMALINK   => true,
 			self::LINK_ATTRIBUTES => [],
+			self::HEADER_LEVEL    => 3,
 		];
 
 		return wp_parse_args( $options, $defaults );
@@ -44,6 +47,7 @@ class Product_Title extends Controller {
 				self::PERMALINK       => '',
 				self::USE_PERMALINK   => '',
 				self::LINK_ATTRIBUTES => '',
+				self::HEADER_TAG      => $this->header_tag( $this->options[ self::HEADER_LEVEL ] ),
 			];
 		}
 		/** @var Product $product */
@@ -56,6 +60,7 @@ class Product_Title extends Controller {
 			self::PERMALINK       => get_the_permalink( $product->post_id() ),
 			self::USE_PERMALINK   => $this->options[ self::USE_PERMALINK ],
 			self::LINK_ATTRIBUTES => $this->build_attribute_string( $this->options[ self::LINK_ATTRIBUTES ] ),
+			self::HEADER_TAG      => $this->header_tag( $this->options[ self::HEADER_LEVEL ] ),
 		];
 
 		return $data;
@@ -81,5 +86,11 @@ class Product_Title extends Controller {
 		] );
 
 		return $controller->render();
+	}
+
+	private function header_tag( $level ) {
+		$level = max( 1, absint( $level ) );
+
+		return sprintf( 'h%d', $level );
 	}
 }

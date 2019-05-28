@@ -2,64 +2,42 @@
 .bc-settings-bigcommerce_new_account {
 	display: flex;
 	flex-direction: column;
-	lost-utility: clearfix;
 }
 
-.bc-connect__header,
-.bc-new-account__header,
-.bc-api-credentials__header,
-.bc-settings-form--bigcommerce_connect,
-.bc-settings-form--bigcommerce_new_account,
-.bc-welcome__account-connection,
-.bc-settings-form--bigcommerce_channel,
-.bc-settings-form--bigcommerce_api_credentials,
-.bc-settings-form--bigcommerce_store_type {
-	@media (--viewport-medium) {
-		lost-column: 11/12;
-	}
+.bc-connect__header {
 
-	@media (--viewport-large) {
-		lost-offset: 1/12;
-	}
-}
+	p,
+	li {
+		font-size: 0.938em;
+		line-height: 1.44;
+		font-weight: var(--font-weight-thin);
 
-.bc-settings-form--bigcommerce_connect,
-.bc-settings-form--bigcommerce_new_account,
-.bc-welcome__account-connection,
-.bc-settings-form--bigcommerce_channel,
-.bc-settings-form--bigcommerce_api_credentials {
-	@media (--viewport-large) {
-		lost-column: 9/12;
+		@media (--viewport-wpadmin) {
+			font-size: var(--font-size-content-xl);
+		}
 	}
 }
 
 .bc-connect__header,
 .bc-new-account__header,
-.bc-api-credentials__header,
 .bc-settings-form--bigcommerce_store_type {
 	margin: 10px 0 30px;
 
 	@media (--viewport-medium) {
-		lost-column: 9/12;
-		margin: 30px 0 50px;
-		max-width: 620px;
-	}
-
-	@media (--viewport-large) {
-		margin-top: 60px;
+		margin-bottom: 36px;
 	}
 }
 
 .bc-settings .bc-settings-connect__title {
 	color: var(--color-bc-black);
-	font-size: 2em;
-	font-weight: var(--font-weight-regular);
-	line-height: 1.25;
-	margin: 18px 0 0;
+	font-size: 1.86em;
+	font-weight: var(--font-weight-thin);
+	line-height: 1.1;
+	margin: 0;
+	padding: 2px 0 4px;
 
 	@media (--viewport-medium) {
-		font-size: 3em;
-		line-height: 1.1;
+		font-size: 2.16em;
 	}
 }
 
@@ -111,20 +89,42 @@
 }
 
 /* Account Reset */
-.bc-welcome-reset {
-	margin-top: 30px;
+.bc-welcome-reset,
+.bc-welcome-skip-menu-setup {
+	position: absolute;
+	bottom: -60px;
+	left: 50%;
+	transform: translateX(-50%);
+}
 
-	@media (--viewport-large) {
-		margin-left: calc(8.33333% + 1.66667px);
+.bc-welcome-skip-menu-setup {
+	bottom: -80px;
+}
+
+.bc-welcome__account-reset-wrapper,
+.bc-welcome__account-reset-overlay {
+	position: fixed;
+	top: 0;
+	right: 0;
+	height: 100%;
+	width: 100%;
+
+	@media (--viewport-wpadmin) {
+		width: calc(100% - 36px);
+		height: calc(100% - 32px);
+		top: 32px;
+	}
+
+	@media (--viewport-full) {
+		width: calc(100% - 160px);
+	}
+
+	.folded & {
+		width: calc(100% - 36px);
 	}
 }
 
 .bc-welcome__account-reset-wrapper {
-	position: fixed;
-	top: 0;
-	right: 0;
-	height: 100vh;
-	width: 100vw;
 	z-index: 159000;
 
 	&[aria-hidden='true'] {
@@ -133,55 +133,60 @@
 }
 
 .bc-welcome__account-reset-overlay {
-	position: fixed;
-	top: 0;
-	right: 0;
-	height: 100vh;
-	width: 100vw;
-	background: var(--color-black-a-70);
+	background: var(--color-black);
+}
+
+.bc-account-reset-logo {
+	background-image: url("var(--path-images)/admin/big-commerce-logo-white.svg");
+	background-size: contain;
+	width: 119px;
+	height: 27px;
+	position: absolute;
+	left: 27px;
+	top: 32px;
+	background-repeat: no-repeat;
 }
 
 .bc-welcome__account-reset-content {
-	background-color: var(--color-white);
-	width: calc(100vw - 120px);
-	max-width: 780px;
+	color: var(--color-white);
+	width: 100%;
+	height: 100vh;
+
+	.bc-admin-btn--outline {
+		border-color: var(--color-white);
+		background: transparent;
+		color: var(--color-white);
+
+		&:hover,
+		&:focus {
+			border-color: var(--color-white);
+			background: var(--color-white);
+			color: var(--color-bc-doger-blue);
+		}
+	}
+}
+
+.bc-welcome__account-reset-content-wrapper {
+	box-sizing: border-box;
 	position: absolute;
 	top: 50%;
 	left: 50%;
 	transform: translate3d(-50%, -50%, 0);
+	max-height: 260px;
+	max-width: 780px;
+	width: calc(100% - 40px);
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: space-between;
 	padding: 40px;
 
 	@media (--viewport-wpadmin) {
-		padding: 80px;
-		width: calc(100vw - 380px);
-		left: 110px;
-		transform: translate3d(0, -50%, 0);
-		height: 100vh;
-		max-height: 260px;
-	}
-
-	@media (min-width: 961px) {
-		left: 190px;
-	}
-
-	@media (--viewport-large) {
-		width: calc(100vw - 520px);
-		left: 260px;
-	}
-
-	@media (--viewport-xlarge) {
 		width: 100%;
-		left: 50%;
-		transform: translate3d(-50%, -50%, 0);
 	}
 
-	> div {
-		height: 100%;
-		display: flex;
-		flex-direction: column;
-		flex-wrap: nowrap;
-		align-items: center;
-		justify-content: space-between;
+	@media (--viewport-full) {
+		padding: 80px;
 	}
 }
 
@@ -192,15 +197,16 @@
 }
 
 p.bc-welcome__account-reset-message {
-	font-size: 32px;
-	text-align: center;
+	font-size: 24px;
+	font-weight: var(--font-weight-thin);
 	margin-top: 0;
-	margin-bottom: 0;
-	line-height: 1em;
-	max-width: 490px;
+	margin-bottom: 0.75em;
+	line-height: 1.2em;
+	max-width: 620px;
+	width: 100%;
 
 	@media (--viewport-wpadmin) {
-		font-size: 46px;
+		font-size: 28px;
 	}
 }
 
@@ -213,13 +219,19 @@ p.bc-welcome__account-reset-message {
 		margin: 10px auto 0;
 		width: 100%;
 		max-width: 204px;
+
+		@media (--viewport-small) {
+			display: inline-block;
+			vertical-align: middle;
+			margin-right: 15px;
+		}
 	}
 }
 
 .bc-welcome__account-reset-close-button {
 	position: absolute;
-	right: 0;
-	top: -42px;
+	right: 20px;
+	top: 20px;
 	font-size: 20px;
 	background-color: transparent;
 	color: var(--color-white);
@@ -300,4 +312,8 @@ p.bc-welcome__account-reset-message {
 		display: inline-block;
 		vertical-align: middle;
 	}
+}
+
+.icon-bc-bc_create_account:before {
+	content: var(--icon-bc-accounts);
 }
