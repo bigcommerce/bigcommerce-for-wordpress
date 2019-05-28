@@ -7421,8 +7421,8 @@ definitions:
             type: integer
             description: |
               The id of the `Product` this `Price Record`'s variant_id is associated with.  Read only.
-      - $ref: "#/definitions/PriceRecordIdentifiers"
       - $ref: "#/definitions/PriceRecordBase"
+      - $ref: "#/definitions/PriceRecordIdentifiers"
   BulkPricingTier:
     type: object
     properties:

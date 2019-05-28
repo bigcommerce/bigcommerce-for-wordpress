@@ -12,10 +12,11 @@ abstract class Settings_Section {
 	 * @return void
 	 */
 	public function render_field( $args ) {
-		$option  = $args[ 'option' ];
-		$default = isset( $args[ 'default' ] ) ? $args[ 'default' ] : '';
-		$value   = get_option( $option, $default );
-		printf( '<input id="field-%s" type="%s" value="%s" class="regular-text code" name="%s" data-lpignore="true" />', esc_attr( $args[ 'option' ] ), esc_attr( $args[ 'type' ] ), esc_attr( $value ), esc_attr( $option ) );
+		$option       = $args['option'];
+		$default      = isset( $args['default'] ) ? $args['default'] : '';
+		$autocomplete = isset( $args['autocomplete'] ) ? $args['autocomplete'] : '';
+		$value        = get_option( $option, $default );
+		printf( '<input id="field-%s" type="%s" value="%s" class="regular-text code" name="%s" autocomplete="%s" data-lpignore="true" />', esc_attr( $args[ 'option' ] ), esc_attr( $args[ 'type' ] ), esc_attr( $value ), esc_attr( $option ), esc_attr( $autocomplete ) );
 		if ( ! empty( $args[ 'description' ] ) ) {
 			printf( '<p class="description">%s</p>', esc_html( $args[ 'description' ] ) );
 		}

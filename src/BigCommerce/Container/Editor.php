@@ -70,7 +70,8 @@ class Editor extends Provider {
 				new Gutenberg\Blocks\Address_List( $container[ Assets::PATH ] ),
 				new Gutenberg\Blocks\Order_History( $container[ Assets::PATH ] ),
 				new Gutenberg\Blocks\Login_Form( $container[ Assets::PATH ] ),
-				new Gutenberg\Blocks\Product_Reviews( $container[ Assets::PATH ] )
+				new Gutenberg\Blocks\Product_Reviews( $container[ Assets::PATH ] ),
+				new Gutenberg\Blocks\Product_Components( $container[ Assets::PATH ] ),
 			];
 			if ( ( (bool) get_option( Cart_Settings::OPTION_ENABLE_CART, true ) ) === true ) {
 				$blocks[] = new Gutenberg\Blocks\Cart( $container[ Assets::PATH ] );

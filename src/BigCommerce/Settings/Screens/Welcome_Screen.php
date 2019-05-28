@@ -6,8 +6,8 @@ namespace BigCommerce\Settings\Screens;
 
 use BigCommerce\Container\Settings;
 
-class Welcome_Screen extends Abstract_Screen {
-	const NAME = 'bigcommerce_welcome';
+class Welcome_Screen extends Onboarding_Screen {
+	const NAME      = 'bigcommerce_welcome';
 
 	/** @var string Path to the templates/admin directory */
 	private $template_dir;

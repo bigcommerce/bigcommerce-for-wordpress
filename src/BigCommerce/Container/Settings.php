@@ -12,6 +12,7 @@ use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Settings\Connection_Status;
 use BigCommerce\Settings\Import_Now;
 use BigCommerce\Settings\Import_Status;
+use BigCommerce\Settings\Onboarding_Progress;
 use BigCommerce\Settings\Screens\Abstract_Screen;
 use BigCommerce\Settings\Screens\Api_Credentials_Screen;
 use BigCommerce\Settings\Screens\Store_Type_Screen;
@@ -64,11 +65,12 @@ class Settings extends Provider {
 	const DIAGNOSTICS_SECTION      = 'settings.section.diagnostics';
 	const MENU_OPTIONS_SECTION     = 'settings.section.nav_menu_options';
 
-	const API_STATUS         = 'settings.api_status';
-	const IMPORT_NOW         = 'settings.import_now';
-	const IMPORT_STATUS      = 'settings.import_status';
-	const IMPORT_LIVE_STATUS = 'settings.import_status_live';
-	const START_OVER         = 'settings.start_over';
+	const API_STATUS          = 'settings.api_status';
+	const IMPORT_NOW          = 'settings.import_now';
+	const IMPORT_STATUS       = 'settings.import_status';
+	const IMPORT_LIVE_STATUS  = 'settings.import_status_live';
+	const START_OVER          = 'settings.start_over';
+	const ONBOARDING_PROGRESS = 'settings.onboarding.progress_bar';
 
 
 	const CONFIG_STATUS              = 'settings.configuration_status';
@@ -456,9 +458,9 @@ class Settings extends Provider {
 				$container[ self::CHANNEL_SECTION ]->handle_action_submission( $container[ self::SETTINGS_SCREEN ]->get_url() . '#' . Channel_Settings::NAME );
 			}
 		} ), 10, 0 );
-		add_action( 'bigcommerce/channel/promote', $this->create_callback( 'promote_channel', function( \WP_Term $term ) use ( $container ) {
+		add_action( 'bigcommerce/channel/promote', $this->create_callback( 'promote_channel', function ( \WP_Term $term ) use ( $container ) {
 			$container[ self::CHANNEL_SECTION ]->promote_channel( $term );
-		}), 10, 1 );
+		} ), 10, 1 );
 
 		$container[ self::PENDING_SCREEN ] = function ( Container $container ) {
 			return new Pending_Account_Screen( $container[ self::CONFIG_STATUS ], $container[ Assets::PATH ] );
@@ -528,16 +530,39 @@ class Settings extends Provider {
 		$start_over_link = $this->create_callback( 'start_over_link', function () use ( $container ) {
 			$container[ self::START_OVER ]->add_link_to_settings_screen();
 		} );
-		add_action( 'bigcommerce/settings/before_end_form/page=' . Api_Credentials_Screen::NAME, $start_over_link );
-		add_action( 'bigcommerce/settings/before_end_form/page=' . Create_Account_Screen::NAME, $start_over_link );
-		add_action( 'bigcommerce/settings/before_end_form/page=' . Connect_Channel_Screen::NAME, $start_over_link );
-		add_action( 'bigcommerce/settings/before_end_form/page=' . Store_Type_Screen::NAME, $start_over_link );
+		add_action( 'bigcommerce/settings/after_form/page=' . Api_Credentials_Screen::NAME, $start_over_link );
+		add_action( 'bigcommerce/settings/after_form/page=' . Create_Account_Screen::NAME, $start_over_link );
+		add_action( 'bigcommerce/settings/after_form/page=' . Connect_Channel_Screen::NAME, $start_over_link );
+		add_action( 'bigcommerce/settings/after_form/page=' . Store_Type_Screen::NAME, $start_over_link );
 		add_action( 'bigcommerce/settings/after_content/page=' . Pending_Account_Screen::NAME, $start_over_link );
 
 		add_action( 'admin_post_' . Start_Over::ACTION, function () use ( $container ) {
 			$container[ self::START_OVER ]->reset_credentials();
 		}, 10, 0 );
 
+		$this->onboarding_progress_bar( $container );
+	}
+
+	private function onboarding_progress_bar( Container $container ) {
+		$container[ self::ONBOARDING_PROGRESS ] = function ( Container $container ) {
+			$path = dirname( $container['plugin_file'] ) . '/templates/admin';
+			return new Onboarding_Progress( $container[ self::CONFIG_STATUS ], $path );
+		};
+		$progress_bar = $this->create_callback( 'onboarding_progress', function () use ( $container ) {
+			$container[ self::ONBOARDING_PROGRESS ]->render();
+		} );
+		add_action( 'bigcommerce/settings/onboarding/progress', $progress_bar, 10, 0 );
+
+		$subheader = $this->create_callback( 'onboarding_subheader', function() use ( $container ) {
+			$container[ self::ONBOARDING_PROGRESS ]->step_subheader();
+		});
+		add_action( 'bigcommerce/settings/before_title/page=' . Welcome_Screen::NAME, $subheader, 10, 0 );
+		add_action( 'bigcommerce/settings/before_title/page=' . Create_Account_Screen::NAME, $subheader, 10, 0 );
+		add_action( 'bigcommerce/settings/before_title/page=' . Api_Credentials_Screen::NAME, $subheader, 10, 0 );
+		add_action( 'bigcommerce/settings/before_title/page=' . Pending_Account_Screen::NAME, $subheader, 10, 0 );
+		add_action( 'bigcommerce/settings/before_title/page=' . Connect_Channel_Screen::NAME, $subheader, 10, 0 );
+		add_action( 'bigcommerce/settings/before_title/page=' . Store_Type_Screen::NAME, $subheader, 10, 0 );
+		add_action( 'bigcommerce/settings/before_title/page=' . Nav_Menu_Screen::NAME, $subheader, 10, 0 );
 	}
 
 	/**

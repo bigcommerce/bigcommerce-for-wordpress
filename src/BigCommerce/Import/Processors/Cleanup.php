@@ -44,6 +44,7 @@ class Cleanup implements Import_Processor {
 		}
 
 		delete_option( Listing_Fetcher::PRODUCT_LISTING_MAP );
+		delete_option( Product_Data_Fetcher::FILTERED_LISTING_MAP );
 
 		$status->set_status( Status::COMPLETED );
 

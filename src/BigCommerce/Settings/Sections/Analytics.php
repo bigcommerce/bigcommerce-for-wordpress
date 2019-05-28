@@ -10,6 +10,7 @@ use BigCommerce\Settings\Screens\Settings_Screen;
 class Analytics extends Settings_Section {
 	const NAME = 'analytics';
 
+	const SYNC_ANALYTICS   = 'bigcommerce_sync_analytics';
 	const FACEBOOK_PIXEL   = 'bigcommerce_facebook_pixel_id';
 	const GOOGLE_ANALYTICS = 'bigcommerce_google_analytics_id';
 	const SEGMENT          = 'bigcommerce_segment_key';
@@ -42,6 +43,12 @@ class Analytics extends Settings_Section {
 
 		register_setting(
 			Settings_Screen::NAME,
+			self::SYNC_ANALYTICS,
+			[ 'default' => 1 ]
+		);
+
+		register_setting(
+			Settings_Screen::NAME,
 			self::FACEBOOK_PIXEL
 		);
 
@@ -51,6 +58,18 @@ class Analytics extends Settings_Section {
 		);
 
 
+		add_settings_field(
+			self::SYNC_ANALYTICS,
+			esc_html( __( 'Sync Tracking IDs', 'bigcommerce' ) ),
+			[ $this, 'render_sync_checkbox', ],
+			Settings_Screen::NAME,
+			self::NAME,
+			[
+				'option'    => self::SYNC_ANALYTICS,
+				'type'      => 'text',
+				'default'   => 1,
+			]
+		);
 		add_settings_field(
 			self::FACEBOOK_PIXEL,
 			esc_html( __( 'Facebook Pixel ID', 'bigcommerce' ) ),
@@ -77,6 +96,20 @@ class Analytics extends Settings_Section {
 		);
 	}
 
+	public function render_sync_checkbox( $args ) {
+		$option  = $args[ 'option' ];
+		$default = isset( $args[ 'default' ] ) ? $args[ 'default' ] : '';
+		$value   = (bool) get_option( $option, $default );
+		printf(
+			'<label><input id="field-%s" type="checkbox" value="1" class="regular-text code" name="%s" %s /> %s</label>',
+			esc_attr( $option ),
+			esc_attr( $option ),
+			checked( true, $value, false ),
+			__( 'Keep analytics tracking IDs in sync with your BigCommerce store settings', 'bigcommerce' )
+		);
+		printf( '<p class="description">%s</p>', __( 'Disable the sync to set different tracking IDs on different sites connected to your account.', 'bigcommerce' ) );
+	}
+
 	/**
 	 * @param string $old_value
 	 * @param string $new_value
@@ -85,15 +118,15 @@ class Analytics extends Settings_Section {
 	 * @action update_option_ . self::FACEBOOK_PIXEL
 	 */
 	public function update_pixel_option( $old_value, $new_value ) {
-		if ( $old_value == $new_value ) {
+		if ( $old_value == $new_value || ! get_option( self::SYNC_ANALYTICS, 1 ) ) {
 			return;
 		}
 		$settings = $this->api->get_analytics_settings();
 		foreach ( $settings as &$account ) {
-			if ( $account[ 'name' ] == self::FACEBOOK_PIXEL_NAME ) {
-				$account[ 'code' ]    = $new_value;
-				$account[ 'enabled' ] = ! empty( $new_value );
-				$this->api->update_analytics_settings( $account[ 'id' ], $account );
+			if ( $account['name'] == self::FACEBOOK_PIXEL_NAME ) {
+				$account['code']    = $new_value;
+				$account['enabled'] = ! empty( $new_value );
+				$this->api->update_analytics_settings( $account['id'], $account );
 
 				return;
 			}
@@ -109,17 +142,18 @@ class Analytics extends Settings_Section {
 	 * @action update_option_ . self::GOOGLE_ANALYTICS
 	 */
 	public function update_google_option( $old_value, $new_value ) {
-		if ( $old_value == $new_value ) {
+		if ( $old_value == $new_value || ! get_option( self::SYNC_ANALYTICS, 1 ) ) {
 			return;
 		}
 		$settings = $this->api->get_analytics_settings();
 		foreach ( $settings as &$account ) {
-			if ( $account[ 'name' ] == self::GOOGLE_ANALYTICS_NAME ) {
-				if (strpos($account[ 'code' ], 'script') === false) {
-					$account[ 'code' ]    = $new_value;
-					$account[ 'enabled' ] = ! empty( $new_value );
-					$this->api->update_analytics_settings( $account[ 'id' ], $account );
+			if ( $account['name'] == self::GOOGLE_ANALYTICS_NAME ) {
+				if ( strpos( $account['code'], 'script' ) === false ) {
+					$account['code']    = $new_value;
+					$account['enabled'] = ! empty( $new_value );
+					$this->api->update_analytics_settings( $account['id'], $account );
 				}
+
 				return;
 			}
 		}

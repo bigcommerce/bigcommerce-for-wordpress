@@ -15,7 +15,7 @@ use BigCommerce\Settings\Sections\Nav_Menu_Options;
 use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
 
-class Nav_Menu_Screen extends Abstract_Screen {
+class Nav_Menu_Screen extends Onboarding_Screen {
 	const NAME          = 'bigcommerce_nav_setup';
 	const COMPLETE_FLAG = 'bigcommerce_nav_setup_complete';
 
@@ -27,14 +27,25 @@ class Nav_Menu_Screen extends Abstract_Screen {
 		return __( 'Welcome', 'bigcommerce' );
 	}
 
-	protected function before_form() {
-		printf( '<p>%s</p>', __( 'Select options below to add items to your navigation menu. If you choose to skip this step, you can also add items through the Customizer or at Appearance ➔ Menus.', 'bigcommerce' ) );
-		parent::before_form();
+	/**
+	 * @return string
+	 */
+	private function get_description() {
+		return sprintf( '<p>%s</p>', __( 'Select options below to add items to your navigation menu. If you choose to skip this step, you can also add items through the Customizer or at Appearance ➔ Menus.', 'bigcommerce' ) );
+	}
+
+	protected function get_header() {
+		return sprintf(
+			'%s<header class="bc-connect__header"><h1 class="bc-settings-connect__title">%s</h1>%s</header>',
+			$this->before_title(),
+			$this->get_page_title(),
+			$this->get_description()
+		);
 	}
 
 	protected function submit_button() {
 		echo '<div class="bc-settings-save">';
-		submit_button( __( 'Add to Menu', 'bigcommerce' ) );
+		$this->onboarding_submit_button( 'bc-settings-menu-submit', 'bc-onboarding-arrow', __( 'Add to Menu', 'bigcommerce' ), true );
 
 		$skip_url = add_query_arg( [
 			'action' => self::NAME,

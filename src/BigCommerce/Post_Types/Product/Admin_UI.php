@@ -129,4 +129,17 @@ class Admin_UI {
 				return '';
 		}
 	}
+
+	/**
+	 * Show applicable admin notices at the top of the products list table
+	 *
+	 * @return void
+	 * @action admin_notices
+	 */
+	public function list_table_admin_notices() {
+		$screen = get_current_screen();
+		if ( $screen && $screen->base === 'edit' && $screen->post_type === Product::NAME ) {
+			settings_errors();
+		}
+	}
 }

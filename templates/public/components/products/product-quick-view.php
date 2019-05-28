@@ -20,24 +20,21 @@
 use BigCommerce\Post_Types\Product\Product;
 
 ?>
-<!-- data-js="bc-product-data-wrapper" is required. -->
-<div id="bc-product-<?php echo esc_attr( $sku ); ?>--quick-view" class="bc-product-card bc-product-card--single" data-js="bc-product-data-wrapper">
-	<?php echo $gallery; ?>
+<?php echo $gallery; ?>
 
-	<div class="bc-product__meta">
-		<?php
-		echo $title;
-		echo $brand;
-		echo $price;
-		echo $rating;
-		echo sprintf( __( '<span class="bc-product-single__meta-label">SKU:</span> %s', 'bigcommerce' ), $sku );
-		?>
+<div class="bc-product__meta">
+	<?php
+	echo $title;
+	echo $brand;
+	echo $price;
+	echo $rating;
+	echo $sku;
+	?>
 
-	</div>
-
-	<div class="bc-product__actions">
-		<?php echo $form; ?>
-	</div>
-
-	<?php echo $description; ?>
 </div>
+
+<div class="bc-product__actions">
+	<?php echo $form; ?>
+</div>
+
+<?php echo $description; ?>

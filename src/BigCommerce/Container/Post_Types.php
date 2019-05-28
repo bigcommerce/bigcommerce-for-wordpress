@@ -20,6 +20,8 @@ class Post_Types extends Provider {
 	const CHANNEL_SYNC        = 'post_type.product.channel_sync';
 	const PRODUCT_ADMIN_LIST  = 'post_type.product.admin_list';
 	const PRODUCT_UNIQUE_SLUG = 'post_type.product.unique_slug';
+	const LISTING_RESET       = 'product_type.product.listing_reset';
+	const PRODUCT_RESYNC      = 'product_type.product.resync_single';
 
 	const CART_INDICATOR = 'post_type.page.cart_indicator';
 	const CART_CREATOR   = 'post_type.page.cart_creator';
@@ -107,6 +109,9 @@ class Post_Types extends Provider {
 		add_filter( 'views_edit-' . Product\Product::NAME, $this->create_callback( 'list_table_manage_link', function ( $views ) use ( $container ) {
 			return $container[ self::PRODUCT_ADMIN ]->list_table_manage_link( $views );
 		} ), 2, 1 );
+		add_action( 'admin_notices', $this->create_callback( 'list_table_admin_notices', function () use ( $container ) {
+			$container[ self::PRODUCT_ADMIN ]->list_table_admin_notices();
+		} ), 10, 0 );
 
 		add_filter( 'map_meta_cap', $this->create_callback( 'unsupported_meta_caps', function ( $caps, $cap, $user_id, $args ) use ( $container ) {
 			return $container[ self::PRODUCT_UNSUPPORTED ]->disallow_publication( $caps, $cap, $user_id, $args );
@@ -149,6 +154,8 @@ class Post_Types extends Provider {
 
 
 		$this->product_store_links( $container );
+		$this->product_listing_reset( $container );
+		$this->product_resync( $container );
 		$this->product_channel_indicator( $container );
 		$this->channel_sync( $container );
 		$this->product_slugs( $container );
@@ -173,6 +180,30 @@ class Post_Types extends Provider {
 		add_filter( 'bigcommerce/gutenberg/js_config', $this->create_callback( 'gutenberg_store_link', function ( $data ) use ( $container ) {
 			return $container[ self::STORE_LINKS ]->add_link_to_gutenberg_config( $data );
 		} ), 10, 1 );
+	}
+
+	private function product_listing_reset( Container $container ) {
+		$container[ self::LISTING_RESET ] = function ( Container $container ) {
+			return new Product\Reset_Listing();
+		};
+		add_filter( 'post_row_actions', $this->create_callback( 'post_row_reset', function ( $actions, $post ) use ( $container ) {
+			return $container[ self::LISTING_RESET ]->add_row_action( $actions, $post );
+		} ), 10, 2 );
+		add_action( 'admin_post_' . Product\Reset_Listing::ACTION, $this->create_callback( 'handle_reset_listing', function () use ( $container ) {
+			$container[ self::LISTING_RESET ]->handle_request();
+		} ), 10, 0 );
+	}
+
+	private function product_resync( Container $container ) {
+		$container[ self::PRODUCT_RESYNC ] = function ( Container $container ) {
+			return new Product\Single_Product_Sync();
+		};
+		add_filter( 'post_row_actions', $this->create_callback( 'post_row_resync', function ( $actions, $post ) use ( $container ) {
+			return $container[ self::PRODUCT_RESYNC ]->add_row_action( $actions, $post );
+		} ), 10, 2 );
+		add_action( 'admin_post_' . Product\Single_Product_Sync::ACTION, $this->create_callback( 'handle_resync_product', function () use ( $container ) {
+			$container[ self::PRODUCT_RESYNC ]->handle_request();
+		} ), 10, 0 );
 	}
 
 	private function product_channel_indicator( Container $container ) {

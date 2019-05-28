@@ -126,7 +126,14 @@ class Amp extends Provider {
 
 				// Remove extra attributes such as data-js from AMP to avoid validation errors.
 				$amp_extra_attributes_removal = $this->create_callback( 'amp_remove_extra_attributes', function ( $attributes, $template ) use ( $container ) {
-					return [];
+					$keys = array_filter( array_keys( $attributes ), function ( $string ) {
+						return strpos( $string, 'data-' ) === 0;
+					} );
+					foreach ( $keys as $key ) {
+						unset( $attributes[ $key ] );
+					}
+
+					return $attributes;
 				} );
 
 				$amp_filter_fallback_image = $this->create_callback( 'amp_filter_fallback_image', function () use ( $container ) {

@@ -7,7 +7,7 @@ namespace BigCommerce\Settings\Screens;
 use BigCommerce\Container\Settings;
 use BigCommerce\Settings\Sections\New_Account_Section;
 
-class Create_Account_Screen extends Abstract_Screen {
+class Create_Account_Screen extends Onboarding_Screen {
 	const NAME = 'bigcommerce_new_account';
 
 	const SUBMITTED_DATA = 'bigcommerce_new_account_submission';
@@ -21,13 +21,9 @@ class Create_Account_Screen extends Abstract_Screen {
 	}
 
 	protected function get_header() {
-		$notices_placeholder = '<div class="wp-header-end"></div>'; // placeholder to tell WP where to put notices
-
 		return sprintf(
-			'%s<header class="bc-new-account__header"><img src="%s" alt="%s" /><h1 class="bc-settings-connect__title">%s</h1></header>',
-			$notices_placeholder,
-			trailingslashit( $this->assets_url ) . 'img/admin/big-commerce-logo.svg',
-			__( 'BigCommerce', 'bigcommerce' ),
+			'%s<header class="bc-new-account__header"><h1 class="bc-settings-connect__title">%s</h1></header>',
+			$this->before_title(),
 			__( 'We just need a few details to create your store.', 'bigcommerce' )
 		);
 	}
@@ -37,7 +33,7 @@ class Create_Account_Screen extends Abstract_Screen {
 	}
 
 	protected function submit_button() {
-		submit_button( __( 'Create My Account', 'bigcommerce' ), 'primary', 'submit', true, ['data-js' => 'bc-settings-create-account-button'] );
+		$this->onboarding_submit_button( 'bc-settings-create-account-button', 'bc-onboarding-arrow', __( 'Create My Account', 'bigcommerce' ), true );
 	}
 
 	public function should_register() {

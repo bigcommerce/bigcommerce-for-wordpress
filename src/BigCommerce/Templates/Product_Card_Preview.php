@@ -22,8 +22,4 @@ class Product_Card_Preview extends Product_Card {
 	protected function get_form( Product $product ) {
 		return '';
 	}
-
-	protected function get_popup_template( Product $product ) {
-		return '';
-	}
 }

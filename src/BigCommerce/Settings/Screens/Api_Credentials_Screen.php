@@ -6,13 +6,11 @@ namespace BigCommerce\Settings\Screens;
 
 use BigCommerce\Api\Base_Client;
 use BigCommerce\Api\Configuration;
-use BigCommerce\Api\ConfigurationRequiredException;
 use BigCommerce\Api\v3\Api\CatalogApi;
-use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Container\Settings;
 use BigCommerce\Settings\Sections\Api_Credentials;
 
-class Api_Credentials_Screen extends Abstract_Screen {
+class Api_Credentials_Screen extends Onboarding_Screen {
 	const NAME = 'bigcommerce_api_credentials';
 
 	protected function get_page_title() {
@@ -28,7 +26,6 @@ class Api_Credentials_Screen extends Abstract_Screen {
 	}
 
 	protected function get_header() {
-		$notices_placeholder = '<div class="wp-header-end"></div>'; // placeholder to tell WP where to put notices
 		$api_accounts_url    = 'https://login.bigcommerce.com/deep-links/settings/auth/api-accounts';
 		$documentation_url   = 'https://developer.bigcommerce.com/bigcommerce-for-wordpress/setup/multi-site';
 		$descriptive_text = sprintf(
@@ -42,10 +39,8 @@ class Api_Credentials_Screen extends Abstract_Screen {
 			__( 'Click here for more information on creating API credentials, including which scopes to select.', 'bigcommerce' )
 		);
 		return sprintf(
-			'%s<header class="bc-api-credentials__header"><img src="%s" alt="%s" /><h1 class="bc-settings-credentials__title">%s</h1>%s</header>',
-			$notices_placeholder,
-			trailingslashit( $this->assets_url ) . 'img/admin/big-commerce-logo.svg',
-			__( 'BigCommerce', 'bigcommerce' ),
+			'%s<header class="bc-connect__header"><h1 class="bc-settings-connect__title">%s</h1>%s</header>',
+			$this->before_title(),
 			$this->get_page_title(),
 			$descriptive_text
 		);
@@ -57,7 +52,7 @@ class Api_Credentials_Screen extends Abstract_Screen {
 
 	protected function submit_button() {
 		echo '<div class="bc-settings-save">';
-		submit_button( __( 'Connect Using API Credentials', 'bigcommerce' ) );
+		$this->onboarding_submit_button( 'bc-settings-create-account-button', 'bc-onboarding-arrow', __( 'Connect Using API Credentials', 'bigcommerce' ), true );
 		echo '</div>';
 	}
 

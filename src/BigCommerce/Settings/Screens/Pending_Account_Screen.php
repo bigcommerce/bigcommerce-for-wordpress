@@ -8,7 +8,7 @@ use BigCommerce\Container\Settings;
 use BigCommerce\Merchant\Account_Status;
 use BigCommerce\Merchant\Onboarding_Api;
 
-class Pending_Account_Screen extends Abstract_Screen {
+class Pending_Account_Screen extends Onboarding_Screen {
 	const NAME = 'bigcommerce_pending_account';
 
 	protected function get_page_title() {
@@ -20,13 +20,9 @@ class Pending_Account_Screen extends Abstract_Screen {
 	}
 
 	protected function get_header() {
-		$notices_placeholder = '<div class="wp-header-end"></div>'; // placeholder to tell WP where to put notices
-
 		return sprintf(
-			'%s<header class="bc-new-account__header"><img src="%s" alt="%s" /><h1 class="bc-settings-connect__title">%s</h1></header>',
-			$notices_placeholder,
-			trailingslashit( $this->assets_url ) . 'img/admin/big-commerce-logo.svg',
-			__( 'BigCommerce', 'bigcommerce' ),
+			'%s<header class="bc-new-account__header"><h1 class="bc-settings-connect__title">%s</h1></header>',
+			$this->before_title(),
 			__( 'We’re Getting Your Account Ready', 'bigcommerce' )
 		);
 	}
@@ -58,11 +54,10 @@ class Pending_Account_Screen extends Abstract_Screen {
 
 		$content = ob_get_clean();
 
-		printf( '<div class="wrap bc-settings bc-settings-%s">%s%s</div>', static::NAME, $this->get_header(), $content );
+		printf( '%s<div class="wrap bc-settings bc-settings-%s">%s<div class="bc-settings-content-wrap">%s%s</div></div>', $this->onboarding_page_header(), static::NAME, $this->progress_bar(), $this->get_header(), $content );
 	}
 
 	public function should_register() {
 		return $this->configuration_status === Settings::STATUS_ACCOUNT_PENDING;
 	}
-
 }

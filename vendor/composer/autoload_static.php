@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitf3631f8c97c31f7967b4e5be974d01df
+class ComposerStaticInitcab068756598229d831f0d63fdde7656
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -91,6 +91,8 @@ class ComposerStaticInitf3631f8c97c31f7967b4e5be974d01df
     public static $classMap = array (
         'BigCommerce\\Accounts\\Countries' => __DIR__ . '/../..' . '/src/BigCommerce/Accounts/Countries.php',
         'BigCommerce\\Accounts\\Customer' => __DIR__ . '/../..' . '/src/BigCommerce/Accounts/Customer.php',
+        'BigCommerce\\Accounts\\Customer_Group' => __DIR__ . '/../..' . '/src/BigCommerce/Accounts/Customer_Group.php',
+        'BigCommerce\\Accounts\\Customer_Group_Proxy' => __DIR__ . '/../..' . '/src/BigCommerce/Accounts/Customer_Group_Proxy.php',
         'BigCommerce\\Accounts\\Login' => __DIR__ . '/../..' . '/src/BigCommerce/Accounts/Login.php',
         'BigCommerce\\Accounts\\Nav_Menu' => __DIR__ . '/../..' . '/src/BigCommerce/Accounts/Nav_Menu.php',
         'BigCommerce\\Accounts\\Roles\\Customer' => __DIR__ . '/../..' . '/src/BigCommerce/Accounts/Roles/Customer.php',
@@ -475,6 +477,7 @@ class ComposerStaticInitf3631f8c97c31f7967b4e5be974d01df
         'BigCommerce\\Editor\\Gutenberg\\Blocks\\Gutenberg_Block' => __DIR__ . '/../..' . '/src/BigCommerce/Editor/Gutenberg/Blocks/Gutenberg_Block.php',
         'BigCommerce\\Editor\\Gutenberg\\Blocks\\Login_Form' => __DIR__ . '/../..' . '/src/BigCommerce/Editor/Gutenberg/Blocks/Login_Form.php',
         'BigCommerce\\Editor\\Gutenberg\\Blocks\\Order_History' => __DIR__ . '/../..' . '/src/BigCommerce/Editor/Gutenberg/Blocks/Order_History.php',
+        'BigCommerce\\Editor\\Gutenberg\\Blocks\\Product_Components' => __DIR__ . '/../..' . '/src/BigCommerce/Editor/Gutenberg/Blocks/Product_Components.php',
         'BigCommerce\\Editor\\Gutenberg\\Blocks\\Product_Reviews' => __DIR__ . '/../..' . '/src/BigCommerce/Editor/Gutenberg/Blocks/Product_Reviews.php',
         'BigCommerce\\Editor\\Gutenberg\\Blocks\\Products' => __DIR__ . '/../..' . '/src/BigCommerce/Editor/Gutenberg/Blocks/Products.php',
         'BigCommerce\\Editor\\Gutenberg\\Blocks\\Registration_Form' => __DIR__ . '/../..' . '/src/BigCommerce/Editor/Gutenberg/Blocks/Registration_Form.php',
@@ -577,6 +580,8 @@ class ComposerStaticInitf3631f8c97c31f7967b4e5be974d01df
         'BigCommerce\\Post_Types\\Product\\Product' => __DIR__ . '/../..' . '/src/BigCommerce/Post_Types/Product/Product.php',
         'BigCommerce\\Post_Types\\Product\\Query' => __DIR__ . '/../..' . '/src/BigCommerce/Post_Types/Product/Query.php',
         'BigCommerce\\Post_Types\\Product\\Query_Mapper' => __DIR__ . '/../..' . '/src/BigCommerce/Post_Types/Product/Query_Mapper.php',
+        'BigCommerce\\Post_Types\\Product\\Reset_Listing' => __DIR__ . '/../..' . '/src/BigCommerce/Post_Types/Product/Reset_Listing.php',
+        'BigCommerce\\Post_Types\\Product\\Single_Product_Sync' => __DIR__ . '/../..' . '/src/BigCommerce/Post_Types/Product/Single_Product_Sync.php',
         'BigCommerce\\Post_Types\\Product\\Store_Links' => __DIR__ . '/../..' . '/src/BigCommerce/Post_Types/Product/Store_Links.php',
         'BigCommerce\\Post_Types\\Product\\Unique_Slug_Filter' => __DIR__ . '/../..' . '/src/BigCommerce/Post_Types/Product/Unique_Slug_Filter.php',
         'BigCommerce\\Post_Types\\Product\\Unsupported_Products' => __DIR__ . '/../..' . '/src/BigCommerce/Post_Types/Product/Unsupported_Products.php',
@@ -604,11 +609,13 @@ class ComposerStaticInitf3631f8c97c31f7967b4e5be974d01df
         'BigCommerce\\Settings\\Connection_Status' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Connection_Status.php',
         'BigCommerce\\Settings\\Import_Now' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Import_Now.php',
         'BigCommerce\\Settings\\Import_Status' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Import_Status.php',
+        'BigCommerce\\Settings\\Onboarding_Progress' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Onboarding_Progress.php',
         'BigCommerce\\Settings\\Screens\\Abstract_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Abstract_Screen.php',
         'BigCommerce\\Settings\\Screens\\Api_Credentials_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Api_Credentials_Screen.php',
         'BigCommerce\\Settings\\Screens\\Connect_Channel_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Connect_Channel_Screen.php',
         'BigCommerce\\Settings\\Screens\\Create_Account_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Create_Account_Screen.php',
         'BigCommerce\\Settings\\Screens\\Nav_Menu_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Nav_Menu_Screen.php',
+        'BigCommerce\\Settings\\Screens\\Onboarding_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Onboarding_Screen.php',
         'BigCommerce\\Settings\\Screens\\Pending_Account_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Pending_Account_Screen.php',
         'BigCommerce\\Settings\\Screens\\Resources_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Resources_Screen.php',
         'BigCommerce\\Settings\\Screens\\Settings_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Settings_Screen.php',
@@ -639,6 +646,7 @@ class ComposerStaticInitf3631f8c97c31f7967b4e5be974d01df
         'BigCommerce\\Shortcodes\\Gift_Certificate_Form' => __DIR__ . '/../..' . '/src/BigCommerce/Shortcodes/Gift_Certificate_Form.php',
         'BigCommerce\\Shortcodes\\Login_Form' => __DIR__ . '/../..' . '/src/BigCommerce/Shortcodes/Login_Form.php',
         'BigCommerce\\Shortcodes\\Order_History' => __DIR__ . '/../..' . '/src/BigCommerce/Shortcodes/Order_History.php',
+        'BigCommerce\\Shortcodes\\Product_Components' => __DIR__ . '/../..' . '/src/BigCommerce/Shortcodes/Product_Components.php',
         'BigCommerce\\Shortcodes\\Product_Reviews' => __DIR__ . '/../..' . '/src/BigCommerce/Shortcodes/Product_Reviews.php',
         'BigCommerce\\Shortcodes\\Products' => __DIR__ . '/../..' . '/src/BigCommerce/Shortcodes/Products.php',
         'BigCommerce\\Shortcodes\\Registration_Form' => __DIR__ . '/../..' . '/src/BigCommerce/Shortcodes/Registration_Form.php',
@@ -693,6 +701,7 @@ class ComposerStaticInitf3631f8c97c31f7967b4e5be974d01df
         'BigCommerce\\Templates\\Gift_Certificate_Page' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Gift_Certificate_Page.php',
         'BigCommerce\\Templates\\Gift_Certificate_Redemption_Instructions' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Gift_Certificate_Redemption_Instructions.php',
         'BigCommerce\\Templates\\Inventory_Level' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Inventory_Level.php',
+        'BigCommerce\\Templates\\Linked_Product_Featured_Image' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Linked_Product_Featured_Image.php',
         'BigCommerce\\Templates\\Login_Form' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Login_Form.php',
         'BigCommerce\\Templates\\Lost_Password_Form' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Lost_Password_Form.php',
         'BigCommerce\\Templates\\Message' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Message.php',
@@ -738,9 +747,11 @@ class ComposerStaticInitf3631f8c97c31f7967b4e5be974d01df
         'BigCommerce\\Templates\\Product_Shortcode_Single' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Product_Shortcode_Single.php',
         'BigCommerce\\Templates\\Product_Shortcode_Single_Preview' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Product_Shortcode_Single_Preview.php',
         'BigCommerce\\Templates\\Product_Single' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Product_Single.php',
+        'BigCommerce\\Templates\\Product_Sku' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Product_Sku.php',
         'BigCommerce\\Templates\\Product_Specs' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Product_Specs.php',
         'BigCommerce\\Templates\\Product_Title' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Product_Title.php',
         'BigCommerce\\Templates\\Profile_Form' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Profile_Form.php',
+        'BigCommerce\\Templates\\Quick_View_Image' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Quick_View_Image.php',
         'BigCommerce\\Templates\\Refinement_Box' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Refinement_Box.php',
         'BigCommerce\\Templates\\Refinery' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Refinery.php',
         'BigCommerce\\Templates\\Registration_Form' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Registration_Form.php',
@@ -972,10 +983,10 @@ class ComposerStaticInitf3631f8c97c31f7967b4e5be974d01df
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitf3631f8c97c31f7967b4e5be974d01df::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitf3631f8c97c31f7967b4e5be974d01df::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitf3631f8c97c31f7967b4e5be974d01df::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitf3631f8c97c31f7967b4e5be974d01df::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitcab068756598229d831f0d63fdde7656::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitcab068756598229d831f0d63fdde7656::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitcab068756598229d831f0d63fdde7656::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitcab068756598229d831f0d63fdde7656::$classMap;
 
         }, null, ClassLoader::class);
     }

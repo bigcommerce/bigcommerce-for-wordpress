@@ -18,27 +18,28 @@
  */
 
 use BigCommerce\Post_Types\Product\Product;
+
 ?>
-	<div class="amp-wp-article bc-product-card bc-product-card--single">
+<div class="amp-wp-article bc-product-card bc-product-card--single">
 
-		<div class="bc-product__gallery">
-			<?php echo $gallery; // WPCS: XSS ok. Already escaped data. ?>
-		</div>
-
-		<div class="bc-product__meta">
-			<?php
-			echo wp_kses( $title, 'bigcommerce/amp' );
-			echo wp_kses( $brand, 'bigcommerce/amp' );
-			echo wp_kses( $price, 'bigcommerce/amp' );
-			echo wp_kses( $rating, 'bigcommerce/amp' );
-			echo sprintf( __( '<span class="bc-product-single__meta-label">SKU:</span> %s', 'bigcommerce' ), $sku );
-			?>
-
-		</div>
-
-		<div class="bc-product__actions">
-			<?php echo $form; // WPCS: XSS ok. Already escaped data. ?>
-		</div>
-
-		<?php echo wp_kses( $description, 'bigcommerce/amp' ); ?>
+	<div class="bc-product__gallery">
+		<?php echo $gallery; // WPCS: XSS ok. Already escaped data. ?>
 	</div>
+
+	<div class="bc-product__meta">
+		<?php
+		echo wp_kses( $title, 'bigcommerce/amp' );
+		echo wp_kses( $brand, 'bigcommerce/amp' );
+		echo wp_kses( $price, 'bigcommerce/amp' );
+		echo wp_kses( $rating, 'bigcommerce/amp' );
+		echo sprintf( __( '<span class="bc-product-single__meta-label">SKU:</span> %s', 'bigcommerce' ), $sku );
+		?>
+
+	</div>
+
+	<div class="bc-product__actions">
+		<?php echo $form; // WPCS: XSS ok. Already escaped data. ?>
+	</div>
+
+	<?php echo wp_kses( $description, 'bigcommerce/amp' ); ?>
+</div>

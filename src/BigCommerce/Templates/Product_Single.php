@@ -45,7 +45,7 @@ class Product_Single extends Controller {
 			self::IMAGES      => $this->get_images( $product ),
 			self::PRICE       => $this->get_price( $product ),
 			self::RATING      => $this->get_rating( $product ),
-			self::SKU         => $product->sku(),
+			self::SKU         => $this->get_sku( $product ),
 			self::BRAND       => $this->get_brand( $product ),
 			self::DESCRIPTION => $this->get_description( $product ),
 			self::FORM        => $this->get_form( $product ),
@@ -59,6 +59,7 @@ class Product_Single extends Controller {
 		$component = Product_Title::factory( [
 			Product_Title::PRODUCT       => $product,
 			Product_Title::USE_PERMALINK => false,
+			Product_Title::HEADER_LEVEL  => 1,
 		] );
 
 		return $component->render();
@@ -165,4 +166,11 @@ class Product_Single extends Controller {
 		return do_shortcode( $shortcode );
 	}
 
+	protected function get_sku( Product $product ) {
+		$component = Product_Sku::factory( [
+			Product_Sku::PRODUCT         => $product,
+		] );
+
+		return $component->render();
+	}
 }

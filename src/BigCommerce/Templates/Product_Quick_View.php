@@ -14,6 +14,17 @@ class Product_Quick_View extends Product_Shortcode_Single {
 
 	protected $template = 'components/products/product-quick-view.php';
 
+	protected $wrapper_tag        = 'div';
+	protected $wrapper_classes    = [ 'bc-product-card', 'bc-product-card--single' ];
+	protected $wrapper_attributes = [ 'data-js' => 'bc-product-data-wrapper' ];
+
+
+	protected function get_wrapper_attributes() {
+		$attributes = $this->wrapper_attributes;
+		$attributes['id'] = sprintf( 'bc-product-%s--quick-view', esc_attr( $this->options[ self::PRODUCT ]->sku() ) );
+		return $attributes;
+	}
+
 	protected function parse_options( array $options ) {
 		$defaults = [
 			self::PRODUCT => null,

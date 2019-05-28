@@ -5,6 +5,7 @@ namespace BigCommerce\Container;
 
 
 use BigCommerce\Accounts\Countries;
+use BigCommerce\Accounts\Customer_Group_Proxy;
 use BigCommerce\Accounts\Nav_Menu;
 use BigCommerce\Accounts\Sub_Nav;
 use BigCommerce\Accounts\User_Profile_Settings;
@@ -20,6 +21,7 @@ class Accounts extends Provider {
 	const NAV_MENU       = 'accounts.nav_menu';
 	const SUB_NAV        = 'accounts.sub_nav';
 	const USER_PROFILE   = 'accounts.user_profile';
+	const GROUP_PROXY    = 'accounts.groups.proxy';
 
 	public function register( Container $container ) {
 		$container[ self::LOGIN ] = function ( Container $container ) {
@@ -59,12 +61,14 @@ class Accounts extends Provider {
 			if ( $container[ Api::CONFIG_COMPLETE ] ) {
 				return $container[ self::LOGIN ]->authenticate_new_user( $user, $username, $password );
 			}
+
 			return $user;
 		} ), 40, 3 );
 		add_filter( 'check_password', $this->create_callback( 'check_password', function ( $match, $password, $hash, $user_id ) use ( $container ) {
 			if ( $container[ Api::CONFIG_COMPLETE ] ) {
 				return $container[ self::LOGIN ]->check_password_for_linked_accounts( $match, $password, $hash, $user_id );
 			}
+
 			return $match;
 		} ), 10, 4 );
 
@@ -73,7 +77,7 @@ class Accounts extends Provider {
 		};
 
 		$container[ self::COUNTRIES_PATH ] = function ( Container $container ) {
-			$file = plugin_dir_path( $container[ 'plugin_file' ] ) . 'assets/data/countries.json';
+			$file = plugin_dir_path( $container['plugin_file'] ) . 'assets/data/countries.json';
 
 			return apply_filters( 'bigcommerce/countries/data_file', $file );
 		};
@@ -122,6 +126,13 @@ class Accounts extends Provider {
 		add_action( 'edit_user_profile', $render_profile_settings, 10, 1 );
 		add_action( 'personal_options_update', $save_profile_settings, 10, 1 );
 		add_action( 'edit_user_profile_update', $save_profile_settings, 10, 1 );
+
+		$container[ self::GROUP_PROXY ] = function ( Container $container ) {
+			return new Customer_Group_Proxy();
+		};
+		add_filter( 'bigcommerce/customer/group_info', $this->create_callback( 'set_customer_group_info', function ( $info, $group_id ) use ( $container ) {
+			return $container[ self::GROUP_PROXY ]->filter_group_info( $info, $group_id );
+		} ), 10, 2 );
 	}
 
 }

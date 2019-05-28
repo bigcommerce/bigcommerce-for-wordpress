@@ -32,17 +32,21 @@ class Start_Over {
 			<div class="bc-welcome-reset">
 				<button type="button" class="bc-welcome-anchor--startover" data-js="bc-welcome-start-over-trigger" data-content="bc-welcome-start-over"><i class="bc-icon icon-bc-undo"></i> %s</button>
 				<script data-js="bc-welcome-start-over" type="text/template">
-					<i class="bc-icon icon-bc-undo bc-welcome-account-reset-icon"></i>
-					<p class="bc-welcome__account-reset-message">%s</p>
-					<div class="bc-welcome__account-reset-actions">
-						<button type="button" class="bc-admin-btn" data-js="bc-welcome-account-reset-confirm" data-url="%s">%s</button>
-						<button type="button" class="bc-admin-btn bc-admin-btn--outline" data-js="bc-welcome-account-reset-cancel">%s</button>
+				<div class="bc-account-reset-logo"></div>
+					<div class="bc-welcome__account-reset-content-wrapper">
+						<p class="bc-welcome__account-reset-message">%s</p>
+						<p class="bc-welcome__account-reset-message">%s</p>
+						<div class="bc-welcome__account-reset-actions">
+							<button type="button" class="bc-admin-btn" data-js="bc-welcome-account-reset-confirm" data-url="%s">%s</button>
+							<button type="button" class="bc-admin-btn bc-admin-btn--outline" data-js="bc-welcome-account-reset-cancel">%s</button>
+						</div>
 					</div>
 				</script>
 			</div>
 			',
 			__( 'Start over', 'bigcommerce' ),
-			__( 'Are you sure you\'d like to start over?', 'bigcommerce' ),
+			__( 'You are about to exit the BigCommerce Store Setup. Your progress will not be saved.', 'bigcommerce' ),
+			__( 'Are you sure you want to quit?', 'bigcommerce' ),
 			esc_url( $url ),
 			__( "Yes, I'm Sure", 'bigcommerce' ),
 			__( 'Nevermind', 'bigcommerce' )

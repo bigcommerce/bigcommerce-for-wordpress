@@ -99,6 +99,23 @@ class Channel_Sync {
 
 			return;
 		}
+
+		try {
+			$response = $this->channels->getChannelListing( $channel_id, $listing_id );
+			$listing  = $response->getData();
+			$product->update_listing_data( $listing );
+		} catch ( ApiException $e ) {
+			/**
+			 * Error triggered when fetching a listing fails
+			 *
+			 * @param int $channel_id
+			 * @param int $listing_id
+			 * @param ApiException $e
+			 */
+			do_action( 'bigcommerce/channel/error/could_not_fetch_listing', $channel_id, $listing_id, $e );
+
+			return;
+		}
 	}
 
 	/**

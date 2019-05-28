@@ -24,15 +24,7 @@
 		<?php echo $brand; ?>
 		<?php echo $price; ?>
 		<?php echo $rating; ?>
-
-		<?php if ( $sku ) { ?>
-			<span class="bc-product__sku">
-				<span class="bc-product-single__meta-label">
-					<?php esc_html_e( 'SKU:', 'bigcommerce' ); ?>
-				</span>
-				<?php echo esc_html( $sku ); ?>
-			</span>
-		<?php } ?>
+		<?php echo $sku; ?>
 		<?php echo $form; ?>
 	</div>
 </section>
