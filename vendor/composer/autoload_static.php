@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitcab068756598229d831f0d63fdde7656
+class ComposerStaticInit5b72e16cbfc5b930914e07234fdb595e
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -615,6 +615,7 @@ class ComposerStaticInitcab068756598229d831f0d63fdde7656
         'BigCommerce\\Settings\\Screens\\Connect_Channel_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Connect_Channel_Screen.php',
         'BigCommerce\\Settings\\Screens\\Create_Account_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Create_Account_Screen.php',
         'BigCommerce\\Settings\\Screens\\Nav_Menu_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Nav_Menu_Screen.php',
+        'BigCommerce\\Settings\\Screens\\Onboarding_Complete_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Onboarding_Complete_Screen.php',
         'BigCommerce\\Settings\\Screens\\Onboarding_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Onboarding_Screen.php',
         'BigCommerce\\Settings\\Screens\\Pending_Account_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Pending_Account_Screen.php',
         'BigCommerce\\Settings\\Screens\\Resources_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Resources_Screen.php',
@@ -736,6 +737,7 @@ class ComposerStaticInitcab068756598229d831f0d63fdde7656
         'BigCommerce\\Templates\\Product_Featured_Image' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Product_Featured_Image.php',
         'BigCommerce\\Templates\\Product_Form' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Product_Form.php',
         'BigCommerce\\Templates\\Product_Gallery' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Product_Gallery.php',
+        'BigCommerce\\Templates\\Product_Hidden_Price' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Product_Hidden_Price.php',
         'BigCommerce\\Templates\\Product_Modifiers' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Product_Modifiers.php',
         'BigCommerce\\Templates\\Product_Options' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Product_Options.php',
         'BigCommerce\\Templates\\Product_Price' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Product_Price.php',
@@ -983,10 +985,10 @@ class ComposerStaticInitcab068756598229d831f0d63fdde7656
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitcab068756598229d831f0d63fdde7656::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitcab068756598229d831f0d63fdde7656::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitcab068756598229d831f0d63fdde7656::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitcab068756598229d831f0d63fdde7656::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit5b72e16cbfc5b930914e07234fdb595e::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit5b72e16cbfc5b930914e07234fdb595e::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit5b72e16cbfc5b930914e07234fdb595e::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit5b72e16cbfc5b930914e07234fdb595e::$classMap;
 
         }, null, ClassLoader::class);
     }

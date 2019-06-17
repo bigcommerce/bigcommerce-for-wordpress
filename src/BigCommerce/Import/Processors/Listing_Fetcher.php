@@ -77,6 +77,7 @@ class Listing_Fetcher implements Import_Processor {
 				'response' => $e->getResponseBody(),
 				'headers'  => $e->getResponseHeaders(),
 			] );
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [] );
 
 			return;
 		}

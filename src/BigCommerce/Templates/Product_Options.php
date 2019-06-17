@@ -4,6 +4,7 @@
 namespace BigCommerce\Templates;
 
 
+use BigCommerce\Assets\Theme\Image_Sizes;
 use BigCommerce\Exceptions\Component_Not_Found_Exception;
 use BigCommerce\Post_Types\Product\Product;
 
@@ -48,23 +49,23 @@ class Product_Options extends Controller {
 
 		$options = array_map( function ( $option ) use ( $variant_options ) {
 			try {
-				$class = $this->identify_component_class( $option[ 'type' ] );
+				$class = $this->identify_component_class( $option['type'] );
 			} catch ( Component_Not_Found_Exception $e ) {
 				return '';
 			}
-			if ( array_key_exists( $option[ 'id' ], $variant_options ) ) {
-				foreach ( $option[ 'option_values' ] as &$value ) {
-					$value[ 'is_default' ] = ( $value[ 'id' ] == $variant_options[ $option[ 'id' ] ] );
+			if ( array_key_exists( $option['id'], $variant_options ) ) {
+				foreach ( $option['option_values'] as &$value ) {
+					$value['is_default'] = ( $value['id'] == $variant_options[ $option['id'] ] );
 				}
 			}
 			if ( $class ) {
 				/** @var Option_Types\Option_Type $component */
 				$component = new $class( [
-					Option_Types\Option_Type::ID       => $option[ 'id' ],
-					Option_Types\Option_Type::LABEL    => $option[ 'display_name' ],
-					Option_Types\Option_Type::OPTIONS  => $option[ 'option_values' ],
-					Option_Types\Option_Type::REQUIRED => (bool) $option[ 'required' ],
-					Option_Types\Option_Type::CONFIG   => $option[ 'config' ],
+					Option_Types\Option_Type::ID       => $option['id'],
+					Option_Types\Option_Type::LABEL    => $option['display_name'],
+					Option_Types\Option_Type::OPTIONS  => $option['option_values'],
+					Option_Types\Option_Type::REQUIRED => (bool) $option['required'],
+					Option_Types\Option_Type::CONFIG   => $option['config'],
 				] );
 
 				return $component->render();
@@ -159,7 +160,11 @@ class Product_Options extends Controller {
 				$inventory = $source->inventory_level;
 				break;
 		}
-		$variants = array_map( function ( $variant ) use ( $inventory ) {
+		/**
+		 * This filter is documented in src/BigCommerce/Templates/Product_Gallery.php
+		 */
+		$image_size = apply_filters( 'bigcommerce/template/gallery/image_size', Image_Sizes::BC_MEDIUM );
+		$variants   = array_map( function ( $variant ) use ( $inventory, $image_size, $product ) {
 			$data = [
 				'variant_id'       => $variant->id,
 				'options'          => $variant->option_values,
@@ -170,11 +175,45 @@ class Product_Options extends Controller {
 				'sku'              => $variant->sku,
 				'price'            => $variant->calculated_price,
 				'formatted_price'  => $this->format_currency( $variant->calculated_price ),
+				'image'            => $this->variant_image_data( $variant->id, $product->post_id(), $image_size ),
 			];
 
 			return $data;
 		}, $source->variants );
 
 		return $variants;
+	}
+
+	/**
+	 * Get image data for the variant.
+	 *
+	 * @param int    $variant_id
+	 * @param int    $post_id
+	 * @param string $image_size
+	 *
+	 * @return array|null
+	 */
+	private function variant_image_data( $variant_id, $post_id, $image_size ) {
+		$empty = [ 'url' => '', 'width' => 0, 'height' => 0 ];
+
+		$variant_image_map = (array) get_post_meta( $post_id, Product::VARIANT_IMAGES_META_KEY, true );
+
+		$image_id = (int) ( ! empty( $variant_image_map[ $variant_id ] ) ? $variant_image_map[ $variant_id ] : 0 );
+
+		if ( ! $image_id ) {
+			return $empty;
+		}
+
+		$image = wp_get_attachment_image_src( $image_id, $image_size );
+
+		if ( ! $image ) {
+			return $empty;
+		}
+
+		return [
+			'url'    => $image[0],
+			'width'  => $image[1],
+			'height' => $image[2],
+		];
 	}
 }

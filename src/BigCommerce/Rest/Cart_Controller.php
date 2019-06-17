@@ -10,6 +10,7 @@ use BigCommerce\Api\v3\Model\CartResponse;
 use BigCommerce\Api\v3\Model\CartUpdateRequest;
 use BigCommerce\Cart\Cart;
 use BigCommerce\Cart\Cart_Mapper;
+use BigCommerce\Exceptions\Product_Not_Found_Exception;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Settings\Sections\Cart as Cart_Settings;
 use BigCommerce\Taxonomies\Availability\Availability;
@@ -297,11 +298,29 @@ class Cart_Controller extends Rest_Controller {
 	 */
 	public function create_cart( $request ) {
 
-		$response = $this->add_to_cart( $request );
+		try {
+			$response = $this->add_to_cart( $request );
+		} catch ( Product_Not_Found_Exception $e ) {
+			return new \WP_Error( 'rest_cannot_create', __( 'Product not found.', 'bigcommerce' ), [
+				'status' => 404,
+			] );
+		} catch ( ApiException $e ) {
+			if ( strpos( (string) $e->getCode(), '4' ) === 0 ) {
+				$body = $e->getResponseBody();
+				if ( $body && ! empty( $body->title ) ) {
+					$message = sprintf( '[%d] %s', $e->getCode(), $body->title );
+				} else {
+					$message = $e->getMessage();
+				}
 
-		if ( $response === null ) {
-			return new \WP_Error( 'rest_cannot_create', __( 'Error creating cart.', 'bigcommerce' ), [
-				'status' => 502,
+				return new \WP_Error( 'rest_cannot_create', sprintf(
+					__( 'Error creating your cart. Error message: "%s"', 'bigcommerce' ),
+					$message
+				), [ 'status' => $e->getCode() ] );
+			}
+
+			return new \WP_Error( 'rest_cannot_create', __( 'Error creating your cart. It might be out of stock or unavailable.', 'bigcommerce' ), [
+				'status'    => $e->getCode(),
 			] );
 		}
 
@@ -319,11 +338,29 @@ class Cart_Controller extends Rest_Controller {
 	 */
 	public function create_item( $request ) {
 
-		$response = $this->add_to_cart( $request );
+		try {
+			$response = $this->add_to_cart( $request );
+		} catch ( Product_Not_Found_Exception $e ) {
+			return new \WP_Error( 'rest_cannot_create', __( 'Product not found.', 'bigcommerce' ), [
+				'status' => 404,
+			] );
+		} catch ( ApiException $e ) {
+			if ( strpos( (string) $e->getCode(), '4' ) === 0 ) {
+				$body = $e->getResponseBody();
+				if ( $body && ! empty( $body->title ) ) {
+					$message = sprintf( '[%d] %s', $e->getCode(), $body->title );
+				} else {
+					$message = $e->getMessage();
+				}
 
-		if ( $response === null ) {
-			return new \WP_Error( 'rest_cannot_create', __( 'Error adding to cart.', 'bigcommerce' ), [
-				'status' => 502,
+				return new \WP_Error( 'rest_cannot_create', sprintf(
+					__( 'Error updating your cart. Error message: "%s"', 'bigcommerce' ),
+					$message
+				), [ 'status' => $e->getCode() ] );
+			}
+
+			return new \WP_Error( 'rest_cannot_create', __( 'Error updating your cart. It might be out of stock or unavailable.', 'bigcommerce' ), [
+				'status'    => $e->getCode(),
 			] );
 		}
 
@@ -337,7 +374,10 @@ class Cart_Controller extends Rest_Controller {
 	 *
 	 * @param \WP_REST_Request $request Full data about the request.
 	 *
-	 * @return \BigCommerce\Api\v3\Model\Cart|null
+	 * @return \BigCommerce\Api\v3\Model\Cart
+	 *
+	 * @throws ApiException
+	 * @throws Product_Not_Found_Exception
 	 */
 	private function add_to_cart( $request ) {
 
@@ -345,11 +385,7 @@ class Cart_Controller extends Rest_Controller {
 		$quantity   = $request->get_param( 'quantity' );
 		$options    = [];
 
-		try {
-			$product = Product::by_product_id( $product_id );
-		} catch ( \Exception $e ) {
-			return null;
-		}
+		$product = Product::by_product_id( $product_id );
 
 		$submitted_options = wp_list_pluck( (array) $request->get_param( 'options' ), 'value', 'id' );
 

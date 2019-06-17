@@ -90,9 +90,7 @@ class Nav_Items_Meta_Box extends Meta_Box {
 
 		if ( empty( $already_updated_user ) ) {
 			$user_id    = get_current_user_id();
-			$prev_value = get_user_option( 'metaboxhidden_nav-menus', $user_id );
-
-			$meta_value = $prev_value;
+			$prev_value = (array) get_user_option( 'metaboxhidden_nav-menus', $user_id );
 
 			// Menus to be displayed by default
 			$options = [

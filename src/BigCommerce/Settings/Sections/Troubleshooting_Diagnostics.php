@@ -60,7 +60,7 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 				'type'        => 'checkbox',
 				'option'      => self::LOG_ERRORS,
 				'label'       => __( 'Enable Error Logs', 'bigcommerce' ),
-				'description' => __( 'If enabled, will log import error messages to /wp-content/uploads/logs/bigcommerce/import.log. If you want to use a different path please define BIGCOMMERCE_DEBUG_LOG in your wp-config.php with the desired writeable path.', 'bigcommerce' ),
+				'description' => __( 'If enabled, will log import error messages to /wp-content/uploads/logs/bigcommerce/debug.log. If you want to use a different path please define BIGCOMMERCE_DEBUG_LOG in your wp-config.php with the desired writeable path.', 'bigcommerce' ),
 			]
 		);
 

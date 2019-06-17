@@ -20,7 +20,7 @@ const el = {};
 const shortcodeObjectToString = () => {
 	const str = [];
 
-	if (shortcodeState.selectedProducts.post_id.length > 0) {
+	if (shortcodeState.selectedProducts.bc_id.length > 0) {
 		Object.entries(shortcodeState.selectedProducts).forEach(([key, value]) => {
 			if (value.length <= 0) {
 				return;

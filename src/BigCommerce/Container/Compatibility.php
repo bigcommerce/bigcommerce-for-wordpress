@@ -28,5 +28,11 @@ class Compatibility extends Provider {
 				include_once( dirname( $container[ 'plugin_file' ] ) . '/src/BigCommerce/Compatibility/wordpress-4-dot-9.php' );
 			}
 		} ), 10, 0 );
+
+		add_action( 'init', $this->create_callback( 'wordpress_5_dot_1', function () use ( $container ) {
+			if ( version_compare( $GLOBALS[ 'wp_version' ], '5.1', '<' ) ) {
+				include_once( dirname( $container[ 'plugin_file' ] ) . '/src/BigCommerce/Compatibility/wordpress-5-dot-1.php' );
+			}
+		} ), 10, 0 );
 	}
 }

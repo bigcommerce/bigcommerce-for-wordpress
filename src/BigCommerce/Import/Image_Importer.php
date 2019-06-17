@@ -11,6 +11,8 @@ use BigCommerce\Logging\Error_Log;
  * Imports an image from a URL and attaches it to a post
  */
 class Image_Importer {
+	const SOURCE_URL = 'bigcommerce_source_url';
+
 	private $image_url;
 	private $attach_to_post_id;
 
@@ -50,7 +52,7 @@ class Image_Importer {
 			return false;
 		}
 
-		update_post_meta( $image_id, 'bigcommerce_source_url', $this->image_url );
+		update_post_meta( $image_id, self::SOURCE_URL, $this->image_url );
 
 		return $image_id;
 	}

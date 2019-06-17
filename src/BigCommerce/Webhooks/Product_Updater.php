@@ -8,6 +8,7 @@ use BigCommerce\Api\v3\Api\ChannelsApi;
 use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Import\Importers\Products\Product_Importer;
 use BigCommerce\Import\Importers\Reviews\Review_Importer;
+use BigCommerce\Logging\Error_Log;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Taxonomies\Channel\Channel;
 use BigCommerce\Taxonomies\Channel\Connections;
@@ -70,6 +71,7 @@ class Product_Updater {
 				'response' => $e->getResponseBody(),
 				'headers'  => $e->getResponseHeaders(),
 			] );
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [] );
 		} finally {
 			// unhook the filters we added at the start
 			remove_filter( 'bigcommerce/channel/listing/should_update', $empty, 10 );

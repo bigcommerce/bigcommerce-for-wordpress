@@ -12,6 +12,7 @@ class Product_Form extends Controller {
 	const OPTIONS             = 'options';
 	const MODIFIERS           = 'modifiers';
 	const BUTTON              = 'button';
+	const MESSAGE             = 'message';
 	const MIN_QUANTITY        = 'min_quantity';
 	const MAX_QUANTITY        = 'max_quantity';
 	const AJAX_ADD_TO_CART    = 'ajax_add_to_cart';
@@ -36,6 +37,7 @@ class Product_Form extends Controller {
 		return [
 			self::PRODUCT             => $product,
 			self::BUTTON              => $product->purchase_button(),
+			self::MESSAGE             => $product->purchase_message(),
 			self::MIN_QUANTITY        => max( (int) $product->order_quantity_minimum, 1 ),
 			self::MAX_QUANTITY        => $this->get_max_quantity( (int) $product->order_quantity_maximum, $product->get_inventory_level() ),
 			self::OPTIONS             => $this->options[ self::SHOW_OPTIONS ] ? $this->get_options( $product ) : '',
@@ -43,6 +45,13 @@ class Product_Form extends Controller {
 			self::AJAX_ADD_TO_CART    => (bool) get_option( Cart::OPTION_AJAX_CART, true ),
 			self::QUANTITY_FIELD_TYPE => $this->options[ self::SHOW_OPTIONS ] ? 'number' : 'hidden',
 		];
+	}
+
+	public function render() {
+		if ( ! $this->options[ self::PRODUCT ]->is_purchasable() ) {
+			return '';
+		}
+		return parent::render();
 	}
 
 	/**

@@ -38,6 +38,43 @@ const showDialog = () => {
 	}
 };
 
+/**
+ * @function resetGlobalState
+ * @description reset global state object items used by the Shortcode UI.
+ */
+const resetGlobalState = () => {
+	// Reset all parameters used by the UI.
+	shortcodeState.wpAPIQueryObj.bigcommerce_brand = [];
+	shortcodeState.wpAPIQueryObj.bigcommerce_category = [];
+	shortcodeState.wpAPIQueryObj.bigcommerce_flag = [];
+	shortcodeState.wpAPIQueryObj.recent = [];
+	shortcodeState.wpAPIQueryObj.search = [];
+	shortcodeState.selectedProducts.bc_id = [];
+};
+
+/**
+ * @function setGlobalState
+ * @description Set instanced values to the global state object for use with the Shortcode UI.
+ * @param params
+ */
+const setGlobalState = (params) => {
+	if (!params) {
+		return;
+	}
+
+	// If we have a valid params object, reset it so it can accept new instanced values.
+	resetGlobalState();
+
+	// Set the global state for all the params below if we have them.
+	/*eslint no-unused-expressions: [2, { allowShortCircuit: true }]*/
+	params.id && shortcodeState.selectedProducts.bc_id.push(...params.id.split(','));
+	params.brand && shortcodeState.wpAPIQueryObj.bigcommerce_brand.push(...params.brand.split(','));
+	params.category && shortcodeState.wpAPIQueryObj.bigcommerce_category.push(...params.category.split(','));
+	params.flag && shortcodeState.wpAPIQueryObj.bigcommerce_flag.push(...params.flag.split(','));
+	params.search && shortcodeState.wpAPIQueryObj.search.push(...params.search.split(','));
+	params.recent && shortcodeState.wpAPIQueryObj.recent.push(params.recent);
+};
+
 const setQueryParams = (params) => {
 	if (!params) {
 		trigger({ event: 'bigcommerce/set_shortcode_ui_state', native: false });
@@ -51,6 +88,7 @@ const setQueryParams = (params) => {
  * @function initDialogUI
  * @description initialize the dialog box.
  * @param target
+ * @param params
  */
 const initDialogUI = (target, params) => {
 	const options = {
@@ -72,6 +110,7 @@ const initDialogUI = (target, params) => {
 
 	instances.dialog.on('render', (dialogEl, e) => {
 		_.delay(() => {
+			setGlobalState(params);
 			productSelection();
 			displaySettings();
 			queryBuilder();
@@ -111,6 +150,7 @@ const toggleShortcodeUIDialog = (event) => {
 	}
 
 	if (state.rendered) {
+		setGlobalState(params);
 		setQueryParams(params);
 		showDialog();
 		return;

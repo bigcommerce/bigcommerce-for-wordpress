@@ -71,6 +71,7 @@ class Channel_Synchronizer {
 					'name'       => $term->name,
 				]
 			);
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [] );
 
 			return;
 		}
@@ -81,6 +82,7 @@ class Channel_Synchronizer {
 			$channels = $this->fetch_channels_from_api();
 		} catch ( ApiException $e ) {
 			do_action( 'bigcommerce/log', Error_Log::ERROR, __( 'Unable to import channels', 'bigcommerce' ), $e->getMessage() );
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [] );
 
 			return;
 		}

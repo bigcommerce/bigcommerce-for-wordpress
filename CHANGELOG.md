@@ -1,5 +1,47 @@
 # Changelog
 
+## [3.2.0]
+
+### Added
+- Display variant images in the product gallery. Once a specific variant
+  is selected, its image will be used as the primary gallery image.
+- Added stack traces to the error log when exceptions are thrown during
+  the import process
+- Added a screen at the end of the onboarding process to guide merchants
+  to their next steps.
+- Added support for pre-order and non-purchaseable product availability
+  settings. Includes two new theme customizer fields to control the text
+  for the "Add to Cart"/"Buy Now" buttons when displaying pre-order products.
+- Added support for products with hidden prices. They will use the new
+  template `components/products/product-hidden-price.php` to not show the price.
+- Added a new option for the Product Components block/shortcode for Add To Cart.
+  This will output the Add to Cart/Buy Now button and form on any page, including 
+  variants if applicable. Example Usage: `[bc-component id="431" type="add_to_cart"]`
+- Added a new Channel Select field in the product picker UI in the WP Admin. You can 
+  now search for products from any channel you've connected to your WP Store. Selecting
+  a channel will initiate a new query immediately and subsequently only produce product
+  search results from that channel.
+
+### Fixed
+- Fixed import of product descriptions containing HTML links. WordPress
+  core was adding `noopener` attributes prematurely, breaking the JSON
+  data stored in the queue.
+- Fixed a fatal error when updating to version 3.0+ from 2.2.1 or earlier
+  while a product import is in progress.
+
+### Changed
+- Pass through custom error messages from the API when Add to Cart fails.
+  Previously we were returning `null` and using a generic message. We're still
+  using the generic message but only when a more specific message is not
+  available from the API.
+- The template `components/products/product-gallery.php` has changed to
+  accommodate variant images.
+- The template `components/products/product-form.php` has a new variable
+  `$message` containing the pre-order message to display for the product.
+- The `bigcommerce/customer/group_id` filter will be called from
+  `\BigCommerce\Accounts\Customer::get_group_id()`, even when the current
+  user is logged out or does not have a customer ID.
+
 ## [3.1.0]
 
 ### Added
@@ -647,6 +689,7 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[3.2.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.1.0...3.2.0
 [3.1.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.0.2...3.1.0
 [3.0.2]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.0.1...3.0.2
 [3.0.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.0.0...3.0.1

@@ -4,6 +4,7 @@
 namespace BigCommerce\Forms;
 
 use BigCommerce\Api\v3\Api\CartApi;
+use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Cart\Cart;
 use BigCommerce\Pages;
 use BigCommerce\Settings;
@@ -46,9 +47,30 @@ class Purchase_Gift_Certificate_Handler implements Form_Handler {
 
 		$gift_certificate = $this->get_certificate_data( $submission[ 'bc-gift-purchase' ] );
 		$cart             = new Cart( $this->api );
-		$response         = $cart->add_gift_certificate( $gift_certificate );
 
-		$url = get_permalink( get_option( Pages\Gift_Certificate_Page::NAME ) );
+
+		try {
+			$response         = $cart->add_gift_certificate( $gift_certificate );
+		} catch ( ApiException $e ) {
+			$url = get_permalink( get_option( Pages\Gift_Certificate_Page::NAME ) );
+			if ( strpos( (string) $e->getCode(), '4' ) === 0 ) {
+				$body = $e->getResponseBody();
+				if ( $body && ! empty( $body->title ) ) {
+					$message = sprintf( '[%d] %s', $e->getCode(), $body->title );
+				} else {
+					$message = $e->getMessage();
+				}
+				$error = new \WP_Error( 'api_error', sprintf(
+					__( 'There was an error adding the gift certificate to your cart. Error message: "%s"', 'bigcommerce' ),
+					$message
+				), [ 'exception' => [ 'message' => $e->getMessage(), 'code' => $e->getCode() ] ] );
+			} else {
+				$error = new \WP_Error( 'api_error', __( 'There was an error adding the gift certificate to your cart.', 'bigcommerce' ), [ 'exception' => $e ] );
+			}
+			do_action( 'bigcommerce/form/error', $error, $submission, $url );
+			return;
+		}
+
 
 		/**
 		 * The message to display when a gift certificate is added to the cart
@@ -57,17 +79,13 @@ class Purchase_Gift_Certificate_Handler implements Form_Handler {
 		 */
 		$message = apply_filters( 'bigcommerce/form/gift_certificate/success_message', __( 'Gift Certificate Created!', 'bigcommerce' ) );
 
-		if ( $response ) {
-			if ( get_option( Settings\Sections\Cart::OPTION_ENABLE_CART, true ) ) {
-				$url = $cart->get_cart_url();
-			} else {
-				$url = $cart->get_checkout_url( $response->getId() );
-				wp_redirect( $url, 303 );
-				exit();
-			}
+		if ( get_option( Settings\Sections\Cart::OPTION_ENABLE_CART, true ) ) {
+			$url = $cart->get_cart_url();
 		} else {
-			$error = new \WP_Error( 'api_error', __( 'There was an error adding the gift certificate to your cart. Please try again.', 'bigcommerce' ) );
-			do_action( 'bigcommerce/form/error', $error, $submission, $url );
+			// no cart page, so redirect to bigcommerce for checkout
+			$url = $cart->get_checkout_url( $response->getId() );
+			wp_redirect( $url, 303 );
+			exit();
 		}
 
 		/**

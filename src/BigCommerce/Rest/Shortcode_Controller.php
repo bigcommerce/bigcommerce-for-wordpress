@@ -57,6 +57,15 @@ class Shortcode_Controller extends Products_Controller {
 			'default'     => [],
 		];
 
+		$params[ 'bc_id' ] = [
+			'description' => __( 'Limit results to only those items with the specified product IDs.', 'bigcommerce' ),
+			'type'        => 'array',
+			'items'       => [
+				'type' => 'integer',
+			],
+			'default'     => [],
+		];
+
 		return $params;
 	}
 
@@ -109,7 +118,7 @@ class Shortcode_Controller extends Products_Controller {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_item( $request ) {
-		if ( ! empty( $request[ 'post_id' ] ) ) {
+		if ( ! empty( $request[ 'post_id' ] ) || ! empty( $request[ 'bc_id' ] ) ) {
 			$args = $this->build_selection_shortcode_args( $request );
 		}
 		if ( empty( $args ) ) {
@@ -166,12 +175,16 @@ class Shortcode_Controller extends Products_Controller {
 	 */
 	protected function build_selection_shortcode_args( $request ) {
 		$query_args  = $this->build_query_shortcode_args( $request );
-		$bcids = array_map( function ( $post_id ) {
-			$product = new Product( $post_id );
+		if ( ! empty( $request[ 'bc_id' ] ) ) {
+			$bcids = array_map( 'intval', $request[ 'bc_id' ] );
+		} else {
+			$bcids = array_map( function ( $post_id ) {
+				$product = new Product( $post_id );
 
-			return $product->bc_id();
-		}, $request[ 'post_id' ] );
-		$ids   = implode( ',', array_filter( array_map( 'intval', $bcids ) ) );
+				return $product->bc_id();
+			}, $request['post_id'] );
+		}
+		$ids   = implode( ',', array_unique( array_filter( array_map( 'intval', $bcids ) ) ) );
 		if ( ! empty( $ids ) ) {
 			$args = [
 				'id' => $ids,

@@ -9,6 +9,7 @@ use BigCommerce\Import\Processors;
 use BigCommerce\Import\Runner;
 use BigCommerce\Import\Task_Definition;
 use BigCommerce\Import\Task_Manager;
+use BigCommerce\Logging\Error_Log;
 use BigCommerce\Settings\Import_Status;
 use BigCommerce\Settings\Sections\Import as Import_Settings;
 use BigCommerce\Taxonomies\Channel\Channel;
@@ -236,7 +237,12 @@ class Import extends Provider {
 		};
 
 		add_action( 'bigcommerce/import/run', function ( $status ) use ( $container ) {
-			$container[ self::TASK_MANAGER ]->run_next( $status );
+			try {
+				$container[ self::TASK_MANAGER ]->run_next( $status );
+			} catch ( \Exception $e ) {
+				do_action( 'bigcommerce/import/error', $e->getMessage(), [] );
+				do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [] );
+			}
 		} );
 
 		$error = $this->create_callback( 'process_error', function () use ( $container ) {

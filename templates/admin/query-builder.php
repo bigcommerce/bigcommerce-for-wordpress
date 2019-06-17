@@ -6,11 +6,13 @@
  *
  * @var \WP_Term|false $featured
  * @var \WP_Term|false $sale
- * @var array     $brands
- * @var array     $categories
+ * @var array          $brands
+ * @var array          $categories
+ * @var array          $channels
  */
 
 use BigCommerce\Taxonomies\Brand\Brand;
+use BigCommerce\Taxonomies\Channel\Channel;
 use BigCommerce\Taxonomies\Flag\Flag;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
 
@@ -21,6 +23,14 @@ use BigCommerce\Taxonomies\Product_Category\Product_Category;
 			class="bc-shortcode-ui__logo"
 			aria-label="<?php esc_attr_e( 'BigCommerce Product Query Builder', 'bigcommerce' ); ?>"
 	></figure>
+
+	<?php if ( count( $channels ) > 1 ) {
+		printf( '<label for="bcqb-channels" class="bc-shortcode-ui__channel-select">%s <select name="%s" id="bcqb-channels" data-js="bcqb-channels">', __( 'Select a Channel', 'bigcommerce' ), Channel::NAME );
+		foreach ( $channels as $channel ) {
+			printf( '<option value="%d" %s data-primary="%s">%s</option>', $channel['id'], selected( $channel['primary'], true, false ), $channel['primary'], esc_html( $channel['name'] ) );
+		}
+		echo '</select></label>';
+	} ?>
 
 	<ul class="bc-shortcode-ui__query-builder-list" data-js="bcqb-list">
 		<li class="bc-shortcode-ui__query-builder-list-item">

@@ -213,6 +213,11 @@ abstract class Product_Saver implements Import_Strategy {
 		} else {
 			delete_post_meta( $this->post_id, Product::GALLERY_META_KEY );
 		}
+		if ( array_key_exists( 'variants', $images ) ) {
+			update_post_meta( $this->post_id, Product::VARIANT_IMAGES_META_KEY, $images['variants'] );
+		} else {
+			delete_post_meta( $this->post_id, Product::VARIANT_IMAGES_META_KEY );
+		}
 	}
 
 	/**

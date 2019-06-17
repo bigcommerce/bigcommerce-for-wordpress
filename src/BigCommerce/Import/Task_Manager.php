@@ -97,8 +97,8 @@ class Task_Manager {
 		} catch ( No_Task_Found_Exception $e ) {
 			do_action( 'bigcommerce/log', Error_Log::NOTICE, __( 'No handler found for current import state', 'bigcommerce' ), [
 				'state'     => $state,
-				'exception' => $e,
 			] );
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [] );
 
 			return false;
 		}
@@ -119,6 +119,7 @@ class Task_Manager {
 	 * @param $state
 	 *
 	 * @return int
+	 * @throws No_Task_Found_Exception
 	 */
 	public function completed_count( $state ) {
 		ksort( $this->tasks );

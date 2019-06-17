@@ -12,6 +12,7 @@ use BigCommerce\Exceptions\Channel_Not_Found_Exception;
 use BigCommerce\Exceptions\Product_Not_Found_Exception;
 use BigCommerce\Settings\Sections\Cart;
 use BigCommerce\Settings\Sections\Channels;
+use BigCommerce\Taxonomies\Availability\Availability;
 use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Channel\Channel;
 use BigCommerce\Taxonomies\Channel\Connections;
@@ -36,6 +37,7 @@ class Product {
 	const IMPORTER_VERSION_META_KEY = 'bigcommerce_importer_version';
 	const DATA_HASH_META_KEY        = 'bigcommerce_data_hash';
 	const GALLERY_META_KEY          = 'bigcommerce_gallery';
+	const VARIANT_IMAGES_META_KEY   = 'bigcommerce_variant_images';
 	const RATING_META_KEY           = 'bigcommerce_rating';
 	const SALES_META_KEY            = 'bigcommerce_sales';
 	const PRICE_META_KEY            = 'bigcommerce_calculated_price';
@@ -124,6 +126,9 @@ class Product {
 	}
 
 	public function calculated_price_range() {
+		if ( has_term( Flag::HIDE_PRICE, Flag::NAME, $this->post_id ) ) {
+			return '';
+		}
 		$prices = get_post_meta( $this->post_id, self::PRICE_RANGE_META_KEY, true );
 		$low    = isset( $prices['calculated']['min'] ) ? $prices['calculated']['min'] : 0;
 		$high   = isset( $prices['calculated']['max'] ) ? $prices['calculated']['max'] : 0;
@@ -351,16 +356,49 @@ class Product {
 	}
 
 	public function purchase_button() {
-		$options = $this->has_options() || $this->out_of_stock() ? 'disabled="disabled"' : '';
-		if ( get_option( Cart::OPTION_ENABLE_CART, true ) ) {
-			$label  = get_option( Buttons::ADD_TO_CART, __( 'Add to Cart', 'bigcommerce' ) );
-			$button = sprintf( '<button class="bc-btn bc-btn--form-submit bc-btn--add_to_cart" type="submit" data-js="%s" %s>%s</button>', $this->bc_id(), $options, $label );
-		} else {
-			$label  = get_option( Buttons::BUY_NOW, __( 'Buy Now', 'bigcommerce' ) );
-			$button = sprintf( '<button class="bc-btn bc-btn--form-submit bc-btn--buy" type="submit" %s>%s</button>', $options, $label );
+		$options  = $this->has_options() || $this->out_of_stock() ? 'disabled="disabled"' : '';
+		$preorder = $this->availability() === Availability::PREORDER;
+		$cart     = get_option( Cart::OPTION_ENABLE_CART, true );
+		$class    = 'bc-btn bc-btn--form-submit';
+		if ( $preorder ) {
+			$class .= ' bc-btn--preorder';
 		}
+		if ( $cart ) {
+			$class .= ' bc-btn--add_to_cart';
+			$label = $preorder ? get_option( Buttons::PREORDER_TO_CART, __( 'Add to Cart', 'bigcommerce' ) ) : get_option( Buttons::ADD_TO_CART, __( 'Add to Cart', 'bigcommerce' ) );
+		} else {
+			$class .= ' bc-btn--buy';
+			$label = $preorder ? get_option( Buttons::PREORDER_NOW, __( 'Pre-Order Now', 'bigcommerce' ) ) : get_option( Buttons::BUY_NOW, __( 'Buy Now', 'bigcommerce' ) );
+		}
+		$button = sprintf( '<button class="%s" type="submit" data-js="%d" %s>%s</button>', $class, $this->bc_id(), $options, $label );
 
 		return apply_filters( 'bigcommerce/button/purchase', $button, $this->post_id );
+	}
+
+	public function purchase_message() {
+		$preorder = $this->availability() === Availability::PREORDER;
+		if ( ! $preorder ) {
+			return '';
+		}
+		$source  = $this->get_source_data();
+		$date    = isset( $source->preorder_release_date ) ? strtotime( $source->preorder_release_date ) : 0;
+		$message = isset( $source->preorder_message ) ? $source->preorder_message : '';
+		$message = str_replace( '%%DATE%%', '%s', $message );
+
+		$default_message   = __( 'Available for pre-order.', 'bigcommerce' );
+		$default_with_date = __( 'Available for pre-order. Expected release date is %s.', 'bigcommerce' );
+
+		if ( empty( $date ) && strpos( $message, '%s' ) !== false ) {
+			$message = '';
+		}
+
+		if ( empty( $message ) ) {
+			$message = empty( $date ) ? $default_message : $default_with_date;
+		}
+
+		$date_string = $date ? date_i18n( get_option( 'date_format', 'Y-m-d' ), $date ) : '';
+
+		return sprintf( $message, $date_string );
 	}
 
 	public function get_inventory_level( $variant_id = 0 ) {
@@ -399,6 +437,38 @@ class Product {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Get the availability for the product
+	 *
+	 * @return string
+	 */
+	public function availability() {
+		$terms = get_the_terms( $this->post_id, Availability::NAME );
+		if ( ! $terms || is_wp_error( $terms ) ) {
+			return Availability::AVAILABLE;
+		}
+
+		return reset( $terms )->slug;
+	}
+
+
+	/**
+	 * Checks if a product can be purchased, considering
+	 * both the purchasability setting and inventory levels
+	 *
+	 * @param int $variant_id
+	 *
+	 * @return bool If the product is out of stock
+	 */
+	public function is_purchasable( $variant_id = 0 ) {
+		$availabilty = $this->availability();
+		if ( $availabilty === Availability::DISABLED ) {
+			return false;
+		}
+
+		return ! $this->out_of_stock( $variant_id );
 	}
 
 	/**

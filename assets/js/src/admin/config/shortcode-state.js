@@ -13,11 +13,12 @@ export default {
 		bigcommerce_flag: [],
 		bigcommerce_brand: [],
 		bigcommerce_category: [],
+		bigcommerce_channel: '',
 		recent: [],
 		search: [],
 	},
 	selectedProducts: {
-		post_id: [],
+		bc_id: [],
 	},
 	insertCallback: false,
 };

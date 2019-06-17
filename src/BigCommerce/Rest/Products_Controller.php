@@ -3,10 +3,13 @@
 
 namespace BigCommerce\Rest;
 
+use BigCommerce\Exceptions\Channel_Not_Found_Exception;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Post_Types\Product\Query_Mapper;
 use BigCommerce\Shortcodes;
 use BigCommerce\Taxonomies\Brand\Brand;
+use BigCommerce\Taxonomies\Channel\Channel;
+use BigCommerce\Taxonomies\Channel\Connections;
 use BigCommerce\Taxonomies\Flag\Flag;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
 use WP_REST_Server;
@@ -72,8 +75,15 @@ class Products_Controller extends Rest_Controller {
 
 		$query_args = apply_filters( 'bigcommerce/rest/products_query', $args, $request );
 
-		$query_args[ 'post_type' ]   = Product::NAME;
-		$query_args[ 'post_status' ] = 'publish';
+		$query_args['post_type']      = Product::NAME;
+		$query_args['post_status']    = 'publish';
+		$query_args['posts_per_page'] = 12;
+		if ( ! empty( $query_args['bigcommerce_id__in'] ) ) {
+			$query_args['posts_per_page'] = - 1;
+		}
+
+		$channel_filter = $this->get_channel_filter( $request->get_param( Channel::NAME ) );
+		add_action( 'pre_get_posts', $channel_filter, 9, 1 ); // run before Query_Filter::set_tax_query()
 
 		$posts_query  = new \WP_Query();
 		$query_result = $posts_query->query( $query_args );
@@ -81,29 +91,37 @@ class Products_Controller extends Rest_Controller {
 		$posts = [];
 
 		foreach ( $query_result as $post_id ) {
-			$data    = $this->prepare_item_for_response( get_post( $post_id ), $request );
-			$posts[] = $this->prepare_response_for_collection( $data );
+			$bcid = get_post_meta( $post_id, Product::BIGCOMMERCE_ID, true );
+			$data = $this->prepare_item_for_response( get_post( $post_id ), $request );
+			// ensure that we only have one result per BCID, no matter how many channels it's in
+			$posts[ $bcid ] = $this->prepare_response_for_collection( $data );
 		}
 
-		$page        = (int) $query_args[ 'paged' ];
+		$page        = (int) $query_args['paged'];
 		$total_posts = $posts_query->found_posts;
 
 		if ( $total_posts < 1 ) {
 			// Out-of-bounds, run the query again without LIMIT for total count.
-			unset( $query_args[ 'paged' ] );
+			unset( $query_args['paged'] );
 
 			$count_query = new \WP_Query();
 			$count_query->query( $query_args );
 			$total_posts = $count_query->found_posts;
 		}
 
-		$max_pages = ceil( $total_posts / (int) $posts_query->query_vars[ 'posts_per_page' ] );
+		remove_action( 'pre_get_posts', $channel_filter, 9 );
+
+		if ( $posts_query->query_vars['posts_per_page'] === - 1 ) {
+			$max_pages = 1;
+		} else {
+			$max_pages = ceil( $total_posts / (int) $posts_query->query_vars['posts_per_page'] );
+		}
 
 		if ( $page > $max_pages && $total_posts > 0 ) {
 			return new \WP_Error( 'rest_post_invalid_page_number', __( 'The page number requested is larger than the number of pages available.', 'bigcommerce' ), [ 'status' => 400 ] );
 		}
 
-		$response = rest_ensure_response( $posts );
+		$response = rest_ensure_response( array_values( $posts ) );
 
 		$response->header( 'X-WP-Total', (int) $total_posts );
 		$response->header( 'X-WP-TotalPages', (int) $max_pages );
@@ -131,6 +149,75 @@ class Products_Controller extends Rest_Controller {
 		return $response;
 	}
 
+	/**
+	 * Get a callback to run on pre_get_posts for a query
+	 * to set an appropriate channel filter for the given channel
+	 *
+	 * @param int|int[] $channel
+	 *
+	 * @return \Closure
+	 */
+	private function get_channel_filter( $channel ) {
+		$no_op = function () {
+			// do nothing
+		};
+		if ( empty( $channel ) ) {
+			return $no_op;
+		}
+
+		try {
+			$connections = new Connections();
+			$primary     = $connections->primary();
+			$active      = $connections->active();
+		} catch ( Channel_Not_Found_Exception $e ) {
+			return $no_op;
+		}
+
+		$active_channel_ids = wp_list_pluck( $active, 'term_id' );
+		if ( $channel === - 1 ) {
+			$valid_channel_ids = $active_channel_ids;
+		} else {
+			$valid_channel_ids = array_intersect( (array) $channel, $active_channel_ids );
+		}
+		if ( empty( $valid_channel_ids ) || $valid_channel_ids === [ $primary->term_id ] ) {
+			return $no_op;
+		}
+
+		/**
+		 * Create a filter for the query to set the channel ID(s)
+		 *
+		 * @param \WP_Query $query
+		 *
+		 * @return void
+		 * @see \BigCommerce\Taxonomies\Channel\Query_Filter::set_tax_query()
+		 */
+		$filter = function ( \WP_Query $query ) use ( $valid_channel_ids ) {
+			$filter_query = [
+				'relation' => 'AND',
+				[
+					'taxonomy' => Channel::NAME,
+					'terms'    => $valid_channel_ids,
+					'field'    => 'term_id',
+					'operator' => 'IN',
+				],
+			];
+
+			if ( ! isset( $query->tax_query ) ) {
+				$query->tax_query = new \WP_Tax_Query( $filter_query );
+			}
+
+			$existing_queries          = $query->tax_query->queries;
+			$query->tax_query->queries = $filter_query;
+			if ( ! empty( $existing_queries ) ) {
+				$query->tax_query->queries[] = $existing_queries;
+			}
+
+			$query->query_vars['tax_query'] = $query->tax_query->queries;
+		};
+
+		return $filter;
+	}
+
 	public function get_collection_params() {
 		$query_params = parent::get_collection_params();
 		foreach ( Shortcodes\Products::default_attributes() as $key => $default ) {
@@ -140,14 +227,14 @@ class Products_Controller extends Rest_Controller {
 			];
 		}
 
-		$query_params[ 'order' ] = [
+		$query_params['order'] = [
 			'description' => __( 'Direction to sort results', 'bigcommerce' ),
 			'type'        => 'string',
 			'default'     => 'asc',
 			'enum'        => [ 'asc', 'desc' ],
 		];
 
-		$query_params[ 'bcid' ] = [
+		$query_params['bcid'] = [
 			'description' => __( 'BigCommerce product IDs', 'bigcommerce' ),
 			'type'        => 'array',
 			'items'       => [
@@ -156,10 +243,16 @@ class Products_Controller extends Rest_Controller {
 			'default'     => [],
 		];
 
-		$query_params[ 'recent' ] = [
+		$query_params['recent'] = [
 			'description' => __( 'Limits results to products updated in the last 2 days', 'bigcommerce' ),
 			'type'        => 'boolean',
 			'default'     => false,
+		];
+
+		$query_params[ Channel::NAME ] = [
+			'description' => __( 'Limits results to products from the given channel', 'bigcommerce' ),
+			'type'        => 'integer',
+			'default'     => 0,
 		];
 
 		foreach ( $this->taxonomy_params() as $taxonomy ) {
@@ -198,9 +291,9 @@ class Products_Controller extends Rest_Controller {
 	 * @return \WP_REST_Response Response object.
 	 */
 	public function prepare_item_for_response( $post, $request ) {
-		$backup_post       = isset( $GLOBALS[ 'post' ] ) ? $GLOBALS[ 'post' ] : null;
-		$product           = new Product( $post->ID );
-		$GLOBALS[ 'post' ] = $post;
+		$backup_post     = isset( $GLOBALS['post'] ) ? $GLOBALS['post'] : null;
+		$product         = new Product( $post->ID );
+		$GLOBALS['post'] = $post;
 
 		setup_postdata( $post );
 
@@ -209,17 +302,17 @@ class Products_Controller extends Rest_Controller {
 		// Base fields for every post.
 		$data = [];
 
-		foreach ( $schema[ 'properties' ] as $key => $meta ) {
+		foreach ( $schema['properties'] as $key => $meta ) {
 			if ( empty( $meta ) ) {
 				continue;
 			}
 			$data[ $key ] = $this->get_item_property( $product, $key, $meta );
 		}
-		$context = ! empty( $request[ 'context' ] ) ? $request[ 'context' ] : 'view';
+		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$data    = $this->add_additional_fields_to_object( $data, $request );
 		$data    = $this->filter_response_by_context( $data, $context );
 
-		$GLOBALS[ 'post' ] = $backup_post;
+		$GLOBALS['post'] = $backup_post;
 		wp_reset_postdata();
 
 		// Wrap the data in a response object.
@@ -446,7 +539,7 @@ class Products_Controller extends Rest_Controller {
 		];
 
 		foreach ( $this->taxonomy_params() as $taxonomy ) {
-			$schema[ 'properties' ][ $taxonomy ] = [
+			$schema['properties'][ $taxonomy ] = [
 				'description' => sprintf( __( 'A term from the %s taxonomy', 'bigcommerce' ), $taxonomy ),
 				'type'        => 'array',
 				'items'       => [

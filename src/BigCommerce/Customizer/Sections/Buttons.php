@@ -9,10 +9,12 @@ use BigCommerce\Customizer\Panels;
 class Buttons {
 	const NAME = 'bigcommerce_buttons';
 
-	const ADD_TO_CART    = 'bigcommerce_add_to_cart_button_label';
-	const BUY_NOW        = 'bigcommerce_buy_now_button_label';
-	const CHOOSE_OPTIONS = 'bigcommerce_choose_options_button_label';
-	const VIEW_PRODUCT   = 'bigcommerce_view_product_button_label';
+	const ADD_TO_CART      = 'bigcommerce_add_to_cart_button_label';
+	const PREORDER_TO_CART = 'bigcommerce_preorder_add_to_cart_button_label';
+	const BUY_NOW          = 'bigcommerce_buy_now_button_label';
+	const PREORDER_NOW     = 'bigcommerce_preorder_now_button_label';
+	const CHOOSE_OPTIONS   = 'bigcommerce_choose_options_button_label';
+	const VIEW_PRODUCT     = 'bigcommerce_view_product_button_label';
 
 	/**
 	 * @param \WP_Customize_Manager $wp_customize
@@ -26,7 +28,9 @@ class Buttons {
 		] ) );
 
 		$this->add_to_cart( $wp_customize );
+		$this->preorder_add_to_cart( $wp_customize );
 		$this->buy_now( $wp_customize );
+		$this->preorder_buy_now( $wp_customize );
 		$this->choose_options( $wp_customize );
 		$this->view_product( $wp_customize );
 	}
@@ -44,6 +48,19 @@ class Buttons {
 		] ) );
 	}
 
+	private function preorder_add_to_cart( \WP_Customize_Manager $wp_customize ) {
+		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::PREORDER_TO_CART, [
+			'type'              => 'option',
+			'default'           => __( 'Add to Cart', 'bigcommerce' ),
+			'transport'         => 'refresh',
+			'sanitize_callback' => 'sanitize_text_field',
+		] ) );
+		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, self::PREORDER_TO_CART, [
+			'section' => self::NAME,
+			'label'   => __( '"Pre-Order Add to Cart" Button Label', 'bigcommerce' ),
+		] ) );
+	}
+
 	private function buy_now( \WP_Customize_Manager $wp_customize ) {
 		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::BUY_NOW, [
 			'type'              => 'option',
@@ -54,6 +71,19 @@ class Buttons {
 		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, self::BUY_NOW, [
 			'section' => self::NAME,
 			'label'   => __( '"Buy Now" Button Label', 'bigcommerce' ),
+		] ) );
+	}
+
+	private function preorder_buy_now( \WP_Customize_Manager $wp_customize ) {
+		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::PREORDER_NOW, [
+			'type'              => 'option',
+			'default'           => __( 'Pre-Order Now', 'bigcommerce' ),
+			'transport'         => 'refresh',
+			'sanitize_callback' => 'sanitize_text_field',
+		] ) );
+		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, self::PREORDER_NOW, [
+			'section' => self::NAME,
+			'label'   => __( '"Pre-Order Now" Button Label', 'bigcommerce' ),
 		] ) );
 	}
 

@@ -9,10 +9,11 @@ import pricing from './pricing';
 
 const el = {
 	container: tools.getNodes('bc-product-single', false, document)[0],
+	formWrapper: tools.getNodes('.bc-product-form', false, document, true)[0],
 };
 
 const init = () => {
-	variants(el.container);
+	variants(el.formWrapper);
 	reviews(el.container);
 	pricing();
 };

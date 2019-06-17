@@ -6,8 +6,10 @@ namespace BigCommerce\Shortcodes;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Templates\Product_Description;
 use BigCommerce\Templates\Product_Featured_Image;
+use BigCommerce\Templates\Product_Form;
 use BigCommerce\Templates\Product_Sku;
 use BigCommerce\Templates\Product_Title;
+use BigCommerce\Editor\Gutenberg\Blocks\Product_Components as Components;
 
 class Product_Components implements Shortcode {
 
@@ -44,24 +46,30 @@ class Product_Components implements Shortcode {
 		}
 
 		switch ( $attr['type'] ) {
-			case 'sku':
+			case Components::SKU:
 				$sku = Product_Sku::factory( [
 					Product_Description::PRODUCT => $product,
 				] );
 
 				return $sku->render();
-			case 'description':
+			case Components::DESCRIPTION:
 				$description = Product_Description::factory( [
 					Product_Description::PRODUCT => $product,
 				] );
 
 				return $description->render();
-			case 'image':
+			case Components::IMAGE:
 				$product_image = Product_Featured_Image::factory( [
 					Product_Featured_Image::PRODUCT => $product,
 				] );
 
 				return $product_image->render();
+			case Components::ADD_TO_CART:
+				$product_form = Product_Form::factory( [
+					Product_Form::PRODUCT => $product,
+				] );
+
+				return $product_form->render();
 			default:
 				$title = Product_Title::factory( [
 					Product_Title::PRODUCT => $product,

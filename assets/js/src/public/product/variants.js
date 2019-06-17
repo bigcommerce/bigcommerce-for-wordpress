@@ -6,9 +6,9 @@
 import _ from 'lodash';
 import delegate from 'delegate';
 import flatpickr from 'flatpickr';
-import * as tools from '../../utils/tools';
-import queryToJson from '../../utils/data/query-to-json';
-import updateQueryVar from '../../utils/data/update-query-var';
+import * as tools from 'utils/tools';
+import queryToJson from 'utils/data/query-to-json';
+import updateQueryVar from 'utils/data/update-query-var';
 import { PRODUCT_MESSAGES } from '../config/wp-settings';
 import { productMessage } from '../templates/product-message';
 
@@ -24,6 +24,12 @@ const state = {
 	variantMessage: '',
 	variantPrice: '',
 	sku: '',
+	variantImage: {
+		url: '',
+		width: '',
+		height: '',
+		template: '',
+	},
 };
 
 const el = {
@@ -123,6 +129,84 @@ const setSelectedVariantPrice = (wrapper = '') => {
 };
 
 /**
+ * @function showVariantImage
+ * @description Shows the variant image if one is available from state.variantImage.url.
+ * @param swiperInstance
+ */
+const showVariantImage = (swiperInstance) => {
+	const slide = document.createElement('div');
+	tools.addClass(slide, 'swiper-slide');
+	tools.addClass(slide, 'bc-product-gallery__image-variant');
+	slide.insertAdjacentHTML('beforeend', state.variantImage.template);
+
+	const image = tools.getNodes('bc-variant-image', false, slide)[0];
+	image.setAttribute('src', state.variantImage.url);
+	image.setAttribute('alt', state.sku);
+	image.setAttribute('width', state.variantImage.width);
+	image.setAttribute('height', state.variantImage.height);
+
+	swiperInstance.appendSlide(slide);
+	swiperInstance.slideTo(swiperInstance.slides.length);
+};
+
+/**
+ * @function removeVariantImage
+ * @description Hide the active variant image.
+ * @param swiperInstance
+ */
+const removeVariantImage = (swiperInstance) => {
+	let slideIndex = '';
+
+	Object.entries(swiperInstance.slides).forEach(([key, slide]) => {
+		if (key === 'length') {
+			return;
+		}
+
+		if (tools.hasClass(slide, 'bc-product-gallery__image-variant')) {
+			slideIndex = key;
+		}
+	});
+
+	if (!slideIndex) {
+		return;
+	}
+
+	swiperInstance.removeSlide(slideIndex);
+	swiperInstance.slideTo(1);
+};
+
+/**
+ * @function showHideVariantImage
+ * @description Hides any active variant image and then displays a new one if it is available.
+ * @param e
+ * @param wrapper
+ */
+const showHideVariantImage = (e, wrapper = '') => {
+	if (!e && !wrapper) {
+		return;
+	}
+
+	const currentWrapper = e ? tools.closest(e.detail.currentGallery.el, '[data-js="bc-product-data-wrapper"]') : wrapper;
+	const variantContainer = tools.getNodes('bc-product-variant-image', false, currentWrapper)[0];
+
+	// Check that the proper variant image container is present in the DOM.
+	if (!variantContainer) {
+		return;
+	}
+
+	state.variantImage.template = variantContainer.innerHTML;
+	const swiperInstance = tools.getNodes('bc-gallery-container', false, currentWrapper)[0].swiper;
+
+	// hide the image after each variant request.
+	removeVariantImage(swiperInstance);
+
+	// If there is a variant image, show it with a short delay for animation purposes.
+	if (state.variantImage.url) {
+		showVariantImage(swiperInstance);
+	}
+};
+
+/**
  * @function handleSelectedVariant
  * @description Takes the current variant and handles status and messaging.
  * @param product
@@ -136,6 +220,13 @@ const handleSelectedVariant = (product = {}) => {
 	state.variantPrice = product.formatted_price;
 	state.variantID = product.variant_id;
 	state.sku = product.sku;
+
+	// Case: product variant has a variant image.
+	if (product.image.url.length > 0) {
+		state.variantImage.url = product.image.url;
+		state.variantImage.width = product.image.width;
+		state.variantImage.height = product.image.height;
+	}
 
 	// Case: Current variant choice has inventory and is not disabled.
 	if ((product.inventory > 0 || product.inventory === -1) && !product.disabled) {
@@ -299,17 +390,25 @@ const handleSelections = (e, node = '') => {
 	state.sku = '';
 	state.variantPrice = '';
 	state.singleVariant = false;
+	state.variantImage.url = '';
+	state.variantImage.width = '';
+	state.variantImage.height = '';
 
 	const formWrapper = tools.closest(optionsContainer, '.bc-product-form');
 	const productID = optionsContainer.dataset.productId;
 	const submitButton = tools.getNodes('.bc-btn--form-submit', false, formWrapper, true)[0];
-	const metaWrapper = tools.closest(optionsContainer, '[data-js="bc-product-data-wrapper"]');
+
+	let metaWrapper = tools.closest(optionsContainer, '[data-js="bc-product-data-wrapper"]');
+	if (!metaWrapper) {
+		metaWrapper = tools.closest(optionsContainer, '[data-wrapper="bc-product-data-wrapper"]');
+	}
 
 	buildSelectionArray(instances.selections[productID], optionsContainer);
 	parseVariants(instances.product[productID], instances.selections[productID]);
 	setProductURLParameter();
 	setVariantIDHiddenField(formWrapper);
 	setSelectedVariantPrice(metaWrapper);
+	showHideVariantImage(null, metaWrapper);
 	setButtonState(submitButton);
 	handleAlertMessage(formWrapper);
 };
@@ -417,7 +516,6 @@ const initOptionsPickers = () => {
 
 		// On initialization, setup our form.
 		handleOptionClicks(options);
-		handleSelections(null, options);
 		handleModifierFields(options);
 	});
 };

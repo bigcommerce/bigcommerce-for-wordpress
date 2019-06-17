@@ -4,10 +4,10 @@
  */
 
 
-import shortcodeState from '../../../config/shortcode-state';
-import { wpAPIProductsPreview, wpAPIShortcodeBuilder } from '../../../../utils/ajax';
-import { I18N } from '../../../config/i18n';
-import * as tools from '../../../../utils/tools';
+import { wpAPIProductsPreview, wpAPIShortcodeBuilder } from 'utils/ajax';
+import * as tools from 'utils/tools';
+import shortcodeState from 'adminConfig/shortcode-state';
+import { I18N } from 'adminConfig/i18n';
 import Inspector from './inspector';
 
 const getResponse = (props, queryObj) => {
