@@ -20,6 +20,7 @@ const state = {
 		options: {},
 		quantity: 1,
 	},
+	cartMessage: '',
 };
 
 const el = {
@@ -111,7 +112,8 @@ const getAjaxQueryString = (button) => {
 
 /**
  * @function updateCartItemCount
- * @description Upon successfully adding a item to the cart, get the new cart count from the response and update the cart menu item.
+ * @description Upon successfully adding a item to the cart, get the new cart count from the response and update the
+ *     			cart menu item.
  * @param data
  */
 const updateCartItemCount = (data = {}) => {
@@ -180,6 +182,31 @@ const handleFetchingState = (button = '') => {
 };
 
 /**
+ * @function handleCartErrors
+ * @description Using the error response codes from the API response, set the corresponding message to print on the page.
+ * @param response
+ */
+const handleCartErrors = (response) => {
+	state.cartMessage = '';
+	const status = response.data.status.toString();
+
+	// If we're missing a status code, just use our default string.
+	if (!status) {
+		state.cartMessage = NLS.cart.ajax_add_to_cart_error;
+	}
+
+	// Map the error code to API's response message.
+	switch (true) {
+	case (status.charAt(0) === '4'):
+		state.cartMessage = response.message;
+		break;
+	case (status.charAt(0) === '5'):
+	default:
+		state.cartMessage = NLS.cart.ajax_add_to_cart_error;
+	}
+};
+
+/**
  * @function handleAjaxAddToCartRequest
  * @description Payload function that handles submitting the product to the cart API.
  * @param e
@@ -207,10 +234,10 @@ const handleAjaxAddToCartRequest = (e) => {
 			state.isFetching = false;
 			handleFetchingState(cartButton);
 
-			// TODO: If/when we ever get more detailed error responses with error codes, we'll need to address them here.
 			if (err) {
 				console.error(err);
-				createAjaxResponseMessage(form, NLS.cart.ajax_add_to_cart_error, true);
+				handleCartErrors(res.body);
+				createAjaxResponseMessage(form, state.cartMessage, true);
 				return;
 			}
 

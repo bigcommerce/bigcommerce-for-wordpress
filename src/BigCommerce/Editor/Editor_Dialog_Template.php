@@ -4,9 +4,11 @@ namespace BigCommerce\Editor;
 
 
 use BigCommerce\Customizer\Sections\Product_Archive;
+use BigCommerce\Exceptions\Channel_Not_Found_Exception;
 use BigCommerce\Rest\Products_Controller;
 use BigCommerce\Rest\Shortcode_Controller;
 use BigCommerce\Taxonomies\Brand\Brand;
+use BigCommerce\Taxonomies\Channel\Connections;
 use BigCommerce\Taxonomies\Flag\Flag;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
 
@@ -98,11 +100,14 @@ class Editor_Dialog_Template {
 		//  Nest sub-category under the correct parent
 		$category_choices = $this->get_choices( 0, $categories_by_parent, 0 );
 
+		$channels = $this->get_channels();
+
 		return $this->render_template( 'query-builder.php', [
 			'featured'   => $featured,
 			'sale'       => $sale,
 			'brands'     => $brand_choices,
 			'categories' => $category_choices,
+			'channels'   => $channels,
 		] );
 	}
 
@@ -130,6 +135,24 @@ class Editor_Dialog_Template {
 		}
 
 		return $choices;
+	}
+
+	private function get_channels() {
+		try {
+			$connections = new Connections();
+			$primary     = $connections->primary();
+		} catch( Channel_Not_Found_Exception $e ) {
+			return [];
+		}
+
+		return array_map( function ( \WP_Term $term ) use ( $primary ) {
+			return [
+				'name'    => $term->name,
+				'slug'    => $term->slug,
+				'id'      => $term->term_id,
+				'primary' => $primary->term_id === $term->term_id,
+			];
+		}, $connections->active() );
 	}
 
 	private function query_settings() {

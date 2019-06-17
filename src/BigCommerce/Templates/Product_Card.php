@@ -6,6 +6,7 @@ namespace BigCommerce\Templates;
 
 use BigCommerce\Customizer\Sections\Buttons;
 use BigCommerce\Post_Types\Product\Product;
+use BigCommerce\Taxonomies\Flag\Flag;
 
 class Product_Card extends Controller {
 	const PRODUCT    = 'product';
@@ -56,9 +57,15 @@ class Product_Card extends Controller {
 	}
 
 	protected function get_price( Product $product ) {
-		$component = Product_Price::factory( [
-			Product_Price::PRODUCT => $product,
-		] );
+		if ( has_term( Flag::HIDE_PRICE, Flag::NAME, $product->post_id() ) ) {
+			$component = Product_Hidden_Price::factory( [
+				Product_Hidden_Price::PRODUCT => $product,
+			] );
+		} else {
+			$component = Product_Price::factory( [
+				Product_Price::PRODUCT => $product,
+			] );
+		}
 
 		return $component->render();
 	}
@@ -95,7 +102,7 @@ class Product_Card extends Controller {
 	}
 
 	protected function get_form( Product $product ) {
-		if ( $product->out_of_stock() ) {
+		if ( ! $product->is_purchasable() ) {
 			return '';
 		}
 		if ( $product->has_options() ) {

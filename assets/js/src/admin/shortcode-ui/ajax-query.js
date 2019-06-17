@@ -73,28 +73,11 @@ const dimTheHouseLights = () => {
 };
 
 /**
- * @function selectedProductCheck
- * @param product object data
- * @returns {boolean}
- */
-const selectedProductCheck = (product) => {
-	let selected = false;
-
-	shortcodeState.selectedProducts.post_id.forEach((int) => {
-		if (parseInt(int, 10) === product.post_id) {
-			selected = true;
-		}
-	});
-
-	return selected;
-};
-
-/**
  * @function renderProductTemplate
  * @param product json product object
  */
 const renderProductTemplate = (product = {}) => {
-	const selected = selectedProductCheck(product);
+	const selected = shortcodeState.selectedProducts.bc_id.filter(bcid => parseInt(bcid, 10) === product.bigcommerce_id).length > 0;
 	const productData = {
 		id: product.post_id,
 		bcid: product.bigcommerce_id,
@@ -232,7 +215,7 @@ const wpAPIGetRequest = () => {
 			}
 
 			handleAjaxResponse(res.body);
-			_.delay(() => handleAjaxPagination(res.links.next), 100);
+			_.delay(() => handleAjaxPagination(res.links.next), 150);
 		});
 };
 
@@ -247,6 +230,7 @@ const cacheElements = () => {
 const bindEvents = () => {
 	delegate(el.searchForm, '[data-js="bcqb-submit"]', 'click', wpAPIGetRequest);
 	on(document, 'bigcommerce/shortcode_ui_state_ready', wpAPIGetRequest);
+	on(document, 'bigcommerce/get_channel_products', wpAPIGetRequest);
 	on(document, 'bigcommerce/hide_shortcode_ui', handleExistingWaypoints);
 };
 

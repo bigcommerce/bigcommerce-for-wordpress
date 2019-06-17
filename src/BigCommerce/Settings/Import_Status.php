@@ -4,6 +4,7 @@
 namespace BigCommerce\Settings;
 
 
+use BigCommerce\Exceptions\No_Task_Found_Exception;
 use BigCommerce\Import\Runner\Cron_Runner;
 use BigCommerce\Import\Runner\Status;
 use BigCommerce\Import\Task_Manager;
@@ -106,7 +107,11 @@ class Import_Status {
 		$previous = $status->previous_status();
 
 		$total_steps     = $this->manager->task_count() - 1; // minus one to ignore the "start" step"
-		$completed_steps = $this->manager->completed_count( $current[ 'status' ] );
+		try {
+			$completed_steps = $this->manager->completed_count( $current[ 'status' ] );
+		} catch ( No_Task_Found_Exception $e ) {
+			$completed_steps = 0;
+		}
 		$current_task    = $this->manager->get_task( $current[ 'status' ] );
 
 		$total     = (int) get_option( self::IMPORT_TOTAL_PRODUCTS, 0 );

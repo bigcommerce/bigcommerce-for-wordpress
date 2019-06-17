@@ -4,6 +4,7 @@
 namespace BigCommerce\Cart;
 
 use BigCommerce\Api\v3\Api\CartApi;
+use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Post_Types\Product\Product;
 
 /**
@@ -23,7 +24,7 @@ class Add_To_Cart {
 	 */
 	public function handle_request( $post_id, CartApi $cart_api ) {
 		if ( ! $this->validate_request( $post_id, $_POST ) ) {
-			$error = new \WP_Error( 'unknown_product', $this->error_message() );
+			$error = new \WP_Error( 'unknown_product', __( 'We were unable to process your request. Please go back and try again.', 'bigcommerce' ) );
 			do_action( 'bigcommerce/form/error', $error, $_POST, home_url( '/' ) );
 
 			return;
@@ -52,9 +53,12 @@ class Add_To_Cart {
 		$quantity = array_key_exists( 'quantity', $_POST ) ? absint( $_POST[ 'quantity' ] ) : 1;
 
 		$cart     = new Cart( $cart_api );
-		$response = $cart->add_line_item( $product_id, $options, $quantity );
-
-		$this->handle_response( $response, $cart, $post_id, $product_id, $variant_id );
+		try {
+			$response = $cart->add_line_item( $product_id, $options, $quantity );
+			$this->handle_response( $response, $cart, $post_id, $product_id, $variant_id );
+		} catch ( ApiException $e ) {
+			$this->handle_exception( $e, $cart );
+		}
 	}
 
 	private function sanitize_option( $value, $config ) {
@@ -84,35 +88,52 @@ class Add_To_Cart {
 	 */
 	protected function handle_response( $response, Cart $cart, $post_id, $product_id, $variant_id ) {
 		$cart_url = $cart->get_cart_url();
-		if ( $response ) {
-			/**
-			 * Triggered when a form is successfully processed.
-			 *
-			 * @param string $message    The message that will display to the user
-			 * @param array  $submission The data submitted to the form
-			 * @param string $url        The URL to redirect the user to
-			 * @param array  $data       Additional data to store with the message
-			 */
-			do_action( 'bigcommerce/form/success', __( '1 item added to Cart', 'bigcommerce' ), $_POST, $cart_url, [
-				'key'        => 'add_to_cart',
-				'cart_id'    => $cart->get_cart_id(),
-				'post_id'    => $post_id,
-				'product_id' => $product_id,
-				'variant_id' => $variant_id,
-			] );
-			wp_safe_redirect( esc_url_raw( $cart_url ), 303 );
-			exit();
-		} else {
-			$error = new \WP_Error( 'api_error', $this->error_message() );
-			do_action( 'bigcommerce/form/error', $error, $_POST, $cart_url );
-		}
+		/**
+		 * Triggered when a form is successfully processed.
+		 *
+		 * @param string $message    The message that will display to the user
+		 * @param array  $submission The data submitted to the form
+		 * @param string $url        The URL to redirect the user to
+		 * @param array  $data       Additional data to store with the message
+		 */
+		do_action( 'bigcommerce/form/success', __( '1 item added to Cart', 'bigcommerce' ), $_POST, $cart_url, [
+			'key'        => 'add_to_cart',
+			'cart_id'    => $cart->get_cart_id(),
+			'post_id'    => $post_id,
+			'product_id' => $product_id,
+			'variant_id' => $variant_id,
+		] );
+		wp_safe_redirect( esc_url_raw( $cart_url ), 303 );
+		exit();
 	}
 
 	/**
-	 * @return string The generic error message to display when a failure occurs.
+	 * @param ApiException $e
+	 * @param Cart         $cart
+	 *
+	 * @return void
 	 */
-	protected function error_message() {
-		return __( 'There was an error adding this product to your cart. It might be out of stock or unavailable.', 'bigcommerce' );
+	protected function handle_exception( ApiException $e, $cart ) {
+		if ( strpos( (string) $e->getCode(), '4' ) === 0 ) {
+			$body = $e->getResponseBody();
+			if ( $body && ! empty( $body->title ) ) {
+				$message = sprintf( '[%d] %s', $e->getCode(), $body->title );
+			} else {
+				$message = $e->getMessage();
+			}
+			$error = new \WP_Error( 'api_error', sprintf(
+				__( 'There was an error adding this product to your cart. Error message: "%s"', 'bigcommerce' ),
+				$message
+			), [ 'exception' => [ 'message' => $e->getMessage(), 'code' => $e->getCode() ] ] );
+		} else {
+			$error = new \WP_Error( 'api_error', __( 'There was an error adding this product to your cart. It might be out of stock or unavailable.', 'bigcommerce' ), [
+				'exception' => [
+					'message' => $e->getMessage(),
+					'code'    => $e->getCode(),
+				],
+			] );
+		}
+		do_action( 'bigcommerce/form/error', $error, $_POST, $cart->get_cart_url() );
 	}
 
 	protected function validate_request( $post_id, $submission ) {

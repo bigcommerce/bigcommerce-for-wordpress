@@ -91,6 +91,7 @@ class Queue_Runner implements Import_Processor {
 						'record_id' => $record->ID,
 						'error'     => $e->getMessage(),
 					] );
+					do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [] );
 				}
 			}
 		}
@@ -100,7 +101,7 @@ class Queue_Runner implements Import_Processor {
 			"SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_type=%s AND post_status IN ('update', 'delete')",
 			Queue_Task::NAME
 		) );
-		do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Completed import bach', 'bigcommerce' ), [
+		do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Completed import batch', 'bigcommerce' ), [
 			'count'     => count( $queue_records ),
 			'remaining' => $remaining,
 		] );
@@ -121,7 +122,8 @@ class Queue_Runner implements Import_Processor {
 		$data = json_decode( $record->post_content );
 		if ( empty( $data ) ) {
 			do_action( 'bigcommerce/log', Error_Log::WARNING, __( 'Invalid data in queue, unable to parse', 'bigcommerce' ), [
-				'record' => $record,
+				'json_last_error_msg' => json_last_error_msg(),
+				'record'              => $record,
 			] );
 
 			return;

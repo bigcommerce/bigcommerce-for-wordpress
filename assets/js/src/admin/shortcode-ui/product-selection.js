@@ -32,7 +32,7 @@ const addProduct = (e) => {
 	el.productList.insertAdjacentHTML('beforeend', selectedProduct(productData));
 	resultsProduct.classList.add('bc-shortcode-ui__selected-result');
 	resultsProduct.querySelector('.bc-shortcode-ui__product-anchor-status').textContent = I18N.buttons.remove_product;
-	shortcodeState.selectedProducts.post_id.push(e.delegateTarget.dataset.postid);
+	shortcodeState.selectedProducts.bc_id.push(e.delegateTarget.dataset.bcid);
 	trigger({ event: 'bigcommerce/shortcode_product_list_event', native: false });
 };
 
@@ -42,11 +42,10 @@ const addProduct = (e) => {
  * @param e
  */
 const removeProduct = (e) => {
-	const productID = e.delegateTarget.dataset.postid;
 	const productBCID = e.delegateTarget.dataset.bcid;
 	const product = tools.getNodes(`[data-product="${productBCID}"]`, false, el.productList, true)[0];
 	const resultsProduct = tools.getNodes(`[data-product="${productBCID}"]`, false, el.resultsContainer, true)[0];
-	const valIndex = shortcodeState.selectedProducts.post_id.indexOf(productID);
+	const bcIdIndex = shortcodeState.selectedProducts.bc_id.indexOf(productBCID);
 
 	if (resultsProduct) {
 		resultsProduct.classList.remove('bc-shortcode-ui__selected-result');
@@ -54,7 +53,7 @@ const removeProduct = (e) => {
 	}
 
 	el.productList.removeChild(product);
-	shortcodeState.selectedProducts.post_id.splice(valIndex, 1);
+	shortcodeState.selectedProducts.bc_id.splice(bcIdIndex, 1);
 	trigger({ event: 'bigcommerce/shortcode_product_list_event', native: false });
 };
 
@@ -80,8 +79,6 @@ const addRemoveProduct = (e) => {
  * @description clear the product list selections and state when triggering the bigcommerce/set_shortcode_ui_state event.
  */
 const resetProductsList = () => {
-	shortcodeState.selectedProducts.post_id = [];
-
 	tools.getNodes('.bc-shortcode-ui__selected-result', true, el.resultsContainer, true).forEach((product) => {
 		tools.removeClass(product, 'bc-shortcode-ui__selected-result');
 	});
@@ -105,10 +102,13 @@ const populateSavedUIProductList = (e) => {
 		return;
 	}
 
-	const k = encodeURIComponent('bcid');
-	const v = encodeURIComponent(currentBlockBCIDs);
 	const str = [];
-	str.push(`${k}=${v}`);
+	const bcidk = encodeURIComponent('bcid');
+	const bcidv = encodeURIComponent(currentBlockBCIDs);
+	str.push(`${bcidk}=${bcidv}`);
+	const channelk = encodeURIComponent('bigcommerce_channel');
+	const channelv = encodeURIComponent('-1');
+	str.push(`${channelk}=${channelv}`);
 	const queryString = str ? str.join(I18N.operations.query_string_separator) : '';
 	let selectedProductsNodes = '';
 
@@ -133,7 +133,6 @@ const populateSavedUIProductList = (e) => {
 				};
 
 				selectedProductsNodes += selectedProduct(productData);
-				shortcodeState.selectedProducts.post_id.push(product.post_id.toString());
 			});
 
 			el.productList.insertAdjacentHTML('beforeend', selectedProductsNodes);

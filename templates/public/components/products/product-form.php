@@ -8,6 +8,7 @@
  * @var string  $options
  * @var string  $modifiers @deprecated
  * @var string  $button
+ * @var string  $message
  * @var int     $min_quantity
  * @var int     $max_quantity
  * @var bool    $ajax_add_to_cart
@@ -42,6 +43,10 @@ use BigCommerce\Post_Types\Product\Product;
 			<?php if ( $max_quantity > 0 ) { ?>max="<?php echo absint( $max_quantity ); ?>"<?php } ?>
 		/>
 	</div>
+
+	<?php if ( $message ) { ?>
+		<span class="bc-product-form__purchase-message"><?php echo wp_strip_all_tags( $message ); ?></span>
+	<?php } ?>
 
 	<?php echo $button; ?>
 	<?php if ( $ajax_add_to_cart ) { ?>

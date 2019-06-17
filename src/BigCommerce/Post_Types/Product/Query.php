@@ -356,7 +356,7 @@ class Query {
 	private function search_to_post_ids( $search_phrase ) {
 		$query = new \WP_Query();
 
-		$matches = $query->query( [
+		$search_query_args = [
 			'fields'                => 'ids',
 			'posts_per_page'        => - 1,
 			'post_type'             => Product::NAME,
@@ -374,16 +374,19 @@ class Query {
 					'compare' => '=',
 				],
 			],
-		] );
+		];
+
+		$matches = $query->query( $search_query_args );
 
 		if ( empty( $matches ) ) {
-			$matches = $query->query( [
+			$search_query_args = [
 				's'                         => $search_phrase,
 				'fields'                    => 'ids',
 				'post_type'                 => Product::NAME,
 				'posts_per_page'            => - 1,
 				self::UNFILTERED_QUERY_FLAG => true,
-			] );
+			];
+			$matches = $query->query( $search_query_args );
 		}
 
 		return apply_filters( 'bigcommerce/query/search_post_ids', array_map( 'intval', $matches ), $search_phrase );

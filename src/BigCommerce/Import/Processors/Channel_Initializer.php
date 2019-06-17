@@ -103,6 +103,7 @@ class Channel_Initializer implements Import_Processor {
 				'response' => $e->getResponseBody(),
 				'headers'  => $e->getResponseHeaders(),
 			] );
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [] );
 
 			return;
 		}
@@ -152,6 +153,7 @@ class Channel_Initializer implements Import_Processor {
 					'response' => $e->getResponseBody(),
 					'headers'  => $e->getResponseHeaders(),
 				] );
+				do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [] );
 
 				return;
 			}

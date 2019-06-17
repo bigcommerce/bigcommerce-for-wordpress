@@ -31,9 +31,6 @@ class Onboarding_Progress {
 	 * @action bigcommerce/settings/onboarding/progress
 	 */
 	public function render() {
-		if ( $this->state === Settings::STATUS_COMPLETE ) {
-			return;
-		}
 		$steps = $this->steps();
 		include trailingslashit( $this->template_dir ) . '/onboarding-progress.php';
 	}

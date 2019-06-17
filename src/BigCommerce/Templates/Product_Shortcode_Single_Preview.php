@@ -5,6 +5,7 @@ namespace BigCommerce\Templates;
 
 
 use BigCommerce\Post_Types\Product\Product;
+use BigCommerce\Taxonomies\Flag\Flag;
 
 class Product_Shortcode_Single_Preview extends Product_Shortcode_Single {
 
@@ -29,9 +30,15 @@ class Product_Shortcode_Single_Preview extends Product_Shortcode_Single {
 	}
 
 	protected function get_price( Product $product ) {
-		$component = Product_Price::factory( [
-			Product_Price::PRODUCT => $product,
-		] );
+		if ( has_term( Flag::HIDE_PRICE, Flag::NAME, $product->post_id() ) ) {
+			$component = Product_Hidden_Price::factory( [
+				Product_Hidden_Price::PRODUCT => $product,
+			] );
+		} else {
+			$component = Product_Price::factory( [
+				Product_Price::PRODUCT => $product,
+			] );
+		}
 
 		return $component->render();
 	}

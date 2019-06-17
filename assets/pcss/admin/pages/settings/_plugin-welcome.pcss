@@ -30,6 +30,10 @@
 			font-size: 3em;
 			line-height: 1.1;
 		}
+
+		.bc-welcome__content--complete & {
+			color: var(--color-white);
+		}
 	}
 
 	p {
@@ -44,6 +48,11 @@
 	}
 }
 
+.bc-welcome__content--complete {
+	background: var(--color-black);
+	color: var(--color-white);
+}
+
 .bc-welcome__content-wrap {
 	width: 100%;
 	box-sizing: border-box;
@@ -54,6 +63,10 @@
 
 	@media (--viewport-wpadmin) {
 		max-width: 410px;
+
+		.bc-welcome__content--complete & {
+			max-width: 100%;
+		}
 	}
 }
 

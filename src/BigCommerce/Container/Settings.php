@@ -15,6 +15,7 @@ use BigCommerce\Settings\Import_Status;
 use BigCommerce\Settings\Onboarding_Progress;
 use BigCommerce\Settings\Screens\Abstract_Screen;
 use BigCommerce\Settings\Screens\Api_Credentials_Screen;
+use BigCommerce\Settings\Screens\Onboarding_Complete_Screen;
 use BigCommerce\Settings\Screens\Store_Type_Screen;
 use BigCommerce\Settings\Screens\Connect_Channel_Screen;
 use BigCommerce\Settings\Screens\Create_Account_Screen;
@@ -48,6 +49,7 @@ class Settings extends Provider {
 	const PENDING_SCREEN     = 'settings.screen.pending';
 	const CREDENTIALS_SCREEN = 'settings.screen.credentials';
 	const MENU_SETUP_SCREEN  = 'settings.screen.nav_menu';
+	const COMPLETE_SCREEN    = 'settings.screen.onboarding_complete';
 	const RESOURCES_SCREEN   = 'settings.screen.resources';
 
 	const API_SECTION              = 'settings.section.api';
@@ -109,6 +111,10 @@ class Settings extends Provider {
 		add_action( 'admin_menu', $this->create_callback( 'settings_screen_admin_menu', function () use ( $container ) {
 			$container[ self::SETTINGS_SCREEN ]->register_settings_page();
 		} ), 10, 0 );
+
+		add_filter( 'bigcommerce/settings/settings_url', $this->create_callback( 'settings_url', function ( $url ) use ( $container ) {
+			return $container[ self::SETTINGS_SCREEN ]->get_url();
+		} ), 10, 1 );
 
 		add_action( 'bigcommerce/settings/after_form/page=' . Settings_Screen::NAME, $this->create_callback( 'settings_support_message', function () use ( $container ) {
 			$container[ self::SETTINGS_SCREEN ]->render_support_link();
@@ -494,6 +500,15 @@ class Settings extends Provider {
 			$container[ self::MENU_SETUP_SCREEN ]->register_settings_page();
 		} ), 10, 0 );
 
+		$container[ self::COMPLETE_SCREEN ] = function ( Container $container ) {
+			$path = dirname( $container['plugin_file'] ) . '/templates/admin';
+
+			return new Onboarding_Complete_Screen( $container[ self::CONFIG_STATUS ], $container[ Assets::PATH ], $path );
+		};
+		add_action( 'admin_menu', $this->create_callback( 'complete_screen_admin_menu', function () use ( $container ) {
+			$container[ self::COMPLETE_SCREEN ]->register_settings_page();
+		} ), 10, 0 );
+
 		$container[ self::MENU_OPTIONS_SECTION ] = function ( Container $container ) {
 			return new Nav_Menu_Options();
 		};
@@ -509,6 +524,7 @@ class Settings extends Provider {
 			/** @var Abstract_Screen[] $possible_screens */
 			$possible_screens = [
 				$container[ self::MENU_SETUP_SCREEN ],
+				$container[ self::COMPLETE_SCREEN ],
 				$container[ self::SETTINGS_SCREEN ],
 				$container[ self::WELCOME_SCREEN ],
 				$container[ self::STORE_TYPE_SCREEN ],
@@ -611,5 +627,8 @@ class Settings extends Provider {
 		add_action( 'admin_menu', $this->create_callback( 'resources_screen_register', function () use ( $container ) {
 			$container[ self::RESOURCES_SCREEN ]->register_settings_page();
 		} ), 10, 0 );
+		add_filter( 'bigcommerce/settings/resources_url', $this->create_callback( 'resources_url', function ( $url ) use ( $container ) {
+			return $container[ self::RESOURCES_SCREEN ]->get_url();
+		} ), 10, 1 );
 	}
 }

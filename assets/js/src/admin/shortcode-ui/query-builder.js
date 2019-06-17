@@ -6,11 +6,11 @@
 import _ from 'lodash';
 import delegate from 'delegate';
 import Choices from 'choices.js';
-import * as tools from '../../utils/tools';
-import * as slide from '../../utils/dom/slide';
-import { setAccActiveAttributes, setAccInactiveAttributes } from '../../utils/dom/accessibility';
-import shortcodeState from '../config/shortcode-state';
-import { on, trigger } from '../../utils/events';
+import * as tools from 'utils/tools';
+import * as slide from 'utils/dom/slide';
+import { setAccActiveAttributes, setAccInactiveAttributes } from 'utils/dom/accessibility';
+import { on, trigger } from 'utils/events';
+import shortcodeState from 'adminConfig/shortcode-state';
 
 const el = {};
 
@@ -178,6 +178,33 @@ const handleLinks = (e) => {
 };
 
 /**
+ * @function resetChannelSelect
+ * @description Upon opening the UI dialog box, reset the channel select field to the default value.
+ */
+const resetChannelSelect = () => {
+	if (!el.channels) {
+		return;
+	}
+
+	for (let i = 0; i < el.channels.length; i++) {
+		const primary = el.channels.options[i].dataset.primary;
+		if (primary.length > 0) {
+			el.channels.selectedIndex = i;
+		}
+	}
+};
+
+/**
+ * @function handleChannelSelection
+ * @description When the channel select field is changed, immediately submit a new ajax query to get that channel's products.
+ * @param e
+ */
+const handleChannelSelection = (e) => {
+	shortcodeState.wpAPIQueryObj.bigcommerce_channel = e.delegateTarget.value;
+	trigger({ event: 'bigcommerce/get_channel_products', native: false });
+};
+
+/**
  * @function clearSearch
  * @description clear all choices from the search input and reset links and objects.
  */
@@ -187,6 +214,7 @@ const clearSearch = () => {
 		bigcommerce_flag: [],
 		bigcommerce_brand: [],
 		bigcommerce_category: [],
+		bigcommerce_channel: '',
 		recent: [],
 		search: [],
 	};
@@ -262,13 +290,17 @@ const setShortcodeState = (event) => {
 		}
 	});
 
+	resetChannelSelect();
+
 	_.delay(() => trigger({ event: 'bigcommerce/shortcode_ui_state_ready', native: false }), state.delaySpeed);
 };
 
 const cacheElements = () => {
-	el.dialog = tools.getNodes('bc-shortcode-ui-products', false, document, false)[0];
+	el.wrapper = tools.getNodes('bc-shortcode-ui-container', false, document)[0];
+	el.productsBlock = tools.getNodes('bc-shortcode-ui-products', false, document)[0];
 	el.linkList = tools.getNodes('bcqb-list')[0];
-	el.searchForm = tools.getNodes('bc-shortcode-ui-search', false, el.dialog, false)[0];
+	el.searchForm = tools.getNodes('bc-shortcode-ui-search', false, el.productsBlock)[0];
+	el.channels = tools.getNodes('bcqb-channels', false, el.wrapper)[0];
 };
 
 const bindEvents = () => {
@@ -279,6 +311,7 @@ const bindEvents = () => {
 
 	delegate(el.linkList, '[data-js="bcqb-has-child-list"]', 'click', toggleChildMenu);
 	delegate(el.linkList, '.bc-shortcode-ui__query-builder-anchor', 'click', handleLinks);
+	delegate(el.wrapper, '[data-js="bcqb-channels"]', 'change', handleChannelSelection);
 	el.searchInput.passedElement.addEventListener('removeItem', handleChoiceRemoval);
 	el.searchInput.passedElement.addEventListener('addItem', handleChoiceAddition);
 	delegate('[data-js="bcqb-clear"]', 'click', clearSearch);

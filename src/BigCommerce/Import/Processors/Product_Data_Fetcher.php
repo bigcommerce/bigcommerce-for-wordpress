@@ -79,6 +79,7 @@ class Product_Data_Fetcher implements Import_Processor {
 				'response' => $e->getResponseBody(),
 				'headers'  => $e->getResponseHeaders(),
 			] );
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [] );
 
 			return;
 		}
@@ -116,6 +117,7 @@ class Product_Data_Fetcher implements Import_Processor {
 			wp_suspend_cache_invalidation( true );
 			wp_defer_term_counting( true );
 			wp_defer_comment_counting( true );
+			wp_remove_targeted_link_rel_filters();
 
 			foreach ( $inserts as $record ) {
 				$task_id = wp_insert_post( [

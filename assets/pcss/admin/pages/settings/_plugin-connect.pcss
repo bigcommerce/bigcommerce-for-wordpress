@@ -317,3 +317,62 @@ p.bc-welcome__account-reset-message {
 .icon-bc-bc_create_account:before {
 	content: var(--icon-bc-accounts);
 }
+
+p.bc-welcome__next-steps-title {
+	font-size: var(--font-size-content-xl);
+	font-weight: var(--font-weight-bold);
+	line-height: 1;
+	margin-bottom: 38px;
+}
+
+.bc-welcome__next-steps-list {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: stretch;
+	justify-content: space-between;
+}
+
+.bc-welcome__next-steps-item {
+	flex: 0 0 100%;
+	box-sizing: border-box;
+	margin-bottom: 38px;
+
+	@media (--viewport-wpadmin) {
+		flex: 0 1 50%;
+		padding-right: 50px;
+	}
+
+	.bc-icon {
+		display: block;
+		color: var(--color-bc-bright-turquoise);
+		font-size: var(--font-size-content-xxl);
+		margin-bottom: 11px;
+	}
+}
+
+p.bc-welcome__new-account-email {
+	color: var(--color-white);
+	font-size: var(--font-size-content-lg);
+	margin-top: 2em;
+}
+
+p.bc-welcome__next-steps-description {
+	font-size: 2.2em;
+	line-height: 1.32em;
+	font-weight: var(--font-weight-thin);
+	margin-bottom: 14px;
+	margin-top: 4px;
+}
+
+.bc-welcome__next-steps-anchor {
+	text-transform: uppercase;
+	color: var(--color-bc-doger-blue);
+	transition: var(--transition);
+	text-decoration: none;
+
+	&:hover,
+	&:focus {
+		color: var(--color-bc-blue-turquoise);
+	}
+}

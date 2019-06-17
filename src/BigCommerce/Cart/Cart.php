@@ -68,7 +68,8 @@ class Cart {
 	 * @param int   $quantity   How many to add to the cart
 	 * @param array $modifiers  Deprecated in 1.7.0, all values should be passed in $options
 	 *
-	 * @return \BigCommerce\Api\v3\Model\Cart|null
+	 * @return \BigCommerce\Api\v3\Model\Cart
+	 * @throws ApiException
 	 */
 	public function add_line_item( $product_id, $options = [], $quantity = 1, $modifiers = [] ) {
 		$request_data      = new CartRequestData();
@@ -107,7 +108,8 @@ class Cart {
 	/**
 	 * @param $certificate
 	 *
-	 * @return \BigCommerce\Api\v3\Model\Cart|null
+	 * @return \BigCommerce\Api\v3\Model\Cart
+	 * @throws ApiException
 	 */
 	public function add_gift_certificate( $certificate ) {
 		$request_data = new CartRequestData();
@@ -122,38 +124,23 @@ class Cart {
 	/**
 	 * @param CartRequestData $request
 	 *
-	 * @return \BigCommerce\Api\v3\Model\Cart|null
+	 * @return \BigCommerce\Api\v3\Model\Cart
+	 *
+	 * @throws ApiException
 	 */
 	private function add_request_to_cart( CartRequestData $request ) {
 		$cart    = null;
 		$cart_id = $this->get_cart_id();
+
+		// validates that the cart still exists
 		$cart_id = $this->sanitize_cart_id( $cart_id );
 
-		try {
-			if ( $cart_id ) {
-				$cart_response = $this->api->cartsCartIdItemsPost( $cart_id, $request );
-				if ( $cart_response ) {
-					$cart = $cart_response->getData();
-				}
-			}
-		} catch ( ApiException $e ) {
-			try {
-				// request failed. Check if the original cart exists
-				$cart = $this->api->cartsCartIdGet( $cart_id, [
-					'line_items.physical_items.options',
-					'line_items.digital_items.options',
-					'redirect_urls',
-				] )->getData();
-
-				return null; // indicates that the request failed
-			} catch ( ApiException $e ) {
-				// request failed. Cart no longer exists, but we can try to make a new one
-				$cart    = null;
-				$cart_id = '';
-			}
-		}
-
-		if ( empty( $cart ) ) { // either there was no cart ID passed, or the cart no longer exists
+		// Add to the existing cart
+		if ( $cart_id ) {
+			/* @throws ApiException if the request failes */
+			$cart_response = $this->api->cartsCartIdItemsPost( $cart_id, $request );
+			$cart = $cart_response->getData();
+		} else { // either there was no cart ID passed, or the cart no longer exists, so build a new cart
 			$customer_id = (int) ( is_user_logged_in() ? get_user_option( Login::CUSTOMER_ID_META, get_current_user_id() ) : 0 );
 			if ( $customer_id ) {
 				$request->setCustomerId( $customer_id );
@@ -172,27 +159,19 @@ class Cart {
 				$this->set_cart_id( $cart_id );
 			} catch ( ApiException $e ) {
 				// request failed. cannot create a new cart
-				$cart = null;
 				$this->set_cart_id( '' );
-			}
-		}
-		if ( ! empty( $cart ) ) {
-			$this->set_item_count_cookie( $cart );
-		}
-
-		if ( $cart_id ) {
-			try {
-				$cart = $this->api->cartsCartIdGet( $cart_id, [
-					'line_items.physical_items.options',
-					'line_items.digital_items.options',
-					'redirect_urls',
-				] )->getData();
-			} catch ( ApiException $e ) {
-				$cart = null;
+				throw $e; // pass it up the call stack
 			}
 		}
 
-		return $cart;
+		$this->set_item_count_cookie( $cart );
+
+		// return a fully-populated cart object, which we can't get with the post requests
+		return $this->api->cartsCartIdGet( $cart_id, [
+			'line_items.physical_items.options',
+			'line_items.digital_items.options',
+			'redirect_urls',
+		] )->getData();
 	}
 
 	public function sanitize_cart_id( $cart_id ) {

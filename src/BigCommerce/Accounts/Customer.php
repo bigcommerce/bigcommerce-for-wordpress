@@ -256,7 +256,10 @@ class Customer {
 	public function get_group_id() {
 		$customer_id = get_user_option( self::CUSTOMER_ID_META, $this->wp_user_id );
 		if ( ! $customer_id ) {
-			return 0;
+			/**
+			 * This filter is documented in src/BigCommerce/Accounts/Customer.php
+			 */
+			return apply_filters( 'bigcommerce/customer/group_id', 0, $this );
 		}
 		$transient_key = sprintf( 'bccustomergroup%d', $customer_id );
 		$group_id      = get_transient( $transient_key );
@@ -265,7 +268,7 @@ class Customer {
 			// Couldn't find in cache, retrieve from the API
 			$profile    = $this->get_profile();
 			$group_id   = isset( $profile['customer_group_id'] ) ? absint( $profile['customer_group_id'] ) : 0;
-			$expiration = HOUR_IN_SECONDS; // TODO: a future webhook to flush this cache when the customer's gorup changes
+			$expiration = HOUR_IN_SECONDS; // TODO: a future webhook to flush this cache when the customer's group changes
 			if ( $group_id === 0 ) {
 				set_transient( $transient_key, 'zero', $expiration ); // workaround for storing empty values in cache
 			} else {

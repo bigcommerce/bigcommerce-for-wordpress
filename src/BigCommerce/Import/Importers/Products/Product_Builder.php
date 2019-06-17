@@ -210,6 +210,7 @@ class Product_Builder extends Record_Builder {
 		$response = [
 			'thumbnail' => 0,
 			'gallery'   => [],
+			'variants'  => [],
 		];
 
 		if ( ! apply_filters( 'bigcommerce/import/product/import_images', true ) ) {
@@ -251,6 +252,35 @@ class Product_Builder extends Record_Builder {
 				$response[ 'gallery' ][] = $post_id;
 				if ( $image[ 'is_thumbnail' ] ) {
 					$response[ 'thumbnail' ] = $post_id;
+				}
+			}
+		}
+
+		$variants = $this->product->getVariants();
+		foreach ( $variants as $var ) {
+			$image_url = $var->getImageUrl();
+			if ( $image_url ) {
+				$existing = get_posts( [
+					'post_type'      => 'attachment',
+					'meta_query'     => [
+						[
+							'key'     => Image_Importer::SOURCE_URL,
+							'value'   => $image_url,
+							'compare' => '=',
+						],
+					],
+					'fields'         => 'ids',
+					'posts_per_page' => 1,
+				] );
+				if ( ! empty( $existing ) ) {
+					$post_id = reset( $existing );
+				} else {
+					$importer = new Image_Importer( $image_url, $parent_id );
+					$post_id  = $importer->import();
+				}
+				if ( ! empty( $post_id ) ) {
+					update_post_meta( $post_id, 'bigcommerce_id', $image['id'] );
+					$response['variants'][ $var->getId() ] = $post_id;
 				}
 			}
 		}

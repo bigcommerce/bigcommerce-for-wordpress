@@ -2,6 +2,7 @@
 
 namespace BigCommerce\Editor\Gutenberg\Blocks;
 
+use BigCommerce\Settings\Sections\Cart;
 use BigCommerce\Shortcodes;
 
 /**
@@ -15,8 +16,9 @@ class Product_Components extends Shortcode_Block {
 	const SKU         = 'sku';
 	const TITLE       = 'title';
 	const DESCRIPTION = 'description';
+	const ADD_TO_CART = 'add_to_cart';
 
-	protected $icon = 'star-filled';
+	protected $icon      = 'star-filled';
 	protected $shortcode = Shortcodes\Product_Components::NAME;
 
 	protected function title() {
@@ -32,8 +34,9 @@ class Product_Components extends Shortcode_Block {
 	}
 
 	protected function keywords() {
-		$keywords = parent::keywords();
+		$keywords   = parent::keywords();
 		$keywords[] = __( 'components', 'bigcommerce' );
+
 		return $keywords;
 	}
 
@@ -41,8 +44,8 @@ class Product_Components extends Shortcode_Block {
 	 * @return array
 	 */
 	public function js_config() {
-		$config = parent::js_config();
-		$config[ 'inspector' ] = [
+		$config              = parent::js_config();
+		$config['inspector'] = [
 			'header'                   => __( 'Component Settings', 'bigcommerce' ),
 			'product_id_label'         => __( 'Product ID', 'bigcommerce' ),
 			'product_id_description'   => __( 'The product ID from BigCommerce', 'bigcommerce' ),
@@ -65,8 +68,13 @@ class Product_Components extends Shortcode_Block {
 					'key'   => self::DESCRIPTION,
 					'label' => __( 'Description', 'bigcommerce' ),
 				],
+				[
+					'key'   => self::ADD_TO_CART,
+					'label' => get_option( Cart::OPTION_ENABLE_CART, true ) ? __( 'Add to Cart', 'bigcommerce' ) : __( 'Buy Now', 'bigcommerce' ),
+				],
 			],
 		];
+
 		return $config;
 	}
 
