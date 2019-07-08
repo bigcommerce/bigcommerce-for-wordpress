@@ -155,7 +155,7 @@ const createAjaxResponseMessage = (wrapper = '', message = '', error = false) =>
 	tools.addClass(messageElement, 'bc-ajax-add-to-cart__message');
 	tools.addClass(messageElement, 'bc-alert');
 	tools.addClass(messageElement, statusClass);
-	messageElement.textContent = message;
+	messageElement.innerHTML = message;
 	messageWrapper.innerHTML = '';
 
 	messageWrapper.appendChild(messageElement);
