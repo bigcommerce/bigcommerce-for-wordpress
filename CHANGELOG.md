@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.3.0]
+
+### Changed
+- HTML elements can now be used in all text string filters so long as it 
+  passes the same `wp_kses` rules used on comments. Previously, HTML inserted
+  via filters for text strings was omitted in certain cases.
+  For instance, on the ajax add to cart message.
+
+
 ## [3.2.0]
 
 ### Added
@@ -689,6 +698,7 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[3.3.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.2.0...3.3.0
 [3.2.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.1.0...3.2.0
 [3.1.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.0.2...3.1.0
 [3.0.2]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.0.1...3.0.2
