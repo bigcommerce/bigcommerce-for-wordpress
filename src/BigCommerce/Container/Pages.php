@@ -15,8 +15,10 @@ use BigCommerce\Pages\Orders_Page;
 use BigCommerce\Pages\Registration_Page;
 use BigCommerce\Pages\Required_Page;
 use BigCommerce\Pages\Shipping_Returns_Page;
+use BigCommerce\Pages\Wishlist_Page;
 use BigCommerce\Settings\Sections\Cart as Cart_Settings;
 use BigCommerce\Settings\Sections\Gift_Certificates as Gift_Certificate_Settings;
+use BigCommerce\Settings\Sections\Wishlists as Wishlist_Settings;
 use Pimple\Container;
 
 class Pages extends Provider {
@@ -32,6 +34,8 @@ class Pages extends Provider {
 	const GIFT_PURCHACE     = 'pages.gift_certificate.purchase';
 	const GIFT_BALANCE      = 'pages.gift_certificate.balance';
 	const SHIPPING_PAGE     = 'pages.shipping_returns';
+	const WISHLIST_USER     = 'pages.wishlist.user';
+	const WISHLIST_PUBLIC   = 'pages.wishlist.public';
 
 	public function register( Container $container ) {
 		$container[ self::REQUIRED_PAGES ] = function ( Container $container ) {
@@ -54,6 +58,9 @@ class Pages extends Provider {
 			}
 			if ( get_option( 'users_can_register' ) ) {
 				$pages[] = $container[ self::REGISTRATION_PAGE ];
+			}
+			if ( get_option( Wishlist_Settings::ENABLED ) ) {
+				$pages[] = $container[ self::WISHLIST_USER ];
 			}
 
 			return $pages;
@@ -97,6 +104,10 @@ class Pages extends Provider {
 
 		$container[ self::SHIPPING_PAGE ] = function ( Container $container ) {
 			return new Shipping_Returns_Page();
+		};
+
+		$container[ self::WISHLIST_USER ] = function( Container $container ) {
+			return new Wishlist_Page();
 		};
 
 		add_action( 'admin_init', $this->create_callback( 'create_pages', function () use ( $container ) {

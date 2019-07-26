@@ -23,7 +23,7 @@ abstract class Controller {
 	protected $wrapper_classes = [];
 
 	/**
-	 * @var string The data-js attribute for the wrapper tag
+	 * @var string[] The data-js attribute for the wrapper tag
 	 */
 	protected $wrapper_attributes = [];
 

@@ -2,6 +2,7 @@
 
 namespace BigCommerce\Editor\Gutenberg\Blocks;
 
+use BigCommerce\Rest\Product_Component_Shortcode_Controller;
 use BigCommerce\Settings\Sections\Cart;
 use BigCommerce\Shortcodes;
 
@@ -20,6 +21,14 @@ class Product_Components extends Shortcode_Block {
 
 	protected $icon      = 'star-filled';
 	protected $shortcode = Shortcodes\Product_Components::NAME;
+
+	/** @var Product_Component_Shortcode_Controller */
+	private $shortcode_rest_controller;
+
+	public function __construct( $assets_url, Product_Component_Shortcode_Controller $shortcode_controller ) {
+		parent::__construct( $assets_url );
+		$this->shortcode_rest_controller = $shortcode_controller;
+	}
 
 	protected function title() {
 		return __( 'BigCommerce Product Components', 'bigcommerce' );
@@ -45,6 +54,9 @@ class Product_Components extends Shortcode_Block {
 	 */
 	public function js_config() {
 		$config              = parent::js_config();
+
+		$config['preview_url'] = $this->get_preview_url();
+
 		$config['inspector'] = [
 			'header'                   => __( 'Component Settings', 'bigcommerce' ),
 			'product_id_label'         => __( 'Product ID', 'bigcommerce' ),
@@ -90,5 +102,9 @@ class Product_Components extends Shortcode_Block {
 				'type' => 'string',
 			],
 		];
+	}
+
+	protected function get_preview_url() {
+		return $this->shortcode_rest_controller->get_base_url() . '/preview';
 	}
 }

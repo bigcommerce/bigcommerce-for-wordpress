@@ -755,6 +755,12 @@ class Cart_Controller extends Rest_Controller {
 								'context'     => [ 'view', 'edit', 'embed' ],
 								'readonly'    => true,
 							],
+							'show_condition'   => [
+								'description' => __( 'If the product condition should be displayed', 'bigcommerce' ),
+								'type'        => 'boolean',
+								'context'     => [ 'view', 'edit', 'embed' ],
+								'readonly'    => true,
+							],
 							'sku'              => [
 								'description' => __( 'The item SKU', 'bigcommerce' ),
 								'type'        => 'object',

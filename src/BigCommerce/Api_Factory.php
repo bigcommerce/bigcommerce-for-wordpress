@@ -12,6 +12,7 @@ use BigCommerce\Api\Shipping_Api;
 use BigCommerce\Api\Store_Api;
 use BigCommerce\Api\Tax_Class_Api;
 use BigCommerce\Api\v3\Api\PricingApi;
+use BigCommerce\Api\v3\Api\WishlistsApi;
 use BigCommerce\Api\Webhooks_Api;
 use BigCommerce\Api\v3\Api\CartApi;
 use BigCommerce\Api\v3\Api\CatalogApi;
@@ -81,10 +82,11 @@ class Api_Factory {
 	}
 
 	/**
-	 * @return PlacementApi
+	 * @return WidgetApi
+	 * @deprecated 3.4.0 Use Api_Factory::widget()
 	 */
 	public function placement() {
-		return new PlacementApi( $this->api_client );
+		return $this->widget();
 	}
 
 	/**
@@ -95,10 +97,11 @@ class Api_Factory {
 	}
 
 	/**
-	 * @return ThemeRegionsApi
+	 * @return WidgetApi
+	 * @deprecated 3.4.0 Use Api_Factory::widget()
 	 */
 	public function themeRegions() {
-		return new ThemeRegionsApi( $this->api_client );
+		return $this->widget();
 	}
 
 	/**
@@ -116,10 +119,18 @@ class Api_Factory {
 	}
 
 	/**
-	 * @return WidgetTemplateApi
+	 * @return WishlistsApi
+	 */
+	public function wishlists() {
+		return new WishlistsApi( $this->api_client );
+	}
+
+	/**
+	 * @return WidgetApi
+	 * @deprecated 3.4.0 Use Api_Factory::widget()
 	 */
 	public function widgetTemplate() {
-		return new WidgetTemplateApi( $this->api_client );
+		return $this->widget();
 	}
 
 	/**

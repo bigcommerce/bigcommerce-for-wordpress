@@ -12,6 +12,7 @@ use BigCommerce\Pages\Address_Page;
 use BigCommerce\Pages\Login_Page;
 use BigCommerce\Pages\Orders_Page;
 use BigCommerce\Pages\Registration_Page;
+use BigCommerce\Pages\Wishlist_Page;
 use WP_User;
 
 class Login {
@@ -216,6 +217,7 @@ class Login {
 			get_option( Account_Page::NAME, 0 ),
 			get_option( Address_Page::NAME, 0 ),
 			get_option( Orders_Page::NAME, 0 ),
+			get_option( Wishlist_Page::NAME, 0 ),
 		] );
 		if ( in_array( $page, $account_pages ) ) {
 			$url = esc_url_raw( wp_login_url( get_permalink( $page ) ) );

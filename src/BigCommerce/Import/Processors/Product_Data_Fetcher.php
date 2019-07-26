@@ -114,10 +114,14 @@ class Product_Data_Fetcher implements Import_Processor {
 				'count' => count( $inserts ),
 			] );
 
+			// optimize the inserts
 			wp_suspend_cache_invalidation( true );
 			wp_defer_term_counting( true );
 			wp_defer_comment_counting( true );
+
+			// prevent WordPress filters from mangling the import data
 			wp_remove_targeted_link_rel_filters();
+			kses_remove_filters();
 
 			foreach ( $inserts as $record ) {
 				$task_id = wp_insert_post( [
@@ -140,6 +144,8 @@ class Product_Data_Fetcher implements Import_Processor {
 				}
 			}
 
+			// restore the filters we disabled earlier
+			kses_init_filters();
 			wp_suspend_cache_invalidation( false );
 			wp_defer_term_counting( false );
 			wp_defer_comment_counting( false );

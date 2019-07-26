@@ -4,7 +4,7 @@
 namespace BigCommerce;
 
 class Plugin {
-	const VERSION = '3.3.0';
+	const VERSION = '3.4.0';
 
 	protected static $_instance;
 
@@ -152,6 +152,10 @@ class Plugin {
 		$action = $wp_list_table->current_action();
 		if ( $action === 'activate-selected' ) {
 			return; // multiple plugins activated
+		}
+
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			return; // activated via CLI
 		}
 
 		set_transient( 'bigcommerce_activation_redirect', 1, 30 );

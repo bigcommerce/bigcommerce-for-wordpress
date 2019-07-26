@@ -60,9 +60,13 @@ class Import_Status {
 	 * @action bigcommerce/settings/import/product_list_table_notice
 	 */
 	public function current_status_notice() {
-		$current = $this->current_status();
-		if ( $current[ 'message' ] ) {
-			printf( '<div class="notice notice-info bigcommerce-notice bigcommerce-notice__import-status" data-js="bc-import-progress-status"><div class="import-status import-status-current"><i class="bc-icon icon-bc-sync" data-js="bc-import-status-icon"></i> <p class="bc-import-status-message">%s</p></div></div>', $current[ 'message' ] );
+		try {
+			$current = $this->current_status();
+			if ( $current[ 'message' ] ) {
+				printf( '<div class="notice notice-info bigcommerce-notice bigcommerce-notice__import-status" data-js="bc-import-progress-status"><div class="import-status import-status-current"><i class="bc-icon icon-bc-sync" data-js="bc-import-status-icon"></i> <p class="bc-import-status-message">%s</p></div></div>', $current[ 'message' ] );
+			}
+		} catch ( \Exception $e ) {
+			// no notice
 		}
 	}
 

@@ -17,10 +17,8 @@
 		<h2><?php echo esc_html( $title ); ?></h2>
 		<div><?php echo esc_html( $description ); ?></div>
 	</header>
-	<!-- data-js="bc-product-archive-refinery" is required -->
-	<section class="bc-product-archive__refinery" data-js="bc-product-archive-refinery">
-		<?php echo $refinery; ?>
-	</section>
+
+	<?php echo $refinery; ?>
 
 	<section class="bc-product-grid bc-product-grid--archive bc-product-grid--<?php echo esc_attr( $columns ); ?>col">
 		<?php

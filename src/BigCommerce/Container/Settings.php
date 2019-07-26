@@ -345,6 +345,7 @@ class Settings extends Provider {
 				$container[ Pages::ACCOUNT_PAGE ],
 				$container[ Pages::ORDERS_PAGE ],
 				$container[ Pages::ADDRESS_PAGE ],
+				$container[ Pages::WISHLIST_USER ],
 				$container[ Pages::SHIPPING_PAGE ],
 			];
 

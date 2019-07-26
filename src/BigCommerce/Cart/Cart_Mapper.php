@@ -246,6 +246,7 @@ class Cart_Mapper {
 			'thumbnail_id'         => 0,
 			'is_featured'          => false,
 			'on_sale'              => false,
+			'show_condition'       => false,
 			'sku'                  => [
 				'product' => '',
 				'variant' => '',
@@ -266,7 +267,8 @@ class Cart_Mapper {
 			$data[ 'name' ]             = get_the_title( $data[ 'post_id' ] );
 			$data[ 'thumbnail_id' ]     = get_post_thumbnail_id( $data[ 'post_id' ] );
 			$data[ 'is_featured' ]      = is_object_in_term( $data[ 'post_id' ], Flag::NAME, Flag::FEATURED );
-			$data[ 'on_sale' ]          = is_object_in_term( $data[ 'post_id' ], Flag::NAME, Flag::SALE );
+			$data[ 'on_sale' ]          = $product->on_sale();
+			$data[ 'show_condition' ]   = $product->show_condition();
 			$data[ 'sku' ]              = [
 				'product' => $product->sku(),
 				'variant' => $this->get_variant_sku( $data[ 'variant_id' ], $product ),
@@ -327,6 +329,7 @@ class Cart_Mapper {
 			'thumbnail_id'         => 0,
 			'is_featured'          => false,
 			'on_sale'              => false,
+			'show_condition'       => false,
 			'sku'                  => [
 				'product' => '',
 				'variant' => '',

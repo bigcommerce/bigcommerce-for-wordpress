@@ -128,7 +128,7 @@ const keyboardNavigation = (e) => {
  */
 const initChoices = () => {
 	const options = {
-		duplicateItems: false,
+		duplicateItemsAllowed: false,
 		searchEnabled: false,
 		placeholder: false,
 		classNames: {

@@ -1,0 +1,822 @@
+swagger: '2.0'
+info:
+  title: BigCommerce Widgets API
+  version: ''
+  description: 'Widgets API allows developers to inject content into a BigCommerce theme.'
+host: api.bigcommerce.com
+basePath: "/stores/{{store_id}}/v3"
+tags:
+  - name: Widget
+    description: BigCommerce Widgets API Definition.
+schemes:
+  - https
+produces:
+  - application/json
+consumes:
+  - application/json
+paths:
+  /content/widget-templates:
+    post:
+      tags:
+        - Widget
+      summary: Create a Widget Template
+      operationId: createWidgetTemplate
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/WidgetTemplateRequest'
+      responses:
+        '200':
+          description: 'Widget Template Created'
+          schema:
+            $ref: '#/definitions/WidgetTemplateResponse'
+      description: Creates a Widget Template
+    get:
+      tags:
+        - Widget
+      operationId: getWidgetTemplates
+      parameters:
+        - name: page
+          description: 'Specifies the page number in a limited (paginated) list of products.'
+          required: false
+          in: query
+          type: integer
+        - name: limit
+          description: 'Controls the number of items per page in a limited (paginated)
+          list of products.'
+          required: false
+          in: query
+          type: integer
+        - in: query
+          name: widget_template_kind
+          description: The kind of widget template.
+          type: string
+          required: false
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/WidgetTemplatesCollectionResponse'
+      description: Returns a list of Widget Templates
+      summary: Get All Widget Templates
+  /content/widget-templates/{uuid}:
+    get:
+      tags:
+        - Widget
+      summary: Get a Widget Template
+      operationId: getWidgetTemplate
+      parameters:
+        - name: uuid
+          description: The identifier for a specific template.
+          required: true
+          in: path
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/WidgetTemplateResponse'
+      description: Return a single Widget Template
+    put:
+      tags:
+        - Widget
+      summary: Update a Widget Template
+      operationId: updateWidgetTemplate
+      parameters:
+        - name: uuid
+          description: The identifier for a specific template.
+          required: true
+          in: path
+          type: string
+          format: uuid
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/WidgetTemplateRequest'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/WidgetTemplateResponse'
+      description: Updates a Widget Template
+    delete:
+      tags:
+        - Widget
+      summary: Delete A Widget Template
+      operationId: deleteWidgetTemplate
+      parameters:
+        - name: uuid
+          description: The identifier for a specific template.
+          required: true
+          in: path
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: An empty response.
+      description: Deletes a Widget Template
+  /content/widgets:
+    post:
+      tags:
+        - Widget
+      summary: Create a Widget
+      operationId: createWidget
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/WidgetRequest'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/WidgetResponse'
+      description: Creates a Widget
+    get:
+      tags:
+        - Widget
+      summary: Get All Widgets
+      operationId: getWidgets
+      parameters:
+        - name: page
+          description: 'Specifies the page number in a limited (paginated) list of products.'
+          required: false
+          in: query
+          type: integer
+        - name: limit
+          description: 'Controls the number of items per page in a limited (paginated)
+          list of products.'
+          required: false
+          in: query
+          type: integer
+        - in: query
+          name: widget_template_kind
+          description: The kind of widget template.
+          type: string
+          required: false
+        - in: query
+          name: widget_template_uuid
+          description: The identifier for a specific widget template.
+          type: string
+          format: uuid
+          required: false
+
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/WidgetCollectionResponse'
+      description: 'Returns a list of Widgets'
+  /content/widgets/{uuid}:
+    get:
+      tags:
+        - Widget
+      summary: Get a Widget
+      operationId: getWidget
+      parameters:
+        - name: uuid
+          description: The identifier for a specific widget.
+          required: true
+          in: path
+          type: string
+          format: uuid
+
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/WidgetResponse'
+      description: Returns a single Widget
+    put:
+      tags:
+        - Widget
+      summary: Update a Widget
+      operationId: updateWidget
+      parameters:
+        - name: uuid
+          description: The identifier for a specific widget.
+          required: true
+          in: path
+          type: string
+          format: uuid
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/WidgetRequest'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/WidgetResponse'
+      description: Updates a Widget
+    delete:
+      tags:
+        - Widget
+      summary: Delete a Widget
+      operationId: deleteWidget
+      parameters:
+        - name: uuid
+          description: The identifier for a specific widget.
+          required: true
+          in: path
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: An empty response.
+      description: Deletes a Widget
+  /content/placements:
+    post:
+      tags:
+        - Widget
+      summary: Create a Placement
+      operationId: createPlacement
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/PlacementRequest'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/PlacementResponse'
+      description: Creates a Placement
+    get:
+      tags:
+        - Widget
+      summary: Get All Placements
+      operationId: getPlacements
+      parameters:
+        - name: page
+          description: 'Specifies the page number in a limited (paginated) list of products.'
+          required: false
+          in: query
+          type: integer
+        - name: limit
+          description: 'Controls the number of items per page in a limited (paginated)
+          list of products.'
+          required: false
+          in: query
+          type: integer
+        - in: query
+          name: widget_template_kind
+          description: The kind of widget template.
+          type: string
+          required: false
+        - in: query
+          name: template_file
+          description: The template file
+          type: string
+          required: false
+        - name: widget_uuid
+          description: The identifier for a specific widget.
+          in: query
+          type: string
+          format: uuid
+          required: false
+        - in: query
+          name: widget_template_uuid
+          description: The identifier for a specific widget template.
+          type: string
+          format: uuid
+          required: false
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/PlacementsCollectionResponse'
+      description: Returns a list of Placements
+  /content/placements/{uuid}:
+    get:
+      tags:
+        - Widget
+      summary: Get a Placement
+      operationId: getPlacement
+      parameters:
+        - name: uuid
+          description: The identifier for a specific placement.
+          required: true
+          in: path
+          type: string
+          format: uuid
+
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/PlacementResponse'
+      description: Returns a single Placement
+    put:
+      tags:
+        - Widget
+      summary: Update a Placement
+      operationId: updatePlacement
+      parameters:
+        - name: uuid
+          description: The identifier for a specific placement.
+          required: true
+          in: path
+          type: string
+          format: uuid
+        - name: placementBody
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/PlacementRequest'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/PlacementResponse'
+      description: Updates a Placement
+    delete:
+      tags:
+        - Widget
+      summary: Delete a Placement
+      operationId: deletePlacement
+      parameters:
+        - name: uuid
+          description: The identifier for a specific placement.
+          required: true
+          in: path
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: An empty response.
+      description: Deletes a Placement
+  /content/layouts:
+    post:
+      tags:
+        - Widget
+      summary: Create a Layout
+      operationId: createLayout
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/LayoutRequest'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/LayoutResponse'
+      description: |-
+        Creates a Layout
+    get:
+      tags:
+        - Widget
+      summary: Get All Layouts
+      operationId: getLayouts
+      parameters:
+        - name: page
+          description: 'Specifies the page number in a limited (paginated) list of products.'
+          required: false
+          in: query
+          type: integer
+        - name: limit
+          description: 'Controls the number of items per page in a limited (paginated)
+          list of products.'
+          required: false
+          in: query
+          type: integer
+        - in: query
+          name: template_file
+          description: The template file
+          type: string
+          required: false
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/LayoutCollectionResponse'
+      description: Returns a list of Layouts
+  /content/layouts/{uuid}:
+    get:
+      tags:
+        - Widget
+      summary: Get a Layout
+      operationId: getLayout
+      parameters:
+        - name: uuid
+          description: The identifier for a specific layout.
+          required: true
+          in: path
+          type: string
+          format: uuid
+
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/LayoutResponse'
+      description: Returns a single Layout
+    put:
+      tags:
+        - Widget
+      summary: Update a Layout
+      operationId: updateLayout
+      parameters:
+        - name: uuid
+          description: The identifier for a specific layout.
+          required: true
+          in: path
+          type: string
+          format: uuid
+        - name: layoutBody
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/LayoutRequest'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/LayoutResponse'
+      description: Updates a Layout
+    delete:
+      tags:
+        - Widget
+      summary: Delete a Layout
+      operationId: deleteLayout
+      parameters:
+        - name: uuid
+          description: The identifier for a specific layout.
+          required: true
+          in: path
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: An empty response.
+      description: Deletes a Layout
+  /content/regions:
+    get:
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ThemeRegionsCollectionResponse'
+      summary: Get Theme Regions
+      description: Returns a list of unique Theme Regions in a template file.
+      operationId: getContentRegions
+      tags:
+        - Widget
+      parameters:
+        - in: query
+          name: templateFile
+          description: 'The template file'
+          type: string
+          required: true
+definitions:
+  WidgetTemplateRequest:
+    required:
+      - name
+      - template
+    properties:
+      name:
+        type: string
+        description: User friendly name.
+      schema:
+        type: object
+        description: The JSON schema of data for this template. Used to validate a
+          configuration.
+        format: json
+      template:
+        type: string
+        description: Handlebars HTML content. Also has access to Stencil Paper helpers.
+        format: html
+    title: Widget Template Request
+  WidgetTemplate:
+    type: object
+    properties:
+      uuid:
+        type: string
+        format: uuid
+        description: The primary identifier.
+      name:
+        type: string
+        description: The user-friendly name.
+      kind:
+        type: string
+        description: The kind of widget template.
+      schema:
+        type: object
+        format: json
+        description: The JSON schema of data for this template. Used to validate a
+          configuration.
+      template:
+        type: string
+        format: html
+        description: The widget template HTML. Supports Handlebars and Paper helpers.
+      date_created:
+        type: string
+        format: datetime
+        description: The date on which this object was initially created.
+      date_modified:
+        type: string
+        format: datetime
+        description: The date on which this object was last updated.
+    title: Widget Template
+  Widget:
+    type: object
+    properties:
+      uuid:
+        type: string
+        format: uuid
+        description: The primary identifier.
+      name:
+        type: string
+        description: The user-friendly name.
+      description:
+        type: string
+        description: The user-friendly description.
+      widget_configuration:
+        type: object
+        description: The JSON data that populates the template.
+        format: json
+      widget_template:
+        $ref: '#/definitions/WidgetTemplate'
+      date_created:
+        type: string
+        format: datetime
+        description: The date on which this object was initially created.
+      date_modified:
+        type: string
+        format: datetime
+        description: The date on which this object was last updated.
+  WidgetRequest:
+    required:
+      - name
+      - widget_template_uuid
+    properties:
+      name:
+        type: string
+        description: User friendly name.
+      description:
+        type: string
+        description: The user-friendly description.
+      widget_configuration:
+        type: object
+        description: The JSON data that populates the template.
+        format: json
+      widget_template_uuid:
+        type: string
+        description: The widget template UUID.
+    title: Widget Request
+  PlacementRequest:
+    type: object
+    properties:
+      widget_uuid:
+        type: string
+        description: A widget identifier.
+      entity_id:
+        type: string
+        description: The specific instance of a page that you would like to target.
+      sort_order:
+        type: integer
+        description: The sort order to control the position of a content widget in
+          a region.
+      region:
+        type: string
+        description: The name of the region in which to insert content widgets.
+      template_file:
+        type: string
+        description: The template file that you would like to target.
+      status:
+        type: string
+        description: Sets the placement as either inactive or active.
+        default: inactive
+        enum:
+          - inactive
+          - active
+    required:
+      - widget_uuid
+      - template_file
+    title: Placement Request
+  Placement:
+    properties:
+      uuid:
+        type: string
+        format: uuid
+        description: The primary identifier.
+      entity_id:
+        type: string
+        description: The specific instance of a page
+      status:
+        type: string
+        description: Determines whether this placement is active or inactive.
+        enum:
+          - inactive
+          - active
+      template_file:
+        type: string
+        description: The page template name.
+      region:
+        type: string
+        description: The user-friendly name.
+      sort_order:
+        type: integer
+        description: The sort order to control position of a content widget in a region.
+      widget:
+        $ref: '#/definitions/Widget'
+      date_created:
+        type: string
+        format: datetime
+        description: The date on which this object was initially created.
+      date_modified:
+        type: string
+        format: datetime
+        description: The date on which this object was last updated.
+  Layout:
+    properties:
+      uuid:
+        type: string
+        format: uuid
+        description: The primary identifier.
+      entity_id:
+        type: string
+        description: The specific instance of a page
+      template_file:
+        type: string
+        description: The page template name.
+      region:
+        type: string
+        description: The name of the region defined in the stencil theme file.
+      markup:
+        type: string
+        description: The HTML layout which defines complex poisitoning for placements.
+      date_created:
+        type: string
+        format: datetime
+        description: The date on which this object was initially created.
+      date_modified:
+        type: string
+        format: datetime
+        description: The date on which this object was last updated.
+    title: Layout
+  LayoutRequest:
+    required:
+      - region
+      - template_file
+      - markup
+    properties:
+      entity_id:
+        type: string
+        description: The specific instance of a page that you would like to target.
+      region:
+        type: string
+        description: The name of the region in which to insert content widgets.
+      template_file:
+        type: string
+        description: The template file that you would like to target.
+      markup:
+        type: string
+        description: The HTML layout which defines complex poisitoning for placements.
+    title: Layout Request
+  ThemeRegion:
+    properties:
+      name:
+        type: string
+        description: The region name.
+    title: Theme Region
+  ThemeRegionsCollectionResponse:
+    description: ''
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/ThemeRegion'
+      meta:
+        type: object
+  LayoutCollectionResponse:
+    description: ''
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Layout'
+      meta:
+        $ref: "#/definitions/CollectionMeta"
+  LayoutResponse:
+    description: ''
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/Layout'
+      meta:
+        type: object
+  PlacementsCollectionResponse:
+    description: ''
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Placement'
+      meta:
+        $ref: "#/definitions/CollectionMeta"
+  PlacementResponse:
+    description: ''
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/Placement'
+      meta:
+        type: object
+  WidgetTemplatesCollectionResponse:
+    description: ''
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/WidgetTemplate'
+      meta:
+        $ref: "#/definitions/CollectionMeta"
+  WidgetTemplateResponse:
+    description: ''
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/WidgetTemplate'
+      meta:
+        type: object
+  WidgetCollectionResponse:
+    description: ''
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Widget'
+      meta:
+        $ref: "#/definitions/CollectionMeta"
+  WidgetResponse:
+    description: ''
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/Widget'
+      meta:
+        type: object
+  CollectionMeta:
+    type: object
+    description: |
+      Data about the response, including pagination and collection totals.
+    properties:
+      pagination:
+        $ref: "#/definitions/Pagination"
+  Pagination:
+    type: object
+    description: |
+      Data about the response, including pagination and collection totals.
+    properties:
+      total:
+        type: integer
+        description: |
+          Total number of items in the result set.
+      count:
+        type: integer
+        description: |
+          Total number of items in the collection response.
+      per_page:
+        type: integer
+        description: |
+          The amount of items returned in the collection per page, controlled by the limit parameter.
+      current_page:
+        type: integer
+        description: |
+          The page you are currently on within the collection.
+      total_pages:
+        type: integer
+        description: |
+          The total number of pages in the collection.
+      links:
+        type: object
+        description: |
+          Pagination links for the previous and next parts of the whole collection.
+        properties:
+          previous:
+            type: string
+            description: |
+              Link to the previous page returned in the response.
+          current:
+            type: string
+            description: |
+              Link to the current page returned in the response.
+          next:
+            type: string
+            description: |
+              Link to the next page returned in the response.

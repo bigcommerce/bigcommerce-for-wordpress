@@ -52,7 +52,7 @@ use BigCommerce\Taxonomies\Brand\Brand;
 					<?php } ?>
 
 					<?php echo esc_html( $item['name'] ); ?>
-					<?php if ( $item['bigcommerce_condition'] ) { ?>
+					<?php if ( $item['show_condition'] && $item['bigcommerce_condition'] ) { ?>
 						<span class="bc-product-flag--grey"><?php echo esc_html( $item['bigcommerce_condition'][0]['label'] ); ?></span>
 					<?php } ?>
 

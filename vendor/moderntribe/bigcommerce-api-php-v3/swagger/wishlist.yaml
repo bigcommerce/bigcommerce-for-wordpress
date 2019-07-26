@@ -1,0 +1,317 @@
+swagger: '2.0'
+info:
+  version: '1.0'
+  title: Wishlist API
+  description: "The Wishlist API allows a developer to create and manage customer Wishlists."
+host: api.bigcommerce.com
+basePath: "/stores/{{store_id}}/v3"
+tags:
+  - name: Wishlists
+    description: ''
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /wishlists:
+    post:
+      description: Creates a Wishlist and Wishlist Item. More than one item can be added in the POST.
+      summary: Create a Wishlist
+      tags:
+        - Wishlists
+      operationId: CreateWishlist
+      parameters:
+        - name: body
+          in: body
+          required: true
+          description: ''
+          schema:
+            $ref: '#/definitions/WishlistRequest'
+      responses:
+        '201':
+          description: 'Wishlist Created'
+          schema:
+            $ref: '#/definitions/WishlistResponse'
+    get:
+      description: Returns a list of Wishlists.
+      summary: Get Wishlists
+      tags:
+        - Wishlists
+      operationId: ListWishlists
+      parameters:
+        - name: customer_id
+          in: query
+          type: integer
+          format: int32
+          description: All wishlists relating to the customer.
+        - in: query
+          type: integer
+          name: page
+          format: int32
+          description: The page number of results per page. 1 is the default and starts
+            from record 0.
+        - name: limit
+          in: query
+          type: integer
+          format: int32
+          description: The numbers of items to return per page. Default is 50 and maximum
+            is 250.
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/WishlistCollectionResponse'
+            type: object
+  /wishlists/{wishlist_id}/items/{item_id}:
+    delete:
+      description: Deletes a Wishlist Item
+      summary: Delete Wishlist Item
+      operationId: DeleteWishlistItem
+      parameters:
+        - name: wishlist_id
+          in: path
+          type: integer
+          required: true
+          description: ID of the Wishlist
+          format: int32
+        - in: path
+          name: item_id
+          type: integer
+          required: true
+          format: int32
+      responses:
+        '204':
+          description: 'Item deleted'
+      tags:
+        - Wishlists
+  /wishlists/{wishlist_id}:
+    get:
+      description: Returns a single Wishlist
+      summary: Get a Wishlist
+      tags:
+        - Wishlists
+      operationId: GetWishlist
+      parameters:
+        - name: wishlist_id
+          in: path
+          type: integer
+          required: true
+          description: ID of the Wishlist
+          format: int32
+
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/WishlistResponse'
+    put:
+      description: Updates a Wishlist
+      summary: Update a Wishlist
+      tags:
+        - Wishlists
+      operationId: UpdateWishlist
+      parameters:
+        - name: body
+          in: body
+          required: true
+          description: ''
+          schema:
+            $ref: '#/definitions/WishlistRequest'
+        - name: wishlist_id
+          in: path
+          type: integer
+          required: true
+          description: ID of the Wishlist
+          format: int32
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/WishlistResponse'
+    delete:
+      description: Deletes a Wishlist
+      summary: Delete a Wishlist
+      tags:
+        - Wishlists
+      operationId: DeleteWishlist
+      parameters:
+        - name: wishlist_id
+          in: path
+          type: integer
+          required: true
+          description: ID of the Wishlist
+          format: int32
+      responses:
+        '204':
+          description: 'Wishlist deleted'
+    parameters:
+      - name: wishlist_id
+        in: path
+        type: string
+        required: true
+  /wishlists/{wishlist_id}/items:
+    parameters:
+      - name: wishlist_id
+        in: path
+        type: string
+        required: true
+    post:
+      summary: Add Wishlist Item
+      description: Adds a Wishlist Item.
+        More than one item can be added at a time.
+      operationId: AddWishlistItems
+      tags:
+        - Wishlists
+      parameters:
+        - name: wishlist_id
+          in: path
+          type: integer
+          required: true
+          description: ID of the Wishlist
+          format: int32
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/WishlistAddItemsRequest'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/WishlistResponse'
+definitions:
+  WishlistRequest:
+    title: Create a Wishlist
+    type: object
+    properties:
+      customer_id:
+        description: The customer id.
+        type: integer
+        format: int32
+        example: 12
+      is_public:
+        description: Whether the wishlist is available to the public.
+        type: boolean
+        example: false
+      name:
+        description: The title of the wishlist.
+        type: string
+        example: School Shopping
+      items:
+        description: Array of Wishlist items.
+        type: array
+        items:
+          $ref: '#/definitions/WishlistItem'
+    required:
+      - customer_id
+  WishlistResponse:
+    title: Response to a request for a wishlist
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/Wishlist'
+      meta:
+        type: object
+  WishlistCollectionResponse:
+    title: Response to a request for a wishlist
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Wishlist'
+      meta:
+        $ref: "#/definitions/CollectionMeta"
+  CollectionMeta:
+    type: object
+    description: Meta payload for collection-type responses
+    properties:
+      pagination:
+        $ref: "#/definitions/Pagination"
+  Wishlist:
+    title: Wishlist
+    type: object
+    properties:
+      id:
+        description: Wishlist ID, provided after creating a wishlist with a POST.
+        type: integer
+        format: int32
+        example: 30
+      customer_id:
+        description: The ID the customer to which the wishlist belongs.
+        type: integer
+        format: int32
+        example: 12
+      name:
+        description: The Wishlist's name.
+        type: string
+        example: Christmas List
+      is_public:
+        description: Whether the Wishlist is available to the public.
+        type: boolean
+        example: true
+      token:
+        description: The token of the Wishlist. This is created internally within
+          BigCommerce. The Wishlist ID is to be used for external apps. Read-Only
+        type: string
+        format: uuid
+        example: 2d55481-13eb-4d1e-9d79-9062b518570d
+      items:
+        description: Array of Wishlist items
+        type: array
+        items:
+          $ref: '#/definitions/WishlistItem'
+  WishlistItem:
+    title: Wishlist Item
+    type: object
+    properties:
+      id:
+        description: The ID of the item
+        type: integer
+        format: int32
+        example: 12
+      product_id:
+        description: The ID of the product.
+        type: integer
+        format: int32
+        example: 55
+      variant_id:
+        description: The variant ID of the item.
+        type: integer
+        format: int32
+        example: 22
+  WishlistAddItemsRequest:
+    title: Add Items to a Wishlist
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/WishlistItem'
+  Pagination:
+    title: Pagination
+    description: Data about the response, including pagination and collection totals.
+    type: object
+    properties:
+      total:
+        description: Total number of items in the result set.
+        type: integer
+        format: int32
+      count:
+        description: Total number of items in the collection response.
+        type: integer
+        format: int32
+      per_page:
+        description: The amount of items returned in the collection per page, controlled
+          by the limit parameter.
+        type: integer
+        format: int32
+      current_page:
+        description: The page you are currently on within the collection.
+        type: integer
+        format: int32
+      total_pages:
+        description: The total number of pages in the collection.
+        type: integer
+        format: int32

@@ -30,17 +30,19 @@ class Import extends Provider {
 	const BATCH_SIZE       = 'import.batch_size';
 	const LARGE_BATCH_SIZE = 'import.large_batch_size';
 
-	const START      = 'import.start';
-	const LISTINGS   = 'import.listings';
-	const CHANNEL    = 'import.channel';
-	const CATEGORIES = 'import.categories';
-	const BRANDS     = 'import.brands';
-	const PRODUCTS   = 'import.products';
-	const MARK       = 'import.mark_deleted';
-	const QUEUE      = 'import.queue';
-	const STORE      = 'import.store';
-	const CLEANUP    = 'import.cleanup';
-	const ERROR      = 'import.error';
+	const START            = 'import.start';
+	const LISTINGS         = 'import.listings';
+	const CHANNEL          = 'import.channel';
+	const PURGE_CATEGORIES = 'import.purge.categories';
+	const PURGE_BRANDS     = 'import.purge.brands';
+	const CATEGORIES       = 'import.categories';
+	const BRANDS           = 'import.brands';
+	const PRODUCTS         = 'import.products';
+	const MARK             = 'import.mark_deleted';
+	const QUEUE            = 'import.queue';
+	const STORE            = 'import.store';
+	const CLEANUP          = 'import.cleanup';
+	const ERROR            = 'import.error';
 
 	public function register( Container $container ) {
 		$this->cron( $container );
@@ -125,6 +127,14 @@ class Import extends Provider {
 			return new Processors\Start_Import();
 		};
 
+		$container[ self::PURGE_CATEGORIES ] = function ( Container $container ) {
+			return new Processors\Category_Purge( $container[ Api::FACTORY ]->catalog(), $container[ self::LARGE_BATCH_SIZE ] );
+		};
+
+		$container[ self::PURGE_BRANDS ] = function ( Container $container ) {
+			return new Processors\Brand_Purge( $container[ Api::FACTORY ]->catalog(), $container[ self::LARGE_BATCH_SIZE ] );
+		};
+
 		$container[ self::CATEGORIES ] = function ( Container $container ) {
 			return new Processors\Category_Import( $container[ Api::FACTORY ]->catalog(), $container[ self::BATCH_SIZE ] );
 		};
@@ -187,6 +197,14 @@ class Import extends Provider {
 			$list[] = new Task_Definition( $this->create_callback( 'fetch_store', function () use ( $container ) {
 				$container[ self::STORE ]->run();
 			} ), 20, Runner\Status::FETCHED_STORE, [ Runner\Status::FETCHING_STORE ], __( 'Fetching currency settings', 'bigcommerce' ) );
+
+			$list[] = new Task_Definition( $this->create_callback( 'purge_categories', function () use ( $container ) {
+				$container[ self::PURGE_CATEGORIES ]->run();
+			} ), 22, Runner\Status::PURGED_CATEGORIES, [ Runner\Status::PURGING_CATEGORIES ], __( 'Removing Categories', 'bigcommerce' ) );
+
+			$list[] = new Task_Definition( $this->create_callback( 'purge_brands', function () use ( $container ) {
+				$container[ self::PURGE_BRANDS ]->run();
+			} ), 23, Runner\Status::PURGED_BRANDS, [ Runner\Status::PURGING_BRANDS ], __( 'Removing Brands', 'bigcommerce' ) );
 
 			$list[] = new Task_Definition( $this->create_callback( 'sync_categories', function () use ( $container ) {
 				$container[ self::CATEGORIES ]->run();

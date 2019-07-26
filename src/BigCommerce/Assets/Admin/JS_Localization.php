@@ -21,7 +21,7 @@ class JS_Localization {
 				'oauth_popup_trigger' => __( 'Click here to authorize WordPress to connect to your BigCommerce account', 'bigcommerce' ),
 			],
 			'messages'   => [
-				'ajax_error'                        => __( 'There was and error submitting or retrieving your request. Please try again.', 'bigcommerce' ),
+				'ajax_error'                        => __( 'There was an error submitting or retrieving your request. Please try again.', 'bigcommerce' ),
 				'no_results'                        => __( 'We could not find any products that matched your query. Please clear your search and try again.', 'bigcommerce' ),
 				'no_products'                       => __( 'We could not find any products that matched your query. Please edit this block and try again.', 'bigcommerce' ),
 				'excessive_attempts'                => __( 'We are still working on connecting your account. It should not be too much longer.', 'bigcommerce' ),

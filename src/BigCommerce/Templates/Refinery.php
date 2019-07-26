@@ -15,7 +15,9 @@ class Refinery extends Controller {
 	const FILTERS = 'filters';
 	const ACTION  = 'action';
 
-
+	protected $wrapper_tag = 'div';
+	protected $wrapper_classes = [ 'bc-product-archive__refinery' ];
+	protected $wrapper_attributes = [ 'data-js' => 'bc-product-archive-refinery' ];
 	protected $template = 'components/catalog/refinery.php';
 
 	/**
@@ -162,7 +164,7 @@ class Refinery extends Controller {
 
     /**
      * Sorts the categories array nesting child under parent with a preceding '-' for each level
-     * 
+     *
      * @param $parent_id
      * @param $terms_by_parent
      * @param $depth

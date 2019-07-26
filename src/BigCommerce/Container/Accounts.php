@@ -7,6 +7,9 @@ namespace BigCommerce\Container;
 use BigCommerce\Accounts\Countries;
 use BigCommerce\Accounts\Customer_Group_Proxy;
 use BigCommerce\Accounts\Nav_Menu;
+use BigCommerce\Accounts\Wishlists\Actions as Wishlist_Actions;
+use BigCommerce\Accounts\Wishlists\Add_Item_View;
+use BigCommerce\Accounts\Wishlists\Wishlist_Request_Parser;
 use BigCommerce\Accounts\Sub_Nav;
 use BigCommerce\Accounts\User_Profile_Settings;
 use BigCommerce\Forms\Delete_Address_Handler;
@@ -14,16 +17,34 @@ use BigCommerce\Accounts\Login;
 use Pimple\Container;
 
 class Accounts extends Provider {
-	const LOGIN          = 'accounts.login';
-	const COUNTRIES      = 'accounts.countries';
-	const COUNTRIES_PATH = 'accounts.countries.path';
-	const DELETE_ADDRESS = 'accounts.delete_address';
-	const NAV_MENU       = 'accounts.nav_menu';
-	const SUB_NAV        = 'accounts.sub_nav';
-	const USER_PROFILE   = 'accounts.user_profile';
-	const GROUP_PROXY    = 'accounts.groups.proxy';
+	const LOGIN           = 'accounts.login';
+	const COUNTRIES       = 'accounts.countries';
+	const COUNTRIES_PATH  = 'accounts.countries.path';
+	const DELETE_ADDRESS  = 'accounts.delete_address';
+	const NAV_MENU        = 'accounts.nav_menu';
+	const SUB_NAV         = 'accounts.sub_nav';
+	const USER_PROFILE    = 'accounts.user_profile';
+	const GROUP_PROXY     = 'accounts.groups.proxy';
+
+	const PUBLIC_WISHLIST        = 'accounts.wishlist.public';
+	const WISHLIST_ROUTER        = 'accounts.wishlist.router';
+	const WISHLIST_CREATE        = 'accounts.wishlist.create';
+	const WISHLIST_EDIT          = 'accounts.wishlist.edit';
+	const WISHLIST_DELETE        = 'accounts.wishlist.delete';
+	const WISHLIST_ADD           = 'accounts.wishlist.add_item';
+	const WISHLIST_REMOVE        = 'accounts.wishlist.remove_item';
+	const WISHLIST_ADD_ITEM_VIEW = 'accounts.wishlist.add_item_view';
 
 	public function register( Container $container ) {
+		$this->login( $container );
+		$this->countries( $container );
+		$this->profile( $container );
+		$this->addresses( $container );
+		$this->customer_groups( $container );
+		$this->wishlists( $container );
+	}
+
+	private function login( Container $container ) {
 		$container[ self::LOGIN ] = function ( Container $container ) {
 			return new Login( $container[ Api::FACTORY ] );
 		};
@@ -71,7 +92,9 @@ class Accounts extends Provider {
 
 			return $match;
 		} ), 10, 4 );
+	}
 
+	private function countries( Container $container ) {
 		$container[ self::COUNTRIES ] = function ( Container $container ) {
 			return new Countries( $container[ self::COUNTRIES_PATH ] );
 		};
@@ -90,14 +113,9 @@ class Accounts extends Provider {
 		} );
 		add_filter( 'bigcommerce/js_config', $countries_js_config, 10, 1 );
 		add_filter( 'bigcommerce/admin/js_config', $countries_js_config, 10, 1 );
+	}
 
-		$container[ self::DELETE_ADDRESS ] = function ( Container $container ) {
-			return new Delete_Address_Handler();
-		};
-		add_action( 'parse_request', $this->create_callback( 'handle_delete_address', function () use ( $container ) {
-			$container[ self::DELETE_ADDRESS ]->handle_request( $_POST );
-		} ), 10, 0 );
-
+	private function profile( Container $container ) {
 		$container[ self::NAV_MENU ] = function ( Container $container ) {
 			return new Nav_Menu();
 		};
@@ -126,13 +144,93 @@ class Accounts extends Provider {
 		add_action( 'edit_user_profile', $render_profile_settings, 10, 1 );
 		add_action( 'personal_options_update', $save_profile_settings, 10, 1 );
 		add_action( 'edit_user_profile_update', $save_profile_settings, 10, 1 );
+	}
 
+	private function addresses( Container $container ) {
+		$container[ self::DELETE_ADDRESS ] = function ( Container $container ) {
+			return new Delete_Address_Handler();
+		};
+		add_action( 'parse_request', $this->create_callback( 'handle_delete_address', function () use ( $container ) {
+			$container[ self::DELETE_ADDRESS ]->handle_request( $_POST );
+		} ), 10, 0 );
+	}
+
+	private function customer_groups( Container $container ) {
 		$container[ self::GROUP_PROXY ] = function ( Container $container ) {
 			return new Customer_Group_Proxy();
 		};
 		add_filter( 'bigcommerce/customer/group_info', $this->create_callback( 'set_customer_group_info', function ( $info, $group_id ) use ( $container ) {
 			return $container[ self::GROUP_PROXY ]->filter_group_info( $info, $group_id );
 		} ), 10, 2 );
+	}
+
+	private function wishlists( Container $container ) {
+		$container[ self::PUBLIC_WISHLIST ] = function ( Container $container ) {
+			return new Wishlist_Request_Parser( $container[ Api::FACTORY ]->wishlists() );
+		};
+
+		add_action( 'parse_request', $this->create_callback( 'public_wishlist_request', function ( \WP $wp ) use ( $container ) {
+			$container[ self::PUBLIC_WISHLIST ]->setup_wishlist_request( $wp );
+		} ), 10, 1 );
+
+		$container[ self::WISHLIST_ROUTER ] = function ( Container $container ) {
+			return new Wishlist_Actions\Request_Router();
+		};
+
+		add_action( 'bigcommerce/action_endpoint/' . Wishlist_Actions\Request_Router::ACTION, $this->create_callback( 'handle_wishlist_action', function ( $args ) use ( $container ) {
+			$container[ self::WISHLIST_ROUTER ]->handle_request( $args );
+		} ), 10, 1 );
+
+		$container[ self::WISHLIST_CREATE ] = function ( Container $container ) {
+			return new Wishlist_Actions\Create_Wishlist( $container[ Api::FACTORY ]->wishlists() );
+		};
+
+		add_action( 'bigcommerce/wishlist_endpoint/' . Wishlist_Actions\Create_Wishlist::ACTION, $this->create_callback( 'create_wishlist', function ( $args ) use ( $container ) {
+			$container[ self::WISHLIST_CREATE ]->handle_request( $args );
+		} ), 10, 1 );
+
+		$container[ self::WISHLIST_EDIT ] = function ( Container $container ) {
+			return new Wishlist_Actions\Edit_Wishlist( $container[ Api::FACTORY ]->wishlists() );
+		};
+
+		add_action( 'bigcommerce/wishlist_endpoint/' . Wishlist_Actions\Edit_Wishlist::ACTION, $this->create_callback( 'edit_wishlist', function ( $args ) use ( $container ) {
+			$container[ self::WISHLIST_EDIT ]->handle_request( $args );
+		} ), 10, 1 );
+
+		$container[ self::WISHLIST_DELETE ] = function ( Container $container ) {
+			return new Wishlist_Actions\Delete_Wishlist( $container[ Api::FACTORY ]->wishlists() );
+		};
+
+		add_action( 'bigcommerce/wishlist_endpoint/' . Wishlist_Actions\Delete_Wishlist::ACTION, $this->create_callback( 'delete_wishlist', function ( $args ) use ( $container ) {
+			$container[ self::WISHLIST_DELETE ]->handle_request( $args );
+		} ), 10, 1 );
+
+		$container[ self::WISHLIST_ADD ] = function ( Container $container ) {
+			return new Wishlist_Actions\Add_Item( $container[ Api::FACTORY ]->wishlists() );
+		};
+
+		add_action( 'bigcommerce/wishlist_endpoint/' . Wishlist_Actions\Add_Item::ACTION, $this->create_callback( 'add_wishlist_item', function ( $args ) use ( $container ) {
+			$container[ self::WISHLIST_ADD ]->handle_request( $args );
+		} ), 10, 1 );
+
+		$container[ self::WISHLIST_REMOVE ] = function ( Container $container ) {
+			return new Wishlist_Actions\Remove_Item( $container[ Api::FACTORY ]->wishlists() );
+		};
+
+		add_action( 'bigcommerce/wishlist_endpoint/' . Wishlist_Actions\Remove_Item::ACTION, $this->create_callback( 'remove_wishlist_item', function ( $args ) use ( $container ) {
+			$container[ self::WISHLIST_REMOVE ]->handle_request( $args );
+		} ), 10, 1 );
+
+		$container[ self::WISHLIST_ADD_ITEM_VIEW ] = function ( Container $container ) {
+			return new Add_Item_View( $container[ Api::FACTORY ]->wishlists() );
+		};
+
+		$add_item_view_to_product_single = $this->create_callback( 'add_item_view_to_product_single', function ( $data, $template, $options ) use ( $container ) {
+			return $container[ self::WISHLIST_ADD_ITEM_VIEW ]->filter_product_single_template( $data, $template, $options );
+		} );
+		add_action( 'bigcommerce/template=components/products/product-single.php/data', $add_item_view_to_product_single, 10, 3 );
+		// Decided not to show on the shortcode single
+		//add_action( 'bigcommerce/template=components/products/product-shortcode-single.php/data', $add_item_view_to_product_single, 10, 3 );
 	}
 
 }

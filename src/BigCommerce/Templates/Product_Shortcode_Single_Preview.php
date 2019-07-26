@@ -60,6 +60,11 @@ class Product_Shortcode_Single_Preview extends Product_Shortcode_Single {
 	}
 
 	protected function get_form( Product $product ) {
-		return '';
+		$component = Product_Form_Preview::factory( [
+			Product_Form::PRODUCT      => $product,
+			Product_Form::SHOW_OPTIONS => false,
+		] );
+
+		return $component->render();
 	}
 }

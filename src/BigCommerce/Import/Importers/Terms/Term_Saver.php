@@ -37,6 +37,45 @@ abstract class Term_Saver implements Import_Strategy {
 
 	abstract protected function save_wp_termmeta( \ArrayAccess $bc_term );
 
+	/**
+	 * Get the name of the term
+	 *
+	 * @param \ArrayAccess $bc_term
+	 *
+	 * @return string
+	 */
+	protected function term_name( \ArrayAccess $bc_term ) {
+		return $this->sanitize_string( $bc_term['name'] );
+	}
+
+	/**
+	 * Get the slug for the term. This is derived from the
+	 * `custom_url` property of the term if present.
+	 *
+	 * @param \ArrayAccess $bc_term
+	 *
+	 * @return string
+	 */
+	protected function term_slug( \ArrayAccess $bc_term ) {
+		$custom_url = $bc_term['custom_url'] ?: [ 'url' => '', 'is_customized' => false ];
+		if ( empty( $custom_url ) || empty( $custom_url['url'] ) ) {
+			$slug = sanitize_title( $this->term_name( $bc_term ) );
+		} else {
+			$slug = sanitize_title( pathinfo( $this->sanitize_string( $custom_url['url'] ), PATHINFO_FILENAME ) );
+		}
+
+		if ( empty( $slug ) ) {
+			$slug = sanitize_title( $this->term_name( $bc_term ) );
+		}
+
+		$duplicate = get_term_by( 'slug', $slug, $this->taxonomy );
+		if ( $duplicate && (int) $duplicate->term_id !== (int) $this->term_id ) {
+			$slug = ''; // let WP auto-assign the slug, otherwise the creation will fail
+		}
+
+		return $slug;
+	}
+
 	protected function sanitize_int( $value ) {
 		if ( is_scalar( $value ) ) {
 			return (int) $value;
@@ -62,8 +101,9 @@ abstract class Term_Saver implements Import_Strategy {
 		// Wp uses wp_filter_kses to sanitize html from the term description
 		// we need to make sure we're getting the same result here
 		return [
-			'description' => wp_filter_kses( $this->sanitize_string( $bc_term[ 'description' ] ) ),
-			'parent' => $this->determine_parent_term_id( $bc_term ),
+			'slug'        => $this->term_slug( $bc_term ),
+			'description' => wp_filter_kses( $this->sanitize_string( $bc_term['description'] ) ),
+			'parent'      => $this->determine_parent_term_id( $bc_term ),
 		];
 	}
 
@@ -75,7 +115,7 @@ abstract class Term_Saver implements Import_Strategy {
 	 * @return int
 	 */
 	protected function determine_parent_term_id( \ArrayAccess $bc_term ) {
-		$bc_id = isset( $bc_term[ 'parent_id' ] ) ? $this->sanitize_int( $bc_term[ 'parent_id' ] ) : 0;
+		$bc_id = isset( $bc_term['parent_id'] ) ? $this->sanitize_int( $bc_term['parent_id'] ) : 0;
 		if ( empty( $bc_id ) ) {
 			return 0;
 		}

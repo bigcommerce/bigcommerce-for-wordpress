@@ -436,12 +436,15 @@ const handleOptionClicks = (options = '') => {
 /**
  * @function handleProductQueryParam
  * @description Creates an added layer of variant checking to ensure that a URL with a variant_id param is set properly.
+ *
+ * @param options
  */
-const handleProductQueryParam = () => {
+const handleProductQueryParam = (options = []) => {
 	// Assumes this is the PDP single page.
 	const variantID = queryToJson().variant_id;
 	const sku = queryToJson().sku;
 	if ((!variantID && !sku) || !el.singleWrapper) {
+		handleSelections(null, options);
 		return;
 	}
 
@@ -517,6 +520,7 @@ const initOptionsPickers = () => {
 		// On initialization, setup our form.
 		handleOptionClicks(options);
 		handleModifierFields(options);
+		handleProductQueryParam(options);
 	});
 };
 
@@ -526,7 +530,6 @@ const init = (container) => {
 	}
 
 	initOptionsPickers();
-	handleProductQueryParam();
 };
 
 export default init;

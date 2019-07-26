@@ -252,11 +252,22 @@ class Product {
 				'id'            => 0,
 				'display_name'  => '',
 				'type'          => '',
+				'sort_order'    => 0,
 				'required'      => false,
 				'config'        => [],
 				'option_values' => [],
 			] );
 		}, $data );
+
+
+		// respect the sorting set by the user
+		usort( $data, function ( $a, $b ) {
+			if ( $a['sort_order'] === $b['sort_order'] ) {
+				return ( $a['display_name'] < $b['display_name'] ) ? - 1 : 1;
+			}
+
+			return ( $a['sort_order'] < $b['sort_order'] ) ? - 1 : 1;
+		} );
 
 		return $data;
 	}
@@ -372,7 +383,7 @@ class Product {
 		}
 		$button = sprintf( '<button class="%s" type="submit" data-js="%d" %s>%s</button>', $class, $this->bc_id(), $options, $label );
 
-		return apply_filters( 'bigcommerce/button/purchase', $button, $this->post_id );
+		return apply_filters( 'bigcommerce/button/purchase', $button, $this->post_id, $label );
 	}
 
 	public function purchase_message() {

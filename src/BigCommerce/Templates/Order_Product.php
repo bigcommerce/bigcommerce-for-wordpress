@@ -9,6 +9,7 @@ use BigCommerce\Exceptions\Product_Not_Found_Exception;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Condition\Condition;
+use BigCommerce\Taxonomies\Flag\Flag;
 
 class Order_Product extends Controller {
 	const PRODUCT        = 'product';
@@ -54,8 +55,8 @@ class Order_Product extends Controller {
 			self::TITLE            => $post_id ? get_the_title( $post_id ) : $product['name'],
 			self::IMAGE_ID         => $image_id,
 			self::IMAGE            => $image,
-			Brand::NAME            => $this->get_terms( $post_id, Brand::NAME ),
-			Condition::NAME        => $this->get_terms( $post_id, Condition::NAME ),
+			Brand::NAME            => $post_id ? $this->get_terms( $post_id, Brand::NAME ) : [],
+			Condition::NAME        => ( $post_id && has_term( Flag::SHOW_CONDITION, Flag::NAME, $post_id ) ) ? $this->get_terms( $post_id, Condition::NAME ) : [],
 			self::QUANTITY_ORDERED => $product['quantity'],
 			self::QUANTITY_SHIPPED => $product['quantity_shipped'],
 			self::UNIT_PRICE       => $this->format_currency( $product['base_price'] ),
