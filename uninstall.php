@@ -9,6 +9,7 @@ use BigCommerce\Import\Processors\Channel_Initializer;
 use BigCommerce\Import\Processors\Listing_Fetcher;
 use BigCommerce\Import\Processors\Product_Data_Fetcher;
 use BigCommerce\Import\Processors\Term_Import;
+use BigCommerce\Import\Processors\Term_Purge;
 use BigCommerce\Import\Runner\Lock;
 use BigCommerce\Import\Runner\Status;
 use BigCommerce\Logging\Error_Log;
@@ -181,6 +182,7 @@ function delete_options() {
 		Channel_Initializer::STATE_OPTION,
 		Product_Data_Fetcher::STATE_OPTION,
 		Product_Data_Fetcher::FILTERED_LISTING_MAP,
+		Term_Purge::STATE_OPTION,
 		Merchant\Onboarding_Api::ACCOUNT_ID,
 		Merchant\Onboarding_Api::STORE_ID,
 		Merchant\Onboarding_Api::AUTH_KEY,
@@ -219,12 +221,11 @@ function delete_options() {
 function delete_user_meta_data() {
 	global $wpdb;
 	$customer_id_meta_key = $wpdb->get_blog_prefix() . Customer::CUSTOMER_ID_META;
-	$nav_init_meta_key    = $wpdb->get_blog_prefix() . Nav_Items_Meta_Box::USER_INITIALIZED;
 
 	// all meta-keys => value to be deleted
 	$meta_keys = [
 		$customer_id_meta_key                => '',
-		$nav_init_meta_key                   => '',
+		Nav_Items_Meta_Box::USER_INITIALIZED => '',
 		User_Profile_Settings::SYNC_PASSWORD => '',
 	];
 

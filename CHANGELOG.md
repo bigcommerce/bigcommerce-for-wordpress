@@ -1,5 +1,67 @@
 # Changelog
 
+## [3.4.0]
+
+### Added
+
+- Created a filter, `bigcommerce/api/ttl`, to control the TTL of the API
+  response cache. Caches now default to one hour, but can be overridden
+  per request. Requests to the pricing API no longer force a cache flush.
+- Added support for sort order on product modifiers. The order will be imported
+  from BigCommerce and respected when rendering the product form.
+- Added a step to the import process to delete categories and brands that
+  were deleted in BigCommerce. This also resolves the issue of a re-created
+  category getting a numeric suffix on the slug when the new term is created.
+- **Wish Lists**
+  - BigCommerce Wish Lists are now part of user accounts.
+  - You can create, edit and delete a Wish List as well as add and remove items.
+  - You and make your list public or private. Private lists cannot be shared
+    and can only be seen by the list owner.
+  - Shared Wish Lists are presented as a filtered version of the main product 
+    archive.
+  - Deleting a Wish List cannot be undone. You will be given a confirmation
+    screen before deleting.
+  - Wish Lists are currently product ID based and not quantity based.
+    Attempting to add the same product to your list will not increase the 
+    quantity nor will it duplicate the product in your list. Only one instance
+    of a product variant is allowed in a Wish List.
+
+### Fixed
+
+- Product categories and brands will now derive their slugs from the
+  "Custom URL" property set in the BigCommerce admin. If a category name
+  changes, the WordPress term slug will update to reflect the new name.
+- Gutenberg blocks were not able to utilize the drag-and-drop feature 
+  due to a conflict with a JS library. This lib has been upgraded and 
+  drag-and-drop functionality has been restored.
+- Products options and modifiers that contained only a single option would 
+  cause the Cart/Buy button to be disabled permanently. This has been been 
+  fixed.
+- The user meta key `bigcommerce_nav_settings_initialized` was not correctly
+  removed when running the plugin uninstaller. This has been fixed.
+- Removed the product condition from cart and order history when the product
+  is not configured to display its condition.
+- Disabled WordPress's kses filters when storing data in the import queue.
+  This fixes mangled HTML in some circumstances. Post content is still filtered
+  later in the import.
+- Upgraded Lodash JS library dependency to the latest version.
+
+### Changed
+- Refinery template (`components/catalog/refinery.php`) has removed the 
+  wrapper element in favor of the Controller variables. Update your template
+  as needed.
+- The Gutenberg Product Component Block now has admin previews that contain 
+  rendered HTML product content for all component types. When a product ID 
+  is not found or is no longer valid, a default message will display letting 
+  you know the product is unavailable on the admin side and the theme side.
+
+### Deprecated
+
+- API factory methods for building widget-related clients are deprecated.
+  Calls to `Api_Factory::placement()`, `Api_Factory::themeRegions()`, and
+  `Api_Factory::widgetTemplate()` should be replaced with `Api_Factory::widget()`.
+  These methods will be removed in a future version.
+
 ## [3.3.0]
 
 ### Changed
@@ -698,6 +760,7 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[3.3.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.3.0...3.4.0
 [3.3.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.2.0...3.3.0
 [3.2.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.1.0...3.2.0
 [3.1.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.0.2...3.1.0

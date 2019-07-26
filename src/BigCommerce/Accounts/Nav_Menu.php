@@ -9,6 +9,7 @@ use BigCommerce\Pages\Address_Page;
 use BigCommerce\Pages\Login_Page;
 use BigCommerce\Pages\Orders_Page;
 use BigCommerce\Pages\Registration_Page;
+use BigCommerce\Pages\Wishlist_Page;
 
 class Nav_Menu {
 	/**
@@ -30,6 +31,7 @@ class Nav_Menu {
 			case get_option( Account_Page::NAME, 0 ):
 			case get_option( Orders_Page::NAME, 0 ):
 			case get_option( Address_Page::NAME, 0 ):
+			case get_option( Wishlist_Page::NAME, 0 ):
 				return $this->setup_account_page_menu_item( $menu_item );
 			default:
 				return $menu_item;

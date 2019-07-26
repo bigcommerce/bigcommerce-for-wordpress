@@ -4,6 +4,7 @@
 namespace BigCommerce\Container;
 
 
+use BigCommerce\Rest\Product_Component_Shortcode_Controller;
 use BigCommerce\Rest\Cart_Controller;
 use BigCommerce\Rest\Orders_Shortcode_Controller;
 use BigCommerce\Rest\Pricing_Controller;
@@ -27,6 +28,9 @@ class Rest extends Provider {
 
 	const ORDERS_SHORTCODE_BASE = 'rest.orders_shortcode_base';
 	const ORDERS_SHORTCODE      = 'rest.orders_shortcode';
+
+	const COMPONENT_SHORTCODE_BASE = 'rest.product_component_shortcode_base';
+	const COMPONENT_SHORTCODE      = 'rest.product_component_shortcode';
 
 	const REVIEW_LIST_BASE = 'rest.review_list_base';
 	const REVIEW_LIST      = 'rest.review_list';
@@ -77,6 +81,14 @@ class Rest extends Provider {
 			return new Orders_Shortcode_Controller( $container[ self::NAMESPACE_BASE ], $container[ self::VERSION ], $container[ self::ORDERS_SHORTCODE_BASE ] );
 		};
 
+		$container[ self::COMPONENT_SHORTCODE_BASE ] = function ( Container $container ) {
+			return apply_filters( 'bigcommerce/rest/product_component_shortcode_base', 'component-shortcode' );
+		};
+
+		$container[ self::COMPONENT_SHORTCODE ] = function ( Container $container ) {
+			return new Product_Component_Shortcode_Controller( $container[ self::NAMESPACE_BASE ], $container[ self::VERSION ], $container[ self::COMPONENT_SHORTCODE_BASE ] );
+		};
+
 		$container[ self::REVIEW_LIST_BASE ] = function ( Container $container ) {
 			return apply_filters( 'bigcommerce/rest/review_list_base', 'product-reviews' );
 		};
@@ -97,6 +109,7 @@ class Rest extends Provider {
 			$container[ self::PRODUCTS ]->register_routes();
 			$container[ self::SHORTCODE ]->register_routes();
 			$container[ self::ORDERS_SHORTCODE ]->register_routes();
+			$container[ self::COMPONENT_SHORTCODE ]->register_routes();
 			$container[ self::CART ]->register_routes();
 			$container[ self::REVIEW_LIST ]->register_routes();
 			$container[ self::PRICING ]->register_routes();

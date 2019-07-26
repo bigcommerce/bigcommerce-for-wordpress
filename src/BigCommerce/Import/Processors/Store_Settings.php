@@ -45,6 +45,8 @@ class Store_Settings implements Import_Processor {
 
 				Settings\Sections\Units::MASS   => $this->sanitize_mass_unit( $store->weight_units ),
 				Settings\Sections\Units::LENGTH => $this->sanitize_length_unit( $store->dimension_units ),
+
+				Settings\Sections\Wishlists::ENABLED => isset( $store->features->wishlists_enabled ) ? (int) $store->features->wishlists_enabled : 0,
 			];
 
 			if ( get_option( Settings\Sections\Analytics::SYNC_ANALYTICS, 1 ) ) {

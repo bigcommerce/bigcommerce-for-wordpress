@@ -20,6 +20,11 @@ class Product_Card_Preview extends Product_Card {
 	}
 
 	protected function get_form( Product $product ) {
-		return '';
+		$component = Product_Form_Preview::factory( [
+			Product_Form::PRODUCT      => $product,
+			Product_Form::SHOW_OPTIONS => false,
+		] );
+
+		return $component->render();
 	}
 }

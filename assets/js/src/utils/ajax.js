@@ -5,7 +5,7 @@
 
 import request from 'superagent';
 import { PRODUCTS_ENDPOINT, SHORTCODE_ENDPOINT, ADMIN_AJAX } from '../admin/config/wp-settings';
-import { GUTENBERG_PRODUCTS } from '../admin/gutenberg/config/gutenberg-settings';
+import { GUTENBERG_PRODUCTS, GUTENBERG_PRODUCT_COMPONENTS } from '../admin/gutenberg/config/gutenberg-settings';
 
 export const wpAPIProductLookup = (queryString = '') => request
 	.get(PRODUCTS_ENDPOINT)
@@ -35,6 +35,10 @@ export const wpAPICartDelete = cartURL => request
 
 export const wpAPIProductsPreview = (queryObj = {}) => request
 	.get(GUTENBERG_PRODUCTS.preview_url)
+	.query(queryObj);
+
+export const wpAPIProductComponentPreview = (queryObj = {}) => request
+	.get(GUTENBERG_PRODUCT_COMPONENTS.preview_url)
 	.query(queryObj);
 
 export const wpAdminAjax = (queryObj = {}) => request

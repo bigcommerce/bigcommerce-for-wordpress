@@ -21,6 +21,7 @@ import {
 	GUTENBERG_PRODUCT_REVIEWS,
 	GUTENBERG_PRODUCTS,
 	GUTENBERG_REGISTER,
+	GUTENBERG_WISHLIST,
 } from '../config/gutenberg-settings';
 
 const { registerBlockType } = wp.blocks;
@@ -36,6 +37,7 @@ const blocks = [
 	new ShortcodeBlock(GUTENBERG_REGISTER),
 	new ShortcodeBlock(GUTENBERG_GIFT_CERTIFICATE_FORM),
 	new ShortcodeBlock(GUTENBERG_GIFT_CERTIFICATE_BALANCE),
+	new ShortcodeBlock(GUTENBERG_WISHLIST),
 	new ProductReviewsBlock(GUTENBERG_PRODUCT_REVIEWS),
 	new ProductComponentsBlock(GUTENBERG_PRODUCT_COMPONENTS),
 ];

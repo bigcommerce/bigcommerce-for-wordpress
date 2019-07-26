@@ -75,7 +75,7 @@ class Product_Archive extends Controller {
 			return sprintf( __( 'All Products Matching "%s"', 'bigcommerce' ), stripslashes( $query->query['s'] ) );
 		}
 
-		$default = __( 'All Products', 'tribe' );
+		$default = __( 'All Products', 'bigcommerce' );
 		$title   = get_option( Customizer\Sections\Product_Archive::ARCHIVE_TITLE, $default );
 
 		return $title;

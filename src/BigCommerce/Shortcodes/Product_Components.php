@@ -7,6 +7,8 @@ use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Templates\Product_Description;
 use BigCommerce\Templates\Product_Featured_Image;
 use BigCommerce\Templates\Product_Form;
+use BigCommerce\Templates\Product_Form_Preview;
+use BigCommerce\Templates\Product_Not_Available;
 use BigCommerce\Templates\Product_Sku;
 use BigCommerce\Templates\Product_Title;
 use BigCommerce\Editor\Gutenberg\Blocks\Product_Components as Components;
@@ -22,8 +24,10 @@ class Product_Components implements Shortcode {
 	 */
 	public static function default_attributes() {
 		return [
-			'id'   => '', // BigCommerce product ID
-			'type' => '', // Type of product component
+			'id'      => 0, // BigCommerce product ID
+			'post_id' => 0, // WordPress post ID
+			'type'    => '', // Type of product component
+			'preview' => 0, // internal use: set to 1 to remove interactive elements
 		];
 	}
 
@@ -35,12 +39,12 @@ class Product_Components implements Shortcode {
 			try {
 				$product = Product::by_product_id( absint( $attr['id'] ) );
 			} catch ( \Exception $e ) {
-				return '';
+				return $this->product_not_found();
 			}
 		} else {
 			$post_id = empty( $attr['post_id'] ) ? get_the_ID() : absint( $attr['post_id'] );
 			if ( empty( $post_id ) || get_post_type( $post_id ) !== Product::NAME ) {
-				return '';
+				return $this->product_not_found();
 			}
 			$product = new Product( $post_id );
 		}
@@ -65,19 +69,44 @@ class Product_Components implements Shortcode {
 
 				return $product_image->render();
 			case Components::ADD_TO_CART:
-				$product_form = Product_Form::factory( [
-					Product_Form::PRODUCT => $product,
-				] );
+				if ( $attr['preview'] ) {
+					$product_form = Product_Form_Preview::factory( [
+						Product_Form::PRODUCT      => $product,
+						Product_Form::SHOW_OPTIONS => false,
+					] );
+				} else {
+					$product_form = Product_Form::factory( [
+						Product_Form::PRODUCT => $product,
+					] );
+				}
 
 				return $product_form->render();
 			default:
-				$title = Product_Title::factory( [
+				$title_args = [
 					Product_Title::PRODUCT => $product,
-				] );
+					Product_Title::SHOW_CONDITION => false,
+					Product_Title::SHOW_INVENTORY => false,
+				];
+				if ( $attr['preview'] ) {
+					$title_args[ Product_Title::USE_PERMALINK ] = false;
+				}
+				$title = Product_Title::factory( $title_args );
 
 				return $title->render();
 		}
 
+	}
+
+	/**
+	 * If a product cannot be found, display a message
+	 * in place of the requested component
+	 *
+	 * @return string
+	 */
+	private function product_not_found() {
+		$component = Product_Not_Available::factory();
+
+		return $component->render();
 	}
 
 }

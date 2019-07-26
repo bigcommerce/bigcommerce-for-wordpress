@@ -301,19 +301,19 @@ const cacheElements = () => {
 	el.linkList = tools.getNodes('bcqb-list')[0];
 	el.searchForm = tools.getNodes('bc-shortcode-ui-search', false, el.productsBlock)[0];
 	el.channels = tools.getNodes('bcqb-channels', false, el.wrapper)[0];
+	el.searchField = document.querySelector('.bc-shortcode-ui__search-input');
+	el.searchInput = new Choices(el.searchField, {
+		removeItemButton: true,
+		duplicateItemsAllowed: false,
+	});
 };
 
 const bindEvents = () => {
-	el.searchInput = new Choices('.bc-shortcode-ui__search-input', {
-		removeItemButton: true,
-		duplicateItems: false,
-	});
-
 	delegate(el.linkList, '[data-js="bcqb-has-child-list"]', 'click', toggleChildMenu);
 	delegate(el.linkList, '.bc-shortcode-ui__query-builder-anchor', 'click', handleLinks);
 	delegate(el.wrapper, '[data-js="bcqb-channels"]', 'change', handleChannelSelection);
-	el.searchInput.passedElement.addEventListener('removeItem', handleChoiceRemoval);
-	el.searchInput.passedElement.addEventListener('addItem', handleChoiceAddition);
+	el.searchField.addEventListener('removeItem', handleChoiceRemoval);
+	el.searchField.addEventListener('addItem', handleChoiceAddition);
 	delegate('[data-js="bcqb-clear"]', 'click', clearSearch);
 	on(document, 'bigcommerce/set_shortcode_ui_state', setShortcodeState);
 	on(document, 'bigcommerce/remove_query_term', handleChoiceRemoval);

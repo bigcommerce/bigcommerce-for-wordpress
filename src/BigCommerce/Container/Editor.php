@@ -9,6 +9,7 @@ use BigCommerce\Editor\Editor_Dialog_Template;
 use BigCommerce\Customizer\Styles;
 use BigCommerce\Settings\Sections\Cart as Cart_Settings;
 use BigCommerce\Settings\Sections\Gift_Certificates as Gift_Certificate_Settings;
+use BigCommerce\Settings\Sections\Wishlists as Wishlist_Settings;
 
 /**
  * Class Editor
@@ -71,7 +72,7 @@ class Editor extends Provider {
 				new Gutenberg\Blocks\Order_History( $container[ Assets::PATH ] ),
 				new Gutenberg\Blocks\Login_Form( $container[ Assets::PATH ] ),
 				new Gutenberg\Blocks\Product_Reviews( $container[ Assets::PATH ] ),
-				new Gutenberg\Blocks\Product_Components( $container[ Assets::PATH ] ),
+				new Gutenberg\Blocks\Product_Components( $container[ Assets::PATH ], $container[ Rest::COMPONENT_SHORTCODE ] ),
 			];
 			if ( ( (bool) get_option( Cart_Settings::OPTION_ENABLE_CART, true ) ) === true ) {
 				$blocks[] = new Gutenberg\Blocks\Cart( $container[ Assets::PATH ] );
@@ -85,6 +86,9 @@ class Editor extends Provider {
 			}
 			if ( get_option( 'users_can_register' ) ) {
 				$blocks[] = new Gutenberg\Blocks\Registration_Form( $container[ Assets::PATH ] );
+			}
+			if ( get_option( Wishlist_Settings::ENABLED ) ) {
+				$blocks[] = new Gutenberg\Blocks\Wishlist( $container[ Assets::PATH ] );
 			}
 			return $blocks;
 		};

@@ -17,8 +17,6 @@ namespace BigCommerce\Api;
 class Caching_Client extends Base_Client {
 	/** @var string */
 	private $cache_group = 'bigcommerce_api';
-	/** @var int */
-	private $cache_ttl = 60;
 	/** @var string */
 	private $generation_key = '';
 
@@ -37,7 +35,7 @@ class Caching_Client extends Base_Client {
 	 * @return array
 	 */
 	public function callApi( $resourcePath, $method, $queryParams, $postData, $headerParams, $responseType = null, $endpointPath = null ) {
-		if ( ! in_array( $method, $this->cacheable_methods() ) ) {
+		if ( $this->is_write_operation( $resourcePath, $method, $queryParams, $postData ) ) {
 			// any write operation increments the cache key
 			$this->update_generation_key();
 
@@ -56,16 +54,63 @@ class Caching_Client extends Base_Client {
 
 		$result = parent::callApi( $resourcePath, $method, $queryParams, $postData, $headerParams, $responseType, $endpointPath );
 
-		wp_cache_set( $cache_key, $result, $this->cache_group, $this->cache_ttl );
+		$ttl = $this->get_ttl_for_request( $resourcePath, $method, $queryParams, $postData );
+		wp_cache_set( $cache_key, $result, $this->cache_group, $ttl );
 
 		return $result;
+	}
+
+	/**
+	 * Identify if the request will write data to the API
+	 *
+	 * @param string $resourcePath
+	 * @param string $method
+	 * @param array  $queryParams
+	 * @param array  $postData
+	 *
+	 * @return bool
+	 */
+	private function is_write_operation( $resourcePath, $method, $queryParams, $postData ) {
+		if ( in_array( $method, $this->read_methods() ) ) {
+			return false;
+		}
+
+		if ( $method === self::$POST && $resourcePath === '/pricing/products' ) {
+			return false; // no pricing api operations write data, even when using POST
+		}
+
+		return true;
+	}
+
+	/**
+	 * @param string $resourcePath
+	 * @param string $method
+	 * @param array  $queryParams
+	 * @param array  $postData
+	 *
+	 * @return int
+	 */
+	private function get_ttl_for_request( $resourcePath, $method, $queryParams, $postData ) {
+		// Default one hour
+		$ttl = HOUR_IN_SECONDS;
+
+		/**
+		 * Filter the expiration time for the cache of an API response.
+		 *
+		 * @param int    $ttl          Number of seconds to cache the response
+		 * @param string $resourcePath The path to the API endpoint being requested
+		 * @param string $method       The request method used
+		 * @param array  $queryParams  Query parameters for the request
+		 * @param array  $postData     Posted data for the request
+		 */
+		return absint( apply_filters( 'bigcommerce/api/ttl', $ttl, $resourcePath, $method, $queryParams, $postData ) );
 	}
 
 
 	/**
 	 * @return array A list of all read operations
 	 */
-	private function cacheable_methods() {
+	private function read_methods() {
 		return [
 			self::$GET,
 			self::$OPTIONS,

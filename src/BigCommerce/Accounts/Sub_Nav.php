@@ -7,6 +7,7 @@ namespace BigCommerce\Accounts;
 use BigCommerce\Pages\Account_Page;
 use BigCommerce\Pages\Address_Page;
 use BigCommerce\Pages\Orders_Page;
+use BigCommerce\Pages\Wishlist_Page;
 use BigCommerce\Templates\Sub_Nav_Links;
 
 class Sub_Nav {
@@ -38,6 +39,7 @@ class Sub_Nav {
 			case get_option( Account_Page::NAME, 0 ):
 			case get_option( Orders_Page::NAME, 0 ):
 			case get_option( Address_Page::NAME, 0 ):
+			case get_option( Wishlist_Page::NAME, 0 ):
 				return $this->get_subnav() . $content;
 			default:
 				return $content;
@@ -54,7 +56,7 @@ class Sub_Nav {
 
 	private function get_links() {
 		$links = [];
-		foreach ( [ Account_Page::NAME, Orders_Page::NAME, Address_Page::NAME ] as $option ) {
+		foreach ( [ Account_Page::NAME, Orders_Page::NAME, Address_Page::NAME, Wishlist_Page::NAME ] as $option ) {
 			$post_id = get_option( $option, 0 );
 			if ( $post_id ) {
 				$links[] = [

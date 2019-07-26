@@ -43,6 +43,7 @@ class ModifierPost extends ModifierBase implements ArrayAccess
     protected static $swaggerTypes = [
         'type' => 'string',
         'required' => 'bool',
+        'sort_order' => 'int',
         'config' => '\BigCommerce\Api\v3\Model\OptionConfig',
         'option_values' => '\BigCommerce\Api\v3\Model\ModifierValue[]',
         'display_name' => 'string'
@@ -60,6 +61,7 @@ class ModifierPost extends ModifierBase implements ArrayAccess
     protected static $attributeMap = [
         'type' => 'type',
         'required' => 'required',
+        'sort_order' => 'sort_order',
         'config' => 'config',
         'option_values' => 'option_values',
         'display_name' => 'display_name'
@@ -72,6 +74,7 @@ class ModifierPost extends ModifierBase implements ArrayAccess
     protected static $setters = [
         'type' => 'setType',
         'required' => 'setRequired',
+        'sort_order' => 'setSortOrder',
         'config' => 'setConfig',
         'option_values' => 'setOptionValues',
         'display_name' => 'setDisplayName'
@@ -84,6 +87,7 @@ class ModifierPost extends ModifierBase implements ArrayAccess
     protected static $getters = [
         'type' => 'getType',
         'required' => 'getRequired',
+        'sort_order' => 'getSortOrder',
         'config' => 'getConfig',
         'option_values' => 'getOptionValues',
         'display_name' => 'getDisplayName'
@@ -156,6 +160,7 @@ class ModifierPost extends ModifierBase implements ArrayAccess
     {
         $this->container['type'] = array_key_exists('type', $data) ? $data['type'] : null;
         $this->container['required'] = array_key_exists('required', $data) ? $data['required'] : null;
+        $this->container['sort_order'] = array_key_exists('sort_order', $data) ? $data['sort_order'] : null;
         $this->container['config'] = array_key_exists('config', $data) ? $data['config'] : null;
         $this->container['option_values'] = array_key_exists('option_values', $data) ? $data['option_values'] : null;
         $this->container['display_name'] = array_key_exists('display_name', $data) ? $data['display_name'] : null;
@@ -243,6 +248,27 @@ class ModifierPost extends ModifierBase implements ArrayAccess
     public function setRequired($required)
     {
         $this->container['required'] = $required;
+
+        return $this;
+    }
+
+    /**
+     * Gets sort_order
+     * @return int
+     */
+    public function getSortOrder()
+    {
+        return $this->container['sort_order'];
+    }
+
+    /**
+     * Sets sort_order
+     * @param int $sort_order The order the modifiers display on the product detail page.
+     * @return $this
+     */
+    public function setSortOrder($sort_order)
+    {
+        $this->container['sort_order'] = $sort_order;
 
         return $this;
     }
