@@ -4,6 +4,8 @@
 namespace BigCommerce\Api;
 
 
+use BigCommerce\Api\v3\ObjectSerializer;
+
 /**
  * Class Caching_Client
  *
@@ -134,7 +136,7 @@ class Caching_Client extends Base_Client {
 		$args       = [
 			'method'       => $method,
 			'queryParams'  => $queryParams,
-			'postData'     => $postData,
+			'postData'     => ObjectSerializer::sanitizeForSerialization( $postData ),
 			'headerParams' => $headerParams,
 			'responseType' => $responseType,
 		];
