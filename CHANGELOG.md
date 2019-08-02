@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.4.1]
+
+### Fixed
+
+- The Pricing API request cache did not properly differentiate based on
+  request parameters, sometimes leading to incorrect prices displaying.
+
 ## [3.4.0]
 
 ### Added
@@ -760,7 +767,8 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
-[3.3.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.3.0...3.4.0
+[3.4.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.4.0...3.4.1
+[3.4.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.3.0...3.4.0
 [3.3.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.2.0...3.3.0
 [3.2.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.1.0...3.2.0
 [3.1.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.0.2...3.1.0
