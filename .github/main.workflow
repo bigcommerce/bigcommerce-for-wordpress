@@ -9,9 +9,13 @@ action "tag" {
 }
 
 action "WordPress Plugin Deploy" {
-  uses = "becomevocal/actions-wordpress/dotorg-plugin-deploy@master"
+  uses = "10up/actions-wordpress/dotorg-plugin-deploy@master"
   needs = ["tag"]
-  secrets = ["SVN_USERNAME", "SVN_PASSWORD"]
+  secrets = [
+    "SVN_USERNAME",
+    "SVN_PASSWORD",
+    "GITHUB_TOKEN",
+  ]
   env = {
     SLUG = "bigcommerce"
   }
