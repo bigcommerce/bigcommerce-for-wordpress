@@ -251,15 +251,15 @@ class Customer {
 	 * Value will be fetched from cache if available,
 	 * otherwise from the API.
 	 *
-	 * @return int
+	 * @return int|null
 	 */
 	public function get_group_id() {
-		$customer_id = get_user_option( self::CUSTOMER_ID_META, $this->wp_user_id );
+		$customer_id = is_user_logged_in() ? get_user_option( self::CUSTOMER_ID_META, $this->wp_user_id ) : 0;
 		if ( ! $customer_id ) {
 			/**
 			 * This filter is documented in src/BigCommerce/Accounts/Customer.php
 			 */
-			return apply_filters( 'bigcommerce/customer/group_id', 0, $this );
+			return apply_filters( 'bigcommerce/customer/group_id', null, $this );
 		}
 		$transient_key = sprintf( 'bccustomergroup%d', $customer_id );
 		$group_id      = get_transient( $transient_key );
@@ -283,7 +283,7 @@ class Customer {
 		/**
 		 * Filter the group ID associated with the customer
 		 *
-		 * @param int      $group_id The customer's group ID
+		 * @param int|null $group_id The customer's group ID. Null for guest users.
 		 * @param Customer $customer The Customer object
 		 */
 		$group_id = apply_filters( 'bigcommerce/customer/group_id', $group_id, $this );

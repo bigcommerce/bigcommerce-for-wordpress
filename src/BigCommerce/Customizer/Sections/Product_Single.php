@@ -8,8 +8,10 @@ use BigCommerce\Customizer\Panels;
 class Product_Single {
 	const NAME = 'bigcommerce_product_single';
 
-	const RELATED_COUNT = 'bigcommerce_max_related_products';
-	const DEFAULT_IMAGE = 'bigcommerce_default_image_id';
+	const RELATED_COUNT     = 'bigcommerce_max_related_products';
+	const DEFAULT_IMAGE     = 'bigcommerce_default_image_id';
+	const PRICE_DISPLAY     = 'bigcommerce_default_price_display';
+	const INVENTORY_DISPLAY = 'bigcommerce_inventory_display';
 
 	/**
 	 * @param \WP_Customize_Manager $wp_customize
@@ -24,6 +26,8 @@ class Product_Single {
 
 		$this->related( $wp_customize );
 		$this->image( $wp_customize );
+		$this->pricing( $wp_customize );
+		$this->inventory( $wp_customize );
 	}
 
 	private function related( \WP_Customize_Manager $wp_customize ) {
@@ -61,5 +65,40 @@ class Product_Single {
 			'label'     => __( 'Default Product Image', 'bigcommerce' ),
 			'mime_type' => 'image',
 		] ) );
+	}
+
+	private function pricing( \WP_Customize_Manager $wp_customize ) {
+		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::PRICE_DISPLAY, [
+			'type'      => 'option',
+			'default'   => 'yes',
+			'transport' => 'refresh',
+		] ) );
+		$wp_customize->add_control( self::PRICE_DISPLAY, [
+			'section'    => self::NAME,
+			'type'       => 'radio',
+			'label'      => __( 'Price display', 'bigcommerce' ),
+			'choices'    => [
+				'yes' => __( 'Show default price', 'bigcommerce' ),
+				'no'  => __( 'Hide default price', 'bigcommerce' ),
+			],
+			'description' => __( 'Control how default prices display while waiting for Pricing API responses', 'bigcommerce' ),
+		] );
+	}
+
+	private function inventory( \WP_Customize_Manager $wp_customize ) {
+		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::INVENTORY_DISPLAY, [
+			'type'      => 'option',
+			'default'   => 'no',
+			'transport' => 'refresh',
+		] ) );
+		$wp_customize->add_control( self::INVENTORY_DISPLAY, [
+			'section' => self::NAME,
+			'type'    => 'radio',
+			'label'   => __( 'Inventory display', 'bigcommerce' ),
+			'choices' => [
+				'yes' => __( 'Always show inventory', 'bigcommerce' ),
+				'no'  => __( 'Only show low inventory', 'bigcommerce' ),
+			],
+		] );
 	}
 }

@@ -6,8 +6,8 @@ namespace BigCommerce\Shortcodes;
 
 use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api\v3\Api\CartApi;
-use BigCommerce\Cart\Add_To_Cart;
 use BigCommerce\Cart\Cart_Mapper;
+use BigCommerce\Settings;
 use BigCommerce\Templates;
 
 class Cart implements Shortcode {
@@ -22,7 +22,7 @@ class Cart implements Shortcode {
 	}
 
 	public function render( $attr, $instance ) {
-		if ( ( (bool) get_option( \BigCommerce\Settings\Sections\Cart::OPTION_ENABLE_CART, true ) ) == false ) {
+		if ( ( (bool) get_option( Settings\Sections\Cart::OPTION_ENABLE_CART, true ) ) == false ) {
 			return ''; // render nothing if the cart is disabled
 		}
 
@@ -65,7 +65,8 @@ class Cart implements Shortcode {
 	}
 
 	private function get_cart_id() {
-		return isset( $_COOKIE[ Add_To_Cart::CART_COOKIE ] ) ? $_COOKIE[ Add_To_Cart::CART_COOKIE ] : '';
+		$cart = new \BigCommerce\Cart\Cart( $this->cart_api );
+		return $cart->get_cart_id();
 	}
 
 	private function get_empty_cart() {

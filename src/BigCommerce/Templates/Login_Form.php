@@ -69,6 +69,7 @@ class Login_Form extends Controller {
 				] );
 
 				return $message->render();
+			case 'invalid_username':
 			case 'invalid_email':
 			case 'incorrect_password':
 				$message = Message::factory( [

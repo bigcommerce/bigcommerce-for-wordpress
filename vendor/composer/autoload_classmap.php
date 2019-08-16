@@ -725,6 +725,7 @@ return array(
     'BigCommerce\\Templates\\Wishlist_Not_Available' => $baseDir . '/src/BigCommerce/Templates/Wishlist_Not_Available.php',
     'BigCommerce\\Templates\\Wishlist_Product' => $baseDir . '/src/BigCommerce/Templates/Wishlist_Product.php',
     'BigCommerce\\Util\\Cart_Item_Iterator' => $baseDir . '/src/BigCommerce/Util/Cart_Item_Iterator.php',
+    'BigCommerce\\Webhooks\\Checkout_Complete_Webhook' => $baseDir . '/src/BigCommerce/Webhooks/Checkout_Complete_Webhook.php',
     'BigCommerce\\Webhooks\\Product_Inventory_Update_Webhook' => $baseDir . '/src/BigCommerce/Webhooks/Product_Inventory_Update_Webhook.php',
     'BigCommerce\\Webhooks\\Product_Update_Webhook' => $baseDir . '/src/BigCommerce/Webhooks/Product_Update_Webhook.php',
     'BigCommerce\\Webhooks\\Product_Updater' => $baseDir . '/src/BigCommerce/Webhooks/Product_Updater.php',

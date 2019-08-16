@@ -84,11 +84,9 @@ class Refinery extends Controller {
 		}
 
 		/**
-		 * Filter the default sort order for products
-		 *
-		 * @param string $sort The sorting method to use
+		 * This filter is documents in src/BigCommerce/Post_Types/Product/Query.php
 		 */
-		$default_sort = apply_filters( 'bigcommerce/template/product/archive/default_sort', Customizer\Sections\Product_Archive::SORT_TITLE_ASC );
+		$default_sort = apply_filters( 'bigcommerce/query/default_sort', Customizer\Sections\Product_Archive::SORT_FEATURED );
 		if ( array_key_exists( 'bc-sort', $_GET ) && array_key_exists( $_GET['bc-sort'], $choices ) ) {
 			$sort = $_GET['bc-sort'];
 		} else {

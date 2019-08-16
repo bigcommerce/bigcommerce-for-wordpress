@@ -31,6 +31,15 @@
 
 	.bc-price-is-loading & {
 		opacity: 0.2;
+
+		&.bc-product__pricing--hidden {
+			position: relative;
+			width: auto;
+			height: auto;
+			visibility: hidden;
+			opacity: 0;
+			order: 2;
+		}
 	}
 }
 

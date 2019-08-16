@@ -36,11 +36,17 @@ class Cart {
 	 * @return string
 	 */
 	public function get_cart_id() {
-		if ( get_option( Settings\Sections\Cart::OPTION_ENABLE_CART, true ) ) {
-			return isset( $_COOKIE[ self::CART_COOKIE ] ) ? $_COOKIE[ self::CART_COOKIE ] : '';
-		} else {
-			return false;
+		$cart_id = '';
+		if ( isset( $_COOKIE[ self::CART_COOKIE ] ) && get_option( Settings\Sections\Cart::OPTION_ENABLE_CART, true ) ) {
+			$cart_id = $_COOKIE[ self::CART_COOKIE ];
 		}
+
+		/**
+		 * Filter the cart ID to use for the current request
+		 *
+		 * @param string $cart_id
+		 */
+		return apply_filters( 'bigcommerce/cart/cart_id', $cart_id );
 	}
 
 	/**
@@ -76,10 +82,12 @@ class Cart {
 		$option_selections = [];
 
 		foreach ( $options as $option_key => $option_value ) {
-			$option_selections[] = new ProductOptionSelection( [
-				'option_id'    => $option_key,
-				'option_value' => $option_value,
-			] );
+			if ( $option_value !== 0 ) {
+				$option_selections[] = new ProductOptionSelection( [
+					'option_id'    => $option_key,
+					'option_value' => $option_value,
+				] );
+			}
 		}
 
 		/*

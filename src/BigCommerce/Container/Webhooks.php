@@ -7,6 +7,7 @@
 
 namespace BigCommerce\Container;
 
+use BigCommerce\Webhooks\Checkout_Complete_Webhook;
 use BigCommerce\Webhooks\Product_Inventory_Update_Webhook;
 use BigCommerce\Webhooks\Product_Update_Webhook;
 use BigCommerce\Webhooks\Product_Updater;
@@ -25,6 +26,7 @@ class Webhooks extends Provider {
 	const PRODUCT_UPDATE_WEBHOOK           = 'webhooks.product_update_webhook';
 	const PRODUCT_INVENTORY_UPDATE_WEBHOOK = 'webhooks.inventory_update_webhook';
 	const PRODUCT_UPDATER                  = 'webhooks.cron.product_updater';
+	const CHECKOUT_COMPLETE_WEBHOOK        = 'webhooks.checkout_complete';
 	const WEBHOOKS_VERSIONING              = 'webhooks.version';
 	const WEBHOOKS_CRON_TASKS              = 'webhooks.cron_tasks';
 
@@ -49,6 +51,7 @@ class Webhooks extends Provider {
 			$webhooks = [
 				$container[ self::PRODUCT_UPDATE_WEBHOOK ],
 				$container[ self::PRODUCT_INVENTORY_UPDATE_WEBHOOK ],
+				$container[ self::CHECKOUT_COMPLETE_WEBHOOK ],
 			];
 
 			/**
@@ -65,6 +68,10 @@ class Webhooks extends Provider {
 
 		$container[ self::PRODUCT_INVENTORY_UPDATE_WEBHOOK ] = function ( Container $container ) {
 			return new Product_Inventory_Update_Webhook( $container[ Api::FACTORY ]->webhooks() );
+		};
+
+		$container[ self::CHECKOUT_COMPLETE_WEBHOOK ] = function ( Container $container ) {
+			return new Checkout_Complete_Webhook( $container[ Api::FACTORY ]->webhooks() );
 		};
 	}
 

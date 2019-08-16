@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit7524f62004e50a2525c6ace13513628d
+class ComposerStaticInit4aeaa1b4a1ad19d6e66f56b84a2d4a9f
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -808,6 +808,7 @@ class ComposerStaticInit7524f62004e50a2525c6ace13513628d
         'BigCommerce\\Templates\\Wishlist_Not_Available' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Wishlist_Not_Available.php',
         'BigCommerce\\Templates\\Wishlist_Product' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Wishlist_Product.php',
         'BigCommerce\\Util\\Cart_Item_Iterator' => __DIR__ . '/../..' . '/src/BigCommerce/Util/Cart_Item_Iterator.php',
+        'BigCommerce\\Webhooks\\Checkout_Complete_Webhook' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Checkout_Complete_Webhook.php',
         'BigCommerce\\Webhooks\\Product_Inventory_Update_Webhook' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Product_Inventory_Update_Webhook.php',
         'BigCommerce\\Webhooks\\Product_Update_Webhook' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Product_Update_Webhook.php',
         'BigCommerce\\Webhooks\\Product_Updater' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Product_Updater.php',
@@ -1024,10 +1025,10 @@ class ComposerStaticInit7524f62004e50a2525c6ace13513628d
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit7524f62004e50a2525c6ace13513628d::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit7524f62004e50a2525c6ace13513628d::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit7524f62004e50a2525c6ace13513628d::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit7524f62004e50a2525c6ace13513628d::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit4aeaa1b4a1ad19d6e66f56b84a2d4a9f::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit4aeaa1b4a1ad19d6e66f56b84a2d4a9f::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit4aeaa1b4a1ad19d6e66f56b84a2d4a9f::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit4aeaa1b4a1ad19d6e66f56b84a2d4a9f::$classMap;
 
         }, null, ClassLoader::class);
     }
