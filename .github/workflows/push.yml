@@ -1,0 +1,18 @@
+on: push
+name: Deploy
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: tag
+      uses: actions/bin/filter@master
+      with:
+        args: tag
+    - name: WordPress Plugin Deploy
+      uses: 10up/actions-wordpress/dotorg-plugin-deploy@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SLUG: bigcommerce
+        SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+        SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
