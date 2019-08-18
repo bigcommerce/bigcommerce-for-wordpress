@@ -66,6 +66,7 @@ class Product_Builder extends Record_Builder {
 			'post_name'    => $this->get_post_slug(),
 			'post_date'    => get_date_from_gmt( $created->format( 'Y-m-d H:i:s' ) ),
 			'post_status'  => $this->get_post_status(),
+			'menu_order'   => $this->get_menu_order(),
 		];
 
 		return $data;
@@ -131,6 +132,22 @@ class Product_Builder extends Record_Builder {
 			default:
 				return 'draft';
 		}
+	}
+
+	private function get_menu_order() {
+		$sort_order = $this->sanitize_int( $this->product['sort_order'] );
+		if ( $sort_order === 0 ) {
+			$sort_order = 10;
+		}
+
+		/**
+		 * Filter the menu order assigned to the product, based on the
+		 * source product's sort_order property.
+		 *
+		 * @param int           $menu_order The menu order to assign
+		 * @param Model\Product $product    The source product
+		 */
+		return apply_filters( 'bigcommerce/import/product/menu_order', $sort_order, $this->product );
 	}
 
 	public function build_product_array() {
@@ -207,6 +224,9 @@ class Product_Builder extends Record_Builder {
 	 * @return array
 	 */
 	public function build_images( $parent_id ) {
+		/** @var \wpdb $wpdb */
+		global $wpdb;
+
 		$response = [
 			'thumbnail' => 0,
 			'gallery'   => [],
@@ -249,6 +269,12 @@ class Product_Builder extends Record_Builder {
 			}
 			if ( ! empty( $post_id ) ) {
 				update_post_meta( $post_id, 'bigcommerce_id', $image[ 'id' ] );
+				foreach ( [ 'url_zoom', 'url_standard', 'url_thumbnail', 'url_tiny' ] as $key ) {
+					$derivative_url = $image[ $key ];
+					if ( $derivative_url ) {
+						update_post_meta( $post_id, $key, $derivative_url );
+					}
+				}
 				$response[ 'gallery' ][] = $post_id;
 				if ( $image[ 'is_thumbnail' ] ) {
 					$response[ 'thumbnail' ] = $post_id;
@@ -260,26 +286,21 @@ class Product_Builder extends Record_Builder {
 		foreach ( $variants as $var ) {
 			$image_url = $var->getImageUrl();
 			if ( $image_url ) {
-				$existing = get_posts( [
-					'post_type'      => 'attachment',
-					'meta_query'     => [
-						[
-							'key'     => Image_Importer::SOURCE_URL,
-							'value'   => $image_url,
-							'compare' => '=',
-						],
-					],
-					'fields'         => 'ids',
-					'posts_per_page' => 1,
-				] );
+				$existing = $wpdb->get_var( $wpdb->prepare(
+					"SELECT p.ID FROM {$wpdb->posts} p
+					 INNER JOIN {$wpdb->postmeta} m ON p.ID=m.post_id
+					 WHERE p.post_type='attachment'
+					   AND m.meta_key IN ( 'bigcommerce_source_url', 'url_zoom', 'url_standard', 'url_thumbnail', 'url_tiny' )
+					   AND m.meta_value=%s ORDER BY p.ID ASC LIMIT 1",
+					$image_url
+				) );
 				if ( ! empty( $existing ) ) {
-					$post_id = reset( $existing );
+					$post_id = (int) $existing;
 				} else {
 					$importer = new Image_Importer( $image_url, $parent_id );
 					$post_id  = $importer->import();
 				}
 				if ( ! empty( $post_id ) ) {
-					update_post_meta( $post_id, 'bigcommerce_id', $image['id'] );
 					$response['variants'][ $var->getId() ] = $post_id;
 				}
 			}

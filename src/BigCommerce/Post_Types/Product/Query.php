@@ -31,6 +31,16 @@ class Query {
 			}
 		}
 
+		if ( $query->is_archive() && $this->is_product_query( $query ) && ! $query->get( 'bc-sort' ) ) {
+			/**
+			 * Filter the default sort order for product archives.
+			 *
+			 * @param string $sort The sorting method to use
+			 */
+			$default_sort = apply_filters( 'bigcommerce/query/default_sort', Product_Archive::SORT_FEATURED );
+			$query->set( 'bc-sort', $default_sort );
+		}
+
 		if ( $query->get( 'bc-sort' ) && $this->is_product_query( $query ) ) {
 			switch ( $query->get( 'bc-sort' ) ) {
 				case Product_Archive::SORT_TITLE_ASC:
@@ -69,9 +79,12 @@ class Query {
 						if ( $wp_query !== $query ) {
 							return $orderby;
 						}
-						$feature_sort = " bcfeatured DESC ";
-						if ( trim( $orderby ) == '' ) {
-							return $feature_sort;
+						/** @var \wpdb $wpdb */
+						global $wpdb;
+						$feature_sort = " bcfeatured DESC, {$wpdb->posts}.menu_order ASC ";
+						$trimmed = trim( $orderby );
+						if ( $trimmed === '' || $trimmed === "{$wpdb->posts}.post_title ASC" ) {
+							return $feature_sort . ", {$wpdb->posts}.post_date DESC, {$wpdb->posts}.post_title ASC ";
 						} else {
 							return $feature_sort . ', ' . $orderby;
 						}

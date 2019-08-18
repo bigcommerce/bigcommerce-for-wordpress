@@ -20,6 +20,7 @@ const state = {
 	optionTrigger: '',
 	isQuickView: false,
 	delay: 250,
+	req: null,
 	products: {
 		items: [],
 	},
@@ -123,7 +124,8 @@ const buildPricingObject = (priceContainer) => {
 
 /**
  * @function showCachedPricing
- * @description Show the cached pricing nodes if the API is down, errors out, or the API pricing nodes are overwritten or missing.
+ * @description Show the cached pricing nodes if the API is down, errors out, or the API pricing nodes are overwritten
+ *     or missing.
  * @param products
  */
 const showCachedPricing = (products = []) => {
@@ -150,7 +152,8 @@ const showCachedPricing = (products = []) => {
 
 /**
  * @function filterAPIPricingData
- * @description Depending on the display_type of the item data, update the applicable price nodes with the new pricing data.
+ * @description Depending on the display_type of the item data, update the applicable price nodes with the new pricing
+ *     data.
  * @param type
  * @param APIPricingNode
  * @param data
@@ -244,43 +247,33 @@ const handleAPIPricingData = (data = {}) => {
 };
 
 /**
- * @function handleOptionFieldsDuringSubmit
- * @description Enable or disable option fields that trigger an API request. Based on state.isFetching.
- * @param target
- */
-const handleOptionFieldsDuringSubmit = (target) => {
-	if (!target) {
-		return;
-	}
-
-	const form = tools.closest(target, 'form');
-	tools.getNodes('bc-product-option-field', true, form).forEach((field) => {
-		if (state.isFetching) {
-			field.setAttribute('disabled', 'disabled');
-		} else {
-			field.removeAttribute('disabled');
-		}
-	});
-};
-
-/**
  * @function submitAPIRequest
  * @description Submit the items saved in the state object to the API endpoint for current pricing data.
  */
-const submitAPIRequest = () => {
+const submitAPIRequest = (instance = {}) => {
+	if (state.products.items.length < 1) {
+		return;
+	}
+
+	if (instance.req) {
+		instance.req.abort();
+		instance.req = null;
+	}
+
 	state.isFetching = true;
 
-	wpAPIProductPricing(PRICING_API_URL, PRICING_API_NONCE, JSON.stringify(state.products))
-		.then((res) => {
+	instance.req = wpAPIProductPricing(PRICING_API_URL, PRICING_API_NONCE, JSON.stringify(state.products))
+		.end((err, res) => {
 			state.isFetching = false;
+			state.req = null;
+
+			if (err) {
+				console.error(err);
+				showCachedPricing(state.products);
+				return;
+			}
+
 			_.delay(() => handleAPIPricingData(res.body), state.delay);
-			handleOptionFieldsDuringSubmit(state.optionTrigger);
-		})
-		.catch((err) => {
-			state.isFetching = false;
-			console.error(err);
-			showCachedPricing(state.products);
-			handleOptionFieldsDuringSubmit(state.optionTrigger);
 		});
 };
 
@@ -298,10 +291,9 @@ const handleOptionChanges = (e) => {
 	state.products.items = [];
 	state.isFetching = true;
 	state.optionTrigger = e.target;
-	handleOptionFieldsDuringSubmit(state.optionTrigger);
 	buildPricingObject(priceContainer);
 	maybePriceIsLoading(priceWrapper);
-	submitAPIRequest();
+	submitAPIRequest(state);
 };
 
 /**
@@ -322,16 +314,37 @@ const initOptionClicks = (pricingContainer = '') => {
 	const checkboxes = tools.getNodes('[data-js="product-form-option"] input[type=checkbox]', true, options, true);
 
 	if (radios.length > 0) {
-		delegate(options, '[data-js="product-form-option"] input[type=radio]', 'click', _.debounce(handleOptionChanges, 1000));
+		delegate(options, '[data-js="product-form-option"] input[type=radio]', 'click', handleOptionChanges);
 	}
 
 	if (selects.length > 0) {
-		delegate(options, '[data-js="product-form-option"] select', 'change', _.debounce(handleOptionChanges, 1000));
+		delegate(options, '[data-js="product-form-option"] select', 'change', handleOptionChanges);
 	}
 
 	if (checkboxes.length > 0) {
-		delegate(options, '[data-js="product-form-option"] input[type=checkbox]', 'click', _.debounce(handleOptionChanges, 1000));
+		delegate(options, '[data-js="product-form-option"] input[type=checkbox]', 'click', handleOptionChanges);
 	}
+};
+
+/**
+ * @function isPreinitialized
+ * @description determines if a pricing node is eligible for preinitialization
+ * @param pricingContainer
+ */
+const isPreinitialized = (pricingContainer) => {
+	if (!tools.hasClass(pricingContainer, 'preinitialized')) {
+		return false; // not preinitialized
+	}
+
+	const dataWrapper = tools.closest(pricingContainer, '[data-js="bc-product-data-wrapper"]');
+	if (!dataWrapper) {
+		return true; // no product options that might affect preinitialized pricing
+	}
+
+	const optionsContainer = tools.getNodes('product-options', false, dataWrapper)[0];
+	const options = getSelectedOptions(optionsContainer);
+
+	return options.length < 1; // no options selected = OK to use preinitialized value
 };
 
 /**
@@ -343,16 +356,21 @@ const initPricing = (e) => {
 	state.products.items = []; // Reset the items array to be submitted to the API endpoint.
 	// Get all nodes that are not initialized and prepare them for the type of data they need to receive.
 	state.isFetching = true;
+
 	tools.getNodes('[data-js="bc-product-pricing"]:not(.initialized)', true, document, true).forEach((pricingContainer) => {
 		const pricingAPINode = tools.getNodes('bc-api-product-pricing', false, pricingContainer)[0];
 
 		tools.addClass(pricingContainer, 'initialized');
-		buildPricingObject(pricingAPINode);
-		maybePriceIsLoading(pricingContainer);
+		// If this node is not preinitialized, it is safe to push to the state.items array and apply the price loading class.
+		if (!isPreinitialized(pricingContainer)) {
+			buildPricingObject(pricingAPINode);
+			maybePriceIsLoading(pricingContainer);
+		}
 		initOptionClicks(pricingContainer);
 	});
 
 	state.isQuickView = e ? e.detail.quickView : false;
+
 	// After looping through all the available nodes, run an API request.
 	submitAPIRequest();
 };

@@ -1,5 +1,85 @@
 # Changelog
 
+## [3.5.0]
+
+### Added
+
+- Product pick lists will include a "None" option if that modifier field
+  is not required. 
+- Added filters to modify the price range and calculated price range of
+  a product. `bigcommerce/product/price_range/data` affects the data
+  that feeds both. The formatted output can be modified with the filters
+  `bigcommerce/product/price_range/formatted` and
+  `bigcommerce/product/calculated_price_range/formatted`
+- Added hooks to the initialization of the product importer. Use
+  `bigcommerce/import/task_list` to modify the list of tasks for the import.
+  Use `bigcommerce/import/task_manager/init` to perform additional setup
+  actions on the task manager (e.g., register more tasks).
+- Added a control to the theme customizer to toggle display of product
+  inventory. Inventory can be shown for all products that track inventory,
+  or only for products with low inventory. Inventory display is filterable
+  per product using the hook `bigcommerce/product/inventory/should_display`.
+- Added a webhook to listen for completed checkouts. The webhook will trigger
+  the action `bigcommerce/webhooks/checkout_complete`.
+- Added support for a omitting products from initial Pricing API calls if they have
+  a `.preinitialized` class added to the pricing DOM node. This will allow 3rd 
+  party plugins/themes to add this CSS class based on their needs/conditions.  
+- Added a toggle in the theme customizer to control display of default
+  pricing while waiting for Pricing API responses.
+
+### Fixed
+
+- Fixed the destination URLs for webhooks, which were missing a path component.
+- Fixed display of error messaging when attempting to log in with an
+  invalid user name.
+- When running in multi-channel mode, removing a product from one channel
+  could remove its images that were shared with the same product in another
+  channel. The images will now stay in place and have their parent post
+  adjusted to the surviving product.
+
+### Changed
+
+- The template `components/products/product-price.php` has two new variables
+  available: `$price_range` and `$calculated_price_range`. This allows
+  filtering of those values beyond what was previously possible. Existing
+  templates will continue to work with values pulled from the product
+  on render.
+- The template `components/products/product-price.php` has a new variable,
+  `$visible`, to use in place of the `bc-product__pricing--visible` class.
+  This controls whether default pricing can be displayed.
+- Default sorting of the Product post type archive and taxonomy archives
+  has been changed from "Title A-Z" to "Featured". This can be changed using
+  the `bigcommerce/query/default_sort` filter.
+- "Featured" sorting now considers the Product's sort order, as set in the
+  BigCommerce admin. Featured items will appear first, followed by all other
+  items sorted by sort order. If the sort order for a product is not set,
+  it is treated as a `10`.
+- The template `components/products/inventory-level.php` has two new variables
+  available: `$status` and `$label`. This simplifies the template, while
+  enabling additional filtering of the values. Existing templates overrides
+  will continue to work with values pulled from the product on render.
+- If embedded checkout is disabled, the current customer's cart count
+  will not display on the cart menu item. The behavior is filterable with
+  the `bigcommerce/cart/menu/show_count` hook.
+- Pricing API requests for unauthenticated users will use `null` as the
+  customer group ID, which uses the default guest group, instead of `0`,
+  which uses no group.
+- When selecting options and modifiers for a product, we're no longer debouncing
+  the clicks and then disabling the fields while a Pricing API call is made.
+  Fields remain enabled, and changes will cause previous Pricing API 
+  calls that might be pending to abort. 
+  
+## Deprecated
+
+- The unused constants `\BigCommerce\Cart\Add_To_Cart::CART_COOKIE` and
+  `\BigCommerce\Cart\Add_To_Cart::COUNT_COOKIE` are deprecated and will
+  be removed in a future version. 
+  
+### Removed
+
+- The filter `bigcommerce/template/product/archive/default_sort` has been removed.
+  Use `bigcommerce/query/default_sort` instead.
+
 ## [3.4.1]
 
 ### Fixed
@@ -767,6 +847,7 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[3.5.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.4.1...3.5.0
 [3.4.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.4.0...3.4.1
 [3.4.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.3.0...3.4.0
 [3.3.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.2.0...3.3.0

@@ -108,9 +108,15 @@ class Product {
 
 	public function price_range() {
 		$original_price = $this->get_property( 'price' );
-		$prices         = get_post_meta( $this->post_id, self::PRICE_RANGE_META_KEY, true );
-		$low            = isset( $prices['price']['min'] ) ? $prices['price']['min'] : 0;
-		$high           = isset( $prices['price']['max'] ) ? $prices['price']['max'] : 0;
+		/**
+		 * Filter the price range data for a product
+		 *
+		 * @param array   $prices  The price range meta for the product
+		 * @param Product $product The product object
+		 */
+		$prices = apply_filters( 'bigcommerce/product/price_range/data', get_post_meta( $this->post_id, self::PRICE_RANGE_META_KEY, true ), $this );
+		$low    = isset( $prices['price']['min'] ) ? $prices['price']['min'] : 0;
+		$high   = isset( $prices['price']['max'] ) ? $prices['price']['max'] : 0;
 
 		if ( $original_price && $original_price < $low ) {
 			$low = $original_price;
@@ -119,25 +125,46 @@ class Product {
 			$high = $original_price;
 		}
 		if ( $low == $high ) {
-			return $this->format_currency( $low, __( 'Free', 'bigcommerce' ) );
+			$range = $this->format_currency( $low, __( 'Free', 'bigcommerce' ) );
+		} else {
+			$range = sprintf( _x( '%s - %s', 'price range low to high', 'bigcommerce' ), $this->format_currency( $low, __( 'Free', 'bigcommerce' ) ), $this->format_currency( $high, __( 'Free', 'bigcommerce' ) ) );
 		}
 
-		return sprintf( _x( '%s - %s', 'price range low to high', 'bigcommerce' ), $this->format_currency( $low, __( 'Free', 'bigcommerce' ) ), $this->format_currency( $high, __( 'Free', 'bigcommerce' ) ) );
+		/**
+		 * Filter the formatted price range for a product
+		 *
+		 * @param string  $range   The formatted price range
+		 * @param Product $product The product object
+		 * @param array   $prices  The price range meta for the product
+		 */
+		return apply_filters( 'bigcommerce/product/price_range/formatted', $range, $this, $prices );
 	}
 
 	public function calculated_price_range() {
 		if ( has_term( Flag::HIDE_PRICE, Flag::NAME, $this->post_id ) ) {
 			return '';
 		}
-		$prices = get_post_meta( $this->post_id, self::PRICE_RANGE_META_KEY, true );
+		/**
+		 * This filter is documented in src/BigCommerce/Post_Types/Product/Product.php
+		 */
+		$prices = apply_filters( 'bigcommerce/product/price_range/data', get_post_meta( $this->post_id, self::PRICE_RANGE_META_KEY, true ), $this );
 		$low    = isset( $prices['calculated']['min'] ) ? $prices['calculated']['min'] : 0;
 		$high   = isset( $prices['calculated']['max'] ) ? $prices['calculated']['max'] : 0;
 
 		if ( $low == $high ) {
-			return $this->format_currency( $low, __( 'Free', 'bigcommerce' ) );
+			$range = $this->format_currency( $low, __( 'Free', 'bigcommerce' ) );
+		} else {
+			$range = sprintf( _x( '%s - %s', 'price range low to high', 'bigcommerce' ), $this->format_currency( $low, __( 'Free', 'bigcommerce' ) ), $this->format_currency( $high, __( 'Free', 'bigcommerce' ) ) );
 		}
 
-		return sprintf( _x( '%s - %s', 'price range low to high', 'bigcommerce' ), $this->format_currency( $low, __( 'Free', 'bigcommerce' ) ), $this->format_currency( $high, __( 'Free', 'bigcommerce' ) ) );
+		/**
+		 * Filter the formatted calculated price range for a product
+		 *
+		 * @param string  $range   The formatted price range
+		 * @param Product $product The product object
+		 * @param array   $prices  The price range meta for the product
+		 */
+		return apply_filters( 'bigcommerce/product/calculated_price_range/formatted', $range, $this, $prices );
 	}
 
 	public function options() {

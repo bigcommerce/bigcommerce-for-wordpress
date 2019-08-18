@@ -73,7 +73,7 @@ abstract class Webhook {
 		$args = [
 			'headers'     => [ self::AUTH_HEADER => $password ],
 			'scope'       => static::SCOPE,
-			'destination' => sprintf( '%s/bigcommerce/%s', home_url(), static::NAME ),
+			'destination' => sprintf( '%s/bigcommerce/webhook/%s', home_url(), static::NAME ),
 			'is_active'   => true,
 		];
 
@@ -130,7 +130,7 @@ abstract class Webhook {
 	 */
 	public function delete( $webhook_id ) {
 		// deleteWebhook returns the deleted webhook on success.
-		$result = $this->api_client->deleteWebhook( $webhook_id );
+		$result = (array) $this->api_client->deleteWebhook( $webhook_id );
 
 		if ( empty( $result[ 'id' ] ) ) {
 			do_action( 'bigcommerce/webhooks/delete_failed', $this, $result );

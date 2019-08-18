@@ -4,7 +4,7 @@ namespace BigCommerce\Webhooks;
 
 
 class Webhook_Versioning {
-	const VERSION = 1;
+	const VERSION = 2;
 
 	/**
 	 * @var Webhook[]

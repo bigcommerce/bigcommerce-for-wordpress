@@ -241,7 +241,12 @@ class Import extends Provider {
 				$container[ self::CLEANUP ]->run();
 			} ), 100, Runner\Status::COMPLETED, [ Runner\Status::CLEANING ], __( 'Wrapping up', 'bigcommerce' ) );
 
-			return $list;
+			/**
+			 * Filter the tasks that will be registered for the product import
+			 *
+			 * @param Task_Definition[] $list The list of tasks to register
+			 */
+			return apply_filters( 'bigcommerce/import/task_list', $list );
 		};
 
 		$container[ self::TASK_MANAGER ] = function ( Container $container ) {
@@ -250,6 +255,13 @@ class Import extends Provider {
 			foreach ( $container[ self::TASK_LIST ] as $task ) {
 				$manager->register( $task );
 			}
+
+			/**
+			 * Triggered when the task manager for the import has finished initializing
+			 *
+			 * @param Task_Manager $manager The task manager object
+			 */
+			do_action( 'bigcommerce/import/task_manager/init', $manager );
 
 			return $manager;
 		};

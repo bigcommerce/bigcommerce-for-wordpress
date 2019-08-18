@@ -10,7 +10,6 @@ class Product_Remover {
 
 	public function remove_by_post_id( $post_id ) {
 		if ( ! empty( $post_id ) ) {
-			$this->remove_images( $post_id );
 			$this->remove_post( $post_id );
 		}
 	}
@@ -48,24 +47,6 @@ class Product_Remover {
 		}
 
 		return absint( reset( $posts ) );
-	}
-
-	private function remove_images( $post_id ) {
-		$image_ids = get_posts( [
-			'post_type'   => 'attachment',
-			'post_parent' => $post_id,
-			'meta_query'  => [
-				[
-					'key'     => 'bigcommerce_id',
-					'compare' => '>',
-					'value'   => 0,
-				],
-			],
-			'fields'      => 'ids',
-		] );
-		foreach ( $image_ids as $image ) {
-			wp_delete_attachment( $image, true );
-		}
 	}
 
 	private function remove_post( $post_id ) {

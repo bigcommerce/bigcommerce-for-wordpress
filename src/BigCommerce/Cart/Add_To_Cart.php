@@ -12,8 +12,16 @@ use BigCommerce\Post_Types\Product\Product;
  */
 class Add_To_Cart {
 	const ACTION       = 'cart';
-	const CART_COOKIE  = 'bigcommerce_cart_id';
-	const COUNT_COOKIE = 'bigcommerce_cart_item_count';
+
+	/**
+	 * @deprecated since 3.5.0 Use Cart::CART_COOKIE
+	 */
+	const CART_COOKIE  = Cart::CART_COOKIE;
+
+	/**
+	 * @deprecated since 3.5.0 Use Cart::COUNT_COOKIE
+	 */
+	const COUNT_COOKIE = Cart::COUNT_COOKIE;
 
 	/**
 	 * @param int     $post_id

@@ -66,15 +66,16 @@ class Pricing_Controller extends Rest_Controller {
 		$customer = new Customer( get_current_user_id() );
 
 		/**
-		 * Filter the customer group ID passed to the BigCommerce API
+		 * Filter the customer group ID passed to the BigCommerce API.
+		 * Null to use the default guest group. 0 to use unmodified catalog pricing.
 		 *
-		 * @param int The customer group ID
+		 * @param int|null The customer group ID
 		 */
-		$customer_group = (int) apply_filters( 'bigcommerce/pricing/customer_group_id', $customer->get_group_id() );
+		$customer_group = apply_filters( 'bigcommerce/pricing/customer_group_id', $customer->get_group_id() );
 		$currency_code  = get_option( Currency::CURRENCY_CODE, 'USD' );
 
 		$args = [
-			'items'             => $request->get_param( 'items' ),
+			'items'             => $this->filter_empty_options( $request->get_param( 'items' ) ),
 			'channel_id'        => $this->get_channel_id(),
 			'currency_code'     => $currency_code,
 			'customer_group_id' => $customer_group,
@@ -95,6 +96,24 @@ class Pricing_Controller extends Rest_Controller {
 		} catch ( \Exception $e ) {
 			return new \WP_Error( 'gateway_error', $e->getMessage(), [ 'exception' => $e ] );
 		}
+	}
+
+	private function filter_empty_options( $items ) {
+		$items = array_map( function ( $item ) {
+			if ( empty( $item['options'] ) ) {
+				return $item;
+			}
+			$item['options'] = array_filter( $item['options'], function ( $option ) {
+				return (int) $option['value_id'] !== 0;
+			} );
+			if ( empty( $item['options'] ) ) {
+				unset( $item['options'] );
+			}
+
+			return $item;
+		}, $items );
+
+		return $items;
 	}
 
 	private function get_channel_id() {
