@@ -18,11 +18,11 @@ Built to integrate seamlessly with WordPress, you get access to our native ecomm
 
 = QUICK START! =
 
-Look at details from the latest release, including new features and enhancements here: https://github.com/bigcommerce/bigcommerce-for-wordpress/releases
+Look at details from the latest release, including new features and enhancements here: [https://github.com/bigcommerce/bigcommerce-for-wordpress/releases](https://github.com/bigcommerce/bigcommerce-for-wordpress/releases)
 
-Dive into how you set up and customize your site using BC4WP using our guides here: https://developer.bigcommerce.com/bigcommerce-for-wordpress/getting-started/introduction
+Dive into how you set up and customize your online store with BC4WP using our guides here: [https://developer.bigcommerce.com/bigcommerce-for-wordpress/getting-started/introduction](https://developer.bigcommerce.com/bigcommerce-for-wordpress/getting-started/introduction)
 
-Have a suggestion for how we can be better? Ping the team! wordpress-suggestions@bigcommerce.com
+Have a suggestion for how we can be better? Ping the team! [wordpress-suggestions@bigcommerce.com](mailto:wordpress-suggestions@bigcommerce.com?subject=BC4WP%20Notes)
 
 = DIFFERENT FROM YOUR TRADITIONAL PLUGIN =
 We’ve taken a very different approach to ecommerce in WordPress. We set out to build our plugin the WordPress Way: deliver value to the community, build it with WordPress experts and make something developers can call their own.
