@@ -10,21 +10,19 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Scale your ecommerce business with WordPress on the front-end and BigCommerce on the back end. Free up server resources from things like catalog management, processing payments, and managing fulfillment logistics.
 
-== Quick Start! ==
-
-Look at details from the latest release, including new features and enhancements here: https://github.com/bigcommerce/bigcommerce-for-wordpress/releases
-
-Dive into how you set up and customize your site using BC4WP using our guides here: https://developer.bigcommerce.com/bigcommerce-for-wordpress/getting-started/introduction
-
-Have a suggestion for how we can be better? Ping the team! wordpress-suggestions@bigcommerce.com
-
 == Description ==
 
 BigCommerce for WordPress is a plugin that allows you to scale ecommerce further than ever before on WordPress. Scale your business with WordPress on the front-end and free up server resources from things like catalog management, processing payments, managing fulfillment logistics and more with BigCommerce on the back end.
 
 Built to integrate seamlessly with WordPress, you get access to our native ecommerce features from a single plugin, the ability to sell across multiple channels and marketplaces from a single location, and best of all, an embedded checkout experience that takes on PCI compliance and customer security on your behalf.
 
-https://youtu.be/YqNID2KEJoo
+= QUICK START! =
+
+Look at details from the latest release, including new features and enhancements here: https://github.com/bigcommerce/bigcommerce-for-wordpress/releases
+
+Dive into how you set up and customize your site using BC4WP using our guides here: https://developer.bigcommerce.com/bigcommerce-for-wordpress/getting-started/introduction
+
+Have a suggestion for how we can be better? Ping the team! wordpress-suggestions@bigcommerce.com
 
 = DIFFERENT FROM YOUR TRADITIONAL PLUGIN =
 We’ve taken a very different approach to ecommerce in WordPress. We set out to build our plugin the WordPress Way: deliver value to the community, build it with WordPress experts and make something developers can call their own.
