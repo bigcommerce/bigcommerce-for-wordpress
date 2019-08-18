@@ -3,12 +3,20 @@ Contributors: bigcommerce, moderntribe, jbrinley, becomevocal, vincentlistrani, 
 Tags: ecommerce, online store, sell online, storefront, retail, online shop, bigcommerce, big commerce, e-commerce, physical products, buy buttons, commerce, shopping cart, checkout, cart, shop, headless commerce, shipping, payments, fulfillment
 Requires at least: 4.6
 Tested up to: 5.2.2
-Stable tag: 3.4.0
+Stable tag: 3.5.0
 Requires PHP: 5.6.24
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Scale your ecommerce business with WordPress on the front-end and BigCommerce on the back end. Free up server resources from things like catalog management, processing payments, and managing fulfillment logistics.
+
+== Quick Start! ==
+
+Look at details from the latest release, including new features and enhancements here: https://github.com/bigcommerce/bigcommerce-for-wordpress/releases
+
+Dive into how you set up and customize your site using BC4WP using our guides here: https://developer.bigcommerce.com/bigcommerce-for-wordpress/getting-started/introduction
+
+Have a suggestion for how we can be better? Ping the team! wordpress-suggestions@bigcommerce.com
 
 == Description ==
 
