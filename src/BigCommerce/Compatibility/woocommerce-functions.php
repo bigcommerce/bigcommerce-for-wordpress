@@ -39,4 +39,9 @@ if ( ! function_exists( 'woocommerce_mini_cart' ) ) {
 	function woocommerce_mini_cart() {
 		return;
 	}
+
+if ( ! function_exists( 'wc_get_cart_url' ) ) {
+	function wc_get_cart_url() {
+		return;
+	}
 }
