@@ -85,7 +85,49 @@ abstract class Required_Page {
 	 * @return void
 	 */
 	private function set_post_id( $post_id ) {
+		$this->ensure_page_is_published( $post_id );
 		update_option( static::NAME, (int) $post_id );
+	}
+
+	/**
+	 * Force the given post to be published.
+	 *
+	 * This comes up when the plugin is uninstalled and then
+	 * reinstalled. The draft page will have the "-uninstalled"
+	 * suffix added to the slug.
+	 *
+	 * @param int $post_id
+	 *
+	 * @return void
+	 */
+	private function ensure_page_is_published( $post_id ) {
+		if ( get_post_status( $post_id ) === 'publish' ) {
+			return;
+		}
+		$post = [
+			'ID'          => $post_id,
+			'post_status' => 'publish',
+			'post_name'   => $this->remove_uninstalled_suffix( get_post_field( 'post_name', $post_id ) ),
+		];
+
+		wp_update_post( $post );
+	}
+
+	/**
+	 * Remove the suffix "-uninstalled" from a string
+	 *
+	 * @param string $string
+	 *
+	 * @return string
+	 */
+	private function remove_uninstalled_suffix( $string ) {
+		$suffix = '-uninstalled';
+		$length = strlen( $suffix );
+		if ( substr( $string, - $length, $length ) === $suffix ) {
+			$string = substr( $string, 0, - $length );
+		}
+
+		return $string;
 	}
 
 	/**
@@ -109,7 +151,7 @@ abstract class Required_Page {
 	 * @return int The ID of the matching post. 0 if none found.
 	 */
 	protected function match_existing_post() {
-		$post_ids = $this->get_post_candidates();
+		$post_ids = $this->get_post_candidates( true );
 		if ( empty( $post_ids ) ) {
 			return 0;
 		}
@@ -121,15 +163,25 @@ abstract class Required_Page {
 	 * Find all the posts that meet the criteria (e.g., post type,
 	 * content) to become this required page.
 	 *
+	 * @param bool $include_uninstalled Whether the list of candidates should include
+	 *                                  pages that have been uninstalled and set to draft
+	 *
 	 * @return int[] Post IDs of potential posts
 	 */
-	public function get_post_candidates() {
+	public function get_post_candidates( $include_uninstalled = false ) {
 		/** @var \wpdb $wpdb */
 		global $wpdb;
 		$content      = $this->get_content();
 		$content_like = '%' . $wpdb->esc_like( $content ) . '%';
+		$status = "post_status='publish'";
+		if ( $include_uninstalled ) {
+			$status = "( $status OR ( post_status='draft' AND post_name LIKE '%-uninstalled' ) )";
+		}
 		$post_ids     = $wpdb->get_col( $wpdb->prepare(
-			"SELECT ID FROM {$wpdb->posts} WHERE post_type=%s AND post_status='publish' AND post_content LIKE %s",
+			"SELECT ID FROM {$wpdb->posts}
+			 WHERE post_type=%s
+ 			   AND $status
+ 			   AND post_content LIKE %s",
 			$this->get_post_type(),
 			$content_like
 		) );

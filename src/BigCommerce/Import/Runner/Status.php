@@ -23,6 +23,8 @@ class Status {
 	const PROCESSED_QUEUE          = 'processed_queue';
 	const FETCHING_STORE           = 'fetching_store';
 	const FETCHED_STORE            = 'fetched_store';
+	const FETCHING_CURRENCIES      = 'fetching_currencies';
+	const FETCHED_CURRENCIES       = 'fetched_currencies';
 	const CLEANING                 = 'cleaning';
 	const COMPLETED                = 'completed';
 	const FAILED                   = 'failed';

@@ -20,8 +20,9 @@ class Post_Types extends Provider {
 	const CHANNEL_SYNC        = 'post_type.product.channel_sync';
 	const PRODUCT_ADMIN_LIST  = 'post_type.product.admin_list';
 	const PRODUCT_UNIQUE_SLUG = 'post_type.product.unique_slug';
-	const LISTING_RESET       = 'product_type.product.listing_reset';
-	const PRODUCT_RESYNC      = 'product_type.product.resync_single';
+	const LISTING_RESET       = 'post_type.product.listing_reset';
+	const PRODUCT_RESYNC      = 'post_type.product.resync_single';
+	const PRODUCT_SEO         = 'post_type.product.seo';
 
 	const CART_INDICATOR = 'post_type.page.cart_indicator';
 	const CART_CREATOR   = 'post_type.page.cart_creator';
@@ -159,6 +160,7 @@ class Post_Types extends Provider {
 		$this->product_channel_indicator( $container );
 		$this->channel_sync( $container );
 		$this->product_slugs( $container );
+		$this->product_seo( $container );
 	}
 
 	private function queue( Container $container ) {
@@ -254,5 +256,20 @@ class Post_Types extends Provider {
 
 			return $slug;
 		} ), 10, 6 );
+	}
+
+	private function product_seo( Container $container ) {
+		$container[ self::PRODUCT_SEO ] = function ( Container $container ) {
+			return new Product\Seo();
+		};
+		add_filter( 'wp_title_parts', $this->create_callback( 'product_wp_title', function ( $title_parts ) use ( $container ) {
+			return $container[ self::PRODUCT_SEO ]->filter_wp_title( $title_parts );
+		} ), 10, 1 );
+		add_filter( 'document_title_parts', $this->create_callback( 'product_document_title', function ( $title_parts ) use ( $container ) {
+			return $container[ self::PRODUCT_SEO ]->filter_document_title( $title_parts );
+		} ), 10, 1 );
+		add_filter( 'wp_head', $this->create_callback( 'product_page_meta_description', function () use ( $container ) {
+			return $container[ self::PRODUCT_SEO ]->print_meta_description();
+		} ), 0, 0 );
 	}
 }

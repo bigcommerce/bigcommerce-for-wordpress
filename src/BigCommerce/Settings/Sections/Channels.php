@@ -126,7 +126,7 @@ class Channels extends Settings_Section {
 		echo '<div class="bigcommerce-channel bigcommerce-channel--new" data-js="bc-channel-row">';
 		printf( '<p class="bigcommerce-channel-create"><a href="#" class="bigcommerce-channel-action bigcommerce-channel-action-create" data-js="bc-channel-show-action" data-action-type="create">%s</a></p>', __( 'Create new channel', 'bigcommerce' ) );
 		printf(
-			'<p class="bigcomerce-new-channel-name" data-js="bc-channel-action" style="display: none;"><input type="text" class="regular-text code" value="" name="%s" data-js="bigcommerce-channel-action-input" /> <a href="#" class="bigcommerce-channel-action bigcommerce-cancel-new-channel" data-js="bc-channel-cancel-action"><i class="bc-icon bc-icon--settings icon-bc-cross"></i> %s</a><span class="description">%s</span></p>',
+			'<p class="bigcommerce-new-channel-name" data-js="bc-channel-action" style="display: none;"><input type="text" class="regular-text code" value="" name="%s" data-js="bigcommerce-channel-action-input" /> <a href="#" class="bigcommerce-channel-action bigcommerce-cancel-new-channel" data-js="bc-channel-cancel-action"><i class="bc-icon bc-icon--settings icon-bc-cross"></i> %s</a><span class="description">%s</span></p>',
 			esc_attr( self::NEW_NAME ),
 			__( 'Cancel', 'bigcommerce' ),
 			__( 'Press Save Changes to create this new channel.', 'bigcommerce' )
@@ -180,13 +180,13 @@ class Channels extends Settings_Section {
 			);
 		}
 		printf(
-			'<p class="bigcomerce-channel-name">%s %s</p>',
+			'<p class="bigcommerce-channel-name">%s %s</p>',
 			esc_html( $term->name ),
 			implode( ' ', $action_links )
 		);
 		if ( array_key_exists( 'rename', $actions ) ) {
 			printf(
-				'<p class="bigcomerce-channel-rename" data-js="bc-channel-action" style="display: none;"><input type="text" class="regular-text code" value="%s" name="%s[%s]" data-js="bigcommerce-channel-action-input" /> <a href="#" class="bigcommerce-channel-action bigcommerce-cancel-rename-channel" data-js="bc-channel-cancel-action" data-channel-name="%s"><i class="bc-icon bc-icon--settings icon-bc-cross"></i> %s</a><span class="description">%s</span></p>',
+				'<p class="bigcommerce-channel-rename" data-js="bc-channel-action" style="display: none;"><input type="text" class="regular-text code" value="%s" name="%s[%s]" data-js="bigcommerce-channel-action-input" /> <a href="#" class="bigcommerce-channel-action bigcommerce-cancel-rename-channel" data-js="bc-channel-cancel-action" data-channel-name="%s"><i class="bc-icon bc-icon--settings icon-bc-cross"></i> %s</a><span class="description">%s</span></p>',
 				esc_attr( $term->name ),
 				esc_attr( self::CHANNEL_NAME ),
 				esc_attr( $term->term_id ),

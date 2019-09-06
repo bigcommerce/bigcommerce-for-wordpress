@@ -25,7 +25,7 @@ use BigCommerce\Taxonomies\Brand\Brand;
 				<?php } ?>
 
 				<?php
-				echo( has_post_thumbnail( $item['post_id'] ) ? get_the_post_thumbnail( $item['post_id'], $image_size ) : $fallback_image );
+				echo( $item['thumbnail_id'] ? wp_get_attachment_image( $item['thumbnail_id'], $image_size ) : $fallback_image );
 				?>
 
 				<?php if ( ! empty( $item['post_id'] ) ) { ?>

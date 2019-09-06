@@ -6,7 +6,6 @@ namespace BigCommerce\Import\Processors;
 
 use BigCommerce\Api\Store_Api;
 use BigCommerce\Api\v3\ApiException;
-use BigCommerce\Api\v3\Model\CartRequestData;
 use BigCommerce\Import\Runner\Status;
 use BigCommerce\Logging\Error_Log;
 use BigCommerce\Post_Types\Product\Product;

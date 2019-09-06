@@ -5,6 +5,7 @@ namespace BigCommerce;
 
 
 use BigCommerce\Api\Base_Client;
+use BigCommerce\Api\Currencies_Api;
 use BigCommerce\Api\Customer_Api;
 use BigCommerce\Api\Marketing_Api;
 use BigCommerce\Api\Payments_Api;
@@ -180,6 +181,12 @@ class Api_Factory {
 	 */
 	public function payments() {
 		return new Payments_Api( $this->api_client );
+	}
+	/**
+	 * @return Currencies_Api
+	 */
+	public function currencies() {
+		return new Currencies_Api( $this->api_client );
 	}
 
 	/**

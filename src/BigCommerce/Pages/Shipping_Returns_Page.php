@@ -61,9 +61,11 @@ class Shipping_Returns_Page extends Required_Page {
 	 * Since the content of the page is freeform (i.e., not using
 	 * a shortcode), it can match any page.
 	 *
+	 * @param bool $include_uninstalled Not used in this implementation
+	 *
 	 * @return int[] Post IDs of potential posts
 	 */
-	public function get_post_candidates() {
+	public function get_post_candidates( $include_uninstalled = false ) {
 		/** @var \wpdb $wpdb */
 		global $wpdb;
 		$post_ids     = $wpdb->get_col( $wpdb->prepare(

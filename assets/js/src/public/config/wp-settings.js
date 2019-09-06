@@ -1,12 +1,11 @@
-
-const wp = window.bigcommerce_config || {};
-
-export const IMAGES_URL = wp.images_url || {};
-export const TEMPLATE_URL = wp.template_url || {};
-export const CART_API_BASE = wp.cart.api_url || '';
-export const AJAX_CART_ENABLED = wp.cart.ajax_enabled || '';
-export const AJAX_CART_NONCE = wp.cart.ajax_cart_nonce || '';
-export const COUNTRIES_OBJ = wp.countries || {};
-export const PRODUCT_MESSAGES = wp.product.messages || '';
-export const PRICING_API_URL = wp.pricing.api_url || '';
-export const PRICING_API_NONCE = wp.pricing.ajax_pricing_nonce || '';
+export const CONFIG = window.bigcommerce_config || {};
+export const CART = CONFIG.cart || {};
+export const IMAGES_URL = CONFIG.images_url || {};
+export const TEMPLATE_URL = CONFIG.template_url || {};
+export const CART_API_BASE = CONFIG.cart.api_url || '';
+export const AJAX_CART_ENABLED = CONFIG.cart.ajax_enabled || '';
+export const AJAX_CART_NONCE = CONFIG.cart.ajax_cart_nonce || '';
+export const COUNTRIES_OBJ = CONFIG.countries || {};
+export const PRODUCT_MESSAGES = CONFIG.product.messages || '';
+export const PRICING_API_URL = CONFIG.pricing.api_url || '';
+export const PRICING_API_NONCE = CONFIG.pricing.ajax_pricing_nonce || '';

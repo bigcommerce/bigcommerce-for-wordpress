@@ -3,7 +3,7 @@ Contributors: bigcommerce, moderntribe, jbrinley, becomevocal, vincentlistrani, 
 Tags: ecommerce, online store, sell online, storefront, retail, online shop, bigcommerce, big commerce, e-commerce, physical products, buy buttons, commerce, shopping cart, checkout, cart, shop, headless commerce, shipping, payments, fulfillment
 Requires at least: 4.6
 Tested up to: 5.2.2
-Stable tag: 3.5.0
+Stable tag: 3.6.0
 Requires PHP: 5.6.24
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -16,13 +16,13 @@ BigCommerce for WordPress is a plugin that allows you to scale ecommerce further
 
 Built to integrate seamlessly with WordPress, you get access to our native ecommerce features from a single plugin, the ability to sell across multiple channels and marketplaces from a single location, and best of all, an embedded checkout experience that takes on PCI compliance and customer security on your behalf.
 
-= QUICK START! =
+= Quick Start! =
 
-Look at details from the latest release, including new features and enhancements here: [https://github.com/bigcommerce/bigcommerce-for-wordpress/releases](https://github.com/bigcommerce/bigcommerce-for-wordpress/releases)
+Look at details from the latest release, including new features and enhancements here: https://github.com/bigcommerce/bigcommerce-for-wordpress/releases
 
-Dive into how you set up and customize your online store with BC4WP using our guides here: [https://developer.bigcommerce.com/bigcommerce-for-wordpress/getting-started/introduction](https://developer.bigcommerce.com/bigcommerce-for-wordpress/getting-started/introduction)
+Dive into how you set up and customize your site using BC4WP using our guides here: https://developer.bigcommerce.com/bigcommerce-for-wordpress/getting-started/introduction
 
-Have a suggestion for how we can be better? Ping the team! [wordpress-suggestions@bigcommerce.com](mailto:wordpress-suggestions@bigcommerce.com?subject=BC4WP%20Notes)
+Have a suggestion for how we can be better? Ping the team! wordpress-suggestions@bigcommerce.com
 
 = DIFFERENT FROM YOUR TRADITIONAL PLUGIN =
 We’ve taken a very different approach to ecommerce in WordPress. We set out to build our plugin the WordPress Way: deliver value to the community, build it with WordPress experts and make something developers can call their own.
