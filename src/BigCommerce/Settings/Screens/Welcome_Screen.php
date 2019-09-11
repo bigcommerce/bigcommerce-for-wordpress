@@ -64,7 +64,7 @@ class Welcome_Screen extends Onboarding_Screen {
 		 *
 		 * @param array $notices
 		 */
-		$notices = apply_filters( 'bigcomerce/settings/welcome/notices', [] );
+		$notices = apply_filters( 'bigcommerce/settings/welcome/notices', [] );
 
 		return (array) $notices;
 	}

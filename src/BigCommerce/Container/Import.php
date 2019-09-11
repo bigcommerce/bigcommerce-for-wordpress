@@ -41,6 +41,7 @@ class Import extends Provider {
 	const MARK             = 'import.mark_deleted';
 	const QUEUE            = 'import.queue';
 	const STORE            = 'import.store';
+	const CURRENCIES       = 'import.currencies';
 	const CLEANUP          = 'import.cleanup';
 	const ERROR            = 'import.error';
 
@@ -171,6 +172,10 @@ class Import extends Provider {
 			return new Processors\Store_Settings( $container[ Api::FACTORY ]->store() );
 		};
 
+		$container[ self::CURRENCIES ] = function ( Container $container ) {
+			return new Processors\Currencies( $container[ Api::FACTORY ]->currencies() );
+		};
+
 		$container[ self::CLEANUP ] = function ( Container $container ) {
 			return new Processors\Cleanup( $container[ self::LARGE_BATCH_SIZE ] );
 		};
@@ -196,7 +201,11 @@ class Import extends Provider {
 
 			$list[] = new Task_Definition( $this->create_callback( 'fetch_store', function () use ( $container ) {
 				$container[ self::STORE ]->run();
-			} ), 20, Runner\Status::FETCHED_STORE, [ Runner\Status::FETCHING_STORE ], __( 'Fetching currency settings', 'bigcommerce' ) );
+			} ), 20, Runner\Status::FETCHED_STORE, [ Runner\Status::FETCHING_STORE ], __( 'Fetching store information', 'bigcommerce' ) );
+
+			$list[] = new Task_Definition( $this->create_callback( 'fetch_currencies', function () use ( $container ) {
+				$container[ self::CURRENCIES ]->run();
+			} ), 21, Runner\Status::FETCHED_CURRENCIES, [ Runner\Status::FETCHING_CURRENCIES ], __( 'Retrieving currency settings', 'bigcommerce' ) );
 
 			$list[] = new Task_Definition( $this->create_callback( 'purge_categories', function () use ( $container ) {
 				$container[ self::PURGE_CATEGORIES ]->run();

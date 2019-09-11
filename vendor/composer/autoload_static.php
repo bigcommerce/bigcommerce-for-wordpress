@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit4aeaa1b4a1ad19d6e66f56b84a2d4a9f
+class ComposerStaticInit9b66a5d3d1c9253a286720379952c74f
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -129,6 +129,7 @@ class ComposerStaticInit4aeaa1b4a1ad19d6e66f56b84a2d4a9f
         'BigCommerce\\Api\\Caching_Client' => __DIR__ . '/../..' . '/src/BigCommerce/Api/Caching_Client.php',
         'BigCommerce\\Api\\Configuration' => __DIR__ . '/../..' . '/src/BigCommerce/Api/Configuration.php',
         'BigCommerce\\Api\\ConfigurationRequiredException' => __DIR__ . '/../..' . '/src/BigCommerce/Api/ConfigurationRequiredException.php',
+        'BigCommerce\\Api\\Currencies_Api' => __DIR__ . '/../..' . '/src/BigCommerce/Api/Currencies_Api.php',
         'BigCommerce\\Api\\Customer_Api' => __DIR__ . '/../..' . '/src/BigCommerce/Api/Customer_Api.php',
         'BigCommerce\\Api\\Marketing_Api' => __DIR__ . '/../..' . '/src/BigCommerce/Api/Marketing_Api.php',
         'BigCommerce\\Api\\Null_Client' => __DIR__ . '/../..' . '/src/BigCommerce/Api/Null_Client.php',
@@ -470,6 +471,7 @@ class ComposerStaticInit4aeaa1b4a1ad19d6e66f56b84a2d4a9f
         'BigCommerce\\Container\\Widgets' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Widgets.php',
         'BigCommerce\\Currency\\Configurable_Formatter' => __DIR__ . '/../..' . '/src/BigCommerce/Currency/Configurable_Formatter.php',
         'BigCommerce\\Currency\\Currency_Formatter' => __DIR__ . '/../..' . '/src/BigCommerce/Currency/Currency_Formatter.php',
+        'BigCommerce\\Currency\\Formatter_Factory' => __DIR__ . '/../..' . '/src/BigCommerce/Currency/Formatter_Factory.php',
         'BigCommerce\\Currency\\Intl_Formatter' => __DIR__ . '/../..' . '/src/BigCommerce/Currency/Intl_Formatter.php',
         'BigCommerce\\Currency\\USD_Formatter' => __DIR__ . '/../..' . '/src/BigCommerce/Currency/USD_Formatter.php',
         'BigCommerce\\Currency\\With_Currency' => __DIR__ . '/../..' . '/src/BigCommerce/Currency/With_Currency.php',
@@ -544,6 +546,7 @@ class ComposerStaticInit4aeaa1b4a1ad19d6e66f56b84a2d4a9f
         'BigCommerce\\Import\\Processors\\Category_Purge' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Processors/Category_Purge.php',
         'BigCommerce\\Import\\Processors\\Channel_Initializer' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Processors/Channel_Initializer.php',
         'BigCommerce\\Import\\Processors\\Cleanup' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Processors/Cleanup.php',
+        'BigCommerce\\Import\\Processors\\Currencies' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Processors/Currencies.php',
         'BigCommerce\\Import\\Processors\\Deleted_Product_Marker' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Processors/Deleted_Product_Marker.php',
         'BigCommerce\\Import\\Processors\\Error_Handler' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Processors/Error_Handler.php',
         'BigCommerce\\Import\\Processors\\Import_Processor' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Processors/Import_Processor.php',
@@ -601,6 +604,7 @@ class ComposerStaticInit4aeaa1b4a1ad19d6e66f56b84a2d4a9f
         'BigCommerce\\Post_Types\\Product\\Query' => __DIR__ . '/../..' . '/src/BigCommerce/Post_Types/Product/Query.php',
         'BigCommerce\\Post_Types\\Product\\Query_Mapper' => __DIR__ . '/../..' . '/src/BigCommerce/Post_Types/Product/Query_Mapper.php',
         'BigCommerce\\Post_Types\\Product\\Reset_Listing' => __DIR__ . '/../..' . '/src/BigCommerce/Post_Types/Product/Reset_Listing.php',
+        'BigCommerce\\Post_Types\\Product\\Seo' => __DIR__ . '/../..' . '/src/BigCommerce/Post_Types/Product/Seo.php',
         'BigCommerce\\Post_Types\\Product\\Single_Product_Sync' => __DIR__ . '/../..' . '/src/BigCommerce/Post_Types/Product/Single_Product_Sync.php',
         'BigCommerce\\Post_Types\\Product\\Store_Links' => __DIR__ . '/../..' . '/src/BigCommerce/Post_Types/Product/Store_Links.php',
         'BigCommerce\\Post_Types\\Product\\Unique_Slug_Filter' => __DIR__ . '/../..' . '/src/BigCommerce/Post_Types/Product/Unique_Slug_Filter.php',
@@ -685,6 +689,7 @@ class ComposerStaticInit4aeaa1b4a1ad19d6e66f56b84a2d4a9f
         'BigCommerce\\Taxonomies\\Channel\\Channel_Synchronizer' => __DIR__ . '/../..' . '/src/BigCommerce/Taxonomies/Channel/Channel_Synchronizer.php',
         'BigCommerce\\Taxonomies\\Channel\\Config' => __DIR__ . '/../..' . '/src/BigCommerce/Taxonomies/Channel/Config.php',
         'BigCommerce\\Taxonomies\\Channel\\Connections' => __DIR__ . '/../..' . '/src/BigCommerce/Taxonomies/Channel/Connections.php',
+        'BigCommerce\\Taxonomies\\Channel\\Currency_Filter' => __DIR__ . '/../..' . '/src/BigCommerce/Taxonomies/Channel/Currency_Filter.php',
         'BigCommerce\\Taxonomies\\Channel\\Query_Filter' => __DIR__ . '/../..' . '/src/BigCommerce/Taxonomies/Channel/Query_Filter.php',
         'BigCommerce\\Taxonomies\\Channel\\Routes' => __DIR__ . '/../..' . '/src/BigCommerce/Taxonomies/Channel/Routes.php',
         'BigCommerce\\Taxonomies\\Condition\\Condition' => __DIR__ . '/../..' . '/src/BigCommerce/Taxonomies/Condition/Condition.php',
@@ -1025,10 +1030,10 @@ class ComposerStaticInit4aeaa1b4a1ad19d6e66f56b84a2d4a9f
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit4aeaa1b4a1ad19d6e66f56b84a2d4a9f::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit4aeaa1b4a1ad19d6e66f56b84a2d4a9f::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit4aeaa1b4a1ad19d6e66f56b84a2d4a9f::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit4aeaa1b4a1ad19d6e66f56b84a2d4a9f::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit9b66a5d3d1c9253a286720379952c74f::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit9b66a5d3d1c9253a286720379952c74f::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit9b66a5d3d1c9253a286720379952c74f::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit9b66a5d3d1c9253a286720379952c74f::$classMap;
 
         }, null, ClassLoader::class);
     }

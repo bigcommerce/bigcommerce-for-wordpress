@@ -222,7 +222,7 @@ class Cart_Mapper {
 		}
 		$data = [
 			'id'                   => $item->getId(),
-			'variant_id'           => $item->getVariantId(),
+			'variant_id'           => (int) $item->getVariantId(),
 			'product_id'           => $item->getProductId(),
 			'name'                 => $item->getName(),
 			'quantity'             => $item->getQuantity(),
@@ -262,19 +262,19 @@ class Cart_Mapper {
 			Product_Category::NAME => [],
 		];
 		try {
-			$product                    = $this->get_product( $item );
-			$data[ 'post_id' ]          = $product->post_id();
-			$data[ 'name' ]             = get_the_title( $data[ 'post_id' ] );
-			$data[ 'thumbnail_id' ]     = get_post_thumbnail_id( $data[ 'post_id' ] );
-			$data[ 'is_featured' ]      = is_object_in_term( $data[ 'post_id' ], Flag::NAME, Flag::FEATURED );
-			$data[ 'on_sale' ]          = $product->on_sale();
-			$data[ 'show_condition' ]   = $product->show_condition();
-			$data[ 'sku' ]              = [
+			$product                   = $this->get_product( $item );
+			$data[ 'post_id' ]         = $product->post_id();
+			$data[ 'name' ]            = get_the_title( $data[ 'post_id' ] );
+			$data['thumbnail_id']      = $this->get_thumbnail_id( $product, $data['variant_id'] );
+			$data[ 'is_featured' ]     = is_object_in_term( $data[ 'post_id' ], Flag::NAME, Flag::FEATURED );
+			$data[ 'on_sale' ]         = $product->on_sale();
+			$data[ 'show_condition' ]  = $product->show_condition();
+			$data[ 'sku' ]             = [
 				'product' => $product->sku(),
 				'variant' => $this->get_variant_sku( $data[ 'variant_id' ], $product ),
 			];
-			$data[ 'options' ]          = $this->get_options( $item );
-			$data[ 'inventory_level' ]  = (int) $product->get_inventory_level( $data[ 'variant_id' ] );
+			$data[ 'options' ]         = $this->get_options( $item );
+			$data[ 'inventory_level' ] = (int) $product->get_inventory_level( $data[ 'variant_id' ] );
 			$data[ 'minimum_quantity' ] = (int) $product->order_quantity_minimum;
 			$data[ 'maximum_quantity' ] = $this->get_max_quantity( (int) $product->order_quantity_maximum, $data[ 'inventory_level' ] );
 
@@ -393,5 +393,14 @@ class Cart_Mapper {
 		} catch ( Channel_Not_Found_Exception $e ) {
 			$this->channel = null;
 		}
+	}
+
+	private function get_thumbnail_id( Product $product, $variant_id ) {
+		$variant_image_map = (array) get_post_meta( $product->post_id(), Product::VARIANT_IMAGES_META_KEY, true );
+		if ( ! empty( $variant_image_map[ $variant_id ] ) ) {
+			return $variant_image_map[ $variant_id ];
+		}
+
+		return get_post_thumbnail_id( $product->post_id() );
 	}
 }

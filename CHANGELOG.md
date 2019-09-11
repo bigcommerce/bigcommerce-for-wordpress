@@ -1,5 +1,49 @@
 # Changelog
 
+## [3.6.0]
+
+### Added
+
+- Added currency selection to the settings screen. Any currencies enabled in the
+  BigCommerce admin are available to assign as the currency for the WordPress site.
+  When in multi-channel mode, different currencies can be assigned to each channel.
+- Added support for custom SEO titles and descriptions. The SEO title set in the
+  BigCommerce admin will override the HTML title tag for the product single. The
+  SEO description set in the BigCommerce admin will be used to render a meta
+  description tag in the page header. Note: If using Yoast SEO, custom descriptions
+  set in the Yoast meta box will lead to a duplicate meta tag. To remove the tag
+  from this plugin, add the following snipped to a theme or plugin:
+  ```
+  add_action( 'plugins_loaded', function() {
+  	remove_action( 'wp_head', bigcommerce()->post_types->product_page_meta_description, 0 );
+  }, 100, 0 );
+  ```
+- Added support for custom image alt text. The alt text set in the BigCommerce admin will
+  be imported into WordPress, where WordPress's standard image rendering functions will
+  use it as the value for the `alt` attribute.
+- Added a new global JS function to the `bigcommerce_config` global JS object. You can now 
+  retrieve the current user's cart ID via JS using `bigcommerce_config.cart.getCartID();`
+
+### Fixed
+
+- Fixed several locations where "bigcommerce" was misspelled as "bigcomerce" in
+  text domains, HTML classes, and filter names.
+
+### Changed
+
+- On uninstall of the plugin, pages related to the plugin will have "-uninstalled"
+  appended to their slugs when they are set to draft. If the plugin is reinstalled
+  later and these pages still exist, they will be republished and "-uninstalled"
+  will be removed from the slugs.
+- If a product variant has an image, and that variant is added to the cart, the
+  cart page will display that variant's image instead of the default product image.
+  
+### Removed
+
+- Currency formatting settings have been removed. Formatting settings are pulled
+  from the BigCommerce currencies API. PHP's intl extension will still be used
+  for formatting if it is available.
+
 ## [3.5.0]
 
 ### Added
@@ -847,6 +891,7 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[3.6.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.5.0...3.6.0
 [3.5.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.4.1...3.5.0
 [3.4.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.4.0...3.4.1
 [3.4.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.3.0...3.4.0

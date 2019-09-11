@@ -275,6 +275,9 @@ class Product_Builder extends Record_Builder {
 						update_post_meta( $post_id, $key, $derivative_url );
 					}
 				}
+				if ( ! empty( $image['description'] ) ) {
+					update_post_meta( $post_id, '_wp_attachment_image_alt', $image['description'] );
+				}
 				$response[ 'gallery' ][] = $post_id;
 				if ( $image[ 'is_thumbnail' ] ) {
 					$response[ 'thumbnail' ] = $post_id;

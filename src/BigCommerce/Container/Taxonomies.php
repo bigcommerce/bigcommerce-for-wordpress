@@ -45,12 +45,13 @@ class Taxonomies extends Provider {
 	const FLAG        = 'taxonomy.flag';
 	const FLAG_CONFIG = 'taxonomy.flag.config';
 
-	const CHANNEL              = 'taxonomy.channel';
-	const CHANNEL_CONFIG       = 'taxonomy.channel.config';
-	const CHANNEL_SYNC         = 'taxonomy.channel.sync';
-	const CHANNEL_CONNECTOR    = 'taxonomy.channel.connector';
-	const CHANNEL_ADMIN_FILTER = 'taxonomy.channel.admin_products_filter';
-	const CHANNEL_QUERY_FILTER = 'taxonomy.channel.query_filter';
+	const CHANNEL                 = 'taxonomy.channel';
+	const CHANNEL_CONFIG          = 'taxonomy.channel.config';
+	const CHANNEL_SYNC            = 'taxonomy.channel.sync';
+	const CHANNEL_CONNECTOR       = 'taxonomy.channel.connector';
+	const CHANNEL_ADMIN_FILTER    = 'taxonomy.channel.admin_products_filter';
+	const CHANNEL_QUERY_FILTER    = 'taxonomy.channel.query_filter';
+	const CHANNEL_CURRENCY_FILTER = 'taxonomy.channel.currency_filter';
 
 	const ROUTES = 'taxonomy.channel.routes';
 
@@ -170,6 +171,13 @@ class Taxonomies extends Provider {
 				$container[ self::CHANNEL_QUERY_FILTER ]->apply( $query );
 			}
 		} ), 10, 1 );
+
+		$container[ self::CHANNEL_CURRENCY_FILTER ] = function ( Container $container ) {
+			return new Channel\Currency_Filter();
+		};
+		add_action( 'pre_option_' . \BigCommerce\Settings\Sections\Currency::CURRENCY_CODE, $this->create_callback( 'filter_channel_currency', function ( $currency_code ) use ( $container ) {
+			return $container[ self::CHANNEL_CURRENCY_FILTER ]->filter_currency( $currency_code );
+		} ), 5, 1 );
 	}
 
 	private function routes( Container $container ) {

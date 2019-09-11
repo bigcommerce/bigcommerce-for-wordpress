@@ -16,6 +16,7 @@ import plugins from './plugins';
 import viewportDims from './viewport-dims';
 import gallery from '../gallery/index';
 import buttons from '../buttons/index';
+import globalBCJS from '../api/index';
 import cart from '../cart/index';
 import checkout from '../checkout/index';
 import loop from '../loop/index';
@@ -53,6 +54,7 @@ const init = () => {
 	// initialize global events
 
 	bindEvents();
+	globalBCJS();
 
 	// initialize the main scripts
 	buttons();

@@ -91,7 +91,7 @@ class Api_Credentials extends Settings_Section {
 	public function render_help_text() {
 		$api_accounts_url = 'https://login.bigcommerce.com/deep-links/settings/auth/api-accounts';
 		$help_text        = sprintf(
-			__( 'After signing in on BigCommerce with your account owner login, <a href="%s" target="_blank">create a new API Account</a> and copy the following credentials.', 'bigcomerce' ),
+			__( 'After signing in on BigCommerce with your account owner login, <a href="%s" target="_blank">create a new API Account</a> and copy the following credentials.', 'bigcommerce' ),
 			$api_accounts_url
 		);
 		printf( '<p class="description">%s</p>', $help_text );

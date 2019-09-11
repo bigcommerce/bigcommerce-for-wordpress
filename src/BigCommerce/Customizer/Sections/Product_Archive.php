@@ -110,7 +110,7 @@ class Product_Archive {
 
 	public static function sort_choices() {
 		$choices = [
-			self::SORT_FEATURED   => __( 'Featured', 'bigcomerce' ),
+			self::SORT_FEATURED   => __( 'Featured', 'bigcommerce' ),
 			self::SORT_DATE       => __( 'Newest', 'bigcommerce' ),
 			self::SORT_SALES      => __( 'Best Selling', 'bigcommerce' ),
 			self::SORT_TITLE_ASC  => __( 'Product Title A–Z', 'bigcommerce' ),
@@ -160,7 +160,7 @@ class Product_Archive {
 
 	public static function filter_choices() {
 		$choices = [
-			self::FILTER_CATEGORY => __( 'Categories', 'bigcomerce' ),
+			self::FILTER_CATEGORY => __( 'Categories', 'bigcommerce' ),
 			self::FILTER_BRAND    => __( 'Brands', 'bigcommerce' ),
 		];
 

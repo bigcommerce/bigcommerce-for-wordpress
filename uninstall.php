@@ -51,17 +51,20 @@ function set_pages_to_draft() {
 		Pages\Address_Page::NAME,
 		Pages\Cart_Page::NAME,
 		Pages\Check_Balance_Page::NAME,
+		Pages\Checkout_Page::NAME,
 		Pages\Gift_Certificate_Page::NAME,
 		Pages\Login_Page::NAME,
 		Pages\Orders_Page::NAME,
 		Pages\Registration_Page::NAME,
 		Pages\Shipping_Returns_Page::NAME,
+		Pages\Wishlist_Page::NAME,
 	];
 	foreach ( $pages as $option ) {
 		$page_id = \get_option( $option );
 		if ( $page_id ) {
 			$post              = \get_post( $page_id );
 			$post->post_status = 'draft';
+			$post->post_name   .= '-uninstalled';
 			\wp_update_post( $post );
 		}
 		\delete_option( $option );
@@ -163,6 +166,7 @@ function delete_options() {
 		Settings\Sections\Currency::CURRENCY_SYMBOL_POSITION,
 		Settings\Sections\Currency::DECIMAL_UNITS,
 		Settings\Sections\Currency::INTEGER_UNITS,
+		Settings\Sections\Currency::ENABLED_CURRENCIES,
 		Settings\Sections\Gift_Certificates::OPTION_ENABLE,
 		Settings\Sections\Troubleshooting_Diagnostics::LOG_ERRORS,
 		Settings\Sections\Units::MASS,
