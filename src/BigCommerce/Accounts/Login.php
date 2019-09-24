@@ -45,21 +45,35 @@ class Login {
 			return; // already connected
 		}
 
-		$api = $this->api_factory->customer();
+		$customer_id = $this->find_customer_id_by_email( $user->user_email );
+		if ( $customer_id ) {
+			$customer->set_customer_id( $customer_id );
 
+			return;
+		}
+
+		$this->create_customer_from_user( $user );
+	}
+
+	/**
+	 * Find the customer ID associated with the given email address
+	 *
+	 * @param string $email
+	 *
+	 * @return int The customer ID, 0 if not found
+	 */
+	private function find_customer_id_by_email( $email ) {
+		return $this->api_factory->customer()->find_customer_id_by_email( $email );
+	}
+
+	/**
+	 * @param \WP_User $user
+	 *
+	 * @return int The new customer's ID, 0 on failure
+	 */
+	private function create_customer_from_user( $user ) {
 		try {
-			$matches = $api->getCustomers( [
-				'email' => $user->user_email,
-			] );
-
-			if ( ! empty( $matches ) ) {
-				/** @var Api\Resources\Customer $customer */
-				$found_customer = reset( $matches );
-				$customer->set_customer_id( $found_customer->id );
-
-				return;
-			}
-
+			$api               = $this->api_factory->customer();
 			$new_customer_data = [
 				'first_name' => $user->first_name ?: $user->user_login,
 				'last_name'  => $user->last_name ?: __( 'User', 'bigcommerce' ),
@@ -70,14 +84,16 @@ class Login {
 			$response = $api->createCustomer( $new_customer_data );
 
 			if ( $response && ! empty( $response->id ) ) {
+				$customer = new Customer( $user->ID );
 				$customer->set_customer_id( $response->id );
 
-				return;
+				return $response->id;
 			}
-
 		} catch ( \Exception $e ) {
-			return;
+			return 0;
 		}
+
+		return 0;
 	}
 
 	/**
@@ -277,6 +293,11 @@ class Login {
 			return $user;
 		}
 
+		$matching_user = get_user_by( 'email', $username );
+		if ( $matching_user ) {
+			return $user; // don't try to create a new user if we already have one with that email
+		}
+
 		$api = $this->api_factory->customer();
 
 		try {
@@ -340,14 +361,27 @@ class Login {
 	 * @filter check_password
 	 */
 	public function check_password_for_linked_accounts( $match, $password, $hash, $user_id ) {
-		$customer    = new Customer( $user_id );
-		$customer_id = $customer->get_customer_id();
-		if ( ! $customer_id ) {
-			return $match;
-		}
 		$sync = get_user_meta( $user_id, User_Profile_Settings::SYNC_PASSWORD, true );
 		if ( ! $sync ) {
 			return $match;
+		}
+
+		$customer    = new Customer( $user_id );
+		$customer_id = $customer->get_customer_id();
+		if ( ! $customer_id ) {
+			/*
+			 * If an account is set to sync with BigCommerce, but we don't know
+			 * the customer ID, we'll look it up here. Presuming we find it,
+			 * we can validate the password against that ID.
+			 *
+			 * After a successful login, the customer ID will be set in
+			 * self::connect_customer_id() on the wp_login action.
+			 */
+			$user        = new \WP_User( $user_id );
+			$customer_id = $this->find_customer_id_by_email( $user->user_email );
+			if ( ! $customer_id ) {
+				return $match;
+			}
 		}
 
 		$api = $this->api_factory->customer();

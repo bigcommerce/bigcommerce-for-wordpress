@@ -17,7 +17,6 @@ class Merchant extends Provider {
 	const CREATE_ACCOUNT    = 'merchant.onboarding.create_account';
 	const CONNECT_ACCOUNT   = 'merchant.onboarding.connect_account';
 	const ACCOUNT_STATUS    = 'merchant.onboarding.account_status';
-	const ROUTES            = 'merchant.routes';
 
 	public function register( Container $container ) {
 		$this->account_onboarding( $container );
@@ -76,5 +75,4 @@ class Merchant extends Provider {
 			$container[ self::ACCOUNT_STATUS ]->handle_refresh_status_request( $errors );
 		} ), 10, 1 );
 	}
-
 }

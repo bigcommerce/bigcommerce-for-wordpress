@@ -16,6 +16,7 @@ use BigCommerce\Api\v3\Api\PricingApi;
 use BigCommerce\Api\v3\Api\WishlistsApi;
 use BigCommerce\Api\Webhooks_Api;
 use BigCommerce\Api\v3\Api\CartApi;
+use BigCommerce\Api\v3\Api\AbandonedCartApi;
 use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Api\v3\Api\ChannelsApi;
 use BigCommerce\Api\v3\Api\CustomersApi;
@@ -45,6 +46,13 @@ class Api_Factory {
 	 */
 	public function cart() {
 		return new CartApi( $this->api_client );
+	}
+
+	/**
+	 * @return AbandonedCartApi
+	 */
+	public function abandonedCart() {
+		return new AbandonedCartApi( $this->api_client );
 	}
 
 	/**

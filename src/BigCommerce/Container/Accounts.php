@@ -7,6 +7,7 @@ namespace BigCommerce\Container;
 use BigCommerce\Accounts\Countries;
 use BigCommerce\Accounts\Customer_Group_Proxy;
 use BigCommerce\Accounts\Nav_Menu;
+use BigCommerce\Accounts\Password_Reset;
 use BigCommerce\Accounts\Wishlists\Actions as Wishlist_Actions;
 use BigCommerce\Accounts\Wishlists\Add_Item_View;
 use BigCommerce\Accounts\Wishlists\Wishlist_Request_Parser;
@@ -17,14 +18,15 @@ use BigCommerce\Accounts\Login;
 use Pimple\Container;
 
 class Accounts extends Provider {
-	const LOGIN           = 'accounts.login';
-	const COUNTRIES       = 'accounts.countries';
-	const COUNTRIES_PATH  = 'accounts.countries.path';
-	const DELETE_ADDRESS  = 'accounts.delete_address';
-	const NAV_MENU        = 'accounts.nav_menu';
-	const SUB_NAV         = 'accounts.sub_nav';
-	const USER_PROFILE    = 'accounts.user_profile';
-	const GROUP_PROXY     = 'accounts.groups.proxy';
+	const LOGIN          = 'accounts.login';
+	const COUNTRIES      = 'accounts.countries';
+	const COUNTRIES_PATH = 'accounts.countries.path';
+	const DELETE_ADDRESS = 'accounts.delete_address';
+	const NAV_MENU       = 'accounts.nav_menu';
+	const SUB_NAV        = 'accounts.sub_nav';
+	const USER_PROFILE   = 'accounts.user_profile';
+	const GROUP_PROXY    = 'accounts.groups.proxy';
+	const PASSWORD_RESET = 'accounts.password_reset';
 
 	const PUBLIC_WISHLIST        = 'accounts.wishlist.public';
 	const WISHLIST_ROUTER        = 'accounts.wishlist.router';
@@ -42,6 +44,7 @@ class Accounts extends Provider {
 		$this->addresses( $container );
 		$this->customer_groups( $container );
 		$this->wishlists( $container );
+		$this->passwords( $container );
 	}
 
 	private function login( Container $container ) {
@@ -231,6 +234,20 @@ class Accounts extends Provider {
 		add_action( 'bigcommerce/template=components/products/product-single.php/data', $add_item_view_to_product_single, 10, 3 );
 		// Decided not to show on the shortcode single
 		//add_action( 'bigcommerce/template=components/products/product-shortcode-single.php/data', $add_item_view_to_product_single, 10, 3 );
+	}
+
+	private function passwords( Container $container ) {
+		$container[ self::PASSWORD_RESET ] = function ( Container $container ) {
+			return new Password_Reset( $container[ Api::FACTORY ]->customer() );
+		};
+
+		add_action( 'after_password_reset', $this->create_callback( 'sync_reset_password', function ( $user, $password ) use ( $container ) {
+			$container[ self::PASSWORD_RESET ]->sync_reset_password_with_bigcommerce( $user, $password );
+		} ), 10, 2 );
+
+		add_action( 'profile_update', $this->create_callback( 'sync_changed_password', function ( $user, $old_user_data ) use ( $container ) {
+			$container[ self::PASSWORD_RESET ]->sync_password_change_with_bigcommerce( $user, $old_user_data );
+		} ), 10, 2 );
 	}
 
 }

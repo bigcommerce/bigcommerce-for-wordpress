@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit9b66a5d3d1c9253a286720379952c74f
+class ComposerStaticInita46f64a2934fb2a3dd5e122d5b3221f7
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -95,6 +95,7 @@ class ComposerStaticInit9b66a5d3d1c9253a286720379952c74f
         'BigCommerce\\Accounts\\Customer_Group_Proxy' => __DIR__ . '/../..' . '/src/BigCommerce/Accounts/Customer_Group_Proxy.php',
         'BigCommerce\\Accounts\\Login' => __DIR__ . '/../..' . '/src/BigCommerce/Accounts/Login.php',
         'BigCommerce\\Accounts\\Nav_Menu' => __DIR__ . '/../..' . '/src/BigCommerce/Accounts/Nav_Menu.php',
+        'BigCommerce\\Accounts\\Password_Reset' => __DIR__ . '/../..' . '/src/BigCommerce/Accounts/Password_Reset.php',
         'BigCommerce\\Accounts\\Roles\\Customer' => __DIR__ . '/../..' . '/src/BigCommerce/Accounts/Roles/Customer.php',
         'BigCommerce\\Accounts\\Roles\\Role' => __DIR__ . '/../..' . '/src/BigCommerce/Accounts/Roles/Role.php',
         'BigCommerce\\Accounts\\Sub_Nav' => __DIR__ . '/../..' . '/src/BigCommerce/Accounts/Sub_Nav.php',
@@ -433,6 +434,7 @@ class ComposerStaticInit9b66a5d3d1c9253a286720379952c74f
         'BigCommerce\\Cart\\Cart' => __DIR__ . '/../..' . '/src/BigCommerce/Cart/Cart.php',
         'BigCommerce\\Cart\\Cart_Mapper' => __DIR__ . '/../..' . '/src/BigCommerce/Cart/Cart_Mapper.php',
         'BigCommerce\\Cart\\Cart_Menu_Item' => __DIR__ . '/../..' . '/src/BigCommerce/Cart/Cart_Menu_Item.php',
+        'BigCommerce\\Cart\\Cart_Recovery' => __DIR__ . '/../..' . '/src/BigCommerce/Cart/Cart_Recovery.php',
         'BigCommerce\\Cart\\Checkout' => __DIR__ . '/../..' . '/src/BigCommerce/Cart/Checkout.php',
         'BigCommerce\\Checkout\\Customer_Login' => __DIR__ . '/../..' . '/src/BigCommerce/Checkout/Customer_Login.php',
         'BigCommerce\\Checkout\\Requirements_Notice' => __DIR__ . '/../..' . '/src/BigCommerce/Checkout/Requirements_Notice.php',
@@ -1030,10 +1032,10 @@ class ComposerStaticInit9b66a5d3d1c9253a286720379952c74f
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit9b66a5d3d1c9253a286720379952c74f::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit9b66a5d3d1c9253a286720379952c74f::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit9b66a5d3d1c9253a286720379952c74f::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit9b66a5d3d1c9253a286720379952c74f::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInita46f64a2934fb2a3dd5e122d5b3221f7::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInita46f64a2934fb2a3dd5e122d5b3221f7::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInita46f64a2934fb2a3dd5e122d5b3221f7::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInita46f64a2934fb2a3dd5e122d5b3221f7::$classMap;
 
         }, null, ClassLoader::class);
     }

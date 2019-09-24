@@ -3,7 +3,11 @@
 
 namespace BigCommerce\Api;
 
-
+/**
+ * Class Customer_Api
+ *
+ * @method mixed updateCustomer( $customer_id, $profile )
+ */
 class Customer_Api extends v2ApiAdapter {
 	/**
 	 * @param int    $customer_id
@@ -28,5 +32,28 @@ class Customer_Api extends v2ApiAdapter {
 		}
 
 		return ! empty( $response->success );
+	}
+
+	/**
+	 * Find the customer ID associated with the given email address
+	 *
+	 * @param string $email
+	 *
+	 * @return int The customer ID, 0 if not found
+	 */
+	public function find_customer_id_by_email( $email ) {
+		try {
+			$matches = $this->getCustomers( [
+				'email' => $email,
+			] );
+
+			if ( empty( $matches ) ) {
+				return 0;
+			}
+
+			return reset( $matches )->id;
+		} catch ( \Exception $e ) {
+			return 0;
+		}
 	}
 }

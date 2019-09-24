@@ -72,9 +72,17 @@ class Login_Form extends Controller {
 			case 'invalid_username':
 			case 'invalid_email':
 			case 'incorrect_password':
+			case 'existing_user_email':
 				$message = Message::factory( [
 					Message::CONTENT => __( 'Please check that you have entered your email address and password correctly.', 'bigcommerce' ),
 					Message::TYPE    => Message::ERROR,
+				] );
+
+				return $message->render();
+			case 'checkemail':
+				$message = Message::factory( [
+					Message::CONTENT => __( 'Check your email for the confirmation link.', 'bigcommerce' ),
+					Message::TYPE    => Message::NOTICE,
 				] );
 
 				return $message->render();
