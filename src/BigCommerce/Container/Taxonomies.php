@@ -214,5 +214,10 @@ class Taxonomies extends Provider {
 		add_action( 'post_updated', $this->create_callback( 'update_route_permalink', function ( $post_id, $new_post, $old_post ) use ( $container ) {
 			$container[ self::ROUTES ]->update_route_permalink( $post_id, $new_post, $old_post );
 		} ), 10, 3 );
+
+		// check that we're updated when an import runs
+		add_action( 'bigcommerce/import/fetched_store_settings',  $this->create_callback( 'check_and_update_routes_version', function () use ( $container ) {
+			$container[ self::ROUTES ]->maybe_update_routes();
+		} ), 10, 0 );
 	}
 }

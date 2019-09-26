@@ -1,5 +1,30 @@
 # Changelog
 
+## [3.7.0]
+
+### Added
+
+- When using the WordPress password reset form or updated a user's password from the
+  WordPress admin, the new password will be synchronized with the BigCommerce customer
+  account for users who's accounts are configured to sync with BigCommerce.
+- Added an endpoint to handle abandoned cart recovery. Visitors who abandon their
+  carts will receive an email with a link that includes a token to recover the cart.
+  On clicking the link, the cart will be restored in the user's new browser session.
+- Added new route configurations to point BigCommerce-generated links to pages on the
+  WordPress site:
+  - `create_account` points to the user registration page
+  - `forgot_password` points to the lost password page
+  - `account_order_status` points to the order history page
+  - `account_new_return` points to the shipping & returns page
+  - `recover_abandoned_cart` points to the cart recovery endpoint
+
+### Changed
+
+- If a user account is configured to sync with BigCommerce but the customer ID user
+  meta is missing (as may happen if the BigCommerce plugin has been uninstalled and
+  reinstalled), a matching customer account may be found by email and used for
+  password validation.
+
 ## [3.6.0]
 
 ### Added
@@ -891,6 +916,7 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[3.7.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.6.0...3.7.0
 [3.6.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.5.0...3.6.0
 [3.5.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.4.1...3.5.0
 [3.4.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.4.0...3.4.1

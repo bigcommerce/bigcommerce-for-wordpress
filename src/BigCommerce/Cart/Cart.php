@@ -56,7 +56,7 @@ class Cart {
 	 *
 	 * @return void
 	 */
-	private function set_cart_id( $cart_id ) {
+	public function set_cart_id( $cart_id ) {
 		/**
 		 * Filter how long the cart cookie should persist
 		 *

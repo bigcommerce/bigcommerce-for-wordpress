@@ -9,9 +9,12 @@ use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api\v3\Model\Route;
 use BigCommerce\Api\v3\Model\Site;
 use BigCommerce\Api\v3\Model\SiteCreateRequest;
+use BigCommerce\Cart\Cart_Recovery;
 use BigCommerce\Pages\Account_Page;
 use BigCommerce\Pages\Cart_Page;
 use BigCommerce\Pages\Login_Page;
+use BigCommerce\Pages\Orders_Page;
+use BigCommerce\Pages\Registration_Page;
 use BigCommerce\Pages\Shipping_Returns_Page;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Taxonomies\Brand\Brand;
@@ -25,6 +28,7 @@ use BigCommerce\Taxonomies\Product_Category\Product_Category;
  */
 class Routes {
 
+	const VERSION = 4;
 	/**
 	 * @var SitesApi
 	 */
@@ -53,6 +57,8 @@ class Routes {
 		foreach ( $route_list as $route ) {
 			$this->update_route( $site_id, $route );
 		}
+
+		update_option( 'schema-' . self::class, self::VERSION );
 	}
 
 	/**
@@ -195,7 +201,27 @@ class Routes {
 				'route'    => str_replace( $home_url, '', get_permalink( get_option( Account_Page::NAME, 0 ) ) ),
 			] ),
 			new Route( [
+				'type'     => 'create_account',
+				'matching' => '',
+				'route'    => str_replace( $home_url, '', get_option( 'users_can_register' ) ? get_permalink( get_option( Registration_Page::NAME, 0 ) ) : home_url( '/' ) ),
+			] ),
+			new Route( [
+				'type'     => 'forgot_password',
+				'matching' => '',
+				'route'    => str_replace( $home_url, '', wp_lostpassword_url() ),
+			] ),
+			new Route( [
+				'type'     => 'account_order_status',
+				'matching' => '',
+				'route'    => str_replace( $home_url, '', get_permalink( get_option( Orders_Page::NAME, 0 ) ) ),
+			] ),
+			new Route( [
 				'type'     => 'returns',
+				'matching' => '',
+				'route'    => str_replace( $home_url, '', get_permalink( get_option( Shipping_Returns_Page::NAME, 0 ) ) ),
+			] ),
+			new Route( [
+				'type'     => 'account_new_return',
 				'matching' => '',
 				'route'    => str_replace( $home_url, '', get_permalink( get_option( Shipping_Returns_Page::NAME, 0 ) ) ),
 			] ),
@@ -214,6 +240,11 @@ class Routes {
 				'matching' => '*',
 				'route'    => str_replace( $home_url, '', $this->get_taxonomy_route( Product_Category::NAME ) ),
 			] ),
+			new Route( [
+				'type'     => 'recover_abandoned_cart',
+				'matching' => '*',
+				'route'    => str_replace( $home_url, '', home_url( '/bigcommerce/' . Cart_Recovery::ACTION ) ),
+			] ),
 		];
 
 		/**
@@ -223,6 +254,18 @@ class Routes {
 		 */
 		return apply_filters( 'bigcommerce/channel/routes', $routes );
 	}
+
+	/**
+	 * @return void
+	 * @action bigcommerce/import/fetched_store_settings
+	 */
+	public function maybe_update_routes() {
+		$version_option = 'schema-' . self::class;
+		if ( (int) get_option( $version_option, 0 ) !== self::VERSION ) {
+			$this->update_routes();
+		}
+	}
+
 
 	/**
 	 * A simplified version of the logic in get_post_permalink()
