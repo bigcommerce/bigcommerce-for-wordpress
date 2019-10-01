@@ -4,6 +4,7 @@
 namespace BigCommerce\Container;
 
 
+use BigCommerce\Widgets\Mini_Cart_Widget;
 use BigCommerce\Widgets\Product_Category_Widget;
 use Pimple\Container;
 
@@ -14,6 +15,7 @@ class Widgets extends Provider {
 		$container[ self::WIDGET_LIST ] = function ( Container $container ) {
 			return [
 				Product_Category_Widget::class,
+				Mini_Cart_Widget::class,
 			];
 		};
 

@@ -5,6 +5,9 @@
  */
 
 
+use BigCommerce\Pages\Cart_Page;
+use BigCommerce\Pages\Checkout_Page;
+
 if ( ! function_exists( 'wc' ) ) {
 	function wc() {
 		return null;
@@ -38,5 +41,17 @@ if ( ! function_exists( 'wc_locate_template' ) ) {
 if ( ! function_exists( 'woocommerce_mini_cart' ) ) {
 	function woocommerce_mini_cart() {
 		return;
+	}
+}
+
+if ( ! function_exists( 'wc_get_cart_url' ) ) {
+	function wc_get_cart_url() {
+		return get_permalink( get_option( Cart_Page::NAME, 0 ) );
+	}
+}
+
+if ( ! function_exists( 'wc_get_checkout_url' ) ) {
+	function wc_get_checkout_url() {
+		return get_permalink( get_option( Checkout_Page::NAME, 0 ) );
 	}
 }

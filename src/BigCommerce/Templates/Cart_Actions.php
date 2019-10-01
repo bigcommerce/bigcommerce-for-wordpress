@@ -25,7 +25,7 @@ class Cart_Actions extends Controller {
 		];
 	}
 
-	private function get_actions( $cart ) {
+	protected function get_actions( $cart ) {
 		$checkout = Cart_Action_Checkout::factory( [
 			Cart_Action_Checkout::CART => $cart,
 		] );

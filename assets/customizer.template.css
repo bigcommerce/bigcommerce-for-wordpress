@@ -4,6 +4,9 @@ a.bc-btn,
 .entry-content .bc-btn,
 .entry-content button.bc-btn,
 .entry-content a.bc-btn,
+.bc-mini-cart .bc-btn,
+.bc-mini-cart button.bc-btn,
+.bc-mini-cart a.bc-btn,
 .bigcommerce-cart__item-count,
 .bc-account-login__form input[type="submit"] {
 	color: var(--button-text);

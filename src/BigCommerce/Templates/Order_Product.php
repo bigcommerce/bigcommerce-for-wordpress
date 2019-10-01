@@ -48,7 +48,7 @@ class Order_Product extends Controller {
 		$product = $this->options[ self::PRODUCT ];
 		$post_id = $product['product_id'] ? $this->get_product_post( $product['product_id'], $this->options[ self::CHANNEL ] ) : 0;
 
-		$image_id = $post_id ? $this->get_image_id( $post_id ) : 0;
+		$image_id = $post_id ? $this->get_image_id( $post_id, $product['variant_id'] ) : 0;
 		$image    = $image_id ? wp_get_attachment_image( $image_id, $this->options[ self::THUMBNAIL_SIZE ] ) : $this->get_fallback_image( $this->options[ self::THUMBNAIL_SIZE ] );
 
 		$data = [
@@ -95,10 +95,18 @@ class Order_Product extends Controller {
 	 *
 	 * @return int
 	 */
-	private function get_image_id( $post_id ) {
+	protected function get_image_id( $post_id, $variant_id = 0 ) {
 		if ( empty( $post_id ) ) {
 			return 0;
 		}
+
+		if ( $variant_id ) {
+			$variant_image_map = (array) get_post_meta( $post_id, Product::VARIANT_IMAGES_META_KEY, true );
+			if ( ! empty( $variant_image_map[ $variant_id ] ) ) {
+				return $variant_image_map[ $variant_id ];
+			}
+		}
+
 		$thumbnail_id = (int) get_post_thumbnail_id( $post_id );
 		if ( $thumbnail_id ) {
 			return $thumbnail_id;
