@@ -1,17 +1,16 @@
-on: push
-name: Deploy
+on: 
+  release:
+    types: [published]
+name: Deploy to WordPress.org
 jobs:
   tag:
+    name: New Release
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name: tag
-      uses: actions/bin/filter@master
-      with:
-        args: tag
     - name: WordPress Plugin Deploy
       uses: 10up/action-wordpress-plugin-deploy@master
       env:
-        SLUG: bigcommerce
         SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
         SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+        SLUG: bigcommerce
