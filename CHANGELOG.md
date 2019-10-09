@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.8.1]
+
+### Changed
+
+- Updated embedded checkout SDK to version 1.37.1 to better handle failures from the cart handover.
+
 ## [3.8.0]
 
 ### Added
@@ -66,7 +72,7 @@
   from this plugin, add the following snipped to a theme or plugin:
   ```
   add_action( 'plugins_loaded', function() {
-  	remove_action( 'wp_head', bigcommerce()->post_types->product_page_meta_description, 0 );
+    remove_action( 'wp_head', bigcommerce()->post_types->product_page_meta_description, 0 );
   }, 100, 0 );
   ```
 - Added support for custom image alt text. The alt text set in the BigCommerce admin will
@@ -942,6 +948,7 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[3.8.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.8.0...3.8.1
 [3.8.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.7.0...3.8.0
 [3.7.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.6.0...3.7.0
 [3.6.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.5.0...3.6.0
