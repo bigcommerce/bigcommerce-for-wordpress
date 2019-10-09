@@ -18,8 +18,9 @@ class JS_Localization {
 				'query_string_separator' => __( '&', 'bigcommerce' ),
 			],
 			'cart'       => [
-				'items_url_param'          => __( '/items/', 'bigcommerce' ),
-				'quantity_param'           => __( 'quantity', 'bigcommerce' ),
+				'items_url_param'          => '/items/',
+				'mini_url_param'           => '/mini/',
+				'quantity_param'           => 'quantity',
 				'message_empty'            => __( 'Your cart is empty.', 'bigcommerce' ),
 				'continue_shopping_label'  => __( 'Take a look around.', 'bigcommerce' ),
 				'continue_shopping_url'    => esc_url( home_url() ),
@@ -27,6 +28,7 @@ class JS_Localization {
 				'add_to_cart_error_502'    => __( 'There was an error adding this product to your cart. It might be out of stock or unavailable.', 'bigcommerce' ),
 				'ajax_add_to_cart_error'   => __( 'There was an error adding this product to your cart.', 'bigcommerce' ),
 				'ajax_add_to_cart_success' => __( 'Product successfully added to your cart.', 'bigcommerce' ),
+				'mini_cart_loading'        => __( 'Loading', 'bigcommerce' ),
 			],
 			'account'    => [
 				'confirm_delete_message' => __( 'Are you sure you want to delete this address?', 'bigcommerce' ),

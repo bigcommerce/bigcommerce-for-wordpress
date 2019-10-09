@@ -33,6 +33,9 @@ export const wpAPIAddToCartAjax = (cartURL, querySrting = '') => request
 export const wpAPICartDelete = cartURL => request
 	.del(cartURL);
 
+export const wpAPIMiniCartGet = cartURL => request
+	.get(cartURL);
+
 export const wpAPIProductsPreview = (queryObj = {}) => request
 	.get(GUTENBERG_PRODUCTS.preview_url)
 	.query(queryObj);

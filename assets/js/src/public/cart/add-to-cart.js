@@ -6,10 +6,12 @@
 import _ from 'lodash';
 import delegate from 'delegate';
 import Cookie from 'js-cookie';
-import * as tools from '../../utils/tools';
-import { CART_API_BASE, AJAX_CART_ENABLED, AJAX_CART_NONCE } from '../config/wp-settings';
-import { wpAPIAddToCartAjax } from '../../utils/ajax';
-import { NLS } from '../config/i18n';
+import * as tools from 'utils/tools';
+import { trigger } from 'utils/events';
+import { wpAPIAddToCartAjax } from 'utils/ajax';
+import { CART_API_BASE, AJAX_CART_ENABLED, AJAX_CART_NONCE } from 'publicConfig/wp-settings';
+import { NLS } from 'publicConfig/i18n';
+import { cartMenuSet } from './cart-menu-item';
 
 const state = {
 	isFetching: false,
@@ -135,6 +137,7 @@ const updateCartItemCount = (data = {}) => {
 
 	_.delay(() => tools.addClass(menuCartCount, 'full'), 150);
 	menuCartCount.textContent = cartCount.toString();
+	cartMenuSet(cartCount);
 };
 
 /**
@@ -243,6 +246,7 @@ const handleAjaxAddToCartRequest = (e) => {
 
 			createAjaxResponseMessage(form, NLS.cart.ajax_add_to_cart_success, false);
 			updateCartItemCount(res.body);
+			trigger({ event: 'bigcommerce/update_mini_cart', native: false });
 		});
 };
 

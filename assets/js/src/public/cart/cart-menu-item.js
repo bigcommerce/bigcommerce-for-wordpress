@@ -6,19 +6,16 @@
 import Cookies from 'js-cookie';
 import _ from 'lodash';
 import * as tools from '../../utils/tools';
-import * as ls from '../../utils/storage/local';
-import { CART_ITEM_COUNT_KEY, CART_ITEM_COUNT_COOKIE } from '../../constants/cookies';
+import { CART_ITEM_COUNT_COOKIE } from '../../constants/cookies';
 
-const cartMenuSet = itemCount => ls.put(CART_ITEM_COUNT_KEY, itemCount);
-
-const cartMenuGet = ls.get(CART_ITEM_COUNT_KEY);
+const cartMenuSet = itemCount => Cookies.set(CART_ITEM_COUNT_COOKIE, itemCount);
 
 const updateCartMenuItem = () => {
-	const currentCount = ls.get(CART_ITEM_COUNT_KEY);
+	const currentCount = Cookies.get(CART_ITEM_COUNT_COOKIE);
 	tools.getNodes('.bigcommerce-cart__item-count', true, document, true).forEach((item) => {
 		item.classList.remove('full');
 
-		if (currentCount <= 0) {
+		if (!currentCount || currentCount <= 0) {
 			item.innerHTML = '';
 			return;
 		}
@@ -48,11 +45,12 @@ const updateMenuQtyOnPageLoad = () => {
 	const cookie = Cookies.get(CART_ITEM_COUNT_COOKIE);
 
 	if (!cookie) {
-		updateCartMenuItem();
 		return;
 	}
 
-	if (cookie !== cartMenuGet) {
+	updateCartMenuItem();
+
+	if (cookie !== Cookies.get(CART_ITEM_COUNT_COOKIE)) {
 		cartMenuSet(cookie);
 		updateCartMenuItem();
 		_.delay(() => {

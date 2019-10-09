@@ -116,7 +116,7 @@ class Currency extends Settings_Section {
 
 		$selected = get_term_meta( $channel_term_id, self::CHANNEL_CURRENCY_CODE, true ) ?: $default;
 
-		if ( ! array_key_exists( $selected, $currencies ) ) {
+		if ( ! array_key_exists( $selected, $currencies ) && $selected !== $default ) {
 			if ( $args[ 'count' ] > 1 ) {
 				$message = sprintf( __( 'The currency <strong>%s</strong> is no longer active for your account. Using <strong>%s</strong> for channel <strong>%s</strong>.', 'bigcommerce' ), $selected, $default, get_term( $channel_term_id, Channel\Channel::NAME )->name );
 			} else {

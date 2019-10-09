@@ -1,5 +1,31 @@
 # Changelog
 
+## [3.8.0]
+
+### Added
+
+- Created a mini-cart template. There are two ways to display the mini-cart. (1) Use a
+  widget to display the mini-cart in a registered sidebar area. (2) Activate the toggle
+  in the theme customizer to display the mini-cart when the cart nav menu icon is clicked.
+  The contents of the mini-cart will be loaded asynchronously to avoid deleterious effects
+  on page caching plugins. The mini-cart has its own set of templates that can be customized
+  independently of the full cart templates.
+- Added two more WooCommerce function stubs for compatibility with some themes:
+  `wc_get_cart_url()` and `wc_get_checkout_url()`. Each will point to the corresponding
+  BigCommerce page for cart or checkout. Props to @mark-netalico.
+
+### Fixed
+
+- Removed an erroneous error message that displayed when updating from version 3.5 or earlier.
+  If the site's currency matches the store's default currency, no error message should display
+  that says the currency is disabled.
+
+### Changed
+
+- If a product variant has an image, and that variant is purchased, the order history
+  page will display that variant's image instead of the default product image.
+- Clarified 3.6.0 changelog entry regarding assignment of currencies to channels.
+
 ## [3.7.0]
 
 ### Added
@@ -31,7 +57,7 @@
 
 - Added currency selection to the settings screen. Any currencies enabled in the
   BigCommerce admin are available to assign as the currency for the WordPress site.
-  When in multi-channel mode, different currencies can be assigned to each channel.
+  When in multi-channel mode, a different currency can be assigned to each channel.
 - Added support for custom SEO titles and descriptions. The SEO title set in the
   BigCommerce admin will override the HTML title tag for the product single. The
   SEO description set in the BigCommerce admin will be used to render a meta
@@ -916,6 +942,7 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[3.8.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.7.0...3.8.0
 [3.7.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.6.0...3.7.0
 [3.6.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.5.0...3.6.0
 [3.5.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.4.1...3.5.0
