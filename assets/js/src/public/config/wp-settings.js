@@ -9,3 +9,4 @@ export const COUNTRIES_OBJ = CONFIG.countries || {};
 export const PRODUCT_MESSAGES = CONFIG.product.messages || '';
 export const PRICING_API_URL = CONFIG.pricing.api_url || '';
 export const PRICING_API_NONCE = CONFIG.pricing.ajax_pricing_nonce || '';
+export const MINI_CART = CONFIG.cart.mini_cart.enabled || false;

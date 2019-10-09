@@ -4,19 +4,20 @@
 namespace BigCommerce\Container;
 
 
-use BigCommerce\Api\v3\Api\CartApi;
 use BigCommerce\Cart\Add_To_Cart;
 use BigCommerce\Cart\Buy_Now;
 use BigCommerce\Cart\Cache_Control;
 use BigCommerce\Cart\Cart_Menu_Item;
 use BigCommerce\Cart\Cart_Recovery;
 use BigCommerce\Cart\Checkout;
+use BigCommerce\Cart\Mini_Cart;
 use Pimple\Container;
 
 class Cart extends Provider {
 	const CART_INDICATOR    = 'cart.page_indicator';
 	const CART_CREATOR      = 'cart.page_creator';
 	const MENU_ITEM         = 'cart.menu_item';
+	const MINI_CART         = 'cart.mini_cart';
 	const CACHE_CONTROL     = 'cart.cache_control';
 	const BUY_NOW           = 'cart.buy_now';
 	const ADD_TO_CART       = 'cart.add_to_cart';
@@ -25,6 +26,7 @@ class Cart extends Provider {
 
 	public function register( Container $container ) {
 		$this->menu_item( $container );
+		$this->mini_cart( $container );
 		$this->cache_control( $container );
 
 		$this->buy_now( $container );
@@ -72,6 +74,7 @@ class Cart extends Provider {
 		$container[ self::ADD_TO_CART ] = function ( Container $container ) {
 			return new Add_To_Cart();
 		};
+
 		$container[ self::RECOVER_FROM_CART ] = function ( Container $container ) {
 			return new Cart_Recovery( $container[ Api::FACTORY ]->abandonedCart(), $container[ Api::FACTORY ]->cart() );
 		};
@@ -82,6 +85,15 @@ class Cart extends Provider {
 
 		add_action( 'bigcommerce/action_endpoint/' . Cart_Recovery::ACTION, $this->create_callback( 'recover_cart_handle_request', function ( $args ) use ( $container ) {
 			$container[ self::RECOVER_FROM_CART ]->handle_request();
+		} ), 10, 1 );
+	}
+
+	private function mini_cart( Container $container ) {
+		$container[ self::MINI_CART ] = function ( Container $container ) {
+			return new Mini_Cart();
+		};
+		add_filter( 'bigcommerce/js_config', $this->create_callback( 'mini_cart_js_config', function ( $config ) use ( $container ) {
+			return $container[ self::MINI_CART ]->add_mini_cart_config( $config );
 		} ), 10, 1 );
 	}
 

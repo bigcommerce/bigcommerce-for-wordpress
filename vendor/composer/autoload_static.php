@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInita46f64a2934fb2a3dd5e122d5b3221f7
+class ComposerStaticInitfe71eae5c568f78e8137e0a51852fc18
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -436,6 +436,7 @@ class ComposerStaticInita46f64a2934fb2a3dd5e122d5b3221f7
         'BigCommerce\\Cart\\Cart_Menu_Item' => __DIR__ . '/../..' . '/src/BigCommerce/Cart/Cart_Menu_Item.php',
         'BigCommerce\\Cart\\Cart_Recovery' => __DIR__ . '/../..' . '/src/BigCommerce/Cart/Cart_Recovery.php',
         'BigCommerce\\Cart\\Checkout' => __DIR__ . '/../..' . '/src/BigCommerce/Cart/Checkout.php',
+        'BigCommerce\\Cart\\Mini_Cart' => __DIR__ . '/../..' . '/src/BigCommerce/Cart/Mini_Cart.php',
         'BigCommerce\\Checkout\\Customer_Login' => __DIR__ . '/../..' . '/src/BigCommerce/Checkout/Customer_Login.php',
         'BigCommerce\\Checkout\\Requirements_Notice' => __DIR__ . '/../..' . '/src/BigCommerce/Checkout/Requirements_Notice.php',
         'BigCommerce\\Compatibility\\Template_Compatibility' => __DIR__ . '/../..' . '/src/BigCommerce/Compatibility/Template_Compatibility.php',
@@ -480,6 +481,7 @@ class ComposerStaticInita46f64a2934fb2a3dd5e122d5b3221f7
         'BigCommerce\\Customizer\\Controls\\Multiple_Checkboxes' => __DIR__ . '/../..' . '/src/BigCommerce/Customizer/Controls/Multiple_Checkboxes.php',
         'BigCommerce\\Customizer\\Panels\\Primary' => __DIR__ . '/../..' . '/src/BigCommerce/Customizer/Panels/Primary.php',
         'BigCommerce\\Customizer\\Sections\\Buttons' => __DIR__ . '/../..' . '/src/BigCommerce/Customizer/Sections/Buttons.php',
+        'BigCommerce\\Customizer\\Sections\\Cart' => __DIR__ . '/../..' . '/src/BigCommerce/Customizer/Sections/Cart.php',
         'BigCommerce\\Customizer\\Sections\\Checkout' => __DIR__ . '/../..' . '/src/BigCommerce/Customizer/Sections/Checkout.php',
         'BigCommerce\\Customizer\\Sections\\Colors' => __DIR__ . '/../..' . '/src/BigCommerce/Customizer/Sections/Colors.php',
         'BigCommerce\\Customizer\\Sections\\Product_Archive' => __DIR__ . '/../..' . '/src/BigCommerce/Customizer/Sections/Product_Archive.php',
@@ -714,6 +716,7 @@ class ComposerStaticInita46f64a2934fb2a3dd5e122d5b3221f7
         'BigCommerce\\Templates\\Amp_Cart_Summary' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Amp_Cart_Summary.php',
         'BigCommerce\\Templates\\Cart' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Cart.php',
         'BigCommerce\\Templates\\Cart_Action_Checkout' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Cart_Action_Checkout.php',
+        'BigCommerce\\Templates\\Cart_Action_View' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Cart_Action_View.php',
         'BigCommerce\\Templates\\Cart_Actions' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Cart_Actions.php',
         'BigCommerce\\Templates\\Cart_Empty' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Cart_Empty.php',
         'BigCommerce\\Templates\\Cart_Error_Message' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Cart_Error_Message.php',
@@ -737,6 +740,12 @@ class ComposerStaticInita46f64a2934fb2a3dd5e122d5b3221f7
         'BigCommerce\\Templates\\Lost_Password_Form' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Lost_Password_Form.php',
         'BigCommerce\\Templates\\Message' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Message.php',
         'BigCommerce\\Templates\\Message_Group' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Message_Group.php',
+        'BigCommerce\\Templates\\Mini_Cart' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Mini_Cart.php',
+        'BigCommerce\\Templates\\Mini_Cart_Actions' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Mini_Cart_Actions.php',
+        'BigCommerce\\Templates\\Mini_Cart_Footer' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Mini_Cart_Footer.php',
+        'BigCommerce\\Templates\\Mini_Cart_Header' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Mini_Cart_Header.php',
+        'BigCommerce\\Templates\\Mini_Cart_Items' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Mini_Cart_Items.php',
+        'BigCommerce\\Templates\\Mini_Cart_Summary' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Mini_Cart_Summary.php',
         'BigCommerce\\Templates\\No_Results' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/No_Results.php',
         'BigCommerce\\Templates\\Option_Types\\Option_Checkbox' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Option_Types/Option_Checkbox.php',
         'BigCommerce\\Templates\\Option_Types\\Option_Date' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Option_Types/Option_Date.php',
@@ -823,6 +832,7 @@ class ComposerStaticInita46f64a2934fb2a3dd5e122d5b3221f7
         'BigCommerce\\Webhooks\\Webhook_Cron_Tasks' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Webhook_Cron_Tasks.php',
         'BigCommerce\\Webhooks\\Webhook_Listener' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Webhook_Listener.php',
         'BigCommerce\\Webhooks\\Webhook_Versioning' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Webhook_Versioning.php',
+        'BigCommerce\\Widgets\\Mini_Cart_Widget' => __DIR__ . '/../..' . '/src/BigCommerce/Widgets/Mini_Cart_Widget.php',
         'BigCommerce\\Widgets\\Product_Category_Widget' => __DIR__ . '/../..' . '/src/BigCommerce/Widgets/Product_Category_Widget.php',
         'Bigcommerce\\Api\\Client' => __DIR__ . '/..' . '/bigcommerce/api/src/Bigcommerce/Api/Client.php',
         'Bigcommerce\\Api\\ClientError' => __DIR__ . '/..' . '/bigcommerce/api/src/Bigcommerce/Api/ClientError.php',
@@ -1032,10 +1042,10 @@ class ComposerStaticInita46f64a2934fb2a3dd5e122d5b3221f7
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInita46f64a2934fb2a3dd5e122d5b3221f7::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInita46f64a2934fb2a3dd5e122d5b3221f7::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInita46f64a2934fb2a3dd5e122d5b3221f7::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInita46f64a2934fb2a3dd5e122d5b3221f7::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitfe71eae5c568f78e8137e0a51852fc18::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitfe71eae5c568f78e8137e0a51852fc18::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitfe71eae5c568f78e8137e0a51852fc18::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitfe71eae5c568f78e8137e0a51852fc18::$classMap;
 
         }, null, ClassLoader::class);
     }

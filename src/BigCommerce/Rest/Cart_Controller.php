@@ -18,6 +18,8 @@ use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Condition\Condition;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
 use BigCommerce\Taxonomies\Product_Type\Product_Type;
+use BigCommerce\Templates\Cart_Empty;
+use BigCommerce\Templates\Mini_Cart;
 use BigCommerce\Util\Cart_Item_Iterator;
 use WP_REST_Server;
 
@@ -38,11 +40,9 @@ class Cart_Controller extends Rest_Controller {
 	 * @filter bigcommerce/js_config
 	 */
 	public function js_config( $config ) {
-		$config[ 'cart' ] = [
-			'api_url'         => $this->get_base_url(),
-			'ajax_enabled'    => (bool) get_option( Cart_Settings::OPTION_AJAX_CART, true ),
-			'ajax_cart_nonce' => wp_create_nonce( 'wp_rest' ),
-		];
+		$config['cart']['api_url']         = $this->get_base_url();
+		$config['cart']['ajax_enabled']    = (bool) get_option( Cart_Settings::OPTION_AJAX_CART, true );
+		$config['cart']['ajax_cart_nonce'] = wp_create_nonce( 'wp_rest' );
 
 		return $config;
 	}
@@ -127,6 +127,22 @@ class Cart_Controller extends Rest_Controller {
 			],
 			'schema' => [ $this, 'get_public_item_schema' ],
 		] );
+
+		register_rest_route( $this->namespace, '/' . $this->mini_cart_route_path(), [
+			'args'   => [
+				'context' => $this->get_context_param(),
+			],
+			[
+				// Get a cart
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'get_mini_cart' ],
+				'permission_callback' => [ $this, 'cart_id_access_check' ],
+				'args'                => [
+					'cart_id' => $this->cart_id_param( true ),
+				],
+			],
+			'schema' => [ $this, 'get_rendered_item_schema' ],
+		] );
 	}
 
 	private function create_route_path() {
@@ -139,6 +155,10 @@ class Cart_Controller extends Rest_Controller {
 
 	private function item_route_path() {
 		return $this->cart_route_path() . '/items/(?P<item_id>[0-9a-f\-]+)';
+	}
+
+	private function mini_cart_route_path() {
+		return $this->cart_route_path() . '/mini';
 	}
 
 	/**
@@ -193,10 +213,7 @@ class Cart_Controller extends Rest_Controller {
 	 * @return bool
 	 */
 	public function cart_id_access_check( $request ) {
-		$cart    = new Cart( $this->cart_api );
-		$cart_id = $request->get_param( 'cart_id' );
-
-		return $cart_id == $cart->get_cart_id();
+		return $request->get_param( 'cart_id' ) === $this->get_cart_id();
 	}
 
 	private function cart_id_param( $required = false ) {
@@ -849,5 +866,86 @@ class Cart_Controller extends Rest_Controller {
 		}
 
 		return $this->add_additional_fields_schema( $schema );
+	}
+
+	/**
+	 * Render the current user's mini-cart, and return as a rest
+	 * response object
+	 *
+	 * @return \WP_REST_Response
+	 */
+	public function get_mini_cart() {
+		$cart_id = $this->get_cart_id();
+		if ( empty( $cart_id ) ) {
+			return $this->get_empty_mini_cart();
+		}
+		try {
+			$template = Mini_Cart::factory( [
+				Mini_Cart::CART => $this->get_mapped_cart( $cart_id ),
+			] );
+
+			return rest_ensure_response( [
+				'rendered' => $template->render(),
+			] );
+		} catch ( ApiException $e ) {
+			return $this->get_empty_mini_cart();
+		}
+	}
+
+	/**
+	 * Render an empty mini-cart and return as a rest response object
+	 *
+	 * @return \WP_REST_Response
+	 */
+	private function get_empty_mini_cart() {
+		$template = Cart_Empty::factory( [
+			Cart_Empty::CART => [
+				'cart_id'         => '',
+				'base_amount'     => 0,
+				'discount_amount' => 0,
+				'cart_amount'     => 0,
+				'items'           => [],
+			],
+		] );
+
+		return rest_ensure_response( [
+			'rendered' => $template->render(),
+		] );
+	}
+
+	private function get_cart_id() {
+		$cart = new Cart( $this->cart_api );
+
+		return $cart->get_cart_id();
+	}
+
+	private function get_mapped_cart( $cart_id ) {
+		$include = [
+			'line_items.physical_items.options',
+			'line_items.digital_items.options',
+			'redirect_urls',
+		];
+		$cart    = $this->cart_api->cartsCartIdGet( $cart_id, [ 'include' => $include ] )->getData();
+		$mapper  = new Cart_Mapper( $cart );
+
+		return $mapper->map();
+	}
+
+	public function get_rendered_item_schema() {
+		$schema = [
+			'$schema'    => 'http://json-schema.org/draft-04/schema#',
+			'title'      => 'bigcommerce_cart_rendered',
+			'type'       => 'object',
+			'properties' => [
+				'rendered' => [
+					'description' => __( 'The rendered template', 'bigcommerce' ),
+					'type'        => 'string',
+					'context'     => [ 'view', 'edit', 'embed' ],
+					'readonly'    => true,
+				],
+			],
+		];
+
+		return $schema;
 	}
 }

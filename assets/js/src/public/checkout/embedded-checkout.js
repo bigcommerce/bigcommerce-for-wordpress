@@ -5,9 +5,9 @@
 
 import Cookie from 'js-cookie';
 import { embedCheckout } from '@bigcommerce/checkout-sdk';
+import * as tools from 'utils/tools';
+import { CART_ID_COOKIE_NAME, CART_ITEM_COUNT_COOKIE } from 'bcConstants/cookies';
 import { cartEmpty } from '../cart/cart-templates';
-import * as tools from '../../utils/tools';
-import { get, remove } from '../../utils/storage/local';
 
 const el = {
 	container: tools.getNodes('bc-embedded-checkout')[0],
@@ -18,16 +18,16 @@ const el = {
  * @description Clears out the localstorage and cart count in the nav menu item.
  */
 const clearCartData = () => {
-	const cartCount = get('bigcommerce_current_cart_item_count');
+	const cartCount = Cookie.get(CART_ITEM_COUNT_COOKIE);
 	if (!cartCount) {
 		return;
 	}
 
 	const cartMenuCount = tools.getNodes('.bigcommerce-cart__item-count', false, document, true)[0];
-	remove('bigcommerce_current_cart_item_count');
+	Cookie.remove(CART_ITEM_COUNT_COOKIE);
 	tools.removeClass(cartMenuCount, 'full');
 	cartMenuCount.textContent = '';
-	Cookie.remove('bigcommerce_cart_id');
+	Cookie.remove(CART_ID_COOKIE_NAME);
 };
 
 /**

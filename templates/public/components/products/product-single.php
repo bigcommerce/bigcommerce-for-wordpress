@@ -1,17 +1,21 @@
 <?php
 /**
- * @var string $images
- * @var string $title
- * @var string $brand
- * @var string $price
- * @var string $rating
- * @var string $form
- * @var string $description
- * @var string $sku
- * @var string $specs
- * @var string $related
- * @var string $reviews
+ * @var Product $product
+ * @var string  $images
+ * @var string  $title
+ * @var string  $brand
+ * @var string  $price
+ * @var string  $rating
+ * @var string  $form
+ * @var string  $description
+ * @var string  $sku
+ * @var string  $specs
+ * @var string  $related
+ * @var string  $reviews
  */
+
+use BigCommerce\Post_Types\Product\Product;
+
 ?>
 
 <!-- data-js="bc-product-data-wrapper" is required. -->

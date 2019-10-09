@@ -127,9 +127,12 @@ class Order_Summary extends Controller {
 			return 0;
 		}
 		// loop through until we find one with a featured image
-		// filter the array, because some items (e.g., gift certificates) won't have a product ID
-		$product_ids = array_filter( wp_list_pluck( $products, 'product_id' ) );
-		foreach ( $product_ids as $product_id ) {
+		foreach ( $products as $product ) {
+			if ( empty( $product['product_id'] ) ) {
+				continue; // e.g., gift certificate
+			}
+			$product_id = $product['product_id'];
+
 			/*
 			 * Yes, this is inefficient if many products are lacking
 			 * images. But it should work on the first try in most cases.
@@ -143,7 +146,18 @@ class Order_Summary extends Controller {
 			if ( empty( $posts ) ) {
 				continue;
 			}
-			$thumbnail_id = (int) get_post_thumbnail_id( reset( $posts ) );
+
+			$post_id = (int) reset( $posts );
+
+			// if the purchased variant has an image, that takes precedence
+			if ( ! empty( $product['variant_id'] ) ) {
+				$variant_image_map = (array) get_post_meta( $post_id, Product::VARIANT_IMAGES_META_KEY, true );
+				if ( ! empty( $variant_image_map[ $product['variant_id'] ] ) ) {
+					return $variant_image_map[ $product['variant_id'] ];
+				}
+			}
+
+			$thumbnail_id = (int) get_post_thumbnail_id( $post_id );
 			if ( $thumbnail_id ) {
 				return $thumbnail_id;
 			}
