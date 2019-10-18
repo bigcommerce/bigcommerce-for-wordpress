@@ -8,6 +8,7 @@ import _ from 'lodash';
 import { trigger } from 'utils/events';
 import * as tools from '../../utils/tools';
 import gallery from '../gallery/productGallery';
+import videos from '../gallery/productVideos';
 import variants from '../product/variants';
 
 const container = tools.getNodes('bc-product-loop-card');
@@ -51,9 +52,12 @@ const initDialogs = () => {
 
 		instances.dialogs[dialogID].on('render', () => {
 			_.delay(() => gallery(), state.delay);
+			_.delay(() => videos(), state.delay);
 			_.delay(() => variants(dialog), state.delay);
 			_.delay(() => trigger({ event: 'bigcommerce/get_pricing', data: { quickView: true }, native: false }), state.delay);
 		});
+
+		instances.dialogs[dialogID].on('hide', () => trigger({ event: 'bigcommerce/gallery_slide_changed', native: false }));
 	});
 };
 

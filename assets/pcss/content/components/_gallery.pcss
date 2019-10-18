@@ -44,11 +44,46 @@
 	background: none;
 	opacity: 0.8;
 	transition: var(--transition);
+	cursor: pointer;
 
 	&:hover,
 	&:focus,
 	&.swiper-slide-active {
 		opacity: 1;
+	}
+}
+
+.bc-product-gallery__thumb-slide--video {
+	align-self: center;
+	text-align: center;
+	opacity: 1;
+	transition: var(--transition-opacity);
+
+	&:hover,
+	&:focus {
+		opacity: 0.6;
+	}
+}
+
+.bc-video-play-icon {
+	display: block;
+	position: relative;
+	margin: 0 auto;
+	width: 40px;
+	height: 40px;
+	line-height: 40px;
+	background-color: var(--color-bc-doger-blue);
+	border-radius: 100%;
+
+	&:before {
+		content: '';
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate3d(-5px, -50%, 0);
+		border-top: 10px solid transparent;
+		border-bottom: 10px solid transparent;
+		border-left: 15px solid var(--color-white);
 	}
 }
 

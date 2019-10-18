@@ -4,8 +4,8 @@
 namespace BigCommerce\Rest;
 
 
-use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api\v3\Api\CartApi;
+use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api\v3\Model\CartResponse;
 use BigCommerce\Api\v3\Model\CartUpdateRequest;
 use BigCommerce\Cart\Cart;
@@ -128,6 +128,28 @@ class Cart_Controller extends Rest_Controller {
 			'schema' => [ $this, 'get_public_item_schema' ],
 		] );
 
+		register_rest_route( $this->namespace, '/' . $this->item_route_path() . '/delete', [
+			'args'   => [
+				'context' => $this->get_context_param(),
+			],
+			[
+				/*
+				 * Delete an item from the cart
+				 * This is a duplicate of the method above, but it doesn't use the DELETE
+				 * method, because GoDaddy has decided that DELETE requests are too esoteric
+				 * to be allowed
+				 */
+				'methods'             => WP_REST_Server::EDITABLE,
+				'callback'            => [ $this, 'delete_item' ],
+				'permission_callback' => [ $this, 'cart_id_access_check' ],
+				'args'                => [
+					'cart_id' => $this->cart_id_param( true ),
+					'item_id' => $this->item_id_param( true ),
+				],
+			],
+			'schema' => [ $this, 'get_public_item_schema' ],
+		] );
+
 		register_rest_route( $this->namespace, '/' . $this->mini_cart_route_path(), [
 			'args'   => [
 				'context' => $this->get_context_param(),
@@ -189,8 +211,8 @@ class Cart_Controller extends Rest_Controller {
 	/**
 	 * Prepares a cart for response.
 	 *
-	 * @param  \BigCommerce\Api\v3\Model\Cart $cart    Cart object.
-	 * @param \WP_REST_Request                $request Request object.
+	 * @param \BigCommerce\Api\v3\Model\Cart $cart    Cart object.
+	 * @param \WP_REST_Request               $request Request object.
 	 *
 	 * @return \WP_REST_Response Response object.
 	 */
@@ -337,7 +359,7 @@ class Cart_Controller extends Rest_Controller {
 			}
 
 			return new \WP_Error( 'rest_cannot_create', __( 'Error creating your cart. It might be out of stock or unavailable.', 'bigcommerce' ), [
-				'status'    => $e->getCode(),
+				'status' => $e->getCode(),
 			] );
 		}
 
@@ -377,7 +399,7 @@ class Cart_Controller extends Rest_Controller {
 			}
 
 			return new \WP_Error( 'rest_cannot_create', __( 'Error updating your cart. It might be out of stock or unavailable.', 'bigcommerce' ), [
-				'status'    => $e->getCode(),
+				'status' => $e->getCode(),
 			] );
 		}
 
@@ -409,22 +431,23 @@ class Cart_Controller extends Rest_Controller {
 		$option_config   = $product->options();
 		$modifier_config = $product->modifiers();
 		foreach ( $option_config as $config ) {
-			if ( array_key_exists( $config[ 'id' ], $submitted_options ) ) {
-				$options[ $config[ 'id' ] ] = absint( $submitted_options[ $config[ 'id' ] ] );
+			if ( array_key_exists( $config['id'], $submitted_options ) ) {
+				$options[ $config['id'] ] = absint( $submitted_options[ $config['id'] ] );
 			}
 		}
 		foreach ( $modifier_config as $config ) {
-			if ( array_key_exists( $config[ 'id' ], $submitted_options ) ) {
-				$options[ $config[ 'id' ] ] = $this->sanitize_option( $submitted_options[ $config[ 'id' ] ], $config );
+			if ( array_key_exists( $config['id'], $submitted_options ) ) {
+				$options[ $config['id'] ] = $this->sanitize_option( $submitted_options[ $config['id'] ], $config );
 			}
 		}
 
 		$cart = new Cart( $this->cart_api );
+
 		return $cart->add_line_item( $product_id, $options, $quantity );
 	}
 
 	private function sanitize_option( $value, $config ) {
-		switch ( $config[ 'type' ] ) {
+		switch ( $config['type'] ) {
 			case 'date':
 				return strtotime( $value );
 			case 'multi_line_text':
@@ -850,7 +873,7 @@ class Cart_Controller extends Rest_Controller {
 		];
 
 		foreach ( $taxonomies as $tax ) {
-			$schema[ 'properties' ][ 'items' ][ 'items' ][ 'properties' ][ $tax ] = [
+			$schema['properties']['items']['items']['properties'][ $tax ] = [
 				'description' => sprintf( __( 'A term from the %s taxonomy', 'bigcommerce' ), $tax ),
 				'type'        => 'array',
 				'items'       => [

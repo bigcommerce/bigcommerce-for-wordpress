@@ -6,6 +6,7 @@
  *
  * @var Product $product
  * @var int[]   $image_ids
+ * @var array[] $youtube_videos
  * @var string  $fallback_image
  * @var string  $image_size     The image size to use for the gallery image
  * @var string  $thumbnail_size The image size to use for thumbnail images
@@ -13,7 +14,9 @@
 
 use BigCommerce\Post_Types\Product\Product;
 
-$gallery_classes = count( $image_ids ) > 1 ? 'swiper-container bc-product-gallery--has-carousel' : 'swiper-container';
+$item_count = count( $image_ids ) + count( $youtube_videos );
+
+$gallery_classes = $item_count > 1 ? 'swiper-container bc-product-gallery--has-carousel' : 'swiper-container';
 ?>
 <div class="bc-product__gallery">
 
@@ -28,12 +31,19 @@ $gallery_classes = count( $image_ids ) > 1 ? 'swiper-container bc-product-galler
 
 			<!-- class="swiper-wrapper" is required -->
 			<div class="swiper-wrapper">
-				<?php if ( $image_ids ) {
+				<?php if ( $item_count > 0 ) {
 					foreach ( $image_ids as $image_id ) { ?>
 						<!-- class="swiper-slide" is required -->
 						<div class="swiper-slide bc-product-gallery__image-slide">
 							<img src="<?php echo esc_url( wp_get_attachment_image_url( $image_id, $image_size ) ); ?>"
 									 alt="<?php echo esc_attr( trim( strip_tags( get_post_meta( $image_id, '_wp_attachment_image_alt', true ) ) ) ); ?>">
+						</div>
+					<?php }
+					foreach ( $youtube_videos as $video ) { ?>
+						<!-- class="swiper-slide" is required -->
+						<div class="swiper-slide bc-product-gallery__video-slide" >
+							<!-- data-js="bc-product-video-player" and data-youtube-id="<?php echo esc_attr( $video['id'] ); ?>" are required -->
+							<div data-js="bc-product-video-player" data-youtube-id="<?php echo esc_attr( $video['id'] ); ?>"></div>
 						</div>
 					<?php }
 				} else { ?>
@@ -44,17 +54,31 @@ $gallery_classes = count( $image_ids ) > 1 ? 'swiper-container bc-product-galler
 			</div>
 		</div>
 
-		<?php if ( count( $image_ids ) > 1 ) { ?>
+		<?php if ( $item_count > 1 ) { ?>
 			<div class="swiper-container" data-js="bc-gallery-thumbs">
 
 				<!-- class="swiper-wrapper" is required -->
 				<div class="swiper-wrapper bc-product-gallery__thumbs">
-					<?php foreach ( $image_ids as $index => $image_id ) { ?>
+					<?php
+					$index = 0;
+					foreach ( $image_ids as $image_id ) { ?>
 						<!-- class="swiper-slide" and data-js="bc-gallery-thumb-trigger" are required -->
 						<a class="swiper-slide bc-product-gallery__thumb-slide" data-js="bc-gallery-thumb-trigger"
-						   data-index="<?php echo (int) $index; ?>">
+						   data-index="<?php echo $index++; ?>">
 							<img src="<?php echo esc_url( wp_get_attachment_image_url( $image_id, $thumbnail_size ) ); ?>"
 							     alt="<?php echo esc_attr( trim( strip_tags( get_post_meta( $image_id, '_wp_attachment_image_alt', true ) ) ) ); ?>">
+						</a>
+					<?php }
+					foreach ( $youtube_videos as $video ) { ?>
+						<!-- class="swiper-slide bc-product-gallery__thumb-slide--video", data-player-id="<?php esc_attr( $video['id'] ); ?>", and data-js="bc-gallery-thumb-trigger" are required -->
+						<a
+								class="swiper-slide bc-product-gallery__thumb-slide bc-product-gallery__thumb-slide--video"
+								data-js="bc-gallery-thumb-trigger"
+								data-index="<?php echo $index++; ?>"
+								data-player-id="<?php echo esc_attr( $video['id'] ); ?>"
+								title="<?php echo esc_attr( sprintf( __( 'Play %s', 'bigcommerce' ), $video['title'] ) ); ?>"
+						>
+							<i class="bc-video-play-icon"></i>
 						</a>
 					<?php } ?>
 				</div>

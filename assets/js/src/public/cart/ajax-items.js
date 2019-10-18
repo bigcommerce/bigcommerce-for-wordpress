@@ -252,23 +252,20 @@ const removeCartItem = (itemRow = '', data = {}) => {
  * @param e
  */
 const handleCartItemRemoval = (e) => {
-	const cartURL = getCartAPIURL(e);
+	const cartItemURL = getCartAPIURL(e);
+	const deleteItemURL = `${cartItemURL}/delete`;
 	const removeButton = e.delegateTarget;
 	const isMiniCart = tools.closest(removeButton, '[data-js="bc-mini-cart"]');
 	const miniCartID = isMiniCart ? isMiniCart.dataset.miniCartId : '';
 
-	if (cartState.isFetching) {
+	if (cartState.isFetching || _.isEmpty(cartItemURL)) {
 		return;
 	}
 
 	cartState.isFetching = true;
 	handleCartState(removeButton);
 
-	if (_.isEmpty(cartURL)) {
-		return;
-	}
-
-	wpAPICartDelete(cartURL)
+	wpAPICartDelete(deleteItemURL)
 		.end((err, res) => {
 			const itemRow = tools.closest(removeButton, `[data-js="${removeButton.dataset.cart_item_id}"]`);
 			cartState.isFetching = false;

@@ -263,7 +263,7 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 					[
 						'label' => __( 'Cart Enabled', 'bigcommerce' ),
 						'key'   => 'cartenabled',
-						'value' => get_option( Cart::OPTION_ENABLE_CART ) ? true : false,
+						'value' => get_option( Cart::OPTION_ENABLE_CART, true ) ? true : false,
 					],
 					[
 						'label' => __( 'Cart Page Slug', 'bigcommerce' ),

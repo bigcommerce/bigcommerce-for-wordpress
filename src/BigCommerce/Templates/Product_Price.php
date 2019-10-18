@@ -12,6 +12,7 @@ class Product_Price extends Controller {
 	const VISIBLE          = 'visible';
 	const PRICE_RANGE      = 'price_range';
 	const CALCULATED_RANGE = 'calculated_price_range';
+	const RETAIL_PRICE     = 'retail_price';
 
 	protected $template           = 'components/products/product-price.php';
 	protected $wrapper_tag        = 'div';
@@ -36,13 +37,14 @@ class Product_Price extends Controller {
 			self::VISIBLE          => $this->visible_class( $this->options[ self::SHOW_DEFAULT ] ),
 			self::PRICE_RANGE      => $product->price_range(),
 			self::CALCULATED_RANGE => $product->calculated_price_range(),
+			self::RETAIL_PRICE     => $product->retail_price(),
 		];
 	}
 
 	protected function get_wrapper_attributes() {
 		$attributes = parent::get_wrapper_attributes();
 
-		$attributes[ 'data-product-price-id' ] = $this->options[ self::PRODUCT ]->bc_id();
+		$attributes['data-product-price-id'] = $this->options[ self::PRODUCT ]->bc_id();
 
 		return $attributes;
 	}

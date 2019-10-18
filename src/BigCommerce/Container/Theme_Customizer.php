@@ -61,7 +61,7 @@ class Theme_Customizer extends Provider {
 			$container[ self::SECTION_PRODUCT_SINGLE ]->register( $wp_customize );
 			$container[ self::SECTION_PRODUCT_ARCHIVE ]->register( $wp_customize );
 
-			if ( get_option( \BigCommerce\Settings\Sections\Cart::OPTION_ENABLE_CART ) ) {
+			if ( get_option( \BigCommerce\Settings\Sections\Cart::OPTION_ENABLE_CART, true ) ) {
 				$container[ self::SECTION_CART ]->register( $wp_customize );
 			}
 

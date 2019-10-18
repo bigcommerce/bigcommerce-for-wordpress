@@ -67,6 +67,19 @@
 	font-size: var(--font-size-content);
 }
 
+.bc-product__retail-price {
+	display: block;
+
+	&.bc-no-retail-price {
+		display: none;
+	}
+}
+
+.bc-product__retail-price-value {
+	text-decoration: line-through;
+	color: var(--color-bc-grey);
+}
+
 .bc-product__original-price {
 	text-decoration: line-through;
 	margin-right: 12px;

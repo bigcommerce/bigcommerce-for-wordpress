@@ -167,6 +167,32 @@ class Product {
 		return apply_filters( 'bigcommerce/product/calculated_price_range/formatted', $range, $this, $prices );
 	}
 
+	/**
+	 * Get the retail price (MSRP) of the product
+	 *
+	 * @return string The formatted currency string for the product's retail price
+	 */
+	public function retail_price() {
+		/**
+		 * Filter the retail price of the product
+		 *
+		 * @param float   $retail_price The retail price of the product
+		 * @param Product $product      The product object
+		 */
+		$price = apply_filters( 'bigcommerce/produce/retail_price/data', (float) $this->get_property( 'retail_price' ), $this );
+		if ( $price ) {
+			/**
+			 * Filter the formatted retail price for a product
+			 *
+			 * @param string  $retail_price The formatted retail price
+			 * @param Product $product      The product object
+			 */
+			return apply_filters( 'bigcommerce/product/retail_price/formatted', $this->format_currency( $price ), $this );
+		}
+
+		return '';
+	}
+
 	public function options() {
 		$data = json_decode( get_post_meta( $this->post_id(), self::OPTIONS_DATA_META_KEY, true ), true );
 		if ( empty( $data ) || ! is_array( $data ) ) {
@@ -383,6 +409,36 @@ class Product {
 		 * @param int[] $gallery The IDs of images in the gallery
 		 */
 		return apply_filters( 'bigcommerce/product/gallery', $gallery );
+	}
+
+	/**
+	 * Get the list of YouTube videos associated with the product
+	 *
+	 * @return array
+	 */
+	public function youtube_videos() {
+		$videos = $this->get_property( 'videos' ) ?: [];
+		$videos = array_filter( $videos, function ( $video ) {
+			return ! empty( $video->video_id ) && ! empty( $video->type ) && $video->type === 'youtube';
+		} );
+		usort( $videos, function ( $a, $b ) {
+			if ( $a->sort_order === $b->sort_order ) {
+				return ( $a->title < $b->title ) ? - 1 : 1;
+			}
+
+			return ( $a->sort_order < $b->sort_order ) ? - 1 : 1;
+		} );
+
+		return array_map( function ( $video ) {
+			return [
+				'url'         => sprintf( 'https://www.youtube.com/watch?v=%s', urlencode( $video->video_id ) ),
+				'embed_url'   => sprintf( 'https://www.youtube.com/embed/%s', urlencode( $video->video_id ) ),
+				'id'          => $video->video_id,
+				'title'       => $video->title,
+				'description' => $video->description,
+				'length'      => $video->length,
+			];
+		}, $videos );
 	}
 
 	public function purchase_url() {
