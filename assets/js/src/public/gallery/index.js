@@ -4,9 +4,11 @@
  */
 
 import gallery from './productGallery';
+import videos from './productVideos';
 
 const init = () => {
 	gallery();
+	videos();
 };
 
 export default init;

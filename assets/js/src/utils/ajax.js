@@ -31,7 +31,7 @@ export const wpAPIAddToCartAjax = (cartURL, querySrting = '') => request
 	});
 
 export const wpAPICartDelete = cartURL => request
-	.del(cartURL);
+	.post(cartURL);
 
 export const wpAPIMiniCartGet = cartURL => request
 	.get(cartURL);

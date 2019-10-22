@@ -35,6 +35,14 @@ a.bc-btn--inverse:focus {
 	border-color: var(--button-color);
 }
 
+.bc-video-play-icon {
+	background-color: var(--button-color);
+}
+
+.bc-video-play-icon:before {
+	color: var(--button-text);
+}
+
 .bc-link {
 	color: var(--button-color);
 }

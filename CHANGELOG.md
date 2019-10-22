@@ -1,5 +1,27 @@
 # Changelog
 
+## [3.9.0]
+
+### Added
+
+- Added the retail price to the product price template. The retail price will only display
+  when it is set on the product in the BigCommerce admin. 
+- Added support for product videos in the product gallery section. The videos will always be YouTube
+  videos. We've implemented the YouTube Player API to assist with play and pause features when
+  switching between multiple videos.
+    - There is a known issue with this YT Player API on IE 11 and videos are currently not playing 
+      in that browser. This will be addressed in the next release.
+
+### Changed
+
+- `DELETE` requests to the WP REST API are now camouflaged as `POST` requests to work around
+  web hosts that do not allow standard HTTP methods.
+  
+### Fixed
+
+- Fixed the missing "Cart" section in the theme customizer when visiting the customizer before
+  first saving any settings in the plugin admin.
+
 ## [3.8.1]
 
 ### Changed
@@ -72,7 +94,7 @@
   from this plugin, add the following snipped to a theme or plugin:
   ```
   add_action( 'plugins_loaded', function() {
-    remove_action( 'wp_head', bigcommerce()->post_types->product_page_meta_description, 0 );
+  	remove_action( 'wp_head', bigcommerce()->post_types->product_page_meta_description, 0 );
   }, 100, 0 );
   ```
 - Added support for custom image alt text. The alt text set in the BigCommerce admin will
@@ -948,6 +970,7 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[3.9.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.8.1...3.9.0
 [3.8.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.8.0...3.8.1
 [3.8.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.7.0...3.8.0
 [3.7.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.6.0...3.7.0

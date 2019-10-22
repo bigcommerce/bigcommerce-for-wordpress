@@ -6,6 +6,7 @@
 import _ from 'lodash';
 import delegate from 'delegate';
 import Swiper from 'swiper';
+import { trigger } from 'utils/events';
 
 import * as tools from 'utils/tools';
 
@@ -23,6 +24,9 @@ const galleryOptions = {
 		effect: 'fade',
 		fadeEffect: {
 			crossFade: true,
+		},
+		on: {
+			slideChange: () => trigger({ event: 'bigcommerce/gallery_slide_changed', native: false }),
 		},
 	}),
 	galleryThumbs: () => ({

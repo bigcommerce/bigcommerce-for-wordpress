@@ -11,7 +11,6 @@ use BigCommerce\Api\v3\Model\PricingRequest;
 use BigCommerce\Api\v3\ObjectSerializer;
 use BigCommerce\Currency\With_Currency;
 use BigCommerce\Exceptions\Channel_Not_Found_Exception;
-use BigCommerce\Settings\Sections\Channels;
 use BigCommerce\Settings\Sections\Currency;
 use BigCommerce\Taxonomies\Channel\Channel;
 use BigCommerce\Taxonomies\Channel\Connections;
@@ -133,6 +132,7 @@ class Pricing_Controller extends Rest_Controller {
 			'variant_id' => $item->getVariantId(),
 			'options'    => $this->object_to_array( $item->getOptions() ),
 		];
+		$retail      = $item->getRetailPrice();
 		$calculated  = $item->getCalculatedPrice();
 		$original    = $item->getPrice();
 		$sale        = $item->getSalePrice();
@@ -143,6 +143,7 @@ class Pricing_Controller extends Rest_Controller {
 			case Currency::DISPLAY_TAX_INCLUSIVE:
 				$min_value        = $minimum ? $minimum->getTaxInclusive() : 0;
 				$max_value        = $maximum ? $maximum->getTaxInclusive() : 0;
+				$retail_value     = $retail ? $retail->getTaxInclusive() : 0;
 				$calculated_value = $calculated ? $calculated->getTaxInclusive() : 0;
 				$original_value   = $original ? $original->getTaxInclusive() : 0;
 				$sale_value       = $sale ? $sale->getTaxInclusive() : 0;
@@ -151,11 +152,17 @@ class Pricing_Controller extends Rest_Controller {
 			default:
 				$min_value        = $minimum ? $minimum->getTaxExclusive() : 0;
 				$max_value        = $maximum ? $maximum->getTaxExclusive() : 0;
+				$retail_value     = $retail ? $retail->getTaxExclusive() : 0;
 				$calculated_value = $calculated ? $calculated->getTaxExclusive() : 0;
 				$original_value   = $original ? $original->getTaxExclusive() : 0;
 				$sale_value       = $sale ? $sale->getTaxExclusive() : 0;
 				break;
 		}
+
+		$return_data['retail_price'] = [
+			'raw'       => $retail_value,
+			'formatted' => $this->format_currency( $retail_value ),
+		];
 
 		if ( $min_value != $max_value ) {
 			$return_data['display_type'] = 'price_range';
@@ -212,7 +219,7 @@ class Pricing_Controller extends Rest_Controller {
 	/**
 	 * Checks if a given request has access to read pricing.
 	 *
-	 * @param  \WP_REST_Request $request Full details about the request.
+	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 */

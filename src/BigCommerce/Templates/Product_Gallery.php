@@ -8,23 +8,24 @@ use BigCommerce\Assets\Theme\Image_Sizes;
 use BigCommerce\Post_Types\Product\Product;
 
 class Product_Gallery extends Controller {
-	const PRODUCT   = 'product';
-	const IMAGE_IDS = 'image_ids';
-	const FALLBACK  = 'fallback_image';
-	const SIZE      = 'image_size';
-	const THUMBNAIL = 'thumbnail_size';
+	const PRODUCT        = 'product';
+	const IMAGE_IDS      = 'image_ids';
+	const YOUTUBE_VIDEOS = 'youtube_videos';
+	const FALLBACK       = 'fallback_image';
+	const SIZE           = 'image_size';
+	const THUMBNAIL      = 'thumbnail_size';
 
 	protected $template = 'components/products/product-gallery.php';
 
 	protected function parse_options( array $options ) {
 		$defaults = [
-			self::PRODUCT => null,
+			self::PRODUCT   => null,
 			/**
 			 * Filter the image size used for product gallery images
 			 *
 			 * @param string $size The image size to use
 			 */
-			self::SIZE    => apply_filters( 'bigcommerce/template/gallery/image_size', Image_Sizes::BC_MEDIUM ),
+			self::SIZE      => apply_filters( 'bigcommerce/template/gallery/image_size', Image_Sizes::BC_MEDIUM ),
 			/**
 			 * Filter the image size used for product gallery image thumbnails
 			 *
@@ -41,11 +42,12 @@ class Product_Gallery extends Controller {
 		$product = $this->options[ self::PRODUCT ];
 
 		return [
-			self::PRODUCT   => $product,
-			self::IMAGE_IDS => $product->get_gallery_ids(),
-			self::FALLBACK  => $this->get_fallback(),
-			self::SIZE      => $this->options[ self::SIZE ],
-			self::THUMBNAIL => $this->options[ self::THUMBNAIL ],
+			self::PRODUCT        => $product,
+			self::IMAGE_IDS      => $product->get_gallery_ids(),
+			self::YOUTUBE_VIDEOS => $this->get_videos( $product ),
+			self::FALLBACK       => $this->get_fallback(),
+			self::SIZE           => $this->options[ self::SIZE ],
+			self::THUMBNAIL      => $this->options[ self::THUMBNAIL ],
 		];
 	}
 
@@ -55,5 +57,8 @@ class Product_Gallery extends Controller {
 		return $component->render();
 	}
 
+	protected function get_videos( Product $product ) {
+		return $product->youtube_videos();
+	}
 
 }

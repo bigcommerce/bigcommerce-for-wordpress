@@ -176,7 +176,15 @@ const filterAPIPricingData = (type = '', APIPricingNode = '', data = {}) => {
 	pricingNodes['price-node'] = APIPricingNode.querySelector('.bc-product__price--base');
 	pricingNodes['sale-node'] = APIPricingNode.querySelector('.bc-product__price--sale');
 	pricingNodes['original-price-node'] = APIPricingNode.querySelector('.bc-product__original-price');
+	pricingNodes['retail-price-node'] = APIPricingNode.querySelector('.bc-product__retail-price');
+	pricingNodes['retail-value-node'] = APIPricingNode.querySelector('.bc-product__retail-price-value');
 	pricingNodes.forEach(node => tools.removeClass(node, 'bc-show-current-price'));
+
+	if (data.retail_price.formatted.length === 0) {
+		tools.addClass(pricingNodes['retail-price-node'], 'bc-no-retail-price');
+	} else {
+		pricingNodes['retail-value-node'].textContent = data.retail_price.formatted;
+	}
 
 	// CASE: The display_type is 'sale'.
 	if (type === 'sale') {

@@ -56,7 +56,7 @@ class Product_Updater {
 			add_filter( 'bigcommerce/channel/listing/should_delete', $empty, 10, 0 );
 
 			$product = $this->catalog->getProductById( $product_id, [
-				'include' => [ 'variants', 'custom_fields', 'images', 'bulk_pricing_rules', 'options', 'modifiers' ],
+				'include' => [ 'variants', 'custom_fields', 'images', 'videos', 'bulk_pricing_rules', 'options', 'modifiers' ],
 			] )->getData();
 
 			foreach ( $channels as $channel ) {

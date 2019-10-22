@@ -23,7 +23,7 @@ class Mini_Cart {
 
 	private function mini_cart_enabled() {
 		$enabled = true;
-		if ( ! get_option( \BigCommerce\Settings\Sections\Cart::OPTION_ENABLE_CART ) ) {
+		if ( ! get_option( \BigCommerce\Settings\Sections\Cart::OPTION_ENABLE_CART, true ) ) {
 			$enabled = false;
 		}
 

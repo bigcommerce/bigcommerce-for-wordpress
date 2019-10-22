@@ -71,7 +71,7 @@ class Product_Data_Fetcher implements Import_Processor {
 		try {
 			$products_response = $this->catalog->getProducts( [
 				'id:in'   => $product_ids,
-				'include' => [ 'variants', 'custom_fields', 'images', 'bulk_pricing_rules', 'options', 'modifiers' ],
+				'include' => [ 'variants', 'custom_fields', 'images', 'videos', 'bulk_pricing_rules', 'options', 'modifiers' ],
 				'limit'   => $this->limit,
 			] );
 		} catch ( ApiException $e ) {
