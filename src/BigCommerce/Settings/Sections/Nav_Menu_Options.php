@@ -106,7 +106,8 @@ class Nav_Menu_Options extends Settings_Section {
 			[
 				'option'  => self::ITEMS_SELECT,
 				'choices' => [
-					'cart' => __( 'Add Cart to Menu', 'bigcommerce' ),
+					'cart'     => __( 'Add Cart to Menu', 'bigcommerce' ),
+					'minicart' => __( 'Show mini-cart widget when users click on the cart menu item', 'bigcommerce' ),
 				],
 			]
 		);
@@ -139,7 +140,7 @@ class Nav_Menu_Options extends Settings_Section {
 		$options = array_map( function ( $menu ) use ( $default ) {
 			return sprintf( '<option value="%d" %s>%s</option>', (int) $menu->term_id, selected( $default, $menu->term_id, false ), esc_html( $menu->name ) );
 		}, $menus );
-		printf( '<select name="%s" id="%s" class="regular-text bc-field-choices" data-js="bc-settings-select-menu-field" required>', esc_attr( $args[ 'option' ] ), esc_attr( $args[ 'label_for' ] ) );
+		printf( '<select name="%s" id="%s" class="regular-text bc-field-choices" data-js="bc-settings-select-menu-field" required>', esc_attr( $args['option'] ), esc_attr( $args['label_for'] ) );
 		printf( '<option value="new">%s</option>', esc_html( __( ' — Create a New Menu — ', 'bigcommerce' ) ) );
 		echo implode( "\n", $options );
 		echo '</select>';
@@ -190,10 +191,10 @@ class Nav_Menu_Options extends Settings_Section {
 	 * @return void
 	 */
 	public function items_select( $args ) {
-		$template = '<label class="bc-settings-section__nav-menu-item-label"><input type="checkbox" name="%s[]" value="%s" checked /> <span>%s</span></label>';
+		$template = '<label class="bc-settings-section__nav-menu-item-label bc-settings-section__nav-menu-item-label--%s"><input type="checkbox" name="%s[]" value="%s" checked class="bc-settings-section__nav-menu-item-checkbox" /> <span>%s</span></label>';
 		$choices  = [];
-		foreach ( $args[ 'choices' ] as $key => $label ) {
-			$choices[] = sprintf( $template, esc_attr( $args[ 'option' ] ), esc_attr( $key ), esc_html( $label ) );
+		foreach ( $args['choices'] as $key => $label ) {
+			$choices[] = sprintf( $template, sanitize_html_class( $key ), esc_attr( $args['option'] ), esc_attr( $key ), esc_html( $label ) );
 		}
 		echo implode( ' ', $choices );
 	}

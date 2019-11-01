@@ -34,6 +34,7 @@ class Reset_Plugin extends Command {
 			'bigcommerce_access_token',
 			'bigcommerce_nav_setup_complete',
 			'bigcommerce_store_type_option_complete',
+			'bigcommerce_enable_mini_cart',
 		];
 
 		foreach ( $options_to_delete as $option ) {

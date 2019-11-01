@@ -45,6 +45,7 @@ class Option extends OptionBase implements ArrayAccess
         'product_id' => 'int',
         'display_name' => 'string',
         'type' => 'string',
+        'sort_order' => 'int',
         'config' => '\BigCommerce\Api\v3\Model\OptionConfig',
         'option_values' => '\BigCommerce\Api\v3\Model\OptionValue[]',
         'name' => 'string'
@@ -64,6 +65,7 @@ class Option extends OptionBase implements ArrayAccess
         'product_id' => 'product_id',
         'display_name' => 'display_name',
         'type' => 'type',
+        'sort_order' => 'sort_order',
         'config' => 'config',
         'option_values' => 'option_values',
         'name' => 'name'
@@ -78,6 +80,7 @@ class Option extends OptionBase implements ArrayAccess
         'product_id' => 'setProductId',
         'display_name' => 'setDisplayName',
         'type' => 'setType',
+        'sort_order' => 'setSortOrder',
         'config' => 'setConfig',
         'option_values' => 'setOptionValues',
         'name' => 'setName'
@@ -92,6 +95,7 @@ class Option extends OptionBase implements ArrayAccess
         'product_id' => 'getProductId',
         'display_name' => 'getDisplayName',
         'type' => 'getType',
+        'sort_order' => 'getSortOrder',
         'config' => 'getConfig',
         'option_values' => 'getOptionValues',
         'name' => 'getName'
@@ -154,6 +158,7 @@ class Option extends OptionBase implements ArrayAccess
         $this->container['product_id'] = array_key_exists('product_id', $data) ? $data['product_id'] : null;
         $this->container['display_name'] = array_key_exists('display_name', $data) ? $data['display_name'] : null;
         $this->container['type'] = array_key_exists('type', $data) ? $data['type'] : null;
+        $this->container['sort_order'] = array_key_exists('sort_order', $data) ? $data['sort_order'] : null;
         $this->container['config'] = array_key_exists('config', $data) ? $data['config'] : null;
         $this->container['option_values'] = array_key_exists('option_values', $data) ? $data['option_values'] : null;
         $this->container['name'] = array_key_exists('name', $data) ? $data['name'] : null;
@@ -301,6 +306,27 @@ class Option extends OptionBase implements ArrayAccess
             throw new \InvalidArgumentException("Invalid value for 'type', must be one of 'radio_buttons', 'rectangles', 'dropdown', 'product_list', 'product_list_with_images', 'swatch'");
         }
         $this->container['type'] = $type;
+
+        return $this;
+    }
+
+    /**
+     * Gets sort_order
+     * @return int
+     */
+    public function getSortOrder()
+    {
+        return $this->container['sort_order'];
+    }
+
+    /**
+     * Sets sort_order
+     * @param int $sort_order The order the modifiers display on the product detail page.
+     * @return $this
+     */
+    public function setSortOrder($sort_order)
+    {
+        $this->container['sort_order'] = $sort_order;
 
         return $this;
     }

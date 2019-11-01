@@ -5,6 +5,7 @@ namespace BigCommerce\Settings\Screens;
 
 
 use BigCommerce\Container\Settings;
+use BigCommerce\Settings\Onboarding_Videos;
 
 class Welcome_Screen extends Onboarding_Screen {
 	const NAME      = 'bigcommerce_welcome';
@@ -33,6 +34,7 @@ class Welcome_Screen extends Onboarding_Screen {
 		$create_account_url  = $this->get_create_account_url();
 		$credentials_url     = $this->get_credentials_url();
 		$notices             = $this->get_notices();
+		$video               = $this->get_video();
 		include trailingslashit( $this->template_dir ) . 'welcome-screen.php';
 	}
 
@@ -68,4 +70,9 @@ class Welcome_Screen extends Onboarding_Screen {
 
 		return (array) $notices;
 	}
+
+	private function get_video() {
+		return $this->make_video_embed( Onboarding_Videos::OVERVIEW );
+	}
+
 }

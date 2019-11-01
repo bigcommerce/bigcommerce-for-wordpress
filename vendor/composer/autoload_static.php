@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit515d9b548ebc6b54434282c941c7a8c9
+class ComposerStaticInit7aca43419ee7651eb194a1f270ca438d
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -639,6 +639,7 @@ class ComposerStaticInit515d9b548ebc6b54434282c941c7a8c9
         'BigCommerce\\Settings\\Import_Now' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Import_Now.php',
         'BigCommerce\\Settings\\Import_Status' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Import_Status.php',
         'BigCommerce\\Settings\\Onboarding_Progress' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Onboarding_Progress.php',
+        'BigCommerce\\Settings\\Onboarding_Videos' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Onboarding_Videos.php',
         'BigCommerce\\Settings\\Screens\\Abstract_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Abstract_Screen.php',
         'BigCommerce\\Settings\\Screens\\Api_Credentials_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Api_Credentials_Screen.php',
         'BigCommerce\\Settings\\Screens\\Connect_Channel_Screen' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Screens/Connect_Channel_Screen.php',
@@ -1042,10 +1043,10 @@ class ComposerStaticInit515d9b548ebc6b54434282c941c7a8c9
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit515d9b548ebc6b54434282c941c7a8c9::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit515d9b548ebc6b54434282c941c7a8c9::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit515d9b548ebc6b54434282c941c7a8c9::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit515d9b548ebc6b54434282c941c7a8c9::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit7aca43419ee7651eb194a1f270ca438d::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit7aca43419ee7651eb194a1f270ca438d::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit7aca43419ee7651eb194a1f270ca438d::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit7aca43419ee7651eb194a1f270ca438d::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -32,18 +32,22 @@ $gallery_classes = $item_count > 1 ? 'swiper-container bc-product-gallery--has-c
 			<!-- class="swiper-wrapper" is required -->
 			<div class="swiper-wrapper">
 				<?php if ( $item_count > 0 ) {
+					$index = 0;
 					foreach ( $image_ids as $image_id ) { ?>
 						<!-- class="swiper-slide" is required -->
-						<div class="swiper-slide bc-product-gallery__image-slide">
+						<div class="swiper-slide bc-product-gallery__image-slide" data-index="<?php echo $index++; ?>">
 							<img src="<?php echo esc_url( wp_get_attachment_image_url( $image_id, $image_size ) ); ?>"
 									 alt="<?php echo esc_attr( trim( strip_tags( get_post_meta( $image_id, '_wp_attachment_image_alt', true ) ) ) ); ?>">
 						</div>
 					<?php }
 					foreach ( $youtube_videos as $video ) { ?>
 						<!-- class="swiper-slide" is required -->
-						<div class="swiper-slide bc-product-gallery__video-slide" >
-							<!-- data-js="bc-product-video-player" and data-youtube-id="<?php echo esc_attr( $video['id'] ); ?>" are required -->
-							<div data-js="bc-product-video-player" data-youtube-id="<?php echo esc_attr( $video['id'] ); ?>"></div>
+						<div
+								class="swiper-slide bc-product-gallery__video-slide"
+								data-js="bc-product-video-slide"
+								data-index="<?php echo $index ++; ?>"
+						>
+							<?php echo $video['embed_html']; ?>
 						</div>
 					<?php }
 				} else { ?>

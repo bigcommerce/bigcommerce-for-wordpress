@@ -83,6 +83,9 @@ class Listing_Fetcher implements Import_Processor {
 		}
 
 		foreach ( $response->getData() as $listing ) {
+			if ( $listing->getState() === 'deleted' ) {
+				continue;
+			}
 			$data = ObjectSerializer::sanitizeForSerialization( $listing );
 			$id_map[ (int) $listing->getProductId() ][ $this->channel_term->term_id ] = json_encode( $data );
 		}

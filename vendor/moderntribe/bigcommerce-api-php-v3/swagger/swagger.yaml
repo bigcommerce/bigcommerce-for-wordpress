@@ -4249,6 +4249,9 @@ definitions:
         x-required:
           - post
           - put
+      sort_order:
+        type: integer
+        description: The order the modifiers display on the product detail page.
       config:
         $ref: "#/definitions/OptionConfig"
       option_values:

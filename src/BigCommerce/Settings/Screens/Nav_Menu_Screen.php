@@ -85,7 +85,7 @@ class Nav_Menu_Screen extends Onboarding_Screen {
 		}
 
 		// The user has clicked the button to skip this step
-		if ( ! empty( $_REQUEST[ 'skip' ] ) ) {
+		if ( ! empty( $_REQUEST['skip'] ) ) {
 			$this->mark_complete();
 			$this->do_redirect();
 
@@ -93,7 +93,7 @@ class Nav_Menu_Screen extends Onboarding_Screen {
 		}
 
 		$submission = $_POST;
-		unset( $submission[ 'action' ], $submission[ '_wpnonce' ] );
+		unset( $submission['action'], $submission['_wpnonce'] );
 		$menu_id = 0;
 		$message = '';
 
@@ -149,6 +149,8 @@ class Nav_Menu_Screen extends Onboarding_Screen {
 
 		if ( in_array( 'cart', $items, true ) ) {
 			$this->create_cart_menu_item( $menu_id );
+			$mini_cart = in_array( 'minicart', $items, true );
+			update_option( \BigCommerce\Customizer\Sections\Cart::ENABLE_MINI_CART, $mini_cart ? 'yes' : 'no' );
 		}
 
 		if ( in_array( 'products', $items, true ) ) {

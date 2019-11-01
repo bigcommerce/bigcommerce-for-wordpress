@@ -58,7 +58,14 @@ class Product_Gallery extends Controller {
 	}
 
 	protected function get_videos( Product $product ) {
-		return $product->youtube_videos();
+		/** @var \WP_Embed $embed */
+		$embed = $GLOBALS['wp_embed'];
+
+		return array_map( function ( $video ) use ( $embed ) {
+			$video['embed_html'] = $embed->shortcode( [], $video['url'] );
+
+			return $video;
+		}, $product->youtube_videos() );
 	}
 
 }

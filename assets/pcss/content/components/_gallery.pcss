@@ -20,6 +20,26 @@
 	margin-bottom: 10px;
 }
 
+.bc-product-gallery__video-slide {
+
+	&:before {
+		display: block;
+		content: '';
+		padding-top: 56.2%;
+		box-sizing: border-box;
+	}
+
+	iframe {
+		position: absolute;
+		top: 0;
+		right: 0;
+		left: 0;
+		bottom: 0;
+		width: 100%;
+		height: 100%;
+	}
+}
+
 /* Thumbnail Carousel */
 
 /* CASE: thumb controller only works with centered slides. This moves that container back to flush left. */
