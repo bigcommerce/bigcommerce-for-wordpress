@@ -1,5 +1,28 @@
 # Changelog
 
+## [3.10.0]
+
+### Added
+
+- Added an option to enable the mini-cart to the nav menu onboarding screen.
+- Added support videos to onboarding screens.
+
+### Changed
+
+- Changed product videos to use oEmbed instead of the YouTube API, thereby supporting IE11.
+
+### Fixed
+
+- Handled an inconsistency in Channels and Catalog API responses to ensure that deleted products
+  are removed from WordPress.
+- Removed erroneous override of product shortcode/block sorting when a sorting argument is explicitly given.
+- Updated BigCommerce API client to version 2.0.3 to handle product option sort order.
+
+### Deprecated
+
+- Product gallery template overrides based off of the short-lived 3.9.0 template should continue to function,
+  but should be updated for compatibility with future versions. Templates depending on the YouTube API are deprecated.
+
 ## [3.9.0]
 
 ### Added
@@ -970,6 +993,7 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[3.10.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.9.0...3.10.0
 [3.9.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.8.1...3.9.0
 [3.8.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.8.0...3.8.1
 [3.8.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.7.0...3.8.0

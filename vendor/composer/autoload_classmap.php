@@ -556,6 +556,7 @@ return array(
     'BigCommerce\\Settings\\Import_Now' => $baseDir . '/src/BigCommerce/Settings/Import_Now.php',
     'BigCommerce\\Settings\\Import_Status' => $baseDir . '/src/BigCommerce/Settings/Import_Status.php',
     'BigCommerce\\Settings\\Onboarding_Progress' => $baseDir . '/src/BigCommerce/Settings/Onboarding_Progress.php',
+    'BigCommerce\\Settings\\Onboarding_Videos' => $baseDir . '/src/BigCommerce/Settings/Onboarding_Videos.php',
     'BigCommerce\\Settings\\Screens\\Abstract_Screen' => $baseDir . '/src/BigCommerce/Settings/Screens/Abstract_Screen.php',
     'BigCommerce\\Settings\\Screens\\Api_Credentials_Screen' => $baseDir . '/src/BigCommerce/Settings/Screens/Api_Credentials_Screen.php',
     'BigCommerce\\Settings\\Screens\\Connect_Channel_Screen' => $baseDir . '/src/BigCommerce/Settings/Screens/Connect_Channel_Screen.php',

@@ -31,7 +31,7 @@ class Query {
 			}
 		}
 
-		if ( $query->is_archive() && $this->is_product_query( $query ) && ! $query->get( 'bc-sort' ) ) {
+		if ( $query->is_archive() && $this->is_product_query( $query ) && ! $query->get( 'bc-sort' ) && ! $query->get( 'orderby' ) ) {
 			/**
 			 * Filter the default sort order for product archives.
 			 *
@@ -41,7 +41,7 @@ class Query {
 			$query->set( 'bc-sort', $default_sort );
 		}
 
-		if ( $query->get( 'bc-sort' ) && $this->is_product_query( $query ) ) {
+		if ( $query->get( 'bc-sort' ) && $this->is_product_query( $query ) && ! is_admin() ) {
 			switch ( $query->get( 'bc-sort' ) ) {
 				case Product_Archive::SORT_TITLE_ASC:
 					$query->set( 'orderby', 'title' );

@@ -205,6 +205,7 @@ function delete_options() {
 		Customizer\Sections\Product_Single::RELATED_COUNT,
 		Customizer\Sections\Product_Single::DEFAULT_IMAGE,
 		Customizer\Sections\Product_Single::PRICE_DISPLAY,
+		Customizer\Sections\Cart::ENABLE_MINI_CART,
 		'bigcommerce_flushed_rewrites',
 		md5( 'bc_webhook_product_updatestore/product/*' ), // removed in version 2.1
 		md5( 'bc_webhook_password_product_updatestore/product/*' ), // removed in version 2.1

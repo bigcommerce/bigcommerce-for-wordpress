@@ -41,6 +41,37 @@
 	}
 }
 
+.bc-onboarding__video {
+	overflow: hidden;
+
+	iframe,
+	object,
+	embed {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		width: 100%;
+		height: 100%;
+		box-sizing: border-box;
+	}
+}
+
+.bc-onboarding__video-embed {
+	position: relative;
+	box-sizing: border-box;
+
+	&:before {
+		position: relative;
+		display: block;
+		content: "";
+		padding-top: 56.25%;
+		-webkit-box-sizing: border-box;
+		box-sizing: border-box;
+	}
+}
+
 .bc-connect-spinner {
 	float: none;
 	visibility: visible;

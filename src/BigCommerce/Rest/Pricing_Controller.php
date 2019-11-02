@@ -74,7 +74,7 @@ class Pricing_Controller extends Rest_Controller {
 		$currency_code  = get_option( Currency::CURRENCY_CODE, 'USD' );
 
 		$args = [
-			'items'             => $this->filter_empty_options( $request->get_param( 'items' ) ),
+			'items'             => $this->filter_empty_options( $request->get_param( 'items' ) ?: [] ),
 			'channel_id'        => $this->get_channel_id(),
 			'currency_code'     => $currency_code,
 			'customer_group_id' => $customer_group,

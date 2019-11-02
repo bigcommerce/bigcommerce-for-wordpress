@@ -57,7 +57,7 @@ const initDialogs = () => {
 			_.delay(() => trigger({ event: 'bigcommerce/get_pricing', data: { quickView: true }, native: false }), state.delay);
 		});
 
-		instances.dialogs[dialogID].on('hide', () => trigger({ event: 'bigcommerce/gallery_slide_changed', native: false }));
+		instances.dialogs[dialogID].on('hide', () => trigger({ event: 'bigcommerce/gallery_slide_changed', data: { quickView: instances.dialogs[dialogID] }, native: false }));
 	});
 };
 

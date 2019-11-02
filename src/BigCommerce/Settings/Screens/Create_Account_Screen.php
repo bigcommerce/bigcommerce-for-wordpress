@@ -5,6 +5,7 @@ namespace BigCommerce\Settings\Screens;
 
 
 use BigCommerce\Container\Settings;
+use BigCommerce\Settings\Onboarding_Videos;
 use BigCommerce\Settings\Sections\New_Account_Section;
 
 class Create_Account_Screen extends Onboarding_Screen {
@@ -22,9 +23,10 @@ class Create_Account_Screen extends Onboarding_Screen {
 
 	protected function get_header() {
 		return sprintf(
-			'%s<header class="bc-new-account__header"><h1 class="bc-settings-connect__title">%s</h1></header>',
+			'<div class="bc-new-account__copy">%s<header class="bc-new-account__header"><h1 class="bc-settings-connect__title">%s</h1></div></header><div class="bc-onboarding__video bc-new-account-video"><div class="bc-onboarding__video-embed">%s</div></div>',
 			$this->before_title(),
-			__( 'We just need a few details to create your store.', 'bigcommerce' )
+			__( 'We just need a few details to create your store.', 'bigcommerce' ),
+			$this->get_video()
 		);
 	}
 
@@ -96,6 +98,10 @@ class Create_Account_Screen extends Onboarding_Screen {
 			wp_safe_redirect( esc_url_raw( add_query_arg( [ 'settings-updated' => 1 ], $this->get_url() ) ), 303 );
 			exit();
 		}
+	}
+
+	private function get_video() {
+		return $this->make_video_embed( Onboarding_Videos::CREATE_ACCOUNT );
 	}
 
 }

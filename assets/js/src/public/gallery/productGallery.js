@@ -25,9 +25,6 @@ const galleryOptions = {
 		fadeEffect: {
 			crossFade: true,
 		},
-		on: {
-			slideChange: () => trigger({ event: 'bigcommerce/gallery_slide_changed', native: false }),
-		},
 	}),
 	galleryThumbs: () => ({
 		a11y: true,
@@ -92,6 +89,7 @@ const initGalleries = () => {
 		slider.classList.add('initialized');
 		instances.swipers[swiperMainId] = new Swiper(slider, galleryOptions.galleryMain());
 		slider.setAttribute('data-id', swiperMainId);
+		instances.swipers[swiperMainId].on('slideChange', () => trigger({ event: 'bigcommerce/gallery_slide_changed', data: { slider: instances.swipers[swiperMainId], previousSlide: instances.swipers[swiperMainId].previousIndex }, native: false }));
 		if (!slider.classList.contains('bc-product-gallery--has-carousel')) {
 			return;
 		}
