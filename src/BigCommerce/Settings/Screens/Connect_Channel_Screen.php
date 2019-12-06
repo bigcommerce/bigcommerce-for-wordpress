@@ -27,8 +27,9 @@ class Connect_Channel_Screen extends Onboarding_Screen {
 
 	protected function get_channels_notices() {
 		return sprintf(
-			'<ul class="bc-settings-connect__channels-instructions"><li>%s</li></ul>',
-			__( 'Within BigCommerce, channels are used to define where products are sold and where orders come from. Note that once you save a channel, you cannot change it, as channels cannot be deleted.', 'bigcommerce' )
+			'<ul class="bc-settings-connect__channels-instructions"><li>%s</li><li>%s</li></ul>',
+			__( 'Within BigCommerce, channels are used to define where products are sold and where orders come from. Note that once you save a channel, you cannot change it, as channels cannot be deleted.', 'bigcommerce' ),
+			wp_kses( __( 'If you plan on connecting your store to <strong>multiple sites</strong> or you are setting up a <strong>WordPress Multisite</strong>, use your <strong>API Credentials</strong> to connect your store instead. Use the <strong>Start Over</strong> button located at the bottom of this page.', 'bigcommerce' ), [ 'strong' => [] ] )
 		);
 	}
 

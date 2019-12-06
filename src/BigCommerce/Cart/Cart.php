@@ -207,22 +207,7 @@ class Cart {
 	 * @return void
 	 */
 	private function set_item_count_cookie( \BigCommerce\Api\v3\Model\Cart $cart ) {
-		$count  = array_reduce(
-			iterator_to_array( Cart_Item_Iterator::factory( $cart ) ),
-			function ( $count, $item ) {
-				if ( method_exists( $item, 'getParentId' ) && $item->getParentId() ) {
-					return $count; // it's a child item, so don't count it
-				}
-				if ( method_exists( $item, 'getQuantity' ) ) {
-					$count += $item->getQuantity();
-				} else {
-					$count += 1;
-				}
-
-				return $count;
-			},
-			0
-		);
+		$count = Item_Counter::count_bigcommerce_cart( $cart );
 		$secure = ( 'https' === parse_url( home_url(), PHP_URL_SCHEME ) );
 		setcookie( self::COUNT_COOKIE, $count, time() + MINUTE_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN, $secure );
 		$_COOKIE[ self::COUNT_COOKIE ] = $count;

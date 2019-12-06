@@ -353,6 +353,7 @@ return array(
     'BigCommerce\\Cart\\Cart_Menu_Item' => $baseDir . '/src/BigCommerce/Cart/Cart_Menu_Item.php',
     'BigCommerce\\Cart\\Cart_Recovery' => $baseDir . '/src/BigCommerce/Cart/Cart_Recovery.php',
     'BigCommerce\\Cart\\Checkout' => $baseDir . '/src/BigCommerce/Cart/Checkout.php',
+    'BigCommerce\\Cart\\Item_Counter' => $baseDir . '/src/BigCommerce/Cart/Item_Counter.php',
     'BigCommerce\\Cart\\Mini_Cart' => $baseDir . '/src/BigCommerce/Cart/Mini_Cart.php',
     'BigCommerce\\Checkout\\Customer_Login' => $baseDir . '/src/BigCommerce/Checkout/Customer_Login.php',
     'BigCommerce\\Checkout\\Requirements_Notice' => $baseDir . '/src/BigCommerce/Checkout/Requirements_Notice.php',

@@ -5,6 +5,11 @@ namespace BigCommerce\Container;
 
 
 use BigCommerce\Customizer\Sections\Product_Archive;
+use BigCommerce\Merchant\Onboarding_Api;
+use BigCommerce\Pages\Account_Page;
+use BigCommerce\Pages\Cart_Page;
+use BigCommerce\Pages\Login_Page;
+use BigCommerce\Pages\Shipping_Returns_Page;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Post_Types\Queue_Task\Queue_Task;
 use BigCommerce\Settings\Screens\Connect_Channel_Screen;
@@ -15,10 +20,6 @@ use BigCommerce\Settings\Sections\Channels as Channel_Settings;
 use BigCommerce\Taxonomies\Availability;
 use BigCommerce\Taxonomies\Brand;
 use BigCommerce\Taxonomies\Channel;
-use BigCommerce\Pages\Account_Page;
-use BigCommerce\Pages\Cart_Page;
-use BigCommerce\Pages\Login_Page;
-use BigCommerce\Pages\Shipping_Returns_Page;
 use BigCommerce\Taxonomies\Channel\Channel_Connector;
 use BigCommerce\Taxonomies\Condition;
 use BigCommerce\Taxonomies\Flag;
@@ -137,6 +138,17 @@ class Taxonomies extends Provider {
 			return new Channel_Connector( $container[ Api::FACTORY ]->channels() );
 		};
 
+		add_action( 'admin_menu', $this->create_callback( 'create_first_channel', function () use ( $container ) {
+			if ( wp_doing_ajax() ) {
+				return;
+			}
+			if ( $container[ Settings::CONFIG_STATUS ] < Settings::STATUS_CHANNEL_CONNECTED
+			     && $container[ Settings::CONFIG_STATUS ] >= Settings::STATUS_API_CONNECTED
+			     && ! empty( get_option( Onboarding_Api::ACCOUNT_ID, '' ) ) ) {
+				$container[ self::CHANNEL_CONNECTOR ]->create_first_channel();
+			}
+		} ), 0, 0 ); // run before menu items are set up
+
 		add_filter( 'sanitize_option_' . Channel_Select::CHANNEL_TERM, $this->create_callback( 'handle_select_channel', function ( $value ) use ( $container ) {
 			return $container[ self::CHANNEL_CONNECTOR ]->handle_connect_request( $value );
 		} ), 100, 1 );
@@ -216,7 +228,7 @@ class Taxonomies extends Provider {
 		} ), 10, 3 );
 
 		// check that we're updated when an import runs
-		add_action( 'bigcommerce/import/fetched_store_settings',  $this->create_callback( 'check_and_update_routes_version', function () use ( $container ) {
+		add_action( 'bigcommerce/import/fetched_store_settings', $this->create_callback( 'check_and_update_routes_version', function () use ( $container ) {
 			$container[ self::ROUTES ]->maybe_update_routes();
 		} ), 10, 0 );
 	}

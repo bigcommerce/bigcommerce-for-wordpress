@@ -11,8 +11,8 @@
 
 	.bigcommerce-connection-status__message {
 		display: inline-block;
+		font-size: var(--font-size-content-lg);
 		color: var(--color-bc-success);
-		font-size: var(--font-size-content-m);
 		font-weight: 500;
 	}
 
@@ -26,6 +26,13 @@
 		&.description {
 			font-style: normal;
 			color: var(--color-bc-black);
+		}
+
+		&.bc-welcome__pending-account-instructions {
+			font-size: 1.65em;
+			padding: 20px;
+			background-color: var(--color-bc-shark);
+			color: var(--color-white);
 		}
 	}
 
@@ -112,9 +119,16 @@
 
 	select,
 	input {
-		border: 1px solid var(--color-border-form-field);
-		box-shadow: none;
+		border: 2px solid var(--color-border-form-field);
+		box-shadow: 0 0 0 1px transparent;
 		color: var(--color-bc-shark);
+		outline: 2px solid transparent;
+
+		&:focus {
+			border-color: var(--color-bc-doger-blue);
+			box-shadow: 0 0 0 1px var(--color-bc-doger-blue);
+			outline: 2px solid transparent;
+		}
 	}
 
 	select {
@@ -144,6 +158,16 @@
 			font-size: 21px;
 			width: 20px;
 			height: 20px;
+		}
+	}
+
+	input[type=radio] {
+
+		&:before {
+			background-color: var(--color-bc-doger-blue);
+			position: relative;
+			left: -1px;
+			top: -1px;
 		}
 	}
 

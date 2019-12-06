@@ -23,9 +23,8 @@ const handleAccountCreationSubmit = (e) => {
 	const wrapper = document.createElement('div');
 
 	_.delay(() => button.setAttribute('disabled', 'disabled'), 50);
-	button.value = I18N.messages.account_creation_message;
 	tools.addClass(wrapper, 'bc-settings-account-creation-wrapper');
-	wrapper.innerHTML = bcAdminSpinner;
+	wrapper.innerHTML = `${bcAdminSpinner} ${I18N.messages.account_creation_message}`;
 	button.parentNode.appendChild(wrapper);
 };
 

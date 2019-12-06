@@ -43,8 +43,11 @@ class Cart_Menu_Item {
 		 * Due to difficulties around accurately syncing the count
 		 * with BigCommerce when checkout happens off site, the
 		 * cart count is disabled when using redirected checkout.
+		 *
+		 * Enabling the mini-cart, though, triggers the necessary
+		 * ajax actions to allow us to update the count.
 		 */
-		if ( ! get_option( Cart::OPTION_EMBEDDED_CHECKOUT, true ) ) {
+		if ( ! get_option( Cart::OPTION_EMBEDDED_CHECKOUT, true ) && get_option( \BigCommerce\Customizer\Sections\Cart::ENABLE_MINI_CART, '' ) !== 'yes' ) {
 			$show = false;
 		}
 
