@@ -7,12 +7,13 @@ import _ from 'lodash';
 import Cookies from 'js-cookie';
 import { on, trigger } from 'utils/events';
 import * as tools from 'utils/tools';
-import { CART_ID_COOKIE_NAME } from 'bcConstants/cookies';
+import { CART_ID_COOKIE_NAME, CART_ITEM_COUNT_COOKIE } from 'bcConstants/cookies';
 import { wpAPIMiniCartGet } from 'utils/ajax';
+import { NLS } from 'publicConfig/i18n';
 import cartState from 'publicConfig/cart-state';
 import { AJAX_CART_NONCE, CART_API_BASE } from 'publicConfig/wp-settings';
-import { NLS } from 'publicConfig/i18n';
 import { cartEmpty } from './cart-templates';
+import { updateCartMenuItem } from './cart-menu-item';
 import ajaxItems from './ajax-items';
 
 /**
@@ -27,6 +28,21 @@ const setEmptyCart = (miniCartID = '') => {
 
 	cartState.isFetching = false;
 	trigger({ event: 'bigcommerce/handle_cart_state', data: { miniCartID }, native: false });
+};
+
+/**
+ * @function updateCartMenuCount
+ * @description if we have a response from the mini cart endpoint and the cart count does not match the cookie, run this.
+ * @param count
+ */
+const updateCartMenuCount = (count = '') => {
+	const cookie = Number(Cookies.get(CART_ITEM_COUNT_COOKIE));
+	if (count === cookie) {
+		return;
+	}
+
+	Cookies.set(CART_ITEM_COUNT_COOKIE, count);
+	updateCartMenuItem();
 };
 
 /**
@@ -73,6 +89,11 @@ const loadMiniCarts = (e) => {
 
 				widget.innerHTML = res.body.rendered;
 				ajaxItems();
+
+				// If the count key exists in the response object, proceed with updating the menu item count.
+				if (!_.some(res.body.count, _.isEmpty)) {
+					updateCartMenuCount(res.body.count);
+				}
 			});
 
 			// End the handle_cart_state event.

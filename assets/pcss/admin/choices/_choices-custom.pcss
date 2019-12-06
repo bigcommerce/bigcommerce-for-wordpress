@@ -31,7 +31,7 @@
 
 	.choices__inner {
 		background-color: var(--color-white);
-		border-color: var(--color-border-form-field);
+		border: 2px solid var(--color-border-form-field);
 		border-radius: 0;
 		box-sizing: border-box;
 		min-height: 20px;
@@ -42,10 +42,12 @@
 
 		&[data-type*="select-one"].is-open:after {
 			border-color: transparent transparent var(--color-bc-doger-blue);
+			border-width: 2px;
 		}
 
 		.choices__inner {
 			border-color: var(--color-bc-doger-blue);
+			border-width: 2px;
 		}
 	}
 
@@ -61,5 +63,6 @@
 	.choices__list--dropdown {
 		border-color: var(--color-border-form-field);
 		box-sizing: border-box;
+		margin-top: 0;
 	}
 }

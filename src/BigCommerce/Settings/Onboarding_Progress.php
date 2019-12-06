@@ -47,6 +47,10 @@ class Onboarding_Progress {
 				'label'  => __( 'Connect Account', 'bigcommerce' ),
 				'active' => ( $this->state === Settings::STATUS_ACCOUNT_PENDING ) || ( filter_input( INPUT_GET, 'page' ) === Api_Credentials_Screen::NAME ),
 			];
+			$steps[] = [
+				'label'  => __( 'Connect Your Channel', 'bigcommerce' ),
+				'active' => $this->state === Settings::STATUS_API_CONNECTED,
+			];
 		} else {
 			$steps[] = [
 				'label'  => __( 'Create Account', 'bigcommerce' ),
@@ -57,11 +61,6 @@ class Onboarding_Progress {
 				'active' => $this->state === Settings::STATUS_ACCOUNT_PENDING,
 			];
 		}
-
-		$steps[] = [
-			'label'  => __( 'Connect Your Channel', 'bigcommerce' ),
-			'active' => $this->state === Settings::STATUS_API_CONNECTED,
-		];
 
 		$steps[] = [
 			'label'  => __( 'Configure Your Store', 'bigcommerce' ),

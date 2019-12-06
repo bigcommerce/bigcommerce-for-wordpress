@@ -10,6 +10,7 @@ use BigCommerce\Api\v3\Model\CartResponse;
 use BigCommerce\Api\v3\Model\CartUpdateRequest;
 use BigCommerce\Cart\Cart;
 use BigCommerce\Cart\Cart_Mapper;
+use BigCommerce\Cart\Item_Counter;
 use BigCommerce\Exceptions\Product_Not_Found_Exception;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Settings\Sections\Cart as Cart_Settings;
@@ -903,12 +904,15 @@ class Cart_Controller extends Rest_Controller {
 			return $this->get_empty_mini_cart();
 		}
 		try {
+			$cart     = $this->fetch_cart( $cart_id );
+			$mapper   = new Cart_Mapper( $cart );
 			$template = Mini_Cart::factory( [
-				Mini_Cart::CART => $this->get_mapped_cart( $cart_id ),
+				Mini_Cart::CART => $mapper->map(),
 			] );
 
 			return rest_ensure_response( [
 				'rendered' => $template->render(),
+				'count'    => Item_Counter::count_bigcommerce_cart( $cart ),
 			] );
 		} catch ( ApiException $e ) {
 			return $this->get_empty_mini_cart();
@@ -933,6 +937,7 @@ class Cart_Controller extends Rest_Controller {
 
 		return rest_ensure_response( [
 			'rendered' => $template->render(),
+			'count'    => 0,
 		] );
 	}
 
@@ -942,16 +947,22 @@ class Cart_Controller extends Rest_Controller {
 		return $cart->get_cart_id();
 	}
 
-	private function get_mapped_cart( $cart_id ) {
+	/**
+	 * Fetch a cart from the BigCommerce API
+	 *
+	 * @param string $cart_id
+	 *
+	 * @return \BigCommerce\Api\v3\Model\Cart
+	 * @throws ApiException
+	 */
+	private function fetch_cart( $cart_id ) {
 		$include = [
 			'line_items.physical_items.options',
 			'line_items.digital_items.options',
 			'redirect_urls',
 		];
-		$cart    = $this->cart_api->cartsCartIdGet( $cart_id, [ 'include' => $include ] )->getData();
-		$mapper  = new Cart_Mapper( $cart );
 
-		return $mapper->map();
+		return $this->cart_api->cartsCartIdGet( $cart_id, [ 'include' => $include ] )->getData();
 	}
 
 	public function get_rendered_item_schema() {
@@ -963,6 +974,12 @@ class Cart_Controller extends Rest_Controller {
 				'rendered' => [
 					'description' => __( 'The rendered template', 'bigcommerce' ),
 					'type'        => 'string',
+					'context'     => [ 'view', 'edit', 'embed' ],
+					'readonly'    => true,
+				],
+				'count'    => [
+					'description' => __( 'The number of items in the cart', 'bigcommerce' ),
+					'type'        => 'integer',
 					'context'     => [ 'view', 'edit', 'embed' ],
 					'readonly'    => true,
 				],

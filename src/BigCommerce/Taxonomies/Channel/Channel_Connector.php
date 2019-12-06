@@ -6,10 +6,11 @@ namespace BigCommerce\Taxonomies\Channel;
 
 use BigCommerce\Api\v3\Api\ChannelsApi;
 use BigCommerce\Api\v3\ApiException;
+use BigCommerce\Api\v3\Model\Channel as ApiChannel;
 use BigCommerce\Api\v3\Model\CreateChannelRequest;
-use BigCommerce\Api\v3\Model\UpdateChannelRequest;
 use BigCommerce\Settings\Sections\Channel_Select;
 use BigCommerce\Settings\Sections\Channels;
+use BigCommerce\Settings\Sections\Import;
 
 /**
  * Class Channel_Connector
@@ -25,6 +26,44 @@ class Channel_Connector {
 
 	public function __construct( ChannelsApi $channels_api ) {
 		$this->channels = $channels_api;
+	}
+
+	public function create_first_channel() {
+		$channel_id = get_option( Channels::CHANNEL_ID, 0 );
+		if ( ! empty( $channel_id ) ) {
+			return; // Already connected to a channel
+		}
+		try {
+			$channels = $this->channels->listChannels()->getData();
+		} catch ( ApiException $e ) {
+			$channels = [];
+		}
+		$channels = array_filter( $channels, function ( ApiChannel $channel ) {
+			return $channel->getPlatform() === 'wordpress';
+		} );
+		if ( count( $channels ) > 0 ) {
+			return; // A channel already exists. Do not automatically create one.
+		}
+
+		/**
+		 * Filter the name given to the auto-created channel.
+		 * Defaults to the blog's domain name.
+		 *
+		 * @param string $name The default channel name
+		 */
+		$channel_name = apply_filters( 'bigcommerce/channel/default_name', parse_url( home_url(), PHP_URL_HOST ) );
+		$term_id = $this->create_channel( $channel_name );
+
+		if ( $term_id ) {
+			$term = get_term( $term_id );
+			/**
+			 * Triggers the promotion of a channel to the "Primary" state
+			 *
+			 * @param \WP_Term $term The Channel term associated with the BigCommerce channel
+			 */
+			do_action( 'bigcommerce/channel/promote', $term );
+		}
+		update_option( Import::OPTION_NEW_PRODUCTS, 1 );
 	}
 
 	/**
@@ -48,14 +87,14 @@ class Channel_Connector {
 			return 0;
 		}
 		$channel = $response->getData();
-		$term = wp_insert_term( $channel->getName(), Channel::NAME );
+		$term    = wp_insert_term( $channel->getName(), Channel::NAME );
 		if ( is_wp_error( $term ) ) {
 			return 0;
 		}
-		update_term_meta( $term[ 'term_id' ], Channel::CHANNEL_ID, $channel->getId() );
-		update_term_meta( $term[ 'term_id' ], Channel::STATUS, Channel::STATUS_DISCONNECTED );
+		update_term_meta( $term['term_id'], Channel::CHANNEL_ID, $channel->getId() );
+		update_term_meta( $term['term_id'], Channel::STATUS, Channel::STATUS_DISCONNECTED );
 
-		return $term[ 'term_id' ];
+		return $term['term_id'];
 	}
 
 	/**
@@ -128,6 +167,7 @@ class Channel_Connector {
 			return $disabled_message;
 		}
 		$disabled_message = __( 'API Path cannot be changed once connected to a channel.', 'bigcommerce' );
+
 		return $disabled_message;
 	}
 }

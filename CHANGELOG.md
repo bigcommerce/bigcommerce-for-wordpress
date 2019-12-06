@@ -1,5 +1,24 @@
 # Changelog
 
+## [3.11.0]
+
+### Changed
+
+- Onboarding Screen modifications:
+  - When submitting the new account form, a loading spinner and message appear letting you know
+    we're working on creating your account.
+  - The email confirmation notice upon creating a new account is now more visible.
+  - On the Channel Selection screen, a new notice was added altering the user
+    to the alternate configuration needed for WordPress multisite setup.
+- The first channel will be automatically created when registering a new account via the WordPress plugin.
+  This store will be configured to automatically add new products to that channel. Additional channels may
+  still be created from the settings screen when multi-channel mode is enabled.
+- The item count badge on the cart menu item will be enabled when either embedded checkout or the mini-cart is enbled.
+  The item count will be included in the mini-cart ajax request and used to update the item count cookie.
+- With the release of WordPress 5.3, there were several updates to accessibility in the WP admin including
+  form fields, color contrast, and attribute updates. We've done the same with our plugin and increased
+  AA compliance throughout the plugin, including onboarding screens, settings pages, and Product UI.
+
 ## [3.10.0]
 
 ### Added
@@ -28,18 +47,18 @@
 ### Added
 
 - Added the retail price to the product price template. The retail price will only display
-  when it is set on the product in the BigCommerce admin. 
+  when it is set on the product in the BigCommerce admin.
 - Added support for product videos in the product gallery section. The videos will always be YouTube
   videos. We've implemented the YouTube Player API to assist with play and pause features when
   switching between multiple videos.
-    - There is a known issue with this YT Player API on IE 11 and videos are currently not playing 
+    - There is a known issue with this YT Player API on IE 11 and videos are currently not playing
       in that browser. This will be addressed in the next release.
 
 ### Changed
 
 - `DELETE` requests to the WP REST API are now camouflaged as `POST` requests to work around
   web hosts that do not allow standard HTTP methods.
-  
+
 ### Fixed
 
 - Fixed the missing "Cart" section in the theme customizer when visiting the customizer before
@@ -123,7 +142,7 @@
 - Added support for custom image alt text. The alt text set in the BigCommerce admin will
   be imported into WordPress, where WordPress's standard image rendering functions will
   use it as the value for the `alt` attribute.
-- Added a new global JS function to the `bigcommerce_config` global JS object. You can now 
+- Added a new global JS function to the `bigcommerce_config` global JS object. You can now
   retrieve the current user's cart ID via JS using `bigcommerce_config.cart.getCartID();`
 
 ### Fixed
@@ -139,7 +158,7 @@
   will be removed from the slugs.
 - If a product variant has an image, and that variant is added to the cart, the
   cart page will display that variant's image instead of the default product image.
-  
+
 ### Removed
 
 - Currency formatting settings have been removed. Formatting settings are pulled
@@ -151,7 +170,7 @@
 ### Added
 
 - Product pick lists will include a "None" option if that modifier field
-  is not required. 
+  is not required.
 - Added filters to modify the price range and calculated price range of
   a product. `bigcommerce/product/price_range/data` affects the data
   that feeds both. The formatted output can be modified with the filters
@@ -168,8 +187,8 @@
 - Added a webhook to listen for completed checkouts. The webhook will trigger
   the action `bigcommerce/webhooks/checkout_complete`.
 - Added support for a omitting products from initial Pricing API calls if they have
-  a `.preinitialized` class added to the pricing DOM node. This will allow 3rd 
-  party plugins/themes to add this CSS class based on their needs/conditions.  
+  a `.preinitialized` class added to the pricing DOM node. This will allow 3rd
+  party plugins/themes to add this CSS class based on their needs/conditions.
 - Added a toggle in the theme customizer to control display of default
   pricing while waiting for Pricing API responses.
 
@@ -212,15 +231,15 @@
   which uses no group.
 - When selecting options and modifiers for a product, we're no longer debouncing
   the clicks and then disabling the fields while a Pricing API call is made.
-  Fields remain enabled, and changes will cause previous Pricing API 
-  calls that might be pending to abort. 
-  
+  Fields remain enabled, and changes will cause previous Pricing API
+  calls that might be pending to abort.
+
 ## Deprecated
 
 - The unused constants `\BigCommerce\Cart\Add_To_Cart::CART_COOKIE` and
   `\BigCommerce\Cart\Add_To_Cart::COUNT_COOKIE` are deprecated and will
-  be removed in a future version. 
-  
+  be removed in a future version.
+
 ### Removed
 
 - The filter `bigcommerce/template/product/archive/default_sort` has been removed.
@@ -250,12 +269,12 @@
   - You can create, edit and delete a Wish List as well as add and remove items.
   - You and make your list public or private. Private lists cannot be shared
     and can only be seen by the list owner.
-  - Shared Wish Lists are presented as a filtered version of the main product 
+  - Shared Wish Lists are presented as a filtered version of the main product
     archive.
   - Deleting a Wish List cannot be undone. You will be given a confirmation
     screen before deleting.
   - Wish Lists are currently product ID based and not quantity based.
-    Attempting to add the same product to your list will not increase the 
+    Attempting to add the same product to your list will not increase the
     quantity nor will it duplicate the product in your list. Only one instance
     of a product variant is allowed in a Wish List.
 
@@ -264,11 +283,11 @@
 - Product categories and brands will now derive their slugs from the
   "Custom URL" property set in the BigCommerce admin. If a category name
   changes, the WordPress term slug will update to reflect the new name.
-- Gutenberg blocks were not able to utilize the drag-and-drop feature 
-  due to a conflict with a JS library. This lib has been upgraded and 
+- Gutenberg blocks were not able to utilize the drag-and-drop feature
+  due to a conflict with a JS library. This lib has been upgraded and
   drag-and-drop functionality has been restored.
-- Products options and modifiers that contained only a single option would 
-  cause the Cart/Buy button to be disabled permanently. This has been been 
+- Products options and modifiers that contained only a single option would
+  cause the Cart/Buy button to be disabled permanently. This has been been
   fixed.
 - The user meta key `bigcommerce_nav_settings_initialized` was not correctly
   removed when running the plugin uninstaller. This has been fixed.
@@ -280,12 +299,12 @@
 - Upgraded Lodash JS library dependency to the latest version.
 
 ### Changed
-- Refinery template (`components/catalog/refinery.php`) has removed the 
+- Refinery template (`components/catalog/refinery.php`) has removed the
   wrapper element in favor of the Controller variables. Update your template
   as needed.
-- The Gutenberg Product Component Block now has admin previews that contain 
-  rendered HTML product content for all component types. When a product ID 
-  is not found or is no longer valid, a default message will display letting 
+- The Gutenberg Product Component Block now has admin previews that contain
+  rendered HTML product content for all component types. When a product ID
+  is not found or is no longer valid, a default message will display letting
   you know the product is unavailable on the admin side and the theme side.
 
 ### Deprecated
@@ -298,7 +317,7 @@
 ## [3.3.0]
 
 ### Changed
-- HTML elements can now be used in all text string filters so long as it 
+- HTML elements can now be used in all text string filters so long as it
   passes the same `wp_kses` rules used on comments. Previously, HTML inserted
   via filters for text strings was omitted in certain cases.
   For instance, on the ajax add to cart message.
@@ -319,9 +338,9 @@
 - Added support for products with hidden prices. They will use the new
   template `components/products/product-hidden-price.php` to not show the price.
 - Added a new option for the Product Components block/shortcode for Add To Cart.
-  This will output the Add to Cart/Buy Now button and form on any page, including 
+  This will output the Add to Cart/Buy Now button and form on any page, including
   variants if applicable. Example Usage: `[bc-component id="431" type="add_to_cart"]`
-- Added a new Channel Select field in the product picker UI in the WP Admin. You can 
+- Added a new Channel Select field in the product picker UI in the WP Admin. You can
   now search for products from any channel you've connected to your WP Store. Selecting
   a channel will initiate a new query immediately and subsequently only produce product
   search results from that channel.
@@ -381,7 +400,7 @@
 - Changed the `assign_terms` capability for categories and brands to `do_not_allow`.
   Assignments would be overwritten by the next import. This keeps it from
   happening in the first place to avoid confusion.
-- Turned off the `autocomplete` attribute on API fields in the settings 
+- Turned off the `autocomplete` attribute on API fields in the settings
   page. This will help to avoid an issue where autocomplete causes a change to
   user credentials and causes the store to disconnect when settings are saved.
 - Updated the product quick view template, `components/products/product-quick-view.php`,
@@ -410,7 +429,7 @@
 
 ### Fixed
 - Fixed duplicate posts created in WordPress when importing products
-  in draft or pending status. 
+  in draft or pending status.
 
 ## [3.0.0]
 
@@ -500,7 +519,7 @@
 - Updated registration of block editor plugins to work with recent
   versions of Gutenberg.
 - Fixed fatal error in the uninstaller from an undefined class constant.
-  
+
 ### Removed
 - Removed the `bc_products` table. All queries that used this table have been
   updated to use post meta.
@@ -534,7 +553,7 @@
 - Updated the BigCommerce Checkout SDK to version 1.18.10
 
 ### Fixed
-- Fixed a layout issue on the WP Admin BigCommerce Resources page where 
+- Fixed a layout issue on the WP Admin BigCommerce Resources page where
   resource cards were misaligned.
 - Fixed AMP validation errors from improperly included scripts. Thanks, @westonruter!
 
@@ -555,7 +574,7 @@
   by default.
 - Added webhooks to listen for product inventory updates. A received webhook
   will schedule an immediate cron job to pull updated product data from
-  the Catalog API. 
+  the Catalog API.
 
 ### Changed
 - Upgraded Checkout SDK to version 1.18.5
@@ -576,8 +595,8 @@
 ## [2.0.0]
 
 ### Added
-- Added new links and buttons to the Products custom post type edit screen 
-  and the BigCommerce Settings page for managing your products on BigCommerce 
+- Added new links and buttons to the Products custom post type edit screen
+  and the BigCommerce Settings page for managing your products on BigCommerce
   and logging in to your account
 - Added a Resources page to the BigCommerce admin section. The Resources page
   contains tab separated content that provides users with a repository of
@@ -591,7 +610,7 @@
 - Added an option to the on-boarding process to choose between a
   full-featured store and one directed more towards bloggers. This
   sets default settings depending on your choice.
-- Added a filter for customer profile fields fetched from the API: 
+- Added a filter for customer profile fields fetched from the API:
   `bigcommerce/customer/empty_profile`
 - Added a filter to wrap the output of a template. Can be used to prepend
   or append content to the template:
@@ -599,7 +618,7 @@
 - Added a template for the checkout button on the cart
 
 ### Changed
-- Updated the error handling and response messages related to the product 
+- Updated the error handling and response messages related to the product
   sync feature. We now provide more information to the user based on the
   type of error that has occurred.
 - Added the product SKU to post meta, so that catalog searches can use
@@ -611,16 +630,16 @@
 - Changed how option and modifier fields are rendered and treated on
   the product single and Quick View modals. Modifiers using select/radio
   fields are now supported, using the same templates as the option fields.
-  
+
   **NOTE:** Please take note of the changes to the option field templates and
   adjust your custom templates as needed.
-  
+
   `components/modifier-types/modifier-checkbox.php` → `components/option-types/option-checkbox.php`
-  
+
   `components/modifier-types/modifier-date.php` → `components/option-types/option-date.php`
-  
+
   `components/modifier-types/modifier-number.php` → `components/option-types/option-number.php`
-  
+
   `components/modifier-types/modifier-text.php` → `components/option-types/option-text.php`
 - The template `components/cart/cart-actions.php` now takes an array of
   rendered `$actions` that will be echoed into the template.
@@ -629,14 +648,14 @@
 
 ### Fixed
 - Fixed a typo on the Create New Account screen during on-boarding
-- Fixed an issue with Quick View modal boxes in product cards where removing 
+- Fixed an issue with Quick View modal boxes in product cards where removing
   the quick-view feature would break the JS and the page.
 - The nonce for an ajax import request is validated before triggering the
   import cron action.
 - Fixed an extra quote rendered in template wrappers.
 - Fixed Flatpickr library issue with quick-view modal. **NOTE:** This changes the position
   of the date picker to inline with the date field. Update your CSS as needed.
-  
+
 ### Deprecated
 - The `modifiers` parameter to the cart REST controller is no longer used
   and will be removed in a future version.
@@ -993,6 +1012,7 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[3.11.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.10.0...3.11.0
 [3.10.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.9.0...3.10.0
 [3.9.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.8.1...3.9.0
 [3.8.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.8.0...3.8.1
