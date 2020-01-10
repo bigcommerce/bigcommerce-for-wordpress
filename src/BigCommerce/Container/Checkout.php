@@ -20,11 +20,11 @@ class Checkout extends Provider {
 
 	private function requirements( Container $container ) {
 		$container[ self::REQUIREMENTS_NOTICE ] = function ( Container $container ) {
-			return new Requirements_Notice( $container[ Api::FACTORY ] );
+			return new Requirements_Notice( $container[ Merchant::SETUP_STATUS ] );
 		};
 
 		add_action( 'admin_notices', $this->create_callback( 'verify_checkout_requirements', function () use ( $container ) {
-			if ( $container[ Api::CONFIG_COMPLETE ] && get_option( Channels::CHANNEL_ID, false ) ) {
+			if ( $container[ Settings::CONFIG_STATUS ] >= Settings::STATUS_COMPLETE ) {
 				$container[ self::REQUIREMENTS_NOTICE ]->check_requirements();
 			}
 		} ), 10, 0 );

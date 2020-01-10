@@ -6,6 +6,7 @@ namespace BigCommerce\Webhooks;
 use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Api\v3\Api\ChannelsApi;
 use BigCommerce\Api\v3\ApiException;
+use BigCommerce\Exceptions\Product_Not_Found_Exception;
 use BigCommerce\Import\Importers\Products\Product_Importer;
 use BigCommerce\Import\Importers\Reviews\Review_Importer;
 use BigCommerce\Logging\Error_Log;
@@ -93,7 +94,7 @@ class Product_Updater {
 		}
 		$listing_id = $this->get_listing_id( $product->getId(), $channel );
 		if ( ! $listing_id ) {
-			do_action( 'bigcommerce/import/update_product/skipped', sprintf( __( 'No listing found for product ID %d. Aborting.', 'bigcommerce' ), $product_id ) );
+			do_action( 'bigcommerce/import/update_product/skipped', sprintf( __( 'No listing found for product ID %d. Aborting.', 'bigcommerce' ), $product->getId() ) );
 
 			return;
 		}
@@ -112,7 +113,12 @@ class Product_Updater {
 	 * @return int
 	 */
 	private function get_listing_id( $product_id, \WP_Term $channel ) {
-		$product    = Product::by_product_id( $product_id, $channel );
+		try {
+			$product = Product::by_product_id( $product_id, $channel );
+		} catch ( Product_Not_Found_Exception $e ) {
+			return 0;
+		}
+
 		$listing    = $product->get_listing_data();
 		$listing_id = 0;
 		if ( ! empty( $listing ) && isset( $listing->listing_id ) ) {

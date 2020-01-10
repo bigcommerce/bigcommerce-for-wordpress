@@ -5,16 +5,23 @@ namespace BigCommerce\Settings\Screens;
 
 use BigCommerce\Container\Settings;
 use BigCommerce\Merchant\Onboarding_Api;
+use BigCommerce\Merchant\Setup_Status;
 
 class Onboarding_Complete_Screen extends Onboarding_Screen {
-	const NAME = 'bigcommerce_setup_complete';
+	const NAME = 'bigcommerce_launch_steps';
 
 	/** @var string Path to the templates/admin directory */
 	private $template_dir;
 
-	public function __construct( $configuration_status, $assets_url, $template_dir ) {
+	/**
+	 * @var Setup_Status
+	 */
+	private $status;
+
+	public function __construct( $configuration_status, $assets_url, $template_dir, Setup_Status $status ) {
 		parent::__construct( $configuration_status, $assets_url );
 		$this->template_dir = trailingslashit( $template_dir );
+		$this->status       = $status;
 	}
 
 	protected function get_page_title() {
@@ -22,11 +29,16 @@ class Onboarding_Complete_Screen extends Onboarding_Screen {
 	}
 
 	protected function get_menu_title() {
-		return __( 'Welcome', 'bigcommerce' );
+		return __( 'Launch Steps', 'bigcommerce' );
 	}
 
 	protected function parent_slug() {
-		return null;
+		$required = $this->status->get_required_steps();
+		if ( empty( $required ) ) {
+			return null;
+		}
+
+		return parent::parent_slug();
 	}
 
 	public function render_settings_page() {
@@ -39,6 +51,17 @@ class Onboarding_Complete_Screen extends Onboarding_Screen {
 		$support_url   = $this->support_url();
 		$extend_url    = $this->extend_url();
 		$customize_url = $this->customize_url();
+
+		ob_start();
+		$this->before_form();
+		$this->start_form();
+		$this->settings_fields();
+		$this->do_settings_sections( static::NAME );
+		$this->submit_button();
+		$this->end_form();
+		$this->after_form();
+		$settings_sections = ob_get_clean();
+
 		include trailingslashit( $this->template_dir ) . 'complete-screen.php';
 	}
 

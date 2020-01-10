@@ -31,7 +31,8 @@ class Import_Status {
 
 	/**
 	 * @return void
-	 * @action bigcommerce/settings/render/frequency
+	 * @action bigcommerce/settings/onboarding/progress
+	 * @action bigcommerce/settings/section/after_fields/id= . Import_Settings::NAME
 	 */
 	public function render_status() {
 		$this->current_status_notice();

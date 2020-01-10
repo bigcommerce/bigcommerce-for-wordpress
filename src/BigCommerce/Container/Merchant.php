@@ -4,19 +4,21 @@
 namespace BigCommerce\Container;
 
 
+use BigCommerce\Merchant\Account_Status;
 use BigCommerce\Merchant\Connect_Account;
 use BigCommerce\Merchant\Create_Account;
-use BigCommerce\Merchant\Account_Status;
 use BigCommerce\Merchant\Onboarding_Api;
+use BigCommerce\Merchant\Setup_Status;
 use BigCommerce\Settings\Screens\Pending_Account_Screen;
 use Pimple\Container;
 
 class Merchant extends Provider {
-	const MIDDLEMAN_URL     = 'merchant.middleman.url';
-	const ONBOARDING_API    = 'merchant.onboarding.api';
-	const CREATE_ACCOUNT    = 'merchant.onboarding.create_account';
-	const CONNECT_ACCOUNT   = 'merchant.onboarding.connect_account';
-	const ACCOUNT_STATUS    = 'merchant.onboarding.account_status';
+	const MIDDLEMAN_URL   = 'merchant.middleman.url';
+	const ONBOARDING_API  = 'merchant.onboarding.api';
+	const CREATE_ACCOUNT  = 'merchant.onboarding.create_account';
+	const CONNECT_ACCOUNT = 'merchant.onboarding.connect_account';
+	const ACCOUNT_STATUS  = 'merchant.onboarding.account_status';
+	const SETUP_STATUS    = 'merchant.onboarding.setup_status';
 
 	public function register( Container $container ) {
 		$this->account_onboarding( $container );
@@ -34,6 +36,7 @@ class Merchant extends Provider {
 		$this->create_account( $container );
 		$this->connect_account( $container );
 		$this->account_status( $container );
+		$this->setup_status( $container );
 	}
 
 	private function create_account( Container $container ) {
@@ -74,5 +77,11 @@ class Merchant extends Provider {
 		add_action( 'bigcommerce/pending_account/check_status', $this->create_callback( 'pending_check_status', function ( $errors ) use ( $container ) {
 			$container[ self::ACCOUNT_STATUS ]->handle_refresh_status_request( $errors );
 		} ), 10, 1 );
+	}
+
+	private function setup_status( Container $container ) {
+		$container[ self::SETUP_STATUS ] = function ( Container $container ) {
+			return new Setup_Status( $container[ Api::FACTORY ] );
+		};
 	}
 }

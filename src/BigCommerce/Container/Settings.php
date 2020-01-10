@@ -3,7 +3,6 @@
 
 namespace BigCommerce\Container;
 
-use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Import\Runner\Cron_Runner;
 use BigCommerce\Import\Runner\Status;
 use BigCommerce\Merchant\Onboarding_Api;
@@ -15,25 +14,26 @@ use BigCommerce\Settings\Import_Status;
 use BigCommerce\Settings\Onboarding_Progress;
 use BigCommerce\Settings\Screens\Abstract_Screen;
 use BigCommerce\Settings\Screens\Api_Credentials_Screen;
-use BigCommerce\Settings\Screens\Onboarding_Complete_Screen;
-use BigCommerce\Settings\Screens\Store_Type_Screen;
 use BigCommerce\Settings\Screens\Connect_Channel_Screen;
 use BigCommerce\Settings\Screens\Create_Account_Screen;
 use BigCommerce\Settings\Screens\Nav_Menu_Screen;
+use BigCommerce\Settings\Screens\Onboarding_Complete_Screen;
 use BigCommerce\Settings\Screens\Pending_Account_Screen;
 use BigCommerce\Settings\Screens\Resources_Screen;
 use BigCommerce\Settings\Screens\Settings_Screen;
+use BigCommerce\Settings\Screens\Store_Type_Screen;
 use BigCommerce\Settings\Screens\Welcome_Screen;
 use BigCommerce\Settings\Sections\Account_Settings;
 use BigCommerce\Settings\Sections\Analytics as Analytics_Settings;
 use BigCommerce\Settings\Sections\Api_Credentials;
+use BigCommerce\Settings\Sections\Cart as Cart_Settings;
 use BigCommerce\Settings\Sections\Channel_Select;
 use BigCommerce\Settings\Sections\Channels as Channel_Settings;
-use BigCommerce\Settings\Sections\Cart as Cart_Settings;
 use BigCommerce\Settings\Sections\Gift_Certificates as Gift_Ceritifcate_Settings;
 use BigCommerce\Settings\Sections\Import as Import_Settings;
 use BigCommerce\Settings\Sections\Nav_Menu_Options;
 use BigCommerce\Settings\Sections\New_Account_Section;
+use BigCommerce\Settings\Sections\Next_Steps;
 use BigCommerce\Settings\Sections\Reviews;
 use BigCommerce\Settings\Sections\Troubleshooting_Diagnostics;
 use BigCommerce\Settings\Start_Over;
@@ -66,6 +66,7 @@ class Settings extends Provider {
 	const CHANNEL_SECTION          = 'settings.section.channel';
 	const DIAGNOSTICS_SECTION      = 'settings.section.diagnostics';
 	const MENU_OPTIONS_SECTION     = 'settings.section.nav_menu_options';
+	const NEXT_STEPS_SECTION       = 'settings.section.next_steps';
 
 	const API_STATUS          = 'settings.api_status';
 	const IMPORT_NOW          = 'settings.import_now';
@@ -92,6 +93,7 @@ class Settings extends Provider {
 		$this->api_status_indicator( $container );
 		$this->cart( $container );
 		$this->gift_certificates( $container );
+		$this->next_steps( $container );
 		$this->import( $container );
 		$this->currency( $container );
 		$this->accounts( $container );
@@ -301,11 +303,13 @@ class Settings extends Provider {
 			return new Import_Status( $container[ Import::TASK_MANAGER ] );
 		};
 
-		add_action( 'bigcommerce/settings/section/after_fields/id=' . Import_Settings::NAME, $this->create_callback( 'import_status_render', function () use ( $container ) {
-			if ( $container[ self::CONFIG_STATUS ] >= self::STATUS_CHANNEL_CONNECTED ) {
+		$render_import_status = $this->create_callback( 'import_status_render', function () use ( $container ) {
+			if ( $container[ self::CONFIG_STATUS ] >= self::STATUS_COMPLETE ) {
 				$container[ self::IMPORT_STATUS ]->render_status();
 			}
-		} ), 20, 0 );
+		} );
+		add_action( 'bigcommerce/settings/section/after_fields/id=' . Import_Settings::NAME, $render_import_status, 20, 0 );
+		add_action( 'bigcommerce/settings/before_title/page=' . Onboarding_Complete_Screen::NAME, $render_import_status, 0, 0 );
 
 		add_action( 'bigcommerce/settings/import/product_list_table_notice', $this->create_callback( 'import_current_status_notice', function () use ( $container ) {
 			if ( $container[ self::CONFIG_STATUS ] >= self::STATUS_COMPLETE ) {
@@ -335,6 +339,17 @@ class Settings extends Provider {
 		add_action( 'bigcommerce/settings/register/screen=' . Settings_Screen::NAME, $this->create_callback( 'currency_settings_register', function () use ( $container ) {
 			$container[ self::CURRENCY_SECTION ]->register_settings_section();
 		} ), 50, 0 );
+	}
+
+	private function next_steps( Container $container ) {
+		$container[ self::NEXT_STEPS_SECTION ] = function ( Container $container ) {
+			$path = dirname( $container['plugin_file'] ) . '/templates/admin';
+
+			return new Next_Steps( $container[ Merchant::SETUP_STATUS ], $path );
+		};
+		add_action( 'bigcommerce/settings/register/screen=' . Settings_Screen::NAME, $this->create_callback( 'next_steps_settings_register', function () use ( $container ) {
+			$container[ self::NEXT_STEPS_SECTION ]->register_settings_section();
+		} ), 10, 0 );
 	}
 
 	private function accounts( Container $container ) {
@@ -504,7 +519,7 @@ class Settings extends Provider {
 		$container[ self::COMPLETE_SCREEN ] = function ( Container $container ) {
 			$path = dirname( $container['plugin_file'] ) . '/templates/admin';
 
-			return new Onboarding_Complete_Screen( $container[ self::CONFIG_STATUS ], $container[ Assets::PATH ], $path );
+			return new Onboarding_Complete_Screen( $container[ self::CONFIG_STATUS ], $container[ Assets::PATH ], $path, $container[ Merchant::SETUP_STATUS ] );
 		};
 		add_action( 'admin_menu', $this->create_callback( 'complete_screen_admin_menu', function () use ( $container ) {
 			$container[ self::COMPLETE_SCREEN ]->register_settings_page();
@@ -563,16 +578,20 @@ class Settings extends Provider {
 	private function onboarding_progress_bar( Container $container ) {
 		$container[ self::ONBOARDING_PROGRESS ] = function ( Container $container ) {
 			$path = dirname( $container['plugin_file'] ) . '/templates/admin';
+
 			return new Onboarding_Progress( $container[ self::CONFIG_STATUS ], $path );
 		};
+
 		$progress_bar = $this->create_callback( 'onboarding_progress', function () use ( $container ) {
-			$container[ self::ONBOARDING_PROGRESS ]->render();
+			if ( $container[ self::CONFIG_STATUS ] >= self::STATUS_COMPLETE ) {
+				$container[ self::ONBOARDING_PROGRESS ]->render();
+			}
 		} );
 		add_action( 'bigcommerce/settings/onboarding/progress', $progress_bar, 10, 0 );
 
-		$subheader = $this->create_callback( 'onboarding_subheader', function() use ( $container ) {
+		$subheader = $this->create_callback( 'onboarding_subheader', function () use ( $container ) {
 			$container[ self::ONBOARDING_PROGRESS ]->step_subheader();
-		});
+		} );
 		add_action( 'bigcommerce/settings/before_title/page=' . Welcome_Screen::NAME, $subheader, 10, 0 );
 		add_action( 'bigcommerce/settings/before_title/page=' . Create_Account_Screen::NAME, $subheader, 10, 0 );
 		add_action( 'bigcommerce/settings/before_title/page=' . Api_Credentials_Screen::NAME, $subheader, 10, 0 );

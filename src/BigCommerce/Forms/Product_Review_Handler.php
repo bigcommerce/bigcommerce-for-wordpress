@@ -4,8 +4,8 @@
 namespace BigCommerce\Forms;
 
 
-use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api\v3\Api\CatalogApi;
+use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api\v3\Model\ProductReviewPost;
 use BigCommerce\Post_Types\Product\Product;
 
@@ -46,16 +46,16 @@ class Product_Review_Handler implements Form_Handler {
 			return;
 		}
 
-		$product    = new Product( (int) $submission[ 'bc-review' ][ 'post_id' ] );
+		$product    = new Product( (int) $submission['bc-review']['post_id'] );
 		$product_id = $product->bc_id();
 
 		$review_request = new ProductReviewPost( [
-			'title'         => sanitize_text_field( $submission[ 'bc-review' ][ 'subject' ] ),
-			'text'          => sanitize_textarea_field( $submission[ 'bc-review' ][ 'content' ] ),
+			'title'         => sanitize_text_field( $submission['bc-review']['subject'] ),
+			'text'          => sanitize_textarea_field( $submission['bc-review']['content'] ),
 			'status'        => apply_filters( 'bigcommerce/form/review/status', 'pending', $submission, $product_id ),
-			'rating'        => intval( $submission[ 'bc-review' ][ 'rating' ] ),
-			'email'         => sanitize_email( $submission[ 'bc-review' ][ 'email' ] ),
-			'name'          => sanitize_text_field( $submission[ 'bc-review' ][ 'name' ] ),
+			'rating'        => intval( $submission['bc-review']['rating'] ),
+			'email'         => sanitize_email( $submission['bc-review']['email'] ),
+			'name'          => sanitize_text_field( $submission['bc-review']['name'] ),
 			'date_reviewed' => new \DateTime(),
 		] );
 
@@ -73,13 +73,17 @@ class Product_Review_Handler implements Form_Handler {
 	}
 
 	private function should_handle_request( $submission ) {
-		if ( ! is_user_logged_in() ) {
+		if ( empty( $submission['bc-action'] ) || $submission['bc-action'] !== self::ACTION ) {
 			return false;
 		}
-		if ( empty( $submission[ 'bc-action' ] ) || $submission[ 'bc-action' ] !== self::ACTION ) {
+		if ( empty( $submission['_wpnonce'] ) || empty( $submission['bc-review'] ) || empty( $submission['bc-review']['post_id'] ) ) {
 			return false;
 		}
-		if ( empty( $submission[ '_wpnonce' ] ) || empty( $submission[ 'bc-review' ] ) || empty( $submission[ 'bc-review' ][ 'post_id' ] ) ) {
+
+		/**
+		 * This filter is documented in src/BigCommerce/Templates/Product_Reviews.php
+		 */
+		if ( ! apply_filters( 'bigcommerce/product/reviews/show_form', is_user_logged_in(), $submission['bc-review']['post_id'] ) ) {
 			return false;
 		}
 
@@ -89,25 +93,25 @@ class Product_Review_Handler implements Form_Handler {
 	private function validate_submission( $submission ) {
 		$errors = new \WP_Error();
 
-		if ( ! wp_verify_nonce( $submission[ '_wpnonce' ], self::ACTION . $submission[ 'bc-review' ][ 'post_id' ] ) ) {
+		if ( ! wp_verify_nonce( $submission['_wpnonce'], self::ACTION . $submission['bc-review']['post_id'] ) ) {
 			$errors->add( 'invalid_nonce', __( 'There was an error validating your request. Please try again.', 'bigcommerce' ) );
 		}
 
-		if ( empty( $submission[ 'bc-review' ][ 'rating' ] ) || intval( $submission[ 'bc-review' ][ 'rating' ] ) < 1 ) {
+		if ( empty( $submission['bc-review']['rating'] ) || intval( $submission['bc-review']['rating'] ) < 1 ) {
 			$errors->add( 'rating', __( 'Please select a rating.', 'bigcommerce' ) );
 		}
-		if ( empty( $submission[ 'bc-review' ][ 'name' ] ) ) {
+		if ( empty( $submission['bc-review']['name'] ) ) {
 			$errors->add( 'name', __( 'Name is required.', 'bigcommerce' ) );
 		}
-		if ( empty( $submission[ 'bc-review' ][ 'email' ] ) ) {
+		if ( empty( $submission['bc-review']['email'] ) ) {
 			$errors->add( 'email', __( 'Email Address is required.', 'bigcommerce' ) );
-		} elseif ( ! is_email( $submission[ 'bc-review' ][ 'email' ] ) ) {
+		} elseif ( ! is_email( $submission['bc-review']['email'] ) ) {
 			$errors->add( 'email', __( 'Please verify that you have submitted a valid email address.', 'bigcommerce' ) );
 		}
-		if ( empty( $submission[ 'bc-review' ][ 'subject' ] ) ) {
+		if ( empty( $submission['bc-review']['subject'] ) ) {
 			$errors->add( 'subject', __( 'Please give your review a subject.', 'bigcommerce' ) );
 		}
-		if ( empty( $submission[ 'bc-review' ][ 'content' ] ) ) {
+		if ( empty( $submission['bc-review']['content'] ) ) {
 			$errors->add( 'content', __( 'Please add comments to your review.', 'bigcommerce' ) );
 		}
 
@@ -135,8 +139,8 @@ class Product_Review_Handler implements Form_Handler {
 			$data = get_transient( $_REQUEST[ Success_Handler::PARAM ] );
 		}
 		if ( $data && array_key_exists( 'submission', $data ) ) {
-			if ( array_key_exists( 'bc-action', $data[ 'submission' ] ) ) {
-				if ( $data[ 'submission' ][ 'bc-action' ] == self::ACTION ) {
+			if ( array_key_exists( 'bc-action', $data['submission'] ) ) {
+				if ( $data['submission']['bc-action'] == self::ACTION ) {
 					return false;
 				}
 			}
