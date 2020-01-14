@@ -82,7 +82,7 @@ class Query {
 						/** @var \wpdb $wpdb */
 						global $wpdb;
 						$feature_sort = " bcfeatured DESC, {$wpdb->posts}.menu_order ASC ";
-						$trimmed = trim( $orderby );
+						$trimmed      = trim( $orderby );
 						if ( $trimmed === '' || $trimmed === "{$wpdb->posts}.post_title ASC" ) {
 							return $feature_sort . ", {$wpdb->posts}.post_date DESC, {$wpdb->posts}.post_title ASC ";
 						} else {
@@ -150,6 +150,27 @@ class Query {
 					];
 					$query->set( 'meta_query', $meta_query );
 					$query->set( 'orderby', [ 'bigcommerce_sales' => 'DESC', 'title' => 'ASC' ] );
+					break;
+				case 'bigcommerce_id__in':
+					$meta_query                   = $query->get( 'meta_query' ) ?: [];
+					$meta_query['bigcommerce_id'] = [
+						'key'     => 'bigcommerce_id',
+						'compare' => 'EXISTS',
+					];
+					$query->set( 'meta_query', $meta_query );
+					$orderby_filter = function ( $orderby, $wp_query ) use ( $query ) {
+						if ( $wp_query !== $query || empty( $query->query_vars['bigcommerce_id__in'] ) ) {
+							return $orderby;
+						}
+						$meta_clauses = $query->meta_query->get_clauses();
+						if ( ! array_key_exists( 'bigcommerce_id', $meta_clauses ) ) {
+							return $orderby;
+						}
+						$alias = $meta_clauses['bigcommerce_id']['alias'];
+
+						return "FIELD({$alias}.meta_value," . implode( ',', array_map( 'absint', $query->query_vars['bigcommerce_id__in'] ) ) . ')';
+					};
+					add_filter( 'posts_orderby', $orderby_filter, 10, 2 );
 					break;
 				default:
 					do_action( 'bigcommerce/query/sort', $query );
@@ -399,6 +420,7 @@ class Query {
 				'posts_per_page'            => - 1,
 				self::UNFILTERED_QUERY_FLAG => true,
 			];
+
 			$matches = $query->query( $search_query_args );
 		}
 

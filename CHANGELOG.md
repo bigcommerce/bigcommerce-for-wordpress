@@ -1,5 +1,34 @@
 # Changelog
 
+## [3.12.0]
+
+### Added
+
+- Added the ability to sort products arbitrarily in the products shortcode. By setting
+  the `sort` parameter to `post__in`, the order of the IDs in the `id` parameter will
+  be maintained in the query results.
+- Added body classes to front end templates with product ID and availabilty, and flags for
+  sale, out of stock, and low inventory products.
+
+### Changed
+
+- The import progress bar will also appear at the top of the final onboarding screen if an
+  import is in progress.
+- Redesigned the final onboarding page to list the next steps to configure the merchant's
+  BigCommerce store. This final page will appear in the admin menu as "Launch Steps" until
+  all required steps have been completed.
+
+### Fixed
+
+- Handled a possible exception in the product update webhook handler
+- Fixed an undefined variable in the product update webhook handler
+- Fixed the product review form handler to respect the value of the
+  `bigcommerce/product/reviews/show_form` filter that is used when
+  displaying the form.
+- Changed the default value for `bigcommerce/gift_certificates/theme` to `general`.
+  The previous value resulted in gift certificate reciepients to receive an email
+  with no gift certificate template attached.
+
 ## [3.11.0]
 
 ### Changed
@@ -1012,6 +1041,7 @@
 
 
 [Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[3.12.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.11.0...3.12.0
 [3.11.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.10.0...3.11.0
 [3.10.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.9.0...3.10.0
 [3.9.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.8.1...3.9.0

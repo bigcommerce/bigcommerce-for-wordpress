@@ -38,6 +38,10 @@ class Query_Mapper {
 			if ( ! empty( $bc_ids ) ) {
 				$query_args[ 'bigcommerce_id__in' ] = $bc_ids;
 			}
+			if ( $query_args['orderby'] === 'post__in' ) {
+				$query_args['orderby'] = '';
+				$query_args['bc-sort'] = 'bigcommerce_id__in';
+			}
 		}
 
 		if ( ! empty( $args[ 'sku' ] ) ) {

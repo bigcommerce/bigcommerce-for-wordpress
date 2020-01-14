@@ -4,7 +4,6 @@
 namespace BigCommerce\Post_Types\Product;
 
 
-use Bigcommerce\Api\Client;
 use BigCommerce\Api_Factory;
 
 class Store_Links {
@@ -89,6 +88,36 @@ class Store_Links {
 		$data[ 'store_link' ][ 'url' ] = $this->get_bigcommerce_post_url( $post );
 
 		return $data;
+	}
+
+	/**
+	 * @param \WP_Admin_Bar $wp_admin_bar
+	 *
+	 * @action admin_bar_menu
+	 */
+	public function modify_edit_product_links_admin_bar( $wp_admin_bar ) {
+		if ( ! ( is_singular( Product::NAME ) && current_user_can( 'edit_post', get_queried_object_id() ) ) ) {
+			return;
+		}
+
+		$wp_admin_bar->add_menu( [
+			'id' => 'edit',
+			'href' => false,
+		] );
+
+		$wp_admin_bar->add_menu( [
+			'id'     => 'edit-wp',
+			'title'  => __( 'in WordPress', 'bigcommerce' ),
+			'parent' => 'edit',
+			'href'   => get_edit_post_link( get_queried_object_id() ),
+		] );
+
+		$wp_admin_bar->add_menu( [
+			'id'     => 'edit-bc',
+			'title'  => __( 'in BigCommerce', 'bigcommerce' ),
+			'parent' => 'edit',
+			'href' => $this->get_bigcommerce_post_url( get_queried_object() ),
+		] );
 	}
 
 	/**

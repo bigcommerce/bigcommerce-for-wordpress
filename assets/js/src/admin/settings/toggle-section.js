@@ -150,7 +150,10 @@ const cacheElements = () => {
  */
 const bindEvents = () => {
 	delegate(el.container, '[data-js="section-toggle-trigger"]', 'click', toggleSection);
-	delegate(el.page, '.bc-settings-form', 'keydown', keyboardNavigation);
+
+	if (el.page) {
+		delegate(el.page, '.bc-settings-form', 'keydown', keyboardNavigation);
+	}
 };
 
 const init = () => {

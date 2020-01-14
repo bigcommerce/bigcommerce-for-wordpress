@@ -182,6 +182,9 @@ class Post_Types extends Provider {
 		add_filter( 'bigcommerce/gutenberg/js_config', $this->create_callback( 'gutenberg_store_link', function ( $data ) use ( $container ) {
 			return $container[ self::STORE_LINKS ]->add_link_to_gutenberg_config( $data );
 		} ), 10, 1 );
+		add_action( 'admin_bar_menu', $this->create_callback( 'admin_bar_edit_link', function ( $wp_admin_bar ) use ( $container ) {
+			$container[ self::STORE_LINKS ]->modify_edit_product_links_admin_bar( $wp_admin_bar );
+		} ), 81, 1 );
 	}
 
 	private function product_listing_reset( Container $container ) {
