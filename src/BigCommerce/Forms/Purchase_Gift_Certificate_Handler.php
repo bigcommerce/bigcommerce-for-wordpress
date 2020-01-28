@@ -170,7 +170,7 @@ class Purchase_Gift_Certificate_Handler implements Form_Handler {
 			__( '%s Gift Certificate', 'bigcommerce' ),
 			apply_filters( 'bigcommerce/currency/format', sprintf( '¤%0.2f', $amount ), $amount )
 		);
-		$theme  = apply_filters( 'bigcommerce/gift_certificates/theme', 'general' );
+		$theme  = apply_filters( 'bigcommerce/gift_certificates/theme', 'General.html' );
 		$data   = [
 			'name'      => $name,
 			'theme'     => $theme,
