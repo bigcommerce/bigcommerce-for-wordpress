@@ -54,7 +54,7 @@ class Scripts {
 			'media-views',
 		], $this->version, true );
 		wp_register_script( 'bigcommerce-admin-vendors', $vendor_src, [ 'bigcommerce-admin-manifest' ], $this->version, true );
-		wp_register_script( 'bigcommerce-admin-scripts', $admin_src, [ 'bigcommerce-admin-vendors' ], $this->version, true );
+		wp_register_script( 'bigcommerce-admin-scripts', $admin_src, [ 'bigcommerce-admin-vendors', 'wp-i18n' ], $this->version, true );
 		wp_register_script( 'bigcommerce-gutenberg-scripts', $gutenberg_src, [
 			'wp-i18n',
 			'wp-editor',

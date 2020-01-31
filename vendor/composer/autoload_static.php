@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitcedef4f3b25c6209e0e38029664daa2b
+class ComposerStaticInit5238ee7ccd477b06ad89fd537de170a2
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -705,7 +705,9 @@ class ComposerStaticInitcedef4f3b25c6209e0e38029664daa2b
         'BigCommerce\\Taxonomies\\Flag\\Config' => __DIR__ . '/../..' . '/src/BigCommerce/Taxonomies/Flag/Config.php',
         'BigCommerce\\Taxonomies\\Flag\\Flag' => __DIR__ . '/../..' . '/src/BigCommerce/Taxonomies/Flag/Flag.php',
         'BigCommerce\\Taxonomies\\Product_Category\\Config' => __DIR__ . '/../..' . '/src/BigCommerce/Taxonomies/Product_Category/Config.php',
+        'BigCommerce\\Taxonomies\\Product_Category\\Group_Filtered_Terms' => __DIR__ . '/../..' . '/src/BigCommerce/Taxonomies/Product_Category/Group_Filtered_Terms.php',
         'BigCommerce\\Taxonomies\\Product_Category\\Product_Category' => __DIR__ . '/../..' . '/src/BigCommerce/Taxonomies/Product_Category/Product_Category.php',
+        'BigCommerce\\Taxonomies\\Product_Category\\Query_Filter' => __DIR__ . '/../..' . '/src/BigCommerce/Taxonomies/Product_Category/Query_Filter.php',
         'BigCommerce\\Taxonomies\\Product_Type\\Config' => __DIR__ . '/../..' . '/src/BigCommerce/Taxonomies/Product_Type/Config.php',
         'BigCommerce\\Taxonomies\\Product_Type\\Product_Type' => __DIR__ . '/../..' . '/src/BigCommerce/Taxonomies/Product_Type/Product_Type.php',
         'BigCommerce\\Taxonomies\\Taxonomy_Config' => __DIR__ . '/../..' . '/src/BigCommerce/Taxonomies/Taxonomy_Config.php',
@@ -1047,10 +1049,10 @@ class ComposerStaticInitcedef4f3b25c6209e0e38029664daa2b
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitcedef4f3b25c6209e0e38029664daa2b::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitcedef4f3b25c6209e0e38029664daa2b::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitcedef4f3b25c6209e0e38029664daa2b::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitcedef4f3b25c6209e0e38029664daa2b::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit5238ee7ccd477b06ad89fd537de170a2::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit5238ee7ccd477b06ad89fd537de170a2::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit5238ee7ccd477b06ad89fd537de170a2::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit5238ee7ccd477b06ad89fd537de170a2::$classMap;
 
         }, null, ClassLoader::class);
     }

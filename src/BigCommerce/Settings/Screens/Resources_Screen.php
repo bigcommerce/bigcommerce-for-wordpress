@@ -58,7 +58,7 @@ class Resources_Screen extends Abstract_Screen {
 		 *
 		 * @param string $url The URL to the resources JSON data
 		 */
-		$resources_url = apply_filters( 'bigcommerce/settings/resources/url', 'https://storage.googleapis.com/bigcommerce-wp-connector.appspot.com/resources.json' );
+		$resources_url = apply_filters( 'bigcommerce/settings/resources/url', 'https://storage.googleapis.com/bigcommerce-wp-connector.appspot.com/resources_v2.json' );
 
 		if ( empty( $resources_url ) ) {
 			return $this->default_resources();

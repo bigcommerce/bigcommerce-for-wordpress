@@ -6,7 +6,7 @@
 import delegate from 'delegate';
 import _ from 'lodash';
 import * as tools from '../../utils/tools';
-import { resourceCard, tabButton, tabCardsContent, tabContentContainer, paginationLink, noDataAvailable } from '../templates/resources';
+import { resourceCard, resourceVideoCard, tabButton, tabCardsContent, tabVideoCardsContent, tabContentContainer, paginationLink, noDataAvailable, videoPlaylist } from '../templates/resources';
 import { ADMIN_IMAGES } from '../config/wp-settings';
 import { on, trigger } from '../../utils/events';
 import scrollTo from '../../utils/dom/scroll-to';
@@ -20,6 +20,7 @@ const el = {
 const tabInstances = {
 	tabs: [],
 	cards: [],
+	videos: [],
 	cards_per_page: 12,
 };
 
@@ -55,6 +56,41 @@ const createCards = (cards, label) => {
 		const image2 = largeThumb ? `${largeThumb} 2x,` : `${ADMIN_IMAGES}bigcommerce-resource-thumbnail-2x.png 2x`;
 		// Create a card and push it as a new indexed item in the cards array.
 		tabInstances.cards[label].push(resourceCard(image1, image2, card.name, card.description, card.url));
+	});
+};
+
+/**
+ * @function createVideoCards
+ * @description Build the HTML elements for each video card data available in the bigcommerce_resources_json JSON.
+ * @param videos
+ * @param label
+ * @param playlistLabel
+ */
+const createVideoCards = (videos = {}, label = '', playlistLabel = '') => {
+	Object.values(videos).forEach((card) => {
+		const smallThumb = _.get(card, 'thumbnail.small');
+		const largeThumb = _.get(card, 'thumbnail.large');
+		// If we have images, use them. Otherwise, we'll use the BigCommerce logo thumbnail placeholder.
+		const image1 = smallThumb ? `${smallThumb} 1x,` : `${ADMIN_IMAGES}bigcommerce-resource-thumbnail.png 1x,`;
+		const image2 = largeThumb ? `${largeThumb} 2x,` : `${ADMIN_IMAGES}bigcommerce-resource-thumbnail-2x.png 2x`;
+		// Create a card and push it as a new indexed item in the cards array.
+		tabInstances.videos[playlistLabel].push(resourceVideoCard(image1, image2, card.name, card.video_length, card.description, card.url));
+	});
+};
+
+/**
+ * @function createVideoPlaylists
+ * @description Creates an array of playlists with completed markup.
+ * @param playlists
+ * @param label
+ */
+const createVideoPlaylists = (playlists = {}, label = '') => {
+	Object.values(playlists).forEach((playlist) => {
+		const playlistLabel = playlist.playlist_label;
+		tabInstances.videos[playlistLabel] = [];
+
+		tabInstances.videos[playlistLabel].push(createVideoCards(playlist.videos, label, playlistLabel));
+		tabInstances.cards[label].push(videoPlaylist(playlistLabel, playlist.playlist, tabInstances.videos[playlistLabel].join(''), tabInstances.videos[playlistLabel].length - 1));
 	});
 };
 
@@ -104,7 +140,6 @@ const createTabContentContainers = () => {
 	// Create a wrapper element to attach the containers to.
 	const contentWrapper = document.createElement('div');
 	tools.addClass(contentWrapper, 'bc-resources-tabs__content');
-	tools.addClass(contentWrapper, 'bc-resources-tabs__max-width');
 	el.contentContainer.appendChild(contentWrapper);
 
 	// Loop through the available keys and create the parent container tied to the tab button.
@@ -223,7 +258,12 @@ const getPaginatedItems = (e, cardKey = '', currentPage = 1) => {
 	const offset = (currentPage - 1) * tabInstances.cards_per_page;
 	const paginatedItems = tabInstances.cards[key].slice(offset, offset + tabInstances.cards_per_page);
 
-	cardPageWrapper.insertAdjacentHTML('beforeend', tabCardsContent(key, paginatedItems.join(''), currentPage));
+	if (key === 'Tutorials') {
+		cardPageWrapper.insertAdjacentHTML('beforeend', tabVideoCardsContent(key, paginatedItems.join(''), currentPage));
+	} else {
+		cardPageWrapper.insertAdjacentHTML('beforeend', tabCardsContent(key, paginatedItems.join(''), currentPage));
+	}
+
 	focusFirstPagedCard(key, currentPage);
 };
 
@@ -274,7 +314,12 @@ const initResourceCards = () => {
 
 		tabInstances.tabs.push(tabButton(section.label));
 		tabInstances.cards[section.label] = [];
-		createCards(section.resources, section.label);
+
+		if (section.label === 'Tutorials') {
+			createVideoPlaylists(section.resources, section.label);
+		} else {
+			createCards(section.resources, section.label);
+		}
 	});
 
 	createTabs();

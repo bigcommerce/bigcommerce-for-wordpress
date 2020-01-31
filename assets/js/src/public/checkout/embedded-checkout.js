@@ -4,8 +4,10 @@
  */
 
 import Cookie from 'js-cookie';
+import _ from 'lodash';
 import { embedCheckout } from '@bigcommerce/checkout-sdk';
 import * as tools from 'utils/tools';
+import scrollTo from 'utils/dom/scroll-to';
 import { CART_ID_COOKIE_NAME, CART_ITEM_COUNT_COOKIE } from 'bcConstants/cookies';
 import { cartEmpty } from '../cart/cart-templates';
 
@@ -23,11 +25,31 @@ const clearCartData = () => {
 		return;
 	}
 
-	const cartMenuCount = tools.getNodes('.bigcommerce-cart__item-count', false, document, true)[0];
-	Cookie.remove(CART_ITEM_COUNT_COOKIE);
-	tools.removeClass(cartMenuCount, 'full');
-	cartMenuCount.textContent = '';
-	Cookie.remove(CART_ID_COOKIE_NAME);
+	const cartMenuCount = tools.getNodes('.bigcommerce-cart__item-count', true, document, true);
+
+	_.delay(() => {
+		Cookie.remove(CART_ITEM_COUNT_COOKIE);
+		Cookie.remove(CART_ID_COOKIE_NAME);
+
+		cartMenuCount.forEach((menuItem) => {
+			tools.removeClass(menuItem, 'full');
+			menuItem.textContent = '';
+		});
+	}, 250);
+};
+
+/**
+ * @function scrollIframe
+ * @description After completing the checkout process, ensure the top of the embedded checkout is visible using scrollTo.
+ */
+const scrollIframe = () => {
+	const options = {
+		offset: -80,
+		duration: 750,
+		$target: jQuery(el.container),
+	};
+
+	_.delay(() => scrollTo(options), 1000);
 };
 
 /**
@@ -46,6 +68,7 @@ const loadEmbeddedCheckout = () => {
 
 	// Set the onComplete callback to use the clearCartData function.
 	config.onComplete = clearCartData;
+	config.onComplete = scrollIframe;
 
 	// Embed the checkout.
 	embedCheckout(config);

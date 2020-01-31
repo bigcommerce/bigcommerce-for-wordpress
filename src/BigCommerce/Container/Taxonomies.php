@@ -28,8 +28,10 @@ use BigCommerce\Taxonomies\Product_Type;
 use Pimple\Container;
 
 class Taxonomies extends Provider {
-	const PRODUCT_CATEGORY        = 'taxonomy.product_category';
-	const PRODUCT_CATEGORY_CONFIG = 'taxonomy.product_category.config';
+	const PRODUCT_CATEGORY                      = 'taxonomy.product_category';
+	const PRODUCT_CATEGORY_CONFIG               = 'taxonomy.product_category.config';
+	const PRODUCT_CATEGORY_GROUP_FILTERED_TERMS = 'taxonomy.product_category.group_filtered_terms';
+	const PRODUCT_CATEGORY_QUERY_FILTER         = 'taxonomy.product_category.query_filter';
 
 	const BRAND        = 'taxonomy.brand';
 	const BRAND_CONFIG = 'taxonomy.brand.config';
@@ -80,6 +82,32 @@ class Taxonomies extends Provider {
 		$container[ self::PRODUCT_CATEGORY_CONFIG ] = function ( Container $container ) {
 			return new Product_Category\Config( Product_Category\Product_Category::NAME, [ Product::NAME ] );
 		};
+
+		$container[ self::PRODUCT_CATEGORY_GROUP_FILTERED_TERMS ] = function ( Container $container ) {
+			return new Product_Category\Group_Filtered_Terms();
+		};
+
+		$container[ self::PRODUCT_CATEGORY_QUERY_FILTER ] = function () use ( $container ) {
+			return new Product_Category\Query_Filter( $container[ self::PRODUCT_CATEGORY_GROUP_FILTERED_TERMS ] );
+		};
+
+		add_filter( 'get_terms_args', $this->create_callback( 'exclude_product_categories_by_group', function ( $args, $taxonomies ) use ( $container ) {
+			if ( ! is_admin() ) {
+				$args = $container[ self::PRODUCT_CATEGORY_GROUP_FILTERED_TERMS ]->exclude_hidden_terms( $args, $taxonomies );
+			}
+
+			return $args;
+		} ), 10, 3 );
+
+		add_action( 'pre_get_posts', $this->create_callback( 'filter_query_by_product_category', function ( $query ) use ( $container ) {
+			if ( ! is_admin() ) {
+				$container[ self::PRODUCT_CATEGORY_QUERY_FILTER ]->apply( $query );
+			}
+		} ), 10, 1 );
+
+		add_action( 'parse_tax_query', $this->create_callback( 'hide_children_by_default', function ( $query ) use ($container) {
+			$container[ self::PRODUCT_CATEGORY_QUERY_FILTER ]->maybe_hide_children( $query );
+		} ), 10, 1 );
 	}
 
 	private function brand( Container $container ) {

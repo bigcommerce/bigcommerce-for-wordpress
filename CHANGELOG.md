@@ -1,5 +1,26 @@
 # Changelog
 
+## [3.13.0]
+
+### Added
+
+- Added category and product view limitations to customers that are members of a
+  group with product category visibility limitations.
+- Added a filter to modify the cache time of user group category visibility.
+  `bigcommerce/product_category/group_filter_terms_user_cache_time` accepts a value,
+  in seconds, for how long to cache the local list of terms by user.
+- Added a new tab to the Resources section in the plugin admin area. The
+  new section, Tutorials, contains video tutorial links from BigCommerce's YouTube channel.
+
+### Changed
+
+- Added a feature that scrolls the browser to the top of the embedded checkout iframe
+  upon completion of the order. This resolves an issue on smaller screens where
+  the window would be stuck at the bottom of the page.
+
+### Fixed
+
+
 ## [3.12.0]
 
 ### Added
