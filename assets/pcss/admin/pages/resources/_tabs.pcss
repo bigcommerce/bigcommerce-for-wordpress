@@ -9,6 +9,10 @@
 			margin-top: 86px;
 		}
 	}
+
+	#wpcontent {
+		padding-left: 0;
+	}
 }
 
 .bc-resources-content {
@@ -17,11 +21,11 @@
 }
 
 .bc-resources {
-	margin: 10px 20px 10px 10px;
+	margin: 10px 0;
 	font-size: 16px;
 
-	@media (--viewport-wpadmin) {
-		margin: 10px 20px 0 0;
+	@media (--viewport-xlarge) {
+		margin: 10px 0 0;
 	}
 }
 
@@ -33,8 +37,10 @@
 
 .bc-resources-header {
 	position: relative;
+	box-sizing: border-box;
 	min-height: 276px;
-	margin-top: 0;
+	margin: 0 20px;
+	width: calc(100% - 40px);
 	display: flex;
 	flex-direction: row;
 
@@ -157,13 +163,13 @@
 	position: absolute;
 	top: 0;
 	left: 0;
-	width: 100%;
+	width: calc(100% - 40px);
 	height: 100%;
 	opacity: 0;
 	z-index: 0;
 	background-color: var(--color-white);
 	transition: var(--transition-opacity);
-	padding-top: 58px;
+	padding: 58px 20px 0;
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;

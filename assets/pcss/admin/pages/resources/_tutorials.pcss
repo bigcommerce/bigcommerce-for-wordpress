@@ -1,0 +1,164 @@
+.bc-resource-tab-playlist {
+	background-color: var(--color-white);
+	position: relative;
+
+	&:first-child {
+		background-color: var(--color-off-white);
+	}
+}
+
+.bc-resources-container-tutorials {
+	padding: 0;
+	width: 100%;
+}
+
+.bc-resource-tab-playlist {
+	width: 100%;
+	padding: 0 0 0 20px;
+
+	.bc-resource-tab-playlist-cards {
+		padding-left: calc(((100vw - 180px) - 940px) / 2);
+		padding-bottom: 52px;
+		flex: 0 0 auto;
+		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		align-items: flex-start;
+		overflow-x: scroll;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	&--00,
+	&--01 {
+
+		.bc-resource-tab-playlist-name {
+			border: 0;
+		}
+	}
+}
+
+.bc-resource-tab-playlist--00 {
+	padding-right: 20px;
+
+	.bc-resource-card--video {
+		margin-right: 0;
+
+		&:first-child {
+			margin-bottom: 30px;
+
+			.bc-resource-card__content {
+				padding: 0;
+				display: flex;
+				flex-direction: column;
+				flex-wrap: wrap;
+				justify-content: space-between;
+			}
+		}
+
+		@media (--viewport-wpadmin) {
+
+			&:first-child {
+				margin-bottom: 0;
+				flex: 0 1 500px;
+				margin-right: 60px;
+
+				.bc-resource-card__content {
+					flex-direction: row;
+				}
+			}
+		}
+	}
+
+	.bc-resource-tab-playlist-cards {
+		overflow: hidden;
+		width: 100%;
+		padding-left: 0;
+		max-width: 940px;
+		margin: 0 auto;
+		justify-content: space-between;
+		flex-wrap: wrap;
+
+		@media (--viewport-wpadmin) {
+			flex-wrap: nowrap;
+		}
+	}
+
+	.bc-resource-tab-playlist-name {
+		font-weight: var(--font-weight-bold);
+	}
+
+	.bc-resource-card--video {
+		flex: 1 1 auto;
+		width: 100%;
+
+		@media (--viewport-wpadmin) {
+			flex: 0 0 300px;
+		}
+	}
+}
+
+.bc-resource-card--video {
+	flex: 0 0 300px;
+	margin-right: 30px;
+
+	.bc-resource-card__content {
+		padding: 0;
+	}
+
+	.bc-resource-card__title {
+		margin-bottom: 0.3em;
+	}
+
+	.bc-resource-card__image {
+		margin-bottom: 22px;
+	}
+
+	&:last-child {
+		padding-right: 20px;
+	}
+}
+
+.bc-resource-tab-playlist-name {
+	flex: 0 0 auto;
+	width: 100%;
+	padding: 50px 20px 32px 0;
+	border-top: 1px solid var(--color-bc-concrete);
+	font-weight: var(--font-weight-regular);
+	text-transform: uppercase;
+	font-size: 1.1em;
+	box-sizing: border-box;
+
+	strong {
+		margin-right: 6px;
+	}
+}
+
+.bc-playlist-count {
+	float: right;
+	font-size: 0.6em;
+}
+
+.bc-resource-card__video-length {
+	font-size: 0.75em;
+	text-transform: uppercase;
+	font-weight: var(--font-weight-semibold);
+}
+
+.bc-resource-card__video-description {
+	font-size: 0.85em;
+	color: var(--color-bc-grey);
+}
+
+.bc-resource-card__video-link {
+	display: block;
+	text-decoration: none;
+	font-size: 1.42em;
+	color: var(--color-bc-doger-blue);
+	opacity: 1;
+	transition: var(--transition-opacity);
+
+	&:hover {
+		opacity: 0.8;
+		color: var(--color-bc-doger-blue);
+	}
+}

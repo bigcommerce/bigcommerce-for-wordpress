@@ -53,4 +53,22 @@ class JS_Localization {
 
 		return apply_filters( 'bigcommerce/admin/js_localization', $js_i18n_array );
 	}
+
+	/**
+	 * Recursively sanitize all the strings with wp_kses
+	 *
+	 * @param string[]|string $strings
+	 *
+	 * @return array|string
+	 */
+	private function kses_strings( $strings ) {
+		if ( is_array( $strings ) ) {
+			return array_map( [ $this, 'kses_strings' ], $strings );
+		}
+		if ( is_string( $strings ) ) {
+			return wp_kses( $strings, 'data' );
+		}
+
+		return $strings;
+	}
 }
