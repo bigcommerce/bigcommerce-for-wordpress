@@ -64,3 +64,13 @@ function bigcommerce_get_env( $key ) {
 	return $value;
 }
 
+/**
+ * Load plugin textdomain.
+ *
+ * @since 1.0.0
+ */
+function bigcommerce_textdomain() {
+	load_plugin_textdomain( 'bigcommerce', false, basename( dirname( __FILE__ ) ) . '/languages' );
+}
+
+add_action( 'plugins_loaded', 'bigcommerce_textdomain' );
