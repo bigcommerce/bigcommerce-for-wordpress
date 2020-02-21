@@ -1,5 +1,24 @@
 # Changelog
 
+## [3.14.0]
+
+### Added
+- Added a missing entry to the 3.0.0 changelog regarding fixing the uninstaller.
+
+### Fixed
+- When the site url changes, the connected channel site URL is also updated.
+
+### Changed
+- Added a new notification in the Diagnostics panel to call out when template
+  overrides are being used.
+- Enhanced the template for product cards by adding additional classes related
+  to product statuses.
+    - bc-\[product-id\]
+    - bc-availability-*
+    - bc-product-sale
+    - bc-product-outofstock
+    - bc-product-lowinventory
+
 ## [3.13.0]
 
 ### Added
@@ -17,9 +36,6 @@
 - Added a feature that scrolls the browser to the top of the embedded checkout iframe
   upon completion of the order. This resolves an issue on smaller screens where
   the window would be stuck at the bottom of the page.
-
-### Fixed
-
 
 ## [3.12.0]
 
