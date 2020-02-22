@@ -135,7 +135,7 @@ class Channels extends Settings_Section {
 	}
 
 	/**
-	 * Retrive all Channel taxonomy terms with the
+	 * Retrieve all Channel taxonomy terms with the
 	 * given connection status.
 	 *
 	 * @param string $status

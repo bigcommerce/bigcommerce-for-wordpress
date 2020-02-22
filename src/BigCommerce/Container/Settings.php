@@ -36,6 +36,7 @@ use BigCommerce\Settings\Sections\New_Account_Section;
 use BigCommerce\Settings\Sections\Next_Steps;
 use BigCommerce\Settings\Sections\Reviews;
 use BigCommerce\Settings\Sections\Troubleshooting_Diagnostics;
+use BigCommerce\Settings\Site_Update;
 use BigCommerce\Settings\Start_Over;
 use BigCommerce\Taxonomies\Channel\Channel;
 use Pimple\Container;
@@ -74,7 +75,7 @@ class Settings extends Provider {
 	const IMPORT_LIVE_STATUS  = 'settings.import_status_live';
 	const START_OVER          = 'settings.start_over';
 	const ONBOARDING_PROGRESS = 'settings.onboarding.progress_bar';
-
+	const SITE_UPDATE         = 'settings.site_update';
 
 	const CONFIG_STATUS              = 'settings.configuration_status';
 	const CONFIG_DISPLAY_MENUS       = 'settings.configuration_display_menus';
@@ -103,6 +104,7 @@ class Settings extends Provider {
 		$this->diagnostics( $container );
 		$this->set_menus_default_visibility( $container );
 		$this->resources( $container );
+		$this->site_update( $container );
 
 	}
 
@@ -649,6 +651,23 @@ class Settings extends Provider {
 		} ), 10, 0 );
 		add_filter( 'bigcommerce/settings/resources_url', $this->create_callback( 'resources_url', function ( $url ) use ( $container ) {
 			return $container[ self::RESOURCES_SCREEN ]->get_url();
+		} ), 10, 1 );
+	}
+
+	private function site_update( $container ) {
+		$container[ self::SITE_UPDATE ] = function () use ( $container ) {
+			return new Site_Update(
+				$container[ Api::FACTORY ]->sites(),
+				get_option( Channel::CHANNEL_ID )
+			);
+		};
+
+		add_filter( 'pre_update_option_siteurl', function( $option ) use ($container ) {
+			return $container[ self::SITE_UPDATE ]->update_bc_channel_site_url( $option );
+		});
+
+		add_filter( 'bigcommerce/settings/channel_site_url', $this->create_callback( 'channel_site_url', function ( $url ) use ( $container ) {
+			return $container[ self::SITE_UPDATE ]->get_bc_channel_site_url( $url );
 		} ), 10, 1 );
 	}
 }

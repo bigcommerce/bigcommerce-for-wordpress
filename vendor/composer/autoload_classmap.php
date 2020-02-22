@@ -589,6 +589,7 @@ return array(
     'BigCommerce\\Settings\\Sections\\Units' => $baseDir . '/src/BigCommerce/Settings/Sections/Units.php',
     'BigCommerce\\Settings\\Sections\\Wishlists' => $baseDir . '/src/BigCommerce/Settings/Sections/Wishlists.php',
     'BigCommerce\\Settings\\Sections\\WithPages' => $baseDir . '/src/BigCommerce/Settings/Sections/WithPages.php',
+    'BigCommerce\\Settings\\Site_Update' => $baseDir . '/src/BigCommerce/Settings/Site_Update.php',
     'BigCommerce\\Settings\\Start_Over' => $baseDir . '/src/BigCommerce/Settings/Start_Over.php',
     'BigCommerce\\Shortcodes\\Account_Profile' => $baseDir . '/src/BigCommerce/Shortcodes/Account_Profile.php',
     'BigCommerce\\Shortcodes\\Address_List' => $baseDir . '/src/BigCommerce/Shortcodes/Address_List.php',

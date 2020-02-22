@@ -23,6 +23,20 @@ export const bigCommerceDiagnostics = data => (
 	<h1 class="h1 bc-diagnostics-data--success">
 		<i class="bc-icon icon-bc-order_confirmation"></i> ${I18N.messages.diagnostics_success_message}
 	</h1>
+	
+	${Object.values(data).map(group => (
+		group.key === 'bigcommerce' ?
+			Object.values(group.value).map(values => (
+				values.key === 'templateoverrides' && values.value.length > 0 ?
+					`<div class="bc-diagnostics-data__notice">
+						<i class="dashicons-before dashicons-warning"></i> 
+						<span class="bc-diagnostics-data__notice--overrides">${I18N.messages.diagnostics_template_overrides_message}</span> 
+					</div>`
+				: ''
+			)).join('')
+		: ''
+	)).join('')}
+	
 	${Object.values(data).map(group => (
 		`<div class="bc-diagnostics-data__section bc-diagnostics-data__section-${group.key}">
 			<h2 class="h2 bc-diagnostics-data__section-header">${group.label}</h2>
