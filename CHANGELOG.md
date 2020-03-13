@@ -1,14 +1,40 @@
 # Changelog
 
+## [3.15.0]
+
+### Added
+
+- Added an option to the customizer to toggle the "Continue Shopping" link for an empty
+  cart between the home page and the catalog page.
+- Added a filter, `bigcommerce/cart/continue_shopping_url`, to modify the destination
+  of the "Continue Shopping" link for an empty cart.
+- Added additional info about routes for all connected channels to the plugin diagnostic data.
+- Added theme support for the WordPress Twenty-Twenty theme and BC4WP.
+
+### Changed
+
+- Added a new class to the product archive template title: `bc-product-archive__title`.
+
+### Fixed
+
+- Addressed an issue in the WP Admin with field heights on fields making them
+  not visible.
+- Fixed channel site URL to update based on the "Site Address" setting, not the "WordPress Address" setting.
+- Fixed options sorting order on select fields for admin settings sections.
+
+
 ## [3.14.0]
 
 ### Added
+
 - Added a missing entry to the 3.0.0 changelog regarding fixing the uninstaller.
 
 ### Fixed
+
 - When the site url changes, the connected channel site URL is also updated.
 
 ### Changed
+
 - Added a new notification in the Diagnostics panel to call out when template
   overrides are being used.
 - Enhanced the template for product cards by adding additional classes related
@@ -1077,7 +1103,9 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
-[Unreleased]: https://github.com/moderntribe/bigcommerce/compare/master...develop
+[3.15.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.14.0...3.15.0
+[3.14.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.13.0...3.14.0
+[3.13.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.12.0...3.13.0
 [3.12.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.11.0...3.12.0
 [3.11.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.10.0...3.11.0
 [3.10.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.9.0...3.10.0

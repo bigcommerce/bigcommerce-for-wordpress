@@ -290,15 +290,15 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 						'key'   => 'templateoverrides',
 						'value' => $this->get_template_overrides(),
 					],
-					[
-						'label' => __( 'Stored Channel URL', 'bigcommerce' ),
-						'key'   => 'bcsiteurl',
-						'value' => $this->get_bc_url(),
-					]
 				],
 			],
 		];
 
+		/**
+		 * Filter the list of diagnostic data
+		 *
+		 * @param array $diagnostics
+		 */
 		$diagnostics = apply_filters( 'bigcommerce/diagnostics', $diagnostics );
 
 		// Send response
@@ -306,10 +306,6 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 
 		// Just in case
 		wp_die( '', '', [ 'response' => null ] );
-	}
-
-	private function get_bc_url() {
-		return apply_filters( 'bigcommerce/settings/channel_site_url', null );
 	}
 
 

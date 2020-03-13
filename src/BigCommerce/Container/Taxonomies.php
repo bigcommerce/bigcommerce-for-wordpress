@@ -105,7 +105,7 @@ class Taxonomies extends Provider {
 			}
 		} ), 10, 1 );
 
-		add_action( 'parse_tax_query', $this->create_callback( 'hide_children_by_default', function ( $query ) use ($container) {
+		add_action( 'parse_tax_query', $this->create_callback( 'hide_children_by_default', function ( $query ) use ( $container ) {
 			$container[ self::PRODUCT_CATEGORY_QUERY_FILTER ]->maybe_hide_children( $query );
 		} ), 10, 1 );
 	}
@@ -222,7 +222,7 @@ class Taxonomies extends Provider {
 
 	private function routes( Container $container ) {
 		$container[ self::ROUTES ] = function ( Container $container ) {
-			return new Channel\Routes( $container[ Api::FACTORY ]->sites() );
+			return new Channel\Routes( $container[ Api::FACTORY ]->sites(), $container[ Api::FACTORY ]->channels() );
 		};
 		add_action( 'bigcommerce/channel/updated_channel_id', $this->create_callback( 'set_routes_for_channel', function ( $channel_id ) use ( $container ) {
 			$container[ self::ROUTES ]->set_routes( $channel_id );
@@ -259,5 +259,9 @@ class Taxonomies extends Provider {
 		add_action( 'bigcommerce/import/fetched_store_settings', $this->create_callback( 'check_and_update_routes_version', function () use ( $container ) {
 			$container[ self::ROUTES ]->maybe_update_routes();
 		} ), 10, 0 );
+
+		add_filter( 'bigcommerce/diagnostics', $this->create_callback( 'route_diagnostics', function ( $data ) use ( $container ) {
+			return $container[ self::ROUTES ]->diagnostic_data( $data );
+		} ), 10, 1 );
 	}
 }

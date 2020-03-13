@@ -131,6 +131,7 @@ const initChoices = () => {
 		duplicateItemsAllowed: false,
 		searchEnabled: false,
 		placeholder: false,
+		shouldSort: false,
 		classNames: {
 			containerOuter: 'bc-choices choices',
 		},

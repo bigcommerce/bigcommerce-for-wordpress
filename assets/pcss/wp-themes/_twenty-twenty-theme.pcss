@@ -1,0 +1,93 @@
+.bc-wp-twenty-twenty-theme {
+	/* Case: Theme Site header need higher z-index than 1. */
+	@media (--viewport-max-1000) {
+
+		.bigcommerce_product-template-default,
+		.singluar {
+
+			#site-header {
+				z-index: 10;
+			}
+		}
+	}
+
+	/* Case: Content widths need to be wider for bc content pages. */
+	.entry-content > * {
+		max-width: 960px !important;
+
+		&.bc-product-card__featured-image {
+			max-width: 370px !important;
+			z-index: 0;
+
+			@media (--viewport-420) {
+				margin-right: calc((100vw - 370px) - 20px);
+			}
+
+			@media (--viewport-min-1000) {
+				margin-left: calc((100vw - 960px) / 2);
+				margin-right: auto;
+			}
+		}
+	}
+
+	.entry-content *[class^="bc-"] {
+
+		h1,
+		h2:not(.bc-product-archive__title), /* Product Archive Title needs top spacing. */
+		h3,
+		h4,
+		h5 {
+			margin-top: 0;
+		}
+	}
+
+	/* Case: Product archive view needs to be wider to allow space for the refinery. */
+	.entry-content .bc-product-archive {
+		max-width: 1260px !important;
+	}
+
+	/* Case: Reset section padding for Single product content. */
+	.single-bigcommerce_product {
+
+		section {
+			padding: inherit;
+		}
+
+		.bc-product-single {
+			padding-top: 4rem;
+		}
+
+		.bc-single-product__section-title,
+		.bc-single-product__section-title--related {
+			margin-top: 0;
+		}
+	}
+
+	/* Case: All BC related buttons should inherit the bc styles from the customizer. */
+	button:not(.toggle) {
+		background-color: inherit;
+	}
+
+	label.bc-product-form__quantity-label {
+		font-size: inherit;
+	}
+
+	/* Case: Quick View modal font sizes influenced by html wrapper setting. */
+	+ .bc-product-quick-view__wrapper {
+		font-size: 2em;
+
+		label.bc-product-form__quantity-label {
+			font-size: inherit;
+		}
+	}
+
+	/* Case: addresses and overlap issue with rating stars. */
+	.bc-single-product__rating--mask {
+		z-index: 0;
+	}
+
+	/* BC Product Gallery interferes with the cart dropdown. */
+	.bc-product-single .bc-product__gallery {
+		z-index: 0;
+	}
+}
