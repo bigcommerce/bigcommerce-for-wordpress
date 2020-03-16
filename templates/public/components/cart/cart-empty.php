@@ -4,6 +4,8 @@
  *
  * @package BigCommerce
  *
+ * @var string $link_destination Url for the "Continue Shopping" link
+ *
  */
 ?>
 
@@ -19,6 +21,6 @@
 	</header>
 	<div class="bc-cart__empty">
 		<h2 class="bc-cart__title--empty"><?php _e( 'Your cart is empty.', 'bigcommerce' ); ?></h2>
-		<a href="<?php echo esc_url( home_url() ); ?>" class="bc-cart__continue-shopping"><?php esc_html_e( 'Take a look around.', 'bigcpommerce' ); ?></a>
+		<a href="<?php echo esc_url( $link_destination ); ?>" class="bc-cart__continue-shopping"><?php esc_html_e( 'Take a look around.', 'bigcommerce' ); ?></a>
 	</div>
 </section>

@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit2e96b28ead25d1bf259e781ae2cb21fa
+class ComposerStaticInit0a829afc2ff52501e2d6d09fe5b1bfe2
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -672,7 +672,6 @@ class ComposerStaticInit2e96b28ead25d1bf259e781ae2cb21fa
         'BigCommerce\\Settings\\Sections\\Units' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Units.php',
         'BigCommerce\\Settings\\Sections\\Wishlists' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Wishlists.php',
         'BigCommerce\\Settings\\Sections\\WithPages' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/WithPages.php',
-        'BigCommerce\\Settings\\Site_Update' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Site_Update.php',
         'BigCommerce\\Settings\\Start_Over' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Start_Over.php',
         'BigCommerce\\Shortcodes\\Account_Profile' => __DIR__ . '/../..' . '/src/BigCommerce/Shortcodes/Account_Profile.php',
         'BigCommerce\\Shortcodes\\Address_List' => __DIR__ . '/../..' . '/src/BigCommerce/Shortcodes/Address_List.php',
@@ -1050,10 +1049,10 @@ class ComposerStaticInit2e96b28ead25d1bf259e781ae2cb21fa
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit2e96b28ead25d1bf259e781ae2cb21fa::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit2e96b28ead25d1bf259e781ae2cb21fa::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit2e96b28ead25d1bf259e781ae2cb21fa::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit2e96b28ead25d1bf259e781ae2cb21fa::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit0a829afc2ff52501e2d6d09fe5b1bfe2::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit0a829afc2ff52501e2d6d09fe5b1bfe2::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit0a829afc2ff52501e2d6d09fe5b1bfe2::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit0a829afc2ff52501e2d6d09fe5b1bfe2::$classMap;
 
         }, null, ClassLoader::class);
     }

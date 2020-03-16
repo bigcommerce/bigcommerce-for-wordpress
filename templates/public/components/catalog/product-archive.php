@@ -14,7 +14,7 @@
 <div class="bc-product-archive">
 
 	<header class="bc-product-archive__header">
-		<h2><?php echo esc_html( $title ); ?></h2>
+		<h2 class="bc-product-archive__title"><?php echo esc_html( $title ); ?></h2>
 		<div><?php echo esc_html( $description ); ?></div>
 	</header>
 

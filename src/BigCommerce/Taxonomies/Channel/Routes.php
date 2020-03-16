@@ -4,6 +4,7 @@
 namespace BigCommerce\Taxonomies\Channel;
 
 
+use BigCommerce\Api\v3\Api\ChannelsApi;
 use BigCommerce\Api\v3\Api\SitesApi;
 use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api\v3\Model\Route;
@@ -33,9 +34,14 @@ class Routes {
 	 * @var SitesApi
 	 */
 	private $sites;
+	/**
+	 * @var ChannelsApi
+	 */
+	private $channels;
 
-	public function __construct( SitesApi $sites_api ) {
-		$this->sites = $sites_api;
+	public function __construct( SitesApi $sites_api, ChannelsApi $channels_api ) {
+		$this->sites    = $sites_api;
+		$this->channels = $channels_api;
 	}
 
 	/**
@@ -348,5 +354,60 @@ class Routes {
 		} catch ( ApiException $e ) {
 			return null;
 		}
+	}
+
+	/**
+	 * Add site and route info to diagnostic info
+	 *
+	 * @param array $data
+	 *
+	 * @return array
+	 */
+	public function diagnostic_data( $data ) {
+		$active_channels = $this->get_active_channel_ids();
+
+		$channel_data = array_filter( array_map( function ( $channel_id ) {
+			$key = 'channel-' . $channel_id;
+			try {
+				$channel = $this->channels->getChannel( $channel_id )->getData();
+				$site    = $this->sites->getChannelSite( $channel_id )->getData();
+				$routes  = $this->sites->indexSiteRoutes( $site->getId() )->getData();
+			} catch ( ApiException $e ) {
+				return null;
+			}
+			$label = $channel->getName();
+
+			$data = [
+				'label' => sprintf( __( 'Channel: %s', 'bigcommerce' ), $label ),
+				'key'   => $key,
+				'value' => [
+					[
+						'label' => __( 'Site URL', 'bigcommerce' ),
+						'key'   => $key . '-site-url',
+						'value' => $site->getUrl(),
+					],
+				],
+			];
+
+			$route_data = array_map( function ( Route $route ) {
+				$label    = $route->getType();
+				$matching = $route->getMatching();
+				if ( $matching ) {
+					$label .= ':' . $matching;
+				}
+
+				return [
+					'label' => sprintf( __( 'Route: %s', 'bigcommerce' ), $label ),
+					'key'   => 'route-' . $route->getId(),
+					'value' => $route->getRoute(),
+				];
+			}, $routes );
+
+			$data['value'] = array_merge( $data['value'], $route_data );
+
+			return $data;
+		}, $active_channels ) );
+
+		return array_merge( $data, $channel_data );
 	}
 }
