@@ -32,7 +32,7 @@ class Import_Status {
 	/**
 	 * @return void
 	 * @action bigcommerce/settings/onboarding/progress
-	 * @action bigcommerce/settings/section/after_fields/id= . Import_Settings::NAME
+	 * @action bigcommerce/settings/section/after_fields/id= . Onboarding_Import_Settings::NAME
 	 */
 	public function render_status() {
 		$this->current_status_notice();

@@ -3,6 +3,8 @@
 namespace BigCommerce\Webhooks;
 
 
+use BigCommerce\Settings\Sections\Import;
+
 class Webhook_Versioning {
 	const VERSION = 2;
 
@@ -25,8 +27,13 @@ class Webhook_Versioning {
 	/**
 	 * @return void
 	 * @action bigcommerce/import/fetched_store_settings
+	 * @action bigcommerce/settings/webhoooks_updated
 	 */
 	public function maybe_update_webhooks() {
+		if ( ! get_option( Import::ENABLE_WEBHOOKS , 1 ) ) {
+			return;
+		}
+
 		$version_option = 'schema-' . self::class;
 		if ( (int) get_option( $version_option, 0 ) !== self::VERSION ) {
 			$this->update_webhooks();

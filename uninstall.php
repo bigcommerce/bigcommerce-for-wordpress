@@ -156,6 +156,7 @@ function delete_options() {
 		Settings\Sections\Cart::OPTION_CART_PAGE_ID,
 		Settings\Sections\Import::OPTION_FREQUENCY,
 		Settings\Sections\Import::OPTION_NEW_PRODUCTS,
+		Settings\Sections\Import::ENABLE_WEBHOOKS,
 		Settings\Sections\Account_Settings::SUPPORT_EMAIL,
 		Settings\Sections\Analytics::SYNC_ANALYTICS,
 		Settings\Sections\Analytics::FACEBOOK_PIXEL,

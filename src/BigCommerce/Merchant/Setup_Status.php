@@ -166,9 +166,9 @@ class Setup_Status {
 			];
 		}
 
-		if ( empty( $status['shipping_methods'] ) ) {
+		if ( empty( $status['shipping_zones'] ) ) {
 			$steps['shipping'] = [
-				'heading' => __( 'Update Your Shipping Address and Settings', 'bigcommerce' ),
+				'heading' => __( 'Configure Your Shipping Zones', 'bigcommerce' ),
 				'url'     => $this->get_shipping_configuration_url(),
 				'label'   => __( 'Open BigCommerce', 'bigcommerce' ),
 				'icon'    => 'shipping_returns',

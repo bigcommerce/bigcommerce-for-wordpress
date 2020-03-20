@@ -3,6 +3,8 @@
 
 namespace BigCommerce\CLI;
 
+use BigCommerce\Webhooks\Webhook_Versioning;
+
 /**
  * Class Reset_Plugin
  *
@@ -28,6 +30,9 @@ class Reset_Plugin extends Command {
 			'bigcommerce_account_id',
 			'bigcommerce_store_id',
 			'bigcommerce_channel_id',
+			'bigcommerce_channel_id',
+			'bigcommerce_webhooks',
+			'schema-' . Webhook_Versioning::class,
 			'bigcommerce_store_url',
 			'bigcommerce_client_id',
 			'bigcommerce_client_secret',
