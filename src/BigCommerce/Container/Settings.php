@@ -34,6 +34,7 @@ use BigCommerce\Settings\Sections\Import as Import_Settings;
 use BigCommerce\Settings\Sections\Nav_Menu_Options;
 use BigCommerce\Settings\Sections\New_Account_Section;
 use BigCommerce\Settings\Sections\Next_Steps;
+use BigCommerce\Settings\Sections\Onboarding_Import_Settings;
 use BigCommerce\Settings\Sections\Reviews;
 use BigCommerce\Settings\Sections\Troubleshooting_Diagnostics;
 use BigCommerce\Settings\Site_Update;
@@ -64,6 +65,7 @@ class Settings extends Provider {
 	const REVIEWS_SECTION          = 'settings.section.reviews';
 	const NEW_ACCOUNT_SECTION      = 'settings.section.new_account';
 	const SELECT_CHANNEL_SECTION   = 'settings.section.select_channel';
+	const IMPORT_SETTINGS_SECTION  = 'settings.section.import_settings';
 	const CHANNEL_SECTION          = 'settings.section.channel';
 	const DIAGNOSTICS_SECTION      = 'settings.section.diagnostics';
 	const MENU_OPTIONS_SECTION     = 'settings.section.nav_menu_options';
@@ -461,11 +463,15 @@ class Settings extends Provider {
 			$container[ self::CHANNEL_SCREEN ]->register_settings_page();
 		} ), 10, 0 );
 
-		$container [ self::SELECT_CHANNEL_SECTION ] = function ( Container $container ) {
+		$container [ self::SELECT_CHANNEL_SECTION ]  = function ( Container $container ) {
 			return new Channel_Select();
+		};
+		$container [ self::IMPORT_SETTINGS_SECTION ] = function ( Container $container ) {
+			return new Onboarding_Import_Settings();
 		};
 		add_action( 'bigcommerce/settings/register/screen=' . Connect_Channel_Screen::NAME, $this->create_callback( 'select_channel_section_register', function () use ( $container ) {
 			$container[ self::SELECT_CHANNEL_SECTION ]->register_settings_section();
+			$container[ self::IMPORT_SETTINGS_SECTION ]->register_settings_section();
 		} ), 10, 0 );
 
 		$container [ self::CHANNEL_SECTION ] = function ( Container $container ) {

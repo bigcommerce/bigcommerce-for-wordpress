@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.16.0]
+
+### Changed
+
+- Removed the notification to finish setting up shipping methods. So long as at least one
+  shipping zone exists (and it will always exist), the notification will not be displayed.
+- Webhooks can be toggled on or off. 
+
 ## [3.15.0]
 
 ### Added

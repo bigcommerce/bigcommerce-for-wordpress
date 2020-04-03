@@ -8,6 +8,10 @@
 namespace BigCommerce\Api;
 
 class Webhooks_Api extends v2ApiAdapter {
+	public function listWebhooks(  ) {
+		return call_user_func( [ $this->client_class, 'listWebhooks' ] );
+	}
+
 	public function createWebhook( $object ) {
 		return call_user_func( [ $this->client_class, 'createWebhook' ], $object );
 	}

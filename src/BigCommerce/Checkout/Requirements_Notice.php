@@ -36,9 +36,9 @@ class Requirements_Notice {
 		$status  = $this->status->get_current_status();
 		$notices = [];
 
-		if ( empty( $status['shipping_methods'] ) ) {
+		if ( empty( $status['shipping_zones'] ) ) {
 			$notices[] = sprintf(
-				__( 'Shipping has not been set up. %s', 'bigcommerce' ),
+				__( 'Shipping Zones have not been set up. %s', 'bigcommerce' ),
 				sprintf( '<a href="%s">%s</a>', esc_url( $this->status->get_shipping_configuration_url() ), __( 'Configure Shipping', 'bigcommerce' ) )
 			);
 		}

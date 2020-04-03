@@ -8,10 +8,13 @@ use BigCommerce\Settings\Screens\Connect_Channel_Screen;
 use BigCommerce\Settings\Screens\Settings_Screen;
 
 class Import extends Settings_Section {
+	use Webhooks;
+
 	const NAME                = 'import';
 	const OPTION_FREQUENCY    = 'bigcommerce_import_frequency';
 	const OPTION_NEW_PRODUCTS = 'bigcommerce_import_new_products';
 	const BATCH_SIZE          = 'bigcommerce_import_batch_size';
+	const ENABLE_WEBHOOKS     = 'bigcommerce_import_enable_webhooks';
 	const MAX_CONCURRENT      = 'bigcommerce_import_max_concurrent';
 
 	const FREQUENCY_FIVE    = 'five_minutes';
@@ -91,6 +94,18 @@ class Import extends Settings_Section {
 			self::BATCH_SIZE
 		);
 
+		add_settings_field(
+			self::ENABLE_WEBHOOKS,
+			__( 'Enable Webhooks', 'bigcommerce' ),
+			[ $this, 'enable_webhooks_toggle' ],
+			Settings_Screen::NAME,
+			self::NAME
+		);
+
+		register_setting(
+			Settings_Screen::NAME,
+			self::ENABLE_WEBHOOKS
+		);
 
 		/* // disabled until we figure out how to implement concurrent processing
 		add_settings_field(

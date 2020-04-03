@@ -72,8 +72,8 @@ abstract class Webhook {
 
 		$args = [
 			'headers'     => [ self::AUTH_HEADER => $password ],
-			'scope'       => static::SCOPE,
-			'destination' => sprintf( '%s/bigcommerce/webhook/%s', home_url(), static::NAME ),
+			'scope'       => $this->scope(),
+			'destination' => $this->destination(),
 			'is_active'   => true,
 		];
 
@@ -108,9 +108,17 @@ abstract class Webhook {
 		 * @param string Webhook action name.
 		 * @param string Webhook scope.
 		 */
-		do_action( 'bigcommerce/webhooks/webhook_updated', intval( $result[ 'id' ] ), static::NAME, static::SCOPE );
+		do_action( 'bigcommerce/webhooks/webhook_updated', intval( $result[ 'id' ] ), static::NAME, $this->scope() );
 
 		return $result[ 'id' ];
+	}
+
+	public function destination() {
+		return sprintf( '%s/bigcommerce/webhook/%s', home_url(), static::NAME );
+	}
+
+	public function scope(  ) {
+		return static::SCOPE;
 	}
 
 	private function generate_password() {
@@ -143,7 +151,7 @@ abstract class Webhook {
 		 * @param string Webhook action name.
 		 * @param string Webhook scope.
 		 */
-		do_action( 'bigcommerce/webhooks/webhook_deleted', $result[ 'id' ], static::NAME, static::SCOPE );
+		do_action( 'bigcommerce/webhooks/webhook_deleted', $result[ 'id' ], static::NAME, $this->scope() );
 
 		return $result[ 'id' ];
 	}

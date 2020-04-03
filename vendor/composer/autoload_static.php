@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit0a829afc2ff52501e2d6d09fe5b1bfe2
+class ComposerStaticInit095e900a552600a11972ec5f47fbab67
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -666,10 +666,12 @@ class ComposerStaticInit0a829afc2ff52501e2d6d09fe5b1bfe2
         'BigCommerce\\Settings\\Sections\\Nav_Menu_Options' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Nav_Menu_Options.php',
         'BigCommerce\\Settings\\Sections\\New_Account_Section' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/New_Account_Section.php',
         'BigCommerce\\Settings\\Sections\\Next_Steps' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Next_Steps.php',
+        'BigCommerce\\Settings\\Sections\\Onboarding_Import_Settings' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Onboarding_Import_Settings.php',
         'BigCommerce\\Settings\\Sections\\Reviews' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Reviews.php',
         'BigCommerce\\Settings\\Sections\\Settings_Section' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Settings_Section.php',
         'BigCommerce\\Settings\\Sections\\Troubleshooting_Diagnostics' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Troubleshooting_Diagnostics.php',
         'BigCommerce\\Settings\\Sections\\Units' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Units.php',
+        'BigCommerce\\Settings\\Sections\\Webhooks' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Webhooks.php',
         'BigCommerce\\Settings\\Sections\\Wishlists' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Wishlists.php',
         'BigCommerce\\Settings\\Sections\\WithPages' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/WithPages.php',
         'BigCommerce\\Settings\\Start_Over' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Start_Over.php',
@@ -835,6 +837,7 @@ class ComposerStaticInit0a829afc2ff52501e2d6d09fe5b1bfe2
         'BigCommerce\\Webhooks\\Product_Inventory_Update_Webhook' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Product_Inventory_Update_Webhook.php',
         'BigCommerce\\Webhooks\\Product_Update_Webhook' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Product_Update_Webhook.php',
         'BigCommerce\\Webhooks\\Product_Updater' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Product_Updater.php',
+        'BigCommerce\\Webhooks\\Status' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Status.php',
         'BigCommerce\\Webhooks\\Webhook' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Webhook.php',
         'BigCommerce\\Webhooks\\Webhook_Cron_Tasks' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Webhook_Cron_Tasks.php',
         'BigCommerce\\Webhooks\\Webhook_Listener' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Webhook_Listener.php',
@@ -1049,10 +1052,10 @@ class ComposerStaticInit0a829afc2ff52501e2d6d09fe5b1bfe2
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit0a829afc2ff52501e2d6d09fe5b1bfe2::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit0a829afc2ff52501e2d6d09fe5b1bfe2::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit0a829afc2ff52501e2d6d09fe5b1bfe2::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit0a829afc2ff52501e2d6d09fe5b1bfe2::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit095e900a552600a11972ec5f47fbab67::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit095e900a552600a11972ec5f47fbab67::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit095e900a552600a11972ec5f47fbab67::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit095e900a552600a11972ec5f47fbab67::$classMap;
 
         }, null, ClassLoader::class);
     }
