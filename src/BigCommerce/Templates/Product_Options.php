@@ -5,6 +5,7 @@ namespace BigCommerce\Templates;
 
 
 use BigCommerce\Assets\Theme\Image_Sizes;
+use BigCommerce\Customizer\Sections\Product_Single as Customizer;
 use BigCommerce\Exceptions\Component_Not_Found_Exception;
 use BigCommerce\Post_Types\Product\Product;
 
@@ -114,11 +115,11 @@ class Product_Options extends Controller {
 
 		if ( $sku ) {
 			foreach ( $variants as $variant ) {
-				if ( $variant[ 'sku' ] !== $sku ) {
+				if ( $variant['sku'] !== $sku ) {
 					continue;
 				}
 				$options = [];
-				foreach ( $variant[ 'options' ] as $option ) {
+				foreach ( $variant['options'] as $option ) {
 					$options[ $option->option_id ] = $option->id;
 				}
 
@@ -126,11 +127,11 @@ class Product_Options extends Controller {
 			}
 		} elseif ( $variant_id > 1 ) {
 			foreach ( $variants as $variant ) {
-				if ( $variant[ 'variant_id' ] != $variant_id ) {
+				if ( $variant['variant_id'] != $variant_id ) {
 					continue;
 				}
 				$options = [];
-				foreach ( $variant[ 'options' ] as $option ) {
+				foreach ( $variant['options'] as $option ) {
 					$options[ $option->option_id ] = $option->id;
 				}
 
@@ -160,11 +161,10 @@ class Product_Options extends Controller {
 				$inventory = $source->inventory_level;
 				break;
 		}
-		/**
-		 * This filter is documented in src/BigCommerce/Templates/Product_Gallery.php
-		 */
-		$image_size = apply_filters( 'bigcommerce/template/gallery/image_size', Image_Sizes::BC_MEDIUM );
-		$variants   = array_map( function ( $variant ) use ( $inventory, $image_size, $product ) {
+
+		$image_size = $this->image_size();
+		$zoom_size  = $this->zoom_size();
+		$variants   = array_map( function ( $variant ) use ( $inventory, $image_size, $zoom_size, $product ) {
 			$data = [
 				'variant_id'       => $variant->id,
 				'options'          => $variant->option_values,
@@ -176,12 +176,41 @@ class Product_Options extends Controller {
 				'price'            => $variant->calculated_price,
 				'formatted_price'  => $this->format_currency( $variant->calculated_price ),
 				'image'            => $this->variant_image_data( $variant->id, $product->post_id(), $image_size ),
+				'zoom'             => [ 'url' => '', 'width' => 0, 'height' => 0 ],
 			];
+			if ( $this->enable_zoom() ) {
+				$data['zoom'] = $this->variant_image_data( $variant->id, $product->post_id(), $zoom_size );
+			}
 
 			return $data;
 		}, $source->variants );
 
 		return $variants;
+	}
+
+
+	private function image_size() {
+		switch ( get_option( Customizer::GALLERY_SIZE, Customizer::SIZE_DEFAULT ) ) {
+			case Customizer::SIZE_LARGE:
+				$size = Image_Sizes::BC_EXTRA_MEDIUM;
+				break;
+			case Customizer::SIZE_DEFAULT:
+			default:
+				$size = Image_Sizes::BC_MEDIUM;
+				break;
+		}
+
+		/**
+		 * This filter is documented in Product_Gallery.php
+		 */
+		return apply_filters( 'bigcommerce/template/gallery/image_size', $size );
+	}
+
+	protected function zoom_size() {
+		/**
+		 * his filter is documented in Product_Gallery.php
+		 */
+		return apply_filters( 'bigcommerce/template/gallery/zoom_size', Image_Sizes::BC_LARGE );
 	}
 
 	/**
@@ -204,7 +233,8 @@ class Product_Options extends Controller {
 			return $empty;
 		}
 
-		$image = wp_get_attachment_image_src( $image_id, $image_size );
+		$image  = wp_get_attachment_image_src( $image_id, $image_size );
+		$srcset = wp_get_attachment_image_srcset( $image_id, $image_size );
 
 		if ( ! $image ) {
 			return $empty;
@@ -214,6 +244,11 @@ class Product_Options extends Controller {
 			'url'    => $image[0],
 			'width'  => $image[1],
 			'height' => $image[2],
+			'srcset' => $srcset,
 		];
+	}
+
+	protected function enable_zoom() {
+		return get_option( Customizer::ENABLE_ZOOM, 'no' ) === 'yes';
 	}
 }

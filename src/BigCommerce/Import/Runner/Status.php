@@ -36,6 +36,8 @@ class Status {
 	const PURGED_CATEGORIES        = 'purged_categories';
 	const PURGING_BRANDS           = 'purging_brands';
 	const PURGED_BRANDS            = 'purged_brands';
+	const RESIZING_IMAGES          = 'resizing_images';
+	const RESIZED_IMAGES           = 'resized_images';
 
 	const CURRENT_LOG  = 'bigcommerce_current_import_status_log';
 	const PREVIOUS_LOG = 'bigcommerce_previous_import_status_log';

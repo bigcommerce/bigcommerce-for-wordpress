@@ -68,7 +68,18 @@ class Routes {
 	}
 
 	/**
+	 * Schedule a cron event to trigger asynchronous route updates
+	 *
+	 * @return void
+	 */
+	public function schedule_update_routes() {
+		wp_schedule_single_event( time(), 'bigcommerce/routes/cron/update' );
+	}
+
+	/**
 	 * @return void Set new routes whenever any of the route list element gets updated
+	 *
+	 * @action bigcommerce/routes/cron/update
 	 */
 	public function update_routes() {
 		foreach ( $this->get_active_channel_ids() as $channel_id ) {

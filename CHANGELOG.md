@@ -1,12 +1,37 @@
 # Changelog
 
+## [3.17.0]
+
+### Added
+
+- Added controls to the theme customizer to edit product category and brand taxonomy slugs.
+- Added Customizer option to control image size output for image gallery and
+  the featured image component.
+  - Modifications were made to the product-gallery.php and product-featured-image.php
+    templates to accommodate these new changes. Update your template overrides accordingly.
+  - Styles updates were also adjusted to accommodate this new image size
+    by adding a new body class: `.bc-gallery-size-bc-xmedium`
+- Added Customizer option to allow the user to apply a zoom-on-hover interaction
+  for main gallery images on the product detail page.
+  - Modifications were made to the product-gallery.php template to accommodate
+    these new changes. Update your template overrides accordingly.
+
+### Changed
+
+- Modified the names of the cart cookies for better compatibility with server/host
+  restrictions. (i.e. Some hosts would remove BC cookies because they lacked a `wp-` prefix)
+- Better error handling around 0 qty field entries on cart items. The ajax response would
+  leave the 0 in the field but would continue to show the previous price value. Entering 0
+  does not delete an item from your cart so we've updated this to return the field value to
+  its previous value.
+
 ## [3.16.0]
 
 ### Changed
 
 - Removed the notification to finish setting up shipping methods. So long as at least one
   shipping zone exists (and it will always exist), the notification will not be displayed.
-- Webhooks can be toggled on or off. 
+- Webhooks can be toggled on or off.
 
 ## [3.15.0]
 
@@ -1111,6 +1136,8 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[3.17.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.16.0...3.17.0
+[3.16.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.15.0...3.16.0
 [3.15.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.14.0...3.15.0
 [3.14.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.13.0...3.14.0
 [3.13.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.12.0...3.13.0

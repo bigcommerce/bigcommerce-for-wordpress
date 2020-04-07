@@ -19,8 +19,8 @@ use BigCommerce\Taxonomies\Channel\Connections;
 use BigCommerce\Util\Cart_Item_Iterator;
 
 class Cart {
-	const CART_COOKIE  = 'bigcommerce_cart_id';
-	const COUNT_COOKIE = 'bigcommerce_cart_item_count';
+	const CART_COOKIE  = 'wp-bigcommerce_cart_id';
+	const COUNT_COOKIE = 'wp-bigcommerce_cart_item_count';
 	/**
 	 * @var CartApi
 	 */

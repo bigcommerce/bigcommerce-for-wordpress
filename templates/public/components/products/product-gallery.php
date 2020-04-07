@@ -10,6 +10,8 @@
  * @var string  $fallback_image
  * @var string  $image_size     The image size to use for the gallery image
  * @var string  $thumbnail_size The image size to use for thumbnail images
+ * @var string  $zoom_size      The image size to use for zoomed images
+ * @var bool    $zoom           Whether image zoom is enabled
  */
 
 use BigCommerce\Post_Types\Product\Product;
@@ -17,11 +19,13 @@ use BigCommerce\Post_Types\Product\Product;
 $item_count = count( $image_ids ) + count( $youtube_videos );
 
 $gallery_classes = $item_count > 1 ? 'swiper-container bc-product-gallery--has-carousel' : 'swiper-container';
+
+$has_zoom = $zoom ? 'bc-product-image-zoom' : '';
 ?>
-<div class="bc-product__gallery">
 
 	<!-- data-js="bc-product-gallery" is required -->
 	<div class="bc-product-gallery__images" data-js="bc-product-gallery">
+
 		<?php if ( $product->on_sale() ) { ?>
 			<span class="bc-product-flag--sale"><?php esc_html_e( 'SALE', 'bigcommerce' ); ?></span>
 		<?php } ?>
@@ -30,14 +34,21 @@ $gallery_classes = $item_count > 1 ? 'swiper-container bc-product-gallery--has-c
 		<div class="<?php echo esc_attr( $gallery_classes ); ?>" data-js="bc-gallery-container">
 
 			<!-- class="swiper-wrapper" is required -->
-			<div class="swiper-wrapper">
+			<div class="swiper-wrapper" data-js="<?php esc_attr_e( $has_zoom ); ?>">
 				<?php if ( $item_count > 0 ) {
 					$index = 0;
-					foreach ( $image_ids as $image_id ) { ?>
+					foreach ( $image_ids as $image_id ) {
+						$image_src = wp_get_attachment_image_url( $image_id, $image_size );
+						$image_full = $zoom ? sprintf( 'data-zoom="%s"', wp_get_attachment_image_url( $image_id, $zoom_size ) ) : '';
+						$image_srcset = wp_get_attachment_image_srcset( $image_id, $image_size );
+						?>
 						<!-- class="swiper-slide" is required -->
 						<div class="swiper-slide bc-product-gallery__image-slide" data-index="<?php echo $index++; ?>">
-							<img src="<?php echo esc_url( wp_get_attachment_image_url( $image_id, $image_size ) ); ?>"
-									 alt="<?php echo esc_attr( trim( strip_tags( get_post_meta( $image_id, '_wp_attachment_image_alt', true ) ) ) ); ?>">
+							<img
+									src="<?php echo esc_url( $image_src ); ?>" <?php echo $image_full; ?>
+									alt="<?php echo esc_attr( trim( strip_tags( get_post_meta( $image_id, '_wp_attachment_image_alt', true ) ) ) ); ?>"
+									srcset="<?php echo esc_attr( $image_srcset ); ?>"
+							>
 						</div>
 					<?php }
 					foreach ( $youtube_videos as $video ) { ?>
@@ -90,13 +101,10 @@ $gallery_classes = $item_count > 1 ? 'swiper-container bc-product-gallery--has-c
 		<?php } ?>
 
 		<!-- If you've made changes to the gallery slide markup above, you should change it to match here as well. -->
-		<!-- data-js="bc-product-variant-image" is required	-->
-		<div data-js="bc-product-variant-image" class="bc-product-variant-image">
-			<!-- class="swiper-slide" is required -->
-			<div class="swiper-slide bc-product-gallery__image-slide">
+		<!-- data-js="bc-product-variant-image" is required and class="swiper-slide" -->
+			<div class="swiper-slide bc-product-gallery__image-slide bc-product-variant-image" data-js="bc-product-variant-image">
 				<!-- data-js="bc-variant-image" is required -->
 				<img src="" alt="" class="bc-variant-image" data-js="bc-variant-image">
 			</div>
-		</div>
+
 	</div>
-</div>
