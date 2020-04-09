@@ -471,6 +471,7 @@ return array(
     'BigCommerce\\Import\\Processors\\Currencies' => $baseDir . '/src/BigCommerce/Import/Processors/Currencies.php',
     'BigCommerce\\Import\\Processors\\Deleted_Product_Marker' => $baseDir . '/src/BigCommerce/Import/Processors/Deleted_Product_Marker.php',
     'BigCommerce\\Import\\Processors\\Error_Handler' => $baseDir . '/src/BigCommerce/Import/Processors/Error_Handler.php',
+    'BigCommerce\\Import\\Processors\\Image_Resizer' => $baseDir . '/src/BigCommerce/Import/Processors/Image_Resizer.php',
     'BigCommerce\\Import\\Processors\\Import_Processor' => $baseDir . '/src/BigCommerce/Import/Processors/Import_Processor.php',
     'BigCommerce\\Import\\Processors\\Listing_Fetcher' => $baseDir . '/src/BigCommerce/Import/Processors/Listing_Fetcher.php',
     'BigCommerce\\Import\\Processors\\Product_Data_Fetcher' => $baseDir . '/src/BigCommerce/Import/Processors/Product_Data_Fetcher.php',

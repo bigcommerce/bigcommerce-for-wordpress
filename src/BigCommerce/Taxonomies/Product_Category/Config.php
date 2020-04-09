@@ -4,6 +4,7 @@
 namespace BigCommerce\Taxonomies\Product_Category;
 
 
+use BigCommerce\Customizer\Sections\Product_Archive;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Taxonomies\Taxonomy_Config;
 
@@ -36,7 +37,12 @@ class Config extends Taxonomy_Config {
 	}
 
 	private function get_slug() {
-		return trailingslashit( $this->get_products_slug() ) . _x( 'categories', 'taxonomy rewrite slug', 'bigcommerce' );
+		$slug = _x( 'categories', 'taxonomy rewrite slug', 'bigcommerce' );
+		$setting = get_option( Product_Archive::CATEGORY_SLUG, $slug );
+		if ( ! empty( $setting ) ) {
+			$slug = $setting;
+		}
+		return trailingslashit( $this->get_products_slug() ) . sanitize_title( trim( $slug, '/') );
 	}
 
 	/**

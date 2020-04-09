@@ -9,6 +9,7 @@ import flatpickr from 'flatpickr';
 import * as tools from 'utils/tools';
 import queryToJson from 'utils/data/query-to-json';
 import updateQueryVar from 'utils/data/update-query-var';
+import { trigger } from 'utils/events';
 import { PRODUCT_MESSAGES } from '../config/wp-settings';
 import { productMessage } from '../templates/product-message';
 
@@ -26,9 +27,9 @@ const state = {
 	sku: '',
 	variantImage: {
 		url: '',
-		width: '',
-		height: '',
 		template: '',
+		zoom: '',
+		srcset: '',
 	},
 };
 
@@ -136,17 +137,22 @@ const setSelectedVariantPrice = (wrapper = '') => {
 const showVariantImage = (swiperInstance) => {
 	const slide = document.createElement('div');
 	tools.addClass(slide, 'swiper-slide');
+	tools.addClass(slide, 'bc-product-gallery__image-slide');
 	tools.addClass(slide, 'bc-product-gallery__image-variant');
 	slide.insertAdjacentHTML('beforeend', state.variantImage.template);
 
 	const image = tools.getNodes('bc-variant-image', false, slide)[0];
 	image.setAttribute('src', state.variantImage.url);
 	image.setAttribute('alt', state.sku);
-	image.setAttribute('width', state.variantImage.width);
-	image.setAttribute('height', state.variantImage.height);
+	image.setAttribute('data-zoom', state.variantImage.zoom);
+	image.setAttribute('srcset', state.variantImage.srcset);
 
 	swiperInstance.appendSlide(slide);
 	swiperInstance.slideTo(swiperInstance.slides.length);
+
+	_.delay(() => {
+		trigger({ event: 'bigcommerce/init_slide_zoom', data: { container: slide.querySelector('img') }, native: false });
+	}, 100);
 };
 
 /**
@@ -224,8 +230,8 @@ const handleSelectedVariant = (product = {}) => {
 	// Case: product variant has a variant image.
 	if (product.image.url.length > 0) {
 		state.variantImage.url = product.image.url;
-		state.variantImage.width = product.image.width;
-		state.variantImage.height = product.image.height;
+		state.variantImage.zoom = !_.isEmpty(product.zoom.url) ? product.zoom.url : '';
+		state.variantImage.srcset = !_.isEmpty(product.image.srcset) ? product.image.srcset : '';
 	}
 
 	// Case: Current variant choice has inventory and is not disabled.
@@ -391,8 +397,7 @@ const handleSelections = (e, node = '') => {
 	state.variantPrice = '';
 	state.singleVariant = false;
 	state.variantImage.url = '';
-	state.variantImage.width = '';
-	state.variantImage.height = '';
+	state.variantImage.zoom = '';
 
 	const formWrapper = tools.closest(optionsContainer, '.bc-product-form');
 	const productID = optionsContainer.dataset.productId;

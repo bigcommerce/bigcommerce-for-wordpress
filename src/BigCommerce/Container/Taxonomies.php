@@ -228,21 +228,32 @@ class Taxonomies extends Provider {
 			$container[ self::ROUTES ]->set_routes( $channel_id );
 		} ), 10, 1 );
 
-		$update_routes = $this->create_callback( 'update_routes', function () use ( $container ) {
+		add_action( 'bigcommerce/routes/cron/update', $this->create_callback( 'update_routes', function () use ( $container ) {
 			$container[ self::ROUTES ]->update_routes();
-		} );
+		} ), 10, 0 );
 
-		$route_changed = $this->create_callback( 'route_changed', function () use ( $update_routes ) {
-			add_action( 'shutdown', $update_routes, 10, 0 );
+		$route_changed = $this->create_callback( 'route_changed', function () use ( $container ) {
+			$container[ self::ROUTES ]->schedule_update_routes();
 		} );
 
 		add_action( 'update_option_show_on_front', $route_changed, 10, 0 );
+		add_action( 'add_option_show_on_front', $route_changed, 10, 0 );
 		add_action( 'update_option_permalink_structure', $route_changed, 10, 0 );
+		add_action( 'add_option_permalink_structure', $route_changed, 10, 0 );
 		add_action( 'update_option_' . Cart_Page::NAME, $route_changed, 10, 0 );
+		add_action( 'add_option_' . Cart_Page::NAME, $route_changed, 10, 0 );
 		add_action( 'update_option_' . Login_Page::NAME, $route_changed, 10, 0 );
+		add_action( 'add_option_' . Login_Page::NAME, $route_changed, 10, 0 );
 		add_action( 'update_option_' . Account_Page::NAME, $route_changed, 10, 0 );
+		add_action( 'add_option_' . Account_Page::NAME, $route_changed, 10, 0 );
 		add_action( 'update_option_' . Shipping_Returns_Page::NAME, $route_changed, 10, 0 );
+		add_action( 'add_option_' . Shipping_Returns_Page::NAME, $route_changed, 10, 0 );
 		add_action( 'update_option_' . Product_Archive::ARCHIVE_SLUG, $route_changed, 10, 0 );
+		add_action( 'add_option_' . Product_Archive::ARCHIVE_SLUG, $route_changed, 10, 0 );
+		add_action( 'update_option_' . Product_Archive::CATEGORY_SLUG, $route_changed, 10, 0 );
+		add_action( 'add_option_' . Product_Archive::CATEGORY_SLUG, $route_changed, 10, 0 );
+		add_action( 'update_option_' . Product_Archive::BRAND_SLUG, $route_changed, 10, 0 );
+		add_action( 'add_option_' . Product_Archive::BRAND_SLUG, $route_changed, 10, 0 );
 		add_action( 'bigcommerce/channel/connection_changed', $route_changed );
 
 		//for when site is updated

@@ -7,6 +7,26 @@
 	@media (--viewport-medium) {
 		margin: 0;
 	}
+
+	/* Case: Larger image size applied to PDP. */
+	.bc-gallery-size-bc-xmedium & {
+		max-width: 100%;
+
+		@media (--viewport-medium) {
+			max-width: 720px;
+		}
+	}
+
+	img[data-zoom] {
+
+		&:hover {
+			cursor: zoom-in;
+		}
+	}
+
+	.drift-zoom-pane img {
+		height: auto !important;
+	}
 }
 
 .bc-product-gallery__image-slide {
@@ -70,6 +90,13 @@
 	&:focus,
 	&.swiper-slide-active {
 		opacity: 1;
+	}
+
+	/* Case: Larger image size applied to PDP. */
+	.bc-gallery-size-bc-xmedium & {
+		@media (--viewport-full) {
+			width: calc(20% - 10px);
+		}
 	}
 }
 

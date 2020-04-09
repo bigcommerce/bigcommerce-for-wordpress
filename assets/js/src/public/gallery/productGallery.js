@@ -25,6 +25,7 @@ const galleryOptions = {
 		fadeEffect: {
 			crossFade: true,
 		},
+		threshold: 170,
 	}),
 	galleryThumbs: () => ({
 		a11y: true,

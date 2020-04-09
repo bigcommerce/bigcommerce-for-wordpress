@@ -12,7 +12,6 @@ use BigCommerce\Import\Task_Manager;
 use BigCommerce\Logging\Error_Log;
 use BigCommerce\Settings\Import_Status;
 use BigCommerce\Settings\Sections\Import as Import_Settings;
-use BigCommerce\Taxonomies\Channel\Channel;
 use BigCommerce\Taxonomies\Channel\Connections;
 use Pimple\Container;
 
@@ -37,6 +36,7 @@ class Import extends Provider {
 	const PURGE_BRANDS     = 'import.purge.brands';
 	const CATEGORIES       = 'import.categories';
 	const BRANDS           = 'import.brands';
+	const RESIZE           = 'import.resize';
 	const PRODUCTS         = 'import.products';
 	const MARK             = 'import.mark_deleted';
 	const QUEUE            = 'import.queue';
@@ -144,6 +144,10 @@ class Import extends Provider {
 			return new Processors\Brand_Import( $container[ Api::FACTORY ]->catalog(), $container[ self::BATCH_SIZE ] );
 		};
 
+		$container[ self::RESIZE ] = function ( Container $container ) {
+			return new Processors\Image_Resizer( $container[ self::BATCH_SIZE ] );
+		};
+
 		$container[ self::LISTINGS ] = function ( Container $container ) {
 			return function ( $channel_term ) use ( $container ) {
 				return new Processors\Listing_Fetcher( $container[ Api::FACTORY ]->channels(), $channel_term, $container[ self::LARGE_BATCH_SIZE ] );
@@ -222,6 +226,11 @@ class Import extends Provider {
 			$list[] = new Task_Definition( $this->create_callback( 'sync_brands', function () use ( $container ) {
 				$container[ self::BRANDS ]->run();
 			} ), 26, Runner\Status::UPDATED_BRANDS, [ Runner\Status::UPDATING_BRANDS ], __( 'Updating Brands', 'bigcommerce' ) );
+
+
+			$list[] = new Task_Definition( $this->create_callback( 'resize_images', function () use ( $container ) {
+				$container[ self::RESIZE ]->run();
+			} ), 27, Runner\Status::RESIZED_IMAGES, [ Runner\Status::RESIZING_IMAGES ], __( 'Regenerating Product Images', 'bigcommerce' ) );
 
 			foreach ( $container[ self::CHANNEL_LIST ] as $channel_term ) {
 				$suffix = sprintf( '-%d', $channel_term->term_id );

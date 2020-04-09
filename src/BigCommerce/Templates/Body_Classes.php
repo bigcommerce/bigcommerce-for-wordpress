@@ -2,6 +2,8 @@
 
 namespace BigCommerce\Templates;
 
+use BigCommerce\Assets\Theme\Image_Sizes;
+use BigCommerce\Customizer\Sections\Product_Single as Customizer;
 use BigCommerce\Post_Types\Product\Product;
 
 class Body_Classes {
@@ -14,10 +16,10 @@ class Body_Classes {
 	 * @filter body_class
 	 */
 	public function set_body_classes( $classes ) {
-		$classes = array_merge( $classes, $this->get_wp_theme() );
+		$classes = array_merge( $classes, $this->get_wp_theme(), $this->get_image_size() );
 
 		if ( is_singular( Product::NAME ) ) {
-			$classes = array_merge( $classes, $this->product_single_classes( get_queried_object_id() ), $this->get_wp_theme() );
+			$classes = array_merge( $classes, $this->product_single_classes( get_queried_object_id() ) );
 		}
 
 		return $classes;
@@ -52,5 +54,22 @@ class Body_Classes {
 		}
 
 		return $classes;
+	}
+
+	private function get_image_size(  ) {
+
+		switch ( get_option( Customizer::GALLERY_SIZE, Customizer::SIZE_DEFAULT ) ) {
+			case Customizer::SIZE_LARGE:
+				$size = Image_Sizes::BC_EXTRA_MEDIUM;
+				break;
+			case Customizer::SIZE_DEFAULT:
+			default:
+				$size = Image_Sizes::BC_MEDIUM;
+				break;
+		}
+
+		return [
+			sanitize_html_class( 'bc-gallery-size-' . $size ),
+		];
 	}
 }

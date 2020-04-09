@@ -10,13 +10,10 @@ use BigCommerce\Post_Types\Product\Product;
 
 ?>
 
+<?php if ( $product->on_sale() ) { ?>
+	<span class="bc-product-flag--sale"><?php esc_html_e( 'SALE', 'bigcommerce' ); ?></span>
+<?php } ?>
 
-<div class="bc-product-card__featured-image">
-	<?php if ( $product->on_sale() ) { ?>
-		<span class="bc-product-flag--sale"><?php esc_html_e( 'SALE', 'bigcommerce' ); ?></span>
-	<?php } ?>
-
-	<?php
-	echo $image;
-	?>
-</div>
+<?php
+echo $image;
+?>

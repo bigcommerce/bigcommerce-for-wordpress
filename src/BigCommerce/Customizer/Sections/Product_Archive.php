@@ -17,6 +17,9 @@ class Product_Archive {
 	const SORT_OPTIONS        = 'bigcommerce_product_archive_sort_options';
 	const FILTER_OPTIONS      = 'bigcommerce_product_archive_filter_options';
 
+	const CATEGORY_SLUG = 'bigcommerce_category_archive_slug';
+	const BRAND_SLUG    = 'bigcommerce_brand_archive_slug';
+
 	const SORT_FEATURED   = 'featured';
 	const SORT_DATE       = 'date';
 	const SORT_SALES      = 'sales';
@@ -45,7 +48,9 @@ class Product_Archive {
 		] ) );
 
 		$this->title( $wp_customize );
-		$this->slug( $wp_customize );
+		$this->product_post_type_slug( $wp_customize );
+		$this->category_taxonomy_slug( $wp_customize );
+		$this->brand_taxonomy_slug( $wp_customize );
 		$this->description( $wp_customize );
 		$this->sorting( $wp_customize );
 		$this->filtering( $wp_customize );
@@ -67,7 +72,7 @@ class Product_Archive {
 		] ) );
 	}
 
-	private function slug( \WP_Customize_Manager $wp_customize ) {
+	private function product_post_type_slug( \WP_Customize_Manager $wp_customize ) {
 		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::ARCHIVE_SLUG, [
 			'type'              => 'option',
 			'default'           => _x( 'products', 'default product post type archive slug', 'bigcommerce' ),
@@ -90,6 +95,32 @@ class Product_Archive {
 		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, self::ARCHIVE_DESCRIPTION, [
 			'section' => self::NAME,
 			'label'   => __( 'Catalog Page Description', 'bigcommerce' ),
+		] ) );
+	}
+
+	private function category_taxonomy_slug( \WP_Customize_Manager $wp_customize ) {
+		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::CATEGORY_SLUG, [
+			'type'              => 'option',
+			'default'           => _x( 'categories', 'default taxonomy archive slug', 'bigcommerce' ),
+			'transport'         => 'refresh',
+			'sanitize_callback' => 'sanitize_text_field',
+		] ) );
+		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, self::CATEGORY_SLUG, [
+			'section' => self::NAME,
+			'label'   => __( 'Category Page Slug', 'bigcommerce' ),
+		] ) );
+	}
+
+	private function brand_taxonomy_slug( \WP_Customize_Manager $wp_customize ) {
+		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::BRAND_SLUG, [
+			'type'              => 'option',
+			'default'           => _x( 'brands', 'default taxonomy archive slug', 'bigcommerce' ),
+			'transport'         => 'refresh',
+			'sanitize_callback' => 'sanitize_text_field',
+		] ) );
+		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, self::BRAND_SLUG, [
+			'section' => self::NAME,
+			'label'   => __( 'Brand Page Slug', 'bigcommerce' ),
 		] ) );
 	}
 
@@ -240,9 +271,9 @@ class Product_Archive {
 
 	private function quick_view( \WP_Customize_Manager $wp_customize ) {
 		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::QUICK_VIEW, [
-			'type'              => 'option',
-			'default'           => 'yes',
-			'transport'         => 'refresh',
+			'type'      => 'option',
+			'default'   => 'yes',
+			'transport' => 'refresh',
 		] ) );
 		$wp_customize->add_control( self::QUICK_VIEW, [
 			'section' => self::NAME,

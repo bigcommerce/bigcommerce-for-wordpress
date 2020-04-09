@@ -38,5 +38,10 @@ class Rewrites extends Provider {
 			$container[ self::FLUSH ]->schedule_flush();
 		} );
 		add_action( 'update_option_' . Product_Archive::ARCHIVE_SLUG, $schedule_flush, 10, 0 );
+		add_action( 'update_option_' . Product_Archive::CATEGORY_SLUG, $schedule_flush, 10, 0 );
+		add_action( 'update_option_' . Product_Archive::BRAND_SLUG, $schedule_flush, 10, 0 );
+		add_action( 'add_option_' . Product_Archive::ARCHIVE_SLUG, $schedule_flush, 10, 0 );
+		add_action( 'add_option_' . Product_Archive::CATEGORY_SLUG, $schedule_flush, 10, 0 );
+		add_action( 'add_option_' . Product_Archive::BRAND_SLUG, $schedule_flush, 10, 0 );
 	}
 }

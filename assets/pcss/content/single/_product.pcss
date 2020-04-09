@@ -13,17 +13,41 @@
 		@media (--viewport-medium) {
 			flex-wrap: nowrap;
 		}
+
+		/* Case: Larger image size applied to PDP. */
+		.bc-gallery-size-bc-xmedium & {
+			@media (--viewport-medium) {
+				flex-wrap: wrap;
+			}
+		}
 	}
 
 	.bc-product__gallery {
 		position: relative;
 		order: 2;
-		flex: 1 1 100%;
+		flex: 1 1 auto;
+		width: 100%;
 
 		@media (--viewport-medium) {
 			order: 1;
 			flex: 0 0 370px;
 			margin-right: 30px;
+		}
+
+		/* Case: Larger image size applied to PDP. */
+		.bc-gallery-size-bc-xmedium & {
+			@media (--viewport-medium) {
+				flex: 0 0 auto;
+				width: 50%;
+			}
+
+			@media (--viewport-full) {
+				max-width: 720px;
+			}
+
+			@media (--viewport-xxlarge) {
+				width: 60%;
+			}
 		}
 	}
 
@@ -35,6 +59,24 @@
 			order: 2;
 			flex: 0 0 auto;
 			width: calc(50% - 60px);
+		}
+
+		/* Case: Larger image size applied to PDP. */
+		.bc-gallery-size-bc-xmedium & {
+			@media (--viewport-medium) {
+				width: calc(50% - 60px);
+			}
+
+			@media (--viewport-full) {
+				width: calc(50% - 30px);
+				padding-left: 30px;
+			}
+
+			@media (--viewport-xxlarge) {
+				flex: 1 1 auto;
+				width: calc(40% - 60px);
+				padding-left: 60px;
+			}
 		}
 	}
 
@@ -90,6 +132,11 @@
 
 	.bc-single-product__ratings {
 		margin-top: 20px;
+	}
+
+	/* Case: Larger image size applied to PDP. */
+	.bc-gallery-size-bc-xmedium & {
+		max-width: 1440px;
 	}
 }
 

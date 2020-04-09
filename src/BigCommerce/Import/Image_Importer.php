@@ -3,6 +3,7 @@
 
 namespace BigCommerce\Import;
 
+use BigCommerce\Assets\Theme\Image_Sizes;
 use BigCommerce\Logging\Error_Log;
 
 /**
@@ -53,6 +54,7 @@ class Image_Importer {
 		}
 
 		update_post_meta( $image_id, self::SOURCE_URL, $this->image_url );
+		update_post_meta( $image_id, Image_Sizes::STATE_META, Image_Sizes::VERSION );
 
 		return $image_id;
 	}

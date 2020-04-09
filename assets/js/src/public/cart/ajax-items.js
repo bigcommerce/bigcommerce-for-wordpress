@@ -193,6 +193,7 @@ const handleQtyUpdate = (inputEvent) => {
 	const queryString = getItemUpdateQueryString(inputEvent);
 	const isMiniCart = tools.closest(inputEvent.delegateTarget, '[data-js="bc-mini-cart"]');
 	const miniCartID = isMiniCart ? isMiniCart.dataset.miniCartId : '';
+
 	window.clearTimeout(timeout);
 
 	timeout = _.delay(() => {
@@ -207,9 +208,16 @@ const handleQtyUpdate = (inputEvent) => {
 
 				if (err) {
 					console.error(err);
+
+					// case: If we get a 502 from the cart API here reset the value of the field to its original value.
+					if (res.statusCode === 502) {
+						inputEvent.delegateTarget.value = inputEvent.delegateTarget.dataset.currentvalue ? inputEvent.delegateTarget.dataset.currentvalue : inputEvent.delegateTarget.getAttribute('value');
+					}
+
 					return;
 				}
 
+				inputEvent.delegateTarget.setAttribute('data-currentvalue', inputEvent.delegateTarget.value);
 				cartItemQtyUpdated(res.body);
 				trigger({ event: 'bigcommerce/update_mini_cart', data: { miniCartID }, native: false });
 			});

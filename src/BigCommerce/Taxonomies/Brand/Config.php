@@ -4,6 +4,7 @@
 namespace BigCommerce\Taxonomies\Brand;
 
 
+use BigCommerce\Customizer\Sections\Product_Archive;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Taxonomies\Taxonomy_Config;
 
@@ -35,7 +36,12 @@ class Config extends Taxonomy_Config {
 	}
 
 	private function get_slug() {
-		return trailingslashit( $this->get_products_slug() ) . _x( 'brands', 'taxonomy rewrite slug', 'bigcommerce' );
+		$slug = _x( 'brands', 'taxonomy rewrite slug', 'bigcommerce' );
+		$setting = get_option( Product_Archive::BRAND_SLUG, $slug );
+		if ( ! empty( $setting ) ) {
+			$slug = $setting;
+		}
+		return trailingslashit( $this->get_products_slug() ) . sanitize_title( trim( $slug, '/') );
 	}
 
 	/**

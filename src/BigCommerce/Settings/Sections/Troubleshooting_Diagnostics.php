@@ -276,6 +276,16 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 						'value' => get_option( Product_Archive::ARCHIVE_SLUG ),
 					],
 					[
+						'label' => __( 'Category Slug', 'bigcommerce' ),
+						'key'   => 'categoryslug',
+						'value' => get_option( Product_Archive::CATEGORY_SLUG ),
+					],
+					[
+						'label' => __( 'Brand Slug', 'bigcommerce' ),
+						'key'   => 'brandslug',
+						'value' => get_option( Product_Archive::BRAND_SLUG ),
+					],
+					[
 						'label' => __( 'Account Page Slug', 'bigcommerce' ),
 						'key'   => 'accountslug',
 						'value' => get_post_field( 'post_name', get_option( Registration_Page::NAME ) ),

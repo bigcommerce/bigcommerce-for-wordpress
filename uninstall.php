@@ -197,6 +197,8 @@ function delete_options() {
 		Customizer\Sections\Buttons::VIEW_PRODUCT,
 		Customizer\Sections\Product_Archive::ARCHIVE_TITLE,
 		Customizer\Sections\Product_Archive::ARCHIVE_SLUG,
+		Customizer\Sections\Product_Archive::CATEGORY_SLUG,
+		Customizer\Sections\Product_Archive::BRAND_SLUG,
 		Customizer\Sections\Product_Archive::ARCHIVE_DESCRIPTION,
 		Customizer\Sections\Product_Archive::SORT_OPTIONS,
 		Customizer\Sections\Product_Archive::FILTER_OPTIONS,
@@ -206,6 +208,9 @@ function delete_options() {
 		Customizer\Sections\Product_Single::RELATED_COUNT,
 		Customizer\Sections\Product_Single::DEFAULT_IMAGE,
 		Customizer\Sections\Product_Single::PRICE_DISPLAY,
+		Customizer\Sections\Product_Single::INVENTORY_DISPLAY,
+		Customizer\Sections\Product_Single::GALLERY_SIZE,
+		Customizer\Sections\Product_Single::ENABLE_ZOOM,
 		Customizer\Sections\Cart::ENABLE_MINI_CART,
 		'bigcommerce_flushed_rewrites',
 		md5( 'bc_webhook_product_updatestore/product/*' ), // removed in version 2.1
