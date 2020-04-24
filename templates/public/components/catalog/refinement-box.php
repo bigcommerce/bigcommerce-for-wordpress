@@ -8,6 +8,7 @@
  * @var string   $action  The form action URL
  * @var string[] $choices The choices for the select options
  * @var string   $type    Type of select box control (filter or sort)
+ * @version 1.0.0
  */
 ?>
 <div class="bc-product-archive__select bc-product-archive--<?php echo esc_attr( $type ); ?>">

@@ -5,6 +5,7 @@
  * @package BigCommerce
  *
  * @var string $next_page_url
+ * @version 1.0.0
  */
 
 ?>

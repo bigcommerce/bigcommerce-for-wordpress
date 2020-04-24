@@ -7,6 +7,7 @@
  * @var string $type       The type of message, probably one of: notice, error, warning, success
  * @var string $key        The key/error code that accompanies the message
  * @var string $attributes Sanitized HTML attributes to add to the wrapper div
+ * @version 1.0.0
  */
 
 ?>

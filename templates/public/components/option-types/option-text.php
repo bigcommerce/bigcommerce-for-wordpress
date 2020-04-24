@@ -8,6 +8,7 @@
  * @var int    $minlength
  * @var int    $maxlength
  * @var string $default_value
+ * @version 1.0.0
  */
 
 ?>

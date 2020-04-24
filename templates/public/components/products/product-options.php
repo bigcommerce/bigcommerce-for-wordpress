@@ -7,6 +7,7 @@
  * @var Product  $product
  * @var string[] $options  The rendered markup for each option
  * @var array    $variants Data about the variants available on the product
+ * @version 1.0.0
  */
 
 use BigCommerce\Post_Types\Product\Product;

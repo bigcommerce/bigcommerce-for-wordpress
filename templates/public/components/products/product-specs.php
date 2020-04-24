@@ -1,6 +1,7 @@
 <?php
 /**
  * @var array $specs
+ * @version 1.0.0
  */
 ?>
 <?php if ( ! empty( $specs ) ) { ?>

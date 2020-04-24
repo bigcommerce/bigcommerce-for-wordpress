@@ -11,6 +11,7 @@
  * @var string $specs
  * @var string $related
  * @var string $reviews
+ * @version 1.0.0
  */
 ?>
 <div class="bc-product-single" data-js="bc-product-single">

@@ -5,6 +5,7 @@
  *
  * @var string[] $messages A list of rendered messages for the group.
  * @var string   $type     The type of message, probably one of: notice, error, warning, success
+ * @version 1.0.0
  */
 
 ?>

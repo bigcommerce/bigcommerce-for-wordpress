@@ -14,7 +14,7 @@ import { CART_API_BASE } from 'publicConfig/wp-settings';
 import { CART_ID_COOKIE_NAME, CART_ITEM_COUNT_COOKIE } from 'bcConstants/cookies';
 import { NLS } from 'publicConfig/i18n';
 import { cartEmpty } from './cart-templates';
-import { updateMenuQtyTotal, updateCartMenuItem } from './cart-menu-item';
+import { updateMenuQtyTotal, updateCartMenuItem, updateFlatsomeCartMenuQty, updateFlatsomeCartMenuPrice } from './cart-menu-item';
 
 const timeoutOptions = {
 	delay: 500,
@@ -138,6 +138,17 @@ const updatedCartTotals = (data = {}) => {
 	});
 };
 
+const handleFlatsomeTheme = (data = {}) => {
+	const flatsome = tools.getNodes('.bc-wp-flatsome-theme', false, document, true)[0];
+
+	if (!flatsome) {
+		return;
+	}
+
+	updateFlatsomeCartMenuQty();
+	updateFlatsomeCartMenuPrice(data);
+};
+
 /**
  * @function cartItemQtyUpdated
  * @description handle the API response when a cart item is updated.
@@ -151,6 +162,7 @@ const cartItemQtyUpdated = (data = {}) => {
 	updateCartItems(data);
 	updatedCartTotals(data);
 	updateMenuQtyTotal(data);
+	handleFlatsomeTheme(data);
 };
 
 /**
@@ -247,11 +259,13 @@ const removeCartItem = (itemRow = '', data = {}) => {
 		Cookies.remove(CART_ID_COOKIE_NAME);
 		Cookies.remove(CART_ITEM_COUNT_COOKIE);
 		updateCartMenuItem();
+		handleFlatsomeTheme(data.body);
 		return;
 	}
 
 	updatedCartTotals(data.body);
 	updateMenuQtyTotal(data.body);
+	handleFlatsomeTheme(data.body);
 };
 
 /**

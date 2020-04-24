@@ -4,6 +4,7 @@
  * @var string  $product_archive_permalink
  * @var string  $no_results_message
  * @var string  $reset_button_label
+ * @version 1.0.0
  */
 
 use BigCommerce\Post_Types\Product\Product;

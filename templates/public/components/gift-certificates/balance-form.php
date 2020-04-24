@@ -4,6 +4,7 @@
  *
  * @var string[] $errors
  * @var string[] $defaults
+ * @version 1.0.0
  */
 $error_class = 'bc-form__control--error'; // REQUIRED
 

@@ -5,6 +5,7 @@
  * @package BigCommerce
  *
  * @var string $checkout_url
+ * @version 1.0.0
  */
 
 use BigCommerce\Amp\Amp_Cart;

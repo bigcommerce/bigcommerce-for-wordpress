@@ -9,6 +9,7 @@
  * @var string  $image
  * @var string  $quick_view
  * @var string  $attributes
+ * @version 1.0.0
  */
 
 use BigCommerce\Post_Types\Product\Product;

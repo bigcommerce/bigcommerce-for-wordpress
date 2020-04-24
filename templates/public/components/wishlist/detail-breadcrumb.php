@@ -5,6 +5,7 @@ use BigCommerce\Accounts\Wishlists\Wishlist;
 /**
  * @var Wishlist $wishlist       The wishlist to display
  * @var string   $wish_lists_url The url to all My Account Wish Lists
+ * @version 1.0.0
  */
 
 ?>

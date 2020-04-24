@@ -8,6 +8,7 @@
  * @var string   $pagination
  * @var bool     $wrap Whether to wrap the output in a div
  * @var int      $columns The number of columns to use for the grid
+ * @version 1.0.0
  */
 
 ?>

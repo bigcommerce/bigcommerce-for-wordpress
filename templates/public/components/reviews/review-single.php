@@ -16,6 +16,7 @@ use BigCommerce\Post_Types\Product\Product;
  * @var string  $author_email  The email address of the review's author
  * @var string  $date_reviewed The date the review was submitted, converted to the local timezone
  * @var int     $timestamp     Timestamp of the review date, converted to the local timezone
+ * @version 1.0.0
  */
 
 ?>

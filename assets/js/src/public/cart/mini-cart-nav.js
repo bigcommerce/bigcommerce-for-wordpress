@@ -59,6 +59,7 @@ const handleClicks = (e) => {
 	}
 
 	e.preventDefault();
+	e.stopPropagation();
 
 	const miniCartWrapper = tools.getNodes('bc-mini-cart', false, e.delegateTarget.parentNode)[0];
 

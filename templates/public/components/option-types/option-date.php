@@ -8,6 +8,7 @@
  * @var int    $min_value
  * @var int    $max_value
  * @var string $default_value
+ * @version 1.0.0
  */
 
 ?>

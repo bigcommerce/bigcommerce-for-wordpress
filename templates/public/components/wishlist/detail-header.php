@@ -9,6 +9,7 @@ use BigCommerce\Accounts\Wishlists\Wishlist;
  * @var string   $edit     The rendered "Edit" form
  * @var string   $delete   The rendered "Delete" form
  * @var string[] $actions  The rendered action links
+ * @version 1.0.0
  */
 
 ?>

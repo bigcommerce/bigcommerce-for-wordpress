@@ -3,6 +3,7 @@
  * Renders the button to load the next page in a paginated shortcode
  *
  * @var string $next_page_url
+ * @version 1.0.0
  */
 ?>
 

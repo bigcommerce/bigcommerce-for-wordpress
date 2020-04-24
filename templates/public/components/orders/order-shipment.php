@@ -8,6 +8,7 @@
  * @var string  $carrier
  * @var object  $address
  * @var array[] $items
+ * @version 1.0.0
  */
 
 /** @var string $csz The City/State/ZIP string */

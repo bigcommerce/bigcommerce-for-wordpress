@@ -6,6 +6,7 @@
  *
  * @var string $fallback_image The fallback image to use for items that do not have an image.
  * @var string $proxy_base     The proxy base path for REST JSON requests.
+ * @version 1.0.0
  */
 
 use BigCommerce\Cart\Cart;

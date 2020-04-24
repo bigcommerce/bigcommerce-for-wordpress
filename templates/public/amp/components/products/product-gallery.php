@@ -5,6 +5,7 @@
  * @var Product $product
  * @var int[]   $image_ids
  * @var string  $fallback_image
+ * @version 1.0.0
  */
 
 use BigCommerce\Post_Types\Product\Product;

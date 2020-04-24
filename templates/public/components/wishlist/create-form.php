@@ -4,6 +4,7 @@
  * @var string $action_url  The form action URL
  * @var string $nonce_field The nonce field for the form
  * @var int[]  $products    The IDs of products to add to the new list
+ * @version 1.0.0
  */
 
 ?>

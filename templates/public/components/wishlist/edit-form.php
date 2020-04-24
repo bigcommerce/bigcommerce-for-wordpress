@@ -5,6 +5,7 @@ use BigCommerce\Accounts\Wishlists\Wishlist;
 /**
  * @var Wishlist $wishlist    The wishlist to display
  * @var string   $nonce_field The nonce field for the edit form
+ * @version 1.0.0
  */
 
 ?>

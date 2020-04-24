@@ -4,6 +4,7 @@
  *
  * @var Product $product
  * @var string  $content
+ * @version 1.0.0
  */
 
 use BigCommerce\Post_Types\Product\Product;

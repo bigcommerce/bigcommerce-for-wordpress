@@ -3,6 +3,7 @@
 
 namespace BigCommerce\Assets\Theme;
 
+use BigCommerce\Templates\Cart_Empty;
 
 class JS_Localization {
 	/**
@@ -13,6 +14,8 @@ class JS_Localization {
 	 * @return array
 	 */
 	public function get_data() {
+		$empty_cart_data = Cart_Empty::factory()->get_data();
+
 		$js_i18n_array = [
 			'operations' => [
 				'query_string_separator' => __( '&', 'bigcommerce' ),
@@ -22,8 +25,8 @@ class JS_Localization {
 				'mini_url_param'           => '/mini/',
 				'quantity_param'           => 'quantity',
 				'message_empty'            => __( 'Your cart is empty.', 'bigcommerce' ),
-				'continue_shopping_label'  => __( 'Take a look around.', 'bigcommerce' ),
-				'continue_shopping_url'    => esc_url( home_url() ),
+				'continue_shopping_label'  => esc_html( $empty_cart_data[ Cart_Empty::LINK_TEXT ] ),
+				'continue_shopping_url'    => esc_url( $empty_cart_data[ Cart_Empty::LINK ] ),
 				'cart_error_502'           => __( 'There was an error with your request. Please try again.', 'bigcommerce' ),
 				'add_to_cart_error_502'    => __( 'There was an error adding this product to your cart. It might be out of stock or unavailable.', 'bigcommerce' ),
 				'ajax_add_to_cart_error'   => __( 'There was an error adding this product to your cart.', 'bigcommerce' ),

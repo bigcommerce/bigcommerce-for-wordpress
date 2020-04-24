@@ -5,6 +5,7 @@
  * @var string $balance The balance of the submitted gift certificate. Already formatted as currencty.
  * @var string $code    The code of the submitted gift certificate.
  * @var string $message Error/message to display to the user.
+ * @version 1.0.0
  */
 ?>
 <div class="bc-gift-balance__response">

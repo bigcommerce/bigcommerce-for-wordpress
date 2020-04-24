@@ -4,6 +4,7 @@
  * @var string[] $reviews Rendered product reviews
  * @var string   $pagination
  * @var bool     $wrap
+ * @version 1.0.0
  */
 
 ?>

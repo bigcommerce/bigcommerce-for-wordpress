@@ -9,6 +9,7 @@
  * @var string  $price_range
  * @var string  $calculated_price_range
  * @var string  $retail_price
+ * @version 1.0.0
  */
 
 use BigCommerce\Post_Types\Product\Product;

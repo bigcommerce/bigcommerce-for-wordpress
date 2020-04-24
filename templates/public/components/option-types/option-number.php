@@ -9,6 +9,7 @@
  * @var int    $max_value
  * @var string $step
  * @var string $default_value
+ * @version 1.0.0
  */
 
 ?>

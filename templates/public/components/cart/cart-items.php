@@ -7,6 +7,7 @@
  * @var array $cart
  * @var string $fallback_image The fallback image to use for items that do not have one
  * @var string $image_size     The image size to use for product images
+ * @version 1.0.0
  */
 
 use BigCommerce\Taxonomies\Brand\Brand;

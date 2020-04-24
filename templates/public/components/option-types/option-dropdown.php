@@ -6,6 +6,7 @@
  * @var string  $label
  * @var array[] $options
  * @var bool    $required
+ * @version 1.0.0
  */
 
 ?>

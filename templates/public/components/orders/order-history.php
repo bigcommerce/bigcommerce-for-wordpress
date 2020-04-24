@@ -5,7 +5,7 @@
  * @var string[] $orders Rendered order objects
  * @var string   $pagination
  * @var bool     $wrap
- *
+ * @version 1.0.0
  */
 
 ?>

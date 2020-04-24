@@ -4,6 +4,7 @@
  * Template for rendering sub-navigation links
  *
  * @var array[] $links An array of associative arrays of links with 'url', 'label', and 'current' keys
+ * @version 1.0.0
  */
 
 ?>

@@ -7,6 +7,7 @@ use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api_Factory;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Settings\Screens\Settings_Screen;
+use BigCommerce\Settings\Sections\Cart;
 
 /**
  * Class Setup_Status
@@ -35,20 +36,27 @@ class Setup_Status {
 	 */
 	public function get_current_status() {
 		$cache = get_transient( self::STATUS_CACHE );
+
 		if ( ! empty( $cache ) && is_array( $cache ) ) {
 			return $cache;
 		}
-
+		
+		$ssl_status = $this->get_ssl_status();
+		
 		$status = [
 			'shipping_zones'   => $this->get_shipping_zone_count(),
 			'shipping_methods' => $this->get_shipping_method_count(),
 			'tax_classes'      => $this->get_tax_class_count(),
 			'payment_methods'  => $this->get_payment_methods_count(),
-			'ssl'              => $this->get_ssl_status(),
+			'ssl'              => $ssl_status,
 			'product_count'    => $this->get_product_count(),
 		];
-
+		
 		set_transient( self::STATUS_CACHE, $status, self::STATUS_CACHE_TTL );
+
+		if ( ! $ssl_status ) {
+			update_option( Cart::OPTION_EMBEDDED_CHECKOUT, 0 );
+		}
 
 		return $status;
 	}
@@ -107,13 +115,17 @@ class Setup_Status {
 	}
 
 	/**
-	 * Not, strictly speaking, about the BigCommerce store. Indicates
-	 * whether the WordPress site is using SSL.
+	 * Indicates whether the WordPress site is using SSL
+	 * and sitewide https is enabled in the store.
 	 *
 	 * @return bool
 	 */
 	public function get_ssl_status() {
-		return is_ssl();
+		return is_ssl() && $this->get_store_sitewidehttps_enabled();
+	}
+
+	private function get_store_sitewidehttps_enabled() {
+		return $this->factory->store()->get_sitewidehttps_enabled();
 	}
 
 	private function get_product_count() {
@@ -202,7 +214,7 @@ class Setup_Status {
 
 		if ( ! $status['ssl'] ) {
 			$steps['ssl'] = [
-				'heading' => __( 'Add SSL Certificate for Embedded Checkout', 'bigcommerce' ),
+				'heading' => __( 'Add SSL Certificate and enable sitewide HTTPS in BigCommerce store for Embedded Checkout', 'bigcommerce' ),
 				'icon'    => 'cart',
 			];
 		}

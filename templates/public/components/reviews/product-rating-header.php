@@ -4,6 +4,7 @@
  * @var int     $percentage   The star rating converted to a percentage (e.g., 4.2 stars = 84%)
  * @var int     $review_count The number of reviews the product has received
  * @var Product $product
+ * @version 1.0.0
  */
 
 use BigCommerce\Post_Types\Product\Product;

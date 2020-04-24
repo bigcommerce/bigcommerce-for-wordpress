@@ -89,4 +89,12 @@ class Store_Api extends v2ApiAdapter {
 			return false;
 		}
 	}
+
+	public function get_sitewidehttps_enabled() {
+		try {
+			return $this->getResource('/store')->features->sitewidehttps_enabled;
+		} catch ( \Exception $e ) {
+			return false;
+		}
+	}
 }

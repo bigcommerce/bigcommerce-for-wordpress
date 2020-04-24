@@ -5,6 +5,7 @@
  * @description Displays a message that the wish list is not available
  *
  * @var string  $message
+ * @version 1.0.0
  */
 
 if ( empty( $message ) ) {

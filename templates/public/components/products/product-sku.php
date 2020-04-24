@@ -6,6 +6,7 @@
  *
  * @var string  $sku
  * @var Product $product
+ * @version 1.0.0
  */
 
 use BigCommerce\Post_Types\Product\Product;

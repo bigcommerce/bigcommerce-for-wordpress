@@ -7,10 +7,11 @@ use BigCommerce\Customizer\Panels;
 class Cart {
 	const NAME = 'bigcommerce_cart';
 
-	const ENABLE_MINI_CART = 'bigcommerce_enable_mini_cart';
-	const EMPTY_CART_LINK  = 'bigcommerce_empty_cart_link_destination';
-	const LINK_HOME        = 'home';
-	const LINK_CATALOG     = 'catalog';
+	const ENABLE_MINI_CART      = 'bigcommerce_enable_mini_cart';
+	const EMPTY_CART_LINK       = 'bigcommerce_empty_cart_link_destination';
+	const EMPTY_CART_LINK_TEXT  = 'bigcommerce_empty_cart_link_destination_text';
+	const LINK_HOME             = 'home';
+	const LINK_CATALOG          = 'catalog';
 
 	/**
 	 * @param \WP_Customize_Manager $wp_customize
@@ -61,5 +62,15 @@ class Cart {
 				self::LINK_CATALOG => __( 'Product Catalog', 'bigcommerce' ),
 			],
 		] );
+		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::EMPTY_CART_LINK_TEXT, [
+			'type'              => 'option',
+			'default'           => __( 'Take a look around', 'bigcommerce' ),
+			'transport'         => 'refresh',
+			'sanitize_callback' => 'sanitize_text_field',
+		] ) );
+		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, self::EMPTY_CART_LINK_TEXT, [
+			'section' => self::NAME,
+			'label'   => __( 'Empty Cart Link Text', 'bigcommerce' ),
+		] ) );
 	}
 }

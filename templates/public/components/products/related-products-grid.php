@@ -5,6 +5,7 @@
  *
  * @var string[] $products An array of rendered related products
  * @var string $columns number of columns to display for products grid.
+ * @version 1.0.0
  */
 
 ?>

@@ -6,6 +6,7 @@
  *
  * @var array  $cart
  * @var string $href URL to the cart page
+ * @version 1.0.0
  */
 
 ?>

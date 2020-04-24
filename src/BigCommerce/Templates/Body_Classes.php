@@ -46,11 +46,34 @@ class Body_Classes {
 	}
 
 	private function get_wp_theme() {
-		$theme   = wp_get_theme();
-		$classes = [];
+		$classes          = [];
+		$theme            = wp_get_theme();
+		$theme_name       = $theme->name;
+		$parent_theme     = $theme->parent_theme;
+		$supported_themes = [
+			'Twenty Sixteen'                            => 'twenty-sixteen',
+			'Twenty Seventeen'                          => 'twenty-seventeen',
+			'Twenty Nineteen'                           => 'twenty-nineteen',
+			'Twenty Twenty'                             => 'twenty-twenty',
+			'Essence Pro'                               => 'genesis-essence',
+			'Magazine Pro'                              => 'genesis-magazine',
+			'Wellness Pro'                              => 'genesis-wellness',
+			'Academy Pro'                               => 'genesis-academy',
+			'Authority Pro'                             => 'genesis-authority',
+			'Author Pro'                                => 'genesis-author',
+			'Digital Pro'                               => 'genesis-digital',
+			'Divine Theme'                              => 'divine',
+			'Veganos'                                   => 'veganos',
+			'Shoptimizer for BigCommerce for WordPress' => 'shoptimizer',
+			'Flatsome'                                  => 'flatsome',
+		];
 
-		if ( 'Twenty Twenty' === $theme->name || 'Twenty Twenty' === $theme->parent_theme ) {
-			$classes[] = 'bc-wp-twenty-twenty-theme';
+		if ( array_key_exists( $theme_name, $supported_themes ) ) {
+			$classes[] = sprintf( 'bc-wp-%s-theme', sanitize_html_class( $supported_themes[ $theme_name ] ) );
+		}
+
+		if ( $parent_theme && array_key_exists( $parent_theme, $supported_themes ) ) {
+			$classes[] = sprintf( 'bc-wp-%s-theme', sanitize_html_class( $supported_themes[ $parent_theme ] ) );
 		}
 
 		return $classes;

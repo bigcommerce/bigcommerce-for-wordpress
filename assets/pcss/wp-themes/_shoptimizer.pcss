@@ -1,0 +1,30 @@
+/* Shoptimizer for BigCommerce for WordPress Theme Styles */
+.bc-wp-shoptimizer-theme {
+
+	&.single-bigcommerce_product {
+
+		&.bc-gallery-size-bc-xmedium {
+
+			.site-main {
+				float: none;
+				width: 100%;
+			}
+
+			.bc-product-single__meta {
+				@media (--viewport-medium) {
+					width: calc(50% - 30px);
+				}
+
+				@media (--viewport-xxlarge) {
+					width: calc(40% - 30px);
+				}
+			}
+		}
+
+		.bc-product-single__meta {
+			@media (--viewport-medium) {
+				width: calc(100% - 470px);
+			}
+		}
+	}
+}

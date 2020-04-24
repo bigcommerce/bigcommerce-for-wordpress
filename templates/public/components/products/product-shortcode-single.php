@@ -11,6 +11,7 @@
  * @var string  $price
  * @var string  $description
  * @var string  $form
+ * @version 1.0.0
  */
 
 use BigCommerce\Post_Types\Product\Product;

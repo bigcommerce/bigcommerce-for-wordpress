@@ -760,10 +760,12 @@ class Product {
 	 * @param int           $product_id
 	 *
 	 * @param \WP_Term|null $channel
+	 * 
+	 * @param array         $query_args
 	 *
 	 * @return Product|array
 	 */
-	public static function by_product_id( $product_id, \WP_Term $channel = null ) {
+	public static function by_product_id( $product_id, \WP_Term $channel = null, $query_args = [] ) {
 
 		if ( empty( $product_id ) ) {
 			throw new \InvalidArgumentException( __( 'Product ID must be a positive integer', 'bigcommerce' ) );
@@ -797,8 +799,9 @@ class Product {
 			];
 		}
 
-		$posts = get_posts( $args );
+		$args = array_merge( $args, $query_args );
 
+		$posts = get_posts( $args );
 
 		if ( empty( $posts ) ) {
 			throw new Product_Not_Found_Exception( sprintf( __( 'No product found matching BigCommerce ID %d', 'bigcommerce' ), $product_id ) );
