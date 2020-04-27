@@ -3,6 +3,8 @@
  * AMP Product Single Template
  * Override this template in your own theme by creating a file at
  * [your-theme]/bigcommerce/amp/single-bigcommerce_product.php
+ * 
+ * @version 1.0.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

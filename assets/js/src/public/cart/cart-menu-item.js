@@ -41,6 +41,25 @@ const updateMenuQtyTotal = (data = {}) => {
 	updateCartMenuItem();
 };
 
+const updateFlatsomeCartMenuPrice = (data = {}) => {
+	const price = !_.isEmpty(data) ? data.subtotal.formatted : '';
+	const menuItemPrice = tools.getNodes('.header-cart-link .cart-price', false, document, true)[0];
+
+	menuItemPrice.innerHTML = price;
+};
+
+const updateFlatsomeCartMenuQty = () => {
+	let currentCount = Cookies.get(CART_ITEM_COUNT_COOKIE);
+
+	if (!currentCount) {
+		currentCount = '0';
+	}
+
+	const menuItemQty = tools.getNodes('.header-cart-link .cart-icon strong', false, document, true)[0];
+
+	menuItemQty.innerHTML = currentCount;
+};
+
 const updateMenuQtyOnPageLoad = () => {
 	const cookie = Cookies.get(CART_ITEM_COUNT_COOKIE);
 
@@ -59,4 +78,4 @@ const updateMenuQtyOnPageLoad = () => {
 	}
 };
 
-export { cartMenuSet, updateMenuQtyTotal, updateMenuQtyOnPageLoad, updateCartMenuItem };
+export { cartMenuSet, updateMenuQtyTotal, updateMenuQtyOnPageLoad, updateCartMenuItem, updateFlatsomeCartMenuPrice, updateFlatsomeCartMenuQty };

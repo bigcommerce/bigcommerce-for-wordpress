@@ -5,6 +5,7 @@
  * @var string  $id
  * @var string  $label
  * @var array[] $options
+ * @version 1.0.0
  */
 
 ?>

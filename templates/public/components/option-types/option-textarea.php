@@ -11,6 +11,8 @@
  * @var string $default_value
  *
  * @todo: client-side validation for max rows
+ * 
+ * @version 1.0.0
  */
 
 ?>

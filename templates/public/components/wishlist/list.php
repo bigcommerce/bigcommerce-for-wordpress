@@ -3,6 +3,7 @@
 /**
  * @var string[] $wishlists   An array of wishlist rows
  * @var string   $create_list The form to create a new wishlist
+ * @version 1.0.0
  */
 
 ?>

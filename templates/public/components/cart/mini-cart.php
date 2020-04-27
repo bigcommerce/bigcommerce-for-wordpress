@@ -8,6 +8,7 @@
  * @var string $header        The cart table layout header
  * @var string $items         The cart items
  * @var string $footer        The cart table layout footer
+ * @version 1.0.0
  */
 
 ?>

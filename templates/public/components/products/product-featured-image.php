@@ -4,6 +4,7 @@
  * @var int     $attachment_id
  * @var string  $size
  * @var string  $image
+ * @version 1.0.0
  */
 
 use BigCommerce\Post_Types\Product\Product;

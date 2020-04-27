@@ -5,6 +5,7 @@
 
 import _ from 'lodash';
 import delegate from 'delegate';
+import queryToJson from 'utils/data/query-to-json';
 import Choices from 'choices.js';
 import * as tools from '../../utils/tools';
 import { up, down } from '../../utils/dom/slide';
@@ -146,6 +147,20 @@ const cacheElements = () => {
 };
 
 /**
+ * @function maybeOpenSections
+ * @description Maybe open specific sections depending on the page we're displaying.
+ */
+const maybeOpenSections = () => {
+	// Case: BigCommerce onboading Channel Settings page should have sections open.
+	if (queryToJson(el.url.query).page === 'bigcommerce_channel') {
+		el.settingSections.forEach((section) => {
+			const target = tools.getNodes('section-toggle-target', false, section)[0];
+			expandSection(section, target);
+		});
+	}
+};
+
+/**
  * @function bindEvents
  * @description bind all event listeners to this function.
  */
@@ -179,6 +194,7 @@ const init = () => {
 		scrollToSection(section);
 	}
 
+	maybeOpenSections();
 	bindEvents();
 };
 

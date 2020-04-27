@@ -17,6 +17,7 @@ use BigCommerce\Post_Types\Product\Product;
  * @var string[] $bigcommerce_condition
  * @var string   $permalink
  * @var string   $delete URL to remove the product from the wishlist
+ * @version 1.0.0
  */
 
 ?>

@@ -6,6 +6,7 @@ use BigCommerce\Accounts\Wishlists\Wishlist;
 /**
  * @var Wishlist $wishlist   The wishlist to display
  * @var string   $public_url The wishlist's public URL
+ * @version 1.0.0
  */
 
 ?>

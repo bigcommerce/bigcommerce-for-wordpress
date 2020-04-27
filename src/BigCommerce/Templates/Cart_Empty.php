@@ -8,8 +8,9 @@ use BigCommerce\Customizer\Sections\Cart as Cart_Settings;
 use BigCommerce\Post_Types\Product\Product;
 
 class Cart_Empty extends Controller {
-	const CART = 'cart';
-	const LINK = 'link_destination';
+	const CART      = 'cart';
+	const LINK      = 'link_destination';
+	const LINK_TEXT = 'link_text';
 
 	protected $template = 'components/cart/cart-empty.php';
 
@@ -23,8 +24,9 @@ class Cart_Empty extends Controller {
 
 	public function get_data() {
 		return [
-			self::CART => $this->options[ self::CART ],
-			self::LINK => $this->continue_shopping_link_url(),
+			self::CART      => $this->options[ self::CART ],
+			self::LINK      => $this->continue_shopping_link_url(),
+			self::LINK_TEXT => $this->continue_shopping_link_text(),
 		];
 	}
 
@@ -46,6 +48,17 @@ class Cart_Empty extends Controller {
 		 * @param string $url
 		 */
 		return apply_filters( 'bigcommerce/cart/continue_shopping_url', $url );
+	}
+	
+	private function continue_shopping_link_text() {
+		$link_text = get_option( Cart_Settings::EMPTY_CART_LINK_TEXT, __( 'Take a look around', 'bigcommerce' ) );
+
+		/**
+		 * Filter the wording of the Continue Shopping link in an empty cart
+		 *
+		 * @param string $link_text
+		 */
+		return apply_filters( 'bigcommerce/cart/continue_shopping_text', $link_text );
 	}
 
 }

@@ -13,6 +13,7 @@
  * @var string $zip
  * @var string $country
  * @var string $phone
+ * @version 1.0.0
  */
 
 /** @var string $csz The City/State/ZIP string */

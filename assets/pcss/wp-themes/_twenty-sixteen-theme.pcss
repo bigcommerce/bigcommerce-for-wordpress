@@ -1,0 +1,19 @@
+.bc-wp-twenty-sixteen-theme {
+	/* Case: Large product image size applied. */
+	.site-inner {
+		max-width: var(--container-1440);
+	}
+
+	/* Case: Product single margin right is too large without the sidebar. */
+	&.single-bigcommerce_product {
+
+		.entry-content {
+			margin-right: 7.6923%;
+
+			/* Media query from the theme. */
+			@media (min-width: 56.875em) {
+				margin-right: 0;
+			}
+		}
+	}
+}

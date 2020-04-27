@@ -7,6 +7,7 @@ use BigCommerce\Post_Types\Product\Product;
  * @var string[] $options  Key/Value pairs for the rating drop-down
  * @var array    $defaults Default values to use to populate the form
  * @var string   $messages Rendered form feedback messages
+ * @version 1.0.0
  */
 
 $error_class = 'bc-form__control--error';

@@ -6,6 +6,7 @@
  * @var string   $search  The search box HTML
  * @var string   $sort    The sort box HTML
  * @var string[] $filters HTML for each of the filter selects
+ * @version 1.0.0
  */
 
 ?>

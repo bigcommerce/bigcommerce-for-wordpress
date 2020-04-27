@@ -8,6 +8,7 @@
  * @var bool   $checked
  * @var string $checkbox_label
  * @var string $checkbox_value
+ * @version 1.0.0
  */
 
 ?>

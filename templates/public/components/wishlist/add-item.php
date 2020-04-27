@@ -6,6 +6,7 @@
  *                              label - The name of the list
  *                              url   - The URL to add the product to the list
  * @var string $create_list The link and template to create a new list
+ * @version 1.0.0
  */
 ?>
 

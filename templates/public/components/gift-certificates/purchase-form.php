@@ -5,6 +5,7 @@
  * @var string[] $errors
  * @var string[] $defaults
  * @var string   $button_label The label of the purchase button
+ * @version 1.0.0
  */
 $error_class = 'bc-form__control--error'; // REQUIRED
 

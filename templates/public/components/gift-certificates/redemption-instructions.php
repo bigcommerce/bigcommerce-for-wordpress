@@ -4,6 +4,8 @@
  * Instructions for redeeming gift certificates. By default, these instructions will
  * be displayed underneath the forms to purchase a gift certificate or check its
  * balance.
+ * 
+ * @version 1.0.0
  */
 
 ?>

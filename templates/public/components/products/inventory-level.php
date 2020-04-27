@@ -7,6 +7,7 @@
  * @var Product $product
  * @var string  $status The inventory status of the product
  * @var string  $label  The label for the current stock level
+ * @version 1.0.0
  */
 
 use BigCommerce\Post_Types\Product\Product;

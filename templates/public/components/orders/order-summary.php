@@ -21,7 +21,7 @@
  * @var string $status
  * @var string $details_url
  * @var string $support_email
- *
+ * @version 1.0.0
  */
 
 ?>

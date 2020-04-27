@@ -83,7 +83,12 @@ class Cart_Mapper {
 			'formatted' => $this->format_currency( $subtotal ),
 		];
 
-		return $cart;
+		/**
+		 * Filter mapped cart
+		 *
+		 * @param array $cart
+		 */
+		return apply_filters( 'bigcommerce/cart_mapper/map', $cart );
 	}
 
 	private function cart_items() {

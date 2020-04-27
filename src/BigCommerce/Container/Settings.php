@@ -626,7 +626,8 @@ class Settings extends Provider {
 	 */
 	private function diagnostics( Container $container ) {
 		$container[ self::DIAGNOSTICS_SECTION ] = function ( Container $container ) {
-			return new Troubleshooting_Diagnostics();
+			$plugin_path = plugin_dir_path( $container['plugin_file'] );
+			return new Troubleshooting_Diagnostics( $plugin_path );
 		};
 
 		add_action( 'bigcommerce/settings/register/screen=' . Settings_Screen::NAME, $this->create_callback( 'diagnostics_settings_register', function () use ( $container ) {

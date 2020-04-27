@@ -14,6 +14,7 @@
  * @var string[] $bigcommerce_brand
  * @var string[] $bigcommerce_condition
  * @var string   $permalink
+ * @version 1.0.0
  */
 
 ?>

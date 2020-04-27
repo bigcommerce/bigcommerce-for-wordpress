@@ -6,6 +6,7 @@
  *
  * @var array $cart
  * @var array $actions
+ * @version 1.0.0
  */
 
 ?>

@@ -6,6 +6,7 @@
  * @var string  $permalink  Permalink to the product
  * @var string  $label      The button label
  * @var string  $attributes Sanitized HTML attributes to add to the template
+ * @version 1.0.0
  */
 
 use BigCommerce\Post_Types\Product\Product;

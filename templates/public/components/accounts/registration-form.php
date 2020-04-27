@@ -3,6 +3,7 @@
  * @var array    $defaults
  * @var array    $countries
  * @var string[] $errors
+ * @version 1.0.0
  */
 
 $error_class = 'bc-form__control--error';

@@ -4,6 +4,7 @@
  *
  * @var array $addresses
  * @var string $new_address
+ * @version 1.0.0
  */
 
 ?>

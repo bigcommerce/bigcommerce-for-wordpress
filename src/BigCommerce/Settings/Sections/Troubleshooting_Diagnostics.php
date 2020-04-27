@@ -15,7 +15,6 @@ use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Settings\Screens\Settings_Screen;
 use BigCommerce\Customizer\Sections\Product_Archive;
 
-
 /**
  * Class Troubleshooting_Diagnostics
  *
@@ -31,6 +30,17 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 
 	const AJAX_ACTION               = 'bigcommerce_support_data';
 	const AJAX_ACTION_IMPORT_ERRORS = 'bigcommerce_import_errors_log';
+
+	/**
+	 * Plugin path
+	 *
+	 * @var string
+	 */
+	protected $plugin_path;
+
+	public function __construct( $plugin_path ) {
+		$this->plugin_path = $plugin_path;
+	}
 
 	/*
 	 * Add settings section self::NAME
@@ -422,7 +432,78 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 			}
 		}
 
-		return $file_override_list;
+		return $this->check_template_overrides( $file_override_list );
+	}
+
+	/**
+	 * Check template override versions
+	 *
+	 * @param array $overrides
+	 * @return array A list of template overrides in the active theme with notes
+	 */
+	private function check_template_overrides( $overrides ) {
+		
+		$messages = [];
+
+		// Get original template for each override and compare versions.
+		foreach ( $overrides as $override ) {
+			$original_template_path = $this->get_original_template_path_from_override( $override );
+
+			$override_version = $this->get_template_version( WP_CONTENT_DIR .'/'. $override );
+			$original_version = $this->get_template_version( $original_template_path );
+			// Cast to int to get only the major version.
+			$override_version_major = (int) $override_version;
+			$original_version_major = (int) $original_version;
+
+			if ( $original_version_major > $override_version_major ) {
+				$override = "{$override} - <strong>Version out of date:</strong> {$override_version} - [Core version: {$original_version}]";
+			}
+
+			$messages[] = $override;
+		}
+
+		return $messages;
+	}
+
+	/**
+	 * Read template file version
+	 *
+	 * @param string $template_path
+	 * @return string
+	 */
+	private function get_template_version( $template_path ) {
+
+		if ( ! file_exists( $template_path ) ) {
+			return '';
+		}
+
+		$re = '/@version\s+(\S+)/';
+		$contents = file_get_contents( $template_path );
+		preg_match( $re, $contents, $match );
+
+		if ( isset( $match[1] ) ) {
+			return $match[1];
+		}
+
+		return '1.0.0';
+	}
+
+	/**
+	 * Get original plugin template path
+	 *
+	 * @param string $override
+	 * @return string
+	 */
+	private function get_original_template_path_from_override( $override ) {
+		$theme_override_dir = apply_filters( 'bigcommerce/template/directory/theme', '', '' );
+
+		// Get everything after $theme_override_dir in the string.
+		$original_template = substr(
+			$override,
+			strpos( $override, $theme_override_dir ) + strlen( $theme_override_dir ) + 1
+		); 
+
+		return "{$this->plugin_path}templates/public/{$original_template}";
 	}
 
 

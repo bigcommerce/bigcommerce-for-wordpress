@@ -162,6 +162,10 @@ const filterAPIPricingData = (type = '', APIPricingNode = '', data = {}) => {
 	const pricingNodes = [];
 	const pricingContainer = tools.closest(APIPricingNode, '[data-js="bc-product-pricing"]');
 
+	if (!pricingContainer) {
+		return;
+	}
+
 	// This will hide the spinner because state.isFetching is false.
 	maybePriceIsLoading(pricingContainer);
 

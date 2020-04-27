@@ -7,6 +7,7 @@
  *
  * @var Product $product
  * @var string  $message
+ * @version 1.0.0
  */
 
 use BigCommerce\Post_Types\Product\Product;

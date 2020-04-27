@@ -8,6 +8,7 @@
  * @var string $placeholder Placeholder text string for text input.
  * @var string $search_label The text string for the label attribute and button.
  * @var string $button_classes The text string of classes for the submit button.
+ * @version 1.0.0
  */
 ?>
 <div class="bc-product-archive__search">

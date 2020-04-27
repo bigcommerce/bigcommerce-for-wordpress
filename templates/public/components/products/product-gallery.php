@@ -12,6 +12,7 @@
  * @var string  $thumbnail_size The image size to use for thumbnail images
  * @var string  $zoom_size      The image size to use for zoomed images
  * @var bool    $zoom           Whether image zoom is enabled
+ * @version 1.0.0
  */
 
 use BigCommerce\Post_Types\Product\Product;

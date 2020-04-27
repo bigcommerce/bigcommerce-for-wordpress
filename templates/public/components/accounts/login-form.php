@@ -3,6 +3,7 @@
  * @var string $form
  * @var string $register_link
  * @var string $message
+ * @version 1.0.0
  */
 ?>
 

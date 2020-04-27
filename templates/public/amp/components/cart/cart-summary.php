@@ -5,6 +5,7 @@
  * @package BigCommerce
  *
  * @var string $proxy_base
+ * @version 1.0.0
  */
 
 use BigCommerce\Cart\Cart;

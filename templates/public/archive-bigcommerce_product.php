@@ -3,6 +3,8 @@
  * Default Product Archive Template
  * Override this template in your own theme by creating a file at
  * [your-theme]/bigcommerce/archive-bigcommerce_product.php
+ * 
+ * @version 1.0.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

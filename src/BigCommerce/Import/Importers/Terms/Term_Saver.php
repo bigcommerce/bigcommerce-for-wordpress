@@ -102,7 +102,7 @@ abstract class Term_Saver implements Import_Strategy {
 		// we need to make sure we're getting the same result here
 		return [
 			'slug'        => $this->term_slug( $bc_term ),
-			'description' => wp_filter_kses( $this->sanitize_string( $bc_term['description'] ) ),
+			'description' => wp_kses_post( $this->sanitize_string( $bc_term['description'] ) ),
 			'parent'      => $this->determine_parent_term_id( $bc_term ),
 		];
 	}

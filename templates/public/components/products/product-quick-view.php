@@ -15,6 +15,7 @@
  * @var string  $specs
  * @var string  $form      The form to purchase the product
  * @var string  $permalink A button linking to the product
+ * @version 1.0.0
  */
 
 use BigCommerce\Post_Types\Product\Product;

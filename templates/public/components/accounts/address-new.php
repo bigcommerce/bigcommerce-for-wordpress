@@ -3,6 +3,7 @@
  * Add a new address to the user's account
  *
  * @var string $form
+ * @version 1.0.0
  */
 ?>
 

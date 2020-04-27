@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit090b83879cd7a9136dda2c8028c82c87
+class ComposerStaticInit659221268de4904175652674d36b15f8
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -441,6 +441,13 @@ class ComposerStaticInit090b83879cd7a9136dda2c8028c82c87
         'BigCommerce\\Checkout\\Customer_Login' => __DIR__ . '/../..' . '/src/BigCommerce/Checkout/Customer_Login.php',
         'BigCommerce\\Checkout\\Requirements_Notice' => __DIR__ . '/../..' . '/src/BigCommerce/Checkout/Requirements_Notice.php',
         'BigCommerce\\Compatibility\\Template_Compatibility' => __DIR__ . '/../..' . '/src/BigCommerce/Compatibility/Template_Compatibility.php',
+        'BigCommerce\\Compatibility\\Themes\\Flatsome\\Flatsome' => __DIR__ . '/../..' . '/src/BigCommerce/Compatibility/Themes/Flatsome/Flatsome.php',
+        'BigCommerce\\Compatibility\\Themes\\Flatsome\\Templates\\Account_Links' => __DIR__ . '/../..' . '/src/BigCommerce/Compatibility/Themes/Flatsome/Templates/Account_Links.php',
+        'BigCommerce\\Compatibility\\Themes\\Null_Theme' => __DIR__ . '/../..' . '/src/BigCommerce/Compatibility/Themes/Null_Theme.php',
+        'BigCommerce\\Compatibility\\Themes\\Theme' => __DIR__ . '/../..' . '/src/BigCommerce/Compatibility/Themes/Theme.php',
+        'BigCommerce\\Compatibility\\Themes\\Theme_Factory' => __DIR__ . '/../..' . '/src/BigCommerce/Compatibility/Themes/Theme_Factory.php',
+        'BigCommerce\\Compatibility\\WooCommerce\\Cart' => __DIR__ . '/../..' . '/src/BigCommerce/Compatibility/WooCommerce/Cart.php',
+        'BigCommerce\\Compatibility\\WooCommerce\\Facade' => __DIR__ . '/../..' . '/src/BigCommerce/Compatibility/WooCommerce/Facade.php',
         'BigCommerce\\Container\\Accounts' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Accounts.php',
         'BigCommerce\\Container\\Amp' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Amp.php',
         'BigCommerce\\Container\\Analytics' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Analytics.php',
@@ -1053,10 +1060,10 @@ class ComposerStaticInit090b83879cd7a9136dda2c8028c82c87
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit090b83879cd7a9136dda2c8028c82c87::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit090b83879cd7a9136dda2c8028c82c87::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit090b83879cd7a9136dda2c8028c82c87::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit090b83879cd7a9136dda2c8028c82c87::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit659221268de4904175652674d36b15f8::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit659221268de4904175652674d36b15f8::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit659221268de4904175652674d36b15f8::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit659221268de4904175652674d36b15f8::$classMap;
 
         }, null, ClassLoader::class);
     }

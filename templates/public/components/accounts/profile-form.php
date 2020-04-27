@@ -7,6 +7,7 @@
  * @var string   $email
  * @var string   $phone
  * @var string[] $errors
+ * @version 1.0.0
  */
 $error_class = 'bc-form__control--error'; // REQUIRED
 ?>

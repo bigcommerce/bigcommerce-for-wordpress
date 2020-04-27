@@ -78,11 +78,22 @@ abstract class Term_Import implements Import_Processor {
 			return;
 		}
 
+		// Allow more HTML in term descriptions than WP default
+		$terms_descriptions_filtered = has_filter( 'pre_term_description', 'wp_filter_kses' );
+		if ( $terms_descriptions_filtered ) {
+			remove_filter( 'pre_term_description', 'wp_filter_kses' );
+		}
+
 		// Create/update each term
 		foreach ( $terms as $term ) {
 			$strategy_factory = new Term_Strategy_Factory( $term, $this->taxonomy() );
 			$strategy         = $strategy_factory->get_strategy();
 			$strategy->do_import();
+		}
+
+		// Put the term description filter back where we found it
+		if ( $terms_descriptions_filtered ) {
+			add_filter( 'pre_term_description', 'wp_filter_kses' );
 		}
 
 

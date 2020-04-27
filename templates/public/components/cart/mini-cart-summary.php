@@ -5,6 +5,7 @@
  * @package BigCommerce
  *
  * @var array $cart
+ * @version 1.0.0
  */
 
 ?>

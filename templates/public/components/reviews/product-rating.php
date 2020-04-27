@@ -5,6 +5,7 @@
  * @var int     $review_count The number of reviews the product has received
  * @var string  $link         Destination for the link to reviews
  * @var Product $product
+ * @version 1.0.0
  */
 
 use BigCommerce\Post_Types\Product\Product;

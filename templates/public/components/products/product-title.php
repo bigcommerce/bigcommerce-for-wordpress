@@ -12,6 +12,7 @@
  * @var bool    $use_permalink   Wrap the title in an anchor tag linked to the product single page.
  * @var string  $link_attributes Sanitized attributes save to add to the permalink anchor tag
  * @var string  $header_tag      The header tag to use to wrap the title
+ * @version 1.0.0
  */
 
 use \BigCommerce\Post_Types\Product\Product;

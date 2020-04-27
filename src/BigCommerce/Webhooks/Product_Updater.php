@@ -114,7 +114,7 @@ class Product_Updater {
 	 */
 	private function get_listing_id( $product_id, \WP_Term $channel ) {
 		try {
-			$product = Product::by_product_id( $product_id, $channel );
+			$product = Product::by_product_id( $product_id, $channel, ['post_status' => 'any'] );
 		} catch ( Product_Not_Found_Exception $e ) {
 			return 0;
 		}

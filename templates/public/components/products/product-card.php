@@ -12,6 +12,7 @@
  * @var string  $price
  * @var string  $quick_view @deprecated since 3.1, @see quick-view-image.php
  * @var string  $attributes @deprecated since 3.1, @see quick-view-image.php
+ * @version 1.0.0
  */
 
 use BigCommerce\Post_Types\Product\Product;

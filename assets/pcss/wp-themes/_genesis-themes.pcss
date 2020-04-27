@@ -1,0 +1,118 @@
+/* Genesis Essence Pro theme */
+.bc-wp-genesis-essence-theme {
+	/* Case: Large product image size applied. */
+	&.bc-gallery-size-bc-xmedium {
+
+		.site-inner {
+			@media (--viewport-min-1000) {
+				max-width: var(--container-960);
+			}
+
+			@media (--viewport-xlarge) {
+				max-width: var(--container-1200);
+			}
+
+			@media (--viewport-xxlarge) {
+				max-width: var(--container-1440);
+			}
+		}
+	}
+}
+
+/* Genesis Magazine Pro theme */
+.bc-wp-genesis-magazine-theme {
+	/* Case: Large product image size applied. */
+	&.bc-gallery-size-bc-xmedium {
+
+		.bc-product-single {
+			padding: 0;
+		}
+	}
+}
+
+/* Genesis Wellness Pro theme */
+.bc-wp-genesis-wellness-theme {
+	/* Case: Increase base width of the container to the BC PDP single. */
+	&.full-width-content .site-inner {
+		max-width: 970px;
+	}
+
+	/* Case: Large product image size applied. */
+	&.bc-gallery-size-bc-xmedium {
+
+		.site-inner {
+			@media (--viewport-min-1000) {
+				max-width: var(--container-960);
+			}
+
+			@media (--viewport-xlarge) {
+				max-width: var(--container-1200);
+			}
+
+			@media (--viewport-xxlarge) {
+				max-width: var(--container-1440);
+			}
+		}
+	}
+}
+
+/* Genesis Academy Pro theme */
+.bc-wp-genesis-author-theme {
+
+	.bc-product-single {
+		padding-top: 30px;
+
+		@media (--viewport-981) {
+			padding-top: 49px;
+		}
+	}
+}
+
+/* Genesis Digital Pro theme */
+.bc-wp-genesis-digital-theme {
+
+	&.single-bigcommerce_product {
+
+		.entry-content {
+			max-width: var(--container-960);
+		}
+	}
+
+	&.bc-gallery-size-bc-xmedium {
+
+		&.single-bigcommerce_product {
+
+			.entry-content {
+				max-width: var(--container-1440);
+			}
+		}
+	}
+
+	+ .bc-product-quick-view__wrapper .bc-product-quick-view__content-inner {
+		font-size: 16px;
+	}
+}
+
+/* Genesis Divine theme */
+.bc-wp-genesis-divine-theme {
+
+	.genesis-nav-menu {
+		overflow: visible;
+
+		.menu-item {
+			position: relative;
+		}
+	}
+
+	&.single-bigcommerce_product {
+
+		.bc-product-single {
+			padding-left: 0;
+			padding-right: 0;
+		}
+	}
+
+	+ .bc-product-quick-view__wrapper .bc-product-quick-view__content-inner {
+		font-size: 16px;
+	}
+}

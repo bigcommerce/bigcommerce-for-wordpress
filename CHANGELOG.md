@@ -1,5 +1,30 @@
 # Changelog
 
+## [3.18.0]
+
+### Added
+
+- Added support for new larger image size and zoom features on the PDP in multiple 
+  supported WordPress themes.
+- Added version numbers to templates. Diagnostics panel will now check major versions of overridden files.
+- Support for Flatsome theme added starting with version 3.10.1 of the theme.
+- Added filter to Cart_Mapper map (PR #201).
+
+### Changed
+
+- Changed filtering on Brand and Product Category descriptions to use `wp_kses_post()` instead
+  of `wp_filter_kses()`. This allows the use of more HTML tags in those term descriptions.
+- Added some additional refined style adjustments to the WordPress Twenty-Twenty theme.
+- Made a change to the onboarding page for connecting your channel. Form sections now start
+  open so you can edit all fields immediately.
+- Both enabled site ssl and Sitewide HTTPS setting in BC store are required to use embedded checkout.
+
+### Fixed
+
+- Empty cart destination link from Customizer is properly linked in the cart.
+- Product sync reflects adding/removing products from store channels.
+
+
 ## [3.17.0]
 
 ### Added
@@ -1136,6 +1161,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[3.18.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.17.0...3.18.0
 [3.17.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.16.0...3.17.0
 [3.16.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.15.0...3.16.0
 [3.15.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.14.0...3.15.0

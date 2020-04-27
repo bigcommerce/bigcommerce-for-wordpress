@@ -3,6 +3,7 @@
  * Renders the button to load the next page of product reviews
  *
  * @var string $next_page_url
+ * @version 1.0.0
  */
 ?>
 

@@ -5,6 +5,7 @@
  * @var string  $brand
  * @var string  $image
  * @var string  $price
+ * @version 1.0.0
  */
 
 use BigCommerce\Post_Types\Product\Product;

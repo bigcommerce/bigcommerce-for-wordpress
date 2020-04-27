@@ -12,6 +12,7 @@ use BigCommerce\Accounts\Wishlists\Wishlist;
  * @var string   $edit      The template for the wishlist's edit form
  * @var string   $delete    The template for the wishlist's delete form
  * @var string[] $actions   Action links for the list
+ * @version 1.0.0
  */
 
 ?>

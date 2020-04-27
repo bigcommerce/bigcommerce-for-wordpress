@@ -1,19 +1,12 @@
 .bc-wp-twenty-twenty-theme {
 	/* Case: Theme Site header need higher z-index than 1. */
-	@media (--viewport-max-1000) {
-
-		.bigcommerce_product-template-default,
-		.singluar {
-
-			#site-header {
-				z-index: 10;
-			}
-		}
+	#site-header {
+		z-index: 10;
 	}
 
 	/* Case: Content widths need to be wider for bc content pages. */
 	.entry-content > * {
-		max-width: 960px !important;
+		max-width: var(--container-960) !important;
 
 		&.bc-product-card__featured-image {
 			max-width: 370px !important;
@@ -27,6 +20,13 @@
 				margin-left: calc((100vw - 960px) / 2);
 				margin-right: auto;
 			}
+		}
+	}
+
+	&.bc-gallery-size-bc-xmedium {
+
+		.entry-content > * {
+			max-width: var(--container-1440) !important;
 		}
 	}
 
@@ -89,5 +89,57 @@
 	/* BC Product Gallery interferes with the cart dropdown. */
 	.bc-product-single .bc-product__gallery {
 		z-index: 0;
+	}
+
+	/* Footer Widgets */
+	.footer-widgets-wrapper {
+		/* Case: Mini Cart in the footer has a link wrapping issue. */
+		.bc-mini-cart .bc-cart-item-image {
+			flex: 0 0 100px;
+
+			img {
+				max-width: 100px;
+			}
+		}
+	}
+
+	/* Case: Address dialog overlay needs to inherit the BG color of the Customizer setting. */
+	.bc-account-address-form__overlay {
+		background: inherit;
+	}
+
+	/* Case: Wish List dialog box font size is too small. */
+	~ .bc-wish-list-dialog__wrapper {
+		font-size: 16px;
+
+		label,
+		.bc-wish-list-dialog-description {
+			font-size: 1.2em;
+		}
+
+		input.bc-wish-list-name-field {
+			margin-top: 4px;
+			margin-bottom: 12px;
+		}
+
+		button.bc-product-quick-view__close-button {
+			background-color: inherit;
+			text-decoration: none;
+			opacity: 0.4;
+
+			&:hover,
+			&:focus {
+				opacity: 1;
+			}
+		}
+	}
+
+	/* Case: Address form modal is cut off. */
+	.bc-account-addresses__list.bc-account-address--form-active {
+		position: absolute;
+	}
+
+	.bc-account-address-form__wrapper {
+		position: relative;
 	}
 }

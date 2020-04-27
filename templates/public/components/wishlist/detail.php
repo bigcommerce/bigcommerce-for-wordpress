@@ -7,6 +7,7 @@ use BigCommerce\Accounts\Wishlists\Wishlist;
  * @var string[] $products   The rendered product rows
  * @var string   $breadcrumb The rendered breadcrumb HTML
  * @var string   $header     The rendered header HTML
+ * @version 1.0.0
  */
 
 ?>

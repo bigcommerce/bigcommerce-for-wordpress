@@ -8,6 +8,7 @@
  * @var string $register_url
  * @var string $redirect_to
  * @var string $message
+ * @version 1.0.0
  */
 
 ?>

@@ -9,6 +9,7 @@
  * @var string   $refinery
  * @var string   $pagination
  * @var string   $columns
+ * @version 1.0.0
  */
 ?>
 <div class="bc-product-archive">

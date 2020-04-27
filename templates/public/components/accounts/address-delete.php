@@ -5,6 +5,7 @@
  * @var int    $address_id
  * @var string $action
  * @var string $url
+ * @version 1.0.0
  */
 ?>
 <!-- class="bc-account-address__delete-form" is required -->
