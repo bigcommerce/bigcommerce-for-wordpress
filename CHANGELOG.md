@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.18.1]
+
+### Fixed
+
+- Fixed an issue with the add to cart ajax feature where the mini cart does not update after a successful request.
+
+
 ## [3.18.0]
 
 ### Added
@@ -1161,6 +1168,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[3.18.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.18.0...3.18.1
 [3.18.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.17.0...3.18.0
 [3.17.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.16.0...3.17.0
 [3.16.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.15.0...3.16.0

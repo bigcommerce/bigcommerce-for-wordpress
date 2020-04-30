@@ -45,17 +45,25 @@ const updateFlatsomeCartMenuPrice = (data = {}) => {
 	const price = !_.isEmpty(data) ? data.subtotal.formatted : '';
 	const menuItemPrice = tools.getNodes('.header-cart-link .cart-price', false, document, true)[0];
 
+	if (!menuItemPrice) {
+		return;
+	}
+
 	menuItemPrice.innerHTML = price;
 };
 
 const updateFlatsomeCartMenuQty = () => {
+	const menuItemQty = tools.getNodes('.header-cart-link .cart-icon strong', false, document, true)[0];
+
+	if (!menuItemQty) {
+		return;
+	}
+
 	let currentCount = Cookies.get(CART_ITEM_COUNT_COOKIE);
 
 	if (!currentCount) {
 		currentCount = '0';
 	}
-
-	const menuItemQty = tools.getNodes('.header-cart-link .cart-icon strong', false, document, true)[0];
 
 	menuItemQty.innerHTML = currentCount;
 };
