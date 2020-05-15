@@ -12,4 +12,32 @@
 			padding-right: 28px;
 		}
 	}
+
+	.bigcommerce-cart__item-count.full {
+		display: none;
+
+		@media (--viewport-medium) {
+			display: inline-block;
+			margin-left: 6px;
+		}
+	}
+
+	.widget_shopping_cart_content {
+
+		.bc-cart {
+			@media (--viewport-medium) {
+				overflow-y: scroll;
+				max-height: calc(100vh - 180px);
+			}
+		}
+	}
+
+	.off-canvas-right .mfp-content {
+		width: 320px;
+	}
+
+	.bc-mini-cart .bc-btn,
+	.bc-mini-cart .bc-btn[disabled] {
+		margin-right: 0;
+	}
 }

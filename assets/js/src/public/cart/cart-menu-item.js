@@ -53,7 +53,7 @@ const updateFlatsomeCartMenuPrice = (data = {}) => {
 };
 
 const updateFlatsomeCartMenuQty = () => {
-	const menuItemQty = tools.getNodes('.header-cart-link .cart-icon strong', false, document, true)[0];
+	const menuItemQty = tools.getNodes('.header-cart-link .cart-icon strong', true, document, true);
 
 	if (!menuItemQty) {
 		return;
@@ -65,7 +65,9 @@ const updateFlatsomeCartMenuQty = () => {
 		currentCount = '0';
 	}
 
-	menuItemQty.innerHTML = currentCount;
+	menuItemQty.forEach((cartIcon) => {
+		cartIcon.innerHTML = currentCount;
+	});
 };
 
 const updateMenuQtyOnPageLoad = () => {

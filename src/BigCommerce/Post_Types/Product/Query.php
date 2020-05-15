@@ -55,59 +55,8 @@ class Query {
 					$query->set( 'orderby', [ 'date' => 'DESC', 'title' => 'ASC' ] );
 					break;
 				case Product_Archive::SORT_FEATURED:
-					$select_filter  = function ( $select, $wp_query ) use ( $query ) {
-						if ( $wp_query !== $query ) {
-							return $select;
-						}
-						$select .= ", COUNT(bcfeatured_terms.name) AS bcfeatured";
-
-						return $select;
-					};
-					$join_filter    = function ( $join, $wp_query ) use ( $query ) {
-						/** @var \wpdb $wpdb */
-						global $wpdb;
-						if ( $wp_query !== $query ) {
-							return $join;
-						}
-						$join .= " LEFT JOIN {$wpdb->term_relationships} bcfeatured_tr ON bcfeatured_tr.object_id={$wpdb->posts}.ID";
-						$join .= $wpdb->prepare( " LEFT JOIN {$wpdb->term_taxonomy} bcfeatured_tt ON bcfeatured_tr.term_taxonomy_id=bcfeatured_tt.term_taxonomy_id AND bcfeatured_tt.taxonomy=%s", Flag::NAME );
-						$join .= $wpdb->prepare( " LEFT JOIN {$wpdb->terms} bcfeatured_terms ON bcfeatured_tt.term_id=bcfeatured_terms.term_id AND bcfeatured_terms.slug=%s", Flag::FEATURED );
-
-						return $join;
-					};
-					$orderby_filter = function ( $orderby, $wp_query ) use ( $query ) {
-						if ( $wp_query !== $query ) {
-							return $orderby;
-						}
-						/** @var \wpdb $wpdb */
-						global $wpdb;
-						$feature_sort = " bcfeatured DESC, {$wpdb->posts}.menu_order ASC ";
-						$trimmed      = trim( $orderby );
-						if ( $trimmed === '' || $trimmed === "{$wpdb->posts}.post_title ASC" ) {
-							return $feature_sort . ", {$wpdb->posts}.post_date DESC, {$wpdb->posts}.post_title ASC ";
-						} else {
-							return $feature_sort . ', ' . $orderby;
-						}
-					};
-					$groupby_filter = function ( $groupby, $wp_query ) use ( $query ) {
-						/** @var \wpdb $wpdb */
-						global $wpdb;
-						if ( $wp_query !== $query ) {
-							return $groupby;
-						}
-						if ( empty( $groupby ) ) {
-							$groupby = "{$wpdb->posts}.ID";
-						}
-
-						return $groupby;
-					};
-
-					add_filter( 'posts_fields', $select_filter, 10, 2 );
-					add_filter( 'posts_join', $join_filter, 10, 2 );
-					add_filter( 'posts_orderby', $orderby_filter, 10, 2 );
-					add_filter( 'posts_groupby', $groupby_filter, 10, 2 );
-					$query->set( 'orderby', 'title' );
-					$query->set( 'order', 'ASC' );
+					// Product 'featured' tag in BC store has no effect on sorting
+					$query->set( 'orderby', [ 'menu_order' => 'ASC', 'title' => 'ASC', 'date' => 'DESC' ] );
 					break;
 				case Product_Archive::SORT_PRICE_ASC:
 					$meta_query = $query->get( 'meta_query' ) ?: [];
