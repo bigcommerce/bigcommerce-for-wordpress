@@ -136,9 +136,6 @@ class Product_Builder extends Record_Builder {
 
 	private function get_menu_order() {
 		$sort_order = $this->sanitize_int( $this->product['sort_order'] );
-		if ( $sort_order === 0 ) {
-			$sort_order = 10;
-		}
 
 		/**
 		 * Filter the menu order assigned to the product, based on the

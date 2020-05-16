@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.19.0]
+
+### Added
+
+- Added some additional support for Flatsome theme minicart widget on mobile/smaller viewports.
+
+### Fixed
+
+- Featured and regular product sort order reflect order in BC store 
+
+
 ## [3.18.1]
 
 ### Fixed
@@ -1168,6 +1179,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[3.19.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.18.1...3.19.0
 [3.18.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.18.0...3.18.1
 [3.18.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.17.0...3.18.0
 [3.17.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.16.0...3.17.0
