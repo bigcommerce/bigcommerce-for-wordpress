@@ -63,6 +63,12 @@ class Assets extends Provider {
 			$container[ self::ADMIN_SCRIPTS ]->enqueue_scripts();
 			$container[ self::ADMIN_STYLES ]->enqueue_styles();
 		} ), 9, 0 );
+		
+		add_action( 'admin_enqueue_scripts', $this->create_callback( 'admin_remove_google_sitekit_script_on_bc_admin_pages', function ( $hook ) {
+			if ( strpos( get_current_screen()->id, 'bigcommerce') !== false ) {
+				wp_dequeue_script( 'googlesitekit-base' );
+			}
+		} ), 999 );
 	}
 
 	public function frontend( Container $container ) {
