@@ -25,10 +25,6 @@ const state = {
 	cartMessage: '',
 };
 
-const el = {
-	buttons: tools.getNodes('.bc-btn--add_to_cart', true, document, true),
-};
-
 /**
  * @function buildAjaxQueryString
  * @description Build a query string of all options and modifiers for a selected variant.
@@ -257,7 +253,7 @@ const bindEvents = () => {
 };
 
 const init = () => {
-	if (!state.ajax_enabled || el.buttons.length === 0) {
+	if (!state.ajax_enabled) {
 		return;
 	}
 

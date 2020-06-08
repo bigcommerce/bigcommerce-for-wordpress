@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.20.0]
+
+### Changed
+- Link to BigCommerce HTTPS settings from Embedded Checkout settings tab.
+
+
+### Fixed
+
+- Fixed an issue with product grids where Ajax to cart is enabled but no simple products are on the page. This would 
+  cause the Add to Cart button on Quick View to redirect to the cart page instead of an ajax submission.
+
+- Fixed Google SiteKit plugin breaking Settings page.
+
+
 ## [3.19.0]
 
 ### Added
@@ -1179,6 +1193,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[3.20.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.19.0...3.20.0
 [3.19.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.18.1...3.19.0
 [3.18.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.18.0...3.18.1
 [3.18.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.17.0...3.18.0

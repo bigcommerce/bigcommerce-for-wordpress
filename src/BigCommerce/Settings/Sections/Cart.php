@@ -138,11 +138,15 @@ class Cart extends Settings_Section {
 		$permitted = (bool) apply_filters( 'bigcommerce/checkout/can_embed', true );
 		$checkbox  = sprintf( '<input id="field-%s" type="checkbox" value="1" class="regular-text code" name="%s" %s %s />', esc_attr( self::OPTION_EMBEDDED_CHECKOUT ), esc_attr( self::OPTION_EMBEDDED_CHECKOUT ), checked( true, $value, false ), disabled( $permitted, false, false ) );
 		if ( $permitted ) {
-			$description = __( 'If enabled, the checkout form will be embedded on your checkout page. If disabled, customers will be redirected to bigcommerce.com for checkout. Your WordPress domain must have a valid SSL certificate and sitewide HTTPS must be enabled in BigCommerce store to support embedded checkout.', 'bigcommerce' );
+			$description = __( 'If enabled, the checkout form will be embedded on your checkout page. If disabled, customers will be redirected to bigcommerce.com for checkout. Your WordPress domain must have a valid SSL certificate and %ssitewide HTTPS must be enabled%s in BigCommerce store to support embedded checkout.', 'bigcommerce' );
 		} else {
-			$description = __( 'Embedded checkout is disabled. An SSL certificate is required for your WordPress domain as well as enabling sitewide HTTPS in BigCommerce store to support embedded checkout.', 'bigcommerce' );
+			$description = __( 'Embedded checkout is disabled. An SSL certificate is required for your WordPress domain as well as %senabling sitewide HTTPS%s in BigCommerce store to support embedded checkout.', 'bigcommerce' );
 		}
-		printf( '<p class="description">%s %s</p>', $checkbox, $description );
+		printf( '<p class="description">%s %s</p>', $checkbox, sprintf(
+			$description,
+			sprintf( '<a target="__blank" href="%s">', esc_url( 'https://login.bigcommerce.com/deep-links/manage/settings/store' ) ),
+			'</a>'
+		) );
 	}
 
 	public function render_cart_page_field() {
