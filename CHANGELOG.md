@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.21.0]
+
+### Added
+- Added manuall site URL sync option in the Diagnostics panel
+
+### Changed
+- Modified admin import timeout message
+- Update checkout SDK to 1.79.0
+
+### Fixed
+- Fixed Best Selling sort on Product archive page
+- Fixed category sort not being reflected in the menu
+
+
 ## [3.20.0]
 
 ### Changed
@@ -1193,6 +1207,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[3.21.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.20.0...3.21.0
 [3.20.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.19.0...3.20.0
 [3.19.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.18.1...3.19.0
 [3.18.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.18.0...3.18.1

@@ -4,6 +4,8 @@
 namespace BigCommerce\Assets\Theme;
 
 
+use BigCommerce\Pages\Checkout_Page;
+
 class Scripts {
 	/**
 	 * @var string Path to the plugin assets directory
@@ -47,6 +49,10 @@ class Scripts {
 		$manifest_src = $this->directory . 'js/dist/' . $manifest_scripts;
 		$vendor_src   = $this->directory . 'js/dist/' . $vendor_scripts;
 		$plugin_src   = $this->directory . 'js/dist/' . $plugin_scripts;
+
+		if ( is_page( get_option( Checkout_Page::NAME, 0 ) ) ) {
+			wp_enqueue_script( 'bigcommerce-checkout-sdk', 'https://checkout-sdk.bigcommerce.com/v1/loader.js', [], $this->version, true );
+		}
 
 		wp_register_script( 'bigcommerce-manifest', $manifest_src, [], $this->version, true );
 		wp_register_script( 'bigcommerce-vendors', $vendor_src, [ 'bigcommerce-manifest', 'jquery' ], $this->version, true );

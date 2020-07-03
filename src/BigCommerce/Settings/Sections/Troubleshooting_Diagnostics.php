@@ -27,6 +27,7 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 	const DIAGNOSTICS_NAME = 'bigcommerce_diagnostics_name';
 	const TEXTBOX_NAME     = 'bigcommerce_diagnostics_output';
 	const LOG_ERRORS       = 'bigcommerce_diagnostics_log_import_errors';
+	const SYNC_SITE_URL    = 'bigcommerce_diagnostics_sync_site_url';
 
 	const AJAX_ACTION               = 'bigcommerce_support_data';
 	const AJAX_ACTION_IMPORT_ERRORS = 'bigcommerce_import_errors_log';
@@ -55,11 +56,25 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 			Settings_Screen::NAME
 		);
 
+		add_settings_field(
+			self::SYNC_SITE_URL,
+			esc_html( __( 'Sync Site URL', 'bigcommerce' ) ),
+			[ $this, 'render_sync_site_url', ],
+			Settings_Screen::NAME,
+			self::NAME,
+			[
+				'type'        => 'checkbox',
+				'option'      => self::SYNC_SITE_URL,
+				'label'       => __( 'Sync Site URL', 'bigcommerce' ),
+				'description' => __( 'Manually sync site URL with BigCommerce.', 'bigcommerce' ),
+			]
+		);
+
 		register_setting(
 			Settings_Screen::NAME,
 			self::LOG_ERRORS
 		);
-
+		
 		add_settings_field(
 			self::LOG_ERRORS,
 			esc_html( __( 'Log import errors', 'bigcommerce' ) ),
@@ -89,6 +104,12 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 		);
 
 
+	}
+
+	public function render_sync_site_url( $args ) {
+		$url  = add_query_arg( [ 'action' => self::SYNC_SITE_URL, '_wpnonce' => wp_create_nonce( self::SYNC_SITE_URL ) ], admin_url( 'admin-post.php' ) );
+		$link = sprintf( '<a href="%s" class="bc-admin-btn">%s</a>', esc_url( $url ), esc_attr( $args[ 'label' ] ) );
+		printf( '%s<p class="description">%s</p>', $link, esc_html__( $args[ 'description' ], 'bigcommerce' ) );
 	}
 
 	/**

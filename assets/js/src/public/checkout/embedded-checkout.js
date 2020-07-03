@@ -5,7 +5,6 @@
 
 import Cookie from 'js-cookie';
 import _ from 'lodash';
-import { embedCheckout } from '@bigcommerce/checkout-sdk';
 import * as tools from 'utils/tools';
 import scrollTo from 'utils/dom/scroll-to';
 import { CART_ID_COOKIE_NAME, CART_ITEM_COUNT_COOKIE } from 'bcConstants/cookies';
@@ -56,7 +55,8 @@ const scrollIframe = () => {
  * @function loadEmbeddedCheckout
  * @description Create an instance of the BC embedded checkout.
  */
-const loadEmbeddedCheckout = () => {
+const loadEmbeddedCheckout = async () => {
+	const checkoutCDN = await checkoutKitLoader.load('embedded-checkout');
 	// Load the config from the data attribute of the checkout container.
 	const config = JSON.parse(el.container.dataset.config);
 
@@ -71,7 +71,7 @@ const loadEmbeddedCheckout = () => {
 	config.onComplete = scrollIframe;
 
 	// Embed the checkout.
-	embedCheckout(config);
+	checkoutCDN.embedCheckout(config);
 };
 
 const init = () => {

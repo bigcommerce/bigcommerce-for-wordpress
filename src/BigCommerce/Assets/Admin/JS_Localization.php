@@ -37,7 +37,7 @@ class JS_Localization {
 				'sync'                                   => [
 					'success'      => __( 'Products Successfully Synced', 'bigcommerce' ),
 					'error'        => __( 'There was an error syncing your products. Please try to import again. If the error persists, please contact support.', 'bigcommerce' ),
-					'timeout'      => __( 'The server is taking longer than expected to respond. We’ll keep trying, but it may take a few minutes to get things moving again. If the problem persists, try reducing the batch size in the Product Sync settings panel.', 'bigcommerce' ),
+					'timeout'      => __( "The server is taking longer than expected to respond. We’ll keep trying, so don't worry. If the problem persists, try reducing the batch size in the Product Sync settings panel.", 'bigcommerce' ),
 					'server_error' => __( 'The server sent an unexpected response. We’ll keep trying, but it may take a few minutes to get things moving again. If the problem persists, try turning on error logging in the Diagnostics settings panel.', 'bigcommerce' ),
 					'unauthorized' => __( 'An error occurred while validating your request. Please refresh the page and try again.', 'bigcommerce' ),
 				],

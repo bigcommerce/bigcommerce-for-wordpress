@@ -599,6 +599,7 @@ return array(
     'BigCommerce\\Settings\\Sections\\Webhooks' => $baseDir . '/src/BigCommerce/Settings/Sections/Webhooks.php',
     'BigCommerce\\Settings\\Sections\\Wishlists' => $baseDir . '/src/BigCommerce/Settings/Sections/Wishlists.php',
     'BigCommerce\\Settings\\Sections\\WithPages' => $baseDir . '/src/BigCommerce/Settings/Sections/WithPages.php',
+    'BigCommerce\\Settings\\Site_URL_Sync' => $baseDir . '/src/BigCommerce/Settings/Site_URL_Sync.php',
     'BigCommerce\\Settings\\Start_Over' => $baseDir . '/src/BigCommerce/Settings/Start_Over.php',
     'BigCommerce\\Shortcodes\\Account_Profile' => $baseDir . '/src/BigCommerce/Shortcodes/Account_Profile.php',
     'BigCommerce\\Shortcodes\\Address_List' => $baseDir . '/src/BigCommerce/Shortcodes/Address_List.php',

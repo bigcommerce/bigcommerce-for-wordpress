@@ -24,6 +24,7 @@ class Term_Updater extends Term_Saver {
 
 	protected function save_wp_termmeta( \ArrayAccess $bc_term ) {
 		update_term_meta( $this->term_id, 'bigcommerce_id', $bc_term[ 'id' ] );
+		update_term_meta( $this->term_id, 'sort_order', $bc_term[ 'sort_order' ] );
 	}
 
 }
