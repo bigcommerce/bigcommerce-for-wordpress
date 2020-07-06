@@ -56,7 +56,7 @@ class Query {
 					break;
 				case Product_Archive::SORT_FEATURED:
 					// Product 'featured' tag in BC store has no effect on sorting
-					$query->set( 'orderby', [ 'menu_order' => 'ASC', 'title' => 'ASC', 'date' => 'DESC' ] );
+					$query->set( 'orderby', [ 'menu_order' => 'ASC', 'date' => 'DESC', 'title' => 'ASC' ] );
 					break;
 				case Product_Archive::SORT_PRICE_ASC:
 					$meta_query = $query->get( 'meta_query' ) ?: [];
@@ -96,9 +96,16 @@ class Query {
 					$meta_query['bigcommerce_sales'] = [
 						'key'     => Product::SALES_META_KEY,
 						'compare' => 'EXISTS',
+						'type'    => 'NUMERIC'
 					];
+					
+					$meta_query['bigcommerce_id'] = [
+						'key'  => Product::BIGCOMMERCE_ID,
+						'type' => 'NUMERIC'
+					];
+
 					$query->set( 'meta_query', $meta_query );
-					$query->set( 'orderby', [ 'bigcommerce_sales' => 'DESC', 'title' => 'ASC' ] );
+					$query->set( 'orderby', [ 'bigcommerce_sales' => 'DESC', 'bigcommerce_id' => 'DESC' ] );
 					break;
 				case 'bigcommerce_id__in':
 					$meta_query                   = $query->get( 'meta_query' ) ?: [];

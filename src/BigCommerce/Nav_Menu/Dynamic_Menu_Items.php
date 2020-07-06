@@ -72,11 +72,17 @@ class Dynamic_Menu_Items {
 		}
 		$terms = get_terms( [
 			'taxonomy'     => $taxonomy->name,
-			'orderby'      => 'name',
-			'order'        => 'ASC',
 			'hide_empty'   => true,
 			'hierarchical' => true,
 			'parent'       => 0,
+			'meta_query' => [
+				[
+					'key'  => 'sort_order',
+					'type' => 'NUMERIC',
+				]
+			],
+			'orderby' => 'sort_order',
+			'order'   => 'ASC',
 		] );
 		$index = 1;
 		$items = array_map( function ( $term ) use ( $item, &$index ) {

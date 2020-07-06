@@ -76,7 +76,7 @@ class Cron_Runner {
 			// cron can continue to run if the user leaves the page and the Ajax
 			// requests stop coming.
 		} catch ( \Exception $e ) {
-			$message = __( 'The server sent an unexpected response. We’ll keep trying, but it may take a few minutes to get things moving again. If the problem persists, try turning on error logging in the Diagnostics settings panel.', 'bigcommerce' );
+			$message = __( 'The server sent an unexpected response. We’ll keep trying, so dont’t worry. If the problem persists, try turning on error logging in the Diagnostics settings panel.', 'bigcommerce' );
 			if ( WP_DEBUG && $e->getMessage() ) {
 				$message .= ' ' . sprintf( __( 'Error message: %s', 'bigcommerce' ), $e->getMessage() );
 			}

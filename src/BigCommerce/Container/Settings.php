@@ -38,6 +38,7 @@ use BigCommerce\Settings\Sections\Onboarding_Import_Settings;
 use BigCommerce\Settings\Sections\Reviews;
 use BigCommerce\Settings\Sections\Troubleshooting_Diagnostics;
 use BigCommerce\Settings\Site_Update;
+use BigCommerce\Settings\Site_URL_Sync;
 use BigCommerce\Settings\Start_Over;
 use BigCommerce\Taxonomies\Channel\Channel;
 use Pimple\Container;
@@ -77,6 +78,7 @@ class Settings extends Provider {
 	const IMPORT_LIVE_STATUS  = 'settings.import_status_live';
 	const START_OVER          = 'settings.start_over';
 	const ONBOARDING_PROGRESS = 'settings.onboarding.progress_bar';
+	const SITE_URL_SYNC       = 'settings.site_url_sync';
 
 	const CONFIG_STATUS              = 'settings.configuration_status';
 	const CONFIG_DISPLAY_MENUS       = 'settings.configuration_display_menus';
@@ -629,6 +631,10 @@ class Settings extends Provider {
 			$plugin_path = plugin_dir_path( $container['plugin_file'] );
 			return new Troubleshooting_Diagnostics( $plugin_path );
 		};
+		
+		$container[ self::SITE_URL_SYNC ] = function ( Container $container ) {
+			return new Site_URL_Sync( $container[ Taxonomies::ROUTES ] , $container[ self::SETTINGS_SCREEN ] );
+		};
 
 		add_action( 'bigcommerce/settings/register/screen=' . Settings_Screen::NAME, $this->create_callback( 'diagnostics_settings_register', function () use ( $container ) {
 			$container[ self::DIAGNOSTICS_SECTION ]->register_settings_section();
@@ -641,7 +647,10 @@ class Settings extends Provider {
 		add_action( 'wp_ajax_' . Troubleshooting_Diagnostics::AJAX_ACTION_IMPORT_ERRORS, $this->create_callback( 'diagnostics_settings_import_errors_action', function () use ( $container ) {
 			$container[ self::DIAGNOSTICS_SECTION ]->get_import_errors( $container[ Log::LOGGER ] );
 		} ), 10, 0 );
-
+		
+		add_action( 'admin_post_' . Troubleshooting_Diagnostics::SYNC_SITE_URL, $this->create_callback( 'diagnostics_settings_sync_site_url_action', function () use ( $container ) {
+			$container[ self::SITE_URL_SYNC ]->sync();
+		} ), 10, 0 );
 	}
 
 	private function resources( Container $container ) {

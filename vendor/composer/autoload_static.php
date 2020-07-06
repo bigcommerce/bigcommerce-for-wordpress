@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit39b28582cfaf12bb36d8163a54330ec4
+class ComposerStaticInit78ffef7991759664bfd69220bf9a5197
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -682,6 +682,7 @@ class ComposerStaticInit39b28582cfaf12bb36d8163a54330ec4
         'BigCommerce\\Settings\\Sections\\Webhooks' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Webhooks.php',
         'BigCommerce\\Settings\\Sections\\Wishlists' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Wishlists.php',
         'BigCommerce\\Settings\\Sections\\WithPages' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/WithPages.php',
+        'BigCommerce\\Settings\\Site_URL_Sync' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Site_URL_Sync.php',
         'BigCommerce\\Settings\\Start_Over' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Start_Over.php',
         'BigCommerce\\Shortcodes\\Account_Profile' => __DIR__ . '/../..' . '/src/BigCommerce/Shortcodes/Account_Profile.php',
         'BigCommerce\\Shortcodes\\Address_List' => __DIR__ . '/../..' . '/src/BigCommerce/Shortcodes/Address_List.php',
@@ -1060,10 +1061,10 @@ class ComposerStaticInit39b28582cfaf12bb36d8163a54330ec4
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit39b28582cfaf12bb36d8163a54330ec4::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit39b28582cfaf12bb36d8163a54330ec4::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit39b28582cfaf12bb36d8163a54330ec4::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit39b28582cfaf12bb36d8163a54330ec4::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit78ffef7991759664bfd69220bf9a5197::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit78ffef7991759664bfd69220bf9a5197::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit78ffef7991759664bfd69220bf9a5197::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit78ffef7991759664bfd69220bf9a5197::$classMap;
 
         }, null, ClassLoader::class);
     }
