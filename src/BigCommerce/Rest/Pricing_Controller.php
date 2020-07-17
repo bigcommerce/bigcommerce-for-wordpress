@@ -211,7 +211,7 @@ class Pricing_Controller extends Rest_Controller {
 		if ( is_array( $object ) ) {
 			return array_map( [ $this, 'object_to_array' ], $object );
 		}
-		$json = json_encode( ObjectSerializer::sanitizeForSerialization( $object ) );
+		$json = wp_json_encode( ObjectSerializer::sanitizeForSerialization( $object ) );
 
 		return json_decode( $json, true );
 	}

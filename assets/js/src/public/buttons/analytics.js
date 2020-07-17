@@ -4,6 +4,7 @@
  */
 
 import delegate from 'delegate';
+import { STORE_DOMAIN } from 'publicConfig/wp-settings';
 import * as tools from '../../utils/tools';
 
 const el = {
@@ -44,6 +45,13 @@ const handleClickTracker = (e) => {
 	console.info(`Segment has sent the following tracking data to your analytics account(s): ${analyticsData}`);
 };
 
+const gaCrossDomainInit = async () => {
+	await analytics.ready(() => {
+		ga('require', 'linker');
+		ga('linker:autoLink', [STORE_DOMAIN]);
+	});
+};
+
 const bindEvents = () => {
 	tools.getNodes('bc-product-loop-card', true, document).forEach((product) => {
 		delegate(product, '[data-js="bc-product-quick-view-dialog-trigger"]', 'click', handleClickTracker);
@@ -60,6 +68,7 @@ const init = () => {
 		return;
 	}
 
+	gaCrossDomainInit();
 	bindEvents();
 	handleAddToCartTracker();
 };

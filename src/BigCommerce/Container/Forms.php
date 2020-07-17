@@ -43,8 +43,9 @@ class Forms extends Provider {
 		 * Handle all form submissions with a bc-action argument
 		 */
 		add_action( 'parse_request', $this->create_callback( 'handle_form_action', function () use ( $container ) {
-			if ( isset( $_REQUEST[ 'bc-action' ] ) ) {
-				do_action( 'bigcommerce/form/action=' . $_REQUEST[ 'bc-action' ], stripslashes_deep( $_REQUEST ) );
+			$action = filter_var_array( $_REQUEST, [ 'bc-action' => FILTER_SANITIZE_STRING ] );
+			if ( $action['bc-action'] ) {
+				do_action( 'bigcommerce/form/action=' . $action['bc-action'], stripslashes_deep( $_REQUEST ) );
 			}
 		} ), 10, 0 );
 

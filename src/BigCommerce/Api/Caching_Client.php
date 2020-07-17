@@ -140,7 +140,7 @@ class Caching_Client extends Base_Client {
 			'headerParams' => $headerParams,
 			'responseType' => $responseType,
 		];
-		$serialized = md5( json_encode( $args ) );
+		$serialized = md5( wp_json_encode( $args ) );
 
 		return $resourcePath . ':' . $serialized . ':' . $this->get_generation_key();
 	}

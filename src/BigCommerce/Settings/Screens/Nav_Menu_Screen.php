@@ -52,7 +52,7 @@ class Nav_Menu_Screen extends Onboarding_Screen {
 			'skip'   => 1,
 		], $this->form_action_url() );
 		$skip_url = wp_nonce_url( $skip_url, self::NAME );
-		printf( '<p class="bc-welcome-skip-menu-setup"><a href="%s" class="bc-admin-btn bc-admin-btn--outline">%s</a></p>', esc_url( $skip_url ), __( 'Skip Menu Setup', 'bigcommerce' ) );
+		printf( '<p class="bc-welcome-skip-menu-setup"><a href="%s" class="bc-admin-btn bc-admin-btn--outline">%s</a></p>', esc_url( $skip_url ), esc_html( __( 'Skip Menu Setup', 'bigcommerce' ) ) );
 		echo '</div>';
 	}
 

@@ -149,7 +149,7 @@ class Migrate_Blocks {
 		foreach ( $shortcode_map as $shortcode_id => $block_id ) {
 			$shortcode = sprintf( '[%s]', $shortcode_id );
 			$block_data = [ 'shortcode' => $shortcode ];
-			$block     = sprintf( "<!-- wp:%s %s -->\n[%s]\n<!-- /wp:%s -->", $block_id, json_encode( $block_data ), $shortcode_id, $block_id );
+			$block     = sprintf( "<!-- wp:%s %s -->\n[%s]\n<!-- /wp:%s -->", $block_id, wp_json_encode( $block_data ), $shortcode_id, $block_id );
 			$content   = str_replace( $shortcode, $block, $content );
 		}
 
@@ -170,7 +170,7 @@ class Migrate_Blocks {
 		$block_string = sprintf(
 			"<!-- wp:%s %s -->\n<div class=\"%s\">%s</div>\n<!-- /wp:%s -->\n",
 			Blocks\Products::NAME,
-			json_encode( $block_data ),
+			wp_json_encode( $block_data ),
 			'wp-block-bigcommerce-products',
 			$shortcode,
 			Blocks\Products::NAME

@@ -437,8 +437,8 @@ class Product_Builder extends Record_Builder {
 	}
 
 	public static function hash( Model\Product $product, Model\Listing $listing ) {
-		$product_string = json_encode( ObjectSerializer::sanitizeForSerialization( $product ) );
-		$listing_string = json_encode( ObjectSerializer::sanitizeForSerialization( $listing ) );
+		$product_string = wp_json_encode( ObjectSerializer::sanitizeForSerialization( $product ) );
+		$listing_string = wp_json_encode( ObjectSerializer::sanitizeForSerialization( $listing ) );
 		return md5( $product_string . $listing_string );
 	}
 }

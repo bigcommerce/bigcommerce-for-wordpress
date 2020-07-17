@@ -12,6 +12,9 @@ use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Settings;
 
 class Store_Settings implements Import_Processor {
+
+	const DOMAIN = 'bigcommerce_domain';
+
 	/**
 	 * @var Store_Api
 	 */
@@ -36,6 +39,7 @@ class Store_Settings implements Import_Processor {
 			}
 
 			$settings = [
+				self::DOMAIN                                         => $store->domain,
 				Settings\Sections\Currency::CURRENCY_CODE            => $store->currency,
 				Settings\Sections\Currency::CURRENCY_SYMBOL          => $store->currency_symbol,
 				Settings\Sections\Currency::CURRENCY_SYMBOL_POSITION => $this->sanitize_currency_symbol_position( $store->currency_symbol_location ),

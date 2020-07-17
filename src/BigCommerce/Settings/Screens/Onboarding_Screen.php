@@ -21,7 +21,7 @@ abstract class Onboarding_Screen extends Abstract_Screen {
 
 	protected function onboarding_page_header() {
 		echo '<div class="bc-plugin-page-header">';
-		printf( '<img class="bc-settings-save__logo" src="%s" alt="%s" />', trailingslashit( $this->assets_url ) . 'img/admin/big-commerce-logo.svg', __( 'BigCommerce', 'bigcommerce' ) );
+		printf( '<img class="bc-settings-save__logo" src="%s" alt="%s" />', trailingslashit( $this->assets_url ) . 'img/admin/big-commerce-logo.svg', esc_html( __( 'BigCommerce', 'bigcommerce' ) ) );
 		echo '</div>';
 	}
 

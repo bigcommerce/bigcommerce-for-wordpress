@@ -44,9 +44,10 @@ class Add_To_Cart {
 
 		$options = [];
 
-		$submitted_options  = empty( $_POST[ 'option' ] ) ? [] : (array) $_POST[ 'option' ];
-		$option_config = $product->options();
-		$modifier_config = $product->modifiers();
+		// Options are sanitized bellow
+		$submitted_options = empty( $_POST[ 'option' ] ) ? [] : (array) $_POST[ 'option' ]; // phpcs:ignore
+		$option_config     = $product->options();
+		$modifier_config   = $product->modifiers();
 		foreach ( $option_config as $config ) {
 			if ( array_key_exists( $config[ 'id' ], $submitted_options ) ) {
 				$options[ $config[ 'id' ] ] = absint( $submitted_options[ $config[ 'id' ] ] );

@@ -124,13 +124,13 @@ class Cart extends Settings_Section {
 	public function render_enable_cart_field() {
 		$value    = (bool) get_option( self::OPTION_ENABLE_CART, true );
 		$checkbox = sprintf( '<input id="field-%s" type="checkbox" value="1" class="regular-text code" name="%s" %s />', esc_attr( self::OPTION_ENABLE_CART ), esc_attr( self::OPTION_ENABLE_CART ), checked( true, $value, false ) );
-		printf( '<p class="description">%s %s</p>', $checkbox, __( 'If enabled, customers will be able to add products to a cart before proceeding to checkout. If disabled, products will use a Buy Now button that takes them directly to checkout.', 'bigcommerce' ) );
+		printf( '<p class="description">%s %s</p>', $checkbox, esc_html( __( 'If enabled, customers will be able to add products to a cart before proceeding to checkout. If disabled, products will use a Buy Now button that takes them directly to checkout.', 'bigcommerce' ) ) );
 	}
 
 	public function render_ajax_cart_field() {
 		$value    = (bool) get_option( self::OPTION_AJAX_CART, true );
-		printf( '<p><label><input type="radio" value="0" name="%s" %s /> %s</label></p>', esc_attr( self::OPTION_AJAX_CART ), checked( false, $value, false ), __( 'When a product is added to the cart, redirect the customer to the shopping cart page immediately', 'bigcommerce' ) );
-		printf( '<p><label><input type="radio" value="1" name="%s" %s /> %s</label></p>', esc_attr( self::OPTION_AJAX_CART ), checked( true, $value, false ), __( 'When a product is added to the cart, keep the customer on the present page and display a notification via Ajax', 'bigcommerce' ) );
+		printf( '<p><label><input type="radio" value="0" name="%s" %s /> %s</label></p>', esc_attr( self::OPTION_AJAX_CART ), checked( false, $value, false ), esc_html( __( 'When a product is added to the cart, redirect the customer to the shopping cart page immediately', 'bigcommerce' ) ) );
+		printf( '<p><label><input type="radio" value="1" name="%s" %s /> %s</label></p>', esc_attr( self::OPTION_AJAX_CART ), checked( true, $value, false ), esc_html( __( 'When a product is added to the cart, keep the customer on the present page and display a notification via Ajax', 'bigcommerce' ) ) );
 	}
 
 	public function render_embedded_checkout_field() {

@@ -84,7 +84,7 @@ class Channels extends Settings_Section {
 		$terms = $this->get_channel_terms( Channel::STATUS_PRIMARY );
 
 		if ( empty( $terms ) ) {
-			printf( '<p>%s</p>', __( 'Primary channel is not set. Please set one now.', 'bigcommerce' ) );
+			printf( '<p>%s</p>', esc_html( __( 'Primary channel is not set. Please set one now.', 'bigcommerce' ) ) );
 
 			return;
 		}
@@ -124,12 +124,12 @@ class Channels extends Settings_Section {
 		}
 
 		echo '<div class="bigcommerce-channel bigcommerce-channel--new" data-js="bc-channel-row">';
-		printf( '<p class="bigcommerce-channel-create"><a href="#" class="bigcommerce-channel-action bigcommerce-channel-action-create" data-js="bc-channel-show-action" data-action-type="create">%s</a></p>', __( 'Create new channel', 'bigcommerce' ) );
+		printf( '<p class="bigcommerce-channel-create"><a href="#" class="bigcommerce-channel-action bigcommerce-channel-action-create" data-js="bc-channel-show-action" data-action-type="create">%s</a></p>', esc_html( __( 'Create new channel', 'bigcommerce' ) ) );
 		printf(
 			'<p class="bigcommerce-new-channel-name" data-js="bc-channel-action" style="display: none;"><input type="text" class="regular-text code" value="" name="%s" data-js="bigcommerce-channel-action-input" /> <a href="#" class="bigcommerce-channel-action bigcommerce-cancel-new-channel" data-js="bc-channel-cancel-action"><i class="bc-icon bc-icon--settings icon-bc-cross"></i> %s</a><span class="description">%s</span></p>',
 			esc_attr( self::NEW_NAME ),
-			__( 'Cancel', 'bigcommerce' ),
-			__( 'Press Save Changes to create this new channel.', 'bigcommerce' )
+			esc_html( __( 'Cancel', 'bigcommerce' ) ),
+			esc_html( __( 'Press Save Changes to create this new channel.', 'bigcommerce' ) )
 		);
 		echo '</div>';
 	}
@@ -191,8 +191,8 @@ class Channels extends Settings_Section {
 				esc_attr( self::CHANNEL_NAME ),
 				esc_attr( $term->term_id ),
 				esc_attr( $term->name ),
-				__( 'Cancel', 'bigcommerce' ),
-				__( 'Press Save Changes to update this channel name.', 'bigcommerce' )
+				esc_html( __( 'Cancel', 'bigcommerce' ) ),
+				esc_html( __( 'Press Save Changes to update this channel name.', 'bigcommerce' ) )
 			);
 		}
 		echo '</div>';
@@ -235,13 +235,13 @@ class Channels extends Settings_Section {
 	public function handle_action_submission( $redirect ) {
 		$submission = $this->validate_action_submission( $_REQUEST );
 		if ( is_wp_error( $submission ) ) {
-			wp_die( $submission, __( 'Invalid request', 'bigcommerce' ), [ 'response' => 400 ] );
+			wp_die( $submission, esc_html( __( 'Invalid request', 'bigcommerce' ) ), [ 'response' => 400 ] );
 		}
 		/** @var \WP_Term $term */
 		$term            = $submission['term'];
 		$previous_status = get_term_meta( $term->term_id, Channel::STATUS, true );
 		if ( $previous_status === Channel::STATUS_PRIMARY ) {
-			wp_die( __( 'Unable to change status of primary channel. Promote another channel to the primary position before modifying.', 'bigcommerce' ) );
+			wp_die( esc_html( __( 'Unable to change status of primary channel. Promote another channel to the primary position before modifying.', 'bigcommerce' ) ) );
 		}
 		switch ( $submission['action'] ) {
 			case self::ACTION_CONNECT:

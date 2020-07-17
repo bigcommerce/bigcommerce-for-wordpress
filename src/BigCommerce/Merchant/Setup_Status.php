@@ -232,9 +232,10 @@ class Setup_Status {
 		}
 
 		if ( current_user_can( 'customize' ) ) {
+			$url = filter_input( INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL );
 			$steps['customizer'] = [
 				'heading' => __( 'Customize the Look and Feel of Your Store', 'bigcommerce' ),
-				'url'     => add_query_arg( 'return', urlencode( remove_query_arg( wp_removable_query_args(), wp_unslash( $_SERVER['REQUEST_URI'] ) ) ), admin_url( 'customize.php' ) ),
+				'url'     => add_query_arg( 'return', urlencode( remove_query_arg( wp_removable_query_args(), wp_unslash( $url ) ) ), admin_url( 'customize.php' ) ),
 				'label'   => __( 'Customize', 'bigcommerce' ),
 				'icon'    => 'customize',
 			];

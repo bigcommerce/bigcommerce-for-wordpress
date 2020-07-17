@@ -30,7 +30,7 @@ class View_Product {
 		$options[ View_Product_Button::ATTRIBUTES ] = array_merge( $options[ View_Product_Button::ATTRIBUTES ], [
 			'data-tracking-trigger' => 'click',
 			'data-tracking-event'   => 'view_product',
-			'data-tracking-data'    => json_encode( [
+			'data-tracking-data'    => wp_json_encode( [
 				'post_id'    => $product->post_id(),
 				'product_id' => $product->bc_id(),
 				'name'       => get_the_title( $product->post_id() ),
@@ -61,7 +61,7 @@ class View_Product {
 		$options[ Product_Title::LINK_ATTRIBUTES ] = array_merge( $options[ Product_Title::LINK_ATTRIBUTES ], [
 			'data-tracking-trigger' => 'click',
 			'data-tracking-event'   => 'view_product',
-			'data-tracking-data'    => json_encode( [
+			'data-tracking-data'    => wp_json_encode( [
 				'post_id'    => $product->post_id(),
 				'product_id' => $product->bc_id(),
 				'name'       => get_the_title( $product->post_id() ),

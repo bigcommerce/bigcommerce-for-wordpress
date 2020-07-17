@@ -92,7 +92,8 @@ class Address_Form extends Controller {
 			return false;
 		}
 
-		$data = get_transient( $_REQUEST[ 'bc-error' ] );
+		$bc_error = filter_var_array( $_REQUEST, [ 'bc-error' => FILTER_SANITIZE_STRING ] );
+		$data     = get_transient( $bc_error[ 'bc-error' ] );
 		if ( empty( $data[ 'error' ] ) || ! array_key_exists( 'user_id', $data ) ) {
 			return false;
 		}

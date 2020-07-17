@@ -51,16 +51,14 @@ class Messages {
 	 * @return string
 	 */
 	public function render_messages() {
-		if ( ! empty( $_REQUEST[ Error_Handler::PARAM ] ) ) {
-			$message = $this->get_error_message( $_REQUEST[ Error_Handler::PARAM ] );
-
-			return $message;
+		$bc_error = filter_var_array( $_REQUEST, [ Error_Handler::PARAM => FILTER_SANITIZE_STRING ] );
+		if ( $bc_error[ Error_Handler::PARAM ] ) {
+			return $this->get_error_message( $bc_error[ Error_Handler::PARAM ] );
 		}
 
-		if ( ! empty( $_REQUEST[ Success_Handler::PARAM ] ) ) {
-			$message = $this->get_success_message( $_REQUEST[ Success_Handler::PARAM ] );
-
-			return $message;
+		$bc_success = filter_var_array( $_REQUEST, [ Success_Handler::PARAM => FILTER_SANITIZE_STRING ] );
+		if ( $bc_success[ Success_Handler::PARAM ] ) {
+			return $this->get_success_message( $bc_success[ Success_Handler::PARAM ] );
 		}
 
 		return '';

@@ -50,13 +50,13 @@ use BigCommerce\Post_Types\Product\Product;
 
 	<?php if ( $bigcommerce_brand ) { ?>
 		<div class="bc-order-product-row__brand">
-			<?php echo implode( _x( ', ', 'brand name separator', 'bigcommerce' ), $bigcommerce_brand ); ?>
+			<?php echo implode( esc_html( _x( ', ', 'brand name separator', 'bigcommerce' ) ), $bigcommerce_brand ); ?>
 		</div>
 	<?php } ?>
 
 </div>
 
-<div class="bc-wish-list-product-row__delete"><a href="<?php echo esc_url( $delete ); ?>" class="bc-link"><?php _e( 'Remove Item', 'bigcommerce' ); ?></a></div>
+<div class="bc-wish-list-product-row__delete"><a href="<?php echo esc_url( $delete ); ?>" class="bc-link"><?php esc_html_e( 'Remove Item', 'bigcommerce' ); ?></a></div>
 
 <div class="bc-wish-list-product-row__price"><?php echo esc_html( $price ); ?></div>
 

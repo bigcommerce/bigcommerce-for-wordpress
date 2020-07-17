@@ -27,7 +27,7 @@ class Resources_Screen extends Abstract_Screen {
 
 	protected function get_page_header() {
 		echo '<div class="bc-plugin-page-header">';
-		printf( '<a href="%s" target="_blank" rel="noopener"><img class="bc-settings-save__logo" src="%s" alt="%s" /></a>', esc_url( $this->login_url() ), trailingslashit( $this->assets_url ) . 'img/admin/big-commerce-logo.svg', __( 'BigCommerce', 'bigcommerce' ) );
+		printf( '<a href="%s" target="_blank" rel="noopener"><img class="bc-settings-save__logo" src="%s" alt="%s" /></a>', esc_url( $this->login_url() ), trailingslashit( $this->assets_url ) . 'img/admin/big-commerce-logo.svg', esc_html( __( 'BigCommerce', 'bigcommerce' ) ) );
 		echo '</div>';
 	}
 

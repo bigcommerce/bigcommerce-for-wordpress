@@ -78,7 +78,7 @@ class Deleted_Product_Marker implements Import_Processor {
 				$task_id = wp_insert_post( [
 					'post_type'    => Queue_Task::NAME,
 					'post_status'  => 'delete',
-					'post_content' => json_encode( [ 'post_id' => $post_id ] ),
+					'post_content' => wp_json_encode( [ 'post_id' => $post_id ] ),
 					'post_date'    => current_time( 'mysql' ),
 					'post_name'    => sprintf( 'delete-post-%d', $post_id ),
 					'post_title'   => sprintf( 'Delete post %d', $post_id ),

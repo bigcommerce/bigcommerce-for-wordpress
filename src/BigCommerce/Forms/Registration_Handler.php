@@ -173,6 +173,9 @@ class Registration_Handler implements Form_Handler {
 		} elseif ( $submission[ 'bc-register' ][ 'new_password' ] !== $submission[ 'bc-register' ][ 'confirm_password' ] ) {
 			$errors->add( 'confirm_password', __( 'Passwords do not match.', 'bigcommerce' ) );
 		}
+		if ( ! $this->validate_password( $submission[ 'bc-register' ][ 'new_password' ] ) ) {
+			$errors->add( 'new_password', __( 'Your new password must be a minimum of 8 characters and contain an uppercase letter, a lowercase letter, a number, and a punctuation mark or symbol.', 'bigcommerce' ) );
+		}
 
 		// Required for address creation
 		if ( empty( $submission[ 'bc-register' ][ 'phone' ] ) ) {
@@ -197,6 +200,33 @@ class Registration_Handler implements Form_Handler {
 		$errors = apply_filters( 'bigcommerce/form/registration/errors', $errors, $submission );
 
 		return $errors;
+	}
+
+	private function validate_password( $password ) {
+		if ( strlen( $password ) < 8 ) {
+			return false;
+		}
+		
+		if ( ! preg_match( '/\d/', $password ) ) {
+			return false;
+		}
+		
+		$has_punct = false;
+		$has_lower = false;
+		$has_upper = false;
+		foreach ( str_split( $password ) as $char) {
+			if ( ctype_punct( $char ) ) {
+				$has_punct = true;
+			}
+			if ( ctype_lower( $char ) ) {
+				$has_lower = true;
+			}
+			if ( ctype_upper( $char ) ) {
+				$has_upper = true;
+			}
+		}
+
+		return $has_punct && $has_lower && $has_upper;
 	}
 
 	private function get_profile( $submitted_profile ) {

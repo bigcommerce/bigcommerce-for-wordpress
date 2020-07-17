@@ -80,7 +80,7 @@ class Import_Status {
 	 * @action self::AJAX_ACTION_IMPORT_STATUS 0
 	 */
 	public function validate_ajax_current_status_request() {
-		$nonce = filter_input( INPUT_GET, '_wpnonce' );
+		$nonce = filter_input( INPUT_GET, '_wpnonce', FILTER_SANITIZE_STRING );
 		if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, self::AJAX_ACTION_IMPORT_STATUS ) ) {
 			wp_send_json_error( [
 				'code'    => 'invalid_nonce',

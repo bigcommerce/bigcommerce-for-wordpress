@@ -71,7 +71,7 @@ class Checkout implements Shortcode {
 		 */
 		$checkout_config = apply_filters( 'bigcommerce/checkout/config', $checkout_config );
 
-		return sprintf( '<div id="bc-embedded-checkout" data-js="bc-embedded-checkout" data-config="%s"></div>', esc_attr( json_encode( $checkout_config ) ) );
+		return sprintf( '<div id="bc-embedded-checkout" data-js="bc-embedded-checkout" data-config="%s"></div>', esc_attr( wp_json_encode( $checkout_config ) ) );
 	}
 
 }

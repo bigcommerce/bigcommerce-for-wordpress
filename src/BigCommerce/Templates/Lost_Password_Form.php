@@ -40,8 +40,9 @@ class Lost_Password_Form extends Controller {
 	}
 
 	private function get_redirect_url() {
-		$url = isset( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : wp_login_url();
-		$url = add_query_arg( [ 'bc-message' => 'checkemail' ], $url );
+		$redirect_to = filter_var_array( $_REQUEST, [ 'redirect_to' => FILTER_SANITIZE_URL ] );
+		$url         = $redirect_to['redirect_to'] ?: wp_login_url();
+		$url         = add_query_arg( [ 'bc-message' => 'checkemail' ], $url );
 
 		return $url;
 	}

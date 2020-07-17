@@ -87,7 +87,7 @@ class Listing_Fetcher implements Import_Processor {
 				continue;
 			}
 			$data = ObjectSerializer::sanitizeForSerialization( $listing );
-			$id_map[ (int) $listing->getProductId() ][ $this->channel_term->term_id ] = json_encode( $data );
+			$id_map[ (int) $listing->getProductId() ][ $this->channel_term->term_id ] = wp_json_encode( $data );
 		}
 		$this->update_option( self::PRODUCT_LISTING_MAP, $id_map, false );
 

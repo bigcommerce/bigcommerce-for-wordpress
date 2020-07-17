@@ -36,15 +36,15 @@
 
 	<?php if ( $min_value && $max_value ) { ?>
 		<span class="bc-product-form__option-description">
-			<?php echo sprintf( __( 'Minimum value: <strong>%s</strong>, Maximum value: <strong>%s</strong>', 'bigcommerce' ), $min_value, $max_value); ?>
+			<?php echo sprintf( esc_html( __( 'Minimum value: <strong>%s</strong>, Maximum value: <strong>%s</strong>', 'bigcommerce' ) ), $min_value, $max_value); ?>
 		</span>
 	<?php } elseif ( $min_value ) { ?>
 		<span class="bc-product-form__option-description">
-			<?php echo sprintf( __( 'Minimum value: <strong>%s</strong>', 'bigcommerce' ), $min_value); ?>
+			<?php echo sprintf( esc_html( __( 'Minimum value: <strong>%s</strong>', 'bigcommerce' ) ), $min_value); ?>
 		</span>
 	<?php } elseif ( $max_value ) { ?>
 		<span class="bc-product-form__option-description">
-			<?php echo sprintf( __( 'Maximum value: <strong>%s</strong>', 'bigcommerce' ), $max_value); ?>
+			<?php echo sprintf( esc_html( __( 'Maximum value: <strong>%s</strong>', 'bigcommerce' ) ), $max_value); ?>
 		</span>
 	<?php } ?>
 

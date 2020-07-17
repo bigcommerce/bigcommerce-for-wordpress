@@ -42,7 +42,9 @@ class Password_Reset {
 	 * @action profile_update
 	 */
 	public function sync_password_change_with_bigcommerce( $user_id, $old_user_data ) {
-		if ( empty( $_POST['pass1'] ) ) { // $_POST is the only place we can find the plain text password
+		// $_POST is the only place we can find the plain text password
+		$pass1 = filter_input( INPUT_POST, 'pass1', FILTER_UNSAFE_RAW ); // phpcs:ignore
+		if ( empty( $pass1 ) ) {
 			return; // not a request to update a user's password
 		}
 		$sync = get_user_meta( $user_id, User_Profile_Settings::SYNC_PASSWORD, true );
@@ -55,7 +57,7 @@ class Password_Reset {
 			return; // nothing changes
 		}
 
-		$this->set_password( $current_user, $_POST['pass1'] );
+		$this->set_password( $current_user, $pass1 );
 	}
 
 	/**

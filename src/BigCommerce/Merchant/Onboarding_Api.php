@@ -29,7 +29,7 @@ class Onboarding_Api {
 	}
 
 	public function create_account( Create_Account_Request $request ) {
-		$request = json_decode( json_encode( $request ), true ); // convert to array
+		$request = json_decode( wp_json_encode( $request ), true ); // convert to array
 
 		return wp_remote_post( $this->base_url . '/stores', [
 			'body'    => $request,
@@ -38,7 +38,7 @@ class Onboarding_Api {
 	}
 
 	public function connect_account( $store_id, Connect_Account_Request $request ) {
-		$request = json_decode( json_encode( $request ), true ); // convert to array
+		$request = json_decode( wp_json_encode( $request ), true ); // convert to array
 
 		return wp_remote_post( sprintf( '%s/stores/%s', $this->base_url, $store_id ), [
 			'body'    => $request,
@@ -105,7 +105,7 @@ class Onboarding_Api {
 	 * @throws \RuntimeException
 	 */
 	public function customer_login_token( $store_id, $customer_id, Customer_Login_Request $request ) {
-		$request            = json_decode( json_encode( $request ), true ); // convert to array
+		$request            = json_decode( wp_json_encode( $request ), true ); // convert to array
 		$request[ 'token' ] = $this->build_auth_token( $store_id );
 		$url                = sprintf( '%s/stores/%s/customers/%s/login-token', $this->base_url, $store_id, $customer_id );
 		$response           = wp_remote_post( $url, [

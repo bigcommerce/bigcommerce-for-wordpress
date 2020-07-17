@@ -33,13 +33,13 @@
 
 		<?php if ( $minlength ) { ?>
 			<span class="bc-product-form__option-description">
-				<?php echo sprintf( __( 'Minimum character count is: <strong>%s</strong>', 'bigcommerce' ), $minlength ); ?>
+				<?php echo sprintf( esc_html( __( 'Minimum character count is: <strong>%s</strong>', 'bigcommerce' ) ), $minlength ); ?>
 			</span>
 		<?php } ?>
 
 		<?php if ( $maxlength ) { ?>
 			<span class="bc-product-form__option-description">
-				<?php echo sprintf( __( 'Maximum character count is: <strong>%s</strong>', 'bigcommerce' ), $maxlength ); ?>
+				<?php echo sprintf( esc_html( __( 'Maximum character count is: <strong>%s</strong>', 'bigcommerce' ) ), $maxlength ); ?>
 			</span>
 		<?php } ?>
 	</div>

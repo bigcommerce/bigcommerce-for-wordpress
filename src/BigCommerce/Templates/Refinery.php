@@ -87,8 +87,9 @@ class Refinery extends Controller {
 		 * This filter is documents in src/BigCommerce/Post_Types/Product/Query.php
 		 */
 		$default_sort = apply_filters( 'bigcommerce/query/default_sort', Customizer\Sections\Product_Archive::SORT_FEATURED );
-		if ( array_key_exists( 'bc-sort', $_GET ) && array_key_exists( $_GET['bc-sort'], $choices ) ) {
-			$sort = $_GET['bc-sort'];
+		$bc_sort      = filter_input( INPUT_GET, 'bc-sort', FILTER_SANITIZE_STRING );
+		if ( $bc_sort && array_key_exists( $bc_sort, $choices ) ) {
+			$sort = $bc_sort;
 		} else {
 			$sort = $default_sort;
 		}

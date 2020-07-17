@@ -52,19 +52,38 @@ class Product_Category_Widget extends \WP_Widget {
 			'echo'         => false,
 		];
 
-		echo $args[ 'before_widget' ];
+		$markup = '';
 
 		if ( $title ) {
-			echo $args[ 'before_title' ] . $title . $args[ 'after_title' ];
+			$markup .= $args[ 'before_title' ] . $title . $args[ 'after_title' ];
 		}
 
 		if ( $use_dropdown ) {
-			echo $this->category_dropdown( $title, $cat_args, $instance );
+			$markup .= $this->category_dropdown( $title, $cat_args, $instance );
 		} else {
-			echo $this->category_list( $cat_args, $instance );
+			$markup .= $this->category_list( $cat_args, $instance );
 		}
 
-		echo $args[ 'after_widget' ];
+		$markup = $args[ 'before_widget' ] . $markup . $args[ 'after_widget' ];
+
+		$allowed_html = array_merge( wp_kses_allowed_html( 'post' ), [
+			'select' => [
+				'id'    => [],
+				'class' => [],
+				'name'  => [],
+			],
+			'option' => [
+				'value'    => [],
+				'selected' => [],
+				'class'    => [],
+			],
+			'form' => [
+				'action' => [],
+				'method' => [],
+			],
+		] );
+
+		echo wp_kses( $markup, $allowed_html );
 	}
 
 	protected function category_dropdown( $title, $args, $instance ) {
@@ -93,18 +112,15 @@ class Product_Category_Widget extends \WP_Widget {
 		$dropdown .= wp_dropdown_categories( apply_filters( 'bigcommerce/widget/categories/dropdown_args', $args, $instance ) );
 
 		$dropdown .= '</form>';
-		$dropdown .= $this->dropdown_js( $dropdown_id );
+		$this->dropdown_js( $dropdown_id );
 
 		return $dropdown;
 	}
 
 	protected function dropdown_js( $dropdown_id ) {
-		ob_start();
-		?>
-		<script type='text/javascript'>
-			/* <![CDATA[ */
+		$inline_js = "
 			(function () {
-				var dropdown = document.getElementById("<?php echo esc_js( $dropdown_id ); ?>");
+				var dropdown = document.getElementById('{$dropdown_id}');
 
 				function onCatChange() {
 					if (dropdown.options[dropdown.selectedIndex].value !== '') {
@@ -114,10 +130,9 @@ class Product_Category_Widget extends \WP_Widget {
 
 				dropdown.onchange = onCatChange;
 			})();
-			/* ]]> */
-		</script>
-		<?php
-		return ob_get_clean();
+		";
+
+		wp_add_inline_script( 'bigcommerce-scripts', $inline_js );
 	}
 
 	protected function category_list( $args, $instance ) {
@@ -166,25 +181,25 @@ class Product_Category_Widget extends \WP_Widget {
 		$hierarchical = isset( $instance[ 'hierarchical' ] ) ? (bool) $instance[ 'hierarchical' ] : false;
 		$dropdown     = isset( $instance[ 'dropdown' ] ) ? (bool) $instance[ 'dropdown' ] : false;
 		?>
-		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'bigcommerce' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>"
-						 name="<?php echo $this->get_field_name( 'title' ); ?>" type="text"
+		<p><label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'bigcommerce' ); ?></label>
+			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"
+						 name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text"
 						 value="<?php echo esc_attr( $title ); ?>"/></p>
 
-		<p><input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'dropdown' ); ?>"
-							name="<?php echo $this->get_field_name( 'dropdown' ); ?>"<?php checked( $dropdown ); ?> />
+		<p><input type="checkbox" class="checkbox" id="<?php echo esc_attr( $this->get_field_id( 'dropdown' ) ); ?>"
+							name="<?php echo esc_attr( $this->get_field_name( 'dropdown' ) ); ?>"<?php checked( $dropdown ); ?> />
 			<label
-				for="<?php echo $this->get_field_id( 'dropdown' ); ?>"><?php _e( 'Display as dropdown', 'bigcommerce' ); ?></label><br/>
+				for="<?php echo esc_attr( $this->get_field_id( 'dropdown' ) ); ?>"><?php esc_html_e( 'Display as dropdown', 'bigcommerce' ); ?></label><br/>
 
-			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'count' ); ?>"
+			<input type="checkbox" class="checkbox" id="<?php echo esc_attr( $this->get_field_id( 'count' ) ); ?>"
 						 name="<?php echo $this->get_field_name( 'count' ); ?>"<?php checked( $count ); ?> />
 			<label
-				for="<?php echo $this->get_field_id( 'count' ); ?>"><?php _e( 'Show post counts', 'bigcommerce' ); ?></label><br/>
+				for="<?php echo esc_attr( $this->get_field_id( 'count' ) ); ?>"><?php esc_html_e( 'Show post counts', 'bigcommerce' ); ?></label><br/>
 
-			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'hierarchical' ); ?>"
-						 name="<?php echo $this->get_field_name( 'hierarchical' ); ?>"<?php checked( $hierarchical ); ?> />
+			<input type="checkbox" class="checkbox" id="<?php echo esc_attr( $this->get_field_id( 'hierarchical' ) ); ?>"
+						 name="<?php echo esc_attr( $this->get_field_name( 'hierarchical' ) ); ?>"<?php checked( $hierarchical ); ?> />
 			<label
-				for="<?php echo $this->get_field_id( 'hierarchical' ); ?>"><?php _e( 'Show hierarchy', 'bigcommerce' ); ?></label>
+				for="<?php echo esc_attr( $this->get_field_id( 'hierarchical' ) ); ?>"><?php esc_html_e( 'Show hierarchy', 'bigcommerce' ); ?></label>
 		</p>
 		<?php
 	}

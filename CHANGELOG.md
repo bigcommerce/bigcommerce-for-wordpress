@@ -1,9 +1,20 @@
 # Changelog
 
+## [3.22.0]
+
+### Added
+- Segment support for cross-domain analytics with Google Analytics. It enables the
+  `autoLinker` plugin feature for GA.
+- Enforce BigCommerce password requirements when registering new customers
+- Display category description on product category pages
+
+### Changed
+- Data Sanitization/Escaping code refactor for WPVIP compliance
+
 ## [3.21.0]
 
 ### Added
-- Added manuall site URL sync option in the Diagnostics panel
+- Added manual site URL sync option in the Diagnostics panel
 
 ### Changed
 - Modified admin import timeout message
@@ -22,7 +33,7 @@
 
 ### Fixed
 
-- Fixed an issue with product grids where Ajax to cart is enabled but no simple products are on the page. This would 
+- Fixed an issue with product grids where Ajax to cart is enabled but no simple products are on the page. This would
   cause the Add to Cart button on Quick View to redirect to the cart page instead of an ajax submission.
 
 - Fixed Google SiteKit plugin breaking Settings page.
@@ -36,7 +47,7 @@
 
 ### Fixed
 
-- Featured and regular product sort order reflect order in BC store 
+- Featured and regular product sort order reflect order in BC store
 
 
 ## [3.18.1]
@@ -50,7 +61,7 @@
 
 ### Added
 
-- Added support for new larger image size and zoom features on the PDP in multiple 
+- Added support for new larger image size and zoom features on the PDP in multiple
   supported WordPress themes.
 - Added version numbers to templates. Diagnostics panel will now check major versions of overridden files.
 - Support for Flatsome theme added starting with version 3.10.1 of the theme.
@@ -1207,6 +1218,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[3.22.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.21.0...3.22.0
 [3.21.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.20.0...3.21.0
 [3.20.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.19.0...3.20.0
 [3.19.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.18.1...3.19.0

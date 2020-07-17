@@ -39,13 +39,13 @@ class Onboarding_Progress {
 		$steps   = [];
 		$steps[] = [
 			'label'  => __( 'Welcome', 'bigcommerce' ),
-			'active' => ( $this->state === Settings::STATUS_NEW ) && ( filter_input( INPUT_GET, 'page' ) === Welcome_Screen::NAME ),
+			'active' => ( $this->state === Settings::STATUS_NEW ) && ( filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING ) === Welcome_Screen::NAME ),
 		];
 
 		if ( $this->connecting_existing_account() ) {
 			$steps[] = [
 				'label'  => __( 'Connect Account', 'bigcommerce' ),
-				'active' => ( $this->state === Settings::STATUS_ACCOUNT_PENDING ) || ( filter_input( INPUT_GET, 'page' ) === Api_Credentials_Screen::NAME ),
+				'active' => ( $this->state === Settings::STATUS_ACCOUNT_PENDING ) || ( filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING ) === Api_Credentials_Screen::NAME ),
 			];
 			$steps[] = [
 				'label'  => __( 'Connect Your Channel', 'bigcommerce' ),
@@ -54,7 +54,7 @@ class Onboarding_Progress {
 		} else {
 			$steps[] = [
 				'label'  => __( 'Create Account', 'bigcommerce' ),
-				'active' => ( $this->state === Settings::STATUS_NEW ) && ( filter_input( INPUT_GET, 'page' ) !== Welcome_Screen::NAME ),
+				'active' => ( $this->state === Settings::STATUS_NEW ) && ( filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING ) !== Welcome_Screen::NAME ),
 			];
 			$steps[] = [
 				'label'  => __( 'Provision Your Store', 'bigcommerce' ),
@@ -84,7 +84,7 @@ class Onboarding_Progress {
 	}
 
 	private function connecting_existing_account() {
-		if ( filter_input( INPUT_GET, 'page' ) === Api_Credentials_Screen::NAME ) {
+		if ( filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING ) === Api_Credentials_Screen::NAME ) {
 			return true;
 		}
 

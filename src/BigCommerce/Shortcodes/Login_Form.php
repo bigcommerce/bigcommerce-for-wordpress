@@ -18,7 +18,7 @@ class Login_Form implements Shortcode {
 			return '';
 		}
 
-		$action = isset( $_GET[ 'action' ] ) ? $_GET[ 'action' ] : '';
+		$action = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
 
 		switch ( $action ) {
 			case 'lostpassword':

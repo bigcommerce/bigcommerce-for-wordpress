@@ -39,7 +39,7 @@ use BigCommerce\Post_Types\Product\Product;
 			class="bc-link bc-single-product__reviews-anchor"
 			data-js="bc-single-product-reviews-anchor"
 		>
-			<?php printf( _n( '%d review', '%d reviews', $review_count, 'bigcommerce' ), $review_count ); ?>
+			<?php printf( esc_html( _n( '%d review', '%d reviews', $review_count, 'bigcommerce' ) ), $review_count ); ?>
 		</a>
 	</div>
 </div>

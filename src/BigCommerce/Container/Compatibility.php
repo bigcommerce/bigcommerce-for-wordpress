@@ -47,7 +47,7 @@ class Compatibility extends Provider {
 		} ), 10, 3 );
 		
 		add_action( 'setup_theme', $this->create_callback( 'woo_compat_functions', function () use ( $container ) {
-			if ( filter_input( INPUT_GET, 'action' ) === 'activate' && filter_input( INPUT_GET, 'plugin' ) === 'woocommerce/woocommerce.php' ) {
+			if ( filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING ) === 'activate' && filter_input( INPUT_GET, 'plugin', FILTER_SANITIZE_STRING ) === 'woocommerce/woocommerce.php' ) {
 				return;
 			}
 			include_once( dirname( $container[ 'plugin_file' ] ) . '/src/BigCommerce/Compatibility/woocommerce-functions.php' );

@@ -22,7 +22,7 @@
 		<div class="bc-cart-header__price"><?php esc_html_e( 'Price', 'bigcommerce' ); ?></div>
 	</header>
 	<div class="bc-cart__empty">
-		<h2 class="bc-cart__title--empty"><?php _e( 'Your cart is empty.', 'bigcommerce' ); ?></h2>
+		<h2 class="bc-cart__title--empty"><?php esc_html_e( 'Your cart is empty.', 'bigcommerce' ); ?></h2>
 		<a href="<?php echo esc_url( $link_destination ); ?>" class="bc-cart__continue-shopping"><?php echo esc_html( $link_text ); ?></a>
 	</div>
 </section>

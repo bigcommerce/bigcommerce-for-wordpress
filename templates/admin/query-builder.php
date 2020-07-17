@@ -25,7 +25,7 @@ use BigCommerce\Taxonomies\Product_Category\Product_Category;
 	></figure>
 
 	<?php if ( count( $channels ) > 1 ) {
-		printf( '<label for="bcqb-channels" class="bc-shortcode-ui__channel-select">%s <select name="%s" id="bcqb-channels" data-js="bcqb-channels">', __( 'Select a Channel', 'bigcommerce' ), Channel::NAME );
+		printf( '<label for="bcqb-channels" class="bc-shortcode-ui__channel-select">%s <select name="%s" id="bcqb-channels" data-js="bcqb-channels">', esc_html( __( 'Select a Channel', 'bigcommerce' ) ), Channel::NAME );
 		foreach ( $channels as $channel ) {
 			printf( '<option value="%d" %s data-primary="%s">%s</option>', $channel['id'], selected( $channel['primary'], true, false ), $channel['primary'], esc_html( $channel['name'] ) );
 		}

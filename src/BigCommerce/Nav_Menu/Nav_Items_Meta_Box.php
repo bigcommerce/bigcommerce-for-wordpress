@@ -130,7 +130,19 @@ class Nav_Items_Meta_Box extends Meta_Box {
 	public function handle_ajax_request() {
 		// identify any bigcommerce menu items in the submission
 		$menu_items_data = [];
-		foreach ( (array) $_POST[ 'menu-item' ] as $menu_item_data ) {
+
+		$menu_item = filter_input_array( INPUT_POST, [
+			'menu-item' => [
+				'filter' => FILTER_SANITIZE_STRING, 
+				'flags'  => FILTER_REQUIRE_ARRAY,
+			]
+		] );
+
+		if ( ! $menu_item || ! $menu_item['menu-item'] ) {
+			return;
+		}
+
+		foreach ( $menu_item as $menu_item_data ) {
 			if ( Dynamic_Menu_Items::TYPE !== $menu_item_data[ 'menu-item-type' ] ) {
 				continue;
 			}
@@ -188,8 +200,9 @@ class Nav_Items_Meta_Box extends Meta_Box {
 			return null;
 		}, $item_ids ) );
 
+		$menu = filter_input( INPUT_POST, 'menu', FILTER_SANITIZE_STRING );
 		/** This filter is documented in wp-admin/includes/nav-menu.php */
-		$walker_class_name = apply_filters( 'wp_edit_nav_menu_walker', 'Walker_Nav_Menu_Edit', $_POST[ 'menu' ] );
+		$walker_class_name = apply_filters( 'wp_edit_nav_menu_walker', 'Walker_Nav_Menu_Edit', $menu );
 
 		if ( ! class_exists( $walker_class_name ) ) {
 			wp_die( 0 );
