@@ -17,7 +17,7 @@ class Cart {
 	public function __construct( CartApi $bc_cart_api )
 	{
 		$this->bc_cart_api         = $bc_cart_api;
-		$this->cart_contents_count = isset( $_COOKIE[ BC_Cart::COUNT_COOKIE ] ) ? $_COOKIE[ BC_Cart::COUNT_COOKIE ] : 0;
+		$this->cart_contents_count = filter_input( INPUT_COOKIE, BC_Cart::COUNT_COOKIE, FILTER_SANITIZE_NUMBER_INT ) ?: 0;
 	}
 
 	public function get_cart_subtotal() {

@@ -56,7 +56,7 @@
 
 		<?php if ( $bigcommerce_brand ) { ?>
 			<div class="bc-order-product-row__brand">
-				<?php echo implode( _x( ', ', 'brand name separator', 'bigcommerce' ), $bigcommerce_brand ); ?>
+				<?php echo implode( esc_html( _x( ', ', 'brand name separator', 'bigcommerce' ) ), $bigcommerce_brand ); ?>
 			</div>
 		<?php } ?>
 
@@ -77,7 +77,7 @@
 	</div>
 
 	<div class="bc-order-product-row__quantity">
-		<div><?php _e( 'Quantity', 'bigcommerce' ); ?></div>
+		<div><?php esc_html_e( 'Quantity', 'bigcommerce' ); ?></div>
 		<?php echo esc_html( $quantity_ordered ); ?>
 	</div>
 

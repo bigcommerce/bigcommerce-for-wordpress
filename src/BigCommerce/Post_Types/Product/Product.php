@@ -369,7 +369,7 @@ class Product {
 	private function json_encode_maybe_from_api( $data ) {
 		$data = $this->maybe_serialize_from_api( $data );
 		if ( ! is_scalar( $data ) ) {
-			$data = json_encode( $data );
+			$data = wp_json_encode( $data );
 		}
 
 		return $data;

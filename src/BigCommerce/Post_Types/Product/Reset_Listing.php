@@ -75,9 +75,9 @@ class Reset_Listing {
 	 */
 	public function handle_request() {
 		$post_id = filter_input( INPUT_GET, 'post_id', FILTER_SANITIZE_NUMBER_INT );
-		$nonce   = filter_input( INPUT_GET, '_wpnonce' );
+		$nonce   = filter_input( INPUT_GET, '_wpnonce', FILTER_SANITIZE_STRING );
 		if ( empty( $post_id ) || ! wp_verify_nonce( $nonce, self::ACTION . $post_id ) || ! current_user_can( 'edit_post', $post_id ) ) {
-			wp_die( __( 'Invalid request', 'bigcommerce' ), __( 'Invalid request', 'bigcommerce' ), 401 );
+			wp_die( esc_html( __( 'Invalid request', 'bigcommerce' ) ), esc_html( __( 'Invalid request', 'bigcommerce' ) ), 401 );
 			exit;
 		}
 

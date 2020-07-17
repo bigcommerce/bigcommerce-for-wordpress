@@ -33,7 +33,7 @@ use BigCommerce\Post_Types\Product\Product;
 		echo wp_kses( $brand, 'bigcommerce/amp' );
 		echo wp_kses( $price, 'bigcommerce/amp' );
 		echo wp_kses( $rating, 'bigcommerce/amp' );
-		echo sprintf( __( '<span class="bc-product-single__meta-label">SKU:</span> %s', 'bigcommerce' ), $sku );
+		echo sprintf( esc_html( __( '<span class="bc-product-single__meta-label">SKU:</span> %s', 'bigcommerce' ) ), $sku );
 		?>
 
 	</div>

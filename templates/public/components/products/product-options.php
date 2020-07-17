@@ -15,7 +15,7 @@ use BigCommerce\Post_Types\Product\Product;
 ?>
 
 <!-- data-js="product-variants-object" and the data-variants attributes are required! -->
-<div data-js="product-variants-object" data-variants="<?php echo esc_attr( json_encode( $variants ) ); ?>"></div>
+<div data-js="product-variants-object" data-variants="<?php echo esc_attr( wp_json_encode( $variants ) ); ?>"></div>
 <?php
 foreach ( $options as $option ) {
 	echo $option;

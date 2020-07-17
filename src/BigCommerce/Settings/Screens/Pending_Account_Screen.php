@@ -40,7 +40,7 @@ class Pending_Account_Screen extends Onboarding_Screen {
 		printf( '<div class="bc-welcome__account-connection-response" data-js="bc-welcome__account-connection-response"></div>' );
 
 		if ( $account_id ) {
-			printf( '<p class="bc-welcome__pending-account-instructions">%s</p>', __( 'You’ll receive an email to confirm your email address and set a password for your account.', 'bigcommerce' ) );
+			printf( '<p class="bc-welcome__pending-account-instructions">%s</p>', esc_html( __( 'You’ll receive an email to confirm your email address and set a password for your account.', 'bigcommerce' ) ) );
 		}
 		printf( '</div>' );
 

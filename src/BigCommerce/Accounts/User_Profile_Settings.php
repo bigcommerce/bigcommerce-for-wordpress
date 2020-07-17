@@ -22,21 +22,21 @@ class User_Profile_Settings {
 		}
 		$sync = get_user_meta( $user->ID, self::SYNC_PASSWORD, true );
 		?>
-		<h2><?php _e( 'BigCommerce', 'bigcommerce' ); ?></h2>
+		<h2><?php esc_html_e( 'BigCommerce', 'bigcommerce' ); ?></h2>
 		<table class="form-table">
 			<tr id="bigcommerce-sync-password" class="">
 				<th scope="row">
-					<?php _e( 'Authentication', 'bigcommerce' ); ?>
+					<?php esc_html_e( 'Authentication', 'bigcommerce' ); ?>
 					<?php wp_nonce_field( self::NONCE_ACTION, self::NONCE_NAME ); ?>
 				</th>
 				<td>
 					<label for="<?php echo esc_attr( self::SYNC_PASSWORD ); ?>">
 						<input id="<?php echo esc_attr( self::SYNC_PASSWORD ); ?>" type="checkbox"
 									 name="<?php echo esc_attr( self::SYNC_PASSWORD ); ?>" value="1" <?php checked( $sync ); ?> />
-						<?php _e( 'Synchronize Password', 'bigcommerce' ); ?>
+						<?php esc_html_e( 'Synchronize Password', 'bigcommerce' ); ?>
 					</label>
 					<p
-						class="description"><?php _e( "Validate the user's password with the BigCommerce API.", 'bigcommerce' ) ?></p>
+						class="description"><?php esc_html_e( "Validate the user's password with the BigCommerce API.", 'bigcommerce' ) ?></p>
 				</td>
 			</tr>
 		</table>
@@ -54,10 +54,9 @@ class User_Profile_Settings {
 		if ( ! current_user_can( 'edit_users' ) ) {
 			return;
 		}
-		if ( ! isset( $_POST[ self::NONCE_NAME ] ) ) {
-			return;
-		}
-		if ( ! wp_verify_nonce( $_POST[ self::NONCE_NAME ], self::NONCE_ACTION ) ) {
+
+		$nonce = filter_input( INPUT_POST, self::NONCE_NAME, FILTER_SANITIZE_STRING ); 
+		if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, self::NONCE_ACTION ) ) {
 			return;
 		}
 

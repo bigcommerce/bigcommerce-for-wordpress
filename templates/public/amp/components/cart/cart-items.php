@@ -22,7 +22,7 @@ use BigCommerce\Cart\Cart;
 	>
 	<div fallback>
 		<div class="bc-cart__empty">
-			<h2 class="bc-cart__title--empty"><?php _e( 'Your cart is empty.', 'bigcommerce' ); ?></h2>
+			<h2 class="bc-cart__title--empty"><?php esc_html_e( 'Your cart is empty.', 'bigcommerce' ); ?></h2>
 			<a href="<?php echo esc_url( home_url() ); ?>" class="bc-cart__continue-shopping">
 				<?php esc_html_e( 'Take a look around.', 'bigcommerce' ); ?>
 			</a>

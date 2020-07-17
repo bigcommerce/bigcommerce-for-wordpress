@@ -41,7 +41,7 @@ class Cart_Recovery {
 		$token = filter_input( INPUT_GET, 't', FILTER_SANITIZE_STRING );
 
 		if ( empty( $token ) ) {
-			wp_die( __( 'Bad Request', 'bigcommerce' ), __( 'Bad Request', 'bigcommerce' ), 400 );
+			wp_die( esc_html( __( 'Bad Request', 'bigcommerce' ) ), esc_html( __( 'Bad Request', 'bigcommerce' ) ), 400 );
 			exit();
 		}
 

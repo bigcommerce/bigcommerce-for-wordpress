@@ -40,11 +40,11 @@ class Admin_Products_Filter {
 			$current = '';
 		}
 
-		printf( '<label for="filter-by-%s" class="screen-reader-text">%s</label>', esc_attr( Channel::NAME ), __( 'Filter by channel', 'bigcommerce' ) );
+		printf( '<label for="filter-by-%s" class="screen-reader-text">%s</label>', esc_attr( Channel::NAME ), esc_html( __( 'Filter by channel', 'bigcommerce' ) ) );
 		printf( '<select name="%s" id="filter-by-%s">', esc_attr( Channel::NAME ), esc_attr( Channel::NAME ) );
 		if ( $current === '' ) {
 			// unlikely condition
-			printf( '<option value="" selected="selected">%s</option>', __( 'Select a channel', 'bigcommerce' ) );
+			printf( '<option value="" selected="selected">%s</option>', esc_html( __( 'Select a channel', 'bigcommerce' ) ) );
 		}
 		foreach ( $channel_options as $channel ) {
 			printf( '<option value="%s" %s>%s</option>', esc_attr( $channel->slug ), selected( $channel->slug, $current, false ), esc_html( $channel->name ) );

@@ -48,7 +48,8 @@ class Error_Handler {
 			return $data;
 		}
 
-		$stored_data = get_transient( $_REQUEST[ 'bc-error' ] );
+		$bc_error    = filter_var_array( $_REQUEST, [ 'bc-error' => FILTER_SANITIZE_STRING ] );
+		$stored_data = get_transient( $bc_error[ 'bc-error' ] );
 		if ( empty( $stored_data[ 'error' ] ) || ! array_key_exists( 'user_id', $stored_data ) ) {
 			return $data;
 		}

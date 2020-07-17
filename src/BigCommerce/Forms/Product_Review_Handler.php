@@ -132,12 +132,16 @@ class Product_Review_Handler implements Form_Handler {
 	 * @filter bigcommerce/forms/show_messages
 	 */
 	public function remove_form_messages_from_post_content( $show, $post_id ) {
-		$data = [];
-		if ( ! empty( $_REQUEST[ Error_Handler::PARAM ] ) ) {
-			$data = get_transient( $_REQUEST[ Error_Handler::PARAM ] );
-		} elseif ( ! empty( $_REQUEST[ Success_Handler::PARAM ] ) ) {
-			$data = get_transient( $_REQUEST[ Success_Handler::PARAM ] );
+		$data       = [];
+		$bc_error   = filter_var_array( $_REQUEST, [ Error_Handler::PARAM => FILTER_SANITIZE_STRING ] );
+		$bc_success = filter_var_array( $_REQUEST, [ Success_Handler::PARAM => FILTER_SANITIZE_STRING ] );
+
+		if ( $bc_error[ Error_Handler::PARAM ] ) {
+			$data = get_transient( $bc_error[ Error_Handler::PARAM ] );
+		} elseif ( $bc_success[ Success_Handler::PARAM ] ) {
+			$data = get_transient( $bc_success[ Success_Handler::PARAM ] );
 		}
+
 		if ( $data && array_key_exists( 'submission', $data ) ) {
 			if ( array_key_exists( 'bc-action', $data['submission'] ) ) {
 				if ( $data['submission']['bc-action'] == self::ACTION ) {

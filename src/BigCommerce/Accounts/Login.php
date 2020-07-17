@@ -183,12 +183,13 @@ class Login {
 	public function lostpassword_error_handler( $error ) {
 
 		if ( ! $error->get_error_code() ) {
-			if ( strpos( $_POST[ 'user_login' ], '@' ) !== false ) {
+			$user_login = filter_input( INPUT_POST, 'user_login', FILTER_SANITIZE_STRING );
+			if ( strpos( $user_login, '@' ) !== false ) {
 				return; // WP has already checked it as an email address
 			}
-			if ( isset( $_POST[ 'user_login' ] ) ) { // WP doesn't add this as an error until after lostpassword_post
-				$user_data = get_user_by( 'login', $_POST[ 'user_login' ] );
-			}
+			// WP doesn't add this as an error until after lostpassword_post
+			$user_data = get_user_by( 'login', $user_login );
+			
 			if ( ! empty( $user_data ) ) {
 				return; // no errors
 			} else {

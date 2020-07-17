@@ -16,7 +16,7 @@
 
 	<header class="bc-product-archive__header">
 		<h2 class="bc-product-archive__title"><?php echo esc_html( $title ); ?></h2>
-		<div><?php echo esc_html( $description ); ?></div>
+		<div><?php echo wp_kses_post( $description ); ?></div>
 	</header>
 
 	<?php echo $refinery; ?>

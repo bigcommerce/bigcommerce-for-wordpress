@@ -44,15 +44,15 @@ class Mini_Cart_Widget extends \WP_Widget {
 		$title = apply_filters( 'widget_title', $title, $instance, $this->id_base );
 
 
-		echo $args['before_widget'];
+		echo wp_kses_post( $args['before_widget'] );
 
 		if ( $title ) {
-			echo $args['before_title'] . $title . $args['after_title'];
+			echo wp_kses_post( $args['before_title'] . $title . $args['after_title'] );
 		}
 
-		printf( '<div data-js="bc-mini-cart"><span class="bc-loading">%s</span></div>', __( 'Loading', 'bigcommerce' ) );
+		printf( '<div data-js="bc-mini-cart"><span class="bc-loading">%s</span></div>', esc_html( __( 'Loading', 'bigcommerce' ) ) );
 
-		echo $args['after_widget'];
+		echo wp_kses_post( $args['after_widget'] );
 	}
 
 	/**
@@ -81,9 +81,10 @@ class Mini_Cart_Widget extends \WP_Widget {
 		$instance = wp_parse_args( (array) $instance, [ 'title' => '' ] );
 		$title    = sanitize_text_field( $instance['title'] );
 		?>
-		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'bigcommerce' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>"
-			       name="<?php echo $this->get_field_name( 'title' ); ?>" type="text"
+
+		<p><label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'bigcommerce' ); ?></label>
+			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"
+			       name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text"
 			       value="<?php echo esc_attr( $title ); ?>" /></p>
 		<?php
 	}

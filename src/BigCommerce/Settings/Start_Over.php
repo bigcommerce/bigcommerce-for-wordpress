@@ -44,12 +44,12 @@ class Start_Over {
 				</script>
 			</div>
 			',
-			__( 'Start over', 'bigcommerce' ),
-			__( 'You are about to exit the BigCommerce Store Setup. Your progress will not be saved.', 'bigcommerce' ),
-			__( 'Are you sure you want to quit?', 'bigcommerce' ),
+			esc_html( __( 'Start over', 'bigcommerce' ) ),
+			esc_html( __( 'You are about to exit the BigCommerce Store Setup. Your progress will not be saved.', 'bigcommerce' ) ),
+			esc_html( __( 'Are you sure you want to quit?', 'bigcommerce' ) ),
 			esc_url( $url ),
-			__( "Yes, I'm Sure", 'bigcommerce' ),
-			__( 'Nevermind', 'bigcommerce' )
+			esc_html( __( "Yes, I'm Sure", 'bigcommerce' ) ),
+			esc_html( __( 'Nevermind', 'bigcommerce' ) )
 		);
 	}
 

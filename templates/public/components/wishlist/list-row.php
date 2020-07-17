@@ -17,26 +17,26 @@ use BigCommerce\Accounts\Wishlists\Wishlist;
 
 ?>
 <div class="bc-wish-list-item bc-wish-list-name">
-	<span class="bc-small-screen-title"><?php _e( 'Wish List Name: ', 'bigcommerce' ); ?></span>
+	<span class="bc-small-screen-title"><?php esc_html_e( 'Wish List Name: ', 'bigcommerce' ); ?></span>
 	<a href="<?php echo esc_url( $user_url ); ?>" class="bc-link bc-wish-list-link">
 		<?php echo esc_html( $name ); ?>
 	</a>
 </div>
 <div class="bc-wish-list-item bc-wish-list-item-count">
-	<span class="bc-small-screen-title"><?php _e( 'Items: ', 'bigcommerce' ); ?></span>
+	<span class="bc-small-screen-title"><?php esc_html_e( 'Items: ', 'bigcommerce' ); ?></span>
 	<?php echo (int) $count; ?>
 </div>
 <div class="bc-wish-list-item bc-wish-list-shared">
 	<?php if ( $is_public ) { ?>
-		<span class="bc-small-screen-title"><?php _e( 'Shared: ', 'bigcommerce' ); ?></span>
-		<?php _e( 'Yes', 'bigcommerce' ); ?>
+		<span class="bc-small-screen-title"><?php esc_html_e( 'Shared: ', 'bigcommerce' ); ?></span>
+		<?php esc_html_e( 'Yes', 'bigcommerce' ); ?>
 	<?php } ?>
 </div>
 <div class="bc-wish-list-item bc-wish-list-actions">
-	<span class="bc-small-screen-title"><?php _e( 'Actions: ', 'bigcommerce' ); ?></span>
+	<span class="bc-small-screen-title"><?php esc_html_e( 'Actions: ', 'bigcommerce' ); ?></span>
 	<?php if ( $is_public ) { ?>
 		<a href="<?php echo esc_url( $share_url ); ?>" class="bc-link bc-wishilist-share" data-js="bc-share-wish-list">
-			<?php _e( 'Share', 'bigcommerce' ); ?>
+			<?php esc_html_e( 'Share', 'bigcommerce' ); ?>
 		</a>
 	<?php } ?>
 	<?php foreach ( $actions as $action ) { ?>

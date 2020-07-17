@@ -145,7 +145,7 @@ class Channel_Initializer implements Import_Processor {
 				$create_response = $this->channels->createChannelListings( $channel_id, $listing_requests );
 				foreach ( $create_response->getData() as $listing ) {
 					$data = ObjectSerializer::sanitizeForSerialization( $listing );
-					$id_map[ (int) $listing->getProductId() ][ $this->channel_term->term_id ] = json_encode( $data );
+					$id_map[ (int) $listing->getProductId() ][ $this->channel_term->term_id ] = wp_json_encode( $data );
 				}
 				$this->update_option( Listing_Fetcher::PRODUCT_LISTING_MAP, $id_map, false );
 			} catch ( ApiException $e ) {

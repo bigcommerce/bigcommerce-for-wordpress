@@ -144,17 +144,17 @@ class Currency extends Settings_Section {
 		echo '</select>';
 
 		if ( $args['count'] > 1 ) {
-			printf( '<p class="description">%s</p>', __( 'Select the currency to use when viewing the store in this channel.', 'bigcommerce' ) );
+			printf( '<p class="description">%s</p>', esc_html( __( 'Select the currency to use when viewing the store in this channel.', 'bigcommerce' ) ) );
 		} else {
-			printf( '<p class="description">%s</p>', __( 'Select the currency to use for your store.', 'bigcommerce' ) );
+			printf( '<p class="description">%s</p>', esc_html( __( 'Select the currency to use for your store.', 'bigcommerce' ) ) );
 		}
 	}
 
 	public function render_price_display_field() {
 		$value   = get_option( self::PRICE_DISPLAY, self::DISPLAY_TAX_EXCLUSIVE );
 		$choices = [
-			self::DISPLAY_TAX_EXCLUSIVE => __( 'Excluding Tax', 'bigcommerce' ),
-			self::DISPLAY_TAX_INCLUSIVE => __( 'Including Tax', 'bigcommerce' ),
+			self::DISPLAY_TAX_EXCLUSIVE => esc_html( __( 'Excluding Tax', 'bigcommerce' ) ),
+			self::DISPLAY_TAX_INCLUSIVE => esc_html( __( 'Including Tax', 'bigcommerce' ) ),
 		];
 
 		$options = [];
@@ -163,13 +163,13 @@ class Currency extends Settings_Section {
 		}
 		printf( '<select id="field-%s" name="%s" class="regular-text bc-field-choices">%s</select>', esc_attr( self::PRICE_DISPLAY ), esc_attr( self::PRICE_DISPLAY ), implode( "\n", $options ) );
 
-		printf( '<p class="description">%s</p>', __( 'Choose whether to include tax in prices shown on your store.', 'bigcommerce' ) );
+		printf( '<p class="description">%s</p>', esc_html( __( 'Choose whether to include tax in prices shown on your store.', 'bigcommerce' ) ) );
 	}
 
 	public function render_default_currency_symbol() {
 		$default = get_option( self::CURRENCY_CODE, '' );
 		if ( empty( $default ) ) {
-			printf( '<p>%s</p>', __( 'Currency code will be automatically set when the product import completes', 'bigcommerce' ) );
+			printf( '<p>%s</p>', esc_html( __( 'Currency code will be automatically set when the product import completes', 'bigcommerce' ) ) );
 		} else {
 			echo esc_html( $default );
 		}

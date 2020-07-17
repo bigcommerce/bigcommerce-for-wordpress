@@ -33,7 +33,7 @@ class Channel_Indicator {
 		}
 
 		echo '<div class="misc-pub-section misc-pub-bigcommerce">';
-		printf( __( 'Channel: %s', 'bigcommerce' ), esc_html( $name ) );
+		printf( esc_html( __( 'Channel: %s', 'bigcommerce' ) ), esc_html( $name ) );
 		echo '</div>';
 	}
 

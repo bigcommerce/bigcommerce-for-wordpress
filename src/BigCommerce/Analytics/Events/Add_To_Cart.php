@@ -31,7 +31,7 @@ class Add_To_Cart {
 			$args[ Message::ATTRIBUTES ] = array_merge( $args[ Message::ATTRIBUTES ], [
 				'data-tracking-trigger' => 'ready',
 				'data-tracking-event'   => 'add_to_cart',
-				'data-tracking-data'    => json_encode( [
+				'data-tracking-data'    => wp_json_encode( [
 					'cart_id'    => $data['cart_id'],
 					'post_id'    => $data['post_id'],
 					'product_id' => $data['product_id'],

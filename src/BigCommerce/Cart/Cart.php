@@ -37,8 +37,9 @@ class Cart {
 	 */
 	public function get_cart_id() {
 		$cart_id = '';
-		if ( isset( $_COOKIE[ self::CART_COOKIE ] ) && get_option( Settings\Sections\Cart::OPTION_ENABLE_CART, true ) ) {
-			$cart_id = $_COOKIE[ self::CART_COOKIE ];
+		$cookie  = filter_input( INPUT_COOKIE, self::CART_COOKIE, FILTER_SANITIZE_STRING );
+		if ( $cookie && get_option( Settings\Sections\Cart::OPTION_ENABLE_CART, true ) ) {
+			$cart_id = $cookie;
 		}
 
 		/**

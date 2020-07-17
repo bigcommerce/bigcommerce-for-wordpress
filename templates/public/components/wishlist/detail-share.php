@@ -11,7 +11,7 @@ use BigCommerce\Accounts\Wishlists\Wishlist;
 
 ?>
 <label for="bc-wish-list-share" class="bc-wish-list-share-title">
-	<?php _e( 'Share:', 'bigcommerce' ); ?>
+	<?php esc_html_e( 'Share:', 'bigcommerce' ); ?>
 </label>
 <input
 	type="text"
@@ -21,5 +21,5 @@ use BigCommerce\Accounts\Wishlists\Wishlist;
 />
 <!-- data-js="bc-copy-wishlist-url" is required -->
 <button type="button" class="bc-wish-list-share--copy" data-js="bc-copy-wishlist-url">
-	<?php _e( 'Copy', 'bigcommerce' ); ?>
+	<?php esc_html_e( 'Copy', 'bigcommerce' ); ?>
 </button>

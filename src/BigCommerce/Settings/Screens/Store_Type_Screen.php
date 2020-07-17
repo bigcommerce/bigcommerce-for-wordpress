@@ -75,9 +75,9 @@ class Store_Type_Screen extends Onboarding_Screen {
 				<a href="%s" class="bc-admin-btn">%s</a>
 			</div>',
 			$url_full,
-			__( 'Full Featured Store', 'bigcommerce' ),
+			esc_html( __( 'Full Featured Store', 'bigcommerce' ) ),
 			$url_blog,
-			__( 'Simple Blogging', 'bigcommerce' )
+			esc_html( __( 'Simple Blogging', 'bigcommerce' ) )
 		);
 	}
 

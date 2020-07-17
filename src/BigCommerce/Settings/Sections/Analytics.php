@@ -105,9 +105,9 @@ class Analytics extends Settings_Section {
 			esc_attr( $option ),
 			esc_attr( $option ),
 			checked( true, $value, false ),
-			__( 'Keep analytics tracking IDs in sync with your BigCommerce store settings', 'bigcommerce' )
+			esc_html( __( 'Keep analytics tracking IDs in sync with your BigCommerce store settings', 'bigcommerce' ) )
 		);
-		printf( '<p class="description">%s</p>', __( 'Disable the sync to set different tracking IDs on different sites connected to your account.', 'bigcommerce' ) );
+		printf( '<p class="description">%s</p>', esc_html( __( 'Disable the sync to set different tracking IDs on different sites connected to your account.', 'bigcommerce' ) ) );
 	}
 
 	/**

@@ -91,7 +91,7 @@ $error_class = 'bc-form__control--error'; // REQUIRED
 
 	<label for="bc-account-address-phone" class="bc-form__control bc-form-2col__control bc-form-2col__control--right <?php if ( in_array( 'phone', $errors ) ) { echo $error_class; } ?>">
 		<span class="bc-form__label bc-account-address__form-label bc-form-control-required"><?php echo esc_html( __( 'Phone:', 'bigcommerce' ) ); ?></span>
-		<input type="tel" name="bc-address[phone]" id="bc-account-address-phone" value="<?php echo esc_html( $phone ); ?>" data-form-field="bc-form-field-phone">
+		<input type="tel" name="bc-address[phone]" id="bc-account-address-phone" value="<?php echo esc_attr( $phone ); ?>" data-form-field="bc-form-field-phone">
 	</label>
 
 	<div class="bc-account-address-form-actions">

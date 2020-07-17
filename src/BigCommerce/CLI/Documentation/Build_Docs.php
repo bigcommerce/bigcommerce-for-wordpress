@@ -39,7 +39,7 @@ class Build_Docs extends Command {
 			exit;
 		}
 		$data        = $this->get_data();
-		$json        = json_encode( $data, JSON_PRETTY_PRINT );
+		$json        = wp_json_encode( $data, JSON_PRETTY_PRINT );
 		$output_file = reset( $args );
 		$result      = file_put_contents( $output_file, $json );
 		WP_CLI::line();

@@ -101,7 +101,7 @@ class Product_Data_Fetcher implements Import_Processor {
 				'product_id' => $product_id,
 				'action'     => 'update',
 				'created'    => current_time( 'mysql' ),
-				'data'       => json_encode( [
+				'data'       => wp_json_encode( [
 					'product'  => ObjectSerializer::sanitizeForSerialization( $product ),
 					'listings' => $map[ $product_id ],
 				] ),

@@ -79,7 +79,7 @@ class Build_Resources extends Command {
 			$flags |= JSON_PRETTY_PRINT;
 		}
 
-		echo json_encode( $output, $flags );
+		echo wp_json_encode( $output, $flags );
 
 	}
 }

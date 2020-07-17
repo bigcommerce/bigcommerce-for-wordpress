@@ -13,11 +13,11 @@ printf( '<div class="bc-complete__next-steps-header"><i class="bc-icon icon-bc-a
 );
 
 if ( ! empty( $required ) ) {
-	printf( '<h3 class="bc-next-steps__section-title">%s</h3>', __( 'Required Steps', 'bigcommerce' ) );
+	printf( '<h3 class="bc-next-steps__section-title">%s</h3>', esc_html( __( 'Required Steps', 'bigcommerce' ) ) );
 	foreach ( $required as $key => $step ) {
 		printf( '<div class="bc-next-step-wrapper bc-required-step %s">', sanitize_html_class( 'bc-next-step--' . $key ) );
 		printf( '<div class="bc-next-step-status-wrapper">' );
-		printf( '<i class="bc-icon %s"></i> <span class="bc-next-step-incomplete">%s</span>', sanitize_html_class( 'icon-bc-' . $step['icon'] ), __( 'Incomplete', 'bigcommerce' ) );
+		printf( '<i class="bc-icon %s"></i> <span class="bc-next-step-incomplete">%s</span>', sanitize_html_class( 'icon-bc-' . $step['icon'] ), esc_html( __( 'Incomplete', 'bigcommerce' ) ) );
 		printf( '</div>' );
 		printf( '<h3 class="h2 bc-next-step-heading">%s</h3>', esc_html( $step['heading'] ) );
 		if ( ! empty( $step['url'] ) && ! empty( $step['label'] ) ) {
@@ -29,11 +29,11 @@ if ( ! empty( $required ) ) {
 
 
 if ( ! empty( $optional ) ) {
-	printf( '<h3 class="bc-next-steps__section-title">%s</h3>', __( 'Optional Steps', 'bigcommerce' ) );
+	printf( '<h3 class="bc-next-steps__section-title">%s</h3>', esc_html( __( 'Optional Steps', 'bigcommerce' ) ) );
 	foreach ( $optional as $key => $step ) {
 		printf( '<div class="bc-next-step-wrapper bc-optional-step %s">', sanitize_html_class( 'bc-next-step--' . $key ) );
 		printf( '<div class="bc-next-step-status-wrapper">' );
-		printf( '<i class="bc-icon %s"></i> <span class="bc-next-step-incomplete">%s</span>', sanitize_html_class( 'icon-bc-' . $step['icon'] ), __( 'Incomplete', 'bigcommerce' ) );
+		printf( '<i class="bc-icon %s"></i> <span class="bc-next-step-incomplete">%s</span>', sanitize_html_class( 'icon-bc-' . $step['icon'] ), esc_html( __( 'Incomplete', 'bigcommerce' ) ) );
 		printf( '</div>' );
 		printf( '<h3 class="h2 bc-next-step-heading">%s</h3>', esc_html( $step['heading'] ) );
 		if ( ! empty( $step['url'] ) && ! empty( $step['label'] ) ) {

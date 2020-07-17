@@ -82,8 +82,11 @@ class Product_Archive extends Controller {
 	}
 
 	private function get_description( \WP_Query $query ) {
-		$default     = '';
-		$description = get_option( Customizer\Sections\Product_Archive::ARCHIVE_DESCRIPTION, $default );
+		$description = get_the_archive_description();
+
+		if ( empty( $description ) ) {
+			$description = get_option( Customizer\Sections\Product_Archive::ARCHIVE_DESCRIPTION, '' );
+		}
 
 		return $description;
 	}

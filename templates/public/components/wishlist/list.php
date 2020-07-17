@@ -9,12 +9,12 @@
 ?>
 <div class="bc-wish-list-header">
 	<?php if ( ! empty( $wishlists) ) { ?>
-		<div class="bc-wish-list-header-title bc-wish-list-name"><?php _e( 'Wish List Name', 'bigcommerce' ); ?></div>
-		<div class="bc-wish-list-header-title bc-wish-list-item-count"><?php _e( 'Items', 'bigcommerce' ); ?></div>
-		<div class="bc-wish-list-header-title bc-wish-list-shared"><?php _e( 'Shared', 'bigcommerce' ); ?></div>
-		<div class="bc-wish-list-header-title bc-wish-list-actions u-bc-visual-hide"><?php _e( 'Actions', 'bigcommerce' ); ?></div>
+		<div class="bc-wish-list-header-title bc-wish-list-name"><?php esc_html_e( 'Wish List Name', 'bigcommerce' ); ?></div>
+		<div class="bc-wish-list-header-title bc-wish-list-item-count"><?php esc_html_e( 'Items', 'bigcommerce' ); ?></div>
+		<div class="bc-wish-list-header-title bc-wish-list-shared"><?php esc_html_e( 'Shared', 'bigcommerce' ); ?></div>
+		<div class="bc-wish-list-header-title bc-wish-list-actions u-bc-visual-hide"><?php esc_html_e( 'Actions', 'bigcommerce' ); ?></div>
 	<?php } else { ?>
-		<h2><?php _e( 'You currently have no Wish Lists. Would you like to create one?', 'bigcommerce' ); ?></h2>
+		<h2><?php esc_html_e( 'You currently have no Wish Lists. Would you like to create one?', 'bigcommerce' ); ?></h2>
 	<?php } ?>
 </div>
 

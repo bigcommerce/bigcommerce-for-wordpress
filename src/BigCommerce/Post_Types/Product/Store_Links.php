@@ -59,7 +59,7 @@ class Store_Links {
 			return;
 		}
 		echo '<div class="misc-pub-section misc-pub-bigcommerce">';
-		printf( '<span class="dashicons dashicons-bigcommerce"></span> <a href="%s" target="_blank">%s</a>', esc_url( $bc_url ), __( 'Open in BigCommerce', 'bigcommerce' ) );
+		printf( '<span class="dashicons dashicons-bigcommerce"></span> <a href="%s" target="_blank">%s</a>', esc_url( $bc_url ), esc_html( __( 'Open in BigCommerce', 'bigcommerce' ) ) );
 		echo '</div>';
 	}
 

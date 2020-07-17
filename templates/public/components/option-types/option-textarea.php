@@ -37,19 +37,19 @@
 
 <?php if ( $minlength ) { ?>
 	<span class="bc-product-form__option-description">
-		<?php echo sprintf( __( 'Minimum characters: <strong>%s</strong>', 'bigcommerce' ), $minlength ); ?>
+		<?php echo sprintf( esc_html( __( 'Minimum characters: <strong>%s</strong>', 'bigcommerce' ) ), $minlength ); ?>
 	</span>
 <?php } ?>
 
 <?php if ( $maxlength ) { ?>
 	<span class="bc-product-form__option-description">
-		<?php echo sprintf( __( 'Maximum characters: <strong>%s</strong>', 'bigcommerce' ), $maxlength ); ?>
+		<?php echo sprintf( esc_html( __( 'Maximum characters: <strong>%s</strong>', 'bigcommerce' ) ), $maxlength ); ?>
 	</span>
 <?php } ?>
 
 <?php if ( $maxrows ) { ?>
 	<span class="bc-product-form__option-description">
-		<?php echo sprintf( __( 'Maximum lines: <strong>%s</strong>', 'bigcommerce' ), $maxrows ); ?>
+		<?php echo sprintf( esc_html( __( 'Maximum lines: <strong>%s</strong>', 'bigcommerce' ) ), $maxrows ); ?>
 	</span>
 <?php } ?>
 

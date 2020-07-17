@@ -48,7 +48,7 @@ class Update_Country_Cache extends Command {
 		if ( empty( $countries ) ) {
 			\WP_CLI::error( __( 'Unable to retrieve country data from the BigCommerce API', 'bigcommerce' ) );
 		}
-		$json = json_encode( $countries );
+		$json = wp_json_encode( $countries );
 		\WP_CLI::debug( sprintf( __( 'Writing country json to %s', 'bigcommerce' ), $output_file ) );
 		file_put_contents( $output_file, $json );
 		\WP_CLI::success( __( 'Update complete', 'bigcommerce' ) );

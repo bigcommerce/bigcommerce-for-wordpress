@@ -16,7 +16,7 @@ $error_class = 'bc-form__control--error';
 		<input type="hidden" name="bc-action" value="register-account"/>
 		<label class="bc-form__control bc-form-2col__control bc-form-2col__control--full <?php if ( in_array( 'email', $errors ) ) { echo esc_attr( $error_class ); } ?>" for="bc-account-register-email">
 			<span class="bc-form__label bc-account-register__form-label bc-form-control-required"><?php echo esc_html( __( 'Email Address', 'bigcommerce' ) ); ?></span>
-			<input type="email" name="bc-register[email]" id="bc-account-register-email" value="<?php echo esc_html( $defaults[ 'email' ] ); ?>" data-form-field="bc-form-field-email">
+			<input type="email" name="bc-register[email]" id="bc-account-register-email" value="<?php echo esc_attr( $defaults[ 'email' ] ); ?>" data-form-field="bc-form-field-email">
 		</label>
 
 		<label class="bc-form__control bc-form-2col__control bc-form-2col__control--left <?php if ( in_array( 'new_password', $errors ) ) { echo esc_attr( $error_class ); } ?>" for="bc-account-register-password">
@@ -31,32 +31,32 @@ $error_class = 'bc-form__control--error';
 
 		<label class="bc-form__control bc-form-2col__control bc-form-2col__control--left <?php if ( in_array( 'first_name', $errors ) ) { echo esc_attr( $error_class ); } ?>" for="bc-account-register-firstname">
 			<span class="bc-form__label bc-account-register__form-label bc-form-control-required"><?php echo esc_html( __( 'First Name', 'bigcommerce' ) ); ?></span>
-			<input type="text" name="bc-register[first_name]" id="bc-account-register-firstname" value="<?php echo esc_html( $defaults[ 'first_name' ] ); ?>"  data-form-field="bc-form-field-first_name">
+			<input type="text" name="bc-register[first_name]" id="bc-account-register-firstname" value="<?php echo esc_attr( $defaults[ 'first_name' ] ); ?>"  data-form-field="bc-form-field-first_name">
 		</label>
 
 		<label class="bc-form__control bc-form-2col__control bc-form-2col__control--right <?php if ( in_array( 'last_name', $errors ) ) { echo esc_attr( $error_class ); } ?>" for="bc-account-register-lastname">
 			<span class="bc-form__label bc-account-register__form-label bc-form-control-required"><?php echo esc_html( __( 'Last Name', 'bigcommerce' ) ); ?></span>
-			<input type="text" name="bc-register[last_name]" id="bc-account-register-lastname" value="<?php echo esc_html( $defaults[ 'last_name' ] ); ?>"  data-form-field="bc-form-field-last_name">
+			<input type="text" name="bc-register[last_name]" id="bc-account-register-lastname" value="<?php echo esc_attr( $defaults[ 'last_name' ] ); ?>"  data-form-field="bc-form-field-last_name">
 		</label>
 
 		<label class="bc-form__control bc-form-2col__control bc-form-2col__control--left <?php if ( in_array( 'street_1', $errors ) ) { echo esc_attr( $error_class ); } ?>" for="bc-account-register-street1">
 			<span class="bc-form__label bc-account-register__form-label bc-form-control-required"><?php echo esc_html( __( 'Address Line 1', 'bigcommerce' ) ); ?></span>
-			<input type="text" name="bc-register[street_1]" id="bc-account-register-street1" value="<?php echo esc_html( $defaults[ 'street_1' ] ); ?>"  data-form-field="bc-form-field-street_1">
+			<input type="text" name="bc-register[street_1]" id="bc-account-register-street1" value="<?php echo esc_attr( $defaults[ 'street_1' ] ); ?>"  data-form-field="bc-form-field-street_1">
 		</label>
 
 		<label class="bc-form__control bc-form-2col__control bc-form-2col__control--right <?php if ( in_array( 'street_2', $errors ) ) { echo esc_attr( $error_class ); } ?>" for="bc-account-register-street2">
 			<span class="bc-form__label bc-account-register__form-label"><?php echo esc_html( __( 'Address Line 2', 'bigcommerce' ) ); ?></span>
-			<input type="text" name="bc-register[street_2]" id="bc-account-register-street2" value="<?php echo esc_html( $defaults[ 'street_2' ] ); ?>" data-form-field="bc-form-field-street_2">
+			<input type="text" name="bc-register[street_2]" id="bc-account-register-street2" value="<?php echo esc_attr( $defaults[ 'street_2' ] ); ?>" data-form-field="bc-form-field-street_2">
 		</label>
 
 		<label class="bc-form__control bc-form-2col__control bc-form-2col__control--left <?php if ( in_array( 'company', $errors ) ) { echo esc_attr( $error_class ); } ?>" for="bc-account-register-company">
 			<span class="bc-form__label bc-account-register__form-label"><?php echo esc_html( __( 'Company Name', 'bigcommerce' ) ); ?></span>
-			<input type="text" name="bc-register[company]" id="bc-account-register-company" value="<?php echo esc_html( $defaults[ 'company' ] ); ?>" data-form-field="bc-form-field-company">
+			<input type="text" name="bc-register[company]" id="bc-account-register-company" value="<?php echo esc_attr( $defaults[ 'company' ] ); ?>" data-form-field="bc-form-field-company">
 		</label>
 
 		<label class="bc-form__control bc-form-2col__control bc-form-2col__control--right <?php if ( in_array( 'city', $errors ) ) { echo esc_attr( $error_class ); } ?>" for="bc-account-register-city">
 			<span class="bc-form__label bc-account-register__form-label bc-form-control-required"><?php echo esc_html( __( 'Suburb/City', 'bigcommerce' ) ); ?></span>
-			<input type="text" name="bc-register[city]" id="bc-account-register-city" value="<?php echo esc_html( $defaults[ 'city' ] ); ?>" data-form-field="bc-form-field-city">
+			<input type="text" name="bc-register[city]" id="bc-account-register-city" value="<?php echo esc_attr( $defaults[ 'city' ] ); ?>" data-form-field="bc-form-field-city">
 		</label>
 
 		<label class="bc-form__control bc-form-2col__control bc-form-2col__control--left <?php if ( in_array( 'state', $errors ) ) { echo esc_attr( $error_class ); } ?>" for="bc-account-register-state" data-js="bc-dynamic-state">
@@ -76,7 +76,7 @@ $error_class = 'bc-form__control--error';
 
 		<label class="bc-form__control bc-form-2col__control bc-form-2col__control--right <?php if ( in_array( 'zip', $errors ) ) { echo esc_attr( $error_class ); } ?>" for="bc-account-register-zip">
 			<span class="bc-form__label bc-account-register-label bc-form-control-required"><?php echo esc_html( __( 'Zip/Postcode', 'bigcommerce' ) ); ?></span>
-			<input type="text" name="bc-register[zip]" id="bc-account-register-zip" value="<?php echo esc_html( $defaults[ 'zip' ] ); ?>"  data-form-field="bc-form-field-zip">
+			<input type="text" name="bc-register[zip]" id="bc-account-register-zip" value="<?php echo esc_attr( $defaults[ 'zip' ] ); ?>"  data-form-field="bc-form-field-zip">
 		</label>
 
 		<label class="bc-form__control bc-form-2col__control bc-form-2col__control--left <?php if ( in_array( 'country', $errors ) ) { echo esc_attr( $error_class ); } ?>" for="bc-account-register-country">
@@ -92,7 +92,7 @@ $error_class = 'bc-form__control--error';
 
 		<label class="bc-form__control bc-form-2col__control bc-form-2col__control--right <?php if ( in_array( 'phone', $errors ) ) { echo esc_attr( $error_class ); } ?>" for="bc-account-register-phone">
 			<span class="bc-form__label bc-account-register__form-label bc-form-control-required"><?php echo esc_html( __( 'Phone:', 'bigcommerce' ) ); ?></span>
-			<input type="tel" name="bc-register[phone]" id="bc-account-register-phone" value="<?php echo esc_html( $defaults[ 'phone' ] ); ?>"  data-form-field="bc-form-field-phone">
+			<input type="tel" name="bc-register[phone]" id="bc-account-register-phone" value="<?php echo esc_attr( $defaults[ 'phone' ] ); ?>"  data-form-field="bc-form-field-phone">
 		</label>
 
 		<div class="bc-form__actions bc-account-register__actions">

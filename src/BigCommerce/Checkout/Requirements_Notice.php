@@ -90,7 +90,7 @@ class Requirements_Notice {
 			printf(
 				'<div class="notice notice-error bigcommerce-notice"><p class="bigcommerce-notice__refresh"><a class="bigcommerce-notice__refresh-button" href="%s"><i class="bc-icon icon-bc-sync"></i> %s</a></p><h3 class="bigcommerce-notice__heading">%s</h3>%s</div>',
 				esc_url( $this->refresh_url() ),
-				__( 'Refresh', 'bigcommerce' ),
+				esc_html( __( 'Refresh', 'bigcommerce' ) ),
 				$notice_header,
 				$list
 			);
@@ -133,7 +133,7 @@ class Requirements_Notice {
 			'action' => self::REFRESH,
 		], $url );
 		if ( empty( $redirect ) ) {
-			$redirect = $_SERVER['REQUEST_URI'];
+			$redirect = filter_input( INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL );
 		}
 		$url = add_query_arg( [ 'redirect_to' => urlencode( $redirect ) ], $url );
 		$url = wp_nonce_url( $url, self::REFRESH );

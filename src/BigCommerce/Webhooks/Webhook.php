@@ -48,7 +48,7 @@ abstract class Webhook {
 	 * @return string|bool|null The value, or false or null if filter_input fails.
 	 */
 	public function get_auth_header() {
-		return filter_input( INPUT_SERVER, self::INPUT_AUTH_HEADER );
+		return filter_input( INPUT_SERVER, self::INPUT_AUTH_HEADER, FILTER_UNSAFE_RAW ); // phpcs:ignore
 	}
 
 	/**

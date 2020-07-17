@@ -68,14 +68,14 @@ class Api_Credentials_Screen extends Onboarding_Screen {
 	 * @action admin_action_update
 	 */
 	public function validate_credentials() {
-		if ( filter_input( INPUT_POST, 'option_page' ) !== Api_Credentials_Screen::NAME ) {
+		if ( filter_input( INPUT_POST, 'option_page', FILTER_SANITIZE_STRING ) !== Api_Credentials_Screen::NAME ) {
 			return;
 		}
 		$config = new Configuration();
-		$config->setHost( untrailingslashit( filter_input( INPUT_POST, Api_Credentials::OPTION_STORE_URL ) ) );
-		$config->setClientId( filter_input( INPUT_POST, Api_Credentials::OPTION_CLIENT_ID ) );
-		$config->setAccessToken( filter_input( INPUT_POST, Api_Credentials::OPTION_ACCESS_TOKEN ) );
-		$config->setClientSecret( filter_input( INPUT_POST, Api_Credentials::OPTION_CLIENT_SECRET ) );
+		$config->setHost( untrailingslashit( filter_input( INPUT_POST, Api_Credentials::OPTION_STORE_URL, FILTER_SANITIZE_URL ) ) );
+		$config->setClientId( filter_input( INPUT_POST, Api_Credentials::OPTION_CLIENT_ID, FILTER_SANITIZE_STRING ) );
+		$config->setAccessToken( filter_input( INPUT_POST, Api_Credentials::OPTION_ACCESS_TOKEN, FILTER_SANITIZE_STRING ) );
+		$config->setClientSecret( filter_input( INPUT_POST, Api_Credentials::OPTION_CLIENT_SECRET, FILTER_SANITIZE_STRING ) );
 		$config->setCurlTimeout( apply_filters( 'bigcommerce/api/timeout', 15 ) );
 		$client = new Base_Client( $config );
 		$api = new CatalogApi( $client );

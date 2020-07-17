@@ -74,7 +74,7 @@ class Gift_Certificates extends Settings_Section {
 	public function render_enable_field() {
 		$value    = (bool) get_option( self::OPTION_ENABLE, true );
 		$checkbox = sprintf( '<input id="field-%s" type="checkbox" value="1" class="regular-text code" name="%s" %s />', esc_attr( self::OPTION_ENABLE ), esc_attr( self::OPTION_ENABLE ), checked( true, $value, false ) );
-		printf( '<p class="description">%s %s</p>', $checkbox, __( 'If enabled, customers will be able to purchase gift certificates for store credit on new pages that contain a form and a method to check balances.', 'bigcommerce' ) );
+		printf( '<p class="description">%s %s</p>', $checkbox, esc_html( __( 'If enabled, customers will be able to purchase gift certificates for store credit on new pages that contain a form and a method to check balances.', 'bigcommerce' ) ) );
 	}
 
 }

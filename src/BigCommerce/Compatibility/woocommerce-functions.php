@@ -51,7 +51,7 @@ if ( ! function_exists( 'wc_locate_template' ) ) {
 
 if ( ! function_exists( 'woocommerce_mini_cart' ) ) {
 	function woocommerce_mini_cart() {
-		printf( '<div data-js="bc-mini-cart"><span class="bc-loading">%s</span></div>', __( 'Loading', 'bigcommerce' ) );
+		printf( '<div data-js="bc-mini-cart"><span class="bc-loading">%s</span></div>', esc_html( __( 'Loading', 'bigcommerce' ) ) );
 	}
 }
 
