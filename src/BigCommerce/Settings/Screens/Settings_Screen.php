@@ -28,14 +28,6 @@ class Settings_Screen extends Abstract_Screen {
 	 */
 	public function register_settings_page() {
 		parent::register_settings_page();
-		/**
-		 * Triggered after registering the main settings screen
-		 *
-		 * @param string $hook_suffix
-		 *
-		 * @deprecated 2018-08-30 Use 'bigcommerce/settings/register/screen=' . Settings_Screen::NAME
-		 */
-		do_action( 'bigcommerce/settings/register', $this->hook_suffix );
 	}
 
 	public function get_header() {

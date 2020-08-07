@@ -15,7 +15,6 @@ class Product_Card extends Controller {
 	const BRAND      = 'brand';
 	const IMAGE      = 'image';
 	const FORM       = 'form';
-	const QUICK_VIEW = 'quick_view';
 	const ATTRIBUTES = 'attributes';
 
 	protected $template           = 'components/products/product-card.php';
@@ -42,8 +41,6 @@ class Product_Card extends Controller {
 			self::BRAND      => $this->get_brand( $product ),
 			self::IMAGE      => $this->get_featured_image( $product, $this->options[ self::ATTRIBUTES ] ),
 			self::FORM       => $this->get_form( $product ),
-			self::QUICK_VIEW => '', // @deprecated since 3.1
-			self::ATTRIBUTES => '', // @deprecated since 3.1
 		];
 	}
 

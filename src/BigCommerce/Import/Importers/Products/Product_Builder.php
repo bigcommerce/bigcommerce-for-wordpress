@@ -4,17 +4,17 @@
 namespace BigCommerce\Import\Importers\Products;
 
 
-use BigCommerce\Api\v3\ApiException;
+use BigCommerce\Api\Api_Data_Sanitizer;
 use BigCommerce\Api\v3\Api\CatalogApi;
+use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api\v3\Model;
 use BigCommerce\Api\v3\Model\Modifier;
 use BigCommerce\Api\v3\Model\ProductImage;
 use BigCommerce\Api\v3\ObjectSerializer;
 use BigCommerce\Import\Image_Importer;
+use BigCommerce\Import\Import_Strategy;
 use BigCommerce\Import\Mappers\Brand_Mapper;
 use BigCommerce\Import\Mappers\Product_Category_Mapper;
-use BigCommerce\Import\Importers\Record_Builder;
-use BigCommerce\Import\Import_Strategy;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Taxonomies\Availability\Availability;
 use BigCommerce\Taxonomies\Brand\Brand;
@@ -24,7 +24,9 @@ use BigCommerce\Taxonomies\Flag\Flag;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
 use BigCommerce\Taxonomies\Product_Type\Product_Type;
 
-class Product_Builder extends Record_Builder {
+class Product_Builder {
+	use Api_Data_Sanitizer;
+
 	/**
 	 * @var Model\Product
 	 */
@@ -384,6 +386,8 @@ class Product_Builder extends Record_Builder {
 		$meta[ Product::BIGCOMMERCE_ID ]            = $this->sanitize_int( $this->product['id'] );
 		$meta[ Product::SKU ]                       = $this->sanitize_string( $this->product['sku'] );
 		$meta[ Product::RATING_META_KEY ]           = $this->get_avg_rating();
+		$meta[ Product::REVIEW_COUNT_META_KEY ]     = $this->sanitize_int( $this->product[ 'reviews_rating_sum' ] );
+		$meta[ Product::RATING_SUM_META_KEY ]       = $this->sanitize_int( $this->product[ 'reviews_count' ] );
 		$meta[ Product::SALES_META_KEY ]            = $this->sanitize_int( $this->product['total_sold'] );
 		$meta[ Product::PRICE_META_KEY ]            = $this->sanitize_double( $this->product['calculated_price'] );
 		$meta[ Product::INVENTORY_META_KEY ]        = $this->sanitize_int( $this->product['inventory_level'] );

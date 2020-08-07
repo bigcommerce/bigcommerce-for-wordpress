@@ -1,11 +1,13 @@
 <?php
 
 
-namespace BigCommerce\Import\Importers\Reviews;
+namespace BigCommerce\Reviews;
 
-use BigCommerce\Import\Importers\Record_Builder;
+use BigCommerce\Api\Api_Data_Sanitizer;
 
-class Review_Builder extends Record_Builder {
+class Review_Builder {
+	use Api_Data_Sanitizer;
+
 	private $data;
 
 	public function __construct( \BigCommerce\Api\v3\Model\ProductReview $data ) {

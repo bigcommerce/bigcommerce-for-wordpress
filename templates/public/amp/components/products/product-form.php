@@ -6,13 +6,12 @@
  *
  * @var Product $product
  * @var string  $options
- * @var string  $modifiers @deprecated
  * @var string  $button
  * @var int     $min_quantity
  * @var int     $max_quantity
  * @var bool    $ajax_add_to_cart
  * @var string  $quantity_field_type
- * @version 1.0.0
+ * @version 1.0.1
  */
 
 use BigCommerce\Post_Types\Product\Product;

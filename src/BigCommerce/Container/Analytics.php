@@ -68,8 +68,12 @@ class Analytics extends Provider {
 			return new Events\Add_To_Cart();
 		};
 
-		add_filter( 'bigcommerce/messages/success/arguments', $this->create_callback( 'add_to_cart_tracking_attributes', function ( $args, $data ) use ( $container ) {
+		add_filter( 'bigcommerce/messages/success/arguments', $this->create_callback( 'add_to_cart_success_tracking_attributes', function ( $args, $data ) use ( $container ) {
 			return $container[ self::ADD_TO_CART ]->set_tracking_attributes_on_success_message( $args, $data );
+		} ), 10, 2 );
+		
+		add_filter( 'bigcommerce/button/purchase/attributes', $this->create_callback( 'add_to_cart_button_tracking_attributes', function ( $attributes, $product ) use ( $container ) {
+			return $container[ self::ADD_TO_CART ]->add_tracking_attributes_to_purchase_button( $attributes, $product );
 		} ), 10, 2 );
 
 		$container[ self::VIEW_PRODUCT ] = function ( Container $container ) {

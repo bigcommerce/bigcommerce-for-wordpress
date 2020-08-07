@@ -10,7 +10,6 @@ use BigCommerce\Settings\Sections\Cart;
 class Product_Form extends Controller {
 	const PRODUCT             = 'product';
 	const OPTIONS             = 'options';
-	const MODIFIERS           = 'modifiers';
 	const BUTTON              = 'button';
 	const MESSAGE             = 'message';
 	const MIN_QUANTITY        = 'min_quantity';
@@ -41,7 +40,6 @@ class Product_Form extends Controller {
 			self::MIN_QUANTITY        => max( (int) $product->order_quantity_minimum, 1 ),
 			self::MAX_QUANTITY        => $this->get_max_quantity( (int) $product->order_quantity_maximum, $product->get_inventory_level() ),
 			self::OPTIONS             => $this->options[ self::SHOW_OPTIONS ] ? $this->get_options( $product ) : '',
-			self::MODIFIERS           => '', // left for backwards compatibility - 1.7.0
 			self::AJAX_ADD_TO_CART    => (bool) get_option( Cart::OPTION_AJAX_CART, true ),
 			self::QUANTITY_FIELD_TYPE => $this->options[ self::SHOW_OPTIONS ] ? 'number' : 'hidden',
 		];
@@ -65,14 +63,6 @@ class Product_Form extends Controller {
 		] );
 
 		return $component->render();
-	}
-
-	/**
-	 * @return string
-	 * @deprecated Modifiers are combined with options as of version 1.7.0
-	 */
-	protected function get_modifiers() {
-		return '';
 	}
 
 	private function get_max_quantity( $order_max, $inventory ) {

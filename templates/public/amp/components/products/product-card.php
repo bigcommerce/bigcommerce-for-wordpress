@@ -5,9 +5,7 @@
  * @var string  $brand
  * @var string  $image
  * @var string  $price
- * @var string  $quick_view
- * @var string  $attributes
- * @version 1.0.0
+ * @version 1.0.1
  */
 
 use BigCommerce\Post_Types\Product\Product;

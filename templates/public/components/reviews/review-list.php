@@ -4,7 +4,8 @@
  * @var string[] $reviews Rendered product reviews
  * @var string   $pagination
  * @var bool     $wrap
- * @version 1.0.0
+ * @var string   $first_page_url
+ * @version 1.1.0
  */
 
 ?>
@@ -20,6 +21,10 @@
 	<?php } ?>
 	<!-- class="bc-load-items-container" and the conditional class "bc-load-items-container--has-pages" are required. -->
 	<div class="bc-product-review-list bc-load-items-container <?php echo( ! empty( $pagination ) ? esc_attr( 'bc-load-items-container--has-pages' ) : '' ); ?>">
+
+	<?php if ( ! empty( $first_page_url ) ) { ?>
+		<input type="hidden" data-js="bc-reviews-ajax-url" value="<?php echo esc_url( $first_page_url ); ?>">
+	<?php } ?>
 <?php } ?>
 
 <?php foreach ( $reviews as $review ) { ?>

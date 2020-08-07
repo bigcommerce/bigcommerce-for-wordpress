@@ -128,10 +128,7 @@ function delete_tables() {
 	/** @var \wpdb $wpdb */
 	global $wpdb;
 	$tables = [
-		Schema\Products_Table::NAME,
-		Schema\Variants_Table::NAME,
 		Schema\Reviews_Table::NAME,
-		Schema\Import_Queue_Table::NAME,
 	];
 
 	foreach ( $tables as $table ) {
@@ -172,10 +169,7 @@ function delete_options() {
 		Settings\Sections\Troubleshooting_Diagnostics::LOG_ERRORS,
 		Settings\Sections\Units::MASS,
 		Settings\Sections\Units::LENGTH,
-		'schema-' . Schema\Products_Table::class,
-		'schema-' . Schema\Variants_Table::class,
 		'schema-' . Schema\Reviews_Table::class,
-		'schema-' . Schema\Import_Queue_Table::class,
 		'schema-' . Schema\User_Roles::class,
 		'schema-' . Webhook_Versioning::class,
 		Status::CURRENT_LOG,

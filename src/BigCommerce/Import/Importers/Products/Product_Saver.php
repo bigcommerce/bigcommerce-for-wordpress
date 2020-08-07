@@ -2,12 +2,8 @@
 
 namespace BigCommerce\Import\Importers\Products;
 
-use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Api\v3\Model;
-use BigCommerce\Api\v3\Model\ProductReview;
-use BigCommerce\Import\Importers\Reviews\Review_Builder;
-use BigCommerce\Import\Importers\Reviews\Review_Fetcher;
 use BigCommerce\Import\Import_Strategy;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Taxonomies\Availability\Availability;
@@ -17,7 +13,6 @@ use BigCommerce\Taxonomies\Condition\Condition;
 use BigCommerce\Taxonomies\Flag\Flag;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
 use BigCommerce\Taxonomies\Product_Type\Product_Type;
-use BigCommerce\Import\Importers\Products\Product_Builder;
 
 /**
  * Class Product_Saver

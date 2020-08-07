@@ -5,18 +5,14 @@ namespace BigCommerce\Import\Processors;
 
 
 use BigCommerce\Api\v3\Api\CatalogApi;
-use BigCommerce\Api\v3\Api\ChannelsApi;
 use BigCommerce\Api\v3\Model\Listing;
 use BigCommerce\Api\v3\Model\Product;
 use BigCommerce\Api\v3\ObjectSerializer;
 use BigCommerce\Import\Importers\Products\Product_Importer;
 use BigCommerce\Import\Importers\Products\Product_Remover;
-use BigCommerce\Import\Importers\Reviews\Review_Importer;
 use BigCommerce\Import\Runner\Status;
 use BigCommerce\Logging\Error_Log;
 use BigCommerce\Post_Types\Queue_Task\Queue_Task;
-use BigCommerce\Settings\Sections\Channels;
-use BigCommerce\Taxonomies\Channel\Channel;
 use BigCommerce\Taxonomies\Channel\Connections;
 
 class Queue_Runner implements Import_Processor {
@@ -161,10 +157,6 @@ class Queue_Runner implements Import_Processor {
 		foreach ( $channels as $channel_term ) {
 			$this->handle_update_for_channel( $product, $data->listings, $channel_term );
 		}
-
-		// only needs to happen once, no matter how many channels
-		$review_importer = new Review_Importer( $product, $this->catalog );
-		$review_importer->import();
 	}
 
 	/**

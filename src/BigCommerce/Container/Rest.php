@@ -94,7 +94,7 @@ class Rest extends Provider {
 		};
 
 		$container[ self::REVIEW_LIST ] = function ( Container $container ) {
-			return new Reviews_Listing_Controller( $container[ self::NAMESPACE_BASE ], $container[ self::VERSION ], $container[ self::REVIEW_LIST_BASE ] );
+			return new Reviews_Listing_Controller( $container[ self::NAMESPACE_BASE ], $container[ self::VERSION ], $container[ self::REVIEW_LIST_BASE ], $container[ Api::FACTORY ]->catalog() );
 		};
 
 		$container[ self::PRICING_BASE ] = function ( Container $container ) {

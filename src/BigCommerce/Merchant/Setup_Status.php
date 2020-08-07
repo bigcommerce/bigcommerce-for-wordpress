@@ -40,9 +40,9 @@ class Setup_Status {
 		if ( ! empty( $cache ) && is_array( $cache ) ) {
 			return $cache;
 		}
-		
+
 		$ssl_status = $this->get_ssl_status();
-		
+
 		$status = [
 			'shipping_zones'   => $this->get_shipping_zone_count(),
 			'shipping_methods' => $this->get_shipping_method_count(),
@@ -51,12 +51,8 @@ class Setup_Status {
 			'ssl'              => $ssl_status,
 			'product_count'    => $this->get_product_count(),
 		];
-		
-		set_transient( self::STATUS_CACHE, $status, self::STATUS_CACHE_TTL );
 
-		if ( ! $ssl_status ) {
-			update_option( Cart::OPTION_EMBEDDED_CHECKOUT, 0 );
-		}
+		set_transient( self::STATUS_CACHE, $status, self::STATUS_CACHE_TTL );
 
 		return $status;
 	}
