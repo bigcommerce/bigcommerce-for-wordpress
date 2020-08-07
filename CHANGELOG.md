@@ -1,5 +1,45 @@
 # Changelog
 
+## [4.0.0]
+
+### Added
+- Added support for Matomo analytics plugin utilizing the events for: `setCustomVariable`, `addEcommerceItem`,
+  and `setEcommerceView` events.
+
+### Changed
+- Minimum supported WordPress version increased to 5.2
+- Minimum supported PHP version increased to 7.2
+- Reviews will no longer be imported as part of the primary import process.
+  A separate cron job will cache a single page of reviews in post meta for
+  each product. Subsequent pages will be queried directly from the BigCommerce
+  API when visitors request to view them.
+- `\BigCommerce\Post_Types\Product\Product::get_reviews()` will only return
+  the cached collection of reviews (usually 12 or fewer). Options to sort
+  reviews are no longer recognized.
+- `\BigCommerce\Import\Importers\Reviews\Review_Builder` has moved to
+  `\BigCommerce\Reviews\Review_Builder`.
+- `\BigCommerce\Import\Importers\Reviews\Review_Fetcher` has moved to
+  `\BigCommerce\Review\Review_Fetcher`. The `$product_id` parameter has moved
+  from the constructor to the `fetch()` method.
+- Updated templates to handle ajax loading of the initial page of reviews. Affected
+  templates are `review-list.php` and `review-list-pagination.php`.
+
+### Removed
+- Removed the `bc_reviews` table. All queries that used this table have been
+  updated to use post meta or query the BigCommerce API.
+- `\BigCommerce\Post_Types\Product\Product::get_review_count()` will return
+  the count of approved reviews. The `$status` parameter has been removed.
+- Remove the abstract class `\BigCommerce\Import\Importers\Record_Builder`.
+  The functionality that was shared by subclasses is available through the
+  trait `\BigCommerce\Api\Api_Data_Sanitizer`.
+- Deprecated classes, methods, and variables from prior versions of the plugin
+  have been removed according to schedule.
+
+### Deprecated
+- `\BigCommerce\Schema\Reviews_Table` has been deprecated and will be removed
+  in version 5.0. Its only remaining functionality is to remove the now-unused
+  table from the database.
+
 ## [3.22.0]
 
 ### Added
@@ -1218,6 +1258,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.0.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.22.0...4.0.0
 [3.22.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.21.0...3.22.0
 [3.21.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.20.0...3.21.0
 [3.20.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.19.0...3.20.0

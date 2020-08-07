@@ -153,6 +153,7 @@ const handleRequestError = (err = {}, target = '') => {
 
 	target.removeAttribute('disabled');
 	loadMoreWrapper.insertAdjacentHTML('beforeend', paginationError(message));
+	initializeItems(loadMoreWrapper);
 };
 
 /**

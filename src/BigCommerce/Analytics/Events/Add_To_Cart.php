@@ -5,6 +5,7 @@ namespace BigCommerce\Analytics\Events;
 
 
 use BigCommerce\Templates\Message;
+use BigCommerce\Post_Types\Product\Product;
 
 class Add_To_Cart {
 
@@ -30,7 +31,7 @@ class Add_To_Cart {
 
 			$args[ Message::ATTRIBUTES ] = array_merge( $args[ Message::ATTRIBUTES ], [
 				'data-tracking-trigger' => 'ready',
-				'data-tracking-event'   => 'add_to_cart',
+				'data-tracking-event'   => 'add_to_cart_message',
 				'data-tracking-data'    => wp_json_encode( [
 					'cart_id'    => $data['cart_id'],
 					'post_id'    => $data['post_id'],
@@ -42,5 +43,24 @@ class Add_To_Cart {
 		}
 
 		return $args;
+	}
+
+	/**
+	 * @param array  $attributes
+	 * @param Product $product
+	 *
+	 * @return array
+	 * @filter bigcommerce/button/purchase/attributes
+	 */
+	public function add_tracking_attributes_to_purchase_button( $attributes, $product ) {
+		return array_merge( $attributes, [
+			'data-tracking-trigger' => 'ready',
+			'data-tracking-event'   => 'add_to_cart',
+			'data-tracking-data'    => wp_json_encode( [
+				'post_id'    => $product->post_id(),
+				'product_id' => $product->bc_id(),
+				'name'       => get_the_title( $product->post_id() ),
+			] ),
+		] );
 	}
 }

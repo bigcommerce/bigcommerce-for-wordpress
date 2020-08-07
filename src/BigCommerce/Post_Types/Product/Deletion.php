@@ -26,23 +26,9 @@ class Deletion {
 				$this->reparent_images( $post_id, $another_channel_post );
 			} else {
 				// the product is complete gone from the site, so get rid of all related imported content
-				$this->remove_reviews( $bc_id );
 				$this->remove_images( $post_id );
 			}
 		}
-	}
-
-	/**
-	 * Remove any reviews related to the product
-	 *
-	 * @param int $product_id
-	 *
-	 * @return void
-	 */
-	private function remove_reviews( $product_id ) {
-		/** @var \wpdb $wpdb */
-		global $wpdb;
-		$wpdb->delete( $wpdb->bc_reviews, [ 'bc_id' => $product_id ], [ '%d' ] );
 	}
 
 	/**

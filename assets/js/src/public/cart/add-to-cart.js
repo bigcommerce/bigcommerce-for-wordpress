@@ -245,6 +245,7 @@ const handleAjaxAddToCartRequest = (e) => {
 			updateFlatsomeCartMenuQty();
 			updateFlatsomeCartMenuPrice(res.body);
 			trigger({ event: 'bigcommerce/update_mini_cart', native: false });
+			trigger({ event: 'bigcommerce/analytics_trigger', data: { cartButton, cartID: res.body.cart_id }, native: false });
 		});
 };
 

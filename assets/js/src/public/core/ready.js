@@ -24,6 +24,8 @@ import page from '../page/index';
 import product from '../product/index';
 import wishLists from '../wish-list/index';
 
+import analytics from '../analytics/index';
+
 /**
  * @function bindEvents
  * @description Bind global event listeners here,
@@ -65,6 +67,7 @@ const init = () => {
 	page();
 	product();
 	wishLists();
+	analytics();
 
 	console.info('BigCommerce FE: Initialized all javascript that targeted document ready.');
 };

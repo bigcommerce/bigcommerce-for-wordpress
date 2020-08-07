@@ -61,25 +61,13 @@ class Product_Reviews implements Shortcode {
 			return '';
 		}
 
-		$reviews       = $product->get_reviews( [
-			'per_page' => $per_page,
-		] );
-		$total_reviews = $product->get_review_count();
-		$total_pages   = empty( $total_reviews ) ? 0 : ceil( $total_reviews / $per_page );
-		$next_page_url = $this->next_page_url( $product->post_id(), $per_page, 1, $total_pages );
-
-		$reviews = array_map( function ( $review ) use ( $product ) {
-			$controller = Review_Single::factory( array_merge( [
-				Review_Single::PRODUCT => $product,
-			], $review ) );
-
-			return $controller->render();
-		}, $reviews );
+		$total_reviews  = $product->get_review_count();
+		$total_pages    = empty( $total_reviews ) ? 0 : ceil( $total_reviews / $per_page );
 
 		$controller = Template_Product_Reviews::factory( [
-			Template_Product_Reviews::PRODUCT       => $product,
-			Template_Product_Reviews::REVIEWS       => $reviews,
-			Template_Product_Reviews::NEXT_PAGE_URL => $next_page_url,
+			Template_Product_Reviews::PRODUCT        => $product,
+			Template_Product_Reviews::FIRST_PAGE_URL => $this->next_page_url( $product->post_id(), $per_page, 0, $total_pages ),
+			Template_Product_Reviews::NEXT_PAGE_URL  => $this->next_page_url( $product->post_id(), $per_page, 1, $total_pages ),
 		] );
 
 		return $controller->render();

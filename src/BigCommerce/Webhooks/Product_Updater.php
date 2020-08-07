@@ -8,7 +8,6 @@ use BigCommerce\Api\v3\Api\ChannelsApi;
 use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Exceptions\Product_Not_Found_Exception;
 use BigCommerce\Import\Importers\Products\Product_Importer;
-use BigCommerce\Import\Importers\Reviews\Review_Importer;
 use BigCommerce\Logging\Error_Log;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Taxonomies\Channel\Channel;
@@ -63,10 +62,6 @@ class Product_Updater {
 			foreach ( $channels as $channel ) {
 				$this->update_for_channel( $product, $channel );
 			}
-
-			// only needs to happen once, no matter how many channels
-			$review_importer = new Review_Importer( $product, $this->catalog );
-			$review_importer->import();
 		} catch ( ApiException $e ) {
 			do_action( 'bigcommerce/import/error', $e->getMessage(), [
 				'response' => $e->getResponseBody(),

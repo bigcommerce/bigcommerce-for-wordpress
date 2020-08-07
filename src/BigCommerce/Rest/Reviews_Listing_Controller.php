@@ -1,14 +1,33 @@
 <?php
 
-
 namespace BigCommerce\Rest;
 
-
 use BigCommerce\Post_Types\Product\Product;
+use BigCommerce\Reviews\Review_Fetcher;
 use BigCommerce\Templates\Review_List;
 use BigCommerce\Templates\Review_Single;
 
 class Reviews_Listing_Controller extends Rest_Controller {
+
+	/**
+	 * @var Review_Fetcher
+	 */
+	private $fetcher;
+
+	/**
+	 * Rest_Controller constructor.
+	 *
+	 * @param string         $namespace_base
+	 * @param string         $version
+	 * @param string         $rest_base
+	 * @param Review_Fetcher $fetcher
+	 */
+	public function __construct( $namespace_base, $version, $rest_base, $fetcher ) {
+		parent::__construct( $namespace_base, $version, $rest_base );
+
+		$this->fetcher = $fetcher;
+	}
+
 
 	public function register_routes() {
 		register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<post_id>[0-9]+)/html', [
@@ -24,18 +43,22 @@ class Reviews_Listing_Controller extends Rest_Controller {
 
 
 	public function get_rendered_item_params() {
-		$params               = [];
-		$params[ 'paged' ]    = [
+		$params             = [];
+		$params['paged']    = [
 			'type'    => 'integer',
 			'default' => 1,
 		];
-		$params[ 'per_page' ] = [
+		$params['per_page'] = [
 			'type'    => 'integer',
 			'default' => 0,
 		];
-		$params[ 'ajax' ]     = [
+		$params['ajax']     = [
 			'type'    => 'integer',
 			'default' => 0,
+		];
+		$params['wrap']     = [
+			'type'    => 'boolean',
+			'default' => false,
 		];
 
 		return $params;
@@ -44,7 +67,7 @@ class Reviews_Listing_Controller extends Rest_Controller {
 	/**
 	 * Checks if a given request has access to read the rendered shortcodes.
 	 *
-	 * @param  \WP_REST_Request $request Full details about the request.
+	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
@@ -74,27 +97,25 @@ class Reviews_Listing_Controller extends Rest_Controller {
 	/**
 	 * Retrieves the rendered review list
 	 *
-	 * @since 4.7.0
-	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
+	 * @since 4.7.0
+	 *
 	 */
 	public function get_rendered_item( $request ) {
 		$attributes = $request->get_params();
-		$product    = new Product( $attributes[ 'post_id' ] );
+		$product    = new Product( $attributes['post_id'] );
 
-		$page = absint( $attributes[ 'paged' ] ) ?: 1;
-		$per_page = absint( $attributes[ 'per_page' ] ) ?: 12;
+		$page     = absint( $attributes['paged'] ) ?: 1;
+		$per_page = absint( $attributes['per_page'] ) ?: 12;
+		$wrap     = filter_var( $attributes['wrap'], FILTER_VALIDATE_BOOLEAN );
 
-		$reviews = $product->get_reviews( [
-			'page'    => $page,
-			'per_page' => $per_page,
-		] );
-
-		$total_reviews = $product->get_review_count();
-		$total_pages   = empty( $total_reviews ) ? 0 : ceil( $total_reviews / $per_page );
-
+		if ( $page === 1 && $per_page <= 12 ) {
+			$reviews = $product->get_reviews( $per_page );
+		} else {
+			$reviews = $this->fetcher->fetch( $product->bc_id(), $page, $per_page )['reviews'];
+		}
 		$reviews = array_map( function ( $review ) use ( $product ) {
 			$controller = Review_Single::factory( array_merge( [
 				Review_Single::PRODUCT => $product,
@@ -103,11 +124,14 @@ class Reviews_Listing_Controller extends Rest_Controller {
 			return $controller->render();
 		}, $reviews );
 
+		$total_reviews = $product->get_review_count();
+		$total_pages   = empty( $total_reviews ) ? 0 : ceil( $total_reviews / $per_page );
+
 		$controller = Review_List::factory( [
-			Review_List::PRODUCT => $product,
-			Review_List::REVIEWS => $reviews,
-			Review_List::WRAP    => false,
-			Review_List::NEXT_PAGE_URL => $this->next_page_url( $attributes[ 'post_id' ], $per_page, $page, $total_pages ),
+			Review_List::PRODUCT       => $product,
+			Review_List::REVIEWS       => $reviews,
+			Review_List::WRAP          => $wrap,
+			Review_List::NEXT_PAGE_URL => $this->next_page_url( $attributes['post_id'], $per_page, $page, $total_pages ),
 		] );
 
 		$output = $controller->render();
@@ -128,8 +152,8 @@ class Reviews_Listing_Controller extends Rest_Controller {
 
 		$attr = [
 			'per_page' => $per_page,
-			'paged' => $current_page + 1,
-			'ajax'  => 1,
+			'paged'    => $current_page + 1,
+			'ajax'     => 1,
 		];
 
 		$url = add_query_arg( $attr, $base_url );

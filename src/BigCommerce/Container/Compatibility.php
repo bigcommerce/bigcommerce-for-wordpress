@@ -6,6 +6,7 @@ namespace BigCommerce\Container;
 
 use BigCommerce\Compatibility\Template_Compatibility;
 use BigCommerce\Compatibility\Themes\Theme_Factory;
+use BigCommerce\Compatibility\Matomo\Matomo;
 use BigCommerce\Compatibility\WooCommerce\Facade;
 use BigCommerce\Compatibility\WooCommerce\Cart as WC_Cart;
 use BigCommerce\Pages\Account_Page;
@@ -17,6 +18,7 @@ class Compatibility extends Provider {
 	const TEMPLATES     = 'theme_compat.templates';
 	const THEME         = 'theme_compat.theme';
 	const WC_FACADE     = 'woo_compat.wc_facade';
+	const MATOMO        = 'compatibility.matomo';
 
 	public function register( Container $container ) {
 		$container[ self::TEMPLATES ] = function ( Container $container ) {
@@ -92,5 +94,21 @@ class Compatibility extends Provider {
 			}
 			return get_option( Login_Page::NAME, 0 );
 		} ), 10, 0 );
+
+		$this->matomo_integration( $container );
+	}
+
+	private function matomo_integration( $container ) {
+		$container[ self::MATOMO ] = function ( Container $container ) {
+			return new Matomo();
+		};
+
+		add_filter( 'bigcommerce/js_config', $this->create_callback( 'compatibility.matomo.js_config', function( $config ) use ( $container ) {
+			if ( class_exists( 'WpMatomo' ) && \WpMatomo::$settings->is_tracking_enabled() ) {
+				return $container[ self::MATOMO ]->js_config( $config );
+			}
+
+			return $config;
+		}), 10, 1 );
 	}
 }

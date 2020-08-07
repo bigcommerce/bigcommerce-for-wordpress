@@ -39,6 +39,10 @@ class Product {
 	const GALLERY_META_KEY          = 'bigcommerce_gallery';
 	const VARIANT_IMAGES_META_KEY   = 'bigcommerce_variant_images';
 	const RATING_META_KEY           = 'bigcommerce_rating';
+	const RATING_SUM_META_KEY       = 'bigcommerce_review_rating_sum';
+	const REVIEW_COUNT_META_KEY     = 'bigcommerce_review_count';
+	const REVIEWS_APPROVED_META_KEY = 'bigcommerce_approved_review_count';
+	const REVIEW_CACHE              = 'bigcommerce_reviews';
 	const SALES_META_KEY            = 'bigcommerce_sales';
 	const PRICE_META_KEY            = 'bigcommerce_calculated_price';
 	const PRICE_RANGE_META_KEY      = 'bigcommerce_price_range';
@@ -454,6 +458,15 @@ class Product {
 		$preorder = $this->availability() === Availability::PREORDER;
 		$cart     = get_option( Cart::OPTION_ENABLE_CART, true );
 		$class    = 'bc-btn bc-btn--form-submit';
+
+		$attributes = apply_filters( 'bigcommerce/button/purchase/attributes', [], $this );
+		$attributes = implode( ' ', array_map( function ( $attribute, $value ) {
+			$attribute  = sanitize_title_with_dashes( $attribute );
+			$value      = esc_attr( $value );
+
+			return sprintf( '%s="%s"', $attribute, $value );
+		}, array_keys( $attributes ), $attributes ) );
+
 		if ( $preorder ) {
 			$class .= ' bc-btn--preorder';
 		}
@@ -464,7 +477,7 @@ class Product {
 			$class .= ' bc-btn--buy';
 			$label = $preorder ? get_option( Buttons::PREORDER_NOW, __( 'Pre-Order Now', 'bigcommerce' ) ) : get_option( Buttons::BUY_NOW, __( 'Buy Now', 'bigcommerce' ) );
 		}
-		$button = sprintf( '<button class="%s" type="submit" data-js="%d" %s>%s</button>', $class, $this->bc_id(), $options, $label );
+		$button = sprintf( '<button class="%s" type="submit" data-js="%d" %s %s>%s</button>', $class, $this->bc_id(), $options, $attributes, $label );
 
 		return apply_filters( 'bigcommerce/button/purchase', $button, $this->post_id, $label );
 	}
@@ -651,61 +664,25 @@ class Product {
 	/**
 	 * Get the reviews associated with this product
 	 *
-	 * @param array $args An array of query parameters
+	 * @param int $count The number of reviews to return. Will not return more
+	 *                   than the number in the review cache.
 	 *
-	 * @return array
+	 * @return array The most recent reviews cached for the product
 	 */
-	public function get_reviews( array $args = [] ) {
-		/** @var \wpdb $wpdb */
-		global $wpdb;
-
-		$args = wp_parse_args( $args, [
-			'per_page' => 12,
-			'page'     => 1,
-			'status'   => 'approved',
-			'orderby'  => 'date_reviewed',
-			'order'    => 'DESC',
-		] );
-
-		$per_page = absint( $args['per_page'] ) ?: 12;
-		$offset   = ( absint( $args['page'] ) - 1 ) * $per_page;
-
-		$args['order']   = ( strtoupper( $args['order'] ) === 'DESC' ? 'DESC' : 'ASC' );
-		$args['orderby'] = in_array( $args['orderby'], [
-			'date_reviewed',
-			'date_created',
-			'date_modified',
-			'author_name',
-			'title',
-			'rating',
-		] ) ? sanitize_key( $args['orderby'] ) : 'date_reviewed';
-
-		$orderby = sprintf( "ORDER BY %s %s", $args['orderby'], $args['order'] );
-		$limit   = sprintf( "LIMIT %d, %d", $offset, $per_page );
-
-		$sql     = "SELECT * FROM {$wpdb->bc_reviews} WHERE bc_id=%d AND status=%s $orderby $limit";
-		$sql     = $wpdb->prepare( $sql, $this->bc_id(), $args['status'] );
-		$results = $wpdb->get_results( $sql, ARRAY_A );
-
-		return $results ?: [];
+	public function get_reviews( $count = 12 ) {
+		$cached = get_post_meta( $this->post_id, self::REVIEW_CACHE, true );
+		if ( is_array( $cached ) ) {
+			return array_slice( $cached, 0, $count );
+		}
+		return [];
 	}
 
 	/**
 	 * Get the total number of reviews for the product
-	 *
-	 * @param string $status
-	 *
 	 * @return int
 	 */
-	public function get_review_count( $status = 'approved' ) {
-		/** @var \wpdb $wpdb */
-		global $wpdb;
-
-		$sql   = "SELECT COUNT(*) FROM {$wpdb->bc_reviews} WHERE bc_id=%d AND status=%s";
-		$sql   = $wpdb->prepare( $sql, $this->bc_id(), $status );
-		$count = $wpdb->get_var( $sql );
-
-		return intval( $count );
+	public function get_review_count() {
+		return (int) get_post_meta( $this->post_id, self::REVIEWS_APPROVED_META_KEY, true );
 	}
 
 	/**
@@ -760,7 +737,7 @@ class Product {
 	 * @param int           $product_id
 	 *
 	 * @param \WP_Term|null $channel
-	 * 
+	 *
 	 * @param array         $query_args
 	 *
 	 * @return Product|array

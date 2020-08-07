@@ -14,16 +14,6 @@ class Add_To_Cart {
 	const ACTION       = 'cart';
 
 	/**
-	 * @deprecated since 3.5.0 Use Cart::CART_COOKIE
-	 */
-	const CART_COOKIE  = Cart::CART_COOKIE;
-
-	/**
-	 * @deprecated since 3.5.0 Use Cart::COUNT_COOKIE
-	 */
-	const COUNT_COOKIE = Cart::COUNT_COOKIE;
-
-	/**
 	 * @param int     $post_id
 	 * @param CartApi $cart_api
 	 *
