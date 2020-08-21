@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.23.0]
+
+### Added
+- Admin notice about required PHP and WP version implications in upcoming version 4.0
+
 ## [3.22.0]
 
 ### Added
@@ -1218,6 +1223,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[3.23.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.22.0...3.23.0
 [3.22.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.21.0...3.22.0
 [3.21.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.20.0...3.21.0
 [3.20.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.19.0...3.20.0
