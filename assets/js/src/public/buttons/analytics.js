@@ -1,19 +1,18 @@
 /**
- * @module Segment Analytics Tracking
- * @description Allow Facebook Pixel and Google Analytics tracking on specified Segment events.
+ * @module Analytics Tracking
+ * @description Allow Facebook Pixel and Google Analytics tracking on specified events.
  */
 
 import delegate from 'delegate';
 import { STORE_DOMAIN } from 'publicConfig/wp-settings';
-import * as tools from 'utils/tools';
-import { on } from 'utils/events';
+import * as tools from '../../utils/tools';
 
 const el = {
 	segment: tools.getNodes('bc-segment-tracker')[0],
 };
 
-const handleAddToCartTracker = (e) => {
-	const cartTrigger = e ? e.detail.cartButton : tools.getNodes('[data-tracking-event="add_to_cart_message"]', false, document, true)[0];
+const handleAddToCartTracker = () => {
+	const cartTrigger = tools.getNodes('[data-tracking-event="add_to_cart"]', false, document, true)[0];
 
 	if (!cartTrigger) {
 		return;
@@ -23,7 +22,7 @@ const handleAddToCartTracker = (e) => {
 	const jsonData = JSON.parse(analyticsData);
 
 	analytics.track('Product Added', {
-		cart_id: e ? e.detail.cart_id : jsonData.cart_id,
+		cart_id: jsonData.cart_id,
 		product_id: jsonData.product_id,
 		variant: jsonData.variant_id,
 	});
@@ -62,8 +61,6 @@ const bindEvents = () => {
 	tools.getNodes('bc-product-quick-view-content', true, document).forEach((dialog) => {
 		delegate(dialog, '.bc-product__title-link', 'click', handleClickTracker);
 	});
-
-	on(document, 'bigcommerce/analytics_trigger', handleAddToCartTracker);
 };
 
 const init = () => {

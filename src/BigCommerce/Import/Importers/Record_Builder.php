@@ -1,10 +1,10 @@
 <?php
 
 
-namespace BigCommerce\Api;
+namespace BigCommerce\Import\Importers;
 
 
-trait Api_Data_Sanitizer {
+abstract class Record_Builder {
 	protected function sanitize_int( $value ) {
 		if ( is_scalar( $value ) ) {
 			return intval( $value );

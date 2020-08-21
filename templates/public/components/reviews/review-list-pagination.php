@@ -3,12 +3,11 @@
  * Renders the button to load the next page of product reviews
  *
  * @var string $next_page_url
- * @var string $first_page_url
- * @version 1.1.0
+ * @version 1.0.0
  */
 ?>
 
-<?php if ( ! empty( $next_page_url ) && empty( $first_page_url ) ) { ?>
+<?php if ( ! empty( $next_page_url ) ) { ?>
 	<!-- data-js="data-js="load-items-trigger-btn" is required -->
 	<button
 			type="button"

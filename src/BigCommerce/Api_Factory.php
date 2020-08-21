@@ -91,10 +91,26 @@ class Api_Factory {
 	}
 
 	/**
+	 * @return WidgetApi
+	 * @deprecated 3.4.0 Use Api_Factory::widget()
+	 */
+	public function placement() {
+		return $this->widget();
+	}
+
+	/**
 	 * @return PricingApi
 	 */
 	public function pricing() {
 		return new PricingApi( $this->api_client );
+	}
+
+	/**
+	 * @return WidgetApi
+	 * @deprecated 3.4.0 Use Api_Factory::widget()
+	 */
+	public function themeRegions() {
+		return $this->widget();
 	}
 
 	/**
@@ -116,6 +132,14 @@ class Api_Factory {
 	 */
 	public function wishlists() {
 		return new WishlistsApi( $this->api_client );
+	}
+
+	/**
+	 * @return WidgetApi
+	 * @deprecated 3.4.0 Use Api_Factory::widget()
+	 */
+	public function widgetTemplate() {
+		return $this->widget();
 	}
 
 	/**

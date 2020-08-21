@@ -7,7 +7,6 @@ namespace BigCommerce\Container;
 use BigCommerce\Assets\Admin;
 use BigCommerce\Assets\Theme;
 use BigCommerce\Plugin;
-use BigCommerce\Taxonomies\Channel\Connections;
 use Pimple\Container;
 
 class Assets extends Provider {
@@ -82,7 +81,7 @@ class Assets extends Provider {
 		};
 
 		$container[ self::FRONTEND_CONFIG ] = function ( Container $container ) {
-			return new Theme\JS_Config( $container[ self::PATH ], new Connections() );
+			return new Theme\JS_Config( $container[ self::PATH ] );
 		};
 
 		$container[ self::FRONTEND_LOCALIZATION ] = function( Container $container ) {

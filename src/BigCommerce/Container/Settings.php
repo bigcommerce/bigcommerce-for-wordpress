@@ -35,8 +35,9 @@ use BigCommerce\Settings\Sections\Nav_Menu_Options;
 use BigCommerce\Settings\Sections\New_Account_Section;
 use BigCommerce\Settings\Sections\Next_Steps;
 use BigCommerce\Settings\Sections\Onboarding_Import_Settings;
-use BigCommerce\Settings\Sections\Reviews as Review_Settings;
+use BigCommerce\Settings\Sections\Reviews;
 use BigCommerce\Settings\Sections\Troubleshooting_Diagnostics;
+use BigCommerce\Settings\Site_Update;
 use BigCommerce\Settings\Site_URL_Sync;
 use BigCommerce\Settings\Start_Over;
 use BigCommerce\Taxonomies\Channel\Channel;
@@ -394,7 +395,7 @@ class Settings extends Provider {
 
 	private function reviews( Container $container ) {
 		$container[ self::REVIEWS_SECTION ] = function ( Container $container ) {
-			return new Review_Settings();
+			return new Reviews();
 		};
 
 		add_action( 'bigcommerce/settings/register/screen=' . Settings_Screen::NAME, $this->create_callback( 'review_settings_register', function () use ( $container ) {
@@ -630,7 +631,7 @@ class Settings extends Provider {
 			$plugin_path = plugin_dir_path( $container['plugin_file'] );
 			return new Troubleshooting_Diagnostics( $plugin_path );
 		};
-
+		
 		$container[ self::SITE_URL_SYNC ] = function ( Container $container ) {
 			return new Site_URL_Sync( $container[ Taxonomies::ROUTES ] , $container[ self::SETTINGS_SCREEN ] );
 		};
@@ -646,7 +647,7 @@ class Settings extends Provider {
 		add_action( 'wp_ajax_' . Troubleshooting_Diagnostics::AJAX_ACTION_IMPORT_ERRORS, $this->create_callback( 'diagnostics_settings_import_errors_action', function () use ( $container ) {
 			$container[ self::DIAGNOSTICS_SECTION ]->get_import_errors( $container[ Log::LOGGER ] );
 		} ), 10, 0 );
-
+		
 		add_action( 'admin_post_' . Troubleshooting_Diagnostics::SYNC_SITE_URL, $this->create_callback( 'diagnostics_settings_sync_site_url_action', function () use ( $container ) {
 			$container[ self::SITE_URL_SYNC ]->sync();
 		} ), 10, 0 );
