@@ -63,8 +63,9 @@ class Proxy_Controller extends WP_REST_Controller {
 			'/carts(\/?$)',
 			[
 				[
-					'methods'  => WP_REST_Server::CREATABLE,
-					'callback' => [ $this, 'create_cart' ],
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'create_cart' ],
+					'permission_callback' => '__return_true',
 				],
 			]
 		);
@@ -74,8 +75,9 @@ class Proxy_Controller extends WP_REST_Controller {
 			[
 				$public_args,
 				[
-					'methods'  => [ WP_REST_Server::DELETABLE, WP_REST_SERVER::CREATABLE ],
-					'callback' => [ $this, 'delete_cart' ],
+					'methods'             => [ WP_REST_Server::DELETABLE, WP_REST_SERVER::CREATABLE ],
+					'callback'            => [ $this, 'delete_cart' ],
+					'permission_callback' => '__return_true',
 				],
 			]
 		);
@@ -84,8 +86,9 @@ class Proxy_Controller extends WP_REST_Controller {
 			'/carts/(.*)/items/(.*)',
 			[
 				[
-					'methods'  => [ WP_REST_Server::DELETABLE, WP_REST_SERVER::CREATABLE ],
-					'callback' => [ $this, 'update_cart_item' ],
+					'methods'             => [ WP_REST_Server::DELETABLE, WP_REST_SERVER::CREATABLE ],
+					'callback'            => [ $this, 'update_cart_item' ],
+					'permission_callback' => '__return_true',
 				],
 			]
 		);
@@ -94,8 +97,9 @@ class Proxy_Controller extends WP_REST_Controller {
 			'/carts/(.*)/redirect_urls(\/?$)',
 			[
 				[
-					'methods'  => WP_REST_Server::CREATABLE,
-					'callback' => [ $this, 'create_redirect_url' ],
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'create_redirect_url' ],
+					'permission_callback' => '__return_true',
 				],
 			]
 		);

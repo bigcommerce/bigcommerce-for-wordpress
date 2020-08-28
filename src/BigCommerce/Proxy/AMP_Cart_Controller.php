@@ -23,8 +23,9 @@ class AMP_Cart_Controller extends Proxy_Controller {
 	 */
 	public function register_routes() {
 		$public_args = [
-			'methods'  => WP_REST_Server::READABLE,
-			'callback' => [ $this, 'get_items' ],
+			'methods'             => WP_REST_Server::READABLE,
+			'callback'            => [ $this, 'get_items' ],
+			'permission_callback' => '__return_true',
 		];
 
 		register_rest_route( $this->proxy_base, '/amp-cart/', $public_args );

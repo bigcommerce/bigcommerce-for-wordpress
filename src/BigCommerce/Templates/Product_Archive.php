@@ -8,6 +8,7 @@ use BigCommerce\Customizer;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
+use BigCommerce\Settings\Sections\Api_Credentials;
 
 class Product_Archive extends Controller {
 	const QUERY = 'query';
@@ -38,7 +39,7 @@ class Product_Archive extends Controller {
 		return [
 			self::POSTS       => $this->get_posts( $query ),
 			self::TITLE       => $this->get_title( $query ),
-			self::DESCRIPTION => $this->get_description( $query ),
+			self::DESCRIPTION => $this->get_description(),
 			self::REFINERY    => $this->get_refinery( $query ),
 			self::PAGINATION  => $this->get_pagination( $query ),
 			self::COLUMNS     => $this->options[ self::COLUMNS ],
@@ -81,8 +82,14 @@ class Product_Archive extends Controller {
 		return $title;
 	}
 
-	private function get_description( \WP_Query $query ) {
+	private function get_description() {
 		$description = get_the_archive_description();
+		$store_url   = bigcommerce_get_env( 'BIGCOMMERCE_API_URL' ) ?: get_option( Api_Credentials::OPTION_STORE_URL, '' );
+
+		preg_match( '#stores/([^\/]+)/#', untrailingslashit( $store_url ), $matches );
+		if ( ! empty( $matches[1] ) ) {
+			$description = str_replace( '%%GLOBAL_CdnStorePath%%', "https://cdn11.bigcommerce.com/s-{$matches[1]}", $description );
+		}
 
 		if ( empty( $description ) ) {
 			$description = get_option( Customizer\Sections\Product_Archive::ARCHIVE_DESCRIPTION, '' );

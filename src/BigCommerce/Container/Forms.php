@@ -71,7 +71,7 @@ class Forms extends Provider {
 		} ), 10, 1 );
 
 		$container[ self::REGISTER ] = function ( Container $container ) {
-			return new Registration_Handler();
+			return new Registration_Handler( $container[ Compatibility::SPAM_CHECKER ] );
 		};
 		add_action( 'bigcommerce/form/action=' . Registration_Handler::ACTION, $this->create_callback( 'register', function ( $submission ) use ( $container ) {
 			return $container[ self::REGISTER ]->handle_request( $submission );

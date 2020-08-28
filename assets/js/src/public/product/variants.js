@@ -10,6 +10,7 @@ import * as tools from 'utils/tools';
 import queryToJson from 'utils/data/query-to-json';
 import updateQueryVar from 'utils/data/update-query-var';
 import { trigger } from 'utils/events';
+import { NLS } from 'publicConfig/i18n';
 import { PRODUCT_MESSAGES } from '../config/wp-settings';
 import { productMessage } from '../templates/product-message';
 
@@ -67,6 +68,35 @@ const setButtonState = (button) => {
 	}
 
 	disableActionButton(button);
+};
+
+
+/**
+ * @function setInventory
+ * @description Updates inventory/out of stock message and inputs
+ */
+const setInventory = () => {
+	// update inventory message and quantity only if it's set
+	if (state.maxInventory === -1) {
+		return;
+	}
+
+	const productTitle = tools.getNodes('.bc-product__title', false, document, true)[0];
+	const qtyInput = tools.getNodes('.bc-product-form__quantity-input', false, document, true)[0];
+	let inventoryContainer = tools.getNodes('.bc-product__inventory', false, document, true)[0];
+
+	if (!inventoryContainer) {
+		inventoryContainer = document.createElement('div');
+		tools.addClass(inventoryContainer, 'bc-product__inventory');
+		productTitle.appendChild(inventoryContainer);
+	}
+
+	inventoryContainer.innerHTML = state.inventoryMessage;
+
+	// update input max
+	if (qtyInput && state.maxInventory !== -1) {
+		qtyInput.max = state.maxInventory;
+	}
 };
 
 /**
@@ -226,6 +256,7 @@ const handleSelectedVariant = (product = {}) => {
 	state.variantPrice = product.formatted_price;
 	state.variantID = product.variant_id;
 	state.sku = product.sku;
+	state.maxInventory = product.inventory;
 
 	// Case: product variant has a variant image.
 	if (product.image.url.length > 0) {
@@ -238,6 +269,7 @@ const handleSelectedVariant = (product = {}) => {
 	if ((product.inventory > 0 || product.inventory === -1) && !product.disabled) {
 		state.isValidOption = true;
 		state.variantMessage = '';
+		state.inventoryMessage = `(${product.inventory} ${NLS.inventory.in_stock})`;
 		return;
 	}
 
@@ -252,6 +284,7 @@ const handleSelectedVariant = (product = {}) => {
 	if (product.inventory === 0) {
 		state.isValidOption = false;
 		state.variantMessage = PRODUCT_MESSAGES.not_available;
+		state.inventoryMessage = NLS.inventory.out_of_stock;
 		return;
 	}
 
@@ -392,6 +425,8 @@ const handleSelections = (e, node = '') => {
 	}
 
 	state.variantMessage = '';
+	state.inventoryMessage = '';
+	state.maxInventory = '';
 	state.variantID = '';
 	state.sku = '';
 	state.variantPrice = '';
@@ -413,6 +448,7 @@ const handleSelections = (e, node = '') => {
 	setProductURLParameter();
 	setVariantIDHiddenField(formWrapper);
 	setSelectedVariantPrice(metaWrapper);
+	setInventory();
 	showHideVariantImage(null, metaWrapper);
 	setButtonState(submitButton);
 	handleAlertMessage(formWrapper);

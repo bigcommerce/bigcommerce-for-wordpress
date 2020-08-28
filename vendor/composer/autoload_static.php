@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitb8d314a87ab3cd8b41db94f7ea515e49
+class ComposerStaticInitd65d0adaea73b5740a9a7add24c74256
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -441,7 +441,9 @@ class ComposerStaticInitb8d314a87ab3cd8b41db94f7ea515e49
         'BigCommerce\\Cart\\Mini_Cart' => __DIR__ . '/../..' . '/src/BigCommerce/Cart/Mini_Cart.php',
         'BigCommerce\\Checkout\\Customer_Login' => __DIR__ . '/../..' . '/src/BigCommerce/Checkout/Customer_Login.php',
         'BigCommerce\\Checkout\\Requirements_Notice' => __DIR__ . '/../..' . '/src/BigCommerce/Checkout/Requirements_Notice.php',
+        'BigCommerce\\Compatibility\\Akismet\\Akismet' => __DIR__ . '/../..' . '/src/BigCommerce/Compatibility/Akismet/Akismet.php',
         'BigCommerce\\Compatibility\\Matomo\\Matomo' => __DIR__ . '/../..' . '/src/BigCommerce/Compatibility/Matomo/Matomo.php',
+        'BigCommerce\\Compatibility\\Spam_Checker' => __DIR__ . '/../..' . '/src/BigCommerce/Compatibility/Spam_Checker.php',
         'BigCommerce\\Compatibility\\Template_Compatibility' => __DIR__ . '/../..' . '/src/BigCommerce/Compatibility/Template_Compatibility.php',
         'BigCommerce\\Compatibility\\Themes\\Flatsome\\Flatsome' => __DIR__ . '/../..' . '/src/BigCommerce/Compatibility/Themes/Flatsome/Flatsome.php',
         'BigCommerce\\Compatibility\\Themes\\Flatsome\\Templates\\Account_Links' => __DIR__ . '/../..' . '/src/BigCommerce/Compatibility/Themes/Flatsome/Templates/Account_Links.php',
@@ -1060,10 +1062,10 @@ class ComposerStaticInitb8d314a87ab3cd8b41db94f7ea515e49
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitb8d314a87ab3cd8b41db94f7ea515e49::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitb8d314a87ab3cd8b41db94f7ea515e49::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitb8d314a87ab3cd8b41db94f7ea515e49::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitb8d314a87ab3cd8b41db94f7ea515e49::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitd65d0adaea73b5740a9a7add24c74256::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitd65d0adaea73b5740a9a7add24c74256::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitd65d0adaea73b5740a9a7add24c74256::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitd65d0adaea73b5740a9a7add24c74256::$classMap;
 
         }, null, ClassLoader::class);
     }

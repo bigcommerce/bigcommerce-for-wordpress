@@ -1,5 +1,22 @@
 # Changelog
 
+## [4.1.0]
+
+### Added
+- Added in support for variant inventories
+- Added version check to the plugin loader so that the plugin is running only if the minimum version is met
+- Integrated support for Akismet spam gateway for account sign ups
+
+### Changed
+- Updated list styles in catalog pages
+- Changed share wishlist functionality to copy wishlist link
+- Updated tax label
+- Added validation for presence of Shortcode for registered BC pages
+
+### Fixed
+- Category description is now properly rendering images uploaded in the BC admin
+
+
 ## [4.0.0]
 
 ### Added
@@ -1258,6 +1275,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.1.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.0.0...4.1.0
 [4.0.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.22.0...4.0.0
 [3.22.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.21.0...3.22.0
 [3.21.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.20.0...3.21.0

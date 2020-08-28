@@ -32,11 +32,12 @@ use BigCommerce\Accounts\Wishlists\Wishlist;
 		<?php esc_html_e( 'Yes', 'bigcommerce' ); ?>
 	<?php } ?>
 </div>
-<div class="bc-wish-list-item bc-wish-list-actions">
+<div class="bc-wish-list-item bc-wish-list-actions" data-js="bc-wish-list-actions">
 	<span class="bc-small-screen-title"><?php esc_html_e( 'Actions: ', 'bigcommerce' ); ?></span>
 	<?php if ( $is_public ) { ?>
-		<a href="<?php echo esc_url( $share_url ); ?>" class="bc-link bc-wishilist-share" data-js="bc-share-wish-list">
-			<?php esc_html_e( 'Share', 'bigcommerce' ); ?>
+		<input type="hidden" class="bc-wishlist-link-input" data-js="bc-copy-wishlist-input" value="<?php echo esc_url( $share_url ); ?>" />
+		<a class="bc-link bc-wishilist-copy" data-js="bc-copy-wishlist-url">
+			<?php esc_html_e( 'Copy link', 'bigcommerce' ); ?>
 		</a>
 	<?php } ?>
 	<?php foreach ( $actions as $action ) { ?>
