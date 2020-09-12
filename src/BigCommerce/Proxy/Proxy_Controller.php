@@ -99,6 +99,18 @@ class Proxy_Controller extends WP_REST_Controller {
 				],
 			]
 		);
+
+		// BY ABDULLAH ADEEB
+		register_rest_route(
+			$this->proxy_base,
+			'/carts/(.*)/items',
+			[
+				[
+					'methods'  => [ WP_REST_SERVER::CREATABLE ],
+					'callback' => [ $this, 'add_cart_item' ],
+				],
+			]
+		);
 	}
 
 	/**
@@ -211,6 +223,37 @@ class Proxy_Controller extends WP_REST_Controller {
 
 			$args['body'] = wp_json_encode( $body );
 		}
+
+		$response = wp_remote_request( $route, $args );
+
+		return rest_ensure_response( json_decode( wp_remote_retrieve_body( $response ), true ) );
+	}
+
+
+	/**
+	 * Add a cart line item. BY ABDULLAH ADEEB
+	 *
+	 * @param WP_REST_Request $request Request instance.
+	 * @return WP_REST_Response
+	 */
+	public function add_cart_item( $request ) {
+		$route = $this->route( $request );
+
+		$params = $request->get_body_params();
+		if ( empty( $params ) ) {
+			$params = json_decode( $request->get_body(), true );
+		}
+
+		$args = [
+			'method'  => $request->get_method(),
+			'headers' => $this->get_request_headers( $request, $route ),
+		];
+
+		// Allow the line_items JSON object to be built from HTML form inputs.
+		$body = [ 'line_items' => array($params) ];
+
+		$args['body'] = wp_json_encode( $body );
+		
 
 		$response = wp_remote_request( $route, $args );
 
