@@ -8,10 +8,21 @@ use BigCommerce\Accounts\Customer;
 use BigCommerce\Accounts\Roles\Customer as Customer_Role;
 use BigCommerce\Accounts\User_Profile_Settings;
 use BigCommerce\Pages\Account_Page;
+use BigCommerce\Compatibility\Spam_Checker;
+use BigCommerce\Settings\Sections\Account_Settings;
 
 class Registration_Handler implements Form_Handler {
 
 	const ACTION = 'register-account';
+
+	/**
+	 * @var Spam_Checker
+	 */
+	private $spam_checker;
+
+	public function __construct( Spam_Checker $spam_checker ) {
+		$this->spam_checker = $spam_checker;
+	}
 
 	public function handle_request( $submission ) {
 
@@ -197,9 +208,26 @@ class Registration_Handler implements Form_Handler {
 			$errors->add( 'country', __( 'Country is required.', 'bigcommerce' ) );
 		}
 
+		if ( ! count( $errors->get_error_codes() ) && $this->is_spam( $submission[ 'bc-register' ] ) ) {
+			$errors->add( 'is_spam', __( 'This user registration was flagged as spam. Please try registering again with different information.', 'bigcommerce' ) );
+		}
+
 		$errors = apply_filters( 'bigcommerce/form/registration/errors', $errors, $submission );
 
 		return $errors;
+	}
+
+	private function is_spam( $submission ) {
+		$spam_check_enabled = (bool) get_option( Account_Settings::REGISTRATION_SPAM_CHECK );
+		if ( ! $spam_check_enabled ) {
+			return false;
+		}
+
+		return $this->spam_checker->is_spam( [
+			'first_name' => $submission['first_name'],
+			'last_name'  => $submission['last_name'],
+			'email'      => $submission['email'],
+		] );
 	}
 
 	private function validate_password( $password ) {

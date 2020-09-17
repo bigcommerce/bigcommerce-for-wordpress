@@ -41,6 +41,23 @@ abstract class Required_Page {
 	public function get_content() {
 		return '';
 	}
+	
+	/**
+	 * Add page shortcode to the content if missing
+	 *
+	 * @param int     $post_id Post id
+	 * @param string  $content Post content
+	 * @return string The content of the post
+	 */
+	public function filter_content( $post_id, $content ) {
+		if ( $this->get_post_id() === $post_id ) {
+			$shortcode = $this->get_content();
+			if ( strpos( $content, $shortcode ) === false ) {
+				return $content . $shortcode;
+			}
+		}
+		return $content;
+	}
 
 	/**
 	 * @return string The label to show on this post in list tables

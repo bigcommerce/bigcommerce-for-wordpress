@@ -7,9 +7,9 @@ As with any WordPress plugin, upload the plugin ZIP file to the
 
 ### System Requirements
 
-* PHP: 5.6+ (7.1+ recommended)
+* PHP: 5.6+ (7.2+ recommended)
 * MySQL: 5.5+ (5.6+ recommended)
-* WordPress: 4.8+
+* WordPress: 5.2+
 * SSL
 * The PHP intl extension will enable better currency formatting
 

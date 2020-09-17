@@ -36,6 +36,10 @@ class Shipping_Returns_Page extends Required_Page {
 		return implode( "\n\n", $content );
 	}
 
+	public function filter_content( $post_id, $content ) {
+		return $content;
+	}
+
 	public function get_post_state_label() {
 		return __( 'Shipping & Returns Page', 'bigcommerce' );
 	}

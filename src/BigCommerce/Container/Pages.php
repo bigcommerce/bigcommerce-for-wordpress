@@ -139,5 +139,15 @@ class Pages extends Provider {
 		add_action( 'bigcommerce/settings/accounts/after_page_field/page=' . Registration_Page::NAME, $this->create_callback( 'enable_registration_notice', function () use ( $container ) {
 			$container[ self::REGISTRATION_PAGE ]->enable_registration_notice();
 		} ), 10, 0 );
+
+		add_action( 'the_content', $this->create_callback( 'page_content', function ( $content ) use ( $container ) {
+			if ( is_page() && in_the_loop() && is_main_query() ) {
+				foreach ( $container[ self::REQUIRED_PAGES ] as $page ) {
+					/** @var Required_Page $page */
+					$content = $page->filter_content( get_the_ID(), $content );
+				}
+			}
+			return $content;
+		} ) );
 	}
 }

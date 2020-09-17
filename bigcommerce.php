@@ -3,12 +3,31 @@
 Plugin Name:  BigCommerce for WordPress
 Description:  Scale your ecommerce business with WordPress on the front-end and BigCommerce on the back end. Free up server resources from things like catalog management, processing payments, and managing fulfillment logistics.
 Author:       BigCommerce
-Version:      4.0.0
+Version:      4.1.0
 Author URI:   https://www.bigcommerce.com/wordpress
 Requires PHP: 7.2.0
 Text Domain:  bigcommerce
 License:      GPLv2 or later
 */
+
+define( 'BIGCOMMERCE_PHP_MINIMUM_VERSION', '7.0' );
+define( 'BIGCOMMERCE_PHP_OPTIMAL_VERSION', '7.2' );
+define( 'BIGCOMMERCE_WP_MINIMUM_VERSION', '4.8' );
+define( 'BIGCOMMERCE_WP_OPTIMAL_VERSION', '5.2' );
+
+if ( version_compare( PHP_VERSION, BIGCOMMERCE_PHP_MINIMUM_VERSION, '<' ) || version_compare( get_bloginfo( 'version' ), BIGCOMMERCE_WP_MINIMUM_VERSION, '<' ) ) {
+	add_action( 'admin_notices', function() {
+		$message = sprintf( esc_html__( 'BigCommerce requires PHP version %s+ and WP version %s+, plugin is currently NOT RUNNING.', 'bigcommerce' ), BIGCOMMERCE_PHP_OPTIMAL_VERSION, BIGCOMMERCE_WP_OPTIMAL_VERSION );
+		echo wp_kses_post( sprintf( '<div class="error">%s</div>', wpautop( $message ) ) );
+	} );
+
+	return;
+} elseif ( version_compare( PHP_VERSION, BIGCOMMERCE_PHP_OPTIMAL_VERSION, '<' ) || version_compare( get_bloginfo( 'version' ), BIGCOMMERCE_WP_OPTIMAL_VERSION, '<' ) ) {
+	add_action( 'admin_notices', function() {
+		$message = sprintf( esc_html__( 'BigCommerce requires PHP version %s+ and WP version %s+', 'bigcommerce' ), BIGCOMMERCE_PHP_OPTIMAL_VERSION, BIGCOMMERCE_WP_OPTIMAL_VERSION );
+		echo wp_kses_post( sprintf( '<div class="notice">%s</div>', wpautop( $message ) ) );
+	} );
+}
 
 if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	require_once __DIR__ . '/vendor/autoload.php';
@@ -63,4 +82,3 @@ function bigcommerce_get_env( $key ) {
 
 	return $value;
 }
-

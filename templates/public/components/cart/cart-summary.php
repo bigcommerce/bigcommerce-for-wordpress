@@ -19,7 +19,7 @@
 <?php if ( $cart['tax_amount']['raw'] > 0 ) { ?>
 	<!-- class="bc-cart-tax" is required -->
 	<div class="bc-cart-tax">
-		<span class="bc-cart-tax__label"><?php echo esc_html( $cart['tax_included'] ? __( 'Tax Included in Subtotal: ', 'bigcommerce' ) : __( 'Tax: ', 'bigcommerce' ) ); ?></span>
+		<span class="bc-cart-tax__label"><?php echo esc_html( $cart['tax_included'] ? __( 'Estimated Tax Included in Subtotal: ', 'bigcommerce' ) : __( 'Estimated Taxes: ', 'bigcommerce' ) ); ?></span>
 		<!-- class="bc-cart-tax__amount" is required -->
 		<span class="bc-cart-tax__amount"><?php echo esc_html( $cart['tax_amount']['formatted'] ); ?></span>
 	</div>

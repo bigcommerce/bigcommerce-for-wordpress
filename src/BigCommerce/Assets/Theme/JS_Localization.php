@@ -45,7 +45,13 @@ class JS_Localization {
 			'pricing'    => [
 				'loading_prices' => __( 'Retrieving current pricing data...', 'bigcommerce' ),
 			],
+			'inventory'    => [
+ 				'in_stock' => __( 'in Stock', 'bigcommerce' ),
+ 				'out_of_stock' => __( 'Out of Stock', 'bigcommerce' ),
+			],
 			'wish_lists' => [
+				'copied' => __( 'Copied!', 'bigcommerce' ),
+				'copy_link' => __( 'Copy link', 'bigcommerce' ),
 				'copy_success' => __( 'Wish List URL copied to clipboard.', 'bigcommerce' ),
 			],
 		];

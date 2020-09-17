@@ -3,10 +3,10 @@
 
 namespace BigCommerce\Container;
 
-
 use BigCommerce\Compatibility\Template_Compatibility;
 use BigCommerce\Compatibility\Themes\Theme_Factory;
 use BigCommerce\Compatibility\Matomo\Matomo;
+use BigCommerce\Compatibility\Akismet\Akismet;
 use BigCommerce\Compatibility\WooCommerce\Facade;
 use BigCommerce\Compatibility\WooCommerce\Cart as WC_Cart;
 use BigCommerce\Pages\Account_Page;
@@ -19,6 +19,7 @@ class Compatibility extends Provider {
 	const THEME         = 'theme_compat.theme';
 	const WC_FACADE     = 'woo_compat.wc_facade';
 	const MATOMO        = 'compatibility.matomo';
+	const SPAM_CHECKER  = 'compatibility.spam_checker';
 
 	public function register( Container $container ) {
 		$container[ self::TEMPLATES ] = function ( Container $container ) {
@@ -42,6 +43,10 @@ class Compatibility extends Provider {
 		$container[ self::WC_FACADE ] = function ( Container $container ) {
 			$wc_cart = new WC_Cart( $container[ Api::FACTORY ]->cart() );
 			return new Facade( $wc_cart );
+		};
+		
+		$container[ self::SPAM_CHECKER ] = function ( Container $container ) {
+			return new Akismet();
 		};
 
 		add_filter( 'page_template', $this->create_callback( 'page_template_override', function ( $template, $type, $templates ) use ( $container ) {
