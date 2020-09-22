@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.2.0]
+
+### Added
+- Added Checkout URL documentation link in Settings
+
+### Changed
+- Updated product quick view modal to work after ajax refresh
+
+
 ## [4.1.0]
 
 ### Added
@@ -1275,6 +1284,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.2.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.1.0...4.2.0
 [4.1.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.0.0...4.1.0
 [4.0.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.22.0...4.0.0
 [3.22.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.21.0...3.22.0

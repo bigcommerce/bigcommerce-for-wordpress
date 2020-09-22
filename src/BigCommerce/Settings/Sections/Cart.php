@@ -34,9 +34,7 @@ class Cart extends Settings_Section {
 		add_settings_section(
 			self::NAME,
 			__( 'Cart & Checkout', 'bigcommerce' ),
-			function ( $section ) {
-				do_action( 'bigcommerce/settings/render/cart', $section );
-			},
+			[ $this, 'render_section' ],
 			Settings_Screen::NAME
 		);
 
@@ -119,6 +117,24 @@ class Cart extends Settings_Section {
 				'label_for' => 'field-' . $this->checkout_page->get_option_name(),
 			]
 		);
+	}
+
+	public function render_section( $section ) {
+		printf( '<p class="description">%s</p>', sprintf(
+			esc_html( __( 'Third-party cookies are going to become a thing of the past, as more and more browsers disable them permanently. Even if your site isn’t being directly impacted now, it will be at some point, so now is the time to take action. - %sLearn More%s', 'bigcommerce' ) ),
+			sprintf( '<a target="__blank" href="%s">', esc_url( 'https://support.bigcommerce.com/s/blog-article/aAn4O000000CdEcSAK/thirdparty-cookies-and-bigcommerce-for-wordpress' ) ),
+			'</a>'
+		) );
+
+		do_action( 'bigcommerce/settings/render/cart', $section );
+	}
+
+	public function render_checkout_docs_url() {
+		printf( '<p class="description">%s</p>', sprintf(
+			esc_html( __( 'Third-party cookies are going to become a thing of the past, as more and more browsers disable them permanently. Even if your site isn’t being directly impacted now, it will be at some point, so now is the time to take action. %s[Learn More]%s', 'bigcommerce' ) ),
+			sprintf( '<a target="__blank" href="%s">', esc_url( 'https://support.bigcommerce.com/s/blog-article/aAn4O000000CdEcSAK/thirdparty-cookies-and-bigcommerce-for-wordpress' ) ),
+			'</a>'
+		) );
 	}
 
 	public function render_enable_cart_field() {
