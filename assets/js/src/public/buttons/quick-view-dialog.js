@@ -5,13 +5,14 @@
 
 import A11yDialog from 'mt-a11y-dialog';
 import _ from 'lodash';
+import delegate from 'delegate';
 import { trigger } from 'utils/events';
 import * as tools from '../../utils/tools';
 import gallery from '../gallery/productGallery';
 import videos from '../gallery/productVideos';
 import variants from '../product/variants';
 
-const container = tools.getNodes('bc-product-loop-card');
+const container = tools.getNodes('.bc-product-grid', false, document, true)[0];
 
 const instances = {
 	dialogs: {},
@@ -34,31 +35,38 @@ const getOptions = dialogID => ({
 	closeButtonClasses: 'bc-product-quick-view__close-button bc-icon icon-bc-cross',
 });
 
-const initDialogs = () => {
-	tools.getNodes('[data-js="bc-product-loop-card"]:not(.initialized)', true, document, true).forEach((dialog) => {
-		const dialogID = _.uniqueId('bc-product-quick-view-dialog-');
-		const dialogTrigger = tools.getNodes('bc-product-quick-view-dialog-trigger', false, dialog)[0];
-		const target = tools.getNodes('[data-quick-view-script]', false, dialog, true)[0];
+const initSingleDialog = (e) => {
+	const dialog = e.delegateTarget;
+	const dialogID = _.uniqueId('bc-product-quick-view-dialog-');
+	const dialogTrigger = tools.getNodes('bc-product-quick-view-dialog-trigger', false, dialog)[0];
+	const target = tools.getNodes('[data-quick-view-script]', false, dialog, true)[0];
 
-		if (!dialogTrigger || !target) {
-			return;
-		}
+	if (!dialogTrigger || !target) {
+		return;
+	}
 
-		dialog.classList.add('initialized');
-		dialogTrigger.setAttribute('data-content', dialogID);
-		dialogTrigger.setAttribute('data-trigger', dialogID);
-		target.setAttribute('data-js', dialogID);
-		instances.dialogs[dialogID] = new A11yDialog(getOptions(dialogID));
+	dialog.classList.add('initialized');
+	dialogTrigger.setAttribute('data-content', dialogID);
+	dialogTrigger.setAttribute('data-trigger', dialogID);
+	target.setAttribute('data-js', dialogID);
+	instances.dialogs[dialogID] = new A11yDialog(getOptions(dialogID));
 
-		instances.dialogs[dialogID].on('render', () => {
-			_.delay(() => gallery(), state.delay);
-			_.delay(() => videos(), state.delay);
-			_.delay(() => variants(dialog), state.delay);
-			_.delay(() => trigger({ event: 'bigcommerce/get_pricing', data: { quickView: true }, native: false }), state.delay);
-		});
-
-		instances.dialogs[dialogID].on('hide', () => trigger({ event: 'bigcommerce/gallery_slide_changed', data: { quickView: instances.dialogs[dialogID] }, native: false }));
+	instances.dialogs[dialogID].on('render', () => {
+		_.delay(() => gallery(), state.delay);
+		_.delay(() => videos(), state.delay);
+		_.delay(() => variants(dialog), state.delay);
+		_.delay(() => trigger({ event: 'bigcommerce/get_pricing', data: { quickView: true }, native: false }), state.delay);
 	});
+
+	instances.dialogs[dialogID].on('hide', () => trigger({ event: 'bigcommerce/gallery_slide_changed', data: { quickView: instances.dialogs[dialogID] }, native: false }));
+
+	if (tools.closest(e.target, '[data-js="bc-product-quick-view-dialog-trigger"]')) {
+		instances.dialogs[dialogID].show();
+	}
+};
+
+const bindEvents = () => {
+	delegate(container, '[data-js="bc-product-loop-card"]:not(.initialized)', 'click', initSingleDialog);
 };
 
 const init = () => {
@@ -66,7 +74,7 @@ const init = () => {
 		return;
 	}
 
-	initDialogs();
+	bindEvents();
 };
 
 export default init;
