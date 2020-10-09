@@ -50,6 +50,7 @@ class Setup_Status {
 			'payment_methods'  => $this->get_payment_methods_count(),
 			'ssl'              => $ssl_status,
 			'product_count'    => $this->get_product_count(),
+			'domain'           => $this->get_domain(),
 		];
 
 		set_transient( self::STATUS_CACHE, $status, self::STATUS_CACHE_TTL );
@@ -123,6 +124,10 @@ class Setup_Status {
 	private function get_store_sitewidehttps_enabled() {
 		return $this->factory->store()->get_sitewidehttps_enabled();
 	}
+	
+	private function get_domain() {
+		return $this->factory->store()->get_domain();
+	}
 
 	private function get_product_count() {
 		$api = $this->factory->catalog();
@@ -150,7 +155,10 @@ class Setup_Status {
 	public function get_payment_configuration_url() {
 		return 'https://login.bigcommerce.com/deep-links/manage/settings/payment';
 	}
-
+	
+	public function get_checkout_setup_documentation_url() {
+		return 'https://support.bigcommerce.com/s/blog-article/aAn4O000000CdEcSAK/thirdparty-cookies-and-bigcommerce-for-wordpress';
+	}
 
 	public function get_required_steps() {
 		$status = $this->get_current_status();
@@ -192,6 +200,17 @@ class Setup_Status {
 			];
 		}
 
+		$is_subdomain = isset( $status['domain'] ) && strpos( $status['domain'], parse_url( get_home_url(), PHP_URL_HOST ) ) !== false;
+		
+		if ( ! $is_subdomain ) {
+			$steps['checkout_url'] = [
+				'heading' => __( 'Checkout URL', 'bigcommerce' ),
+				'url'     => $this->get_checkout_setup_documentation_url(),
+				'label'   => __( 'Learn More', 'bigcommerce' ),
+				'icon'    => 'store-front',
+			];
+		}
+			
 		/**
 		 * Filter the array of next steps required for setting up the
 		 * BigCommerce store.

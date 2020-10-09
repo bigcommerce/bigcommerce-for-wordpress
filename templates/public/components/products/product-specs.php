@@ -11,7 +11,7 @@
 			<?php foreach ( $specs as $key => $value ) { ?>
 				<li class="bc-product__spec">
 					<span class="bc-product__spec-title"><?php echo esc_html( $key ); ?></span>
-					<span class="bc-product__spec-value"><?php echo esc_html( $value ); ?></span>
+					<span class="bc-product__spec-value"><?php echo wp_kses( $value, $allowed_html ); ?></span>
 				</li>
 			<?php } ?>
 		</ul>

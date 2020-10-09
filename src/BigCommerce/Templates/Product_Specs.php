@@ -8,8 +8,9 @@ use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Settings\Sections\Units;
 
 class Product_Specs extends Controller {
-	const PRODUCT = 'product';
-	const SPECS   = 'specs';
+	const PRODUCT      = 'product';
+	const SPECS        = 'specs';
+	const ALLOWED_HTML = 'allowed_html';
 
 	protected $template = 'components/products/product-specs.php';
 
@@ -26,8 +27,9 @@ class Product_Specs extends Controller {
 		$product = $this->options[ self::PRODUCT ];
 
 		return [
-			self::PRODUCT => $product,
-			self::SPECS   => $this->get_specs( $product ),
+			self::PRODUCT      => $product,
+			self::SPECS        => $this->get_specs( $product ),
+			self::ALLOWED_HTML => $this->get_allowed_html(),
 		];
 	}
 
@@ -59,8 +61,18 @@ class Product_Specs extends Controller {
 			$specs[ $label ] = $field[ 'value' ];
 		}
 
-
 		return apply_filters( 'bigcommerce/product/specs', $specs, $product );
+	}
+
+	protected function get_allowed_html() {
+		return [
+			'img' => [
+				'src'    => [],
+				'alt'    => [],
+				'width'  => [],
+				'height' => [],
+			],
+		];
 	}
 
 }
