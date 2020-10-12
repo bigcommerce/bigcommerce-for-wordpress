@@ -121,6 +121,10 @@ class Product_Builder {
 			// presume that there are no modifiers
 		}
 
+		if ( ! $this->product->getIsVisible() ) {
+			return 'draft';
+		}
+
 		$state = $this->listing->getState();
 		switch ( $state ) {
 			case 'active':

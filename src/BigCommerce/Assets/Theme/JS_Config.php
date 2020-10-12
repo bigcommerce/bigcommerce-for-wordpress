@@ -46,12 +46,16 @@ class JS_Config {
 	}
 
 	private function get_current_channel_data() {
-		$current_channel = $this->connections->current();
-		if ( $current_channel ) {
-			return [
-				'id'   => get_term_meta( $current_channel->term_id, Channel::CHANNEL_ID, true ),
-				'name' => $current_channel->name,
-			];
+		try {
+			$current_channel = $this->connections->current();
+			if ( $current_channel ) {
+				return [
+					'id'   => get_term_meta( $current_channel->term_id, Channel::CHANNEL_ID, true ),
+					'name' => $current_channel->name,
+				];
+			}
+		} catch (\Exception $e) {
+			
 		}
 
 		return false;
