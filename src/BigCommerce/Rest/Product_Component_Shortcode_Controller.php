@@ -24,10 +24,18 @@ class Product_Component_Shortcode_Controller extends Rest_Controller {
 	public function get_rendered_item_params() {
 		$params = [];
 		foreach ( Shortcodes\Product_Components::default_attributes() as $key => $default ) {
-			$params[ $key ] = [
-				'type'    => is_int( $default ) ? 'integer' : 'string',
-				'default' => $default,
-			];
+			if ( is_int( $default ) ) {
+				$params[ $key ] = [
+					'type'              => 'integer',
+					'default'           => $default,
+					'sanitize_callback' => 'absint',
+				];
+			} else {
+				$params[ $key ] = [
+					'type'    => 'string',
+					'default' => $default,
+				];
+			}
 		}
 
 		return $params;

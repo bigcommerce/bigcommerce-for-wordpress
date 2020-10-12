@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.3.0]
+
+### Added
+- Added required additional onboarding step for setting a Checkout URL
+- Allow img tag in product custom fields
+
+### Fixed
+- Fixed add new product component block error
+- Fixed HTML in Settings helptext
+- Visible on storefront BC setting not reflected in WP
+- Fixed front-end exception if channel is not set
+
+
 ## [4.2.0]
 
 ### Added
@@ -1284,6 +1297,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.3.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.2.0...4.3.0
 [4.2.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.1.0...4.2.0
 [4.1.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.0.0...4.1.0
 [4.0.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/3.22.0...4.0.0

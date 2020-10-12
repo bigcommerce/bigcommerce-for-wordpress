@@ -97,4 +97,12 @@ class Store_Api extends v2ApiAdapter {
 			return false;
 		}
 	}
+	
+	public function get_domain() {
+		try {
+			return $this->getResource('/store')->domain;
+		} catch ( \Exception $e ) {
+			return false;
+		}
+	}
 }

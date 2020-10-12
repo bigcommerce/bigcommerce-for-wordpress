@@ -35,8 +35,10 @@ class Registration_Page extends Required_Page {
 		printf(
 			'<p class="description">%s</p>',
 			sprintf(
-				esc_html( __( 'To enable this page feature, please go to <a href="%s">General Settings</a> and check the box by "Anyone can register"', 'bigcommerce' ) ),
-				esc_url( admin_url( 'options-general.php' ) )
+				esc_html( __( 'To enable this page feature, please go to %sGeneral Settings%s and check the box by "Anyone can register"', 'bigcommerce' ) ),
+				sprintf( '<a href="%s">', esc_url( admin_url( 'options-general.php' ) ) ),
+				'</a>'
+				
 			)
 		);
 	}
