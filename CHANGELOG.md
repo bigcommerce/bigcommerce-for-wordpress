@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.3.1]
+
+### Fixed
+- Fixed product duplication on import and single product front-end visibility when default customer group is not set in BC settings
+- Fixed an issue with Quick View buttons/modals not triggering their respective Quick View dialog when multiple product 
+  grids are on the same page.
+
+
 ## [4.3.0]
 
 ### Added
@@ -1297,6 +1305,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.3.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.3.0...4.3.1
 [4.3.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.2.0...4.3.0
 [4.2.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.1.0...4.2.0
 [4.1.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.0.0...4.1.0

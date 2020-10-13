@@ -12,7 +12,7 @@ import gallery from '../gallery/productGallery';
 import videos from '../gallery/productVideos';
 import variants from '../product/variants';
 
-const container = tools.getNodes('.bc-product-grid', false, document, true)[0];
+const hasCards = tools.getNodes('bc-product-loop-card').length;
 
 const instances = {
 	dialogs: {},
@@ -66,11 +66,11 @@ const initSingleDialog = (e) => {
 };
 
 const bindEvents = () => {
-	delegate(container, '[data-js="bc-product-loop-card"]:not(.initialized)', 'click', initSingleDialog);
+	delegate(document.body, '[data-js="bc-product-loop-card"]:not(.initialized)', 'click', initSingleDialog);
 };
 
 const init = () => {
-	if (!container) {
+	if (!hasCards) {
 		return;
 	}
 
