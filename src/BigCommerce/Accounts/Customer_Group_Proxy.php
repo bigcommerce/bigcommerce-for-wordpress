@@ -39,6 +39,10 @@ class Customer_Group_Proxy {
 	}
 
 	private function fetch_from_api( $group_id ) {
+		if ( empty( $group_id ) ) {
+			return false;
+		}
+
 		$response = Client::getResource( sprintf( '/customer_groups/%d', $group_id ) );
 		if ( ! $response ) {
 			return false;
