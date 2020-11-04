@@ -48,13 +48,16 @@ class Refinery extends Controller {
 		];
 	}
 
-
 	/**
 	 * @param \WP_Query $query
 	 *
 	 * @return string
 	 */
 	private function get_search( \WP_Query $query ) {
+		if ( ! $this->is_search_enabled() ) {
+			return '';
+		}
+
 		$search    = $query->is_search() && isset( $query->query['s'] ) ? stripslashes( $query->query['s'] ) : '';
 		$component = Search_Box::factory( [
 			Search_Box::NAME           => 's',
@@ -63,6 +66,24 @@ class Refinery extends Controller {
 		] );
 
 		return $component->render();
+	}
+
+	/**
+	 * @return string[]
+	 */
+	protected function get_wrapper_classes() {
+		$classes = parent::get_wrapper_classes();
+		if ( ! $this->is_search_enabled() ) {
+			$classes[] = 'bc-refinery--no-search';
+		}
+		return $classes;
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function is_search_enabled() {
+		return get_option( \BigCommerce\Customizer\Sections\Product_Archive::SEARCH_FIELD, 'yes' ) !== 'no';
 	}
 
 	/**

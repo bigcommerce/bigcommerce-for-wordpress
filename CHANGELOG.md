@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.4.0]
+
+### Added
+- Added a new customizer option to hide search bar from product archive
+- Added ability to embed iframe in Product description
+- Added option to never sync products
+- Added new sort options on Product Archive: by SKU and by Inventory Count
+
+
 ## [4.3.1]
 
 ### Fixed
@@ -1305,6 +1314,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.4.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.3.1...4.4.0
 [4.3.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.3.0...4.3.1
 [4.3.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.2.0...4.3.0
 [4.2.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.1.0...4.2.0

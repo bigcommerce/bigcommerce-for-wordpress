@@ -91,7 +91,9 @@ class Product_Builder {
 	}
 
 	private function sanitize_content( $content ) {
-		return wp_kses_post( $content );
+		$content = html_entity_decode( $content );
+
+		return wp_kses( $content, 'bigcommerce/product_description' );
 	}
 
 	private function get_post_slug() {
@@ -389,6 +391,7 @@ class Product_Builder {
 		$meta[ Product::IMPORTER_VERSION_META_KEY ] = Import_Strategy::VERSION;
 		$meta[ Product::BIGCOMMERCE_ID ]            = $this->sanitize_int( $this->product['id'] );
 		$meta[ Product::SKU ]                       = $this->sanitize_string( $this->product['sku'] );
+		$meta[ Product::SKU_NORMALIZED ]            = $this->normalize_sku( $this->product['sku'] );
 		$meta[ Product::RATING_META_KEY ]           = $this->get_avg_rating();
 		$meta[ Product::REVIEW_COUNT_META_KEY ]     = $this->sanitize_int( $this->product[ 'reviews_rating_sum' ] );
 		$meta[ Product::RATING_SUM_META_KEY ]       = $this->sanitize_int( $this->product[ 'reviews_count' ] );
@@ -399,6 +402,58 @@ class Product_Builder {
 		$meta[ Product::DATA_HASH_META_KEY ]        = self::hash( $this->product, $this->listing );
 
 		return $meta;
+	}
+
+	private function normalize_sku( $sku ) {
+		$num_of_characters = apply_filters( 'bigcommerce/sku/normalized/segment/num_of_characters', 10 );
+		if ( empty( $sku ) ) {
+			return apply_filters( 'bigcommerce/sku/normalized/empty', str_repeat( 'z', $num_of_characters ) );
+		}
+
+		return apply_filters( 'bigcommerce/sku/normalized', $this->normalize_sku_segments( $this->segment_sku( $sku ), $num_of_characters ), $sku );
+	}
+
+	private function segment_sku( $sku ) {
+		$sku = preg_replace( "/[^A-Za-z0-9 ]/", '', $sku );
+
+		// Group characters by type
+		$previous_type = 'alpha';
+		$segments = [[]];
+		foreach ( str_split( $sku ) as $char ) {
+			end( $segments );
+			$key = key( $segments );
+
+			$current_type = 'num';
+
+			if ( ctype_alpha( $char ) ) {
+				$current_type = 'alpha';
+			}
+
+			if ( $current_type !== $previous_type ) {
+				$key++;
+				$segments[ $key ] = [];
+			}
+			$segments[ $key ][] = $char;
+
+			$previous_type = $current_type;
+		}
+
+		// Flatten segments
+		return array_map( function( $segment ) {
+			return implode( '', $segment );
+		}, $segments );
+	}
+
+	private function normalize_sku_segments( $segments, $num_of_characters ) {
+		$segments = array_map( function( $segment ) use ( $num_of_characters ) {
+			$pad_type = STR_PAD_LEFT;
+			if ( ctype_alpha( $segment[0] ) ) {
+				$pad_type = STR_PAD_RIGHT;
+			}
+			return str_pad( $segment, $num_of_characters, '0', $pad_type );
+		}, $segments );
+
+		return implode( '-', $segments );
 	}
 
 	private function get_avg_rating() {

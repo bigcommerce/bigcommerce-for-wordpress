@@ -13,6 +13,12 @@ class Cron_Scheduler {
 	 * @return void
 	 */
 	public function schedule_next_import() {
+		$frequency = get_option( Import::OPTION_FREQUENCY, Import::DEFAULT_FREQUENCY );
+		if ( $frequency === Import::FREQUENCY_NEVER ) {
+			wp_unschedule_hook( Cron_Runner::START_CRON );
+			return;
+		}
+
 		$status   = new Status();
 		$previous = $status->previous_status();
 
@@ -24,8 +30,8 @@ class Cron_Scheduler {
 			return;
 		}
 
-		$last      = (int) $previous[ 'timestamp' ];
-		$frequency = get_option( Import::OPTION_FREQUENCY, Import::DEFAULT_FREQUENCY );
+		$last = (int) $previous[ 'timestamp' ];
+		
 		switch ( $frequency ) {
 			case Import::FREQUENCY_HOURLY:
 				$offset = HOUR_IN_SECONDS;

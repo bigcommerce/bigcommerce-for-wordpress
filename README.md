@@ -7,7 +7,7 @@ As with any WordPress plugin, upload the plugin ZIP file to the
 
 ### System Requirements
 
-* PHP: 5.6+ (7.2+ recommended)
+* PHP: 7.2+
 * MySQL: 5.5+ (5.6+ recommended)
 * WordPress: 5.2+
 * SSL

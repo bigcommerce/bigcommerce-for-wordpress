@@ -23,6 +23,7 @@ class Import extends Settings_Section {
 	const FREQUENCY_DAILY   = 'daily';
 	const FREQUENCY_WEEKLY  = 'weekly';
 	const FREQUENCY_MONTHLY = 'monthly';
+	const FREQUENCY_NEVER   = 'never';
 
 	const DEFAULT_FREQUENCY = self::FREQUENCY_FIVE;
 
@@ -168,6 +169,7 @@ class Import extends Settings_Section {
 			self::FREQUENCY_DAILY   => __( 'Day', 'bigcommerce' ),
 			self::FREQUENCY_WEEKLY  => __( 'Week', 'bigcommerce' ),
 			self::FREQUENCY_MONTHLY => __( 'Month', 'bigcommerce' ),
+			self::FREQUENCY_NEVER   => __( 'Never', 'bigcommerce' ),
 		];
 
 		$select = sprintf( '<select id="field-%s" name="%s" class="regular-text bc-field-choices">', esc_attr( self::OPTION_FREQUENCY ), esc_attr( self::OPTION_FREQUENCY ) );
