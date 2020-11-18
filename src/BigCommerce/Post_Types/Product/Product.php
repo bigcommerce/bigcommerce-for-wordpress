@@ -28,6 +28,7 @@ class Product {
 	const BIGCOMMERCE_ID            = 'bigcommerce_id';
 	const LISTING_ID                = 'bigcommerce_listing_id';
 	const SKU                       = 'bigcommerce_sku';
+	const SKU_NORMALIZED            = 'bigcommerce_sku_normalized';
 	const SOURCE_DATA_META_KEY      = 'bigcommerce_source_data';
 	const LISTING_DATA_META_KEY     = 'bigcommerce_listing_data';
 	const MODIFIER_DATA_META_KEY    = 'bigcommerce_modifier_data';

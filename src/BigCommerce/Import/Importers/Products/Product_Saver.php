@@ -97,7 +97,9 @@ abstract class Product_Saver implements Import_Strategy {
 	 */
 	protected function save_wp_post( Product_Builder $builder ) {
 		$postarr = $this->get_post_array( $builder );
+		kses_remove_filters();
 		wp_update_post( $postarr );
+		kses_init();
 	}
 
 	/**

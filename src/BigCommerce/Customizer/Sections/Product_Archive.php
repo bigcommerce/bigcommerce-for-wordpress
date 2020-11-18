@@ -20,14 +20,16 @@ class Product_Archive {
 	const CATEGORY_SLUG = 'bigcommerce_category_archive_slug';
 	const BRAND_SLUG    = 'bigcommerce_brand_archive_slug';
 
-	const SORT_FEATURED   = 'featured';
-	const SORT_DATE       = 'date';
-	const SORT_SALES      = 'sales';
-	const SORT_TITLE_ASC  = 'title_asc';
-	const SORT_TITLE_DESC = 'title_desc';
-	const SORT_REVIEWS    = 'reviews';
-	const SORT_PRICE_ASC  = 'price_asc';
-	const SORT_PRICE_DESC = 'price_desc';
+	const SORT_FEATURED        = 'featured';
+	const SORT_DATE            = 'date';
+	const SORT_SALES           = 'sales';
+	const SORT_TITLE_ASC       = 'title_asc';
+	const SORT_TITLE_DESC      = 'title_desc';
+	const SORT_REVIEWS         = 'reviews';
+	const SORT_PRICE_ASC       = 'price_asc';
+	const SORT_PRICE_DESC      = 'price_desc';
+	const SORT_INVENTORY_COUNT = 'inventory_count';
+	const SORT_SKU             = 'sku';
 
 	const FILTER_CATEGORY  = Product_Category::NAME;
 	const FILTER_BRAND     = Brand::NAME;
@@ -35,6 +37,7 @@ class Product_Archive {
 	const PER_PAGE         = 'bigcommerce_products_per_page';
 	const GRID_COLUMNS     = 'bigcommerce_catalog_grid_columns';
 	const QUICK_VIEW       = 'bigcommerce_enable_quick_view';
+	const SEARCH_FIELD     = 'bigcommerce_catalog_enable_search_field';
 
 	/**
 	 * @param \WP_Customize_Manager $wp_customize
@@ -57,6 +60,7 @@ class Product_Archive {
 		$this->columns( $wp_customize );
 		$this->per_page( $wp_customize );
 		$this->quick_view( $wp_customize );
+		$this->search_field( $wp_customize );
 	}
 
 	private function title( \WP_Customize_Manager $wp_customize ) {
@@ -141,14 +145,16 @@ class Product_Archive {
 
 	public static function sort_choices() {
 		$choices = [
-			self::SORT_FEATURED   => __( 'Featured', 'bigcommerce' ),
-			self::SORT_DATE       => __( 'Newest', 'bigcommerce' ),
-			self::SORT_SALES      => __( 'Best Selling', 'bigcommerce' ),
-			self::SORT_TITLE_ASC  => __( 'Product Title A–Z', 'bigcommerce' ),
-			self::SORT_TITLE_DESC => __( 'Product Title Z–A', 'bigcommerce' ),
-			self::SORT_REVIEWS    => __( 'Reviews', 'bigcommerce' ),
-			self::SORT_PRICE_ASC  => __( 'Price (low to high)', 'bigcommerce' ),
-			self::SORT_PRICE_DESC => __( 'Price (high to low)', 'bigcommerce' ),
+			self::SORT_FEATURED        => __( 'Featured', 'bigcommerce' ),
+			self::SORT_DATE            => __( 'Newest', 'bigcommerce' ),
+			self::SORT_SALES           => __( 'Best Selling', 'bigcommerce' ),
+			self::SORT_TITLE_ASC       => __( 'Product Title A–Z', 'bigcommerce' ),
+			self::SORT_TITLE_DESC      => __( 'Product Title Z–A', 'bigcommerce' ),
+			self::SORT_REVIEWS         => __( 'Reviews', 'bigcommerce' ),
+			self::SORT_PRICE_ASC       => __( 'Price (low to high)', 'bigcommerce' ),
+			self::SORT_PRICE_DESC      => __( 'Price (high to low)', 'bigcommerce' ),
+			self::SORT_INVENTORY_COUNT => __( 'Inventory Count', 'bigcommerce' ),
+			self::SORT_SKU             => __( 'SKU', 'bigcommerce' ),
 		];
 
 		/**
@@ -279,6 +285,23 @@ class Product_Archive {
 			'section' => self::NAME,
 			'type'    => 'radio',
 			'label'   => __( 'Quick View', 'bigcommerce' ),
+			'choices' => [
+				'yes' => __( 'Enabled', 'bigcommerce' ),
+				'no'  => __( 'Disabled', 'bigcommerce' ),
+			],
+		] );
+	}
+	
+	private function search_field( \WP_Customize_Manager $wp_customize ) {
+		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::SEARCH_FIELD, [
+			'type'      => 'option',
+			'default'   => 'yes',
+			'transport' => 'refresh',
+		] ) );
+		$wp_customize->add_control( self::SEARCH_FIELD, [
+			'section' => self::NAME,
+			'type'    => 'radio',
+			'label'   => __( 'Search Field', 'bigcommerce' ),
 			'choices' => [
 				'yes' => __( 'Enabled', 'bigcommerce' ),
 				'no'  => __( 'Disabled', 'bigcommerce' ),
