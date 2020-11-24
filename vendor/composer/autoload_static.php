@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit8b09bf9f1356e0790db1a8d3e134532f
+class ComposerStaticInit036efd74fe5f5fcea116741d8af1c127
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -637,6 +637,7 @@ class ComposerStaticInit8b09bf9f1356e0790db1a8d3e134532f
         'BigCommerce\\Rest\\Products_Controller' => __DIR__ . '/../..' . '/src/BigCommerce/Rest/Products_Controller.php',
         'BigCommerce\\Rest\\Rest_Controller' => __DIR__ . '/../..' . '/src/BigCommerce/Rest/Rest_Controller.php',
         'BigCommerce\\Rest\\Reviews_Listing_Controller' => __DIR__ . '/../..' . '/src/BigCommerce/Rest/Reviews_Listing_Controller.php',
+        'BigCommerce\\Rest\\Shipping_Controller' => __DIR__ . '/../..' . '/src/BigCommerce/Rest/Shipping_Controller.php',
         'BigCommerce\\Rest\\Shortcode_Controller' => __DIR__ . '/../..' . '/src/BigCommerce/Rest/Shortcode_Controller.php',
         'BigCommerce\\Reviews\\Product_Update_Listener' => __DIR__ . '/../..' . '/src/BigCommerce/Reviews/Product_Update_Listener.php',
         'BigCommerce\\Reviews\\Review_Builder' => __DIR__ . '/../..' . '/src/BigCommerce/Reviews/Review_Builder.php',
@@ -825,6 +826,9 @@ class ComposerStaticInit8b09bf9f1356e0790db1a8d3e134532f
         'BigCommerce\\Templates\\Review_List_Pagination' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Review_List_Pagination.php',
         'BigCommerce\\Templates\\Review_Single' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Review_Single.php',
         'BigCommerce\\Templates\\Search_Box' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Search_Box.php',
+        'BigCommerce\\Templates\\Shipping_Info_Button' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Shipping_Info_Button.php',
+        'BigCommerce\\Templates\\Shipping_Methods' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Shipping_Methods.php',
+        'BigCommerce\\Templates\\Shipping_Zones_Dropdown' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Shipping_Zones_Dropdown.php',
         'BigCommerce\\Templates\\Sub_Nav_Links' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Sub_Nav_Links.php',
         'BigCommerce\\Templates\\Template' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Template.php',
         'BigCommerce\\Templates\\Template_Override' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Template_Override.php',
@@ -1064,10 +1068,10 @@ class ComposerStaticInit8b09bf9f1356e0790db1a8d3e134532f
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit8b09bf9f1356e0790db1a8d3e134532f::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit8b09bf9f1356e0790db1a8d3e134532f::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit8b09bf9f1356e0790db1a8d3e134532f::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit8b09bf9f1356e0790db1a8d3e134532f::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit036efd74fe5f5fcea116741d8af1c127::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit036efd74fe5f5fcea116741d8af1c127::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit036efd74fe5f5fcea116741d8af1c127::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit036efd74fe5f5fcea116741d8af1c127::$classMap;
 
         }, null, ClassLoader::class);
     }

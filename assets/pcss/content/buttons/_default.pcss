@@ -4,7 +4,7 @@ a.bc-btn,
 .entry-content .bc-btn,
 .entry-content button.bc-btn,
 .entry-content a.bc-btn,
-.bc-account-login__form input[type="submit"] {
+.bc-account-login__form input[type="submit"].button {
 	display: inline-block;
 	font-family: sans-serif;
 	width: 100%;
@@ -55,8 +55,14 @@ a.bc-btn,
 		animation: ajax-add-to-cart 1s infinite;
 	}
 
-	&--small {
+	&--small,
+	&--small[disabled] {
 		padding: 8px 16px;
+
+		&:hover,
+		&:focus {
+			padding: 8px 16px;
+		}
 	}
 
 	&--inverse {

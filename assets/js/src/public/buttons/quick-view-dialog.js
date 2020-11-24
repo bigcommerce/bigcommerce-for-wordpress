@@ -36,9 +36,9 @@ const getOptions = dialogID => ({
 });
 
 const initSingleDialog = (e) => {
-	const dialog = e.delegateTarget;
+	const dialogTrigger = e.delegateTarget;
+	const dialog = tools.closest(e.delegateTarget, '[data-js="bc-product-loop-card"]');
 	const dialogID = _.uniqueId('bc-product-quick-view-dialog-');
-	const dialogTrigger = tools.getNodes('bc-product-quick-view-dialog-trigger', false, dialog)[0];
 	const target = tools.getNodes('[data-quick-view-script]', false, dialog, true)[0];
 
 	if (!dialogTrigger || !target) {
@@ -66,7 +66,7 @@ const initSingleDialog = (e) => {
 };
 
 const bindEvents = () => {
-	delegate(document.body, '[data-js="bc-product-loop-card"]:not(.initialized)', 'click', initSingleDialog);
+	delegate(document.body, '[data-js="bc-product-loop-card"]:not(.initialized) [data-js="bc-product-quick-view-dialog-trigger"]', 'click', initSingleDialog);
 };
 
 const init = () => {

@@ -12,6 +12,7 @@ import { wpAPIMiniCartGet } from 'utils/ajax';
 import cartState from 'publicConfig/cart-state';
 import { on, trigger } from 'utils/events';
 import { CART_ID_COOKIE_NAME } from 'bcConstants/cookies';
+import { AJAX_CART_UPDATE } from 'bcConstants/events';
 import { NLS } from 'publicConfig/i18n';
 import globalState from 'publicConfig/state';
 import ajaxItems from './ajax-items';
@@ -136,7 +137,7 @@ const initCartMenuItems = () => {
 		menuItem.appendChild(fragment);
 	});
 
-	trigger({ event: 'bigcommerce/update_mini_cart', native: false });
+	trigger({ event: AJAX_CART_UPDATE, native: false });
 };
 
 /**

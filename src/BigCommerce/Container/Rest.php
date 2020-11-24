@@ -11,6 +11,7 @@ use BigCommerce\Rest\Pricing_Controller;
 use BigCommerce\Rest\Products_Controller;
 use BigCommerce\Rest\Reviews_Listing_Controller;
 use BigCommerce\Rest\Shortcode_Controller;
+use BigCommerce\Rest\Shipping_Controller;
 use Pimple\Container;
 
 class Rest extends Provider {
@@ -37,6 +38,9 @@ class Rest extends Provider {
 
 	const PRICING_BASE = 'rest.pricing_base';
 	const PRICING      = 'rest.pricing';
+
+	const SHIPPING_BASE = 'rest.shipping_base';
+	const SHIPPING      = 'rest.shipping';
 
 	private $version = 1;
 
@@ -105,6 +109,14 @@ class Rest extends Provider {
 			return new Pricing_Controller( $container[ self::NAMESPACE_BASE ], $container[ self::VERSION ], $container[ self::PRICING_BASE ], $container[ Api::FACTORY ]->pricing() );
 		};
 
+		$container[ self::SHIPPING_BASE ] = function ( Container $container ) {
+			return apply_filters( 'bigcommerce/rest/shipping_base', 'shipping' );
+		};
+
+		$container[ self::SHIPPING ] = function ( Container $container ) {
+			return new Shipping_Controller( $container[ self::NAMESPACE_BASE ], $container[ self::VERSION ], $container[ self::SHIPPING_BASE ], $container[ Api::FACTORY ]->shipping(), $container[ Api::FACTORY ]->cart() );
+		};
+
 		add_action( 'rest_api_init', $this->create_callback( 'rest_init', function () use ( $container ) {
 			$container[ self::PRODUCTS ]->register_routes();
 			$container[ self::SHORTCODE ]->register_routes();
@@ -113,6 +125,7 @@ class Rest extends Provider {
 			$container[ self::CART ]->register_routes();
 			$container[ self::REVIEW_LIST ]->register_routes();
 			$container[ self::PRICING ]->register_routes();
+			$container[ self::SHIPPING ]->register_routes();
 		} ), 10, 0 );
 
 		add_filter( 'bigcommerce/product/reviews/rest_url', $this->create_callback( 'review_list_rest_url', function ( $url, $post_id ) use ( $container ) {
@@ -125,6 +138,10 @@ class Rest extends Provider {
 
 		add_filter( 'bigcommerce/js_config', $this->create_callback( 'pricing_js_config', function( $config ) use ( $container ) {
 			return $container[ self::PRICING ]->js_config( $config );
+		}), 10, 1 );
+
+		add_filter( 'bigcommerce/js_config', $this->create_callback( 'shipping_js_config', function( $config ) use ( $container ) {
+			return $container[ self::SHIPPING ]->js_config( $config );
 		}), 10, 1 );
 	}
 }

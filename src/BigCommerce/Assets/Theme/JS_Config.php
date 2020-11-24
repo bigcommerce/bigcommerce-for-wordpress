@@ -5,6 +5,7 @@ namespace BigCommerce\Assets\Theme;
 
 use BigCommerce\Taxonomies\Channel\Channel;
 use BigCommerce\Taxonomies\Channel\Connections;
+use BigCommerce\Settings\Sections\Currency;
 
 class JS_Config {
 	/**
@@ -30,14 +31,15 @@ class JS_Config {
 	public function get_data() {
 		if ( ! isset( $this->data ) ) {
 			$this->data = [
-				'store_domain' => get_option( \BigCommerce\Import\Processors\Store_Settings::DOMAIN ),
-				'images_url'   => $this->directory . 'img/admin/',
-				'product'      => [
-					'messages' => [
+				'store_domain'  => get_option( \BigCommerce\Import\Processors\Store_Settings::DOMAIN ),
+				'images_url'    => $this->directory . 'img/admin/',
+				'product'       => [
+					'messages'  => [
 						'not_available' => __( 'The selected product combination is currently unavailable.', 'bigcommerce' ),
 					],
 				],
-				'channel'      => $this->get_current_channel_data(),
+				'channel'       => $this->get_current_channel_data(),
+				'currency_code' => get_option( Currency::CURRENCY_CODE, 'USD' ),
 			];
 			$this->data = apply_filters( 'bigcommerce/js_config', $this->data );
 		}

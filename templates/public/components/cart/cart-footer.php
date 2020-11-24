@@ -9,5 +9,6 @@
  * @version 1.0.0
  */
 
+echo $shipping;
 echo $summary;
 echo $actions;

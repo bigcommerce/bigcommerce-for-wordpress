@@ -1,0 +1,77 @@
+.bc-shipping-calculator {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	align-items: flex-end;
+	border-bottom: 1px solid var(--color-bc-light-grey);
+	padding: 12px 0;
+}
+
+.bc-shipping-calculator-toggle {
+	text-align: right;
+}
+
+.bc-shipping-loader {
+	opacity: 0;
+	visibility: hidden;
+	transition: var(--transition);
+
+	&.show-spinner {
+		opacity: 1;
+		visibility: visible;
+	}
+}
+
+.bc-shipping-calculator-toggle,
+.bc-shipping-calculator-toggle:disabled {
+	background: transparent;
+	font-weight: normal;
+	padding: 0;
+	text-transform: none;
+	opacity: 1;
+	transition: var(--transition-opacity);
+	color: var(--color-bc-black);
+	margin-bottom: 12px;
+
+	&:hover,
+	&:focus {
+		color: var(--color-bc-black);
+		background: transparent;
+		text-transform: none;
+		font-weight: normal;
+		opacity: 0.82;
+		padding: 0;
+	}
+}
+
+.bc-shipping-methods,
+.bc-shipping-method {
+	list-style: none;
+}
+
+.bc-shipping-methods {
+	padding: 0;
+	margin: 8px 0;
+}
+
+.bc-shipping-method__option {
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 6px;
+}
+
+.bc-shipping-method__label {
+	display: inline-block;
+	vertical-align: middle;
+	font-size: 0.85em;
+}
+
+.bc-shipping-method__price {
+	font-weight: 700;
+}
+
+.bc-shipping-error {
+	font-size: 0.85em;
+	color: var(--color-bc-red);
+}
