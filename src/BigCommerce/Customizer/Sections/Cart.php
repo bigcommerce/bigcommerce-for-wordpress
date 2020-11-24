@@ -7,11 +7,12 @@ use BigCommerce\Customizer\Panels;
 class Cart {
 	const NAME = 'bigcommerce_cart';
 
-	const ENABLE_MINI_CART      = 'bigcommerce_enable_mini_cart';
-	const EMPTY_CART_LINK       = 'bigcommerce_empty_cart_link_destination';
-	const EMPTY_CART_LINK_TEXT  = 'bigcommerce_empty_cart_link_destination_text';
-	const LINK_HOME             = 'home';
-	const LINK_CATALOG          = 'catalog';
+	const ENABLE_MINI_CART     = 'bigcommerce_enable_mini_cart';
+	const EMPTY_CART_LINK      = 'bigcommerce_empty_cart_link_destination';
+	const EMPTY_CART_LINK_TEXT = 'bigcommerce_empty_cart_link_destination_text';
+	const LINK_HOME            = 'home';
+	const LINK_CATALOG         = 'catalog';
+	const ENABLE_SHIPPING_INFO = 'bigcommerce_enable_shipping_info';
 
 	/**
 	 * @param \WP_Customize_Manager $wp_customize
@@ -26,6 +27,7 @@ class Cart {
 
 		$this->mini_cart( $wp_customize );
 		$this->empty_cart_link( $wp_customize );
+		$this->shipping_info( $wp_customize );
 	}
 
 	private function mini_cart( \WP_Customize_Manager $wp_customize ) {
@@ -72,5 +74,23 @@ class Cart {
 			'section' => self::NAME,
 			'label'   => __( 'Empty Cart Link Text', 'bigcommerce' ),
 		] ) );
+	}
+
+	private function shipping_info( \WP_Customize_Manager $wp_customize ) {
+		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::ENABLE_SHIPPING_INFO, [
+			'type'      => 'option',
+			'default'   => 'no',
+			'transport' => 'refresh',
+		] ) );
+		$wp_customize->add_control( self::ENABLE_SHIPPING_INFO, [
+			'section'     => self::NAME,
+			'type'        => 'radio',
+			'description' => __( 'Enable shipping calculation in Cart. ', 'bigcommerce' ),
+			'label'       => __( 'Shipping Info', 'bigcommerce' ),
+			'choices'     => [
+				'yes' => __( 'Enabled', 'bigcommerce' ),
+				'no'  => __( 'Disabled', 'bigcommerce' ),
+			],
+		] );
 	}
 }

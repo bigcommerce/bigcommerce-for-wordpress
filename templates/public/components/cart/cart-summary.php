@@ -12,8 +12,8 @@
 <!-- class="bc-cart-subtotal" is required -->
 <div class="bc-cart-subtotal">
 	<span class="bc-cart-subtotal__label"><?php esc_html_e( 'Subtotal: ', 'bigcommerce' ); ?></span>
-	<!-- class="bc-cart-subtotal__amount" is required -->
-	<span class="bc-cart-subtotal__amount"><?php echo esc_html( $cart['subtotal']['formatted'] ); ?></span>
+	<!-- class="bc-cart-subtotal__amount" and data-subtotal="" are required -->
+	<span class="bc-cart-subtotal__amount" data-subtotal="<?php echo esc_html( $cart['subtotal']['formatted'] ); ?>"><?php echo esc_html( $cart['subtotal']['formatted'] ); ?></span>
 </div>
 
 <?php if ( $cart['tax_amount']['raw'] > 0 ) { ?>

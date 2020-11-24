@@ -101,6 +101,7 @@ use BigCommerce\Taxonomies\Brand\Brand;
 					max="<?php echo esc_attr( $max ); ?>"
 			>
 		</div>
+		<!-- class="bc-cart-item-total-price" is required -->
 		<?php $price_classes = $item['on_sale'] ? 'bc-cart-item-total-price bc-cart-item--on-sale' : 'bc-cart-item-total-price'; ?>
 		<div class="<?php echo esc_attr( $price_classes ); ?>">
 			<?php echo esc_html( $item['total_sale_price']['formatted'] ); ?>

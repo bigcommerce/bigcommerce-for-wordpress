@@ -209,8 +209,9 @@ const bindEvents = () => {
 	el.itemContainer.forEach((itemContainer) => {
 		createSpinLoader(itemContainer);
 		initializeItems(itemContainer);
-		delegate(document, '[data-js="load-items-trigger-btn"]', 'click', getNextPageItems);
 	});
+
+	delegate(document, '[data-js="load-items-trigger-btn"]', 'click', getNextPageItems);
 };
 
 const init = () => {

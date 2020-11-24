@@ -32,6 +32,7 @@ class JS_Localization {
 				'ajax_add_to_cart_error'   => __( 'There was an error adding this product to your cart.', 'bigcommerce' ),
 				'ajax_add_to_cart_success' => __( 'Product successfully added to your cart.', 'bigcommerce' ),
 				'mini_cart_loading'        => __( 'Loading', 'bigcommerce' ),
+				'shipping_calc_error'      => __( 'There was an error calculating your shipping cost. Please try again.', 'bigcommerce' ),
 			],
 			'account'    => [
 				'confirm_delete_message' => __( 'Are you sure you want to delete this address?', 'bigcommerce' ),

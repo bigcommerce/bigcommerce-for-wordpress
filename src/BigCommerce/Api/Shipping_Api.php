@@ -20,4 +20,8 @@ class Shipping_Api extends v2ApiAdapter {
 
 		return array_sum( array_map( 'count', $methods ) );
 	}
+
+	public function get_shipping_methods( $zone_id ) {
+		return $this->getCollection( sprintf( '/shipping/zones/%d/methods', $zone_id ) ) ?: [];
+	}
 }

@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.5.0]
+
+### Added
+- Added shipping estimation calculator to the cart page as well as
+  option to enable/disable this feature in the WordPress Customizer. 
+
+### Changed
+- Changed how Quick View triggers detect their corresponding modal container.
+  This change allows more flexibility in terms of where a Quick View button can be 
+  placed in a product card.
+
+
 ## [4.4.0]
 
 ### Added
@@ -1314,6 +1326,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.5.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.4.0...4.5.0
 [4.4.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.3.1...4.4.0
 [4.3.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.3.0...4.3.1
 [4.3.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.2.0...4.3.0

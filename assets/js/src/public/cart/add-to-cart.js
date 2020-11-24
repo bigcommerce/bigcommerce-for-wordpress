@@ -10,6 +10,8 @@ import * as tools from 'utils/tools';
 import { trigger } from 'utils/events';
 import { wpAPIAddToCartAjax } from 'utils/ajax';
 import { CART_API_BASE, AJAX_CART_ENABLED, AJAX_CART_NONCE } from 'publicConfig/wp-settings';
+import { CART_ID_COOKIE_NAME } from 'bcConstants/cookies';
+import { AJAX_CART_UPDATE } from 'bcConstants/events';
 import { NLS } from 'publicConfig/i18n';
 import { cartMenuSet, updateFlatsomeCartMenuQty, updateFlatsomeCartMenuPrice } from './cart-menu-item';
 
@@ -222,7 +224,7 @@ const handleAjaxAddToCartRequest = (e) => {
 		return;
 	}
 
-	const cartID = Cookie.get('bigcommerce_cart_id');
+	const cartID = Cookie.get(CART_ID_COOKIE_NAME);
 	const url = cartID ? `${CART_API_BASE}/${cartID}` : CART_API_BASE;
 	const query = getAjaxQueryString(cartButton);
 
@@ -244,7 +246,7 @@ const handleAjaxAddToCartRequest = (e) => {
 			updateCartItemCount(res.body);
 			updateFlatsomeCartMenuQty();
 			updateFlatsomeCartMenuPrice(res.body);
-			trigger({ event: 'bigcommerce/update_mini_cart', native: false });
+			trigger({ event: AJAX_CART_UPDATE, native: false });
 			trigger({ event: 'bigcommerce/analytics_trigger', data: { cartButton, cartID: res.body.cart_id }, native: false });
 		});
 };

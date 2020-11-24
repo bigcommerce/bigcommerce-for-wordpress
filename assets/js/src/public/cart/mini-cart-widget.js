@@ -12,6 +12,7 @@ import { wpAPIMiniCartGet } from 'utils/ajax';
 import { NLS } from 'publicConfig/i18n';
 import cartState from 'publicConfig/cart-state';
 import { AJAX_CART_NONCE, CART_API_BASE } from 'publicConfig/wp-settings';
+import { AJAX_CART_UPDATE, HANDLE_CART_STATE } from 'bcConstants/events';
 import { cartEmpty } from './cart-templates';
 import { updateCartMenuItem } from './cart-menu-item';
 import ajaxItems from './ajax-items';
@@ -27,7 +28,7 @@ const setEmptyCart = (miniCartID = '') => {
 	});
 
 	cartState.isFetching = false;
-	trigger({ event: 'bigcommerce/handle_cart_state', data: { miniCartID }, native: false });
+	trigger({ event: HANDLE_CART_STATE, data: { miniCartID }, native: false });
 };
 
 /**
@@ -63,7 +64,7 @@ const loadMiniCarts = (e) => {
 
 	// Start the handle_cart_state event.
 	cartState.isFetching = true;
-	trigger({ event: 'bigcommerce/handle_cart_state', data: { miniCartID: eventMiniCartID }, native: false });
+	trigger({ event: HANDLE_CART_STATE, data: { miniCartID: eventMiniCartID }, native: false });
 
 	// If we don't have a cartID and URL, stop here.
 	if (_.isEmpty(cartURL)) {
@@ -98,7 +99,7 @@ const loadMiniCarts = (e) => {
 
 			// End the handle_cart_state event.
 			cartState.isFetching = false;
-			trigger({ event: 'bigcommerce/handle_cart_state', data: { miniCartID: eventMiniCartID }, native: false });
+			trigger({ event: HANDLE_CART_STATE, data: { miniCartID: eventMiniCartID }, native: false });
 		});
 };
 
@@ -112,7 +113,7 @@ const cacheElements = () => {
 };
 
 const bindEvents = () => {
-	on(document, 'bigcommerce/update_mini_cart', loadMiniCarts);
+	on(document, AJAX_CART_UPDATE, loadMiniCarts);
 };
 
 const init = () => {

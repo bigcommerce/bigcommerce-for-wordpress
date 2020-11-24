@@ -11,3 +11,6 @@ export const PRICING_API_URL = CONFIG.pricing.api_url || '';
 export const PRICING_API_NONCE = CONFIG.pricing.ajax_pricing_nonce || '';
 export const MINI_CART = CONFIG.cart.mini_cart.enabled || false;
 export const STORE_DOMAIN = CONFIG.store_domain || '';
+export const SHIPPING_API_ZONES = CONFIG.cart.zones_api_url || '';
+export const SHIPPING_API_METHODS = CONFIG.cart.methods_api_url || '';
+export const CURRENCY_CODE = CONFIG.currency_code || '';
