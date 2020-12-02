@@ -70,7 +70,12 @@ abstract class Term_Saver implements Import_Strategy {
 
 		$duplicate = get_term_by( 'slug', $slug, $this->taxonomy );
 		if ( $duplicate && (int) $duplicate->term_id !== (int) $this->term_id ) {
-			$slug = ''; // let WP auto-assign the slug, otherwise the creation will fail
+			$current_slug = get_term( $this->term_id )->slug;
+			if ( $current_slug === $duplicate->slug ) {
+				$slug = ''; // let WP auto-assign the slug, otherwise the creation will fail
+			} else {
+				$slug = $current_slug; // keep the current slug else WP will alternate the slug on each import
+			}
 		}
 
 		return $slug;
