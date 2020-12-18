@@ -130,7 +130,7 @@ const buildPricingObject = (priceContainer) => {
  */
 const showCachedPricing = (products = []) => {
 	// The API is down or responded with an error but and we still have API Pricing Nodes on the page.
-	if (products.items.length) {
+	if (products.length) {
 		products.items.forEach((product) => {
 			// Only update the requested products to show the cached pricing data.
 			const priceWrapper = tools.getNodes(`[data-product-price-id="${product.product_id}"]`, false, document, true)[0];

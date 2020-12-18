@@ -1,11 +1,24 @@
 # Changelog
 
+
+## [4.6.0]
+
+### Added
+- Added time zone for import times in Settings > Product Sync
+
+### Fixed
+- Addressed an issue where missing template markup on custom template overrides
+  caused a JS error on the page rendering the rest of the page unusable.
+  
+  **Note:** Where possible, please use all require markup outlined in the templates.
+
+
 ## [4.5.1]
 
 ### Fixed
-
 - Fixed product category slug changes when re-importing a term that overlaps
   with a term with a different parent.
+
 
 ## [4.5.0]
 
@@ -1333,6 +1346,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.6.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.5.0...4.6.0
 [4.5.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.5.0...4.5.1
 [4.5.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.4.0...4.5.0
 [4.4.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.3.1...4.4.0
