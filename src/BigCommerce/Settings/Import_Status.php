@@ -181,7 +181,7 @@ class Import_Status {
 				$status_string = sprintf( __( 'Last import completed on <strong>%s at %s (%s)</strong>.', 'bigcommerce' ), $date, $time, $this->get_timezone_string() );
 				break;
 			case Status::FAILED:
-				$status_string = sprintf( __( 'Last import failed on <strong>%s at %s (%s)</strong>.', 'bigcommerce' ), $date, $time, $$this->get_timezone_string() );
+				$status_string = sprintf( __( 'Last import failed on <strong>%s at %s (%s)</strong>.', 'bigcommerce' ), $date, $time, $this->get_timezone_string() );
 				break;
 			case Status::NOT_STARTED:
 				$status_string = '';
