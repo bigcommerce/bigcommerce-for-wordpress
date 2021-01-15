@@ -50,7 +50,18 @@ $error_class = 'bc-form__control--error'; // REQUIRED
 						<textarea name="bc-gift-purchase[message]" id="bc-gift-purchase-message" data-form-field="bc-form-field-message"><?php echo esc_textarea( $defaults[ 'message' ] ); ?></textarea>
 					</label>
 
-					<?php // TODO: theme selection when properly supported by the BigCommerce API ?>
+					<?php if ( count( $themes ) === 1 ) : ?>
+						<input type="hidden" name="bc-gift-purchase[theme]" id="bc-gift-purchase-theme" data-form-field="bc-form-field-theme" value="<?php echo esc_attr( reset( $themes )['template'] ); ?>">
+					<?php else: ?>
+						<label for="bc-gift-purchase-theme" class="bc-form__control <?php if ( in_array( 'theme', $errors ) ) { echo esc_attr( $error_class ); } ?>">
+							<span class="bc-form__label bc-gift-purchase__form-label"><?php echo esc_html( __( 'Gift Certificate Theme', 'bigcommerce' ) ); ?></span>
+							<select name="bc-gift-purchase[theme]" id="bc-gift-purchase-theme" data-form-field="bc-form-field-theme">
+								<?php foreach ( $themes as $theme ) : ?>
+									<option value="<?php echo esc_attr( $theme['template'] ); ?>" <?php selected( $theme['template'], $defaults['theme'], true ); ?>><?php echo esc_html( $theme['name'] ); ?></option>
+								<?php endforeach; ?>
+							</select>
+						</label>
+					<?php endif; ?>
 				</div>
 			</div>
 

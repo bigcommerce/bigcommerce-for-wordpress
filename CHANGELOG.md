@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.7.0]
+
+### Added
+- Added a proxy server endpoint to add multiple products to the cart in a single request
+- Added support for Gift Certificate themes drop-down
+
+### Fixed
+- Fixed an erorr when printing a failed import time message in the Settings panel
+
 
 ## [4.6.0]
 
@@ -1346,6 +1355,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.7.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.6.0...4.7.0
 [4.6.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.5.0...4.6.0
 [4.5.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.5.0...4.5.1
 [4.5.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.4.0...4.5.0
