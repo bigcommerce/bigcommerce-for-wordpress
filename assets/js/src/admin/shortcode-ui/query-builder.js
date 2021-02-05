@@ -109,7 +109,7 @@ const addChoice = (value, label) => {
  * @description remove a choice from the search query.
  */
 const removeChoice = (value) => {
-	el.searchInput.removeItemsByValue(value);
+	el.searchInput.removeActiveItemsByValue(value);
 	trigger({ event: 'bigcommerce/shortcode_query_term_removed', data: { value }, native: false });
 };
 
@@ -158,6 +158,10 @@ const handleChoiceRemoval = (e) => {
  * @param e event
  */
 const handleLinks = (e) => {
+	if (!e) {
+		return;
+	}
+
 	const element = e.delegateTarget ? e.delegateTarget : e;
 	const key = e.delegateTarget ? e.delegateTarget.dataset.key : e.dataset.key;
 	const value = e.delegateTarget ? e.delegateTarget.dataset.value : e.dataset.value;
@@ -196,7 +200,8 @@ const resetChannelSelect = () => {
 
 /**
  * @function handleChannelSelection
- * @description When the channel select field is changed, immediately submit a new ajax query to get that channel's products.
+ * @description When the channel select field is changed, immediately submit a new ajax query to get that channel's
+ *     products.
  * @param e
  */
 const handleChannelSelection = (e) => {
