@@ -162,8 +162,6 @@ class Requirements_Notice {
 	 * @filter bigcommerce/checkout/can_embed
 	 */
 	public function can_enable_embedded_checkout() {
-		$status = $this->status->get_current_status();
-
-		return (bool) $status['ssl'];
+		return (bool) $this->status->is_ssl();
 	}
 }

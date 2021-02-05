@@ -41,14 +41,12 @@ class Setup_Status {
 			return $cache;
 		}
 
-		$ssl_status = $this->get_ssl_status();
-
 		$status = [
 			'shipping_zones'   => $this->get_shipping_zone_count(),
 			'shipping_methods' => $this->get_shipping_method_count(),
 			'tax_classes'      => $this->get_tax_class_count(),
 			'payment_methods'  => $this->get_payment_methods_count(),
-			'ssl'              => $ssl_status,
+			'ssl'              => $this->get_store_sitewidehttps_enabled(),
 			'product_count'    => $this->get_product_count(),
 			'domain'           => $this->get_domain(),
 		];
@@ -117,8 +115,8 @@ class Setup_Status {
 	 *
 	 * @return bool
 	 */
-	public function get_ssl_status() {
-		return is_ssl() && $this->get_store_sitewidehttps_enabled();
+	public function is_ssl() {
+		return is_ssl() && $this->get_current_status()['ssl'];
 	}
 
 	private function get_store_sitewidehttps_enabled() {
@@ -224,10 +222,9 @@ class Setup_Status {
 	}
 
 	public function get_optional_steps() {
-		$status = $this->get_current_status();
 		$steps  = [];
 
-		if ( ! $status['ssl'] ) {
+		if ( ! $this->is_ssl() ) {
 			$steps['ssl'] = [
 				'heading' => __( 'Add SSL Certificate and enable sitewide HTTPS in BigCommerce store for Embedded Checkout', 'bigcommerce' ),
 				'icon'    => 'cart',

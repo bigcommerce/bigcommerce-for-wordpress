@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.8.0]
+
+### Fixed
+
+- Addresses an issue with the Choices JS library breaking the term selection in
+  the WP admin Product Selector UI.
+- Fixed greyed out Embedded Checkout option in the settings even if site is ssl configured
+
+
 ## [4.7.0]
 
 ### Added
@@ -1355,6 +1364,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.8.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.7.0...4.8.0
 [4.7.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.6.0...4.7.0
 [4.6.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.5.0...4.6.0
 [4.5.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.5.0...4.5.1
