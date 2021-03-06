@@ -48,8 +48,10 @@ const handleClickTracker = (e) => {
 
 const gaCrossDomainInit = async () => {
 	await analytics.ready(() => {
-		ga('require', 'linker');
-		ga('linker:autoLink', [STORE_DOMAIN]);
+		if (typeof ga === 'function') {
+			ga('require', 'linker');
+			ga('linker:autoLink', [STORE_DOMAIN]);
+		}
 	});
 };
 
