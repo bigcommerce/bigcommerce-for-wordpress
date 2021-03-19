@@ -6,6 +6,7 @@
  * @var string   $no_results
  * @var string   $title
  * @var string   $description
+ * @var string   $thumbnail
  * @var string   $refinery
  * @var string   $pagination
  * @var string   $columns
@@ -16,6 +17,7 @@
 
 	<header class="bc-product-archive__header">
 		<h2 class="bc-product-archive__title"><?php echo esc_html( $title ); ?></h2>
+		<?php echo wp_kses_post( $thumbnail ); ?>
 		<div><?php echo wp_kses_post( $description ); ?></div>
 	</header>
 

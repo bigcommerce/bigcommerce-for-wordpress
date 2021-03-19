@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.9.0]
+
+### Added
+- Added support for Product Category images
+- Added additional error message when attempting to create a channel with an existing name
+
+
 ## [4.8.0]
 
 ### Fixed
@@ -1364,6 +1371,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.9.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.8.0...4.9.0
 [4.8.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.7.0...4.8.0
 [4.7.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.6.0...4.7.0
 [4.6.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.5.0...4.6.0

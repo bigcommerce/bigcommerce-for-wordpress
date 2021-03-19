@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitef8b243e8bac21b00e6d48497c7050eb
+class ComposerStaticInitf629a677b821c24e4ef358484fa6c69d
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -936,6 +936,7 @@ class ComposerStaticInitef8b243e8bac21b00e6d48497c7050eb
         'Dotenv\\Validator' => __DIR__ . '/..' . '/vlucas/phpdotenv/src/Validator.php',
         'Firebase\\JWT\\BeforeValidException' => __DIR__ . '/..' . '/firebase/php-jwt/src/BeforeValidException.php',
         'Firebase\\JWT\\ExpiredException' => __DIR__ . '/..' . '/firebase/php-jwt/src/ExpiredException.php',
+        'Firebase\\JWT\\JWK' => __DIR__ . '/..' . '/firebase/php-jwt/src/JWK.php',
         'Firebase\\JWT\\JWT' => __DIR__ . '/..' . '/firebase/php-jwt/src/JWT.php',
         'Firebase\\JWT\\SignatureInvalidException' => __DIR__ . '/..' . '/firebase/php-jwt/src/SignatureInvalidException.php',
         'Monolog\\ErrorHandler' => __DIR__ . '/..' . '/monolog/monolog/src/Monolog/ErrorHandler.php',
@@ -1060,7 +1061,7 @@ class ComposerStaticInitef8b243e8bac21b00e6d48497c7050eb
         'Psr\\Log\\LoggerInterface' => __DIR__ . '/..' . '/psr/log/Psr/Log/LoggerInterface.php',
         'Psr\\Log\\LoggerTrait' => __DIR__ . '/..' . '/psr/log/Psr/Log/LoggerTrait.php',
         'Psr\\Log\\NullLogger' => __DIR__ . '/..' . '/psr/log/Psr/Log/NullLogger.php',
-        'Psr\\Log\\Test\\DummyTest' => __DIR__ . '/..' . '/psr/log/Psr/Log/Test/LoggerInterfaceTest.php',
+        'Psr\\Log\\Test\\DummyTest' => __DIR__ . '/..' . '/psr/log/Psr/Log/Test/DummyTest.php',
         'Psr\\Log\\Test\\LoggerInterfaceTest' => __DIR__ . '/..' . '/psr/log/Psr/Log/Test/LoggerInterfaceTest.php',
         'Psr\\Log\\Test\\TestLogger' => __DIR__ . '/..' . '/psr/log/Psr/Log/Test/TestLogger.php',
     );
@@ -1068,10 +1069,10 @@ class ComposerStaticInitef8b243e8bac21b00e6d48497c7050eb
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitef8b243e8bac21b00e6d48497c7050eb::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitef8b243e8bac21b00e6d48497c7050eb::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitef8b243e8bac21b00e6d48497c7050eb::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitef8b243e8bac21b00e6d48497c7050eb::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitf629a677b821c24e4ef358484fa6c69d::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitf629a677b821c24e4ef358484fa6c69d::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitf629a677b821c24e4ef358484fa6c69d::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitf629a677b821c24e4ef358484fa6c69d::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -83,6 +83,10 @@ class Channel_Connector {
 		try {
 			$response = $this->channels->createChannel( $request );
 		} catch ( ApiException $e ) {
+			$resp_body = $e->getResponseBody();
+			if ( ! empty( $resp_body->title ) ) {
+				add_settings_error( Channel_Select::NEW_CHANNEL, 'api_channel_error', $resp_body->title );
+			}
 			do_action( 'bigcommerce/channel/error/could_not_create_channel', $e, $request );
 
 			return 0;
