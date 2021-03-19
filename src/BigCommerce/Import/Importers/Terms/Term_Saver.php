@@ -4,6 +4,7 @@
 namespace BigCommerce\Import\Importers\Terms;
 
 use BigCommerce\Import\Import_Strategy;
+use BigCommerce\Import\Image_Importer;
 
 abstract class Term_Saver implements Import_Strategy {
 	/** @var \ArrayAccess */
@@ -29,6 +30,7 @@ abstract class Term_Saver implements Import_Strategy {
 	public function do_import() {
 		$this->term_id = $this->save_wp_term( $this->bc_term );
 		$this->save_wp_termmeta( $this->bc_term );
+		$this->import_image( $this->bc_term );
 
 		return $this->term_id;
 	}
@@ -142,5 +144,35 @@ abstract class Term_Saver implements Import_Strategy {
 		}
 
 		return 0;
+	}
+
+	protected function import_image( \ArrayAccess $bc_term ) {
+		$image_url = $bc_term[ 'image_url' ];
+
+		// find an existing image
+		$existing = get_posts( [
+			'post_type'      => 'attachment',
+			'meta_query'     => [
+				[
+					'key'     => Image_Importer::SOURCE_URL,
+					'value'   => $image_url,
+					'compare' => '=',
+				],
+			],
+			'fields'         => 'ids',
+			'posts_per_page' => 1,
+		] );
+
+		if ( ! empty( $existing ) ) {
+			$post_id = reset( $existing );
+		} else {
+			$importer = new Image_Importer( $image_url );
+			$post_id  = $importer->import();
+		}
+		if ( ! empty( $post_id ) ) {
+			update_term_meta( $this->term_id, 'thumbnail_id', $post_id );
+		} else {
+			delete_term_meta( $this->term_id, 'thumbnail_id' );
+		}
 	}
 }

@@ -8,12 +8,13 @@ class Image_Sizes {
 	const VERSION    = 2;
 	const STATE_META = 'bigcommerce_sizing';
 
-	const BC_THUMB        = 'bc-thumb';
-	const BC_THUMB_LARGE  = 'bc-thumb-large';
-	const BC_SMALL        = 'bc-small';
-	const BC_MEDIUM       = 'bc-medium';
-	const BC_EXTRA_MEDIUM = 'bc-xmedium';
-	const BC_LARGE        = 'bc-large';
+	const BC_THUMB          = 'bc-thumb';
+	const BC_THUMB_LARGE    = 'bc-thumb-large';
+	const BC_SMALL          = 'bc-small';
+	const BC_MEDIUM         = 'bc-medium';
+	const BC_EXTRA_MEDIUM   = 'bc-xmedium';
+	const BC_LARGE          = 'bc-large';
+	const BC_CATEGORY_IMAGE = 'bc-category-image';
 
 	// Increment self::VERSION above when adding/changing this list
 	private $sizes = [
@@ -46,6 +47,11 @@ class Image_Sizes {
 			'width'  => 1280,
 			'height' => 1280,
 			'crop'   => true,
+		],
+		self::BC_CATEGORY_IMAGE => [
+			'width'  => 1600,
+			'height' => 0,
+			'crop'   => false,
 		],
 	];
 
