@@ -2624,6 +2624,505 @@ paths:
         204:
           description: |
             An empty response.
+  /customers/settings/channels/{channelId}:
+    parameters:
+      - name: "channelId"
+        in: "path"
+        description: "The ID of a Channel that's available through GET /channels"
+        required: true
+        type: "integer"
+        format: "int64"
+    get:
+      tags:
+        - Customers
+      description: |
+        Get customer settings for a channel
+      operationId: getCustomerSettings
+      responses:
+        200:
+          description: |
+            Success.
+          schema:
+            $ref: "#/definitions/CustomersSettings"
+    put:
+      tags:
+        - Customers
+      description: |
+        Updates customer settings in BigCommerce.
+      operationId: updateCustomerSettings
+      parameters:
+        - name: ChannelSettings
+          in: body
+          required: true
+          description: |
+            A BigCommerce `ChannelSettings` object.
+          schema:
+            $ref: "#/definitions/CustomersSettings"
+      responses:
+        200:
+          description: |
+            Success.
+          schema:
+            $ref: "#/definitions/CustomersSettings"
+  /customers:
+    get:
+      description: |-
+        Returns a list of Customers. Optional filter parameters can be passed in.
+        **Notes**
+        Attribute names are not available on the customer object.
+      summary: Get All Customers
+      tags:
+        - Customers
+      operationId: CustomersGet
+      deprecated: false
+      parameters:
+        - name: page
+          in: query
+          type: integer
+          description: Page number. `page=1`
+        - in: query
+          type: number
+          name: limit
+          description: Items count per page. `limit=50`
+        - name: 'id:in'
+          in: query
+          type: array
+          description: |-
+            Filter items by id.
+            `id:in=4,5,6`
+          items:
+            type: integer
+        - name: 'company:in'
+          in: query
+          type: array
+          items:
+            type: string
+          description: 'Filter items by company. `company:in=bigcommerce,commongood`'
+        - name: 'customer_group_id:in'
+          in: query
+          type: array
+          description: 'Filter items by customer_group_id. `customer_group_id:in=5,6`'
+          items:
+            type: string
+        - name: date_created
+          in: query
+          type: string
+          description: 'Filter items by date_created. `date_created=2018-09-05T13:43:54`'
+          format: date-time
+        - name: 'date_created:max'
+          in: query
+          type: string
+          description: 'Filter items by maximum date_created. `date_created:max=2018-09-10`'
+        - name: 'date_created:min'
+          in: query
+          type: string
+          description: 'Filter items by date_created. `date_created:min=2018-09-05`'
+          format: date-time
+        - name: date_modified
+          in: query
+          type: string
+          description: 'Filter items by date_modified. `date_modified=2018-09-05T13:45:03`'
+          format: date-time
+        - name: 'date_modified:min'
+          in: query
+          type: string
+          description: 'Filter items by mininum date_modified. `date_modified:min=2019-09-04T:00:00:00` or `date_modified:min=2019-09-04`'
+        - name: 'date_modified:max'
+          in: query
+          type: string
+          format: date-time
+          description: 'Filter items by maximum date_modified `date_modified:max=2018-09-05T13:45:03` or `date_modified:max=2019-09-04`'
+        - name: 'email:in'
+          in: query
+          type: string
+          description: 'Filter items by email. `email:in=janedoe@email.com`'
+        - name: 'name:in'
+          in: query
+          type: array
+          description: Filter items by first_name and last_name. `name=james moriarty`
+          items:
+            type: string
+        - name: 'name:like'
+          in: query
+          type: array
+          description: |-
+            Filter items by substring in first_name and last_name.
+            `name:like=moriarty, sherlock`
+            Concatenates the first_name and last_name fields.
+          items:
+            type: string
+        - name: 'registration_ip_address:in'
+          in: query
+          type: array
+          description: |-
+            Filter items by registration_ip_address. If the customer was created using the API, then registration address is blank.
+            `registration_ip_address:in=12.345.6.789`
+          items:
+            type: integer
+        - name: include
+          in: query
+          type: string
+          description: |-
+            Indicates whether to include customer sub-resources:
+             * `addresses` - customer addresses
+             * `storecredit` - store credit
+             * `attributes` - customer attributes and address attributes
+             * `formfields` - customer and address form fields
+             `include=addresses,storecredit,attributes,formfields`
+          enum:
+            - addresses
+            - storecredit
+            - attributes
+            - formfields
+        - in: query
+          name: sort
+          type: string
+          description: |-
+            Sort items by date_created or last_name:
+            * `date_created:asc` - date created, ascending
+            * `date_created:desc` - date created, descending
+            * `last_name:asc` - last name, ascending
+            * `last_name:desc` - last name, descending
+            Example: `sort=last_name:asc`
+          enum:
+            - 'date_created:asc'
+            - 'date_created:desc'
+            - 'last_name:asc'
+            - 'last_name:desc'
+      responses:
+        200:
+          schema:
+            $ref: '#/definitions/CustomerCollectionResponse'
+    post:
+      description: |-
+        Creates Customers. Multiple customers can be created in one call.
+        **Required Fields**
+        * last_name
+        * first_name
+        * email
+        **Required Fields Customer Address**
+        * first_name
+        * city
+        * country_code
+        * state_or_province
+        * last_name
+        * address1
+        * postal_code
+        **Required Fields Attributes**
+        * Attributes must be [created](https://developer.bigcommerce.com/api-reference/customer-subscribers/v3-customers-api/customer-attributes/customersattributespost) **BEFORE** creating a customer.
+        * attribute_id
+        * attribute_value -- This is input as a string, regardless of the [Type](/api-reference/customer-subscribers/v3-customers-api/models/type).
+      summary: Create Customers
+      tags:
+        - Customers
+      operationId: CustomersPost
+      deprecated: false
+      parameters:
+        - name: body
+          in: body
+          required: true
+          description: ''
+          schema:
+            type: array
+            items:
+              title: Customer Post
+              type: object
+              properties:
+                email:
+                  description: The email of the customer. Must be unique.
+                  type: string
+                  minLength: 3
+                  maxLength: 255
+                first_name:
+                  description: The first name of the customer.
+                  type: string
+                  minLength: 1
+                  maxLength: 100
+                last_name:
+                  description: The last name of the customer.
+                  type: string
+                  minLength: 1
+                  maxLength: 100
+                company:
+                  description: The company of the customer.
+                  type: string
+                  minLength: 0
+                  maxLength: 255
+                phone:
+                  description: The phone number of the customer.
+                  type: string
+                  minLength: 0
+                  maxLength: 50
+                notes:
+                  description: The customer notes.
+                  type: string
+                tax_exempt_category:
+                  description: The tax exempt category code for the customer.
+                  type: string
+                  minLength: 0
+                  maxLength: 255
+                customer_group_id:
+                  description: Id of the group which this customer belongs to.
+                  type: integer
+                  format: int32
+                addresses:
+                  description: Array of customer addresses. Limited to 10
+                  type: array
+                  maxItems: 10
+                  items:
+                    title: Address For Customer
+                    example:
+                      address1: Addr 1
+                      address2: ''
+                      address_type: residential
+                      city: San Francisco
+                      company: History
+                      country_code: US
+                      first_name: Ronald
+                      last_name: Swimmer
+                      phone: '707070707'
+                      postal_code: '33333'
+                      state_or_province: California
+                    type: object
+                    properties:
+                      first_name:
+                        description: The first name of the customer address.
+                        type: string
+                        minLength: 1
+                        maxLength: 255
+                      last_name:
+                        description: The last name of the customer address.
+                        type: string
+                        minLength: 1
+                        maxLength: 255
+                      company:
+                        description: The company of the customer address.
+                        type: string
+                        minLength: 0
+                        maxLength: 255
+                      address1:
+                        description: The address 1 line.
+                        type: string
+                      address2:
+                        description: The address 2 line.
+                        type: string
+                      city:
+                        description: The city of the customer address.
+                        type: string
+                        minLength: 0
+                        maxLength: 100
+                      state_or_province:
+                        description: The state or province name
+                        type: string
+                        minLength: 0
+                        maxLength: 100
+                      postal_code:
+                        description: The postal code of the customer address.
+                        type: string
+                        minLength: 0
+                        maxLength: 30
+                      country_code:
+                        description: The country code of the customer address.
+                        type: string
+                        minLength: 2
+                        maxLength: 2
+                      phone:
+                        description: The phone number of the customer address.
+                        type: string
+                        minLength: 0
+                        maxLength: 50
+                      address_type:
+                        title: Address Type
+                        description: The address type. Residential or Commercial
+                        example: residential
+                        type: string
+                        enum:
+                          - residential
+                          - commercial
+                    required:
+                      - first_name
+                      - last_name
+                      - address1
+                      - city
+                      - state_or_province
+                      - postal_code
+                      - country_code
+                attributes:
+                  description: Array of customer attributes. Limited to 10
+                  type: array
+                  maxItems: 10
+                  items:
+                    title: Customer Attribute Value For Customer
+                    example:
+                      attribute_id: 55
+                      value: string value
+                    type: object
+                    properties:
+                      attribute_id:
+                        description: Attribute ID.
+                        type: integer
+                        format: int32
+                      attribute_value:
+                        description: 'Attribute value. This will always be a string, regardless of the attributes type.'
+                        type: string
+                        minLength: 0
+                        maxLength: 255
+                    required:
+                      - attribute_id
+                      - attribute_value
+                authentication:
+                  title: Customer Authentication
+                  type: object
+                  properties:
+                    force_password_reset:
+                      description: 'If `true`, this customer will be forced to change password on next login.'
+                      type: boolean
+                    new_password:
+                      description: New password for customer. Write only field
+                      type: string
+                accepts_product_review_abandoned_cart_emails:
+                  type: boolean
+                  description: It determines if the customer is signed up to receive either product review or abandoned cart emails or recieve both emails.
+                store_credit_amounts:
+                  $ref: '#/definitions/storeCreditAmounts'
+              required:
+                - email
+                - first_name
+                - last_name
+      responses:
+        200:
+          schema:
+            $ref: '#/definitions/CustomerCollectionResponse'
+        422:
+          description: The *Customer* was not valid. This is the result of missing required fields or trying to edit a read only field. See the response for more details.
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      description: |-
+        Updates Customers. Subresource updates are not supported. Multiple customers can be updated in one call.
+        **Required Fields**
+        * id -- ID of the *Customer* This must be included in the request body
+        **Read Only Fields**
+        * id
+        * registration_ip_address
+        * date_created
+        * date_modified
+        **Notes**
+        Attributes Values can not be updated using Update a Customer. Use the Update a [Customer Attribute Values](https://developer.bigcommerce.com/api-reference/customer-subscribers/v3-customers-api/customer-attribute-values/customersattributevaluesput) endpoint.
+      summary: Update Customers
+      tags:
+        - Customers
+      operationId: CustomersPut
+      deprecated: false
+      parameters:
+        - name: body
+          in: body
+          required: true
+          description: ''
+          schema:
+            type: array
+            items:
+              title: Customer Put
+              type: object
+              properties:
+                email:
+                  description: The email of the customer. Must be unique.
+                  type: string
+                  minLength: 3
+                  maxLength: 255
+                first_name:
+                  description: The first name of the customer.
+                  type: string
+                  minLength: 1
+                  maxLength: 100
+                last_name:
+                  description: The last name of the customer.
+                  type: string
+                  minLength: 1
+                  maxLength: 100
+                company:
+                  description: The company of the customer.
+                  type: string
+                  minLength: 0
+                  maxLength: 255
+                phone:
+                  description: The phone number of the customer.
+                  type: string
+                  minLength: 0
+                  maxLength: 50
+                registration_ip_address:
+                  description: The IP address from which this customer was registered.
+                  type: string
+                  minLength: 0
+                  maxLength: 30
+                notes:
+                  description: The customer notes.
+                  type: string
+                tax_exempt_category:
+                  description: The tax exempt category code for the customer.
+                  type: string
+                  minLength: 0
+                  maxLength: 255
+                customer_group_id:
+                  description: Id of the group which this customer belongs to.
+                  type: integer
+                  format: int32
+                id:
+                  description: The unique numeric ID of the customer.
+                  type: integer
+                  format: int32
+                authentication:
+                  title: Customer Authentication
+                  type: object
+                  properties:
+                    force_password_reset:
+                      description: 'If `true`, this customer will be forced to change password on next login.'
+                      type: boolean
+                    new_password:
+                      description: New password for customer. Write only field
+                      type: string
+                accepts_product_review_abandoned_cart_emails:
+                  type: boolean
+                  description: It determines if the customer is signed up to receive either product review or abandoned cart emails or recieve both emails.
+                store_credit_amounts:
+                  $ref: '#/definitions/storeCreditAmounts'
+              required:
+                - id
+      responses:
+        200:
+          schema:
+            $ref: '#/definitions/CustomerCollectionResponse'
+        422:
+          description: |
+            The `Customer` was not valid. This is the result of missing required fields, or of invalid data. See the response for more details.
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      description: |-
+        Deletes Customers.
+        **Required Query**
+        * id:in -- ID of the customer
+        **Notes**
+        A query is required to delete customers. If not provided, a 204 is returned, with no changes to the data.
+      summary: Delete Customers
+      tags:
+        - Customers
+      operationId: CustomersDelete
+      deprecated: false
+      parameters:
+        - in: query
+          name: 'id:in'
+          type: array
+          items:
+            type: integer
+          description: |-
+            Filter items by id.
+            `id:in=4,5,6`
+          required: true
+      responses:
+        204:
+          description: ''
+          headers: {}
   /orders/{order_id}/transactions:
       parameters:
         - $ref: "#/parameters/OrderIdParam"
@@ -7337,3 +7836,269 @@ definitions:
                 - original
                 - last_activated
                 - last_created
+  CustomersSettings:
+    title: ChannelSettings
+    type: object
+    properties:
+      data:
+        type: object
+        properties:
+          privacy_settings:
+            type: object
+            properties:
+              ask_shopper_for_tracking_consent:
+                type: boolean
+              policy_url:
+                type: string
+              ask_shopper_for_tracking_consent_on_checkout:
+                type: boolean
+          customer_group_settings:
+            type: object
+            properties:
+              guest_customer_group_id:
+                type: integer
+              default_customer_group_id:
+                type: integer
+          allow_global_logins:
+            type: boolean
+  CustomerCollectionResponse:
+    description: Customer Collection Response
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Customer'
+      meta:
+        $ref: '#/definitions/CollectionMeta'
+  Customer:
+    title: Customer
+    type: object
+    properties:
+      email:
+        description: The email of the customer. Must be unique.
+        type: string
+        minLength: 3
+        maxLength: 255
+      first_name:
+        description: The first name of the customer.
+        type: string
+        minLength: 1
+        maxLength: 100
+      last_name:
+        description: The last name of the customer.
+        type: string
+        minLength: 1
+        maxLength: 100
+      company:
+        description: The company of the customer.
+        type: string
+        minLength: 0
+        maxLength: 255
+      phone:
+        description: The phone number of the customer.
+        type: string
+        minLength: 0
+        maxLength: 50
+      registration_ip_address:
+        description: The IP address from which this customer was registered.
+        type: string
+        minLength: 0
+        maxLength: 30
+      notes:
+        description: The customer notes.
+        type: string
+      tax_exempt_category:
+        description: The tax exempt category code for the customer.
+        type: string
+        minLength: 0
+        maxLength: 255
+      customer_group_id:
+        description: Id of the group which this customer belongs to.
+        type: integer
+        format: int32
+      id:
+        description: The unique numeric ID of the customer.
+        type: integer
+        format: int32
+      date_modified:
+        description: The date on which the customer was modified.
+        type: string
+        format: date-time
+      date_created:
+        description: The date of which the customer was created.
+        type: string
+        format: date-time
+      address_count:
+        description: Total number of customer addresses
+        type: integer
+        format: int32
+      attribute_count:
+        description: Total number of customer attributes
+        type: integer
+        format: int32
+      authentication:
+        title: Customer Authentication Base
+        example:
+          force_password_reset: true
+        type: object
+        properties:
+          force_password_reset:
+            description: 'If `true`, this customer will be forced to change password on next login.'
+            type: boolean
+      addresses:
+        description: Array of customer addresses. Limited to 10
+        type: array
+        maxItems: 10
+        items:
+          title: Address
+          type: object
+          properties:
+            first_name:
+              description: The first name of the customer address.
+              type: string
+              minLength: 1
+              maxLength: 255
+            last_name:
+              description: The last name of the customer address.
+              type: string
+              minLength: 1
+              maxLength: 255
+            company:
+              description: The company of the customer address.
+              type: string
+              minLength: 0
+              maxLength: 255
+            address1:
+              description: The address 1 line.
+              type: string
+            address2:
+              description: The address 2 line.
+              type: string
+            city:
+              description: The city of the customer address.
+              type: string
+              minLength: 0
+              maxLength: 100
+            state_or_province:
+              description: The state or province name
+              type: string
+              minLength: 0
+              maxLength: 100
+            postal_code:
+              description: The postal code of the customer address.
+              type: string
+              minLength: 0
+              maxLength: 30
+            country_code:
+              description: The country code of the customer address.
+              type: string
+              minLength: 2
+              maxLength: 2
+            phone:
+              description: The phone number of the customer address.
+              type: string
+              minLength: 0
+              maxLength: 50
+            address_type:
+              title: Address Type
+              description: The address type. Residential or Commercial
+              example: residential
+              type: string
+              enum:
+                - residential
+                - commercial
+            customer_id:
+              description: The customer ID.
+              type: integer
+              format: int32
+            id:
+              description: The unique numeric ID of the address.
+              type: integer
+              format: int32
+            country:
+              description: The country name of the customer address.
+              type: string
+            form_fields:
+              description: Array of form fields. Controlled by `formfields` parameter.
+              type: array
+              items:
+                title: 'Form Field Value'
+                type: object
+          required:
+            - first_name
+            - last_name
+            - address1
+            - city
+            - state_or_province
+            - postal_code
+            - country_code
+            - customer_id
+            - id
+      attributes:
+        description: Array of customer attributes. Limited to 10
+        type: array
+        maxItems: 10
+        items:
+          title: Customer Attribute Value
+          type: object
+          properties:
+            attribute_id:
+              description: Attribute ID.
+              type: integer
+              format: int32
+            value:
+              description: 'Attribute value. This will always be a string, regardless of the attributes type.'
+              type: string
+              minLength: 0
+              maxLength: 255
+            id:
+              description: Attribute value ID.
+              type: integer
+              format: int32
+            customer_id:
+              description: Customer ID.
+              type: integer
+              format: int32
+            date_modified:
+              description: The date on which the customer attribute value was modified.
+              type: string
+              format: date-time
+            date_created:
+              description: The date of which the customer attribute value was created.
+              type: string
+              format: date-time
+          required:
+            - attribute_id
+            - value
+            - customer_id
+      form_fields:
+        description: Array of form fields. Controlled by `formfields` parameter.
+        type: array
+        items:
+          title: 'Form Field Value'
+          type: object
+      store_credit_amounts:
+        $ref: '#/definitions/storeCreditAmounts'
+      accepts_product_review_abandoned_cart_emails:
+        type: boolean
+        description: It determines if the customer is signed up to receive either product review or abandoned cart emails or recieve both emails.
+      channel_ids:
+        $ref: '#/definitions/customerChannelIds'
+  storeCreditAmounts:
+    description: 'Store credit.'
+    type: array
+    format: double
+    items:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: float
+          example: 43.18
+  customerChannelIds:
+    type: array
+    title: customerChannelIds
+    description: Array of channel ids the Customer has access to.
+    items:
+      type: integer

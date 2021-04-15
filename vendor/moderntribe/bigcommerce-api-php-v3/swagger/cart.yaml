@@ -483,10 +483,10 @@ definitions:
         type: array
         items:
           $ref: "#/definitions/AppliedDiscount"
-      coupons:
-        type: array
-        items:
-          $ref: "#/definitions/AppliedCoupon"
+      # coupons:
+      #   type: array
+      #   items:
+      #     $ref: "#/definitions/AppliedCoupon"
       discount_amount:
         type: number
         description: The total value of all discounts applied to this item.

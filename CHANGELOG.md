@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.10.0]
+
+### Added
+- Added support for Twenty Twenty One theme
+- Added support for global customer Login
+- Added Checkout Complete page
+
+### Fixed
+- Fixed Onboarding Settings not showing the correct list of channels
+- Fixed Shipping Calculator enable/disable toggle in the Customizer
+
+
 ## [4.9.0]
 
 ### Added
@@ -10,7 +22,6 @@
 ## [4.8.0]
 
 ### Fixed
-
 - Addresses an issue with the Choices JS library breaking the term selection in
   the WP admin Product Selector UI.
 - Fixed greyed out Embedded Checkout option in the settings even if site is ssl configured
@@ -1371,6 +1382,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.10.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.9.0...4.10.0
 [4.9.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.8.0...4.9.0
 [4.8.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.7.0...4.8.0
 [4.7.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.6.0...4.7.0

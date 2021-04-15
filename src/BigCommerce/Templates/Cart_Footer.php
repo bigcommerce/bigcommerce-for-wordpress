@@ -52,7 +52,7 @@ class Cart_Footer extends Controller {
 	}
 	
 	protected function get_shipping( $cart ) {
-		$enable_shipping_info = get_option( Cart_Settings::ENABLE_SHIPPING_INFO, false );
+		$enable_shipping_info = get_option( Cart_Settings::ENABLE_SHIPPING_INFO, false ) === 'yes';
 
 		if ( ! $enable_shipping_info || ! $this->is_physical_item_in_cart( $cart ) ) {
 			return '';

@@ -52,7 +52,6 @@ class ItemPhysical extends BaseItem implements ArrayAccess
         'is_taxable' => 'bool',
         'image_url' => 'string',
         'discounts' => '\BigCommerce\Api\v3\Model\AppliedDiscount[]',
-        'coupons' => '\BigCommerce\Api\v3\Model\AppliedCoupon[]',
         'discount_amount' => 'float',
         'coupon_amount' => 'float',
         'list_price' => 'float',
@@ -85,7 +84,6 @@ class ItemPhysical extends BaseItem implements ArrayAccess
         'is_taxable' => 'is_taxable',
         'image_url' => 'image_url',
         'discounts' => 'discounts',
-        'coupons' => 'coupons',
         'discount_amount' => 'discount_amount',
         'coupon_amount' => 'coupon_amount',
         'list_price' => 'list_price',
@@ -113,7 +111,6 @@ class ItemPhysical extends BaseItem implements ArrayAccess
         'is_taxable' => 'setIsTaxable',
         'image_url' => 'setImageUrl',
         'discounts' => 'setDiscounts',
-        'coupons' => 'setCoupons',
         'discount_amount' => 'setDiscountAmount',
         'coupon_amount' => 'setCouponAmount',
         'list_price' => 'setListPrice',
@@ -141,7 +138,6 @@ class ItemPhysical extends BaseItem implements ArrayAccess
         'is_taxable' => 'getIsTaxable',
         'image_url' => 'getImageUrl',
         'discounts' => 'getDiscounts',
-        'coupons' => 'getCoupons',
         'discount_amount' => 'getDiscountAmount',
         'coupon_amount' => 'getCouponAmount',
         'list_price' => 'getListPrice',
@@ -195,7 +191,6 @@ class ItemPhysical extends BaseItem implements ArrayAccess
         $this->container['is_taxable'] = array_key_exists('is_taxable', $data) ? $data['is_taxable'] : null;
         $this->container['image_url'] = array_key_exists('image_url', $data) ? $data['image_url'] : null;
         $this->container['discounts'] = array_key_exists('discounts', $data) ? $data['discounts'] : null;
-        $this->container['coupons'] = array_key_exists('coupons', $data) ? $data['coupons'] : null;
         $this->container['discount_amount'] = array_key_exists('discount_amount', $data) ? $data['discount_amount'] : null;
         $this->container['coupon_amount'] = array_key_exists('coupon_amount', $data) ? $data['coupon_amount'] : null;
         $this->container['list_price'] = array_key_exists('list_price', $data) ? $data['list_price'] : null;
@@ -472,27 +467,6 @@ class ItemPhysical extends BaseItem implements ArrayAccess
     public function setDiscounts($discounts)
     {
         $this->container['discounts'] = $discounts;
-
-        return $this;
-    }
-
-    /**
-     * Gets coupons
-     * @return \BigCommerce\Api\v3\Model\AppliedCoupon[]
-     */
-    public function getCoupons()
-    {
-        return $this->container['coupons'];
-    }
-
-    /**
-     * Sets coupons
-     * @param \BigCommerce\Api\v3\Model\AppliedCoupon[] $coupons
-     * @return $this
-     */
-    public function setCoupons($coupons)
-    {
-        $this->container['coupons'] = $coupons;
 
         return $this;
     }

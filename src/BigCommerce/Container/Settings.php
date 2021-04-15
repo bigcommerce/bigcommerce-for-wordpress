@@ -238,7 +238,7 @@ class Settings extends Provider {
 
 	private function cart( Container $container ) {
 		$container[ self::CART_SECTION ] = function ( Container $container ) {
-			return new Cart_Settings( $container[ Pages::CART_PAGE ], $container[ Pages::CHECKOUT_PAGE ] );
+			return new Cart_Settings( $container[ Pages::CART_PAGE ], $container[ Pages::CHECKOUT_PAGE ], $container[ Pages::CHECKOUT_COMPLETE_PAGE ] );
 		};
 		add_action( 'bigcommerce/settings/register/screen=' . Settings_Screen::NAME, $this->create_callback( 'cart_settings_register', function () use ( $container ) {
 			$container[ self::CART_SECTION ]->register_settings_section();
@@ -372,6 +372,14 @@ class Settings extends Provider {
 		add_action( 'bigcommerce/settings/register/screen=' . Settings_Screen::NAME, $this->create_callback( 'accounts_settings_register', function () use ( $container ) {
 			$container[ self::ACCOUNTS_SECTION ]->register_settings_section();
 		} ), 50, 0 );
+
+		add_action( 'init', $this->create_callback( 'add_default_global_logins', function () use ( $container ) {
+			$container[ self::ACCOUNTS_SECTION ]->add_default_global_logins();
+		} ) );
+
+		add_action( 'update_option_' . Account_Settings::ALLOW_GLOBAL_LOGINS, $this->create_callback( 'update_allow_global_logins', function ( $old_value, $new_value ) use ( $container ) {
+			$container[ self::ACCOUNTS_SECTION ]->maybe_sync_global_logins( $old_value, $new_value );
+		} ), 10, 2 );
 	}
 
 	private function analytics( Container $container ) {
