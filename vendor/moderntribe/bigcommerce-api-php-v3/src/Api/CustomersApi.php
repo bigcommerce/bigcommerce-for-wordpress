@@ -178,6 +178,385 @@ class CustomersApi
         }
     }
     /**
+     * Operation customersDelete
+     * Delete Customers
+     *
+     *
+     * @param array $params = []
+     *     - idin int[] Filter items by id. &#x60;id:in&#x3D;4,5,6&#x60; (required)
+     * @return null
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     */
+    public function customersDelete(array $params = [])
+    {
+        list($response) = $this->customersDeleteWithHttpInfo($params);
+        return $response;
+    }
+
+
+    /**
+     * Operation customersDeleteWithHttpInfo
+     *
+     * @see self::customersDelete()
+     * @param array $params = []
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return array of null, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function customersDeleteWithHttpInfo(array $params = [])
+    {
+        
+
+        // parse inputs
+        $resourcePath = "/customers";
+        $httpBody = '';
+        $queryParams = [];
+        $headerParams = [];
+        $formParams = [];
+        $_header_accept = $this->apiClient->selectHeaderAccept(['application/json']);
+        if (!is_null($_header_accept)) {
+            $headerParams['Accept'] = $_header_accept;
+        }
+        $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
+
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
+        // default format to json
+        $resourcePath = str_replace("{format}", "json", $resourcePath);
+
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            $httpBody = $_tempBody; // $_tempBody is the method argument, if present
+        } elseif (count($formParams) > 0) {
+            $httpBody = $formParams; // for HTTP post (form)
+        }
+        
+        // make the API Call
+        try {
+            list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
+                $resourcePath,
+                'DELETE',
+                $queryParams,
+                $httpBody,
+                $headerParams,
+                null,
+                '/customers'
+            );
+            return [null, $statusCode, $httpHeader];
+
+         } catch (ApiException $e) {
+            switch ($e->getCode()) {
+            
+            }
+
+            throw $e;
+        }
+    }
+    /**
+     * Operation customersGet
+     * Get All Customers
+     *
+     *
+     * @param array $params = []
+     *     - page int Page number. &#x60;page&#x3D;1&#x60; (optional)
+     *     - limit float Items count per page. &#x60;limit&#x3D;50&#x60; (optional)
+     *     - idin int[] Filter items by id. &#x60;id:in&#x3D;4,5,6&#x60; (optional)
+     *     - companyin string[] Filter items by company. &#x60;company:in&#x3D;bigcommerce,commongood&#x60; (optional)
+     *     - customer_group_idin string[] Filter items by customer_group_id. &#x60;customer_group_id:in&#x3D;5,6&#x60; (optional)
+     *     - date_created \DateTime Filter items by date_created. &#x60;date_created&#x3D;2018-09-05T13:43:54&#x60; (optional)
+     *     - date_createdmax string Filter items by maximum date_created. &#x60;date_created:max&#x3D;2018-09-10&#x60; (optional)
+     *     - date_createdmin \DateTime Filter items by date_created. &#x60;date_created:min&#x3D;2018-09-05&#x60; (optional)
+     *     - date_modified \DateTime Filter items by date_modified. &#x60;date_modified&#x3D;2018-09-05T13:45:03&#x60; (optional)
+     *     - date_modifiedmin string Filter items by mininum date_modified. &#x60;date_modified:min&#x3D;2019-09-04T:00:00:00&#x60; or &#x60;date_modified:min&#x3D;2019-09-04&#x60; (optional)
+     *     - date_modifiedmax \DateTime Filter items by maximum date_modified &#x60;date_modified:max&#x3D;2018-09-05T13:45:03&#x60; or &#x60;date_modified:max&#x3D;2019-09-04&#x60; (optional)
+     *     - emailin string Filter items by email. &#x60;email:in&#x3D;janedoe@email.com&#x60; (optional)
+     *     - namein string[] Filter items by first_name and last_name. &#x60;name&#x3D;james moriarty&#x60; (optional)
+     *     - namelike string[] Filter items by substring in first_name and last_name. &#x60;name:like&#x3D;moriarty, sherlock&#x60; Concatenates the first_name and last_name fields. (optional)
+     *     - registration_ip_addressin int[] Filter items by registration_ip_address. If the customer was created using the API, then registration address is blank. &#x60;registration_ip_address:in&#x3D;12.345.6.789&#x60; (optional)
+     *     - include string Indicates whether to include customer sub-resources:  * &#x60;addresses&#x60; - customer addresses  * &#x60;storecredit&#x60; - store credit  * &#x60;attributes&#x60; - customer attributes and address attributes  * &#x60;formfields&#x60; - customer and address form fields  &#x60;include&#x3D;addresses,storecredit,attributes,formfields&#x60; (optional)
+     *     - sort string Sort items by date_created or last_name: * &#x60;date_created:asc&#x60; - date created, ascending * &#x60;date_created:desc&#x60; - date created, descending * &#x60;last_name:asc&#x60; - last name, ascending * &#x60;last_name:desc&#x60; - last name, descending Example: &#x60;sort&#x3D;last_name:asc&#x60; (optional)
+     * @return \BigCommerce\Api\v3\Model\CustomerCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     */
+    public function customersGet(array $params = [])
+    {
+        list($response) = $this->customersGetWithHttpInfo($params);
+        return $response;
+    }
+
+
+    /**
+     * Operation customersGetWithHttpInfo
+     *
+     * @see self::customersGet()
+     * @param array $params = []
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return array of \BigCommerce\Api\v3\Model\CustomerCollectionResponse, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function customersGetWithHttpInfo(array $params = [])
+    {
+        
+
+        // parse inputs
+        $resourcePath = "/customers";
+        $httpBody = '';
+        $queryParams = [];
+        $headerParams = [];
+        $formParams = [];
+        $_header_accept = $this->apiClient->selectHeaderAccept(['application/json']);
+        if (!is_null($_header_accept)) {
+            $headerParams['Accept'] = $_header_accept;
+        }
+        $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
+
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
+        // default format to json
+        $resourcePath = str_replace("{format}", "json", $resourcePath);
+
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            $httpBody = $_tempBody; // $_tempBody is the method argument, if present
+        } elseif (count($formParams) > 0) {
+            $httpBody = $formParams; // for HTTP post (form)
+        }
+        
+        // make the API Call
+        try {
+            list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
+                $resourcePath,
+                'GET',
+                $queryParams,
+                $httpBody,
+                $headerParams,
+                '\BigCommerce\Api\v3\Model\CustomerCollectionResponse',
+                '/customers'
+            );
+            return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\CustomerCollectionResponse', $httpHeader), $statusCode, $httpHeader];
+
+         } catch (ApiException $e) {
+            switch ($e->getCode()) {
+            
+                case 200:
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\CustomerCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
+            }
+
+            throw $e;
+        }
+    }
+    /**
+     * Operation customersPost
+     * Create Customers
+     *
+     *
+     * @param \BigCommerce\Api\v3\Model\CustomerPost[] $body  (required)
+     * @param array $params = []
+     * @return \BigCommerce\Api\v3\Model\CustomerCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     */
+    public function customersPost($body, array $params = [])
+    {
+        list($response) = $this->customersPostWithHttpInfo( $body, $params);
+        return $response;
+    }
+
+
+    /**
+     * Operation customersPostWithHttpInfo
+     *
+     * @see self::customersPost()
+     * @param \BigCommerce\Api\v3\Model\CustomerPost[] $body  (required)
+     * @param array $params = []
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return array of \BigCommerce\Api\v3\Model\CustomerCollectionResponse, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function customersPostWithHttpInfo( $body, array $params = [])
+    {
+        
+        // verify the required parameter 'body' is set
+        if (!isset($body)) {
+            throw new \InvalidArgumentException('Missing the required parameter $body when calling customersPost');
+        }
+        
+
+        // parse inputs
+        $resourcePath = "/customers";
+        $httpBody = '';
+        $queryParams = [];
+        $headerParams = [];
+        $formParams = [];
+        $_header_accept = $this->apiClient->selectHeaderAccept(['application/json']);
+        if (!is_null($_header_accept)) {
+            $headerParams['Accept'] = $_header_accept;
+        }
+        $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
+
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
+        // default format to json
+        $resourcePath = str_replace("{format}", "json", $resourcePath);
+
+        // body params
+        $_tempBody = null;
+        if (isset($body)) {
+        $_tempBody = $body;
+        }
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            $httpBody = $_tempBody; // $_tempBody is the method argument, if present
+        } elseif (count($formParams) > 0) {
+            $httpBody = $formParams; // for HTTP post (form)
+        }
+        
+        // make the API Call
+        try {
+            list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
+                $resourcePath,
+                'POST',
+                $queryParams,
+                $httpBody,
+                $headerParams,
+                '\BigCommerce\Api\v3\Model\CustomerCollectionResponse',
+                '/customers'
+            );
+            return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\CustomerCollectionResponse', $httpHeader), $statusCode, $httpHeader];
+
+         } catch (ApiException $e) {
+            switch ($e->getCode()) {
+            
+                case 200:
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\CustomerCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
+                case 422:
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
+            }
+
+            throw $e;
+        }
+    }
+    /**
+     * Operation customersPut
+     * Update Customers
+     *
+     *
+     * @param \BigCommerce\Api\v3\Model\CustomerPut[] $body  (required)
+     * @param array $params = []
+     * @return \BigCommerce\Api\v3\Model\CustomerCollectionResponse
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     */
+    public function customersPut($body, array $params = [])
+    {
+        list($response) = $this->customersPutWithHttpInfo( $body, $params);
+        return $response;
+    }
+
+
+    /**
+     * Operation customersPutWithHttpInfo
+     *
+     * @see self::customersPut()
+     * @param \BigCommerce\Api\v3\Model\CustomerPut[] $body  (required)
+     * @param array $params = []
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return array of \BigCommerce\Api\v3\Model\CustomerCollectionResponse, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function customersPutWithHttpInfo( $body, array $params = [])
+    {
+        
+        // verify the required parameter 'body' is set
+        if (!isset($body)) {
+            throw new \InvalidArgumentException('Missing the required parameter $body when calling customersPut');
+        }
+        
+
+        // parse inputs
+        $resourcePath = "/customers";
+        $httpBody = '';
+        $queryParams = [];
+        $headerParams = [];
+        $formParams = [];
+        $_header_accept = $this->apiClient->selectHeaderAccept(['application/json']);
+        if (!is_null($_header_accept)) {
+            $headerParams['Accept'] = $_header_accept;
+        }
+        $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
+
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
+        // default format to json
+        $resourcePath = str_replace("{format}", "json", $resourcePath);
+
+        // body params
+        $_tempBody = null;
+        if (isset($body)) {
+        $_tempBody = $body;
+        }
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            $httpBody = $_tempBody; // $_tempBody is the method argument, if present
+        } elseif (count($formParams) > 0) {
+            $httpBody = $formParams; // for HTTP post (form)
+        }
+        
+        // make the API Call
+        try {
+            list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
+                $resourcePath,
+                'PUT',
+                $queryParams,
+                $httpBody,
+                $headerParams,
+                '\BigCommerce\Api\v3\Model\CustomerCollectionResponse',
+                '/customers'
+            );
+            return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\CustomerCollectionResponse', $httpHeader), $statusCode, $httpHeader];
+
+         } catch (ApiException $e) {
+            switch ($e->getCode()) {
+            
+                case 200:
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\CustomerCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
+                case 422:
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\ErrorResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
+            }
+
+            throw $e;
+        }
+    }
+    /**
      * Operation deleteSubscriberById
      * 
      *
@@ -351,6 +730,106 @@ class CustomersApi
 
          } catch (ApiException $e) {
             switch ($e->getCode()) {
+            
+            }
+
+            throw $e;
+        }
+    }
+    /**
+     * Operation getCustomerSettings
+     * 
+     *
+     *
+     * @param int $channel_id The ID of a Channel that&#39;s available through GET /channels (required)
+     * @param array $params = []
+     * @return \BigCommerce\Api\v3\Model\CustomersSettings
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     */
+    public function getCustomerSettings($channel_id, array $params = [])
+    {
+        list($response) = $this->getCustomerSettingsWithHttpInfo($channel_id, $params);
+        return $response;
+    }
+
+
+    /**
+     * Operation getCustomerSettingsWithHttpInfo
+     *
+     * @see self::getCustomerSettings()
+     * @param int $channel_id The ID of a Channel that&#39;s available through GET /channels (required)
+     * @param array $params = []
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return array of \BigCommerce\Api\v3\Model\CustomersSettings, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function getCustomerSettingsWithHttpInfo($channel_id, array $params = [])
+    {
+        
+        // verify the required parameter 'channel_id' is set
+        if (!isset($channel_id)) {
+            throw new \InvalidArgumentException('Missing the required parameter $channel_id when calling getCustomerSettings');
+        }
+        
+
+        // parse inputs
+        $resourcePath = "/customers/settings/channels/{channelId}";
+        $httpBody = '';
+        $queryParams = [];
+        $headerParams = [];
+        $formParams = [];
+        $_header_accept = $this->apiClient->selectHeaderAccept(['application/json']);
+        if (!is_null($_header_accept)) {
+            $headerParams['Accept'] = $_header_accept;
+        }
+        $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
+
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
+        // path params
+
+
+        if (isset($channel_id)) {
+            $resourcePath = str_replace(
+                "{" . "channelId" . "}",
+                $this->apiClient->getSerializer()->toPathValue($channel_id),
+                $resourcePath
+            );
+        }
+        // default format to json
+        $resourcePath = str_replace("{format}", "json", $resourcePath);
+
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            $httpBody = $_tempBody; // $_tempBody is the method argument, if present
+        } elseif (count($formParams) > 0) {
+            $httpBody = $formParams; // for HTTP post (form)
+        }
+        
+        // make the API Call
+        try {
+            list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
+                $resourcePath,
+                'GET',
+                $queryParams,
+                $httpBody,
+                $headerParams,
+                '\BigCommerce\Api\v3\Model\CustomersSettings',
+                '/customers/settings/channels/{channelId}'
+            );
+            return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\CustomersSettings', $httpHeader), $statusCode, $httpHeader];
+
+         } catch (ApiException $e) {
+            switch ($e->getCode()) {
+            
+                case 200:
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\CustomersSettings', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
             
             }
 
@@ -546,6 +1025,118 @@ class CustomersApi
             
                 case 200:
                 $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\SubscriberCollectionResponse', $e->getResponseHeaders());
+                $e->setResponseObject($data);
+                break;
+            
+            }
+
+            throw $e;
+        }
+    }
+    /**
+     * Operation updateCustomerSettings
+     * 
+     *
+     *
+     * @param int $channel_id The ID of a Channel that&#39;s available through GET /channels (required)
+     * @param \BigCommerce\Api\v3\Model\CustomersSettings $channel_settings A BigCommerce &#x60;ChannelSettings&#x60; object. (required)
+     * @param array $params = []
+     * @return \BigCommerce\Api\v3\Model\CustomersSettings
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     */
+    public function updateCustomerSettings($channel_id, $channel_settings, array $params = [])
+    {
+        list($response) = $this->updateCustomerSettingsWithHttpInfo($channel_id,  $channel_settings, $params);
+        return $response;
+    }
+
+
+    /**
+     * Operation updateCustomerSettingsWithHttpInfo
+     *
+     * @see self::updateCustomerSettings()
+     * @param int $channel_id The ID of a Channel that&#39;s available through GET /channels (required)
+     * @param \BigCommerce\Api\v3\Model\CustomersSettings $channel_settings A BigCommerce &#x60;ChannelSettings&#x60; object. (required)
+     * @param array $params = []
+     * @throws \BigCommerce\Api\v3\ApiException on non-2xx response
+     * @throws \InvalidArgumentException
+     * @return array of \BigCommerce\Api\v3\Model\CustomersSettings, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function updateCustomerSettingsWithHttpInfo($channel_id,  $channel_settings, array $params = [])
+    {
+        
+        // verify the required parameter 'channel_id' is set
+        if (!isset($channel_id)) {
+            throw new \InvalidArgumentException('Missing the required parameter $channel_id when calling updateCustomerSettings');
+        }
+        
+        // verify the required parameter 'channel_settings' is set
+        if (!isset($channel_settings)) {
+            throw new \InvalidArgumentException('Missing the required parameter $channel_settings when calling updateCustomerSettings');
+        }
+        
+
+        // parse inputs
+        $resourcePath = "/customers/settings/channels/{channelId}";
+        $httpBody = '';
+        $queryParams = [];
+        $headerParams = [];
+        $formParams = [];
+        $_header_accept = $this->apiClient->selectHeaderAccept(['application/json']);
+        if (!is_null($_header_accept)) {
+            $headerParams['Accept'] = $_header_accept;
+        }
+        $headerParams['Content-Type'] = $this->apiClient->selectHeaderContentType(['application/json']);
+
+        // query params
+        foreach ( $params as $key => $param ) {
+            $queryParams[ $key ] = $this->apiClient->getSerializer()->toQueryValue( $param );
+        }
+
+        // path params
+
+
+        if (isset($channel_id)) {
+            $resourcePath = str_replace(
+                "{" . "channelId" . "}",
+                $this->apiClient->getSerializer()->toPathValue($channel_id),
+                $resourcePath
+            );
+        }
+        // default format to json
+        $resourcePath = str_replace("{format}", "json", $resourcePath);
+
+        // body params
+        $_tempBody = null;
+        if (isset($channel_settings)) {
+        $_tempBody = $channel_settings;
+        }
+        // for model (json/xml)
+        if (isset($_tempBody)) {
+            $httpBody = $_tempBody; // $_tempBody is the method argument, if present
+        } elseif (count($formParams) > 0) {
+            $httpBody = $formParams; // for HTTP post (form)
+        }
+        
+        // make the API Call
+        try {
+            list($response, $statusCode, $httpHeader) = $this->apiClient->callApi(
+                $resourcePath,
+                'PUT',
+                $queryParams,
+                $httpBody,
+                $headerParams,
+                '\BigCommerce\Api\v3\Model\CustomersSettings',
+                '/customers/settings/channels/{channelId}'
+            );
+            return [$this->apiClient->getSerializer()->deserialize($response, '\BigCommerce\Api\v3\Model\CustomersSettings', $httpHeader), $statusCode, $httpHeader];
+
+         } catch (ApiException $e) {
+            switch ($e->getCode()) {
+            
+                case 200:
+                $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\BigCommerce\Api\v3\Model\CustomersSettings', $e->getResponseHeaders());
                 $e->setResponseObject($data);
                 break;
             

@@ -9,9 +9,10 @@ use BigCommerce\Pages\Required_Page;
 trait WithPages {
 	public function render_page_field( $args ) {
 		/** @var Required_Page $page */
-		$page   = $args[ 'page' ];
-		$option = $page->get_option_name();
-		$value  = (int) get_option( $option, 0 );
+		$page        = $args[ 'page' ];
+		$option      = $page->get_option_name();
+		$value       = (int) get_option( $option, 0 );
+		$description = $args['description'] ?? '';
 
 		do_action( 'bigcommerce/settings/accounts/before_page_field', $page, $value );
 		do_action( 'bigcommerce/settings/accounts/before_page_field/page=' . $option, $page, $value );

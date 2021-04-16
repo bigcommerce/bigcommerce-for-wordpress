@@ -77,6 +77,13 @@ class Api_Factory {
 	}
 
 	/**
+	 * @return Customer_Api
+	 */
+	public function customer() {
+		return new Customer_Api( $this->api_client );
+	}
+
+	/**
 	 * @return CustomersApi
 	 */
 	public function customers() {
@@ -116,13 +123,6 @@ class Api_Factory {
 	 */
 	public function wishlists() {
 		return new WishlistsApi( $this->api_client );
-	}
-
-	/**
-	 * @return Customer_Api
-	 */
-	public function customer() {
-		return new Customer_Api( $this->api_client );
 	}
 
 	/**

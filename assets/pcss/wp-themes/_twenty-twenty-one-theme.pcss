@@ -1,0 +1,363 @@
+:root {
+	--global--color-primary: #28303d;
+	--global--spacing-vertical: 30px;
+	--heading--font-size-h3: 2rem;
+}
+
+.bc-wp-twenty-twenty-one-theme {
+	/* Case: Remove browser-defined border style. */
+	.site .button,
+	button,
+	input[type=submit],
+	input[type=reset],
+	.wp-block-search .wp-block-search__button,
+	.wp-block-button .wp-block-button__link,
+	.wp-block-file a.wp-block-file__button .bc-product-archive {
+		border: none;
+	}
+
+	/* Case: Overwrite anchor styles when .bc-btn is applied. */
+	.site a.bc-btn:focus:not(.wp-block-button__link):not(.wp-block-file__button) {
+		background: var(--color-primary);
+		outline-offset: -6px;
+		outline: 2px dotted currentColor;
+		text-decoration: none;
+	}
+
+	/* Case: Overwrite theme-specific button styles. */
+	.site .button:not(:hover):not(:active):not(.has-background),
+	button:not(:hover):not(:active):not(.has-background),
+	input[type=submit]:not(:hover):not(:active):not(.has-background),
+	input[type=reset]:not(:hover):not(:active):not(.has-background),
+	.wp-block-search .wp-block-search__button:not(:hover):not(:active):not(.has-background),
+	.wp-block-button .wp-block-button__link:not(:hover):not(:active):not(.has-background),
+	.wp-block-file a.wp-block-file__button:not(:hover):not(:active):not(.has-background) {
+		background-color: var(--color-primary);
+		border: none;
+		color: var(--color-white);
+	}
+
+	/* Case: Overwrite theme-specific button styles. */
+	.bc-btn--inverse,
+	button.bc-btn--inverse,
+	a.bc-btn--inverse,
+	.entry-content .bc-btn--inverse,
+	.entry-content button.bc-btn--inverse,
+	.entry-content a.bc-btn--inverse,
+	.bc-account-login__form input[type="submit"].button--inverse {
+		border: none;
+		padding: 15px 20px;
+	}
+
+	/* Case: Overwrite theme-specific link styles. */
+	a.bc-link:focus:not(.wp-block-button__link):not(.wp-block-file__button) {
+		background: none;
+	}
+
+	/* Case: Content widths need to be wider for bc content pages. */
+	.entry-content > * {
+		max-width: var(--container-960) !important;
+	}
+
+	.bc-product-archive {
+		/* Case: Product archive view needs to be wider to allow space for the refinery. */
+		max-width: 1260px !important;
+
+		.bc-product-archive__refinery {
+
+			.bc-form {
+				@media (--viewport-full) {
+					justify-content: space-between;
+				}
+			}
+		}
+
+		.bc-product-archive__select-label {
+			@media (--viewport-full) {
+				margin-bottom: 0;
+			}
+		}
+
+		.bc-product__title {
+			@media (--viewport-full) {
+				font-size: var(--font-size-content-xl);
+			}
+		}
+
+		.bc-btn,
+		button.bc-btn,
+		a.bc-btn,
+		.entry-content .bc-btn,
+		.entry-content button.bc-btn,
+		.entry-content a.bc-btn,
+		.bc-account-login__form input[type="submit"].button {
+			font-size: var(--font-size-content-xxs);
+		}
+
+		.bc-quickview-trigger:not(:hover):not(:active):not(.has-background) {
+			background-color: transparent;
+		}
+
+		.bc-product-card__featured-image {
+
+			img {
+				margin: 0 auto;
+			}
+		}
+	}
+
+	.bc-product-single {
+
+		.bc-form {
+			margin-top: 20px;
+			width: 100%;
+
+			input[type="radio"],
+			input[type="checkbox"] {
+				border: 0;
+				height: 1px;
+				margin: -1px;
+				padding: 0;
+				position: absolute;
+				width: 1px;
+			}
+
+			input[type=checkbox] + label,
+			input[type=radio] + label {
+				display: block;
+				padding-left: 0;
+			}
+		}
+
+		.bc-form__control {
+			margin-right: 20px;
+		}
+
+		.bc-product-variant__label--pick-list {
+			border-color: var(--global--color-primary);
+		}
+
+		.bc-product-variant__label--title {
+			color: var(--global--color-primary);
+		}
+
+		.bc-single-product__reviews {
+			border-top-color: var(--global--color-primary);
+		}
+
+		.bc-product-review-form__title {
+			font-size: var(--heading--font-size-h3);
+		}
+
+		.bc-product-review-form-wrapper {
+			padding: 20px 0;
+		}
+
+		.bc-product-review__cancel-write-btn {
+			display: inline-block;
+			margin-top: 20px;
+		}
+	}
+
+	.bc-account-login {
+
+		.bc-account-login__register-list {
+			margin-left: 0;
+		}
+
+		.bc-account-login__form,
+		.bc-account-login__register {
+			@media (--viewport-medium) {
+				margin-bottom: 40px;
+				width: 100%;
+			}
+
+			@media (--viewport-full) {
+				margin-bottom: 0;
+				width: 50%;
+			}
+		}
+
+		.bc-account-login__form {
+
+			label {
+				align-items: center;
+				display: flex;
+			}
+
+			input {
+				margin-right: 1em;
+			}
+		}
+
+		.bc-account-login__form-inner {
+			@media (--viewport-medium) {
+				margin-left: auto;
+				margin-right: auto;
+			}
+
+			a {
+				display: inline-block;
+				margin-top: 20px;
+			}
+		}
+
+		.bc-account-login__register {
+			@media (--viewport-medium) {
+				margin-top: var(--global--spacing-vertical);
+			}
+
+			@media (--viewport-full) {
+				margin-top: 0;
+			}
+
+			.bc-btn--register {
+				margin-top: 20px;
+			}
+		}
+	}
+
+	.bc-order-list__item {
+		border-bottom-color: var(--global--color-primary);
+	}
+
+	.bc-order-detail {
+
+		.bc-order__product-list {
+			padding-left: 0;
+		}
+
+		.bc-order-detail__body {
+			flex-wrap: wrap;
+		}
+
+		.bc-order-detail__meta {
+			flex: 1 1 100%;
+			margin-right: 0;
+			max-width: 100%;
+			width: 100%;
+		}
+
+		.bc-order-detail-meta__list {
+			@media (--viewport-full) {
+				flex-wrap: nowrap;
+			}
+		}
+
+		.bc-order-detail-meta__list-item {
+			@media (--viewport-full) {
+				max-width: 25%;
+				width: 25%;
+			}
+
+			&:nth-child(1n) {
+				margin-right: 0;
+			}
+
+			&:nth-child(3n) {
+				@media (--viewport-full) {
+					margin-left: 0;
+				}
+			}
+		}
+
+		.bc-order-detail__totals {
+			@media (--viewport-medium) {
+				justify-self: flex-end;
+				margin-left: auto;
+				max-width: 50%;
+				width: 50%;
+			}
+		}
+	}
+
+	.bc-account-wish-lists {
+
+		.bc-wish-list-row,
+		.bc-wish-list-header {
+			border-bottom-color: var(--global--color-primary);
+		}
+
+		.bc-wish-list-link {
+			display: block;
+			line-height: var(--line-height-l);
+		}
+
+		.bc-wishilist-copy {
+			@media (--viewport-medium) {
+				display: block;
+			}
+		}
+	}
+
+	/* CASE: dialog gets added outside <body >  */
+	+ .bc-wish-list-dialog__wrapper {
+
+		.bc-wish-list-name-field {
+			margin: 0 0 1em;
+			width: 100%;
+		}
+
+		.bc-wish-list-public-label {
+			width: calc(100% - 30px);
+		}
+	}
+
+	.bc-account-page {
+		border-bottom-color: var(--global--color-primary);
+		border-top-color: var(--global--color-primary);
+
+		.bc-account-login__register {
+			border-left-color: var(--global--color-primary);
+		}
+	}
+
+	.bc-account-address-form__overlay {
+		background-color: transparent;
+	}
+
+	.bc-mini-cart {
+
+		.bc-btn {
+			background-color: var(--color-primary);
+			font-size: var(--font-size-content-s);
+			font-weight: var(--font-weight-semibold);
+			line-height: var(--line-height-l);
+			text-decoration: none;
+
+			&:hover {
+				text-decoration: none;
+			}
+		}
+	}
+
+	.bc-cart-item {
+		border-top-color: var(--global--color-primary);
+
+		&:last-child {
+			border-bottom-color: var(--global--color-primary);
+		}
+	}
+
+	.bc-cart__empty {
+		border-bottom-color: var(--global--color-primary);
+		border-top-color: var(--global--color-primary);
+	}
+
+	.bc-shipping-calculator {
+		border-bottom-color: var(--global--color-primary);
+	}
+
+	.bc-gift-purchase {
+
+		.bc-form__col:first-child {
+			@media (--viewport-medium) {
+				border-right-color: var(--global--color-primary);
+			}
+		}
+
+		.bc-form .bc-form-terms {
+			background: none;
+		}
+	}
+}

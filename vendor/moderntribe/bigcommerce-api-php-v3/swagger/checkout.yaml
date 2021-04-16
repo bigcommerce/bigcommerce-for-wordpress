@@ -1,0 +1,1462 @@
+swagger: '2.0'
+info:
+  version: '3.0'
+  title: Checkouts
+  description: Create checkouts from existing carts using BigCommerce checkout logic.
+host: api.bigcommerce.com
+basePath: '/stores/{$$.env.store_hash}/v3'
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  '/checkouts/{checkoutId}':
+    get:
+      description: |-
+        Returns a *Checkout*.
+
+        **Notes**
+
+        The cart ID and checkout ID are the same.
+      summary: Get a Checkout
+      tags:
+        - Checkout
+      operationId: CheckoutsByCheckoutIdGet
+      produces:
+        - application/json
+      parameters:
+        - name: checkoutId
+          in: path
+          type: string
+          required: true
+          description: Id of the Checkout
+        - name: Accept
+          in: header
+          type: string
+          default: application/json
+          required: true
+        - name: Content-Type
+          in: header
+          type: string
+          default: application/json
+          required: true
+        - in: query
+          name: include
+          type: string
+          description: |-
+            * `cart.lineItems.physicalItems.options` - physical options
+            * `cart.lineItems.digitalItems.options` - digital options
+            * `cart.lineItems.physicalItems.categoryNames` - physical categories
+            * `cart.lineItems.digitalItems.categoryNames` - digital categories
+            * `customer` - customer
+            * `customer.customerGroup` - customer group
+            * `payments` - payments
+            * `promotions` - promotions
+            * `consignments.availableShippingOptions` - shipping options
+      responses:
+        '200':
+          schema:
+            $ref: '#/definitions/CheckoutResponse'
+        '404':
+          description: When a given checkout ID is not found.
+          schema:
+            title: Checkout Error
+            type: object
+            properties:
+              errors:
+                description: ''
+                type: array
+                items:
+                  $ref: '#/definitions/ErrorDetail'
+                  title: ErrorDetail
+                  type: object
+                  properties:
+                    status:
+                      description: ''
+                      type: integer
+                      format: int32
+                    title:
+                      description: ''
+                      type: string
+                    type:
+                      description: ''
+                      type: string
+                    detail:
+                      description: ''
+                      type: string
+      x-unitTests: []
+      x-operation-settings:
+        CollectParameters: false
+        AllowDynamicQueryParameters: false
+        AllowDynamicFormParameters: false
+        IsMultiContentStreaming: false
+  '/checkouts/{checkoutId}/billing-address':
+    post:
+      description: |-
+        Adds a billing address to an existing *Checkout*.
+
+        **Required Fields**
+        * email
+        * country_code
+      tags:
+        - Checkout
+      operationId: CheckoutsBillingAddressByCheckoutIdPost
+      produces:
+        - application/json
+      parameters:
+        - name: checkoutId
+          in: path
+          type: string
+          required: true
+          description: Id of the Checkout
+        - name: Accept
+          in: header
+          type: string
+          default: application/json
+          required: true
+        - name: Content-Type
+          in: header
+          type: string
+          default: application/json
+          required: true
+        - name: body
+          in: body
+          required: true
+          description: Either email or countryCode is required.
+          schema:
+            $ref: '#/definitions/AddressProperties'
+      responses:
+        '200':
+          schema:
+            $ref: '#/definitions/CheckoutResponse'
+      x-unitTests: []
+      x-operation-settings:
+        CollectParameters: false
+        AllowDynamicQueryParameters: false
+        AllowDynamicFormParameters: false
+        IsMultiContentStreaming: false
+      summary: Add Checkout Billing Address
+  '/checkouts/{checkoutId}/billing-address/{addressId}':
+    put:
+      description: Updates an existing billing address on *Checkout*.
+      summary: Update Checkout Billing Address
+      tags:
+        - Checkout
+      operationId: CheckoutsBillingAddressByCheckoutIdAndAddressIdPut
+      produces:
+        - application/json
+      parameters:
+        - name: checkoutId
+          in: path
+          type: string
+          required: true
+          description: Id of the Checkout
+        - name: Accept
+          in: header
+          type: string
+          default: application/json
+          required: true
+        - name: Content-Type
+          in: header
+          type: string
+          default: application/json
+          required: true
+        - name: addressId
+          in: path
+          type: integer
+          required: true
+        - name: body
+          in: body
+          required: true
+          description: ''
+          schema:
+            $ref: '#/definitions/AddressProperties'
+      responses:
+        '200':
+          schema:
+            $ref: '#/definitions/CheckoutResponse'
+      x-unitTests: []
+      x-operation-settings:
+        CollectParameters: false
+        AllowDynamicQueryParameters: false
+        AllowDynamicFormParameters: false
+        IsMultiContentStreaming: false
+  '/checkouts/{checkoutId}/consignments':
+    post:
+      description: "Adds a new *Consignment* to *Checkout*.\n\n\nThere are two steps to add a new shipping address and shipping options with line items. \n* Add a new Consignment to Checkout.\n\t* Send a POST to Consignments with each shipping address and line items IDs. Each address can have its own line item IDs.\n\t* As part of the request URL make sure to add `include=consignments.available_shipping_options` to return the available shipping options based on line items and shipping locations. This appended request will return `available_shipping_options` in the response.\n\n* [Update the Consignment](https://developer.bigcommerce.com/api-reference/cart-checkout/server-server-checkout-api/checkout-consignments/checkoutsconsignmentsbycheckoutidandconsignmentidput) with Shipping Options.\n\n**Required Query**\n* consignments.available_shipping_options\n\n**Required Fields**\n* shipping_address\n* line_items"
+      summary: Add Consignment to Checkout
+      tags:
+        - Checkout
+      operationId: CheckoutsConsignmentsByCheckoutIdPost
+      produces:
+        - application/json
+      parameters:
+        - name: checkoutId
+          in: path
+          type: string
+          required: true
+          description: Id of the Checkout
+        - name: Accept
+          in: header
+          type: string
+          default: application/json
+          required: true
+        - name: Content-Type
+          in: header
+          type: string
+          default: application/json
+          required: true
+        - name: body
+          in: body
+          required: true
+          description: ''
+          schema:
+            $ref: '#/definitions/CreateConsignmentRequest'            
+        - name: include
+          in: query
+          required: false
+          x-enum-elements:
+            - name: Enum_consignments.availableShippingOptions
+              description: ''
+          type: string
+          description: Must be included to get available shipping options
+          default: consignments.available_shipping_options
+        - $ref: '#/parameters/includeShippingOption'
+      responses:
+        '200':
+          schema:
+            $ref: '#/definitions/CheckoutResponse'
+      x-unitTests: []
+      x-operation-settings:
+        CollectParameters: false
+        AllowDynamicQueryParameters: false
+        AllowDynamicFormParameters: false
+        IsMultiContentStreaming: false
+  '/checkouts/{checkoutId}/consignments/{consignmentId}':
+    put:
+      description: "Updates an existing consignment. Shipping address, line item IDs or the shipping option ID can be updated using this endpoint.\n\nThere are two steps to add a new shipping address and shipping options with line items. \n1. Add a [new Consignment](/api-reference/cart-checkout/server-server-checkout-api/checkout-consignments/checkoutsconsignmentsbycheckoutidpost) to Checkout.\n2. Update the Consignment with Shipping Options.\n\t1. Update each *Consignment* `shipping_option_id` (shipping address and line items) with the `available_shipping_option > id` from Step One. \n\n\n**Required Fields**\n* shipping_option_id"
+      summary: Update Checkout Consignment
+      tags:
+        - Checkout
+      operationId: CheckoutsConsignmentsByCheckoutIdAndConsignmentIdPut
+      produces:
+        - application/json
+      parameters:
+        - name: checkoutId
+          in: path
+          type: string
+          required: true
+          description: Id of the Checkout
+        - name: Accept
+          in: header
+          type: string
+          default: application/json
+          required: true
+        - name: Content-Type
+          in: header
+          type: string
+          default: application/json
+          required: true
+        - name: consignmentId
+          in: path
+          type: string
+          required: true
+        - name: body
+          in: body
+          required: true
+          description: ''
+          schema:
+            $ref: '#/definitions/UpdateConsignmentRequest'
+        - name: include
+          in: query
+          required: false
+          x-enum-elements:
+            - name: Enum_consignments.availableShippingOptions
+              description: ''
+          type: string
+          description: Must be included to get available shipping options
+          default: consignments.available_shipping_options
+      responses:
+        '200':
+          schema:
+            $ref: '#/definitions/CheckoutResponse'            
+      x-unitTests: []
+      x-operation-settings:
+        CollectParameters: false
+        AllowDynamicQueryParameters: false
+        AllowDynamicFormParameters: false
+        IsMultiContentStreaming: false
+    delete:
+      description: >-
+        Removes an existing consignment from checkout. 
+
+
+        Removing the last consigment will remove the Cart from the customer it
+        is assigned to. Create a new rediret url for the customer to access it
+        again.
+      summary: Delete Checkout Consignment
+      tags:
+        - Checkout
+      operationId: CheckoutsConsignmentsByCheckoutIdAndConsignmentIdDelete
+      produces:
+        - application/json
+      parameters:
+        - name: checkoutId
+          in: path
+          type: string
+          required: true
+          description: Id of the Checkout
+        - name: Accept
+          in: header
+          type: string
+          default: application/json
+          required: true
+        - name: Content-Type
+          in: header
+          type: string
+          default: application/json
+          required: true
+        - name: consignmentId
+          in: path
+          type: string
+          required: true
+      responses:
+        '200':
+          schema:
+            $ref: '#/definitions/CheckoutResponse'
+      x-unitTests: []
+      x-operation-settings:
+        CollectParameters: false
+        AllowDynamicQueryParameters: false
+        AllowDynamicFormParameters: false
+        IsMultiContentStreaming: false
+  '/checkouts/{checkoutId}/coupons':
+    post:
+      description: |-
+        Adds a *Coupon Code* to *Checkout*.
+
+        **Required Fields**
+        * coupon_code
+      summary: Add Coupon to Checkout
+      tags:
+        - Checkout
+      operationId: CheckoutsCouponsByCheckoutIdPost
+      produces:
+        - application/json
+      parameters:
+        - name: checkoutId
+          in: path
+          type: string
+          required: true
+          description: Id of the Checkout
+        - name: Accept
+          in: header
+          type: string
+          default: application/json
+          required: true
+        - name: Content-Type
+          in: header
+          type: string
+          default: application/json
+          required: true
+        - name: body
+          in: body
+          required: true
+          description: ''
+          schema:
+            $ref: '#/definitions/CouponCodeRequest'
+      responses:
+        '200':
+          schema:
+            $ref: '#/definitions/CheckoutResponse'
+      x-unitTests: []
+      x-operation-settings:
+        CollectParameters: false
+        AllowDynamicQueryParameters: false
+        AllowDynamicFormParameters: false
+        IsMultiContentStreaming: false
+  '/checkouts/{checkoutId}/coupons/{couponCode}':
+    delete:
+      description: Deletes a *Coupon Code* from *Checkout*.
+      summary: Delete Checkout Coupon
+      tags:
+        - Checkout
+      operationId: CheckoutsCouponsByCheckoutIdAndCouponCodeDelete
+      produces:
+        - application/json
+      parameters:
+        - name: checkoutId
+          in: path
+          type: string
+          required: true
+          description: Id of the Checkout
+        - name: Accept
+          in: header
+          type: string
+          default: application/json
+          required: true
+        - name: Content-Type
+          in: header
+          type: string
+          default: application/json
+          required: true
+        - name: couponCode
+          in: path
+          type: string
+          required: true
+          description: 'The actual couponCode, not the couponId.'
+      responses:
+        '200':
+          schema:
+            $ref: '#/definitions/CheckoutResponse'
+      x-unitTests: []
+      x-operation-settings:
+        CollectParameters: false
+        AllowDynamicQueryParameters: false
+        AllowDynamicFormParameters: false
+        IsMultiContentStreaming: false
+  '/checkouts/{checkoutId}/orders':
+    post:
+      responses:
+        '200':
+          schema:
+            $ref: '#/definitions/OrderResponse'
+      summary: Create an Order
+      description: >-
+        Creates an order.
+
+
+        ## Usage notes
+
+        * Orders created will be set to incomplete order status. 
+
+        * You can create as many orders from the same order(cart) as you want. 
+
+        * Order duplication creates the same order with a new order number with
+        the incomplete status. 
+
+        * Once the order is paid, then the cart is deleted. 
+
+        * Cart deletion occurs if you are using BigCommerce to accept payments
+        on orders.
+      parameters:
+        - name: Accept
+          in: header
+          type: string
+          default: application/json
+          required: true
+        - name: Content-Type
+          in: header
+          type: string
+          default: application/json
+          required: true
+        - name: checkoutId
+          in: path
+          type: string
+          required: true
+          description: ID of the checkout (same as the cart ID).
+      tags:
+        - Checkout
+      operationId: createAnOrder
+    parameters:
+      - name: checkoutId
+        in: path
+        type: string
+        required: true
+definitions:
+  Checkout:
+    title: Checkout
+    type: object
+    properties:
+      id:
+        description: ''
+        type: string
+        format: uuid
+      cart:
+        $ref: './cart.yaml#/definitions/Cart'
+      billing_address:
+        title: Address Response
+        allOf:
+          - title: Address Properties
+            properties:
+              first_name:
+                description: ''
+                type: string
+              last_name:
+                description: ''
+                type: string
+              email:
+                type: string
+                description: ''
+              company:
+                description: ''
+                type: string
+              address1:
+                description: ''
+                type: string
+              address2:
+                description: ''
+                type: string
+              city:
+                description: ''
+                type: string
+              state_or_province:
+                description: Represents state or province.
+                type: string
+              state_or_province_code:
+                description: ''
+                type: string
+              country_code:
+                type: string
+                description: ''
+              postal_code:
+                description: ''
+                type: string
+              phone:
+                description: ''
+                type: string
+                pattern: '^\+?[1-9]\d{1,14}(x\d{1-5})?$'
+              custom_fields:
+                description: ''
+                type: array
+                items:
+                  title: Custom Field
+                  type: object
+                  properties:
+                    field_id:
+                      description: ''
+                      type: string
+                    field_value:
+                      description: >-
+                        This can also be an array for fields that need to
+                        support list of values (e.g., a set of check boxes.)
+                      type: string
+            required:
+              - email
+              - country_code
+          - properties:
+              id:
+                description: ''
+                type: string
+        type: object
+      consignments:
+        description: ''
+        type: array
+        items:
+          $ref: '#/definitions/Consignment'
+          title: Consignment
+          description: >-
+            This allows us to have multiple shipping addresses. Where there is
+            only one shipping address, this array will contain only one value,
+            with all the items.
+          type: object
+          properties:
+            id:
+              description: ''
+              type: string
+            shipping_address:
+              title: Address Response
+              allOf:
+                - title: Address Properties
+                  properties:
+                    first_name:
+                      description: ''
+                      type: string
+                    last_name:
+                      description: ''
+                      type: string
+                    email:
+                      type: string
+                      description: ''
+                    company:
+                      description: ''
+                      type: string
+                    address1:
+                      description: ''
+                      type: string
+                    address2:
+                      description: ''
+                      type: string
+                    city:
+                      description: ''
+                      type: string
+                    state_or_province:
+                      description: Represents state or province.
+                      type: string
+                    state_or_province_code:
+                      description: ''
+                      type: string
+                    country_code:
+                      type: string
+                      description: ''
+                    postal_code:
+                      description: ''
+                      type: string
+                    phone:
+                      description: ''
+                      type: string
+                      pattern: '^\+?[1-9]\d{1,14}(x\d{1-5})?$'
+                    custom_fields:
+                      description: ''
+                      type: array
+                      items:
+                        title: Custom Field
+                        type: object
+                        properties:
+                          field_id:
+                            description: ''
+                            type: string
+                          field_value:
+                            description: >-
+                              This can also be an array for fields that need to
+                              support list of values (e.g., a set of check
+                              boxes.)
+                            type: string
+                  required:
+                    - email
+                    - country_code
+                - properties:
+                    id:
+                      description: ''
+                      type: string
+              type: object
+            available_shipping_options:
+              description: >-
+                This is available only when "include=available_shipping_options"
+                is presented in the URL.
+              type: array
+              items:
+                title: Selected Shipping Option
+                type: object
+                properties:
+                  description:
+                    description: ''
+                    type: string
+                  id:
+                    description: ''
+                    type: string
+                  type:
+                    description: >-
+                      Specified the type of shipping option. Flat rate, UPS,
+                      etc.,
+                    type: string
+                  image_url:
+                    description: ''
+                    type: string
+                  cost:
+                    description: ''
+                    type: number
+                    format: double
+                  transit_time:
+                    description: An estimate of the arrival time.
+                    type: string
+                  additional_description:
+                    type: string
+                    description: 'ReadOnly, Field used for Shipping Provider API.'
+            selected_shipping_option:
+              title: Selected Shipping Option
+              type: object
+              properties:
+                description:
+                  description: ''
+                  type: string
+                id:
+                  description: ''
+                  type: string
+                type:
+                  description: 'Specified the type of shipping option. Flat rate, UPS, etc.,'
+                  type: string
+                image_url:
+                  description: ''
+                  type: string
+                cost:
+                  description: ''
+                  type: number
+                  format: double
+                transit_time:
+                  description: An estimate of the arrival time.
+                  type: string
+                additional_description:
+                  type: string
+                  description: 'ReadOnly, Field used for Shipping Provider API.'
+            coupon_discounts:
+              description: List of consignment discounts applied through coupons
+              type: array
+              items:
+                title: Consignment Coupon Discount
+                type: object
+                properties:
+                  code:
+                    description: Coupon code that applied this discount
+                    type: string
+                  amount:
+                    description: ''
+                    type: number
+                    format: double
+            discounts:
+              description: >-
+                List of consignment discounts applied through cart level
+                discounts
+              type: array
+              items:
+                title: Consignment Discount
+                type: object
+                properties:
+                  id:
+                    description: Discount rule ID that applied this discount
+                    type: string
+            shipping_cost_inc_tax:
+              description: The shipping cost for this consignment including tax.
+              type: number
+              format: double
+            shipping_cost_ex_tax:
+              description: The shipping cost for this consignment excluding tax.
+              type: number
+              format: double
+            handling_cost_inc_tax:
+              description: >-
+                The handling cost of shipping for this consignment including
+                tax.
+              type: number
+              format: double
+            handling_cost_ex_tax:
+              description: >-
+                The handling cost of shipping for this consignment excluding
+                tax.
+              type: number
+              format: double
+            line_item_ids:
+              description: ''
+              type: array
+              items:
+                type: string
+      taxes:
+        description: ''
+        type: array
+        items:
+          $ref: '#/definitions/Tax'
+          title: Tax
+          type: object
+          properties:
+            name:
+              description: Name of the tax.
+              type: string
+            amount:
+              description: ''
+              type: number
+              format: double
+      coupons:
+        description: Coupons applied at checkout level.
+        type: array
+        items:
+          $ref: '#/definitions/AppliedCoupon'
+      order_id:
+        description: ''
+        type: string
+      shipping_cost_total_inc_tax:
+        description: Shipping cost before any discounts are applied including tax.
+        type: number
+        format: double
+      shipping_cost_total_ex_tax:
+        description: Shipping cost before any discounts are applied excluding tax.
+        type: number
+        format: double
+      handling_cost_total_inc_tax:
+        description: Handling cost for all consignments including tax.
+        type: number
+        format: double
+      handling_cost_total_ex_tax:
+        description: Handling cost for all consignments excluding tax.
+        type: number
+        format: double
+      tax_total:
+        description: ''
+        type: number
+        format: double
+      subtotal_inc_tax:
+        description: >-
+          Subtotal of the checkout before applying item level discounts
+          including tax.
+        type: number
+        format: double
+      subtotal_ex_tax:
+        description: >-
+          Subtotal of the checkout before applying item level discounts
+          excluding tax.
+        type: number
+        format: double
+      grand_total:
+        description: >-
+          The total payable amount, before applying any store credit or gift
+          certificate.
+        type: number
+        format: double
+      created_time:
+        description: Time when the cart was created.
+        type: string
+      updated_time:
+        description: Time when the cart was last updated.
+        type: string
+      customer_message:
+        description: >-
+          Shopper's message provided as details for the order to be created from
+          this checkout
+        type: string
+  Currency:
+    title: Currency
+    type: object
+    properties:
+      code:
+        description: 'ISO-4217 currency code. (See: http://en.wikipedia.org/wiki/ISO_4217.)'
+        type: string
+  AppliedCoupon:
+    title: Applied Coupon
+    type: object
+    properties:
+      code:
+        description: the coupon code
+        type: string
+      id:
+        description: The coupon ID.
+        type: string
+      discounted_amount:
+        description: The discounted amount applied within a given context.
+        type: number
+        format: double
+      coupon_type:
+        type: integer
+        enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+        description: |-
+          |Type `int`|Type Name|
+          |-|-|
+          |`0`|`per_item_discount`|
+          |`1`|`percentage_discount`|
+          |`2`|`per_total_discount`|
+          |`3`|`shipping_discount`|
+          |`4`|`free_shipping`|
+          |`5`|`promotion`|
+    required:
+      - code
+  AppliedDiscount:
+    title: Applied Discount
+    type: object
+    properties:
+      id:
+        description: ID of the applied discount.
+        type: number
+        format: double
+      discounted_amount:
+        description: The discounted amount applied within a given context.
+        type: number
+        format: double
+  AddressProperties:
+    title: Address Properties
+    type: object
+    properties:
+      first_name:
+        description: ''
+        type: string
+      last_name:
+        description: ''
+        type: string
+      email:
+        type: string
+        description: ''
+      company:
+        description: ''
+        type: string
+      address1:
+        description: ''
+        type: string
+      address2:
+        description: ''
+        type: string
+      city:
+        description: ''
+        type: string
+      state_or_province:
+        description: Represents state or province.
+        type: string
+      state_or_province_code:
+        description: ''
+        type: string
+      country_code:
+        type: string
+        description: ''
+      postal_code:
+        description: ''
+        type: string
+      phone:
+        description: ''
+        type: string
+        pattern: '^\+?[1-9]\d{1,14}(x\d{1-5})?$'
+      custom_fields:
+        description: ''
+        type: array
+        items:
+          title: Custom Field
+          type: object
+          properties:
+            field_id:
+              description: ''
+              type: string
+            field_value:
+              description: >-
+                This can also be an array for fields that need to support list
+                of values (e.g., a set of check boxes.)
+              type: string
+    required:
+      - email
+      - country_code
+  Consignment:
+    title: Consignment
+    description: >-
+      This allows us to have multiple shipping addresses. Where there is only
+      one shipping address, this array will contain only one value, with all the
+      items.
+    type: object
+    properties:
+      id:
+        description: ''
+        type: string
+      shipping_address:
+        title: Address Response
+        allOf:
+          - title: Address Properties
+            properties:
+              first_name:
+                description: ''
+                type: string
+              last_name:
+                description: ''
+                type: string
+              email:
+                type: string
+                description: ''
+              company:
+                description: ''
+                type: string
+              address1:
+                description: ''
+                type: string
+              address2:
+                description: ''
+                type: string
+              city:
+                description: ''
+                type: string
+              state_or_province:
+                description: Represents state or province.
+                type: string
+              state_or_province_code:
+                description: ''
+                type: string
+              country_code:
+                type: string
+                description: ''
+              postal_code:
+                description: ''
+                type: string
+              phone:
+                description: ''
+                type: string
+                pattern: '^\+?[1-9]\d{1,14}(x\d{1-5})?$'
+              custom_fields:
+                description: ''
+                type: array
+                items:
+                  title: Custom Field
+                  type: object
+                  properties:
+                    field_id:
+                      description: ''
+                      type: string
+                    field_value:
+                      description: >-
+                        This can also be an array for fields that need to
+                        support list of values (e.g., a set of check boxes.)
+                      type: string
+            required:
+              - email
+              - country_code
+          - properties:
+              id:
+                description: ''
+                type: string
+        type: object
+      available_shipping_options:
+        description: >-
+          This is available only when "include=available_shipping_options" is
+          presented in the URL.
+        type: array
+        items:
+          title: Selected Shipping Option
+          type: object
+          properties:
+            description:
+              description: ''
+              type: string
+            id:
+              description: ''
+              type: string
+            type:
+              description: 'Specified the type of shipping option. Flat rate, UPS, etc.,'
+              type: string
+            image_url:
+              description: ''
+              type: string
+            cost:
+              description: ''
+              type: number
+              format: double
+            transit_time:
+              description: An estimate of the arrival time.
+              type: string
+            additional_description:
+              type: string
+              description: 'ReadOnly, Field used for Shipping Provider API.'
+      selected_shipping_option:
+        title: Selected Shipping Option
+        type: object
+        properties:
+          description:
+            description: ''
+            type: string
+          id:
+            description: ''
+            type: string
+          type:
+            description: 'Specified the type of shipping option. Flat rate, UPS, etc.,'
+            type: string
+          image_url:
+            description: ''
+            type: string
+          cost:
+            description: ''
+            type: number
+            format: double
+          transit_time:
+            description: An estimate of the arrival time.
+            type: string
+          additional_description:
+            type: string
+            description: 'ReadOnly, Field used for Shipping Provider API.'
+      coupon_discounts:
+        description: List of consignment discounts applied through coupons
+        type: array
+        items:
+          title: Consignment Coupon Discount
+          type: object
+          properties:
+            code:
+              description: Coupon code that applied this discount
+              type: string
+            amount:
+              description: ''
+              type: number
+              format: double
+      discounts:
+        description: List of consignment discounts applied through cart level discounts
+        type: array
+        items:
+          title: Consignment Discount
+          type: object
+          properties:
+            id:
+              description: Discount rule ID that applied this discount
+              type: string
+      shipping_cost_inc_tax:
+        description: The shipping cost for this consignment including tax.
+        type: number
+        format: double
+      shipping_cost_ex_tax:
+        description: The shipping cost for this consignment excluding tax.
+        type: number
+        format: double
+      handling_cost_inc_tax:
+        description: The handling cost of shipping for this consignment including tax.
+        type: number
+        format: double
+      handling_cost_ex_tax:
+        description: The handling cost of shipping for this consignment excluding tax.
+        type: number
+        format: double
+      line_item_ids:
+        description: ''
+        type: array
+        items:
+          type: string
+  SelectedShippingOption:
+    title: Selected Shipping Option
+    type: object
+    properties:
+      description:
+        description: ''
+        type: string
+      id:
+        description: ''
+        type: string
+      type:
+        description: 'Specified the type of shipping option. Flat rate, UPS, etc.,'
+        type: string
+      image_url:
+        description: ''
+        type: string
+      cost:
+        description: ''
+        type: number
+        format: double
+      transit_time:
+        description: An estimate of the arrival time.
+        type: string
+  ConsignmentCouponDiscount:
+    title: Consignment Coupon Discount
+    type: object
+    properties:
+      code:
+        description: Coupon code that applied this discount
+        type: string
+      amount:
+        description: ''
+        type: number
+        format: double
+  ConsignmentDiscount:
+    title: Consignment Discount
+    type: object
+    properties:
+      id:
+        description: Discount rule ID that applied this discount
+        type: string
+  Tax:
+    title: Tax
+    type: object
+    properties:
+      name:
+        description: Name of the tax.
+        type: string
+      amount:
+        description: ''
+        type: number
+        format: double
+  ErrorDetail:
+    title: ErrorDetail
+    type: object
+    properties:
+      status:
+        description: ''
+        type: integer
+        format: int32
+      title:
+        description: ''
+        type: string
+      type:
+        description: ''
+        type: string
+      detail:
+        description: ''
+        type: string
+  CreateConsignmentRequest:
+    title: Create Consignment Request
+    type: object
+    properties:
+      shipping_address:
+        title: Address Properties
+        type: object
+        properties:
+          first_name:
+            description: ''
+            type: string
+          last_name:
+            description: ''
+            type: string
+          email:
+            type: string
+            description: ''
+          company:
+            description: ''
+            type: string
+          address1:
+            description: ''
+            type: string
+          address2:
+            description: ''
+            type: string
+          city:
+            description: ''
+            type: string
+          state_or_province:
+            description: Represents state or province.
+            type: string
+          state_or_province_code:
+            description: ''
+            type: string
+          country_code:
+            type: string
+            description: ''
+          postal_code:
+            description: ''
+            type: string
+          phone:
+            description: ''
+            type: string
+            pattern: '^\+?[1-9]\d{1,14}(x\d{1-5})?$'
+          custom_fields:
+            description: ''
+            type: array
+            items:
+              title: Custom Field
+              type: object
+              properties:
+                field_id:
+                  description: ''
+                  type: string
+                field_value:
+                  description: >-
+                    This can also be an array for fields that need to support
+                    list of values (e.g., a set of check boxes.)
+                  type: string
+        required:
+          - email
+          - country_code
+      line_items:
+        description: ''
+        type: array
+        items:
+          title: Consignment Line Item
+          type: object
+          properties:
+            item_id:
+              description: Corresponds to `line_items` > `id in Checkout response.
+              type: string
+            quantity:
+              description: ''
+              type: integer
+              format: int32
+          required:
+            - item_id
+            - quantity
+  UpdateConsignmentRequest:
+    title: Update Consignment Request
+    description: >-
+      One or more of these three fields are mandatory. Shipping address and line
+      items can be updated in one request. Shipping option ID has to be updated
+      in a separate request, since changing the address or line items can
+      invalidate the previously available shipping options.
+    type: object
+    properties:
+      shipping_address:
+        title: Address Properties
+        type: object
+        properties:
+          first_name:
+            description: ''
+            type: string
+          last_name:
+            description: ''
+            type: string
+          email:
+            type: string
+            description: ''
+          company:
+            description: ''
+            type: string
+          address1:
+            description: ''
+            type: string
+          address2:
+            description: ''
+            type: string
+          city:
+            description: ''
+            type: string
+          state_or_province:
+            description: Represents state or province.
+            type: string
+          state_or_province_code:
+            description: ''
+            type: string
+          country_code:
+            type: string
+            description: ''
+          postal_code:
+            description: ''
+            type: string
+          phone:
+            description: ''
+            type: string
+            pattern: '^\+?[1-9]\d{1,14}(x\d{1-5})?$'
+          custom_fields:
+            description: ''
+            type: array
+            items:
+              title: Custom Field
+              type: object
+              properties:
+                field_id:
+                  description: ''
+                  type: string
+                field_value:
+                  description: >-
+                    This can also be an array for fields that need to support
+                    list of values (e.g., a set of check boxes.)
+                  type: string
+        required:
+          - email
+          - country_code
+      line_items:
+        description: ''
+        type: array
+        items:
+          title: Consignment Line Item
+          type: object
+          properties:
+            item_id:
+              description: Corresponds to `line_items` > `id in Checkout response.
+              type: string
+            quantity:
+              description: ''
+              type: integer
+              format: int32
+          required:
+            - item_id
+            - quantity
+      shipping_option_id:
+        description: ''
+        type: string
+  CouponCodeRequest:
+    title: Coupon Code Request
+    type: object
+    properties:
+      coupon_code:
+        description: ''
+        type: string
+  Order:
+    type: object
+    title: Order
+    properties:
+      id:
+        type: integer
+        example: 75
+        description: The order Id.
+  CheckoutResponse:
+    description: ''
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/Checkout'
+  OrderResponse:
+    description: ''
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/Order'
+      meta:
+        type: object
+    examples:
+      application/json:
+        data:
+          id: 75
+        meta: {}
+parameters:
+  checkoutId:
+    name: checkoutId
+    in: path
+    type: string
+    required: true
+    description: Id of the Checkout
+  addressId:
+    name: addressId
+    in: path
+    type: integer
+    required: true
+  consignmentId:
+    name: consignmentId
+    in: path
+    type: string
+    required: true
+  couponCode:
+    name: couponCode
+    in: path
+    type: string
+    required: true
+    description: 'The actual couponCode, not the couponId.'
+  Accept:
+    name: Accept
+    in: header
+    type: string
+    default: application/json
+    required: true
+  Content-Type:
+    name: Content-Type
+    in: header
+    type: string
+    default: application/json
+    required: true
+  includeShippingOption:
+    name: include
+    in: query
+    type: string
+    enum:
+      - consignments.available_shipping_options
+securityDefinitions:
+  X-Auth-Token:
+    type: apiKey
+    name: X-Auth-Token
+    in: header
+    description: >-
+      ### OAuth Scopes
+
+      |  **UI Name** | **Permission** | **Parameter** |
+
+      | --- | --- | --- |
+
+      |  Checkouts | modify | `store_checkout` |
+
+      |  Checkouts | read-only | `store_checkout_read_only` |
+
+
+      ### Headers
+
+
+      |Header|Parameter|Description|
+
+      |-|-|-|
+
+      |`X-Auth-Token`|`access_token `|Obtained by creating an API account or
+      installing an app in a BigCommerce control panel.|
+
+
+      ### Example
+
+
+      ```http
+
+      GET /stores/{$$.env.store_hash}/v3/catalog/summary
+
+      host: api.bigcommerce.com
+
+      Content-Type: application/json
+
+      X-Auth-Token: {access_token}
+
+      ```
+
+
+      * For more information on Authenticating BigCommerce APIs, see:
+      [Authentication](https://developer.bigcommerce.com/api-docs/getting-started/authentication). 
+tags:
+  - name: Checkout
+security:
+  - X-Auth-Client: []
+  - X-Auth-Token: []
+x-stoplight:
+  docs:
+    includeDownloadLink: true
+    showModels: false

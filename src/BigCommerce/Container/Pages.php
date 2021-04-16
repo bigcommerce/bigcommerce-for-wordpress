@@ -9,6 +9,7 @@ use BigCommerce\Pages\Address_Page;
 use BigCommerce\Pages\Cart_Page;
 use BigCommerce\Pages\Check_Balance_Page;
 use BigCommerce\Pages\Checkout_Page;
+use BigCommerce\Pages\Checkout_Complete_Page;
 use BigCommerce\Pages\Gift_Certificate_Page;
 use BigCommerce\Pages\Login_Page;
 use BigCommerce\Pages\Orders_Page;
@@ -24,18 +25,19 @@ use Pimple\Container;
 class Pages extends Provider {
 	const REQUIRED_PAGES = 'pages.required_pages';
 
-	const CART_PAGE         = 'pages.cart';
-	const CHECKOUT_PAGE     = 'pages.checkout';
-	const LOGIN_PAGE        = 'pages.login';
-	const REGISTRATION_PAGE = 'pages.register';
-	const ACCOUNT_PAGE      = 'pages.account';
-	const ADDRESS_PAGE      = 'pages.address';
-	const ORDERS_PAGE       = 'pages.orders';
-	const GIFT_PURCHACE     = 'pages.gift_certificate.purchase';
-	const GIFT_BALANCE      = 'pages.gift_certificate.balance';
-	const SHIPPING_PAGE     = 'pages.shipping_returns';
-	const WISHLIST_USER     = 'pages.wishlist.user';
-	const WISHLIST_PUBLIC   = 'pages.wishlist.public';
+	const CART_PAGE              = 'pages.cart';
+	const CHECKOUT_PAGE          = 'pages.checkout';
+	const CHECKOUT_COMPLETE_PAGE = 'pages.checkout.complete';
+	const LOGIN_PAGE             = 'pages.login';
+	const REGISTRATION_PAGE      = 'pages.register';
+	const ACCOUNT_PAGE           = 'pages.account';
+	const ADDRESS_PAGE           = 'pages.address';
+	const ORDERS_PAGE            = 'pages.orders';
+	const GIFT_PURCHACE          = 'pages.gift_certificate.purchase';
+	const GIFT_BALANCE           = 'pages.gift_certificate.balance';
+	const SHIPPING_PAGE          = 'pages.shipping_returns';
+	const WISHLIST_USER          = 'pages.wishlist.user';
+	const WISHLIST_PUBLIC        = 'pages.wishlist.public';
 
 	public function register( Container $container ) {
 		$container[ self::REQUIRED_PAGES ] = function ( Container $container ) {
@@ -45,6 +47,7 @@ class Pages extends Provider {
 				$container[ self::ADDRESS_PAGE ],
 				$container[ self::ORDERS_PAGE ],
 				$container[ self::SHIPPING_PAGE ],
+				$container[ self::CHECKOUT_COMPLETE_PAGE ],
 			];
 			if ( ( (bool) get_option( Cart_Settings::OPTION_ENABLE_CART, true ) ) === true ) {
 				$pages[] = $container[ self::CART_PAGE ];
@@ -72,6 +75,10 @@ class Pages extends Provider {
 
 		$container[ self::CHECKOUT_PAGE ] = function ( Container $container ) {
 			return new Checkout_Page();
+		};
+		
+		$container[ self::CHECKOUT_COMPLETE_PAGE ] = function ( Container $container ) {
+			return new Checkout_Complete_Page();
 		};
 
 		$container[ self::LOGIN_PAGE ] = function ( Container $container ) {

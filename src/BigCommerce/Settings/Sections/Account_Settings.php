@@ -14,6 +14,7 @@ class Account_Settings extends Settings_Section {
 
 	const SUPPORT_EMAIL           = 'bigcommerce_support_email';
 	const REGISTRATION_SPAM_CHECK = 'bigcommerce_registration_spam_check';
+	const ALLOW_GLOBAL_LOGINS     = 'bigcommerce_allow_global_logins';
 
 	/**
 	 * @var Required_Page[]
@@ -92,6 +93,25 @@ class Account_Settings extends Settings_Section {
 				'description' => __( 'Enable user registration spam check with Akismet.', 'bigcommerce' ),
 			]
 		);
+		
+		register_setting(
+			Settings_Screen::NAME,
+			self::ALLOW_GLOBAL_LOGINS
+		);
+
+		add_settings_field(
+			self::ALLOW_GLOBAL_LOGINS,
+			esc_html( __( 'Allow global logins', 'bigcommerce' ) ),
+			[ $this, 'render_allow_global_logins_field' ],
+			Settings_Screen::NAME,
+			self::NAME,
+			[
+				'type'        => 'checkbox',
+				'option'      => self::ALLOW_GLOBAL_LOGINS,
+				'label'       => __( 'Allow global logins', 'bigcommerce' ),
+				'description' => __( 'Allow all future customers global login access across all your storefronts.', 'bigcommerce' ),
+			]
+		);
 
 	}
 
@@ -107,6 +127,35 @@ class Account_Settings extends Settings_Section {
 		$value    = (bool) get_option( self::REGISTRATION_SPAM_CHECK, true );
 		$checkbox = sprintf( '<input id="field-%s" type="checkbox" value="1" class="regular-text code" name="%s" %s />', esc_attr( self::REGISTRATION_SPAM_CHECK ), esc_attr( self::REGISTRATION_SPAM_CHECK ), checked( true, $value, false ) );
 		printf( '<p class="description">%s %s</p>', $checkbox, esc_html( __( 'If enabled, customer registration form will check for spam by using Akismet before creating new customers.', 'bigcommerce' ) ) );
+	}
+	
+	public function render_allow_global_logins_field() {
+		$value    = (bool) get_option( self::ALLOW_GLOBAL_LOGINS, false );
+		$checkbox = sprintf( '<input id="field-%s" type="checkbox" value="1" class="regular-text code" name="%s" %s />', esc_attr( self::ALLOW_GLOBAL_LOGINS ), esc_attr( self::ALLOW_GLOBAL_LOGINS ), checked( true, $value, false ) );
+		printf( '<p class="description">%s %s</p>', $checkbox, esc_html( __( 'Allow all future customers global login access across all your storefronts.', 'bigcommerce' ) ) );
+	}
+
+	/**
+	 * @param string $old_value
+	 * @param string $new_value
+	 *
+	 * @return void
+	 * @action update_option_ . self::ALLOW_GLOBAL_LOGINS
+	 */
+	public function maybe_sync_global_logins( $old_value, $new_value ) {
+		if ( $old_value === $new_value ) {
+			return;
+		}
+
+		do_action( 'bigcommerce/sync_global_logins' );
+	}
+
+	/**
+	 * @return void
+	 * @action init
+	 */
+	public function add_default_global_logins() {
+		add_option( self::ALLOW_GLOBAL_LOGINS, '' );
 	}
 
 }

@@ -17,6 +17,7 @@ use BigCommerce\Pages\Login_Page;
 use BigCommerce\Pages\Orders_Page;
 use BigCommerce\Pages\Registration_Page;
 use BigCommerce\Pages\Shipping_Returns_Page;
+use BigCommerce\Pages\Checkout_Complete_Page;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
@@ -29,7 +30,7 @@ use BigCommerce\Taxonomies\Product_Category\Product_Category;
  */
 class Routes {
 
-	const VERSION = 4;
+	const VERSION = 5;
 	/**
 	 * @var SitesApi
 	 */
@@ -149,6 +150,7 @@ class Routes {
 		$routes_posts[] = get_option( Login_Page::NAME );
 		$routes_posts[] = get_option( Account_Page::NAME );
 		$routes_posts[] = get_option( Shipping_Returns_Page::NAME );
+		$routes_posts[] = get_option( Checkout_Complete_Page::NAME );
 
 		if ( in_array( $post_id, $routes_posts ) ) {
 			$this->update_routes();
@@ -261,6 +263,11 @@ class Routes {
 				'type'     => 'recover_abandoned_cart',
 				'matching' => '*',
 				'route'    => str_replace( $home_url, '', home_url( '/bigcommerce/' . Cart_Recovery::ACTION ) ),
+			] ),
+			new Route( [
+				'type'     => 'order_confirmation',
+				'matching' => '',
+				'route'    => str_replace( $home_url, '', get_permalink( get_option( Checkout_Complete_Page::NAME, 0 ) ) ),
 			] ),
 		];
 
