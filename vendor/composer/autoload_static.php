@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitf629a677b821c24e4ef358484fa6c69d
+class ComposerStaticInit72066fe8c35817917e8195cae31ee595
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -89,6 +89,7 @@ class ComposerStaticInitf629a677b821c24e4ef358484fa6c69d
     );
 
     public static $classMap = array (
+        'BigCommerce\\Accounts\\Channel_Settings' => __DIR__ . '/../..' . '/src/BigCommerce/Accounts/Channel_Settings.php',
         'BigCommerce\\Accounts\\Countries' => __DIR__ . '/../..' . '/src/BigCommerce/Accounts/Countries.php',
         'BigCommerce\\Accounts\\Customer' => __DIR__ . '/../..' . '/src/BigCommerce/Accounts/Customer.php',
         'BigCommerce\\Accounts\\Customer_Group' => __DIR__ . '/../..' . '/src/BigCommerce/Accounts/Customer_Group.php',
@@ -148,6 +149,7 @@ class ComposerStaticInitf629a677b821c24e4ef358484fa6c69d
         'BigCommerce\\Api\\v3\\Api\\CartApi' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Api/CartApi.php',
         'BigCommerce\\Api\\v3\\Api\\CatalogApi' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Api/CatalogApi.php',
         'BigCommerce\\Api\\v3\\Api\\ChannelsApi' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Api/ChannelsApi.php',
+        'BigCommerce\\Api\\v3\\Api\\CheckoutApi' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Api/CheckoutApi.php',
         'BigCommerce\\Api\\v3\\Api\\CustomersApi' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Api/CustomersApi.php',
         'BigCommerce\\Api\\v3\\Api\\OrdersApi' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Api/OrdersApi.php',
         'BigCommerce\\Api\\v3\\Api\\PriceListsApi' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Api/PriceListsApi.php',
@@ -162,6 +164,9 @@ class ComposerStaticInitf629a677b821c24e4ef358484fa6c69d
         'BigCommerce\\Api\\v3\\Model\\AbandonedCartInfo' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/AbandonedCartInfo.php',
         'BigCommerce\\Api\\v3\\Model\\AbandonedCartResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/AbandonedCartResponse.php',
         'BigCommerce\\Api\\v3\\Model\\Activate' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/Activate.php',
+        'BigCommerce\\Api\\v3\\Model\\Address' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/Address.php',
+        'BigCommerce\\Api\\v3\\Model\\AddressForCustomer' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/AddressForCustomer.php',
+        'BigCommerce\\Api\\v3\\Model\\AddressProperties' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/AddressProperties.php',
         'BigCommerce\\Api\\v3\\Model\\Adjuster' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/Adjuster.php',
         'BigCommerce\\Api\\v3\\Model\\AppliedCoupon' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/AppliedCoupon.php',
         'BigCommerce\\Api\\v3\\Model\\AppliedDiscount' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/AppliedDiscount.php',
@@ -202,6 +207,9 @@ class ComposerStaticInitf629a677b821c24e4ef358484fa6c69d
         'BigCommerce\\Api\\v3\\Model\\Channel' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/Channel.php',
         'BigCommerce\\Api\\v3\\Model\\ChannelCollectionResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/ChannelCollectionResponse.php',
         'BigCommerce\\Api\\v3\\Model\\ChannelResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/ChannelResponse.php',
+        'BigCommerce\\Api\\v3\\Model\\Checkout' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/Checkout.php',
+        'BigCommerce\\Api\\v3\\Model\\CheckoutError' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/CheckoutError.php',
+        'BigCommerce\\Api\\v3\\Model\\CheckoutResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/CheckoutResponse.php',
         'BigCommerce\\Api\\v3\\Model\\CollectionMeta' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/CollectionMeta.php',
         'BigCommerce\\Api\\v3\\Model\\ComplexRule' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/ComplexRule.php',
         'BigCommerce\\Api\\v3\\Model\\ComplexRuleBase' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/ComplexRuleBase.php',
@@ -219,8 +227,14 @@ class ComposerStaticInitf629a677b821c24e4ef358484fa6c69d
         'BigCommerce\\Api\\v3\\Model\\ConfigurableFieldPost' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/ConfigurableFieldPost.php',
         'BigCommerce\\Api\\v3\\Model\\ConfigurableFieldPut' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/ConfigurableFieldPut.php',
         'BigCommerce\\Api\\v3\\Model\\ConfigurableFieldResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/ConfigurableFieldResponse.php',
+        'BigCommerce\\Api\\v3\\Model\\Consignment' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/Consignment.php',
+        'BigCommerce\\Api\\v3\\Model\\ConsignmentCouponDiscount' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/ConsignmentCouponDiscount.php',
+        'BigCommerce\\Api\\v3\\Model\\ConsignmentDiscount' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/ConsignmentDiscount.php',
+        'BigCommerce\\Api\\v3\\Model\\ConsignmentLineItem' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/ConsignmentLineItem.php',
         'BigCommerce\\Api\\v3\\Model\\ContactEntity' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/ContactEntity.php',
+        'BigCommerce\\Api\\v3\\Model\\CouponCodeRequest' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/CouponCodeRequest.php',
         'BigCommerce\\Api\\v3\\Model\\CreateChannelRequest' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/CreateChannelRequest.php',
+        'BigCommerce\\Api\\v3\\Model\\CreateConsignmentRequest' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/CreateConsignmentRequest.php',
         'BigCommerce\\Api\\v3\\Model\\CreditCard' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/CreditCard.php',
         'BigCommerce\\Api\\v3\\Model\\Currency' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/Currency.php',
         'BigCommerce\\Api\\v3\\Model\\Custom' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/Custom.php',
@@ -233,7 +247,21 @@ class ComposerStaticInitf629a677b821c24e4ef358484fa6c69d
         'BigCommerce\\Api\\v3\\Model\\CustomUrlBrand' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/CustomUrlBrand.php',
         'BigCommerce\\Api\\v3\\Model\\CustomUrlCategory' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/CustomUrlCategory.php',
         'BigCommerce\\Api\\v3\\Model\\CustomUrlProduct' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/CustomUrlProduct.php',
+        'BigCommerce\\Api\\v3\\Model\\Customer' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/Customer.php',
+        'BigCommerce\\Api\\v3\\Model\\CustomerAttributeValue' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/CustomerAttributeValue.php',
+        'BigCommerce\\Api\\v3\\Model\\CustomerAttributeValueForCustomer' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/CustomerAttributeValueForCustomer.php',
+        'BigCommerce\\Api\\v3\\Model\\CustomerAuthentication' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/CustomerAuthentication.php',
+        'BigCommerce\\Api\\v3\\Model\\CustomerAuthenticationBase' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/CustomerAuthenticationBase.php',
+        'BigCommerce\\Api\\v3\\Model\\CustomerChannelIds' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/CustomerChannelIds.php',
+        'BigCommerce\\Api\\v3\\Model\\CustomerCollectionResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/CustomerCollectionResponse.php',
+        'BigCommerce\\Api\\v3\\Model\\CustomerPost' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/CustomerPost.php',
+        'BigCommerce\\Api\\v3\\Model\\CustomerPut' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/CustomerPut.php',
+        'BigCommerce\\Api\\v3\\Model\\CustomersSettings' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/CustomersSettings.php',
+        'BigCommerce\\Api\\v3\\Model\\CustomersSettingsData' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/CustomersSettingsData.php',
+        'BigCommerce\\Api\\v3\\Model\\CustomersSettingsDataCustomerGroupSettings' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/CustomersSettingsDataCustomerGroupSettings.php',
+        'BigCommerce\\Api\\v3\\Model\\CustomersSettingsDataPrivacySettings' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/CustomersSettingsDataPrivacySettings.php',
         'BigCommerce\\Api\\v3\\Model\\DetailedErrors' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/DetailedErrors.php',
+        'BigCommerce\\Api\\v3\\Model\\ErrorDetail' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/ErrorDetail.php',
         'BigCommerce\\Api\\v3\\Model\\ErrorResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/ErrorResponse.php',
         'BigCommerce\\Api\\v3\\Model\\GiftCertificate' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/GiftCertificate.php',
         'BigCommerce\\Api\\v3\\Model\\GiftWrapping' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/GiftWrapping.php',
@@ -299,6 +327,8 @@ class ComposerStaticInitf629a677b821c24e4ef358484fa6c69d
         'BigCommerce\\Api\\v3\\Model\\OptionValueResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/OptionValueResponse.php',
         'BigCommerce\\Api\\v3\\Model\\OptionValueVariant' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/OptionValueVariant.php',
         'BigCommerce\\Api\\v3\\Model\\OptionValueVariantPost' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/OptionValueVariantPost.php',
+        'BigCommerce\\Api\\v3\\Model\\Order' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/Order.php',
+        'BigCommerce\\Api\\v3\\Model\\OrderResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/OrderResponse.php',
         'BigCommerce\\Api\\v3\\Model\\Pagination' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/Pagination.php',
         'BigCommerce\\Api\\v3\\Model\\PaginationLinks' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/PaginationLinks.php',
         'BigCommerce\\Api\\v3\\Model\\Placement' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/Placement.php',
@@ -361,10 +391,13 @@ class ComposerStaticInitf629a677b821c24e4ef358484fa6c69d
         'BigCommerce\\Api\\v3\\Model\\ScriptPut' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/ScriptPut.php',
         'BigCommerce\\Api\\v3\\Model\\ScriptResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/ScriptResponse.php',
         'BigCommerce\\Api\\v3\\Model\\ScriptsResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/ScriptsResponse.php',
+        'BigCommerce\\Api\\v3\\Model\\SelectedShippingOption' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/SelectedShippingOption.php',
         'BigCommerce\\Api\\v3\\Model\\Site' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/Site.php',
         'BigCommerce\\Api\\v3\\Model\\SiteCreateRequest' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/SiteCreateRequest.php',
         'BigCommerce\\Api\\v3\\Model\\SiteResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/SiteResponse.php',
         'BigCommerce\\Api\\v3\\Model\\StoreCredit' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/StoreCredit.php',
+        'BigCommerce\\Api\\v3\\Model\\StoreCreditAmounts' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/StoreCreditAmounts.php',
+        'BigCommerce\\Api\\v3\\Model\\StoreCreditAmountsInner' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/StoreCreditAmountsInner.php',
         'BigCommerce\\Api\\v3\\Model\\Subscriber' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/Subscriber.php',
         'BigCommerce\\Api\\v3\\Model\\SubscriberBase' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/SubscriberBase.php',
         'BigCommerce\\Api\\v3\\Model\\SubscriberCollectionResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/SubscriberCollectionResponse.php',
@@ -372,6 +405,7 @@ class ComposerStaticInitf629a677b821c24e4ef358484fa6c69d
         'BigCommerce\\Api\\v3\\Model\\SubscriberPut' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/SubscriberPut.php',
         'BigCommerce\\Api\\v3\\Model\\SubscriberResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/SubscriberResponse.php',
         'BigCommerce\\Api\\v3\\Model\\SuccessBatchResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/SuccessBatchResponse.php',
+        'BigCommerce\\Api\\v3\\Model\\Tax' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/Tax.php',
         'BigCommerce\\Api\\v3\\Model\\TaxPrice' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/TaxPrice.php',
         'BigCommerce\\Api\\v3\\Model\\Theme' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/Theme.php',
         'BigCommerce\\Api\\v3\\Model\\ThemeRegion' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/ThemeRegion.php',
@@ -383,6 +417,7 @@ class ComposerStaticInitf629a677b821c24e4ef358484fa6c69d
         'BigCommerce\\Api\\v3\\Model\\TransactionPost' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/TransactionPost.php',
         'BigCommerce\\Api\\v3\\Model\\TransactionResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/TransactionResponse.php',
         'BigCommerce\\Api\\v3\\Model\\UpdateChannelRequest' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/UpdateChannelRequest.php',
+        'BigCommerce\\Api\\v3\\Model\\UpdateConsignmentRequest' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/UpdateConsignmentRequest.php',
         'BigCommerce\\Api\\v3\\Model\\UpdateListingRequest' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/UpdateListingRequest.php',
         'BigCommerce\\Api\\v3\\Model\\Variant' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/Variant.php',
         'BigCommerce\\Api\\v3\\Model\\VariantBase' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/VariantBase.php',
@@ -600,6 +635,7 @@ class ComposerStaticInitf629a677b821c24e4ef358484fa6c69d
         'BigCommerce\\Pages\\Address_Page' => __DIR__ . '/../..' . '/src/BigCommerce/Pages/Address_Page.php',
         'BigCommerce\\Pages\\Cart_Page' => __DIR__ . '/../..' . '/src/BigCommerce/Pages/Cart_Page.php',
         'BigCommerce\\Pages\\Check_Balance_Page' => __DIR__ . '/../..' . '/src/BigCommerce/Pages/Check_Balance_Page.php',
+        'BigCommerce\\Pages\\Checkout_Complete_Page' => __DIR__ . '/../..' . '/src/BigCommerce/Pages/Checkout_Complete_Page.php',
         'BigCommerce\\Pages\\Checkout_Page' => __DIR__ . '/../..' . '/src/BigCommerce/Pages/Checkout_Page.php',
         'BigCommerce\\Pages\\Gift_Certificate_Page' => __DIR__ . '/../..' . '/src/BigCommerce/Pages/Gift_Certificate_Page.php',
         'BigCommerce\\Pages\\Login_Page' => __DIR__ . '/../..' . '/src/BigCommerce/Pages/Login_Page.php',
@@ -1069,10 +1105,10 @@ class ComposerStaticInitf629a677b821c24e4ef358484fa6c69d
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitf629a677b821c24e4ef358484fa6c69d::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitf629a677b821c24e4ef358484fa6c69d::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitf629a677b821c24e4ef358484fa6c69d::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitf629a677b821c24e4ef358484fa6c69d::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit72066fe8c35817917e8195cae31ee595::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit72066fe8c35817917e8195cae31ee595::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit72066fe8c35817917e8195cae31ee595::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit72066fe8c35817917e8195cae31ee595::$classMap;
 
         }, null, ClassLoader::class);
     }

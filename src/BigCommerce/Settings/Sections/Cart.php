@@ -6,6 +6,7 @@ namespace BigCommerce\Settings\Sections;
 
 use BigCommerce\Pages\Cart_Page;
 use BigCommerce\Pages\Checkout_Page;
+use BigCommerce\Pages\Checkout_Complete_Page;
 use BigCommerce\Pages\Required_Page;
 use BigCommerce\Settings\Screens\Settings_Screen;
 
@@ -20,10 +21,12 @@ class Cart extends Settings_Section {
 
 	private $cart_page;
 	private $checkout_page;
+	private $checkout_complete_page;
 
-	public function __construct( Cart_Page $cart_page, Checkout_Page $checkout_page ) {
-		$this->cart_page     = $cart_page;
-		$this->checkout_page = $checkout_page;
+	public function __construct( Cart_Page $cart_page, Checkout_Page $checkout_page, Checkout_Complete_Page $checkout_complete_page ) {
+		$this->cart_page              = $cart_page;
+		$this->checkout_page          = $checkout_page;
+		$this->checkout_complete_page = $checkout_complete_page;
 	}
 
 	/**
@@ -115,6 +118,23 @@ class Cart extends Settings_Section {
 			[
 				'page'      => $this->checkout_page,
 				'label_for' => 'field-' . $this->checkout_page->get_option_name(),
+			]
+		);
+		
+		register_setting(
+			Settings_Screen::NAME,
+			$this->checkout_complete_page->get_option_name()
+		);
+		add_settings_field(
+			$this->checkout_complete_page->get_option_name(),
+			$this->checkout_complete_page->get_post_state_label(),
+			[ $this, 'render_page_field' ],
+			Settings_Screen::NAME,
+			self::NAME,
+			[
+				'page'        => $this->checkout_complete_page,
+				'label_for'   => 'field-' . $this->checkout_complete_page->get_option_name(),
+				'description' => esc_html( __( 'This page will only be displayed to customers if you are using an embedded checkout with a redirected payment processor.', 'bigcommerce' ) ),
 			]
 		);
 	}

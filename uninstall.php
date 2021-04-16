@@ -155,6 +155,8 @@ function delete_options() {
 		Settings\Sections\Import::OPTION_NEW_PRODUCTS,
 		Settings\Sections\Import::ENABLE_WEBHOOKS,
 		Settings\Sections\Account_Settings::SUPPORT_EMAIL,
+		Settings\Sections\Account_Settings::REGISTRATION_SPAM_CHECK,
+		Settings\Sections\Account_Settings::ALLOW_GLOBAL_LOGINS,
 		Settings\Sections\Analytics::SYNC_ANALYTICS,
 		Settings\Sections\Analytics::FACEBOOK_PIXEL,
 		Settings\Sections\Analytics::GOOGLE_ANALYTICS,
@@ -213,6 +215,7 @@ function delete_options() {
 		Webhook::AUTH_KEY_OPTION,
 		Settings\Sections\Cart::OPTION_AJAX_CART,
 		Settings\Sections\Import::BATCH_SIZE,
+		Settings\Sections\Account_Settings::ALLOW_GLOBAL_LOGINS,
 		Term_Import::STATE_OPTION,
 	];
 

@@ -29,7 +29,6 @@ class Channel_Synchronizer {
 	 *
 	 * @return void
 	 * @action bigcommerce/settings/before_form/page= . Settings_Screen::NAME
-	 * @action bigcommerce/settings/before_form/page= . Connect_Channel_Screen::NAME
 	 * @action bigcommerce/import/start
 	 */
 	public function initial_sync() {
@@ -77,6 +76,10 @@ class Channel_Synchronizer {
 		}
 	}
 
+	/**
+	 * @action bigcommerce/settings/before_form/page= . Connect_Channel_Screen::NAME
+	 * @return void
+	 */
 	public function sync() {
 		try {
 			$channels = $this->fetch_channels_from_api();
@@ -121,7 +124,8 @@ class Channel_Synchronizer {
 	 */
 	private function fetch_channels_from_api() {
 		/** @var \BigCommerce\Api\v3\Model\Channel[] $data */
-		$data = $this->channels_api->listChannels()->getData();
+		$data = $this->channels_api->listChannels( [ 'available' => 'true' ] )->getData();
+		// 'platform' => 'wordpress' filter does not work so we filter here instead
 		$data = array_filter( $data, function ( \BigCommerce\Api\v3\Model\Channel $channel ) {
 			return $channel->getPlatform() === 'wordpress';
 		} );

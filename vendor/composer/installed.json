@@ -53,11 +53,7 @@
             "ecommerce",
             "http",
             "rest"
-        ],
-        "support": {
-            "issues": "https://github.com/bigcommerce/bigcommerce-api-php/issues",
-            "source": "https://github.com/bigcommerce/bigcommerce-api-php/tree/master"
-        }
+        ]
     },
     {
         "name": "firebase/php-jwt",
@@ -109,25 +105,21 @@
         "keywords": [
             "jwt",
             "php"
-        ],
-        "support": {
-            "issues": "https://github.com/firebase/php-jwt/issues",
-            "source": "https://github.com/firebase/php-jwt/tree/v5.2.1"
-        }
+        ]
     },
     {
         "name": "moderntribe/bigcommerce-api-php-v3",
-        "version": "v2.0.3",
-        "version_normalized": "2.0.3.0",
+        "version": "v2.1.0",
+        "version_normalized": "2.1.0.0",
         "source": {
             "type": "git",
             "url": "git@github.com:moderntribe/bigcommerce-api-php-v3.git",
-            "reference": "cb1d50d17b670e5aeb55c062f90aecd36fb0651f"
+            "reference": "3724d325ec667c47fb5f20fdfb1ee8e30672c64f"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/moderntribe/bigcommerce-api-php-v3/zipball/cb1d50d17b670e5aeb55c062f90aecd36fb0651f",
-            "reference": "cb1d50d17b670e5aeb55c062f90aecd36fb0651f",
+            "url": "https://api.github.com/repos/moderntribe/bigcommerce-api-php-v3/zipball/3724d325ec667c47fb5f20fdfb1ee8e30672c64f",
+            "reference": "3724d325ec667c47fb5f20fdfb1ee8e30672c64f",
             "shasum": ""
         },
         "require": {
@@ -141,7 +133,7 @@
             "satooshi/php-coveralls": "~1.0",
             "squizlabs/php_codesniffer": "~2.6"
         },
-        "time": "2019-10-22T13:41:33+00:00",
+        "time": "2021-04-14T10:32:03+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -249,11 +241,7 @@
             "log",
             "logging",
             "psr-3"
-        ],
-        "support": {
-            "issues": "https://github.com/Seldaek/monolog/issues",
-            "source": "https://github.com/Seldaek/monolog/tree/1.24.0"
-        }
+        ]
     },
     {
         "name": "paragonie/random_compat",
@@ -304,12 +292,7 @@
             "polyfill",
             "pseudorandom",
             "random"
-        ],
-        "support": {
-            "email": "info@paragonie.com",
-            "issues": "https://github.com/paragonie/random_compat/issues",
-            "source": "https://github.com/paragonie/random_compat"
-        }
+        ]
     },
     {
         "name": "pimple/pimple",
@@ -361,11 +344,7 @@
         "keywords": [
             "container",
             "dependency injection"
-        ],
-        "support": {
-            "issues": "https://github.com/silexphp/Pimple/issues",
-            "source": "https://github.com/silexphp/Pimple/tree/master"
-        }
+        ]
     },
     {
         "name": "psr/container",
@@ -416,11 +395,7 @@
             "container-interface",
             "container-interop",
             "psr"
-        ],
-        "support": {
-            "issues": "https://github.com/php-fig/container/issues",
-            "source": "https://github.com/php-fig/container/tree/master"
-        }
+        ]
     },
     {
         "name": "psr/log",
@@ -469,10 +444,7 @@
             "log",
             "psr",
             "psr-3"
-        ],
-        "support": {
-            "source": "https://github.com/php-fig/log/tree/1.1.3"
-        }
+        ]
     },
     {
         "name": "vlucas/phpdotenv",
@@ -524,10 +496,6 @@
             "dotenv",
             "env",
             "environment"
-        ],
-        "support": {
-            "issues": "https://github.com/vlucas/phpdotenv/issues",
-            "source": "https://github.com/vlucas/phpdotenv/tree/master"
-        }
+        ]
     }
 ]

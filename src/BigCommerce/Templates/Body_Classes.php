@@ -55,6 +55,7 @@ class Body_Classes {
 			'Twenty Seventeen'                          => 'twenty-seventeen',
 			'Twenty Nineteen'                           => 'twenty-nineteen',
 			'Twenty Twenty'                             => 'twenty-twenty',
+			'Twenty Twenty-One'                         => 'twenty-twenty-one',
 			'Essence Pro'                               => 'genesis-essence',
 			'Magazine Pro'                              => 'genesis-magazine',
 			'Wellness Pro'                              => 'genesis-wellness',

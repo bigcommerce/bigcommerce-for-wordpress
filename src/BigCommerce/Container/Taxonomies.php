@@ -154,8 +154,12 @@ class Taxonomies extends Provider {
 			$container[ self::CHANNEL_SYNC ]->initial_sync();
 		} );
 		add_action( 'bigcommerce/settings/before_form/page=' . Settings_Screen::NAME, $channel_sync, 10, 0 );
-		add_action( 'bigcommerce/settings/before_form/page=' . Connect_Channel_Screen::NAME, $channel_sync, 10, 0 );
 		add_action( 'bigcommerce/import/start', $channel_sync, 10, 0 );
+
+		// We need a fresh list of channels on Connect Channel screen
+		add_action( 'bigcommerce/settings/before_form/page=' . Connect_Channel_Screen::NAME, function () use ( $container ) {
+			$container[ self::CHANNEL_SYNC ]->sync();
+		}, 10, 0 );
 
 		add_action( 'edited_' . Channel\Channel::NAME, $this->create_callback( 'handle_channel_name_change', function ( $term_id ) use ( $container ) {
 			$container[ self::CHANNEL_SYNC ]->handle_name_change( $term_id );
