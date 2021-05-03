@@ -10,6 +10,7 @@ import addToCart from './add-to-cart';
 import miniCartWidget from './mini-cart-widget';
 import miniCartNav from './mini-cart-nav';
 import shippingCalc from './shipping-calculator';
+import couponCode from './coupon-code';
 
 const init = () => {
 	cartItemsAjax();
@@ -19,6 +20,7 @@ const init = () => {
 	miniCartWidget();
 	miniCartNav();
 	shippingCalc();
+	couponCode();
 };
 
 export default init;

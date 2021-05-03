@@ -12,7 +12,7 @@ import { on, trigger } from 'utils/events';
 import cartState from 'publicConfig/cart-state';
 import { CART_API_BASE } from 'publicConfig/wp-settings';
 import { CART_ID_COOKIE_NAME, CART_ITEM_COUNT_COOKIE } from 'bcConstants/cookies';
-import { AJAX_CART_UPDATE, HANDLE_CART_STATE } from 'bcConstants/events';
+import { AJAX_CART_UPDATE, HANDLE_CART_STATE, HANDLE_COUPON_CODE } from 'bcConstants/events';
 import { NLS } from 'publicConfig/i18n';
 import { cartEmpty } from './cart-templates';
 import { updateMenuQtyTotal, updateCartMenuItem, updateFlatsomeCartMenuQty, updateFlatsomeCartMenuPrice } from './cart-menu-item';
@@ -132,10 +132,12 @@ const updateCartItems = (data = {}) => {
  * @param data
  */
 const updatedCartTotals = (data = {}) => {
+	const cartData = data.detail ? data.detail.data : data;
+
 	tools.getNodes('bc-cart', true).forEach((cart) => {
-		const baseAmount = data.subtotal.formatted;
+		const baseAmount = cartData.subtotal.formatted;
 		const subTotal = tools.getNodes('.bc-cart-subtotal__amount', false, cart, true)[0];
-		const taxAmount = data.tax_amount.formatted;
+		const taxAmount = cartData.tax_amount.formatted;
 		const taxTotal = tools.getNodes('.bc-cart-tax__amount', false, cart, true)[0];
 
 		subTotal.textContent = baseAmount;
@@ -316,6 +318,8 @@ const bindEvents = () => {
 	delegate(document, '[data-js="bc-cart-item__quantity"]', 'input', handleQtyUpdate);
 	delegate(document, '[data-js="remove-cart-item"]', 'click', handleCartItemRemoval);
 	on(document, HANDLE_CART_STATE, handleCartState);
+	on(document, HANDLE_COUPON_CODE, handleCartState);
+	on(document, HANDLE_COUPON_CODE, updatedCartTotals);
 };
 
 const init = () => {

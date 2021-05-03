@@ -1,0 +1,54 @@
+.bc-coupon-code {
+
+}
+
+.bc-add-coupon-form,
+.bc-remove-coupon-form {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: center;
+}
+
+.bc-add-coupon-form {
+
+	.bc-hide-add-form & {
+		display: none;
+	}
+}
+
+.bc-remove-coupon-form {
+
+	.bc-hide-remove-form & {
+		display: none;
+	}
+}
+
+input[type="text"].bc-coupon-code-field {
+	flex: 0 1 auto;
+
+	@media (--viewport-full) {
+		width: auto;
+	}
+}
+
+.bc-coupon-code-submit,
+.bc-coupon-details {
+	margin-top: 20px;
+
+	@media (--viewport-full) {
+		margin-top: 0;
+		margin-left: 20px;
+	}
+}
+
+.bc-coupon-code-remove {
+
+	i {
+		float: left;
+		line-height: 1.6;
+		border-right: 1px solid;
+		padding-right: 16px;
+	}
+}

@@ -13,6 +13,7 @@ class Cart {
 	const LINK_HOME            = 'home';
 	const LINK_CATALOG         = 'catalog';
 	const ENABLE_SHIPPING_INFO = 'bigcommerce_enable_shipping_info';
+	const ENABLE_COUPON_CODE   = 'bigcommerce_enable_coupon_code';
 
 	/**
 	 * @param \WP_Customize_Manager $wp_customize
@@ -28,6 +29,7 @@ class Cart {
 		$this->mini_cart( $wp_customize );
 		$this->empty_cart_link( $wp_customize );
 		$this->shipping_info( $wp_customize );
+		$this->coupon_code( $wp_customize );
 	}
 
 	private function mini_cart( \WP_Customize_Manager $wp_customize ) {
@@ -87,6 +89,24 @@ class Cart {
 			'type'        => 'radio',
 			'description' => __( 'Enable shipping calculation in Cart. ', 'bigcommerce' ),
 			'label'       => __( 'Shipping Info', 'bigcommerce' ),
+			'choices'     => [
+				'yes' => __( 'Enabled', 'bigcommerce' ),
+				'no'  => __( 'Disabled', 'bigcommerce' ),
+			],
+		] );
+	}
+	
+	private function coupon_code( \WP_Customize_Manager $wp_customize ) {
+		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::ENABLE_COUPON_CODE, [
+			'type'      => 'option',
+			'default'   => 'no',
+			'transport' => 'refresh',
+		] ) );
+		$wp_customize->add_control( self::ENABLE_COUPON_CODE, [
+			'section'     => self::NAME,
+			'type'        => 'radio',
+			'description' => __( 'Enable coupon code in Cart. ', 'bigcommerce' ),
+			'label'       => __( 'Coupon Code', 'bigcommerce' ),
 			'choices'     => [
 				'yes' => __( 'Enabled', 'bigcommerce' ),
 				'no'  => __( 'Disabled', 'bigcommerce' ),

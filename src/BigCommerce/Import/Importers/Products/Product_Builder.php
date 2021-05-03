@@ -487,12 +487,12 @@ class Product_Builder {
 
 		$ranges = [
 			'price'      => [
-				'max' => max( $prices ),
-				'min' => min( $prices ),
+				'max' => ! empty( $prices ) ? max( $prices ) : 0,
+				'min' => ! empty( $prices ) ? min( $prices ) : 0,
 			],
 			'calculated' => [
-				'max' => max( $calculated ),
-				'min' => min( $calculated ),
+				'max' => ! empty( $calculated ) ? max( $calculated ) : 0,
+				'min' => ! empty( $calculated ) ? min( $calculated ) : 0,
 			],
 		];
 

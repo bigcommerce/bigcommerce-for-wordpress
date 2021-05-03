@@ -27,6 +27,7 @@ use BigCommerce\Api\v3\Api\ThemeRegionsApi;
 use BigCommerce\Api\v3\Api\ThemesApi;
 use BigCommerce\Api\v3\Api\WidgetApi;
 use BigCommerce\Api\v3\Api\WidgetTemplateApi;
+use BigCommerce\Api\v3\Api\CheckoutApi;
 use BigCommerce\Container\Api;
 
 class Api_Factory {
@@ -166,11 +167,19 @@ class Api_Factory {
 	public function payments() {
 		return new Payments_Api( $this->api_client );
 	}
+
 	/**
 	 * @return Currencies_Api
 	 */
 	public function currencies() {
 		return new Currencies_Api( $this->api_client );
+	}
+	
+	/**
+	 * @return CheckoutApi
+	 */
+	public function checkout() {
+		return new CheckoutApi( $this->api_client );
 	}
 
 	/**

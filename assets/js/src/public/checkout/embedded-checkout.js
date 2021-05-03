@@ -7,6 +7,7 @@ import Cookie from 'js-cookie';
 import _ from 'lodash';
 import * as tools from 'utils/tools';
 import scrollTo from 'utils/dom/scroll-to';
+import { trigger } from 'utils/events';
 import { CART_ID_COOKIE_NAME, CART_ITEM_COUNT_COOKIE } from 'bcConstants/cookies';
 import { cartEmpty } from '../cart/cart-templates';
 
@@ -51,6 +52,12 @@ const scrollIframe = () => {
 	_.delay(() => scrollTo(options), 1000);
 };
 
+const handleOrderCompleteEvents = () => {
+	trigger({ event: 'bigcommerce/order_complete', data: { cart_id: Cookie.get(CART_ID_COOKIE_NAME) }, native: false });
+	clearCartData();
+	scrollIframe();
+};
+
 /**
  * @function loadEmbeddedCheckout
  * @description Create an instance of the BC embedded checkout.
@@ -67,8 +74,7 @@ const loadEmbeddedCheckout = async () => {
 	}
 
 	// Set the onComplete callback to use the clearCartData function.
-	config.onComplete = clearCartData;
-	config.onComplete = scrollIframe;
+	config.onComplete = handleOrderCompleteEvents;
 
 	// Embed the checkout.
 	checkoutCDN.embedCheckout(config);

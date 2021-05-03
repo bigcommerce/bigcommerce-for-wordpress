@@ -28,6 +28,10 @@ class Term_Strategy_Factory {
 			return new Term_Creator( $this->bc_term, $this->taxonomy );
 		}
 
+		if ( ! $this->needs_refresh( $matching_term_id ) ) {
+			return new Term_Ignorer( $this->bc_term, $this->taxonomy, $matching_term_id );
+		}
+
 		return new Term_Updater( $this->bc_term, $this->taxonomy, $matching_term_id );
 
 	}
@@ -55,5 +59,26 @@ class Term_Strategy_Factory {
 		}
 
 		return 0;
+	}
+
+	private function needs_refresh( $term_id ) {
+		if ( get_term_meta( $term_id, Term_Saver::IMPORTER_VERSION_META_KEY, true ) != Import_Strategy::VERSION ) {
+			$response = true;
+		} else {
+			$new_hash = Term_Saver::hash( $this->bc_term );
+			$old_hash = get_term_meta( $term_id, Term_Saver::DATA_HASH_META_KEY, true );
+			$response = $new_hash !== $old_hash;
+
+		}
+
+		/**
+		 * Filter whether the term should be refreshed
+		 *
+		 * @param bool          $response Whether the term should be refreshed
+		 * @param int           $term_id  The ID of the term
+		 * @param array         $bc_term  The term data from the API
+		 * @param string        $version  The version of the importer
+		 */
+		return apply_filters( 'bigcommerce/import/strategy/term/needs_refresh', $response, $term_id, $this->bc_term, Import_Strategy::VERSION );
 	}
 }

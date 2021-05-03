@@ -1,5 +1,20 @@
 # Changelog
 
+## [4.11.0]
+
+### Added
+- Added support for a generic Segment tracking event on order completion via Embedded Checkout.
+- Added Customizer option and cart functionality to process coupon/promo codes.
+
+### Changed
+- Optimized Brand and Category import. (Less time to import by skipping terms that did not change)
+
+### Fixed
+- Addressed issues with the Shipping Calculator not properly accommodating
+  Free and Ship by Weight/Total options.
+- Fixed CLI importer warnings
+
+
 ## [4.10.0]
 
 ### Added
@@ -1382,6 +1397,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.11.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.10.0...4.11.0
 [4.10.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.9.0...4.10.0
 [4.9.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.8.0...4.9.0
 [4.8.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.7.0...4.8.0

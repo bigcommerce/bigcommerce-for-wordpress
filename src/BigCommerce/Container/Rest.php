@@ -12,6 +12,7 @@ use BigCommerce\Rest\Products_Controller;
 use BigCommerce\Rest\Reviews_Listing_Controller;
 use BigCommerce\Rest\Shortcode_Controller;
 use BigCommerce\Rest\Shipping_Controller;
+use BigCommerce\Rest\Coupon_Code_Controller;
 use Pimple\Container;
 
 class Rest extends Provider {
@@ -41,6 +42,9 @@ class Rest extends Provider {
 
 	const SHIPPING_BASE = 'rest.shipping_base';
 	const SHIPPING      = 'rest.shipping';
+	
+	const COUPON_CODE_BASE = 'rest.coupon_code_base';
+	const COUPON_CODE      = 'rest.coupon_code';
 
 	private $version = 1;
 
@@ -116,6 +120,14 @@ class Rest extends Provider {
 		$container[ self::SHIPPING ] = function ( Container $container ) {
 			return new Shipping_Controller( $container[ self::NAMESPACE_BASE ], $container[ self::VERSION ], $container[ self::SHIPPING_BASE ], $container[ Api::FACTORY ]->shipping(), $container[ Api::FACTORY ]->cart() );
 		};
+		
+		$container[ self::COUPON_CODE_BASE ] = function ( Container $container ) {
+			return apply_filters( 'bigcommerce/rest/coupon_code', 'coupon-code' );
+		};
+
+		$container[ self::COUPON_CODE ] = function ( Container $container ) {
+			return new Coupon_Code_Controller( $container[ self::NAMESPACE_BASE ], $container[ self::VERSION ], $container[ self::COUPON_CODE_BASE ], $container[ Api::FACTORY ]->checkout(), $container[ Api::FACTORY ]->cart() );
+		};
 
 		add_action( 'rest_api_init', $this->create_callback( 'rest_init', function () use ( $container ) {
 			$container[ self::PRODUCTS ]->register_routes();
@@ -126,6 +138,7 @@ class Rest extends Provider {
 			$container[ self::REVIEW_LIST ]->register_routes();
 			$container[ self::PRICING ]->register_routes();
 			$container[ self::SHIPPING ]->register_routes();
+			$container[ self::COUPON_CODE ]->register_routes();
 		} ), 10, 0 );
 
 		add_filter( 'bigcommerce/product/reviews/rest_url', $this->create_callback( 'review_list_rest_url', function ( $url, $post_id ) use ( $container ) {
@@ -142,6 +155,10 @@ class Rest extends Provider {
 
 		add_filter( 'bigcommerce/js_config', $this->create_callback( 'shipping_js_config', function( $config ) use ( $container ) {
 			return $container[ self::SHIPPING ]->js_config( $config );
+		}), 10, 1 );
+		
+		add_filter( 'bigcommerce/js_config', $this->create_callback( 'coupon_code_js_config', function( $config ) use ( $container ) {
+			return $container[ self::COUPON_CODE ]->js_config( $config );
 		}), 10, 1 );
 	}
 }
