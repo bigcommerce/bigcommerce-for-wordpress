@@ -33,6 +33,7 @@ class Import_Products extends Command {
 
 		if ( ! empty( $assoc_args[ 'force' ] ) ) {
 			add_filter( 'bigcommerce/import/strategy/needs_refresh', '__return_true' );
+			add_filter( 'bigcommerce/import/strategy/term/needs_refresh', '__return_true' );
 		}
 
 		$this->hook_messages();
@@ -107,6 +108,10 @@ class Import_Products extends Command {
 		add_action( 'bigcommerce/import/product/error', function ( $product_id, CatalogApi $catalog_api, \Exception $exception ) {
 			\WP_CLI::warning( sprintf( __( 'Failed to import product with ID %d. Error: %s', 'bigcommerce' ), $product_id, $exception->getMessage() ) );
 		}, 10, 3 );
+
+		add_action( 'bigcommerce/import/term/skipped', function ( $data ) {
+			\WP_CLI::log( sprintf( __( 'Skipped term "%s". Already up to date.', 'bigcommerce' ), $data[ 'name' ] ) );
+		}, 10, 2 );
 	}
 
 }

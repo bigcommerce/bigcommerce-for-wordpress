@@ -62,16 +62,34 @@ class Cart_Mapper {
 				'formatted' => $this->format_currency( $this->cart->getCartAmount() ),
 			],
 			'tax_included'    => (bool) $this->cart->getTaxIncluded(),
+			'coupons'         => $this->map_coupon_data( $this->cart->getCoupons() ),
 			'items'           => $this->cart_items(),
 		];
 
-		$tax_amount = $this->calculate_total_tax( $cart[ 'cart_amount' ][ 'raw' ], $cart[ 'discount_amount' ][ 'raw' ], $cart[ 'items' ] );
+		$coupons_discount_amount = $this->get_coupons_discount_amount( $this->cart->getCoupons() );
+
+		$cart[ 'coupons_discount_amount' ] = [
+			'raw'       => $coupons_discount_amount,
+			'formatted' => $this->format_currency( $coupons_discount_amount ),
+		];
+
+		$tax_amount = $this->calculate_total_tax(
+			$cart[ 'cart_amount' ][ 'raw' ],
+			$cart[ 'discount_amount' ][ 'raw' ],
+			$coupons_discount_amount,
+			$cart[ 'items' ]
+		);
 
 		$cart[ 'tax_amount' ] = [
 			'raw'       => $tax_amount,
 			'formatted' => $this->format_currency( $tax_amount ),
 		];
 
+		/**
+		 * If tax is not already included in item prices
+		 * then we need to deduct the calulated tax from the subtotal
+		 * as we are displaying the tax separately
+		 */
 		if ( $cart[ 'tax_included' ] ) {
 			$subtotal = $cart[ 'cart_amount' ][ 'raw' ];
 		} else {
@@ -89,6 +107,27 @@ class Cart_Mapper {
 		 * @param array $cart
 		 */
 		return apply_filters( 'bigcommerce/cart_mapper/map', $cart );
+	}
+
+	private function map_coupon_data( array $coupons ) {
+		return array_map( function ( $coupon ) {
+			$amount = $coupon->getDiscountedAmount();
+			return [
+				'code'        => $coupon->getCode(),
+				'name'        => $coupon->getName(),
+				'coupon_type' => $coupon->getCouponType(),
+				'discounted_amount' => [
+					'raw'       => $amount,
+					'formatted' => $this->format_currency( $amount ),
+				],
+			];
+		}, $coupons );
+	}
+
+	private function get_coupons_discount_amount( array $coupons ) {
+		return array_reduce( $coupons, function( $carry, $coupon ) {
+			return $carry + $coupon->getDiscountedAmount();
+		}, 0 );
 	}
 
 	private function cart_items() {
@@ -267,21 +306,27 @@ class Cart_Mapper {
 			Product_Category::NAME => [],
 		];
 		try {
-			$product                   = $this->get_product( $item );
-			$data[ 'post_id' ]         = $product->post_id();
-			$data[ 'name' ]            = get_the_title( $data[ 'post_id' ] );
-			$data['thumbnail_id']      = $this->get_thumbnail_id( $product, $data['variant_id'] );
-			$data[ 'is_featured' ]     = is_object_in_term( $data[ 'post_id' ], Flag::NAME, Flag::FEATURED );
-			$data[ 'on_sale' ]         = $product->on_sale();
-			$data[ 'show_condition' ]  = $product->show_condition();
-			$data[ 'sku' ]             = [
+			$product                             = $this->get_product( $item );
+			$data[ 'post_id' ]                   = $product->post_id();
+			$data[ 'name' ]                      = get_the_title( $data[ 'post_id' ] );
+			$data['thumbnail_id']                = $this->get_thumbnail_id( $product, $data['variant_id'] );
+			$data[ 'is_featured' ]               = is_object_in_term( $data[ 'post_id' ], Flag::NAME, Flag::FEATURED );
+			$data[ 'on_sale' ]                   = $product->on_sale();
+			$data[ 'show_condition' ]            = $product->show_condition();
+			$data[ 'sku' ]                       = [
 				'product' => $product->sku(),
 				'variant' => $this->get_variant_sku( $data[ 'variant_id' ], $product ),
 			];
-			$data[ 'options' ]         = $this->get_options( $item );
-			$data[ 'inventory_level' ] = (int) $product->get_inventory_level( $data[ 'variant_id' ] );
-			$data[ 'minimum_quantity' ] = (int) $product->order_quantity_minimum;
-			$data[ 'maximum_quantity' ] = $this->get_max_quantity( (int) $product->order_quantity_maximum, $data[ 'inventory_level' ] );
+			$data[ 'options' ]                   = $this->get_options( $item );
+			$data[ 'inventory_level' ]           = (int) $product->get_inventory_level( $data[ 'variant_id' ] );
+			$data[ 'minimum_quantity' ]          = (int) $product->order_quantity_minimum;
+			$data[ 'maximum_quantity' ]          = $this->get_max_quantity( (int) $product->order_quantity_maximum, $data[ 'inventory_level' ] );
+			$data[ 'weight' ]                    = $product->weight;
+			$data[ 'is_free_shipping' ]          = (bool) $product->is_free_shipping;
+			$data[ 'fixed_cost_shipping_price' ] = [
+				'raw'       => $product->fixed_cost_shipping_price,
+				'formatted' => $this->format_currency( $product->fixed_cost_shipping_price ),
+			];
 
 			$taxonomies = [
 				Availability::NAME,
@@ -354,18 +399,19 @@ class Cart_Mapper {
 	}
 
 	/**
-	 * @param float $cart_amount     The `cart_amount` value for the cart
-	 * @param float $discount_amount The `discount_amount` value for the cart
-	 * @param array $items           The items in the cart
+	 * @param float $cart_amount             The `cart_amount` value for the cart
+	 * @param float $discount_amount         The `discount_amount` value for the cart
+	 * @param float $coupons_discount_amount The `coupons_discount_amount` value for the cart
+	 * @param array $items                   The items in the cart
 	 *
 	 * @return float
 	 */
-	private function calculate_total_tax( $cart_amount, $discount_amount, $items ) {
+	private function calculate_total_tax( $cart_amount, $discount_amount, $coupons_discount_amount, $items ) {
 		$item_sum = array_sum( array_map( function ( $item ) {
 			return isset( $item[ 'total_list_price' ][ 'raw' ] ) ? $item[ 'total_list_price' ][ 'raw' ] : 0;
 		}, $items ) );
 
-		return $cart_amount + $discount_amount - $item_sum;
+		return $cart_amount + $discount_amount + $coupons_discount_amount - $item_sum;
 	}
 
 	/**

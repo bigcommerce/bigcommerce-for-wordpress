@@ -12,6 +12,11 @@ const el = {
 	segment: tools.getNodes('bc-segment-tracker')[0],
 };
 
+/**
+ * @function handleAddToCartTracker
+ * @description Event handler for tracking products added to the cart.
+ * @param e
+ */
 const handleAddToCartTracker = (e) => {
 	const cartTrigger = e ? e.detail.cartButton : tools.getNodes('[data-tracking-event="add_to_cart_message"]', false, document, true)[0];
 
@@ -30,6 +35,11 @@ const handleAddToCartTracker = (e) => {
 	console.info(`Segment has sent the following cart tracking data to your analytics account(s): ${analyticsData}`);
 };
 
+/**
+ * @function handleClickTracker
+ * @description Event handler for clicking on products to view PDP or Quick View.
+ * @param e
+ */
 const handleClickTracker = (e) => {
 	const target = e.delegateTarget;
 	const analyticsData = target.dataset.trackingData;
@@ -46,6 +56,30 @@ const handleClickTracker = (e) => {
 	console.info(`Segment has sent the following tracking data to your analytics account(s): ${analyticsData}`);
 };
 
+/**
+ * @function handleOrderCompleteTracker
+ * @description Event handler for embedded checkout order completion.
+ * @param e
+ * TODO: This needs to be overhauled once BC can provide proper order data in the ECO response.
+ */
+const handleOrderCompleteTracker = (e) => {
+	if (!e.detail) {
+		return;
+	}
+
+	const cartID = e.detail.cart_id;
+	analytics.track('BigCommerce Order Completed', {
+		cart_id: cartID,
+	});
+
+	console.info(`Segment has sent the following tracking data to your analytics account(s): Order Completed. Cart ID: ${cartID}`);
+};
+
+/**
+ * @function gaCrossDomainInit
+ * @description Enable GA x-domain tracking by default.
+ * @return {Promise<void>}
+ */
 const gaCrossDomainInit = async () => {
 	await analytics.ready(() => {
 		ga('require', 'linker');
@@ -64,6 +98,7 @@ const bindEvents = () => {
 	});
 
 	on(document, 'bigcommerce/analytics_trigger', handleAddToCartTracker);
+	on(document, 'bigcommerce/order_complete', handleOrderCompleteTracker);
 };
 
 const init = () => {

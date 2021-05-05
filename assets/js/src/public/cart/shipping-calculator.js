@@ -7,7 +7,7 @@ import * as tools from 'utils/tools';
 import delegate from 'delegate';
 import cartState from 'publicConfig/cart-state';
 import { Spinner } from 'spin.js/spin';
-import { AJAX_CART_UPDATE, HANDLE_CART_STATE } from 'bcConstants/events';
+import { AJAX_CART_UPDATE, HANDLE_CART_STATE, HANDLE_COUPON_CODE } from 'bcConstants/events';
 import { SHIPPING_API_ZONES, SHIPPING_API_METHODS } from 'publicConfig/wp-settings';
 import { NLS } from 'publicConfig/i18n';
 import { wpAPIGetShippingZones, wpAPIGetShippingMethods } from 'utils/ajax';
@@ -80,11 +80,12 @@ const resetShippingCalculator = (e) => {
 	handleShippingError();
 
 	// On a cart ajax refresh event
-	if (e.detail.cartData) {
+	const cartData = e.detail.cartData ? e.detail.cartData : e.detail.data;
+	if (cartData) {
 		// First set the subtotal to the cart state.
-		state.subtotal = e.detail.cartData.subtotal.formatted;
+		state.subtotal = cartData.subtotal.formatted;
 		// If the only remaining items in the card are digital goods, remove the shipping calculator all together.
-		setValidCartCount(e.detail.cartData);
+		setValidCartCount(cartData);
 		if (state.shippingItemCount === 0) {
 			el.calculator.parentNode.removeChild(el.calculator);
 			return;
@@ -260,6 +261,7 @@ const bindEvents = () => {
 	delegate(el.calculator, '[data-js="bc-shipping-zones"]', 'change', getMethods);
 	delegate(el.calculator, '[data-js="shipping-calculator-update"]', 'click', updateCartPrice);
 	on(document, AJAX_CART_UPDATE, resetShippingCalculator);
+	on(document, HANDLE_COUPON_CODE, resetShippingCalculator);
 };
 
 const init = () => {

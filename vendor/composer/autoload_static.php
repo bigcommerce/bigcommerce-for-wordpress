@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit72066fe8c35817917e8195cae31ee595
+class ComposerStaticInita65448a311d97df73656edff122d916e
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -582,6 +582,7 @@ class ComposerStaticInit72066fe8c35817917e8195cae31ee595
         'BigCommerce\\Import\\Importers\\Products\\Product_Strategy_Factory' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Importers/Products/Product_Strategy_Factory.php',
         'BigCommerce\\Import\\Importers\\Products\\Product_Updater' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Importers/Products/Product_Updater.php',
         'BigCommerce\\Import\\Importers\\Terms\\Term_Creator' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Importers/Terms/Term_Creator.php',
+        'BigCommerce\\Import\\Importers\\Terms\\Term_Ignorer' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Importers/Terms/Term_Ignorer.php',
         'BigCommerce\\Import\\Importers\\Terms\\Term_Saver' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Importers/Terms/Term_Saver.php',
         'BigCommerce\\Import\\Importers\\Terms\\Term_Strategy_Factory' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Importers/Terms/Term_Strategy_Factory.php',
         'BigCommerce\\Import\\Importers\\Terms\\Term_Updater' => __DIR__ . '/../..' . '/src/BigCommerce/Import/Importers/Terms/Term_Updater.php',
@@ -667,6 +668,7 @@ class ComposerStaticInit72066fe8c35817917e8195cae31ee595
         'BigCommerce\\Proxy\\Proxy_Cache' => __DIR__ . '/../..' . '/src/BigCommerce/Proxy/Proxy_Cache.php',
         'BigCommerce\\Proxy\\Proxy_Controller' => __DIR__ . '/../..' . '/src/BigCommerce/Proxy/Proxy_Controller.php',
         'BigCommerce\\Rest\\Cart_Controller' => __DIR__ . '/../..' . '/src/BigCommerce/Rest/Cart_Controller.php',
+        'BigCommerce\\Rest\\Coupon_Code_Controller' => __DIR__ . '/../..' . '/src/BigCommerce/Rest/Coupon_Code_Controller.php',
         'BigCommerce\\Rest\\Orders_Shortcode_Controller' => __DIR__ . '/../..' . '/src/BigCommerce/Rest/Orders_Shortcode_Controller.php',
         'BigCommerce\\Rest\\Pricing_Controller' => __DIR__ . '/../..' . '/src/BigCommerce/Rest/Pricing_Controller.php',
         'BigCommerce\\Rest\\Product_Component_Shortcode_Controller' => __DIR__ . '/../..' . '/src/BigCommerce/Rest/Product_Component_Shortcode_Controller.php',
@@ -776,6 +778,7 @@ class ComposerStaticInit72066fe8c35817917e8195cae31ee595
         'BigCommerce\\Templates\\Cart_Action_Checkout' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Cart_Action_Checkout.php',
         'BigCommerce\\Templates\\Cart_Action_View' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Cart_Action_View.php',
         'BigCommerce\\Templates\\Cart_Actions' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Cart_Actions.php',
+        'BigCommerce\\Templates\\Cart_Coupon_Code' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Cart_Coupon_Code.php',
         'BigCommerce\\Templates\\Cart_Empty' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Cart_Empty.php',
         'BigCommerce\\Templates\\Cart_Error_Message' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Cart_Error_Message.php',
         'BigCommerce\\Templates\\Cart_Footer' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Cart_Footer.php',
@@ -1105,10 +1108,10 @@ class ComposerStaticInit72066fe8c35817917e8195cae31ee595
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit72066fe8c35817917e8195cae31ee595::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit72066fe8c35817917e8195cae31ee595::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit72066fe8c35817917e8195cae31ee595::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit72066fe8c35817917e8195cae31ee595::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInita65448a311d97df73656edff122d916e::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInita65448a311d97df73656edff122d916e::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInita65448a311d97df73656edff122d916e::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInita65448a311d97df73656edff122d916e::$classMap;
 
         }, null, ClassLoader::class);
     }

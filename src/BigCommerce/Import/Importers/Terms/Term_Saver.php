@@ -7,6 +7,10 @@ use BigCommerce\Import\Import_Strategy;
 use BigCommerce\Import\Image_Importer;
 
 abstract class Term_Saver implements Import_Strategy {
+
+	const DATA_HASH_META_KEY        = 'bigcommerce_data_hash';
+	const IMPORTER_VERSION_META_KEY = 'bigcommerce_importer_version';
+
 	/** @var \ArrayAccess */
 	protected $bc_term;
 
@@ -31,6 +35,9 @@ abstract class Term_Saver implements Import_Strategy {
 		$this->term_id = $this->save_wp_term( $this->bc_term );
 		$this->save_wp_termmeta( $this->bc_term );
 		$this->import_image( $this->bc_term );
+		
+		update_term_meta( $this->term_id, self::DATA_HASH_META_KEY, self::hash( $this->bc_term ) );
+		update_term_meta( $this->term_id, self::IMPORTER_VERSION_META_KEY, Import_Strategy::VERSION );
 
 		return $this->term_id;
 	}
@@ -174,5 +181,9 @@ abstract class Term_Saver implements Import_Strategy {
 		} else {
 			delete_term_meta( $this->term_id, 'thumbnail_id' );
 		}
+	}
+
+	public static function hash( $bc_term ) {
+		return md5( $bc_term );
 	}
 }

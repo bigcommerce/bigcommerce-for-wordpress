@@ -7,10 +7,10 @@ use BigCommerce\Templates\Shipping_Info_Button;;
 use BigCommerce\Customizer\Sections\Cart as Cart_Settings;
 
 class Cart_Footer extends Controller {
-	const CART     = 'cart';
-	const SUMMARY  = 'summary';
-	const ACTIONS  = 'actions';
-	const SHIPPING = 'shipping';
+	const CART        = 'cart';
+	const SUMMARY     = 'summary';
+	const ACTIONS     = 'actions';
+	const SHIPPING    = 'shipping';
 
 	protected $template = 'components/cart/cart-footer.php';
 	protected $wrapper_tag = 'footer';
@@ -28,10 +28,10 @@ class Cart_Footer extends Controller {
 		$cart = $this->options[ self::CART ];
 
 		return [
-			self::CART     => $cart,
-			self::ACTIONS  => $this->get_actions( $cart ),
-			self::SUMMARY  => $this->get_summary( $cart ),
-			self::SHIPPING => $this->get_shipping( $cart ),
+			self::CART        => $cart,
+			self::ACTIONS     => $this->get_actions( $cart ),
+			self::SUMMARY     => $this->get_summary( $cart ),
+			self::SHIPPING    => $this->get_shipping( $cart ),
 		];
 	}
 
