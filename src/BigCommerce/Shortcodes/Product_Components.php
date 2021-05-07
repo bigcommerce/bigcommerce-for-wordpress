@@ -26,10 +26,11 @@ class Product_Components implements Shortcode {
 	 */
 	public static function default_attributes() {
 		return [
-			'id'      => 0, // BigCommerce product ID
-			'post_id' => 0, // WordPress post ID
+			'id'      => 0,  // BigCommerce product ID
+			'sku'     => '', // BigCommerce product SKU
+			'post_id' => 0,  // WordPress post ID
 			'type'    => '', // Type of product component
-			'preview' => 0, // internal use: set to 1 to remove interactive elements
+			'preview' => 0,  // internal use: set to 1 to remove interactive elements
 		];
 	}
 
@@ -41,6 +42,14 @@ class Product_Components implements Shortcode {
 			try {
 				$product = Product::by_product_id( absint( $attr['id'] ) );
 			} catch ( \Exception $e ) {
+				return $this->product_not_found();
+			}
+		} else if ( ! empty( $attr['sku'] ) ) {
+			// The $attr['sku'] is the BC product SKU
+			try {
+				$product = Product::by_product_sku($attr['sku']);
+			}
+			catch ( \Exception $e ) {
 				return $this->product_not_found();
 			}
 		} else {

@@ -777,12 +777,76 @@ class Product {
 			];
 		}
 
+		return self::query($args, $query_args);
+	}
+
+	/**
+	 * Gets a BigCommerce Product by SKU and returns matching Product object
+	 *
+	 * @param int           $product_sku
+	 *
+	 * @param \WP_Term|null $channel
+	 *
+	 * @param array         $query_args
+	 *
+	 * @return Product|array
+	 */
+	public static function by_product_sku( $product_sku, \WP_Term $channel = null, $query_args = [] ) {
+
+		if ( empty( $product_sku ) ) {
+			throw new \InvalidArgumentException( __( 'Product SKU must be a provided', 'bigcommerce' ) );
+		}
+
+		$args = [
+			'meta_query'     => [
+				[
+					'key'   => 'bigcommerce_sku',
+					'value' => sanitize_text_field($product_sku),
+				],
+			],
+			'post_type'      => self::NAME,
+			'posts_per_page' => 1,
+		];
+
+		if ( $channel === null ) {
+			// use the current channel
+			$connections = new Connections();
+			$channel     = $connections->current();
+		}
+
+		if ( $channel ) {
+			$args['tax_query'] = [
+				[
+					'taxonomy' => Channel::NAME,
+					'field'    => 'term_id',
+					'terms'    => [ (int) $channel->term_id ],
+					'operator' => 'IN',
+				],
+			];
+		}
+
+		return self::query($args, $query_args);
+	}
+
+	/**
+	 * Executes WP_Query and returns matching Product object
+	 *
+	 * @param int           $product_sku
+	 *
+	 * @param \WP_Term|null $channel
+	 *
+	 * @param array         $query_args
+	 *
+	 * @return Product|array
+	 */
+	private static function query($args, $query_args = [] ) {
+
 		$args = array_merge( $args, $query_args );
 
 		$posts = get_posts( $args );
 
 		if ( empty( $posts ) ) {
-			throw new Product_Not_Found_Exception( sprintf( __( 'No product found matching BigCommerce ID %d', 'bigcommerce' ), $product_id ) );
+			throw new Product_Not_Found_Exception( sprintf( __( 'No product found matching key "%s" with value "%s"', 'bigcommerce' ), $args['meta_query'][0]['key'], $args['meta_query'][0]['value'] ) );
 		}
 
 		return new Product( $posts[0]->ID );
