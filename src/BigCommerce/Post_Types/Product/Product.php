@@ -749,11 +749,48 @@ class Product {
 			throw new \InvalidArgumentException( __( 'Product ID must be a positive integer', 'bigcommerce' ) );
 		}
 
+		return self::by_product_meta( 'bigcommerce_id', absint( $product_id ), $channel, $query_args );
+	}
+	
+	/**
+	 * Gets a BigCommerce Product SKU and returns matching Product object
+	 *
+	 * @param string        $product_sku
+	 *
+	 * @param \WP_Term|null $channel
+	 *
+	 * @param array         $query_args
+	 *
+	 * @return Product|array
+	 */
+	public static function by_product_sku( $product_sku, \WP_Term $channel = null, $query_args = [] ) {
+
+		if ( empty( $product_sku ) ) {
+			throw new \InvalidArgumentException( __( 'Product SKU is missing', 'bigcommerce' ) );
+		}
+
+		return self::by_product_meta( 'bigcommerce_sku', sanitize_text_field( $product_sku ), $channel, $query_args );
+	}
+	
+	/**
+	 * Gets a BigCommerce Product by meta
+	 *
+	 * @param string        $meta_key
+	 * @param mixed         $meta_value
+	 *
+	 * @param \WP_Term|null $channel
+	 *
+	 * @param array         $query_args
+	 *
+	 * @return Product|array
+	 */
+	private static function by_product_meta( $meta_key, $meta_value, \WP_Term $channel = null, $query_args = [] ) {
+
 		$args = [
 			'meta_query'     => [
 				[
-					'key'   => 'bigcommerce_id',
-					'value' => absint( $product_id ),
+					'key'   => $meta_key,
+					'value' => $meta_value,
 				],
 			],
 			'post_type'      => self::NAME,
@@ -782,7 +819,7 @@ class Product {
 		$posts = get_posts( $args );
 
 		if ( empty( $posts ) ) {
-			throw new Product_Not_Found_Exception( sprintf( __( 'No product found matching BigCommerce ID %d', 'bigcommerce' ), $product_id ) );
+			throw new Product_Not_Found_Exception( sprintf( __( 'No product found matching %s %s', 'bigcommerce' ), strtoupper( $meta_key ), $meta_value ) );
 		}
 
 		return new Product( $posts[0]->ID );

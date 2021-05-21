@@ -1,7 +1,8 @@
 :root {
 	--global--color-primary: #28303d;
 	--global--spacing-vertical: 30px;
-	--heading--font-size-h3: 2rem;
+	--heading--font-size-h3: 2em;
+	--primary-nav--font-size: 1.25em;
 }
 
 .bc-wp-twenty-twenty-one-theme {
@@ -16,42 +17,14 @@
 		border: none;
 	}
 
-	/* Case: Overwrite anchor styles when .bc-btn is applied. */
-	.site a.bc-btn:focus:not(.wp-block-button__link):not(.wp-block-file__button) {
-		background: var(--color-primary);
-		outline-offset: -6px;
-		outline: 2px dotted currentColor;
-		text-decoration: none;
+	.bc-btn:not(:hover):not(:active):not(.has-background) {
+		--global--color-background: var(--color-white);
+		--global--color-primary: var(--color-primary);
 	}
 
-	/* Case: Overwrite theme-specific button styles. */
-	.site .button:not(:hover):not(:active):not(.has-background),
-	button:not(:hover):not(:active):not(.has-background),
-	input[type=submit]:not(:hover):not(:active):not(.has-background),
-	input[type=reset]:not(:hover):not(:active):not(.has-background),
-	.wp-block-search .wp-block-search__button:not(:hover):not(:active):not(.has-background),
-	.wp-block-button .wp-block-button__link:not(:hover):not(:active):not(.has-background),
-	.wp-block-file a.wp-block-file__button:not(:hover):not(:active):not(.has-background) {
-		background-color: var(--color-primary);
-		border: none;
-		color: var(--color-white);
-	}
-
-	/* Case: Overwrite theme-specific button styles. */
-	.bc-btn--inverse,
-	button.bc-btn--inverse,
-	a.bc-btn--inverse,
-	.entry-content .bc-btn--inverse,
-	.entry-content button.bc-btn--inverse,
-	.entry-content a.bc-btn--inverse,
-	.bc-account-login__form input[type="submit"].button--inverse {
-		border: none;
-		padding: 15px 20px;
-	}
-
-	/* Case: Overwrite theme-specific link styles. */
-	a.bc-link:focus:not(.wp-block-button__link):not(.wp-block-file__button) {
-		background: none;
+	.bc-link:not(:hover):not(:active):not(.has-background) {
+		--global--color-background: var(--color-primary);
+		--global--color-primary: transparent;
 	}
 
 	/* Case: Content widths need to be wider for bc content pages. */
@@ -76,26 +49,6 @@
 			@media (--viewport-full) {
 				margin-bottom: 0;
 			}
-		}
-
-		.bc-product__title {
-			@media (--viewport-full) {
-				font-size: var(--font-size-content-xl);
-			}
-		}
-
-		.bc-btn,
-		button.bc-btn,
-		a.bc-btn,
-		.entry-content .bc-btn,
-		.entry-content button.bc-btn,
-		.entry-content a.bc-btn,
-		.bc-account-login__form input[type="submit"].button {
-			font-size: var(--font-size-content-xxs);
-		}
-
-		.bc-quickview-trigger:not(:hover):not(:active):not(.has-background) {
-			background-color: transparent;
 		}
 
 		.bc-product-card__featured-image {
@@ -134,11 +87,11 @@
 		}
 
 		.bc-product-variant__label--pick-list {
-			border-color: var(--global--color-primary);
+			--color-bc-light-grey: var(--global--color-primary);
 		}
 
 		.bc-product-variant__label--title {
-			color: var(--global--color-primary);
+			--color-bc-grey: var(--global--color-primary);
 		}
 
 		.bc-single-product__reviews {
@@ -218,7 +171,7 @@
 	}
 
 	.bc-order-list__item {
-		border-bottom-color: var(--global--color-primary);
+		--color-bc-light-grey: var(--global--color-primary);
 	}
 
 	.bc-order-detail {
@@ -275,23 +228,79 @@
 
 		.bc-wish-list-row,
 		.bc-wish-list-header {
-			border-bottom-color: var(--global--color-primary);
+			--color-bc-light-grey: var(--global--color-primary);
 		}
 
 		.bc-wish-list-link {
 			display: block;
 			line-height: var(--line-height-l);
 		}
+	}
 
-		.bc-wishilist-copy {
-			@media (--viewport-medium) {
+	+ .bc-product-quick-view__wrapper {
+
+		.site .button,
+		button,
+		input[type=submit],
+		input[type=reset],
+		.wp-block-search .wp-block-search__button,
+		.wp-block-button .wp-block-button__link,
+		.wp-block-file a.wp-block-file__button .bc-product-archive {
+			border: none;
+		}
+
+		.bc-btn:not(:hover):not(:active):not(.has-background) {
+			--global--color-background: var(--color-white);
+			--global--color-primary: var(--color-primary);
+		}
+
+		.bc-link:not(:hover):not(:active):not(.has-background) {
+			--global--color-background: var(--color-primary);
+			--global--color-primary: transparent;
+		}
+
+		.bc-form {
+
+			input[type="radio"],
+			input[type="checkbox"] {
+				border: 0;
+				height: 1px;
+				margin: -1px;
+				padding: 0;
+				position: absolute;
+				width: 1px;
+			}
+
+			input[type=checkbox] + label,
+			input[type=radio] + label {
 				display: block;
+				padding-left: 0;
 			}
 		}
 	}
 
-	/* CASE: dialog gets added outside <body >  */
+	/* CASE: dialog gets added outside <body  >   */
 	+ .bc-wish-list-dialog__wrapper {
+
+		.site .button,
+		button,
+		input[type=submit],
+		input[type=reset],
+		.wp-block-search .wp-block-search__button,
+		.wp-block-button .wp-block-button__link,
+		.wp-block-file a.wp-block-file__button .bc-product-archive {
+			border: none;
+		}
+
+		.bc-btn:not(:hover):not(:active):not(.has-background) {
+			--global--color-background: var(--color-white);
+			--global--color-primary: var(--color-primary);
+		}
+
+		.bc-link:not(:hover):not(:active):not(.has-background) {
+			--global--color-background: var(--color-primary);
+			--global--color-primary: transparent;
+		}
 
 		.bc-wish-list-name-field {
 			margin: 0 0 1em;
@@ -306,10 +315,6 @@
 	.bc-account-page {
 		border-bottom-color: var(--global--color-primary);
 		border-top-color: var(--global--color-primary);
-
-		.bc-account-login__register {
-			border-left-color: var(--global--color-primary);
-		}
 	}
 
 	.bc-account-address-form__overlay {
@@ -317,15 +322,19 @@
 	}
 
 	.bc-mini-cart {
+		--primary-nav--font-family: sans-serif;
+		--primary-nav--font-size: var(--font-size-content-s);
+		--primary-nav--font-weight: var(--font-weight-semibold);
 
 		.bc-btn {
-			background-color: var(--color-primary);
-			font-size: var(--font-size-content-s);
-			font-weight: var(--font-weight-semibold);
-			line-height: var(--line-height-l);
 			text-decoration: none;
 
 			&:hover {
+				text-decoration: none;
+			}
+
+			&:focus:not(.wp-block-button__link):not(.wp-block-file__button) {
+				background: var(--color-primary);
 				text-decoration: none;
 			}
 		}
@@ -359,5 +368,22 @@
 		.bc-form .bc-form-terms {
 			background: none;
 		}
+	}
+
+	.bc-account-address__edit,
+	.bc-account-address__delete,
+	button.bc-account-address__edit,
+	button.bc-account-address__delete,
+	a.bc-account-address__edit,
+	a.bc-account-address__delete {
+		--global--color-background: var(--color-primary);
+		--global--color-primary: transparent;
+	}
+
+	.bc-account-addresses__add-button,
+	button.bc-account-addresses__add-button,
+	a.bc-account-addresses__add-button {
+		--global--color-background: var(--color-bc-black);
+		--global--color-primary: transparent;
 	}
 }

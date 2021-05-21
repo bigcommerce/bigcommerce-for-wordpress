@@ -10,6 +10,7 @@ use BigCommerce\Api\Customer_Api;
 use BigCommerce\Api\Marketing_Api;
 use BigCommerce\Api\Payments_Api;
 use BigCommerce\Api\Shipping_Api;
+use BigCommerce\Api\Banners_Api;
 use BigCommerce\Api\Store_Api;
 use BigCommerce\Api\Tax_Class_Api;
 use BigCommerce\Api\v3\Api\PricingApi;
@@ -180,6 +181,13 @@ class Api_Factory {
 	 */
 	public function checkout() {
 		return new CheckoutApi( $this->api_client );
+	}
+
+	/**
+	 * @return Banners_Api
+	 */
+	public function banners() {
+		return new Banners_Api( $this->api_client );
 	}
 
 	/**

@@ -5,6 +5,7 @@ namespace BigCommerce\Container;
 
 use BigCommerce\Post_Types\Product;
 use BigCommerce\Post_Types\Queue_Task;
+use BigCommerce\Post_Types\Sync_Log;
 use BigCommerce\Taxonomies\Channel\Channel;
 use Pimple\Container;
 
@@ -29,14 +30,19 @@ class Post_Types extends Provider {
 
 	const QUEUE        = 'post_type.queue_task';
 	const QUEUE_CONFIG = 'post_type.queue_task.config';
+	
+	const SYNC_LOG        = 'post_type.sync_log';
+	const SYNC_LOG_CONFIG = 'post_type.sync_log.config';
 
 	public function register( Container $container ) {
 		$this->product( $container );
 		$this->queue( $container );
+		$this->sync_log( $container );
 
 		add_action( 'init', $this->create_callback( 'register', function () use ( $container ) {
 			$container[ self::PRODUCT_CONFIG ]->register();
 			$container[ self::QUEUE_CONFIG ]->register();
+			$container[ self::SYNC_LOG_CONFIG ]->register();
 		} ), 1, 0 );
 	}
 
@@ -167,6 +173,32 @@ class Post_Types extends Provider {
 		$container[ self::QUEUE_CONFIG ] = function ( Container $container ) {
 			return new Queue_Task\Config( Queue_Task\Queue_Task::NAME );
 		};
+	}
+	
+	private function sync_log( Container $container ) {
+		$container[ self::SYNC_LOG_CONFIG ] = function ( Container $container ) {
+			return new Sync_Log\Config( Sync_Log\Sync_Log::NAME );
+		};
+		
+		$container[ self::SYNC_LOG ] = function ( Container $container ) {
+			return new Sync_Log\Sync_Log;
+		};
+
+		add_action( 'bigcommerce/import/start', $this->create_callback( 'sync_log_create_sync', function ( $error ) use ( $container ) {
+			$container[ self::SYNC_LOG ]->create_sync();
+		} ) );
+
+		add_action( 'bigcommerce/import/error', $this->create_callback( 'sync_log_log_error', function ( $error ) use ( $container ) {
+			$container[ self::SYNC_LOG ]->log_error( $error );
+		} ) );
+		
+		add_action( 'bigcommerce/import/logs/rotate', $this->create_callback( 'sync_log_complete_sync', function ( $log ) use ( $container ) {
+			$container[ self::SYNC_LOG ]->complete_sync( $log );
+		} ) );
+
+		add_filter( 'bigcommerce/diagnostics', $this->create_callback( 'sync_log_diagnostics', function ( $data ) use ( $container ) {
+			return $container[ self::SYNC_LOG ]->diagnostic_data( $data );
+		} ), 10, 1 );
 	}
 
 	private function product_store_links( Container $container ) {
