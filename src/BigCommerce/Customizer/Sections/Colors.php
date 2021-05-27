@@ -18,6 +18,8 @@ class Colors {
 	const COLOR_BC_GREEN      = '#65c68c';
 	const COLOR_BC_LIGHT_GREY = '#e0e3e9';
 	const COLOR_BC_BLACK      = '#34313f';
+	const COLOR_BANNER_GREY   = '#757575';
+	const COLOR_WHITE         = '#ffffff';
 	const TEXT_DARK           = 'dark';
 	const TEXT_LIGHT          = 'light';
 
@@ -28,6 +30,8 @@ class Colors {
 	const AVAILABILITY_COLOR = 'bigcommerce_availability_color';
 	const CONDITION_COLOR    = 'bigcommerce_condition_color';
 	const CONDITION_TEXT     = 'bigcommerce_condition_text_color';
+	const BANNER_COLOR       = 'bigcommerce_banner_color';
+	const BANNER_TEXT        = 'bigcommerce_banner_text_color';
 
 	/**
 	 * @param \WP_Customize_Manager $wp_customize
@@ -45,6 +49,7 @@ class Colors {
 		$this->sale( $wp_customize );
 		$this->availability( $wp_customize );
 		$this->condition( $wp_customize );
+		$this->banners( $wp_customize );
 	}
 
 	private function css( \WP_Customize_Manager $wp_customize ) {
@@ -157,12 +162,35 @@ class Colors {
 		] ) );
 		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, self::CONDITION_TEXT, [
 			'section' => self::NAME,
-			'label'   => __( 'Product Condition Color', 'bigcommerce' ),
+			'label'   => __( 'Product Condition Text Color', 'bigcommerce' ),
 			'type'    => 'select',
 			'choices' => [
 				self::TEXT_LIGHT => __( 'Light', 'bigcommerce' ),
 				self::TEXT_DARK  => __( 'Dark', 'bigcommerce' ),
 			],
+		] ) );
+	}
+	private function banners( \WP_Customize_Manager $wp_customize ) {
+		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::BANNER_COLOR, [
+			'type'              => 'theme_mod',
+			'default'           => self::COLOR_BANNER_GREY,
+			'transport'         => 'refresh',
+			'sanitize_callback' => 'sanitize_hex_color',
+		] ) );
+		$wp_customize->add_control( new \WP_Customize_Color_Control( $wp_customize, self::BANNER_COLOR, [
+			'section' => self::NAME,
+			'label'   => __( 'Banner Backgound Color', 'bigcommerce' ),
+		] ) );
+
+		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::BANNER_TEXT, [
+			'type'              => 'theme_mod',
+			'default'           => self::COLOR_WHITE,
+			'transport'         => 'refresh',
+			'sanitize_callback' => 'sanitize_text_field',
+		] ) );
+		$wp_customize->add_control( new \WP_Customize_Color_Control( $wp_customize, self::BANNER_TEXT, [
+			'section' => self::NAME,
+			'label'   => __( 'Banner Text Color', 'bigcommerce' ),
 		] ) );
 	}
 

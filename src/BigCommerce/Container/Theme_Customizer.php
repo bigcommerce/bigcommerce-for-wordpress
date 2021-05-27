@@ -17,6 +17,7 @@ class Theme_Customizer extends Provider {
 	const SECTION_PRODUCT_ARCHIVE = 'customizer.section.product_archive';
 	const SECTION_CART            = 'customizer.section.cart';
 	const SECTION_CHECKOUT        = 'customizer.section.checkout';
+	const SECTION_BANNERS         = 'customizer.section.banners';
 	const STYLES                  = 'customizer.styles';
 
 	public function register( Container $container ) {
@@ -47,6 +48,10 @@ class Theme_Customizer extends Provider {
 		$container[ self::SECTION_CHECKOUT ] = function ( Container $container ) {
 			return new Sections\Checkout();
 		};
+		
+		$container[ self::SECTION_BANNERS ] = function ( Container $container ) {
+			return new Sections\Banners();
+		};
 
 		$container[ self::STYLES ] = function ( Container $container ) {
 			$path = dirname( $container[ 'plugin_file' ] ) . '/assets/customizer.template.css';
@@ -60,6 +65,7 @@ class Theme_Customizer extends Provider {
 			$container[ self::SECTION_COLORS ]->register( $wp_customize );
 			$container[ self::SECTION_PRODUCT_SINGLE ]->register( $wp_customize );
 			$container[ self::SECTION_PRODUCT_ARCHIVE ]->register( $wp_customize );
+			$container[ self::SECTION_BANNERS ]->register( $wp_customize );
 
 			if ( get_option( \BigCommerce\Settings\Sections\Cart::OPTION_ENABLE_CART, true ) ) {
 				$container[ self::SECTION_CART ]->register( $wp_customize );

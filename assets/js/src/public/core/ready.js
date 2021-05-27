@@ -23,6 +23,7 @@ import loop from '../loop/index';
 import page from '../page/index';
 import product from '../product/index';
 import wishLists from '../wish-list/index';
+import banners from '../banners/index';
 
 import analytics from '../analytics/index';
 
@@ -68,6 +69,7 @@ const init = () => {
 	product();
 	wishLists();
 	analytics();
+	banners();
 
 	console.info('BigCommerce FE: Initialized all javascript that targeted document ready.');
 };

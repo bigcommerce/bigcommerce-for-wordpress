@@ -27,6 +27,7 @@ class Product_Components implements Shortcode {
 	public static function default_attributes() {
 		return [
 			'id'      => 0, // BigCommerce product ID
+			'sku'     => 0, // BigCommerce product SKU
 			'post_id' => 0, // WordPress post ID
 			'type'    => '', // Type of product component
 			'preview' => 0, // internal use: set to 1 to remove interactive elements
@@ -40,6 +41,12 @@ class Product_Components implements Shortcode {
 			// The $attr['id'] is the BC product ID
 			try {
 				$product = Product::by_product_id( absint( $attr['id'] ) );
+			} catch ( \Exception $e ) {
+				return $this->product_not_found();
+			}
+		} elseif ( ! empty( $attr['sku'] ) ) {
+			try {
+				$product = Product::by_product_sku( sanitize_text_field( $attr['sku'] ) );
 			} catch ( \Exception $e ) {
 				return $this->product_not_found();
 			}

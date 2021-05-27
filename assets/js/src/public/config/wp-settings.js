@@ -16,3 +16,4 @@ export const SHIPPING_API_METHODS = CONFIG.cart.methods_api_url || '';
 export const CURRENCY_CODE = CONFIG.currency_code || '';
 export const COUPON_CODE_ADD = CONFIG.cart.coupon_code_add_api_url || '';
 export const COUPON_CODE_REMOVE = CONFIG.cart.coupon_code_delete_api_url || '';
+export const BANNERS = CONFIG.banners || [];

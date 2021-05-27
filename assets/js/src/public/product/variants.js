@@ -163,8 +163,9 @@ const setSelectedVariantPrice = (wrapper = '') => {
  * @function showVariantImage
  * @description Shows the variant image if one is available from state.variantImage.url.
  * @param swiperInstance
+ * @param swiperNavInstance
  */
-const showVariantImage = (swiperInstance) => {
+const showVariantImage = (swiperInstance, swiperNavInstance) => {
 	const slide = document.createElement('div');
 	tools.addClass(slide, 'swiper-slide');
 	tools.addClass(slide, 'bc-product-gallery__image-slide');
@@ -178,7 +179,9 @@ const showVariantImage = (swiperInstance) => {
 	image.setAttribute('srcset', state.variantImage.srcset);
 
 	swiperInstance.appendSlide(slide);
+	swiperInstance.update();
 	swiperInstance.slideTo(swiperInstance.slides.length);
+	swiperNavInstance.slideTo(0);
 
 	_.delay(() => {
 		trigger({ event: 'bigcommerce/init_slide_zoom', data: { container: slide.querySelector('img') }, native: false });
@@ -189,8 +192,9 @@ const showVariantImage = (swiperInstance) => {
  * @function removeVariantImage
  * @description Hide the active variant image.
  * @param swiperInstance
+ * @param swiperNavInstance
  */
-const removeVariantImage = (swiperInstance) => {
+const removeVariantImage = (swiperInstance, swiperNavInstance) => {
 	let slideIndex = '';
 
 	Object.entries(swiperInstance.slides).forEach(([key, slide]) => {
@@ -203,12 +207,14 @@ const removeVariantImage = (swiperInstance) => {
 		}
 	});
 
+	swiperInstance.slideTo(0);
+	swiperNavInstance.slideTo(0);
+
 	if (!slideIndex) {
 		return;
 	}
 
 	swiperInstance.removeSlide(slideIndex);
-	swiperInstance.slideTo(1);
 };
 
 /**
@@ -231,14 +237,16 @@ const showHideVariantImage = (e, wrapper = '') => {
 	}
 
 	state.variantImage.template = variantContainer.innerHTML;
-	const swiperInstance = tools.getNodes('bc-gallery-container', false, currentWrapper)[0].swiper;
+	const swiperWrapper = tools.getNodes('bc-gallery-container', false, currentWrapper)[0];
+	const swiperInstance = swiperWrapper.swiper;
+	const swiperNavInstance = tools.getNodes(`[data-id="${swiperWrapper.dataset.controls}"]`, false, document, true)[0].swiper;
 
 	// hide the image after each variant request.
-	removeVariantImage(swiperInstance);
+	removeVariantImage(swiperInstance, swiperNavInstance);
 
 	// If there is a variant image, show it with a short delay for animation purposes.
 	if (state.variantImage.url) {
-		showVariantImage(swiperInstance);
+		showVariantImage(swiperInstance, swiperNavInstance);
 	}
 };
 

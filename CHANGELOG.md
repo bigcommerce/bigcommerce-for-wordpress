@@ -1,5 +1,27 @@
 # Changelog
 
+## [4.12.0]
+
+### Added
+
+- Support for fetching products by SKU via query and shortcode.
+  
+- Added "Product Sync Log" section to the Settings > Diagnostics panel in the 
+  WP Admin. This shows the last 10 sync attempts and their result.
+  
+- Added support for Banners via the [Banners API](https://developer.bigcommerce.com/api-reference/store-management/marketing/banners) to import and use custom banners from the BC store 
+  within your WordPress site.
+
+### Changed
+
+- Updated gallery thumbnail active slide functionality when triggering SKU specific images.
+
+- Updated "Checkout Complete" page assignment in Settings. Allows for any page to be used, 
+  as the checkout complete page.
+
+### Fixed
+
+
 ## [4.11.0]
 
 ### Added
@@ -1397,6 +1419,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.12.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.11.0...4.12.0
 [4.11.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.10.0...4.11.0
 [4.10.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.9.0...4.10.0
 [4.9.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.8.0...4.9.0

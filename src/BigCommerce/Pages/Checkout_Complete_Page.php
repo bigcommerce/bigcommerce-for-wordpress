@@ -32,4 +32,43 @@ class Checkout_Complete_Page extends Required_Page {
 		return $content;
 	}
 
+	/**
+	 * Find an existing post that can be designated as the
+	 * required page.
+	 *
+	 * Since the content of the page is freeform (i.e., not using
+	 * a shortcode), it doesn't make sense to match an existing post.
+	 *
+	 * @return int The ID of the matching post. 0 if none found.
+	 */
+	protected function match_existing_post() {
+		return 0;
+	}
+
+	/**
+	 * Find all the posts that meet the criteria (e.g., post type,
+	 * content) to become this required page.
+	 *
+	 * Since the content of the page is freeform (i.e., not using
+	 * a shortcode), it can match any page.
+	 *
+	 * @param bool $include_uninstalled Not used in this implementation
+	 *
+	 * @return int[] Post IDs of potential posts
+	 */
+	public function get_post_candidates( $include_uninstalled = false ) {
+		/** @var \wpdb $wpdb */
+		global $wpdb;
+		$post_ids     = $wpdb->get_col( $wpdb->prepare(
+			"SELECT ID FROM {$wpdb->posts} WHERE post_type=%s AND post_status='publish'",
+			$this->get_post_type()
+		) );
+
+		$post_ids = array_map( 'intval', $post_ids );
+
+		$post_ids = (array) apply_filters( 'bigcommerce/pages/matching_page_candidates', $post_ids, static::NAME );
+
+		return $post_ids;
+	}
+
 }
