@@ -174,6 +174,52 @@ class Login {
 		return $login_url;
 	}
 
+
+	/**
+	 * If a user exists only on BC, try to sync before reset pasword email is sent.
+	 * 
+	 * @param WP_User|false $user_data WP_User object if found, false if the user does not exist.
+	 * @param WP_Error      $errors    A WP_Error object containing any errors generated
+	 *                                 by using invalid credentials.
+	 *
+	 * @return \WP_User|false
+	 * @action lostpassword_user_data
+	 */
+	public function before_reset_password_email( $user_data, $errors ) {
+		if ( $errors->get_error_code() === 'invalid_email' ) {
+			$user_login  = filter_input( INPUT_POST, 'user_login', FILTER_SANITIZE_STRING );
+			$customer_id = $this->find_customer_id_by_email( $user_login );
+
+			if ( ! $customer_id ) {
+				return false;
+			}
+
+			$user_id = wp_create_user( $user_login, wp_generate_password(), $user_login );
+			if ( is_wp_error( $user_id ) ) {
+				return false;
+			}
+			$user = new \WP_User( $user_id );
+
+			/**
+			 * Filter the default role given to new users
+			 *
+			 * @param string $role
+			 */
+			$role = apply_filters( 'bigcommerce/user/default_role', Customer_Role::NAME );
+			$user->set_role( $role );
+
+			// all future password validation will be against the API for this user
+			update_user_meta( $user_id, User_Profile_Settings::SYNC_PASSWORD, true );
+
+			$customer = new Customer( $user_id );
+			$customer->set_customer_id( $customer_id );
+
+			return $user;
+		}
+
+		return $user_data;
+	}
+
 	/**
 	 * @param \WP_Error $error
 	 *

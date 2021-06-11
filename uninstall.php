@@ -25,6 +25,7 @@ use BigCommerce\Taxonomies\Condition\Condition;
 use BigCommerce\Taxonomies\Flag\Flag;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
 use BigCommerce\Taxonomies\Product_Type\Product_Type;
+use BigCommerce\Taxonomies\Channel\Channel;
 use BigCommerce\Webhooks\Product_Update_Webhook;
 use BigCommerce\Webhooks\Webhook;
 use BigCommerce\Webhooks\Webhook_Versioning;
@@ -107,11 +108,15 @@ function get_taxonomy_list() {
 		Flag::NAME,
 		Product_Category::NAME,
 		Product_Type::NAME,
+		Channel::NAME,
 	];
 }
 
 function delete_terms() {
 	foreach ( get_taxonomy_list() as $tax ) {
+		// In order to get the terms, taxonomy must first be registered
+		register_taxonomy( $tax, Product::NAME );
+
 		$terms = \get_terms( [
 			'taxonomy'   => $tax,
 			'hide_empty' => false,
