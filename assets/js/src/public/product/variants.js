@@ -160,6 +160,24 @@ const setSelectedVariantPrice = (wrapper = '') => {
 };
 
 /**
+ * @function setVariantSKU
+ * @description Update the variant SKU after successful variant selection;
+ * @param wrapper
+ */
+const setVariantSKU = (wrapper = '') => {
+	if (!wrapper) {
+		return;
+	}
+
+	const skuWrapper = tools.getNodes('bc-product-sku', false, wrapper)[0];
+	if (!skuWrapper) { // No SKU template wrapper. No SKU
+		return;
+	}
+
+	skuWrapper.textContent = state.sku.length > 0 ? state.sku : '';
+};
+
+/**
  * @function showVariantImage
  * @description Shows the variant image if one is available from state.variantImage.url.
  * @param swiperInstance
@@ -239,7 +257,12 @@ const showHideVariantImage = (e, wrapper = '') => {
 	state.variantImage.template = variantContainer.innerHTML;
 	const swiperWrapper = tools.getNodes('bc-gallery-container', false, currentWrapper)[0];
 	const swiperInstance = swiperWrapper.swiper;
-	const swiperNavInstance = tools.getNodes(`[data-id="${swiperWrapper.dataset.controls}"]`, false, document, true)[0].swiper;
+	const swiperNavWrapper = tools.getNodes(`[data-id="${swiperWrapper.dataset.controls}"]`, false, document, true)[0];
+	// Check that the proper thumbnail slider present in the DOM before calling the swiper object.
+	if (!swiperNavWrapper) {
+		return;
+	}
+	const swiperNavInstance = swiperNavWrapper.swiper;
 
 	// hide the image after each variant request.
 	removeVariantImage(swiperInstance, swiperNavInstance);
@@ -456,6 +479,7 @@ const handleSelections = (e, node = '') => {
 	setProductURLParameter();
 	setVariantIDHiddenField(formWrapper);
 	setSelectedVariantPrice(metaWrapper);
+	setVariantSKU(metaWrapper);
 	setInventory();
 	showHideVariantImage(null, metaWrapper);
 	setButtonState(submitButton);

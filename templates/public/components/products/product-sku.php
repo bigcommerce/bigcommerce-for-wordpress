@@ -6,7 +6,7 @@
  *
  * @var string  $sku
  * @var Product $product
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 use BigCommerce\Post_Types\Product\Product;
@@ -20,4 +20,7 @@ if ( empty( $sku ) ) {
 	<?php esc_html_e( 'SKU:', 'bigcommerce' ); ?>
 </span>
 
-<?php echo esc_html( $sku ); ?>
+<!-- data-js="bc-product-sku" is required -->
+<span class="bc-product-single__meta-sku" data-js="bc-product-sku">
+	<?php echo esc_html( $sku ); ?>
+</span>
