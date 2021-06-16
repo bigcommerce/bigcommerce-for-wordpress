@@ -72,6 +72,10 @@ class Accounts extends Provider {
 			return $container[ self::LOGIN ]->lostpassword_url( $url, $redirect );
 		} ), 10, 2 );
 
+		add_filter( 'lostpassword_user_data', $this->create_callback( 'lostpassword_user_data', function ( $user_data, $errors ) use ( $container ) {
+			return $container[ self::LOGIN ]->before_reset_password_email( $user_data, $errors );
+		} ), 10, 2 );
+
 		add_action( 'lostpassword_post', $this->create_callback( 'lostpassword_post', function ( $error ) use ( $container ) {
 			return $container[ self::LOGIN ]->lostpassword_error_handler( $error );
 		} ), 10, 1 );
@@ -92,6 +96,7 @@ class Accounts extends Provider {
 
 			return $user;
 		} ), 40, 3 );
+
 		add_filter( 'check_password', $this->create_callback( 'check_password', function ( $match, $password, $hash, $user_id ) use ( $container ) {
 			if ( $container[ Api::CONFIG_COMPLETE ] ) {
 				return $container[ self::LOGIN ]->check_password_for_linked_accounts( $match, $password, $hash, $user_id );

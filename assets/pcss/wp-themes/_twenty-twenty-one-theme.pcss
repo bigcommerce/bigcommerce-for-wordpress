@@ -6,6 +6,18 @@
 }
 
 .bc-wp-twenty-twenty-one-theme {
+	/* Case: Make room for banners */
+	.bc-banners {
+
+		~ .site {
+			position: relative;
+
+			.primary-navigation {
+				--global--admin-bar--height: 0;
+			}
+		}
+	}
+
 	/* Case: Remove browser-defined border style. */
 	.site .button,
 	button,
@@ -17,6 +29,11 @@
 		border: none;
 	}
 
+	/* Case: Remove focus background color. */
+	.site a:focus:not(.wp-block-button__link):not(.wp-block-file__button) {
+		background: none;
+	}
+
 	.bc-btn:not(:hover):not(:active):not(.has-background) {
 		--global--color-background: var(--color-white);
 		--global--color-primary: var(--color-primary);
@@ -25,6 +42,11 @@
 	.bc-link:not(:hover):not(:active):not(.has-background) {
 		--global--color-background: var(--color-primary);
 		--global--color-primary: transparent;
+	}
+
+	.bc-load-items__trigger-btn {
+		--global--color-primary: transparent;
+		--global--color-background: #5273f4;
 	}
 
 	/* Case: Content widths need to be wider for bc content pages. */
@@ -279,7 +301,7 @@
 		}
 	}
 
-	/* CASE: dialog gets added outside <body  >   */
+	/* CASE: dialog gets added outside <body> */
 	+ .bc-wish-list-dialog__wrapper {
 
 		.site .button,

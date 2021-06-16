@@ -9,6 +9,7 @@ import * as tools from 'utils/tools';
 import scrollTo from 'utils/dom/scroll-to';
 import { trigger } from 'utils/events';
 import { CART_ID_COOKIE_NAME, CART_ITEM_COUNT_COOKIE } from 'bcConstants/cookies';
+import bigcommerceConfig from 'bigcommerce_config';
 import { cartEmpty } from '../cart/cart-templates';
 
 const el = {
@@ -52,10 +53,26 @@ const scrollIframe = () => {
 	_.delay(() => scrollTo(options), 1000);
 };
 
+/**
+ * @function handleOrderCompleteEvents
+ * @description Clear the cart data and scroll the order into view on the page if the order is successfully completed.
+ */
 const handleOrderCompleteEvents = () => {
 	trigger({ event: 'bigcommerce/order_complete', data: { cart_id: Cookie.get(CART_ID_COOKIE_NAME) }, native: false });
 	clearCartData();
 	scrollIframe();
+};
+
+/**
+ * @function handleLogoutEvents
+ * @description Log the user out of wordpress if they have successfully logged out of BC via the Embedded Checkout SDK.
+ */
+const handleLogoutEvents = () => {
+	if (!bigcommerceConfig.logout_url) {
+		return;
+	}
+
+	window.location = bigcommerceConfig.logout_url;
 };
 
 /**
@@ -75,6 +92,9 @@ const loadEmbeddedCheckout = async () => {
 
 	// Set the onComplete callback to use the clearCartData function.
 	config.onComplete = handleOrderCompleteEvents;
+
+	// Set the onComplete callback to use the clearCartData function.
+	config.onSignOut = handleLogoutEvents;
 
 	// Embed the checkout.
 	checkoutCDN.embedCheckout(config);

@@ -40,6 +40,7 @@ class JS_Config {
 				],
 				'channel'       => $this->get_current_channel_data(),
 				'currency_code' => get_option( Currency::CURRENCY_CODE, 'USD' ),
+				'logout_url'    => esc_url( wp_logout_url( '/' ) ),
 			];
 			$this->data = apply_filters( 'bigcommerce/js_config', $this->data );
 		}
@@ -57,7 +58,7 @@ class JS_Config {
 				];
 			}
 		} catch (\Exception $e) {
-			
+
 		}
 
 		return false;

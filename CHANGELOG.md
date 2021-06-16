@@ -1,5 +1,32 @@
 # Changelog
 
+
+## [4.13.0]
+
+### Added
+
+- Added support for password reset for users that exist only on BC (not yet synced with WP)
+- Delete all channels from the WP database on plugin uninstall so a fresh channel list is pulled when reinstalling and connecting to a new store
+- Added support for changing the SKU element when selecting variants. This adds a wrapper 
+  around the SKU value where JS targets the wrapper and updates the text.
+  
+  **NOTE:** Update your templates accordingly. *product-sku.php*
+
+### Changed
+- Within Embedded Checkout, logging out using the EC sign out buttonnow triggers
+  a callback to log the user out of wordpress as well via `wp_logout()`
+  
+- The SKU text now updates after changing options on a product.
+  
+  **NOTE: product-sku.php template updated to v.1.1.0**
+
+### Fixed
+
+- Fixed background colors in 2021 theme
+- Fixed banner overlaps the mobile menu icon on 2021 theme
+- Fixed top/bottom banners set for WordPress Twenty-Seventeen theme not showing up on home page.
+
+
 ## [4.12.0]
 
 ### Added
@@ -1419,6 +1446,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.13.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.12.0...4.13.0
 [4.12.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.11.0...4.12.0
 [4.11.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.10.0...4.11.0
 [4.10.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.9.0...4.10.0
