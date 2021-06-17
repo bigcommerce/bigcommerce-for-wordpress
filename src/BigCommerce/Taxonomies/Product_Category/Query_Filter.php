@@ -129,17 +129,20 @@ class Query_Filter {
 			return;
 		}
 
+		$escaped_ids = implode(', ', array_map( function($n) use ($wpdb) {
+			return $wpdb->prepare('%d', $n);
+		}, $this->group_filtered_terms->get_visible_terms()));
+
 		$sql = "SELECT p.ID
 		        FROM {$wpdb->posts} p
 		        INNER JOIN {$wpdb->term_relationships} r ON r.object_id=p.ID
-		        WHERE p.post_name=%s AND p.post_type=%s AND r.term_taxonomy_id IN (%s)";
+		        WHERE p.post_name=%s AND p.post_type=%s AND r.term_taxonomy_id IN (" . $escaped_ids .")";
 
 		$post_id = $wpdb->get_var(
 			$wpdb->prepare(
 				$sql,
 				$name,
-				Product::NAME,
-				implode( ', ', array_map( 'intval', $this->group_filtered_terms->get_visible_terms() ) )
+				Product::NAME
 			)
 		) ?: - 1;
 
