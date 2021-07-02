@@ -227,6 +227,10 @@ class Login {
 	 * @action lostpassword_post
 	 */
 	public function lostpassword_error_handler( $error ) {
+		// Don't intercept admin reset password link
+		if ( is_admin() ) {
+			return;
+		}
 
 		if ( ! $error->get_error_code() ) {
 			$user_login = filter_input( INPUT_POST, 'user_login', FILTER_SANITIZE_STRING );
@@ -314,6 +318,20 @@ class Login {
 			 * @param string $url The account profile page URL
 			 */
 			$url = apply_filters( 'bigcommerce/account/profile/permalink', $url );
+
+			// Go to default WP login page if it's a confirm email action.
+			$action = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
+			if ( $action === 'confirm_admin_email' ) {
+				remove_filter( 'login_url', bigcommerce()->accounts->login_url, 10 );
+				$url = add_query_arg(
+					[
+						'action'  => $action,
+						'wp_lang' => filter_input( INPUT_GET, 'wp_lang', FILTER_SANITIZE_STRING ),
+					],
+					wp_login_url( $url )
+				);
+			}
+
 			wp_safe_redirect( esc_url_raw( $url ) );
 			exit();
 		}

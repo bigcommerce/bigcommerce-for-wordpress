@@ -8,7 +8,7 @@
  * @var int    $minlength
  * @var int    $maxlength
  * @var string $default_value
- * @version 1.0.0
+ * @version 1.0.1
  */
 
 ?>
@@ -33,13 +33,13 @@
 
 		<?php if ( $minlength ) { ?>
 			<span class="bc-product-form__option-description">
-				<?php echo sprintf( esc_html( __( 'Minimum character count is: <strong>%s</strong>', 'bigcommerce' ) ), $minlength ); ?>
+				<?php echo sprintf( __( 'Minimum character count is: <strong>%s</strong>', 'bigcommerce' ), esc_html( $minlength ) ); ?>
 			</span>
 		<?php } ?>
 
 		<?php if ( $maxlength ) { ?>
 			<span class="bc-product-form__option-description">
-				<?php echo sprintf( esc_html( __( 'Maximum character count is: <strong>%s</strong>', 'bigcommerce' ) ), $maxlength ); ?>
+				<?php echo sprintf( __( 'Maximum character count is: <strong>%s</strong>', 'bigcommerce' ), esc_html( $maxlength ) ); ?>
 			</span>
 		<?php } ?>
 	</div>

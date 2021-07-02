@@ -9,7 +9,7 @@
  * @var int    $max_value
  * @var string $step
  * @var string $default_value
- * @version 1.0.0
+ * @version 1.0.1
  */
 
 ?>
@@ -36,15 +36,15 @@
 
 	<?php if ( $min_value && $max_value ) { ?>
 		<span class="bc-product-form__option-description">
-			<?php echo sprintf( esc_html( __( 'Minimum value: <strong>%s</strong>, Maximum value: <strong>%s</strong>', 'bigcommerce' ) ), $min_value, $max_value); ?>
+			<?php echo sprintf( __( 'Minimum value: <strong>%s</strong>, Maximum value: <strong>%s</strong>', 'bigcommerce' ), esc_html( $min_value ), esc_html( $max_value ) ); ?>
 		</span>
 	<?php } elseif ( $min_value ) { ?>
 		<span class="bc-product-form__option-description">
-			<?php echo sprintf( esc_html( __( 'Minimum value: <strong>%s</strong>', 'bigcommerce' ) ), $min_value); ?>
+			<?php echo sprintf( __( 'Minimum value: <strong>%s</strong>', 'bigcommerce' ), esc_html( $min_value ) ); ?>
 		</span>
 	<?php } elseif ( $max_value ) { ?>
 		<span class="bc-product-form__option-description">
-			<?php echo sprintf( esc_html( __( 'Maximum value: <strong>%s</strong>', 'bigcommerce' ) ), $max_value); ?>
+			<?php echo sprintf( __( 'Maximum value: <strong>%s</strong>', 'bigcommerce' ), esc_html( $max_value ) ); ?>
 		</span>
 	<?php } ?>
 
