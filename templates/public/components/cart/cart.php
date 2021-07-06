@@ -10,7 +10,7 @@
  * @var string $coupon_code   The cart table coupon code field
  * @var string $items         The cart items
  * @var string $footer        The cart table layout footer
- * @version 1.0.0
+ * @version 2.0.0
  */
 
 ?>

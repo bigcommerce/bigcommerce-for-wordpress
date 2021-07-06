@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.14.0]
+
+### Fixed
+- Fixed Product Form > Option Description escaping logic so `<strong>` tags render properly.
+- Fixed login redirect_to query argument not being respected. This happened for admin users in the case when confirm admin email action was in progress. Other user roles were not affected.
+- Fixed Admin/Users reset password link
+- Fixed cart footer template description and bumped the template version (related github issue: https://github.com/bigcommerce/bigcommerce-for-wordpress/issues/275)
+- Fixed javascript error should the pricing API error out (related github issues: https://github.com/bigcommerce/bigcommerce-for-wordpress/issues/226 https://github.com/bigcommerce/bigcommerce-for-wordpress/issues/231)
 
 ## [4.13.0]
 
@@ -7,17 +15,17 @@
 
 - Added support for password reset for users that exist only on BC (not yet synced with WP)
 - Delete all channels from the WP database on plugin uninstall so a fresh channel list is pulled when reinstalling and connecting to a new store
-- Added support for changing the SKU element when selecting variants. This adds a wrapper 
+- Added support for changing the SKU element when selecting variants. This adds a wrapper
   around the SKU value where JS targets the wrapper and updates the text.
-  
+
   **NOTE:** Update your templates accordingly. *product-sku.php*
 
 ### Changed
 - Within Embedded Checkout, logging out using the EC sign out buttonnow triggers
   a callback to log the user out of wordpress as well via `wp_logout()`
-  
+
 - The SKU text now updates after changing options on a product.
-  
+
   **NOTE: product-sku.php template updated to v.1.1.0**
 
 ### Fixed
@@ -32,18 +40,18 @@
 ### Added
 
 - Support for fetching products by SKU via query and shortcode.
-  
-- Added "Product Sync Log" section to the Settings > Diagnostics panel in the 
+
+- Added "Product Sync Log" section to the Settings > Diagnostics panel in the
   WP Admin. This shows the last 10 sync attempts and their result.
-  
-- Added support for Banners via the [Banners API](https://developer.bigcommerce.com/api-reference/store-management/marketing/banners) to import and use custom banners from the BC store 
+
+- Added support for Banners via the [Banners API](https://developer.bigcommerce.com/api-reference/store-management/marketing/banners) to import and use custom banners from the BC store
   within your WordPress site.
 
 ### Changed
 
 - Updated gallery thumbnail active slide functionality when triggering SKU specific images.
 
-- Updated "Checkout Complete" page assignment in Settings. Allows for any page to be used, 
+- Updated "Checkout Complete" page assignment in Settings. Allows for any page to be used,
   as the checkout complete page.
 
 ### Fixed
@@ -109,7 +117,7 @@
 ### Fixed
 - Addressed an issue where missing template markup on custom template overrides
   caused a JS error on the page rendering the rest of the page unusable.
-  
+
   **Note:** Where possible, please use all require markup outlined in the templates.
 
 
@@ -1446,6 +1454,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.14.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.13.0...4.14.0
 [4.13.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.12.0...4.13.0
 [4.12.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.11.0...4.12.0
 [4.11.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.10.0...4.11.0
