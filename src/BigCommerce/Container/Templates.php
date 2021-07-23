@@ -86,7 +86,7 @@ class Templates extends Provider {
 
 
 		add_filter( 'template_include', $this->create_callback( 'template_include', function ( $path ) use ( $container ) {
-			return $container[ self::OVERRIDE ]->fallback_to_plugin_template( $path );
+			return $container[ self::OVERRIDE ]->include_product_template( $path );
 		} ), 10, 1 );
 
 		add_filter( 'body_class', $this->create_callback( 'set_body_classes', function ( $classes ) use ( $container ) {

@@ -6,16 +6,15 @@
 import multiCheckboxes from './multiple-checkboxes';
 import * as tools from '../../utils/tools';
 
-const el = {
-	customizer: tools.getNodes('#customize-controls', false, document, true)[0],
-};
-
 const init = () => {
-	if (!el.customizer) {
+	/** Note: make sure to look for element after "DOM ready" */
+	const customizer = tools.getNodes('#customize-controls', false, document, true)[0];
+
+	if (!customizer) {
 		return;
 	}
 
-	multiCheckboxes(el.customizer);
+	multiCheckboxes(customizer);
 
 	console.info('BigCommerce: Initialized Theme Customizer Scripts.');
 };

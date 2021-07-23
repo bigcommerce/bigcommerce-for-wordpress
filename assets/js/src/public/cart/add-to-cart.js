@@ -169,6 +169,8 @@ const createAjaxResponseMessage = (wrapper = '', message = '', error = false) =>
  */
 const handleFetchingState = (button = '') => {
 	if (!button) {
+		const allCartButtons = tools.getNodes('.bc-btn--add_to_cart', true, document, true);
+		allCartButtons.forEach(handleFetchingState);
 		return;
 	}
 
@@ -228,12 +230,12 @@ const handleAjaxAddToCartRequest = (e) => {
 	const url = cartID ? `${CART_API_BASE}/${cartID}` : CART_API_BASE;
 	const query = getAjaxQueryString(cartButton);
 
-	handleFetchingState(cartButton);
+	handleFetchingState(cartID ? cartButton : null);
 	wpAPIAddToCartAjax(url, query)
 		.set('X-WP-Nonce', AJAX_CART_NONCE)
 		.end((err, res) => {
 			state.isFetching = false;
-			handleFetchingState(cartButton);
+			handleFetchingState(cartID ? cartButton : null);
 
 			if (err) {
 				console.error(err);
