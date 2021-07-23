@@ -1,5 +1,13 @@
 # Changelog
 
+
+## [4.14.1]
+
+### Fixed
+- Fixed the product template include logic for WordPress 5.8
+- Fixed bug introduced in WordPress 5.8 that prevents WordPress Customizer from reacting when changes were made to the Product Catalog "Sort By" options.
+- Updates add to cart functionality to wait for creation of cart, so multiple add to carts function properly.  Fix for: https://github.com/bigcommerce/bigcommerce-for-wordpress/issues/230
+
 ## [4.14.0]
 
 ### Fixed
@@ -1454,6 +1462,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.14.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.14.0...4.14.1
 [4.14.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.13.0...4.14.0
 [4.13.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.12.0...4.13.0
 [4.12.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.11.0...4.12.0

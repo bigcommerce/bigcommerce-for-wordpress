@@ -173,10 +173,7 @@ class Template_Override {
 	 *
 	 * @filter template_include
 	 */
-	public function fallback_to_plugin_template( $template ) {
-		if ( ! empty( $template ) ) {
-			return $template;
-		}
+	public function include_product_template( $template ) {
 		if ( is_singular( Product::NAME ) ) {
 			return $this->get_product_single_path();
 		}
@@ -194,29 +191,40 @@ class Template_Override {
 	 * @return bool|string Path to the product single template in the plugin
 	 */
 	private function get_product_single_path() {
-		return $this->get_plugin_template_path( 'single-' . Product::NAME . '.php' );
+		return $this->get_template_path( 'single-' . Product::NAME . '.php' );
 	}
 
 	/**
 	 * @return bool|string Path to the product archive template in the plugin
 	 */
 	private function get_product_archive_path() {
-		return $this->get_plugin_template_path( 'archive-' . Product::NAME . '.php' );
+		return $this->get_template_path( 'archive-' . Product::NAME . '.php' );
 	}
 
 	/**
-	 * Get the relative path to a template file in the plugin dir
+	 * Get the template path
 	 *
 	 * @param string $relative_path
 	 *
 	 * @return string|bool
 	 */
-	private function get_plugin_template_path( $relative_path ) {
+	private function get_template_path( $relative_path ) {
+		$path = '';
+		/**
+		 * This filter is documented in src/BigCommerce/Templates/Controller.php
+		 */
+		$theme_dir = apply_filters( 'bigcommerce/template/directory/theme', '', $relative_path );
+		if ( ! empty( $theme_dir ) ) {
+			$path = locate_template( trailingslashit( $theme_dir ) . $relative_path );
+		}
+
 		/**
 		 * This filter is documented in src/BigCommerce/Templates/Controller.php
 		 */
 		$plugin_dir = apply_filters( 'bigcommerce/template/directory/plugin', '', $relative_path );
-		$path       = trailingslashit( $plugin_dir ) . $relative_path;
+		if ( empty( $path ) && ! empty( $plugin_dir ) ) {
+			$path = trailingslashit( $plugin_dir ) . $relative_path;
+		}
 
 		$path = apply_filters( 'bigcommerce/template/path', $path, $relative_path );
 		if ( ! file_exists( $path ) ) {

@@ -50,6 +50,12 @@ class Editor extends Provider {
 			echo $container[ self::UI_DIALOG ]->render_dialog_once();
 		} );
 		add_action( 'enqueue_block_editor_assets', $this->create_callback( 'block_editor_enqueue_dialog_template', function() use ( $container, $render_callback ) {
+			$current_screen = get_current_screen();
+			
+			if ( is_a( $current_screen, 'WP_Screen' ) && method_exists( $current_screen, 'is_block_editor' ) && ! $current_screen->is_block_editor() ) {
+				return;
+			}
+
 			if ( did_action( 'admin_enqueue_scripts' ) ) { // if the Gutenberg plugin is enabled, the action will already be called
 				$render_callback();
 			} else { // if using the Block Editor in WP core, no HTML has been rendered, so delay the output

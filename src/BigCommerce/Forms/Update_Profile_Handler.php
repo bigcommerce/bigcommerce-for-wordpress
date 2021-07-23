@@ -39,14 +39,15 @@ class Update_Profile_Handler implements Form_Handler {
 			$update_user      = true;
 		}
 
+		$userdata = $user->to_array();
 		if ( $password ) {
-			$user->user_pass                            = $password;
+			$userdata['user_pass']                      = $password;
 			$update_user                                = true;
 			$profile[ '_authentication' ][ 'password' ] = $password;
 		}
 
 		if ( $update_user ) {
-			$updated = wp_update_user( $user );
+			$updated = wp_update_user( $userdata );
 			if ( is_wp_error( $updated ) ) {
 				switch ( $updated->get_error_code() ) {
 					case 'existing_user_email':
