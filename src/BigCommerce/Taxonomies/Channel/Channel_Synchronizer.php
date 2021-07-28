@@ -124,7 +124,8 @@ class Channel_Synchronizer {
 	 */
 	private function fetch_channels_from_api() {
 		/** @var \BigCommerce\Api\v3\Model\Channel[] $data */
-		$data = $this->channels_api->listChannels( [ 'available' => 'true' ] )->getData();
+		$data = $this->channels_api->listChannels()->getData();
+
 		// 'platform' => 'wordpress' filter does not work so we filter here instead
 		$data = array_filter( $data, function ( \BigCommerce\Api\v3\Model\Channel $channel ) {
 			return $channel->getPlatform() === 'wordpress';
@@ -168,6 +169,8 @@ class Channel_Synchronizer {
 		if ( get_term_meta( $term->term_id, Channel::STATUS, true ) === Channel::STATUS_ORPHAN ) {
 			update_term_meta( $term->term_id, Channel::STATUS, Channel::STATUS_DISCONNECTED );
 		}
+
+		$this->update_channel_status_meta( $term->term_id, $channel['status'] );
 	}
 
 	/**
@@ -197,6 +200,18 @@ class Channel_Synchronizer {
 		if ( $status === Channel::STATUS_PRIMARY ) {
 			$this->bulk_assign_primary_channel( (int) $term['term_id'] );
 		}
+
+		$this->update_channel_status_meta( $term['term_id'], $channel['status'] );
+	}
+
+	/**
+	 * @param int    $term_id
+	 * @param string $status
+	 *
+	 * @return void
+	 */
+	private function update_channel_status_meta( $term_id, $status ) {
+		update_term_meta( $term_id, BC_Status::STATUS, $status );
 	}
 
 	/**

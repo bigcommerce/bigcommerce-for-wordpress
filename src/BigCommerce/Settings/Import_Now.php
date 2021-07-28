@@ -7,6 +7,7 @@ namespace BigCommerce\Settings;
 use BigCommerce\Import\Runner\Cron_Runner;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Settings\Screens\Settings_Screen;
+use BigCommerce\Import\Import_Type;
 
 class Import_Now {
 	const ACTION = 'bigcommerce_import_now';
@@ -35,8 +36,54 @@ class Import_Now {
 			return;
 		}
 		$label  = $label ?: __( 'Sync Products', 'bigcommerce' );
-		$button = '<a href="%s" class="bc-admin-btn bc-admin-btn--outline">%s</a>';
-		printf( $button, esc_url( $this->get_import_url( $redirect ) ), $label );
+		$button = sprintf( '<button class="button bc-admin-btn bc-admin-btn--outline">%s</button>', $label );
+
+		/**
+		 * Hidden form fields
+		 */
+		$hidden_fields = [
+			[
+				'name'  => 'redirect_to',
+				'value' => $redirect,
+			],
+			[
+				'name'  => 'action',
+				'value' => self::ACTION,
+			],
+			[
+				'name'  => '_wpnonce',
+				'value' => wp_create_nonce( self::ACTION ),
+			],
+		];
+		$hidden_fields = implode( '', array_map( function ( $field ) {
+			return sprintf( '<input type="hidden" name="%s" value="%s">', $field['name'], $field['value'] );
+		}, $hidden_fields ) );
+
+		/**
+		 * Import type dropdown
+		 */
+		$import_type_dropdown = [
+			[
+				'name'  => __( 'All Products', 'bigcommerce' ),
+				'value' => Import_Type::IMPORT_TYPE_FULL,
+			],
+			[
+				'name'  => __( 'New/Updated since last sync', 'bigcommerce' ),
+				'value' => Import_Type::IMPORT_TYPE_PARTIAL,
+			],
+		];
+		$import_type_dropdown = implode( '', array_map( function ( $option ) {
+			return sprintf( '<option value="%s">%s</option>', $option['value'], $option['name'] );
+		}, $import_type_dropdown ) );
+		$import_type_dropdown = sprintf( '<select name="%s">%s</select>', Import_Type::IMPORT_TYPE, $import_type_dropdown );
+
+		printf(
+			'<form action="%s" class="bc-product-sync-form">%s %s %s</form>',
+			admin_url( 'admin-post.php' ),
+			$hidden_fields,
+			$import_type_dropdown,
+			$button
+		);
 	}
 
 
@@ -89,6 +136,9 @@ class Import_Now {
 		check_admin_referer( self::ACTION );
 
 		if ( $this->current_user_can_start_import() ) {
+			$import_type = filter_input( INPUT_GET, Import_Type::IMPORT_TYPE, FILTER_SANITIZE_STRING );
+
+			update_option( Import_Type::IMPORT_TYPE, $import_type );
 			do_action( Cron_Runner::START_CRON );
 		}
 

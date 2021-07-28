@@ -55,6 +55,7 @@ class Taxonomies extends Provider {
 	const CHANNEL_ADMIN_FILTER    = 'taxonomy.channel.admin_products_filter';
 	const CHANNEL_QUERY_FILTER    = 'taxonomy.channel.query_filter';
 	const CHANNEL_CURRENCY_FILTER = 'taxonomy.channel.currency_filter';
+	const CHANNEL_BC_STATUS       = 'taxonomy.channel.bc_status';
 
 	const ROUTES = 'taxonomy.channel.routes';
 
@@ -142,23 +143,34 @@ class Taxonomies extends Provider {
 
 	private function channel( Container $container ) {
 		$this->routes( $container );
-
+		
 		$container[ self::CHANNEL_CONFIG ] = function ( Container $container ) {
 			return new Channel\Config( Channel\Channel::NAME, [ Product::NAME, Queue_Task::NAME ] );
 		};
 		$container[ self::CHANNEL_SYNC ]   = function ( Container $container ) {
 			return new Channel\Channel_Synchronizer( $container[ Api::FACTORY ]->channels() );
 		};
-
-		$channel_sync = $this->create_callback( 'channel_sync', function () use ( $container ) {
-			$container[ self::CHANNEL_SYNC ]->initial_sync();
+		$container[ self::CHANNEL_BC_STATUS ] = function ( Container $container ) {
+			return new Channel\BC_Status();
+		};
+		
+		add_action( 'bigcommerce/import/start', function () use ( $container ) {
+			$container[ self::CHANNEL_BC_STATUS ]->maybe_cancel_import();
+		}, 11, 0 );
+		
+		add_action( 'admin_notices', function () use ( $container ) {
+			$container[ self::CHANNEL_BC_STATUS ]->admin_notices();
 		} );
-		add_action( 'bigcommerce/settings/before_form/page=' . Settings_Screen::NAME, $channel_sync, 10, 0 );
-		add_action( 'bigcommerce/import/start', $channel_sync, 10, 0 );
-
-		// We need a fresh list of channels on Connect Channel screen
-		add_action( 'bigcommerce/settings/before_form/page=' . Connect_Channel_Screen::NAME, function () use ( $container ) {
+		
+		// We need a fresh list of channels on Connect Channel screen and on each import
+		$channel_sync = $this->create_callback( 'channel_sync', function () use ( $container ) {
 			$container[ self::CHANNEL_SYNC ]->sync();
+		} );
+		add_action( 'bigcommerce/settings/before_form/page=' . Connect_Channel_Screen::NAME, $channel_sync, 10, 0 );
+		add_action( 'bigcommerce/import/start', $channel_sync, 10, 0 );
+		
+		add_action( 'bigcommerce/settings/before_form/page=' . Settings_Screen::NAME, function () use ( $container ) {
+			$container[ self::CHANNEL_SYNC ]->initial_sync();
 		}, 10, 0 );
 
 		add_action( 'edited_' . Channel\Channel::NAME, $this->create_callback( 'handle_channel_name_change', function ( $term_id ) use ( $container ) {

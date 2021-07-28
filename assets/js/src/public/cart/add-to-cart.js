@@ -117,7 +117,7 @@ const getAjaxQueryString = (button) => {
  * @param data
  */
 const updateCartItemCount = (data = {}) => {
-	const menuCartCount = tools.getNodes('.bigcommerce-cart__item-count', false, document, true)[0];
+	const menuCartCount = tools.getNodes('bc-cart-item-count')[0];
 	if (!menuCartCount) {
 		return;
 	}

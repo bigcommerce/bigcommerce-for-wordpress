@@ -36,7 +36,7 @@ class Amp_Cart_Menu_Item {
 	reset-on-refresh
 	>
 	<template type="amp-mustache">
-		<span class="bigcommerce-cart__item-count">{{ items_count }}</span>
+		<span class="bigcommerce-cart__item-count" data-js="bc-cart-item-count">{{ items_count }}</span>
 	</template>
 </amp-list>';
 

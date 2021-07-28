@@ -10,6 +10,7 @@ use BigCommerce\Api\v3\Model\ListingCollectionResponse;
 use BigCommerce\Api\v3\ObjectSerializer;
 use BigCommerce\Import\No_Cache_Options;
 use BigCommerce\Import\Runner\Status;
+use BigCommerce\Import\Import_Type;
 use BigCommerce\Logging\Error_Log;
 use BigCommerce\Taxonomies\Channel\Channel;
 
@@ -42,9 +43,9 @@ class Listing_Fetcher implements Import_Processor {
 	 * @param int         $limit    Number of listing IDs to fetch per request
 	 */
 	public function __construct( ChannelsApi $channels, \WP_Term $channel_term, $limit = 100 ) {
-		$this->limit    = $limit;
+		$this->limit        = $limit;
 		$this->channel_term = $channel_term;
-		$this->channels = $channels;
+		$this->channels     = $channels;
 	}
 
 	public function run() {
@@ -58,8 +59,21 @@ class Listing_Fetcher implements Import_Processor {
 			return;
 		}
 
-		$id_map = $this->get_option( self::PRODUCT_LISTING_MAP, [] ) ?: [];
+		$modified_product_ids = [];
+		$import_type          = get_option( Import_Type::IMPORT_TYPE );
+		if ( $import_type === Import_Type::IMPORT_TYPE_PARTIAL ) {
+			$modified_product_ids = apply_filters( 'bigcommerce_modified_product_ids', [] );
+	
+			if ( empty( $modified_product_ids ) ) {
+				$status->set_status( Status::FETCHED_LISTINGS . '-' . $this->channel_term->term_id );
+				$this->clear_state();
+				$this->update_option( self::PRODUCT_LISTING_MAP, [], false );
 
+				return;
+			}
+		}
+
+		$id_map = $this->get_option( self::PRODUCT_LISTING_MAP, [] ) ?: [];
 		$next = $this->get_next();
 
 		do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Retrieving listings', 'bigcommerce' ), [
@@ -69,8 +83,9 @@ class Listing_Fetcher implements Import_Processor {
 
 		try {
 			$response = $this->channels->listChannelListings( $channel_id, [
-				'limit' => $this->limit,
-				'after' => $next ?: null,
+				'product_id:in' => $modified_product_ids,
+				'limit'         => $this->limit,
+				'after'         => $next ?: null,
 			] );
 		} catch ( ApiException $e ) {
 			do_action( 'bigcommerce/import/error', $e->getMessage(), [

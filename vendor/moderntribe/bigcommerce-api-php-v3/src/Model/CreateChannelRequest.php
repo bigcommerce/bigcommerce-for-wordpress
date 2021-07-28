@@ -44,7 +44,11 @@ class CreateChannelRequest implements ArrayAccess
         'type' => 'string',
         'platform' => 'string',
         'name' => 'string',
-        'external_id' => 'string'
+        'external_id' => 'string',
+        'is_listable_from_ui' => 'bool',
+        'is_visible' => 'bool',
+        'status' => 'string',
+        'config_meta' => '\BigCommerce\Api\v3\Model\ChannelConfigMeta'
     ];
 
     public static function swaggerTypes()
@@ -60,7 +64,11 @@ class CreateChannelRequest implements ArrayAccess
         'type' => 'type',
         'platform' => 'platform',
         'name' => 'name',
-        'external_id' => 'external_id'
+        'external_id' => 'external_id',
+        'is_listable_from_ui' => 'is_listable_from_ui',
+        'is_visible' => 'is_visible',
+        'status' => 'status',
+        'config_meta' => 'config_meta'
     ];
 
     /**
@@ -71,7 +79,11 @@ class CreateChannelRequest implements ArrayAccess
         'type' => 'setType',
         'platform' => 'setPlatform',
         'name' => 'setName',
-        'external_id' => 'setExternalId'
+        'external_id' => 'setExternalId',
+        'is_listable_from_ui' => 'setIsListableFromUi',
+        'is_visible' => 'setIsVisible',
+        'status' => 'setStatus',
+        'config_meta' => 'setConfigMeta'
     ];
 
     /**
@@ -82,7 +94,11 @@ class CreateChannelRequest implements ArrayAccess
         'type' => 'getType',
         'platform' => 'getPlatform',
         'name' => 'getName',
-        'external_id' => 'getExternalId'
+        'external_id' => 'getExternalId',
+        'is_listable_from_ui' => 'getIsListableFromUi',
+        'is_visible' => 'getIsVisible',
+        'status' => 'getStatus',
+        'config_meta' => 'getConfigMeta'
     ];
 
     public static function attributeMap()
@@ -108,6 +124,14 @@ class CreateChannelRequest implements ArrayAccess
     const PLATFORM_WORDPRESS = 'wordpress';
     const PLATFORM_DRUPAL = 'drupal';
     const PLATFORM_BIGCOMMERCE = 'bigcommerce';
+    const STATUS_PRELAUNCH = 'prelaunch';
+    const STATUS_ACTIVE = 'active';
+    const STATUS_INACTIVE = 'inactive';
+    const STATUS_CONNECTED = 'connected';
+    const STATUS_DISCONNECTED = 'disconnected';
+    const STATUS_ARCHIVED = 'archived';
+    const STATUS_DELETED = 'deleted';
+    const STATUS_TERMINATED = 'terminated';
     
 
     
@@ -139,6 +163,24 @@ class CreateChannelRequest implements ArrayAccess
         ];
     }
     
+    /**
+     * Gets allowable values of the enum
+     * @return string[]
+     */
+    public function getStatusAllowableValues()
+    {
+        return [
+            self::STATUS_PRELAUNCH,
+            self::STATUS_ACTIVE,
+            self::STATUS_INACTIVE,
+            self::STATUS_CONNECTED,
+            self::STATUS_DISCONNECTED,
+            self::STATUS_ARCHIVED,
+            self::STATUS_DELETED,
+            self::STATUS_TERMINATED,
+        ];
+    }
+    
 
     /**
      * Associative array for storing property values
@@ -156,6 +198,10 @@ class CreateChannelRequest implements ArrayAccess
         $this->container['platform'] = array_key_exists('platform', $data) ? $data['platform'] : null;
         $this->container['name'] = array_key_exists('name', $data) ? $data['name'] : null;
         $this->container['external_id'] = array_key_exists('external_id', $data) ? $data['external_id'] : null;
+        $this->container['is_listable_from_ui'] = array_key_exists('is_listable_from_ui', $data) ? $data['is_listable_from_ui'] : null;
+        $this->container['is_visible'] = array_key_exists('is_visible', $data) ? $data['is_visible'] : null;
+        $this->container['status'] = array_key_exists('status', $data) ? $data['status'] : null;
+        $this->container['config_meta'] = array_key_exists('config_meta', $data) ? $data['config_meta'] : null;
     }
 
     /**
@@ -192,6 +238,10 @@ class CreateChannelRequest implements ArrayAccess
         if ($this->container['name'] === null) {
             $invalid_properties[] = "'name' can't be null";
         }
+        $allowed_values = ["prelaunch", "active", "inactive", "connected", "disconnected", "archived", "deleted", "terminated"];
+        if (!in_array($this->container['status'], $allowed_values)) {
+            $invalid_properties[] = "invalid value for 'status', must be one of #{allowed_values}.";
+        }
         return $invalid_properties;
     }
 
@@ -218,6 +268,10 @@ class CreateChannelRequest implements ArrayAccess
             return false;
         }
         if ($this->container['name'] === null) {
+            return false;
+        }
+        $allowed_values = ["prelaunch", "active", "inactive", "connected", "disconnected", "archived", "deleted", "terminated"];
+        if (!in_array($this->container['status'], $allowed_values)) {
             return false;
         }
         return true;
@@ -312,6 +366,94 @@ class CreateChannelRequest implements ArrayAccess
     public function setExternalId($external_id)
     {
         $this->container['external_id'] = $external_id;
+
+        return $this;
+    }
+
+    /**
+     * Gets is_listable_from_ui
+     * @return bool
+     */
+    public function getIsListableFromUi()
+    {
+        return $this->container['is_listable_from_ui'];
+    }
+
+    /**
+     * Sets is_listable_from_ui
+     * @param bool $is_listable_from_ui
+     * @return $this
+     */
+    public function setIsListableFromUi($is_listable_from_ui)
+    {
+        $this->container['is_listable_from_ui'] = $is_listable_from_ui;
+
+        return $this;
+    }
+
+    /**
+     * Gets is_visible
+     * @return bool
+     */
+    public function getIsVisible()
+    {
+        return $this->container['is_visible'];
+    }
+
+    /**
+     * Sets is_visible
+     * @param bool $is_visible
+     * @return $this
+     */
+    public function setIsVisible($is_visible)
+    {
+        $this->container['is_visible'] = $is_visible;
+
+        return $this;
+    }
+
+    /**
+     * Gets status
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->container['status'];
+    }
+
+    /**
+     * Sets status
+     * @param string $status
+     * @return $this
+     */
+    public function setStatus($status)
+    {
+        $allowed_values = ['prelaunch', 'active', 'inactive', 'connected', 'disconnected', 'archived', 'deleted', 'terminated'];
+        if (!is_null($status) && (!in_array($status, $allowed_values))) {
+            throw new \InvalidArgumentException("Invalid value for 'status', must be one of 'prelaunch', 'active', 'inactive', 'connected', 'disconnected', 'archived', 'deleted', 'terminated'");
+        }
+        $this->container['status'] = $status;
+
+        return $this;
+    }
+
+    /**
+     * Gets config_meta
+     * @return \BigCommerce\Api\v3\Model\ChannelConfigMeta
+     */
+    public function getConfigMeta()
+    {
+        return $this->container['config_meta'];
+    }
+
+    /**
+     * Sets config_meta
+     * @param \BigCommerce\Api\v3\Model\ChannelConfigMeta $config_meta
+     * @return $this
+     */
+    public function setConfigMeta($config_meta)
+    {
+        $this->container['config_meta'] = $config_meta;
 
         return $this;
     }

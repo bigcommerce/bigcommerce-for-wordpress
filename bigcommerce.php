@@ -3,7 +3,7 @@
 Plugin Name:  BigCommerce for WordPress
 Description:  Scale your ecommerce business with WordPress on the front-end and BigCommerce on the back end. Free up server resources from things like catalog management, processing payments, and managing fulfillment logistics.
 Author:       BigCommerce
-Version:      4.14.1
+Version:      4.15.0
 Author URI:   https://www.bigcommerce.com/wordpress
 Requires PHP: 7.2.0
 Text Domain:  bigcommerce
@@ -42,6 +42,15 @@ add_action( 'plugins_loaded', 'bigcommerce_init', 1, 0 );
  * @return \BigCommerce\Plugin
  */
 function bigcommerce_init() {
+	// Don't load on frontend for non-active channel status
+	if ( ! defined( 'WP_CLI' )
+		&& ! is_admin()
+		&& bigcommerce_get_primary_channel_status() !== null
+		&& bigcommerce_get_primary_channel_status() !== \BigCommerce\Taxonomies\Channel\BC_Status::STATUS_ACTIVE
+	) {
+		return;
+	}
+
 	$container = new \Pimple\Container( [ 'plugin_file' => __FILE__ ] );
 	$plugin    = \BigCommerce\Plugin::instance( $container );
 	$plugin->init();
@@ -81,4 +90,33 @@ function bigcommerce_get_env( $key ) {
 	}
 
 	return $value;
+}
+
+/**
+ * Get the status of the primary channel
+ *
+ * @return mixed The found value. null if not found.
+ */
+function bigcommerce_get_primary_channel_status() {
+	$cache_key = 'bigcommerce_primary_channel_status';
+	$status    = wp_cache_get( $cache_key );
+	if ( $status === false ) {
+		global $wpdb;
+
+		$sql = "SELECT tm.meta_value
+				FROM {$wpdb->termmeta} tm
+				INNER JOIN {$wpdb->termmeta} tm2 ON tm2.term_id=tm.term_id
+				WHERE tm.meta_key=%s AND tm2.meta_key=%s AND tm2.meta_value=%s";
+
+		$status = $wpdb->get_var( $wpdb->prepare(
+			$sql,
+			\BigCommerce\Taxonomies\Channel\BC_Status::STATUS,
+			\BigCommerce\Taxonomies\Channel\Channel::STATUS,
+			\BigCommerce\Taxonomies\Channel\Channel::STATUS_PRIMARY
+		) );
+
+		wp_cache_set( $cache_key, $status );
+	}
+  
+    return $status;
 }
