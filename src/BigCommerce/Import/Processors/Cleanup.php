@@ -6,6 +6,7 @@ namespace BigCommerce\Import\Processors;
 
 use BigCommerce\Import\Runner\Cron_Runner;
 use BigCommerce\Import\Runner\Status;
+use BigCommerce\Import\Import_Type;
 use BigCommerce\Logging\Error_Log;
 use BigCommerce\Post_Types\Queue_Task\Queue_Task;
 
@@ -45,6 +46,7 @@ class Cleanup implements Import_Processor {
 
 		delete_option( Listing_Fetcher::PRODUCT_LISTING_MAP );
 		delete_option( Product_Data_Fetcher::FILTERED_LISTING_MAP );
+		delete_option( Import_Type::IMPORT_TYPE );
 
 		$status->set_status( Status::COMPLETED );
 

@@ -26,7 +26,7 @@ const clearCartData = () => {
 		return;
 	}
 
-	const cartMenuCount = tools.getNodes('.bigcommerce-cart__item-count', true, document, true);
+	const cartMenuCount = tools.getNodes('bc-cart-item-count', true);
 
 	_.delay(() => {
 		Cookie.remove(CART_ITEM_COUNT_COOKIE);

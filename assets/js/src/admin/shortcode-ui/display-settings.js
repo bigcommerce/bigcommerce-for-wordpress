@@ -88,15 +88,15 @@ const setOrderbyParam = (event, params = {}) => {
 		return;
 	}
 
-	const orderByParam = params.orderby ? params.orderby.toLowerCase() : 'date';
-	const field = tools.getNodes(`#bc-shortcode-ui__product-orderby--${orderByParam}`, false, el.displaySettings, true);
+	const orderByParam = params.orderby ? params.orderby.toLowerCase() : '';
+	const field = tools.getNodes('#bc-shortcode-ui__product-orderby', false, el.displaySettings, true);
 
 	if (field.length === 0) {
 		return;
 	}
 
 	shortcodeState.wpAPIDisplaySettings.orderby = orderByParam;
-	field[0].checked = true;
+	field[0].value = orderByParam;
 };
 
 const showHideDefaultSettingsHeader = (active = false) => {
@@ -226,7 +226,7 @@ const cacheElements = () => {
 const bindEvents = () => {
 	delegate(el.displaySettings, '#bc-shortcode-ui__posts-per-page', 'input', setPostsPerPage);
 	delegate(el.displaySettings, '[name="bc-shortcode-ui__product-order"]', 'click', setOrderParam);
-	delegate(el.displaySettings, '[name="bc-shortcode-ui__product-orderby"]', 'click', setOrderbyParam);
+	delegate(el.displaySettings, '[name="bc-shortcode-ui__product-orderby"]', 'change', setOrderbyParam);
 	delegate(el.displaySettings, '[data-js="bc-shortcode-ui-reset-posts-per-page"]', 'click', resetPostsPerPage);
 	delegate(el.settingsSidebar, '[data-js="bc-shortcode-ui-remove-term"]', 'click', removeTermOnClick);
 	on(document, 'bigcommerce/set_shortcode_ui_state', handleSavedUIDisplaySettings);

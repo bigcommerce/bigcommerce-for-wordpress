@@ -23,7 +23,7 @@ class Cart_Menu_Item {
 		}
 		$menu_item->classes[] = 'menu-item-bigcommerce-cart';
 
-		$menu_item->title .= ' <span class="bigcommerce-cart__item-count"></span>';
+		$menu_item->title .= ' <span class="bigcommerce-cart__item-count" data-js="bc-cart-item-count"></span>';
 
 		return $menu_item;
 	}

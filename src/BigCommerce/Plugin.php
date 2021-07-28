@@ -4,7 +4,7 @@
 namespace BigCommerce;
 
 class Plugin {
-	const VERSION = '4.14.1';
+	const VERSION = '4.15.0';
 
 	protected static $_instance;
 
@@ -75,8 +75,8 @@ class Plugin {
 		$this->providers[ 'rewrites' ]          = new Container\Rewrites();
 		$this->providers[ 'schema' ]            = new Container\Schema();
 		$this->providers[ 'settings' ]          = new Container\Settings();
-		$this->providers[ 'shortcodes' ]        = new Container\Shortcodes();
 		$this->providers[ 'taxonomies' ]        = new Container\Taxonomies();
+		$this->providers[ 'shortcodes' ]        = new Container\Shortcodes();
 		$this->providers[ 'templates' ]         = new Container\Templates();
 		$this->providers[ 'widgets' ]           = new Container\Widgets();
 		$this->providers[ 'webhooks' ]          = new Container\Webhooks();

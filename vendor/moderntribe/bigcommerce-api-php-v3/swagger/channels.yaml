@@ -3,7 +3,7 @@ info:
   version: '1.0'
   title: "BigCommerce Channels API"
   description: The Channels API enables you to create and manage listings across a BigCommerce merchant's sales channels.
-host: "api.bigcommerce.com"
+# host: "api.bigcommerce.com"
 tags:
   - name: Channels
     description: BigCommerce Channels API Definition.
@@ -280,6 +280,23 @@ definitions:
         type: string
       external_id:
         type: string
+      is_listable_from_ui:
+        type: boolean
+      is_visible:
+        type: boolean
+      status:
+        type: string
+        enum:
+          - prelaunch
+          - active
+          - inactive
+          - connected
+          - disconnected
+          - archived
+          - deleted
+          - terminated
+      config_meta:
+        $ref: '#/definitions/ChannelConfigMeta'
     required:
       - name
       - type
@@ -298,6 +315,23 @@ definitions:
         type: string
       external_id:
         type: string
+      is_listable_from_ui:
+        type: boolean
+      is_visible:
+        type: boolean
+      status:
+        type: string
+        enum:
+          - prelaunch
+          - active
+          - inactive
+          - connected
+          - disconnected
+          - archived
+          - deleted
+          - terminated
+      config_meta:
+        $ref: '#/definitions/ChannelConfigMeta'
     required:
       - name
       - type
@@ -341,8 +375,49 @@ definitions:
         type: string
       external_id:
         type: string
+      is_listable_from_ui:
+        type: boolean
+      is_visible:
+        type: boolean
+      status:
+        type: string
+        enum:
+          - prelaunch
+          - active
+          - inactive
+          - connected
+          - disconnected
+          - archived
+          - deleted
+          - terminated
+      config_meta:
+        $ref: '#/definitions/ChannelConfigMeta'
     required:
       - name
+  ChannelConfigMeta:
+    type: object
+    description: Optional channel configuration object.
+    properties:
+      app:
+        type: object
+        description: 'A [channel app](https://developer.bigcommerce.com/api-docs/channels/overview#channel-apps) config object for optionally configuring the channel''s user interface in the control panel. '
+        properties:
+          id:
+            type: integer
+            description: 'The unique `id` given to an app registered in [DevTools](https://devtools.bigcommerce.com/); used to create links to the app in channel manager. [Learn how to find an App''s ID](https://developer.bigcommerce.com/api-docs/apps/tutorials/id).'
+          sections:
+            type: array
+            description: 'if set, when the app is loaded within the control panel, the navigation `sections` will be directly embedded in the control panel navigation.'
+            items:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: The title of the navigation section.
+                  example: '"Settings"'
+                query_path:
+                  type: string
+                  description: The value that will be passed to the app's iFrame in the URL and will allow the app to display the appropriate section within the app iFrame in the control panel.
   UpdateListingRequest:
     title: Update Listing
     allOf:

@@ -1,12 +1,26 @@
 # Changelog
 
 
+## [4.15.0]
+
+### Added
+- Added support for partial product import. A dropdown is added next to the Sync Products button with an option to sync only products that have changed since the last sync.
+- Added support for channel status. The plugin will not load on the front-end if the channel status is anything other than `active`. Admin area will load but the product import will be allowed only for `active` and `inactive` status.
+
+### Changed
+- Updated "Add to Cart" JavaScript functions to use `[data-js="bc-cart-item-count"]` selector instead of `.bigcommerce-cart__item-count`.
+
+### Fixed
+- Fixed product page 404 error for logged in user. WP Forum: https://wordpress.org/support/topic/product-page-404-error-for-logged-in-user/
+
+
 ## [4.14.1]
 
 ### Fixed
 - Fixed the product template include logic for WordPress 5.8
 - Fixed bug introduced in WordPress 5.8 that prevents WordPress Customizer from reacting when changes were made to the Product Catalog "Sort By" options.
 - Updates add to cart functionality to wait for creation of cart, so multiple add to carts function properly.  Fix for: https://github.com/bigcommerce/bigcommerce-for-wordpress/issues/230
+
 
 ## [4.14.0]
 
@@ -16,6 +30,7 @@
 - Fixed Admin/Users reset password link
 - Fixed cart footer template description and bumped the template version (related github issue: https://github.com/bigcommerce/bigcommerce-for-wordpress/issues/275)
 - Fixed javascript error should the pricing API error out (related github issues: https://github.com/bigcommerce/bigcommerce-for-wordpress/issues/226 https://github.com/bigcommerce/bigcommerce-for-wordpress/issues/231)
+
 
 ## [4.13.0]
 
@@ -1462,6 +1477,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.15.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.14.1...4.15.0
 [4.14.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.14.0...4.14.1
 [4.14.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.13.0...4.14.0
 [4.13.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.12.0...4.13.0
@@ -1471,7 +1487,7 @@
 [4.9.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.8.0...4.9.0
 [4.8.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.7.0...4.8.0
 [4.7.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.6.0...4.7.0
-[4.6.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.5.0...4.6.0
+[4.6.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.5.1...4.6.0
 [4.5.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.5.0...4.5.1
 [4.5.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.4.0...4.5.0
 [4.4.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.3.1...4.4.0

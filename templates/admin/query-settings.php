@@ -71,24 +71,11 @@
 
 			<div class="bc-shortcode-ui__product-orderby">
 				<span class="bc-shortcode-ui__field-label"><?php esc_html_e( 'Order By:', 'bigcommerce' ); ?></span>
-				<label for="bc-shortcode-ui__product-orderby--title">
-					<input
-							type="radio"
-							name="bc-shortcode-ui__product-orderby"
-							id="bc-shortcode-ui__product-orderby--title"
-							value="title"
-					>
-					<span class="bc-shortcode-ui__field-label"><?php esc_html_e( 'Title', 'bigcommerce' ); ?></span>
-				</label>
-				<label for="bc-shortcode-ui__product-orderby--date">
-					<input
-							type="radio"
-							name="bc-shortcode-ui__product-orderby"
-							id="bc-shortcode-ui__product-orderby--date"
-							value="date"
-					>
-					<span class="bc-shortcode-ui__field-label"><?php esc_html_e( 'Date', 'bigcommerce' ); ?></span>
-				</label>
+				<select name="bc-shortcode-ui__product-orderby" id="bc-shortcode-ui__product-orderby">
+					<option value=""><?php esc_html_e( 'Default', 'bigcommerce' ); ?></option>
+					<option value="date"><?php esc_html_e( 'Date', 'bigcommerce' ); ?></option>
+					<option value="title"><?php esc_html_e( 'Title', 'bigcommerce' ); ?></option>
+				</select>
 			</div>
 
 			<div class="bc-shortcode-ui__pagination">

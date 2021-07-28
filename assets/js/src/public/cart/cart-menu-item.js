@@ -12,7 +12,7 @@ const cartMenuSet = itemCount => Cookies.set(CART_ITEM_COUNT_COOKIE, itemCount);
 
 const updateCartMenuItem = () => {
 	const currentCount = Cookies.get(CART_ITEM_COUNT_COOKIE);
-	tools.getNodes('.bigcommerce-cart__item-count', true, document, true).forEach((item) => {
+	tools.getNodes('bc-cart-item-count', true).forEach((item) => {
 		item.classList.remove('full');
 
 		if (!currentCount || currentCount <= 0) {

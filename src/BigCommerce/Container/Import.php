@@ -9,6 +9,7 @@ use BigCommerce\Import\Processors;
 use BigCommerce\Import\Runner;
 use BigCommerce\Import\Task_Definition;
 use BigCommerce\Import\Task_Manager;
+use BigCommerce\Import\Import_Type;
 use BigCommerce\Logging\Error_Log;
 use BigCommerce\Settings\Import_Status;
 use BigCommerce\Settings\Sections\Import as Import_Settings;
@@ -44,6 +45,7 @@ class Import extends Provider {
 	const CURRENCIES       = 'import.currencies';
 	const CLEANUP          = 'import.cleanup';
 	const ERROR            = 'import.error';
+	const IMPORT_TYPE      = 'import.type';
 
 	public function register( Container $container ) {
 		$this->cron( $container );
@@ -309,6 +311,18 @@ class Import extends Provider {
 
 		add_action( 'bigcommerce/import/before', $flush_option_caches, 0, 0 );
 		add_action( 'bigcommerce/import/after', $flush_option_caches, 0, 0 );
+
+		$container[ self::IMPORT_TYPE ] = function ( Container $container ) {
+			return new Import_Type( $container[ Api::FACTORY ]->catalog() );
+		};
+
+		add_filter( 'bigcommerce_modified_product_ids', $this->create_callback( 'modified_product_ids', function ( $modified_product_ids ) use ( $container ) {
+			return $container[ self::IMPORT_TYPE ]->fetch_modified_product_ids();
+		} ) );
+		
+		add_filter( 'bigcommerce/import/task_list', $this->create_callback( 'filter_import_type_task_list', function ( $task_list ) use ( $container ) {
+			return $container[ self::IMPORT_TYPE ]->filter_task_list( $task_list );
+		} ) );
 
 	}
 }

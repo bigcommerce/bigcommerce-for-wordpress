@@ -4,6 +4,7 @@
 namespace BigCommerce\Container;
 
 use BigCommerce\Shortcodes as Codes;
+use BigCommerce\Taxonomies\Channel\BC_Status;
 use Pimple\Container;
 
 class Shortcodes extends Provider {

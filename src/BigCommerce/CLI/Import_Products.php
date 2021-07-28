@@ -7,6 +7,7 @@ namespace BigCommerce\CLI;
 use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Import\Runner\CLI_Runner;
 use BigCommerce\Import\Runner\Lock;
+use BigCommerce\Import\Import_Type;
 
 class Import_Products extends Command {
 	protected function command() {
@@ -26,6 +27,13 @@ class Import_Products extends Command {
 				'description' => __( 'Force all products to refresh, even if they have up-to-date data. Defaults to false.', 'bigcommerce' ),
 				'default'     => false,
 			],
+			[
+				'type'        => 'flag',
+				'name'        => 'partial',
+				'optional'    => true,
+				'description' => __( 'Fetch only products that were modified since last import.', 'bigcommerce' ),
+				'default'     => false,
+			],
 		];
 	}
 
@@ -34,6 +42,10 @@ class Import_Products extends Command {
 		if ( ! empty( $assoc_args[ 'force' ] ) ) {
 			add_filter( 'bigcommerce/import/strategy/needs_refresh', '__return_true' );
 			add_filter( 'bigcommerce/import/strategy/term/needs_refresh', '__return_true' );
+		}
+		
+		if ( ! empty( $assoc_args[ 'partial' ] ) ) {
+			update_option( Import_Type::IMPORT_TYPE, Import_Type::IMPORT_TYPE_PARTIAL );
 		}
 
 		$this->hook_messages();
