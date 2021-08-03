@@ -1,6 +1,12 @@
 # Changelog
 
 
+## [4.15.1]
+
+### Fixed
+- Fixed a fatal error on plugin activation for new installs
+
+
 ## [4.15.0]
 
 ### Added
@@ -1477,6 +1483,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.15.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.15.0...4.15.1
 [4.15.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.14.1...4.15.0
 [4.14.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.14.0...4.14.1
 [4.14.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.13.0...4.14.0

@@ -67,10 +67,14 @@ class BC_Status {
 	 * @return string
 	 */
 	public function get_current_channel_status() {
-		$connections = new Connections();
-		$current     = $connections->current();
+		try {
+			$connections = new Connections();
+			$current     = $connections->current();
 
-		return get_term_meta( $current->term_id, self::STATUS, true );
+			return get_term_meta( $current->term_id, self::STATUS, true );
+		} catch (\Exception $e) {
+			return '';
+		}
 	}
 
 }
