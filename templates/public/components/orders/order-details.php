@@ -94,6 +94,12 @@
 						<dd class="bc-order-detail-totals__value"><?php echo esc_html( $shipping ); ?></dd>
 					</div>
 				<?php } ?>
+				<?php if ( $tax ) { ?>
+				<div class="bc-order-detail-totals__list-item">
+					<dt class="bc-order-detail-totals__label"><?php esc_html_e( 'Estimated tax to be collected', 'bigcommerce' ); ?>: </dt>
+					<dd class="bc-order-detail-totals__value"><?php echo esc_html( $tax ); ?></dd>
+				</div>
+				<?php } ?>
 				<?php if ( $discount_amount ) { ?>
 					<div class="bc-order-detail-totals__list-item">
 						<dt class="bc-order-detail-totals__label"><?php esc_html_e( 'Promotion Applied', 'bigcommerce' ); ?>: </dt>
@@ -117,18 +123,6 @@
 						<dt class="bc-order-detail-totals__label"><?php esc_html_e( 'Gift Certificate', 'bigcommerce' ); ?>: </dt>
 						<dd class="bc-order-detail-totals__value">-<?php echo esc_html( $gift_certificate ); ?></dd>
 					</div>
-				<?php } ?>
-				<?php if( $total_ex_tax ){ ?>
-				<div class="bc-order-detail-totals__list-item">
-					<dt class="bc-order-detail-totals__label"><?php esc_html_e( 'Total Before Tax', 'bigcommerce' ); ?>: </dt>
-					<dd class="bc-order-detail-totals__value"><?php echo esc_html( $total_ex_tax ); ?></dd>
-				</div>
-				<?php } ?>
-				<?php if ( $tax ) { ?>
-				<div class="bc-order-detail-totals__list-item">
-					<dt class="bc-order-detail-totals__label"><?php esc_html_e( 'Estimated tax to be collected', 'bigcommerce' ); ?>: </dt>
-					<dd class="bc-order-detail-totals__value"><?php echo esc_html( $tax ); ?></dd>
-				</div>
 				<?php } ?>
 				<div class="bc-order-detail-totals__list-item">
 					<dt class="bc-order-detail-totals__label bc-order-detail-totals__label--lg"><?php esc_html_e( 'Grand Total', 'bigcommerce' ); ?>: </dt>

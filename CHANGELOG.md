@@ -1,6 +1,15 @@
 # Changelog
 
 
+## [4.16.0]
+
+### Fixed
+- Fixed styling of hidden product variant radio elements in Twenty Twenty One theme
+- Fixed sub total to exclude tax in cart details
+- Fixed sub total to exclude tax in order history details
+- Fixed CLI importer warnings
+
+
 ## [4.15.1]
 
 ### Fixed
@@ -1483,6 +1492,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.16.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.15.1...4.16.0
 [4.15.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.15.0...4.15.1
 [4.15.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.14.1...4.15.0
 [4.14.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.14.0...4.14.1

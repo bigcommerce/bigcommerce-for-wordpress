@@ -43,7 +43,9 @@ class Image_Importer {
 
 		$image_id = media_handle_sideload( $file_array, $this->attach_to_post_id );
 		if ( is_wp_error( $image_id ) ) {
-			unlink( $tmp );
+			if ( file_exists( $tmp ) ) {
+				unlink( $tmp );
+			}
 
 			do_action( 'bigcommerce/import/log', Error_Log::NOTICE, __( 'Failed to sideload image', 'bigcommerce' ), [
 				'url'   => $this->image_url,

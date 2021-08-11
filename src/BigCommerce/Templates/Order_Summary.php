@@ -69,7 +69,8 @@ class Order_Summary extends Controller {
 		$order    = $this->options[ 'order' ];
 		$image_id = $this->get_image_id( $order[ 'products' ] );
 		$image    = $image_id ? wp_get_attachment_image( $image_id, $this->options[ self::THUMBNAIL_SIZE ] ) : $this->get_fallback_image( $this->options[ self::THUMBNAIL_SIZE ] );
-		if ( apply_filters( 'bigcommerce/order/include_tax_in_subtotal', true, $order ) ) {
+
+		if ( apply_filters( 'bigcommerce/order/include_tax_in_subtotal', false, $order ) ) {
 			$subtotal = $order[ 'subtotal_inc_tax' ];
 		} else {
 			$subtotal = $order[ 'subtotal_ex_tax' ];
