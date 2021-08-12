@@ -413,6 +413,12 @@ class Product_Builder {
 		return apply_filters( 'bigcommerce/sku/normalized', $this->normalize_sku_segments( $this->segment_sku( $sku ), $num_of_characters ), $sku );
 	}
 
+	/**
+	 * Segment SKU by type (num, alpha)
+	 *
+	 * @param string $sku
+	 * @return array
+	 */
 	private function segment_sku( $sku ) {
 		$sku = preg_replace( "/[^A-Za-z0-9 ]/", '', $sku );
 
@@ -439,11 +445,23 @@ class Product_Builder {
 		}
 
 		// Flatten segments
-		return array_map( function( $segment ) {
+		return array_filter( array_map( function( $segment ) {
 			return implode( '', $segment );
-		}, $segments );
+		}, $segments ) );
 	}
 
+	/**
+	 * Pad sku segments with 0
+	 * 
+	 * Numbers are padded left, alpha right
+	 * 12345 -> 00000123245
+	 * aabcc -> aabcc00000
+	 * 12345aabcc -> 00000123245-aabcc00000
+	 *
+	 * @param array $segments
+	 * @param int $num_of_characters
+	 * @return string
+	 */
 	private function normalize_sku_segments( $segments, $num_of_characters ) {
 		$segments = array_map( function( $segment ) use ( $num_of_characters ) {
 			$pad_type = STR_PAD_LEFT;
