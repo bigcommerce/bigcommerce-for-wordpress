@@ -91,8 +91,6 @@ const setInventory = () => {
 		productTitle.appendChild(inventoryContainer);
 	}
 
-	inventoryContainer.innerHTML = state.inventoryMessage;
-
 	// update input max
 	if (qtyInput && state.maxInventory !== -1) {
 		qtyInput.max = state.maxInventory;

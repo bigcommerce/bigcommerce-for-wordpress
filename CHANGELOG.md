@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.17.0]
+
+### Changed
+- PHPDoc for cart-footer.php template updated
+
+### Fixed
+- Fixed Product Import logic so `script` and `style` tag contents are not displayed in product description.
+- Fixed `Uncaught ReferenceError: ga is not defined` console error
+- Fixed Wishlist product image thumbnail size
+- Fixed reset password error
+- Fixed low stock notification
 
 ## [4.16.0]
 
@@ -1492,6 +1503,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.17.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.16.0...4.17.0
 [4.16.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.15.1...4.16.0
 [4.15.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.15.0...4.15.1
 [4.15.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.14.1...4.15.0

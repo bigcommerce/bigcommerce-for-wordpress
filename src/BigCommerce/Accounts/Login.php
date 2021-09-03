@@ -177,7 +177,7 @@ class Login {
 
 	/**
 	 * If a user exists only on BC, try to sync before reset pasword email is sent.
-	 * 
+	 *
 	 * @param WP_User|false $user_data WP_User object if found, false if the user does not exist.
 	 * @param WP_Error      $errors    A WP_Error object containing any errors generated
 	 *                                 by using invalid credentials.
@@ -214,6 +214,9 @@ class Login {
 			$customer = new Customer( $user_id );
 			$customer->set_customer_id( $customer_id );
 
+			// Remove the error code to remove it from the front end to display to to user.
+			$errors->remove( 'invalid_email' );
+
 			return $user;
 		}
 
@@ -239,7 +242,7 @@ class Login {
 			}
 			// WP doesn't add this as an error until after lostpassword_post
 			$user_data = get_user_by( 'login', $user_login );
-			
+
 			if ( ! empty( $user_data ) ) {
 				return; // no errors
 			} else {

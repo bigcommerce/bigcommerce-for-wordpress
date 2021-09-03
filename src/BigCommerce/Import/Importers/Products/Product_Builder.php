@@ -91,6 +91,11 @@ class Product_Builder {
 	}
 
 	private function sanitize_content( $content ) {
+		/**
+		 * Remove contents of `script` and `style` tags.
+		 * @see https://developer.wordpress.org/reference/functions/wp_strip_all_tags/
+		 */
+		$content = preg_replace( '@<(script|style)[^>]*?>.*?</\\1>@si', '', $content );
 		$content = html_entity_decode( $content );
 
 		return wp_kses( $content, 'bigcommerce/product_description' );
@@ -452,7 +457,7 @@ class Product_Builder {
 
 	/**
 	 * Pad sku segments with 0
-	 * 
+	 *
 	 * Numbers are padded left, alpha right
 	 * 12345 -> 00000123245
 	 * aabcc -> aabcc00000
