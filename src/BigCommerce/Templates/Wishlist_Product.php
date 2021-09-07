@@ -73,6 +73,7 @@ class Wishlist_Product extends Controller {
 		if ( $quick_view === 'no' ) {
 			$image_component = Linked_Product_Featured_Image::factory( [
 				Product_Featured_Image::PRODUCT => $product,
+				Product_Featured_Image::SIZE => $this->options[ self::THUMBNAIL_SIZE ]
 			] );
 
 			return $image_component->render();
@@ -80,6 +81,7 @@ class Wishlist_Product extends Controller {
 
 		$image_component = Product_Featured_Image::factory( [
 			Product_Featured_Image::PRODUCT => $product,
+			Product_Featured_Image::SIZE => $this->options[ self::THUMBNAIL_SIZE ]
 		] );
 
 		$quick_view_component = Quick_View_Image::factory( [

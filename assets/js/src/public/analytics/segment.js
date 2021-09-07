@@ -81,6 +81,11 @@ const handleOrderCompleteTracker = (e) => {
  * @return {Promise<void>}
  */
 const gaCrossDomainInit = async () => {
+	// Check for the global ga function and confirm it's an object.
+	if (typeof ga === 'undefined') {
+		return;
+	}
+
 	await analytics.ready(() => {
 		ga('require', 'linker');
 		ga('linker:autoLink', [STORE_DOMAIN]);
