@@ -158,7 +158,7 @@ class Import extends Provider {
 
 		$container[ self::CHANNEL ] = function ( Container $container ) {
 			return function ( $channel_term ) use ( $container ) {
-				return new Processors\Channel_Initializer( $container[ Api::FACTORY ]->channels(), $container[ Api::FACTORY ]->catalog(), $channel_term, $container[ self::LARGE_BATCH_SIZE ] );
+				return new Processors\Channel_Initializer( $container[ Api::FACTORY ]->channels(), $container[ Api::FACTORY ]->catalog(), $channel_term, $container[ self::BATCH_SIZE ] );
 			};
 		};
 
@@ -319,7 +319,7 @@ class Import extends Provider {
 		add_filter( 'bigcommerce_modified_product_ids', $this->create_callback( 'modified_product_ids', function ( $modified_product_ids ) use ( $container ) {
 			return $container[ self::IMPORT_TYPE ]->fetch_modified_product_ids();
 		} ) );
-		
+
 		add_filter( 'bigcommerce/import/task_list', $this->create_callback( 'filter_import_type_task_list', function ( $task_list ) use ( $container ) {
 			return $container[ self::IMPORT_TYPE ]->filter_task_list( $task_list );
 		} ) );
