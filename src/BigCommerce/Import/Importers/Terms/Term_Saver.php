@@ -35,7 +35,7 @@ abstract class Term_Saver implements Import_Strategy {
 		$this->term_id = $this->save_wp_term( $this->bc_term );
 		$this->save_wp_termmeta( $this->bc_term );
 		$this->import_image( $this->bc_term );
-		
+
 		update_term_meta( $this->term_id, self::DATA_HASH_META_KEY, self::hash( $this->bc_term ) );
 		update_term_meta( $this->term_id, self::IMPORTER_VERSION_META_KEY, Import_Strategy::VERSION );
 
@@ -79,7 +79,11 @@ abstract class Term_Saver implements Import_Strategy {
 
 		$duplicate = get_term_by( 'slug', $slug, $this->taxonomy );
 		if ( $duplicate && (int) $duplicate->term_id !== (int) $this->term_id ) {
-			$current_slug = get_term( $this->term_id )->slug;
+			$term = get_term( $this->term_id );
+			$current_slug = '';
+			if ( ! empty( $term->slug ) ) {
+				$current_slug = $term->slug;
+			}
 			if ( $current_slug === $duplicate->slug ) {
 				$slug = ''; // let WP auto-assign the slug, otherwise the creation will fail
 			} else {

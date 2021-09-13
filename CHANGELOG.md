@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.17.1]
+
+### Fixed
+- Fixes an issue with product imports/syncing where the process would fail (504)
+  due to a timeout with `upstream_response_time`. The timeout value was increased to 
+  allow more time to complete the process.
+
 ## [4.17.0]
 
 ### Changed
