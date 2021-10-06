@@ -3,7 +3,7 @@
 namespace BigCommerce\Import;
 
 interface Import_Strategy {
-	const VERSION = '4.4.0';
+	const VERSION = '4.17.0';
 
 	/**
 	 * @return int The imported post ID

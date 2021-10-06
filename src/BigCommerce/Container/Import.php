@@ -324,5 +324,10 @@ class Import extends Provider {
 			return $container[ self::IMPORT_TYPE ]->filter_task_list( $task_list );
 		} ) );
 
+		add_filter( 'bigcommerce/import/term/data', $this->create_callback( 'filter_import_parent_category_data', function ( $data, $bc_category_id ) use ( $container ) {
+			$category_data = $container[ self::CATEGORIES ]->get_category_data( $bc_category_id );
+			return $category_data->getData();
+		} ), 10, 2 );
+
 	}
 }

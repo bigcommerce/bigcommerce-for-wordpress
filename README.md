@@ -7,9 +7,9 @@ As with any WordPress plugin, upload the plugin ZIP file to the
 
 ### System Requirements
 
-* PHP: 7.2+
-* MySQL: 5.5+ (5.6+ recommended)
-* WordPress: 5.2+
+* PHP: 7.4+
+* MySQL: 5.6+ (or MariaDB version 10.1+)
+* WordPress: 5.8+
 * SSL
 * The PHP intl extension will enable better currency formatting
 
@@ -248,7 +248,7 @@ injection container itself. The former is also available at any time after initi
 by calling the function `bigcommerce()`.
 
 An instance of each of the service providers found in the `src/BigCommerce/Container`
-directory can be accessed via this plugin controller, using the keys specified in 
+directory can be accessed via this plugin controller, using the keys specified in
 `\BigCommerce\Plugin::load_service_providers()`. E.g., to get an instance of the
 `BigCommerce\Container\Cart` service provider, you would use `bigcommerce()->cart`.
 
