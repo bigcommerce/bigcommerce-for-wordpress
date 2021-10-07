@@ -34,4 +34,18 @@ class Category_Import extends Term_Import {
 
 		return $response;
 	}
+
+	/**
+	 * Get category data from API.
+	 *
+	 * @param $category_id
+	 *
+	 * @return \BigCommerce\Api\v3\Model\CategoryResponse
+	 * @throws ApiException
+	 */
+	public function get_category_data( $category_id ) {
+		$response = $this->catalog_api->getCategoryById( $category_id );
+
+		return $response;
+	}
 }

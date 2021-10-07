@@ -1,5 +1,20 @@
 # Changelog
 
+## [4.18.0]
+
+### Changed
+
+- Added support for BC product sub categories in the WP Menu feature for adding the 
+  Product Categories.
+- Updated version requirements and compatibility for PHP, MySQL, and WordPress.
+  PHP 7.4+, MySQL 5.6+, WordPress 5.8.1 (tested up to). 
+
+### Fixed
+
+- Fixed an issue with WordPress menus where the option to add Brands or Product Categories
+  would not add to the menu list at all.
+- Fixed issue with cart on the main menu on different themes. Now the menu item cart opens the mini cart.
+
 ## [4.17.1]
 
 ### Fixed

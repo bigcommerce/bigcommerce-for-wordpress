@@ -5,6 +5,7 @@ namespace BigCommerce\Import\Importers\Terms;
 
 use BigCommerce\Import\Import_Strategy;
 use BigCommerce\Import\Image_Importer;
+use BigCommerce\Import\Processors\Category_Import;
 
 abstract class Term_Saver implements Import_Strategy {
 
@@ -152,6 +153,17 @@ abstract class Term_Saver implements Import_Strategy {
 
 		if ( ! empty( $terms ) ) {
 			return (int) reset( $terms )->term_id;
+		} else {
+			$parent_term = apply_filters( 'bigcommerce/import/term/data', false, $bc_id );
+
+			if ( ! empty( $parent_term ) ) {
+				$strategy = new Term_Creator( $parent_term, $this->taxonomy );
+				$parent_term_id = $strategy->do_import();
+
+				if ( ! empty( $parent_term_id ) ) {
+					return $parent_term_id;
+				}
+			}
 		}
 
 		return 0;

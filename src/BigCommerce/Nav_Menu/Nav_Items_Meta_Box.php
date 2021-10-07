@@ -133,7 +133,7 @@ class Nav_Items_Meta_Box extends Meta_Box {
 
 		$menu_item = filter_input_array( INPUT_POST, [
 			'menu-item' => [
-				'filter' => FILTER_SANITIZE_STRING, 
+				'filter' => FILTER_SANITIZE_STRING,
 				'flags'  => FILTER_REQUIRE_ARRAY,
 			]
 		] );
@@ -142,7 +142,7 @@ class Nav_Items_Meta_Box extends Meta_Box {
 			return;
 		}
 
-		foreach ( $menu_item as $menu_item_data ) {
+		foreach ( $menu_item['menu-item'] as $menu_item_data ) {
 			if ( Dynamic_Menu_Items::TYPE !== $menu_item_data[ 'menu-item-type' ] ) {
 				continue;
 			}
