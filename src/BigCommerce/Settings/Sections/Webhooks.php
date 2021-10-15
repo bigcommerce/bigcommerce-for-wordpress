@@ -9,7 +9,7 @@ trait Webhooks {
 		$current = get_option( Import::ENABLE_WEBHOOKS, 0 );
 
 		printf( '<p class="description">%s</p>', esc_html( __( 'Would you like to enable webhooks? Please be advised that some hosts do not handle this increased level of traffic well.', 'bigcommerce' ) ) );
-
+        printf('<p class="description">%s</p>', esc_html( __( 'Note: If you are finding that products are not automatically updating via webhooks, disable this feature and then re-enable it to reset the webhook subscription.', 'bigcommerce') ) );
 		echo '<fieldset>';
 		printf(
 			'<p><label><input type="radio" name="%s" value="1" %s /> %s</label></p>',

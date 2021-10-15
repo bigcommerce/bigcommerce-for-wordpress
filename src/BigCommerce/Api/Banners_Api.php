@@ -3,7 +3,13 @@
 
 namespace BigCommerce\Api;
 
-
+/**
+ * Class Banners_Api
+ *
+ * Get banners data from banners v2 api collection
+ *
+ * @package BigCommerce\Api
+ */
 class Banners_Api extends v2ApiAdapter {
 
 	public function get_banners() {

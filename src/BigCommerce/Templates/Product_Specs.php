@@ -35,7 +35,17 @@ class Product_Specs extends Controller {
 
 	protected function get_specs( Product $product ) {
 		$specs       = [];
+		/**
+		 * Filters units mass.
+		 *
+		 * @param string $mass_unit   Mass unit.
+		 */
 		$mass_unit   = apply_filters( 'bigcommerce/units/mass', get_option( Units::MASS, 'oz' ) );
+		/**
+		 * Filters units mass.
+		 *
+		 * @param string $length_unit Length unit.
+		 */
 		$length_unit = apply_filters( 'bigcommerce/units/length', get_option( Units::LENGTH, 'in' ) );
 
 		$weight = $product->weight;
@@ -57,10 +67,16 @@ class Product_Specs extends Controller {
 
 		foreach ( $product->get_custom_fields() as $field ) {
 			$label = sprintf( _x( '%s:', 'product specification field label', 'bigcommerce' ), $field[ 'name' ] );
-			
+
 			$specs[ $label ] = $field[ 'value' ];
 		}
 
+		/**
+		 * Filters product specs.
+		 *
+		 * @param array   $specs   Specs.
+		 * @param Product $product Product.
+		 */
 		return apply_filters( 'bigcommerce/product/specs', $specs, $product );
 	}
 

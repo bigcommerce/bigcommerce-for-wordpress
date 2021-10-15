@@ -6,8 +6,27 @@ namespace BigCommerce\Api;
 
 use Firebase\JWT\JWT;
 
+/**
+ * Class Store_Api
+ *
+ * Handle retrieving information about store from APIv2
+ *
+ * @package BigCommerce\Api
+ */
 class Store_Api extends v2ApiAdapter {
 
+    /**
+     * Get customr login token by id
+     *
+     * @param $id
+     * @param string $redirectUrl
+     * @param string $requestIp
+     * @param int $channel_id
+     *
+     * @return string
+     *
+     * @throws \Exception
+     */
 	public function getCustomerLoginToken( $id, $redirectUrl = '', $requestIp = '', $channel_id = 0 ) {
 		$config     = $this->apiClient->getConfig();
 		$client_id  = $config->getClientId();
@@ -41,6 +60,11 @@ class Store_Api extends v2ApiAdapter {
 		return JWT::encode( $payload, $secret, 'HS256' );
 	}
 
+    /**
+     * Return server time in unix timestamp
+     *
+     * @return int|mixed
+     */
 	private function get_server_time() {
 		$offset = get_transient( 'bigcommerce_time_offset' );
 		if ( $offset === false ) {
@@ -50,6 +74,12 @@ class Store_Api extends v2ApiAdapter {
 		return time() + $offset;
 	}
 
+    /**
+     * Update server time from /time endpoint. If it is not possible set current unix timestamp.
+     * Determine time offset between BC api result and current server time
+     *
+     * @return int
+     */
 	private function update_server_time() {
 		try {
 			$api_time = $this->getResource( '/time' )->time;
@@ -63,6 +93,11 @@ class Store_Api extends v2ApiAdapter {
 		return $offset;
 	}
 
+    /**
+     * Return the list of store analytics settings
+     *
+     * @return array|array[]
+     */
 	public function get_analytics_settings() {
 		try {
 			$settings = $this->getCollection( '/settings/analytics' );
@@ -76,6 +111,14 @@ class Store_Api extends v2ApiAdapter {
 		return $settings ?: [];
 	}
 
+    /**
+     * Update store analytics setting by id
+     *
+     * @param $id
+     * @param array $settings
+     *
+     * @return bool
+     */
 	public function update_analytics_settings( $id, array $settings ) {
 		try {
 			unset( $settings[ 'id' ] );
@@ -85,11 +128,15 @@ class Store_Api extends v2ApiAdapter {
 
 			return true;
 		} catch ( \Exception $e ) {
-			// ¯\_(ツ)_/¯
+			// TODO: provide more detailed information about an error
 			return false;
 		}
 	}
 
+    /**
+     * Check if site wide https option is enabled in BC
+     * @return false
+     */
 	public function get_sitewidehttps_enabled() {
 		try {
 			return $this->getResource('/store')->features->sitewidehttps_enabled;
@@ -97,7 +144,12 @@ class Store_Api extends v2ApiAdapter {
 			return false;
 		}
 	}
-	
+
+    /**
+     * Get store domain
+     *
+     * @return false
+     */
 	public function get_domain() {
 		try {
 			return $this->getResource('/store')->domain;

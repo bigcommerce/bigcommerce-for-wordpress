@@ -14,6 +14,13 @@ use BigCommerce\Settings\Sections\Channels;
 use BigCommerce\Taxonomies\Channel\Channel;
 use BigCommerce\Taxonomies\Channel\Connections;
 
+/**
+ * Class Customer_Login
+ *
+ * Handle customer login logic on checkout
+ *
+ * @package BigCommerce\Checkout
+ */
 class Customer_Login {
 	/**
 	 * @var Onboarding_Api
@@ -32,6 +39,8 @@ class Customer_Login {
 
 
 	/**
+     * Get new login token for the customer
+     *
 	 * @param string $checkout_url
 	 *
 	 * @return string
@@ -88,6 +97,11 @@ class Customer_Login {
 		}
 	}
 
+    /**
+     * Get current channel id
+     *
+     * @return int
+     */
 	private function get_channel_id() {
 		try {
 			$connections = new Connections();

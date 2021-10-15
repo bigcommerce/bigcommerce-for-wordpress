@@ -67,6 +67,9 @@ class Account_Status {
 				'message'       => __( 'There was an error locating your account. Please refresh this page and try connecting again.', 'bigcommerce' ),
 				'data'          => wp_remote_retrieve_body( $response ),
 				'response_code' => $response_code,
+				/**
+				 * This filter is documented in src/BigCommerce/Merchant/Connect_Account.php.
+				 */
 				'redirect'      => apply_filters( 'bigcommerce/onboarding/error_redirect', admin_url() ),
 			], 200 );
 			exit();
@@ -113,6 +116,9 @@ class Account_Status {
 				$this->save_store_hash( $response_body[ 'store_hash' ] );
 				$this->save_auth_credentials( $response_body[ 'client_id' ], $response_body[ 'oauth_token' ] );
 
+				/**
+				 * This filter is documented in src/BigCommerce/Merchant/Connect_Account.php.
+				 */
 				$redirect_url = apply_filters( 'bigcommerce/onboarding/success_redirect', admin_url() );
 
 				wp_send_json_success( [

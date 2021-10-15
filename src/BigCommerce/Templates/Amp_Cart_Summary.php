@@ -26,6 +26,11 @@ class Amp_Cart_Summary extends Cart_Summary {
 	public function get_data() {
 		return [
 			self::CART       => $this->options[ self::CART ],
+			/**
+			 * Filters REST proxy base.
+			 *
+			 * @param string $proxy_base Proxy base.
+			 */
 			self::PROXY_BASE => apply_filters( 'bigcommerce/rest/proxy_base', 'bc/v3' ),
 		];
 	}

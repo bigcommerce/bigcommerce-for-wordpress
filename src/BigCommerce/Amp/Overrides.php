@@ -131,6 +131,11 @@ class Overrides {
 	 */
 	public function amp_kses_allowed_html( $allowed_tags, $context ) {
 		if ( 'bigcommerce/amp' === $context ) {
+			/**
+			 * Filters AMP kses allowed html from BC.
+			 *
+			 * @param array $allowed_tags Allowed tags.
+			 */
 			return apply_filters( 'bigcommerce/amp/kses_allowed_html',
 				array_merge(
 					wp_kses_allowed_html( 'post' ),

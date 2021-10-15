@@ -9,12 +9,19 @@ use BigCommerce\Api\Null_Client;
 use BigCommerce\Api\Configuration;
 use BigCommerce\Api\Request_Headers;
 use BigCommerce\Api_Factory;
+use BigCommerce\Cache\Cache_Handler;
 use BigCommerce\Settings\Sections\Api_Credentials;
 use Pimple\Container;
 
+/**
+ * Class API
+ *
+ * @package BigCommerce\Container
+ */
 class Api extends Provider {
 	const CONFIG_COMPLETE = 'api.configuration.complete';
 
+	const CACHE_HANDLER        = 'api.cache_handler';
 	const CLIENT        = 'api.client';
 	const CONFIG        = 'api.configuration';
 	const CLIENT_ID     = 'api.client_id';
@@ -25,6 +32,11 @@ class Api extends Provider {
 	const TIMEOUT       = 'api.timeout';
 	const HEADERS       = 'api.headers';
 
+    /**
+     * Register api client container
+     *
+     * @param Container $container
+     */
 	public function register( Container $container ) {
 		$container[ self::CLIENT ] = function ( Container $container ) {
 			/** @var Configuration $config */
@@ -35,6 +47,10 @@ class Api extends Provider {
 
 			return new Caching_Client( $config );
 		};
+
+        $container[ self::CACHE_HANDLER ] = function ( Container $container ) {
+            return new Cache_Handler();
+        };
 
 		$container[ self::CONFIG ] = function ( Container $container ) {
 			$config = new Configuration();

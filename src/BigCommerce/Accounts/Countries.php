@@ -3,7 +3,9 @@
 
 namespace BigCommerce\Accounts;
 
-
+/**
+ * Class Countries
+ */
 class Countries {
 	private $data_file;
 	private $data;

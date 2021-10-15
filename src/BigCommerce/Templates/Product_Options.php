@@ -107,6 +107,11 @@ class Product_Options extends Controller {
 		}
 	}
 
+    /**
+     * Get product variants and return options for provided variant id or sku
+     * @param Product $product
+     * @return array
+     */
 	protected function get_selected_variant_options( Product $product ) {
 
 		$variant_id = (int) filter_input( INPUT_GET, 'variant_id', FILTER_SANITIZE_NUMBER_INT );

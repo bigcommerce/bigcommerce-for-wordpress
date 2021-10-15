@@ -6,6 +6,11 @@ namespace BigCommerce\Cart;
 use BigCommerce\Settings;
 use BigCommerce\Settings\Sections\Cart;
 
+/**
+ * Class Cart_Menu_Item
+ *
+ * @package BigCommerce\Cart
+ */
 class Cart_Menu_Item {
 
 	/**

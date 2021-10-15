@@ -6,9 +6,19 @@ namespace BigCommerce\Accounts\Wishlists\Actions;
 use BigCommerce\Api\v3\Model\WishlistRequest;
 use BigCommerce\Pages\Wishlist_Page;
 
+/**
+ * Class Edit_Wishlist
+ *
+ * Handle wishlist edit
+ */
 class Edit_Wishlist extends Wishlist_Action {
 	const ACTION = 'edit';
 
+    /**
+     * Update single wishlist
+     *
+     * @param $args
+     */
 	public function handle_request( $args ) {
 		$redirect = get_the_permalink( get_option( Wishlist_Page::NAME, 0 ) );
 		try {
@@ -30,6 +40,13 @@ class Edit_Wishlist extends Wishlist_Action {
 		}
 	}
 
+    /**
+     * Validate and cleanup request
+     * @param array $args
+     * @param array $submission
+     *
+     * @return array
+     */
 	protected function sanitize_request( array $args, array $submission ) {
 		$wishlist_id = reset( $args );
 		if ( empty( $wishlist_id ) || ! is_numeric( $wishlist_id ) ) {

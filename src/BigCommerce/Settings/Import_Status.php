@@ -154,6 +154,13 @@ class Import_Status {
 			$status_string = sprintf( __( 'Step %s of %s: %s', 'bigcommerce' ), $completed_steps, $total_steps, $status_string );
 		}
 		$response = array_merge( [
+			/**
+			 * Filters settings current import status.
+			 *
+			 * @param string $status_string     Status.
+			 * @param string $current_status    Current Status.
+			 * @param string $current_timestamp Current timestamp.
+			 */
 			'message'  => apply_filters( 'bigcommerce/settings/import_status/current', $status_string, $current[ 'status' ], $current[ 'timestamp' ] ),
 			'status'   => $current[ 'status' ],
 			'previous' => $previous[ 'status' ],
@@ -192,6 +199,13 @@ class Import_Status {
 		}
 
 		return [
+			/**
+			 * Filters settings previous import status.
+			 *
+			 * @param string $status_string     Status.
+			 * @param string $previous_status    Current Status.
+			 * @param string $previous_timestamp Current timestamp.
+			 */
 			'message' => apply_filters( 'bigcommerce/settings/import_status/previous', $status_string, $previous[ 'status' ], $previous[ 'timestamp' ] ),
 			'status'  => $previous[ 'status' ],
 		];
@@ -213,6 +227,9 @@ class Import_Status {
 		}
 
 		return [
+			/**
+			 * This filter is documented in src/BigCommerce/Settings/Import_Status.php.
+			 */
 			'message' => apply_filters( 'bigcommerce/settings/import_status/previous', $status_string, $next ),
 			'status'  => $next,
 		];

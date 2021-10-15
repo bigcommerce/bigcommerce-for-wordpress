@@ -150,6 +150,14 @@ class Add_To_Cart {
 		return true;
 	}
 
+    /**
+     * Get product variant id from submission
+     *
+     * @param Product $product
+     * @param $submission
+     *
+     * @return int
+     */
 	protected function get_variant_id( Product $product, $submission ) {
 		if ( ! empty( $submission[ 'variant_id' ] ) ) {
 			return (int) $submission[ 'variant_id' ];

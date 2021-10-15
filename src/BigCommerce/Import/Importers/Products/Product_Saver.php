@@ -116,6 +116,11 @@ abstract class Product_Saver implements Import_Strategy {
 			$postarr['edit_date'] = true;
 		}
 
+		/**
+		 * Filters import product post array.
+		 *
+		 * @param array $postarr Post array.
+		 */
 		return apply_filters( 'bigcommerce/import/product/post_array', $postarr );
 	}
 

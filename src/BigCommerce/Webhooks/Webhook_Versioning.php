@@ -5,6 +5,13 @@ namespace BigCommerce\Webhooks;
 
 use BigCommerce\Settings\Sections\Import;
 
+/**
+ * Class Webhook_Versioning
+ *
+ * Handle webhook update logic depends on the webhooks version
+ *
+ * @package BigCommerce\Webhooks
+ */
 class Webhook_Versioning {
 	const VERSION = 2;
 

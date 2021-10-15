@@ -9,6 +9,11 @@ use BigCommerce\Exceptions\Product_Not_Found_Exception;
 use BigCommerce\Pages\Wishlist_Page;
 use BigCommerce\Post_Types\Product\Product;
 
+/**
+ * Class Add_Item
+ *
+ * Handle requests for adding items
+ */
 class Add_Item extends Wishlist_Action {
 	const ACTION = 'add-item';
 
@@ -44,6 +49,14 @@ class Add_Item extends Wishlist_Action {
 		}
 	}
 
+    /**
+     * Cleanup add item request
+     *
+     * @param array $args
+     * @param array $submission
+     *
+     * @return array
+     */
 	protected function sanitize_request( array $args, array $submission ) {
 		$wishlist_id = reset( $args );
 		if ( empty( $wishlist_id ) || ! is_numeric( $wishlist_id ) ) {

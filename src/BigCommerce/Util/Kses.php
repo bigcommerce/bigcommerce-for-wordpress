@@ -16,6 +16,11 @@ class Kses {
 	 */
 	public function product_description_allowed_html( $allowed_tags, $context ) {
 		if ( 'bigcommerce/product_description' === $context ) {
+			/**
+			 * Filters product description's allowed html
+			 *
+			 * @param array $allowed_html_tags Allowed HTML tags.
+			 */
 			return apply_filters( 'bigcommerce/product_description/allowed_html',
 				array_merge(
 					wp_kses_allowed_html( 'post' ),

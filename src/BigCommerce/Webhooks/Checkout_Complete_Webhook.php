@@ -8,7 +8,11 @@
 namespace BigCommerce\Webhooks;
 
 /**
+ * Class Checkout Complete Webhook
+ *
  * Sets up the webhook that runs when checkout completes
+ *
+ * @package BigCommerce\Webhooks
  */
 class Checkout_Complete_Webhook extends Webhook {
 	const SCOPE = 'store/cart/converted';

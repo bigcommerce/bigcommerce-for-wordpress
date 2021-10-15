@@ -180,6 +180,9 @@ class New_Account_Section extends Settings_Section {
 
 
 	protected function get_countries_and_states( $current_country ) {
+		/**
+		 * This filter is documented in src/BigCommerce/Templates/Address_Form.php.
+		 */
 		$countries = apply_filters( 'bigcommerce/countries/data', [] );
 		$states    = [];
 		foreach ( $countries as $country ) {

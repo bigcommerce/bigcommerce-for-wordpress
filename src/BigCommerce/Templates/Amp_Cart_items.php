@@ -29,6 +29,11 @@ class Amp_Cart_Items extends Cart_Items {
 		return array_merge(
 			parent::get_data(),
 			[
+				/**
+				 * Filters REST proxy base.
+				 *
+				 * @param string $proxy_base Proxy base.
+				 */
 				self::PROXY_BASE => apply_filters( 'bigcommerce/rest/proxy_base', 'bc/v3' ),
 			]
 		);

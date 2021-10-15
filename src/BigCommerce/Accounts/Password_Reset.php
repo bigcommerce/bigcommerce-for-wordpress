@@ -4,6 +4,11 @@ namespace BigCommerce\Accounts;
 
 use BigCommerce\Api\Customer_Api;
 
+/**
+ * Class Password Reset
+ *
+ * Responsible for customer password reset
+ */
 class Password_Reset {
 
 	/** @var Customer_Api */
@@ -61,6 +66,8 @@ class Password_Reset {
 	}
 
 	/**
+     * Set customer password
+     *
 	 * @param \WP_User $user
 	 * @param string   $password
 	 *

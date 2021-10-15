@@ -13,6 +13,13 @@ use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Taxonomies\Channel\Channel;
 use BigCommerce\Taxonomies\Channel\Connections;
 
+/**
+ * Class Product_Updater
+ *
+ * Responsible for product update process.
+ *
+ * @package BigCommerce\Webhooks
+ */
 class Product_Updater {
 	/** @var CatalogApi */
 	private $catalog;
@@ -76,6 +83,8 @@ class Product_Updater {
 	}
 
 	/**
+     * Start product update for the specified channel
+     *
 	 * @param \BigCommerce\Api\v3\Model\Product $product
 	 * @param \WP_Term                          $channel
 	 *
@@ -89,6 +98,12 @@ class Product_Updater {
 		}
 		$listing_id = $this->get_listing_id( $product->getId(), $channel );
 		if ( ! $listing_id ) {
+			/**
+			 * Fires if product update import skipped.
+			 *
+			 * @param string $message       Message.
+			 * @param int    $product_bc_id Product BC ID.
+			 */
 			do_action( 'bigcommerce/import/update_product/skipped', sprintf( __( 'No listing found for product ID %d. Aborting.', 'bigcommerce' ), $product->getId() ) );
 
 			return;

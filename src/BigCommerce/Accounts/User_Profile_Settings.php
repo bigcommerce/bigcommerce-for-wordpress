@@ -3,13 +3,18 @@
 
 namespace BigCommerce\Accounts;
 
-
+/**
+ * Class User_Profile_Settings
+ *
+ * Responsible for profile settings rendering and saving
+ */
 class User_Profile_Settings {
 	const SYNC_PASSWORD = 'bigcommerce_sync_password';
 	const NONCE_ACTION  = 'bc_user_profile';
 	const NONCE_NAME    = 'bc_nonce';
 
 	/**
+     * Render profile settings
 	 * @param \WP_User $user
 	 *
 	 * @return void
@@ -44,6 +49,7 @@ class User_Profile_Settings {
 	}
 
 	/**
+     * Handle save logic for profile settings
 	 * @param int $user_id
 	 *
 	 * @return void
@@ -55,7 +61,7 @@ class User_Profile_Settings {
 			return;
 		}
 
-		$nonce = filter_input( INPUT_POST, self::NONCE_NAME, FILTER_SANITIZE_STRING ); 
+		$nonce = filter_input( INPUT_POST, self::NONCE_NAME, FILTER_SANITIZE_STRING );
 		if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, self::NONCE_ACTION ) ) {
 			return;
 		}

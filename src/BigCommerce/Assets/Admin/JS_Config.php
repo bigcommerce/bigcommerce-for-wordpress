@@ -40,6 +40,12 @@ class JS_Config {
 				'product_import_ajax_nonce'  => wp_create_nonce( Import_Status::AJAX_ACTION_IMPORT_STATUS ),
 				'product_import_ajax_action' => Import_Status::AJAX_ACTION_IMPORT_STATUS,
 			];
+
+			/**
+			 * Filters admin js config object.
+			 *
+			 * @param array $data Js config data.
+			 */
 			$this->data = apply_filters( 'bigcommerce/admin/js_config', $this->data );
 		}
 
@@ -49,6 +55,12 @@ class JS_Config {
 	public function get_gutenberg_data() {
 		if ( ! isset( $this->gutenberg ) ) {
 			$this->gutenberg = [];
+
+			/**
+			 * Filters gutenberg js config data.
+			 *
+			 * @param array $gutenberg Js config data.
+			 */
 			$this->gutenberg = apply_filters( 'bigcommerce/gutenberg/js_config', $this->gutenberg );
 		}
 

@@ -39,14 +39,29 @@ class Welcome_Screen extends Onboarding_Screen {
 	}
 
 	private function get_connect_account_url() {
+		/**
+		 * Filters settings connect account url.
+		 *
+		 * @param string $connect_account_url Connect account url.
+		 */
 		return apply_filters( 'bigcommerce/settings/connect_account_url', 'https://www.bigcommerce.com/' );
 	}
 
 	private function get_create_account_url() {
+		/**
+		 * Filters settings create account url.
+		 *
+		 * @param string $create_account_url Create account url.
+		 */
 		return apply_filters( 'bigcommerce/settings/create_account_url', 'https://www.bigcommerce.com/' );
 	}
 
 	private function get_credentials_url() {
+		/**
+		 * Filters settings credential url.
+		 *
+		 * @param string $credential_url Credential url.
+		 */
 		return apply_filters( 'bigcommerce/settings/credentials_url', admin_url() );
 	}
 

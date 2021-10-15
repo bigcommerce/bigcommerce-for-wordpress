@@ -145,7 +145,13 @@ class Purchase_Gift_Certificate_Handler implements Form_Handler {
 			if ( $amount < 1.0 || $amount > 1000.0 ) {
 				$errors->add( 'amount', sprintf(
 					__( 'Please enter an amount between %s and %s', 'bigcommerce' ),
+					/**
+					 * This filter is documented in src/BigCommerce/Currency/With_Currency.php.
+					 */
 					apply_filters( 'bigcommerce/currency/format', sprintf( '¤%0.2f', $this->minimum ), $this->minimum ),
+					/**
+					 * This filter is documented in src/BigCommerce/Currency/With_Currency.php.
+					 */
 					apply_filters( 'bigcommerce/currency/format', sprintf( '¤%0.2f', $this->maximum ), $this->maximum )
 				) );
 			}
@@ -155,6 +161,12 @@ class Purchase_Gift_Certificate_Handler implements Form_Handler {
 			$errors->add( 'terms', __( 'Agree to the terms to proceed', 'bigcommerce' ) );
 		}
 
+		/**
+		 * Filters update gift certificates form errors.
+		 *
+		 * @param \WP_Error $errors     WP error.
+		 * @param array     $submission Submitted data.
+		 */
 		$errors = apply_filters( 'bigcommerce/form/gift_certificate/errors', $errors, $submission );
 
 		return $errors;
@@ -168,8 +180,16 @@ class Purchase_Gift_Certificate_Handler implements Form_Handler {
 		$amount = $this->sanitize_amount( $submission[ 'amount' ] );
 		$name   = sprintf(
 			__( '%s Gift Certificate', 'bigcommerce' ),
+			/**
+			 * This filter is documented in src/BigCommerce/Currency/With_Currency.php.
+			 */
 			apply_filters( 'bigcommerce/currency/format', sprintf( '¤%0.2f', $amount ), $amount )
 		);
+		/**
+		 * Filters gift certificates theme.
+		 *
+		 * @param string $theme Theme.
+		 */
 		$theme  = apply_filters( 'bigcommerce/gift_certificates/theme', $submission[ 'theme' ] );
 		$data   = [
 			'name'      => $name,

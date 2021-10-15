@@ -7,6 +7,11 @@ namespace BigCommerce\Analytics\Events;
 use BigCommerce\Templates\Message;
 use BigCommerce\Post_Types\Product\Product;
 
+/**
+ * Class Add_To_Cart
+ *
+ * Add analytics tracking to purchase buttons and set success message tracking attributes
+ */
 class Add_To_Cart {
 
 
