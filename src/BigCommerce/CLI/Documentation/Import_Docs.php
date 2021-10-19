@@ -8,6 +8,11 @@ use BigCommerce\CLI\Command;
 use WP_CLI;
 use WP_Parser\WP_CLI_Logger;
 
+/**
+ * Class Import_Docs
+ *
+ * Imports provides json file previously built by docs build command
+ */
 class Import_Docs extends Command {
 	private $plugin_dir;
 
@@ -34,6 +39,14 @@ class Import_Docs extends Command {
 		];
 	}
 
+    /**
+     * Run docs import process
+     *
+     * @param $args
+     * @param $assoc_args
+     *
+     * @throws WP_CLI\ExitException
+     */
 	public function run( $args, $assoc_args ) {
 		if ( ! class_exists( '\WP_Parser\Importer' ) ) {
 			WP_CLI::error( __( 'Please install and activate WP Parser from https://github.com/WordPress/phpdoc-parser before importing documentation.', 'bigcommerce' ) );
@@ -64,6 +77,11 @@ class Import_Docs extends Command {
 		$this->run_import( $phpdoc );
 	}
 
+    /**
+     * @param $data
+     *
+     * @throws WP_CLI\ExitException
+     */
 	private function run_import( $data ) {
 		if ( ! wp_get_current_user()->exists() ) {
 			WP_CLI::error( 'Please specify a valid user: --user=<id|login>' );

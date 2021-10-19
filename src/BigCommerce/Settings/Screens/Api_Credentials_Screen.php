@@ -76,6 +76,9 @@ class Api_Credentials_Screen extends Onboarding_Screen {
 		$config->setClientId( filter_input( INPUT_POST, Api_Credentials::OPTION_CLIENT_ID, FILTER_SANITIZE_STRING ) );
 		$config->setAccessToken( filter_input( INPUT_POST, Api_Credentials::OPTION_ACCESS_TOKEN, FILTER_SANITIZE_STRING ) );
 		$config->setClientSecret( filter_input( INPUT_POST, Api_Credentials::OPTION_CLIENT_SECRET, FILTER_SANITIZE_STRING ) );
+		/**
+		 * This filter is documented in src/BigCommerce/Container/Api.php.
+		 */
 		$config->setCurlTimeout( apply_filters( 'bigcommerce/api/timeout', 15 ) );
 		$client = new Base_Client( $config );
 		$api = new CatalogApi( $client );

@@ -140,6 +140,12 @@ class Query_Mapper {
 			$query_args[ 'paged' ] = (int) $args[ 'paged' ];
 		}
 
+		/**
+		 * Filters shortcode products query arguments.
+		 *
+		 * @param array $query_args Query Arguments.
+		 * @param array $args       Arguments.
+		 */
 		return apply_filters( 'bigcommerce/shortcode/products/query_args', $query_args, $args );
 	}
 

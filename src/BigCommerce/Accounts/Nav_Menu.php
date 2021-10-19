@@ -11,8 +11,15 @@ use BigCommerce\Pages\Orders_Page;
 use BigCommerce\Pages\Registration_Page;
 use BigCommerce\Pages\Wishlist_Page;
 
+/**
+ * Class Nav_Menu
+ *
+ * Set menu items
+ */
 class Nav_Menu {
 	/**
+     * Filter account menu items
+     *
 	 * @param object $menu_item
 	 *
 	 * @return object
@@ -39,6 +46,13 @@ class Nav_Menu {
 
 	}
 
+    /**
+     * Return login/logout menu item
+     *
+     * @param $menu_item
+     *
+     * @return mixed
+     */
 	public function setup_login_menu_item( $menu_item ) {
 		if ( is_user_logged_in() && ! is_admin() ) {
 			$menu_item->url = wp_logout_url();
@@ -54,6 +68,13 @@ class Nav_Menu {
 		return $menu_item;
 	}
 
+    /**
+     * Adds sign up menu item
+     *
+     * @param $menu_item
+     *
+     * @return mixed
+     */
 	public function setup_registration_menu_item( $menu_item ) {
 		if ( is_user_logged_in() && ! is_admin() ) {
 			$account_page = get_option( Account_Page::NAME, 0 );
@@ -76,6 +97,13 @@ class Nav_Menu {
 		return $menu_item;
 	}
 
+    /**
+     * Set an account menu item
+     *
+     * @param $menu_item
+     *
+     * @return mixed
+     */
 	public function setup_account_page_menu_item( $menu_item ) {
 		if ( ! is_user_logged_in() ) {
 			$menu_item->_invalid = true;

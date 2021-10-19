@@ -7,6 +7,11 @@ use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Templates\No_Results;
 use BigCommerce\Templates\Product_Archive;
 
+/**
+ * Class Missing_Wishlist
+ *
+ * Handle missing wishlist page and results message
+ */
 class Missing_Wishlist extends Wishlist_Public_View {
 
 

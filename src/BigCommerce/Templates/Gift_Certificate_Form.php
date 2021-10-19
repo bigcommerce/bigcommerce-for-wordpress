@@ -54,29 +54,34 @@ class Gift_Certificate_Form extends Form_Controller {
 	}
 
 	protected function get_themes() {
+		/**
+		 * Filters gift certificates themes.
+		 *
+		 * @param array $gift_certificate_themes Themes.
+		 */
 		return apply_filters( 'bigcommerce/gift_certificates/themes', [
 			'boy' => [
-				'name'     => __( 'Boy', 'bigcommerce' ), 
+				'name'     => __( 'Boy', 'bigcommerce' ),
 				'template' => 'Boy.html',
 			],
 			'celebration' => [
-				'name'     => __( 'Celebration', 'bigcommerce' ), 
+				'name'     => __( 'Celebration', 'bigcommerce' ),
 				'template' => 'Celebration.html',
 			],
 			'christmas' => [
-				'name'     => __( 'Christmas', 'bigcommerce' ), 
+				'name'     => __( 'Christmas', 'bigcommerce' ),
 				'template' => 'Christmas.html',
 			],
 			'general' => [
-				'name'     => __( 'General', 'bigcommerce' ), 
+				'name'     => __( 'General', 'bigcommerce' ),
 				'template' => 'General.html',
 			],
 			'girl' => [
-				'name'     => __( 'Girl', 'bigcommerce' ), 
+				'name'     => __( 'Girl', 'bigcommerce' ),
 				'template' => 'Girl.html',
 			],
 			'birthday' => [
-				'name'     => __( 'Birthday', 'bigcommerce' ), 
+				'name'     => __( 'Birthday', 'bigcommerce' ),
 				'template' => 'Birthday.html',
 			],
 		] );

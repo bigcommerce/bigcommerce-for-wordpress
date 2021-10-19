@@ -21,7 +21,7 @@ class Shipping_Controller extends Rest_Controller {
 	 * @var Shipping_Api
 	 */
 	private $shipping_api;
-	
+
 	/**
 	 * @var CartApi
 	 */
@@ -54,7 +54,7 @@ class Shipping_Controller extends Rest_Controller {
 	public function js_config( $config ) {
 		$config['cart']['methods_api_url'] = $this->get_base_url();
 		$config['cart']['zones_api_url']   = $this->get_base_url() . '/zones/html';
-	
+
 		return $config;
 	}
 
@@ -170,7 +170,7 @@ class Shipping_Controller extends Rest_Controller {
 			if ( $method->type === self::SHIPPING_METHOD_TYPE_FREE && $rate_raw > 0 ) {
 				$method_name = __( 'Fixed Shipping', 'bigcommerce' );
 			}
-			
+
 			$method = [
 				'id'              => $method->id,
 				'name'            => $method_name,
@@ -184,7 +184,7 @@ class Shipping_Controller extends Rest_Controller {
 
 			$method['cart_subtotal_raw'] = $cart_subtotal;
 			$method['cart_subtotal']     = $this->format_price( $cart_subtotal );
-			
+
 			return $method;
 		}, $methods ) );
 
@@ -202,6 +202,9 @@ class Shipping_Controller extends Rest_Controller {
 	}
 
 	private function format_price( $price ) {
+		/**
+		 * This filter is documented in src/BigCommerce/Currency/With_Currency.php.
+		 */
 		return apply_filters( 'bigcommerce/currency/format', sprintf( '¤%0.2f', $price ), $price );
 	}
 
@@ -222,7 +225,7 @@ class Shipping_Controller extends Rest_Controller {
 
 		$total = $cart['subtotal']['raw'] + $rate + $method['fixed_surcharge'];
 
-		return $total; 
+		return $total;
 	}
 
 	private function get_method_rate( $method, $cart ) {
@@ -234,7 +237,7 @@ class Shipping_Controller extends Rest_Controller {
 				$minimum_subtotal                = $method->settings->carrier_options->minimum_sub_total ?? 0;
 				$exclude_fixed_shipping_products = (bool) $method->settings->carrier_options->exclude_fixed_shipping_products ?? true;
 				$use_discounted_sub_total        = (bool) $method->settings->carrier_options->use_discounted_sub_total ?? true;
-				
+
 				$subtotal = $cart['subtotal']['raw'];
 				if ( ! $use_discounted_sub_total ) {
 					// TODO: Add coupons amount
@@ -249,7 +252,7 @@ class Shipping_Controller extends Rest_Controller {
 					$method->enabled = false;
 				}
 				break;
-				
+
 			case self::SHIPPING_METHOD_TYPE_WEIGHT_WEIGHT:
 
 				$cart_weight = $this->get_cart_weight( $cart );
@@ -265,7 +268,7 @@ class Shipping_Controller extends Rest_Controller {
 				}
 
 				break;
-				
+
 			case self::SHIPPING_METHOD_TYPE_WEIGHT_TOTAL:
 
 				$ranges = $method->settings->range ?? [];
@@ -284,7 +287,7 @@ class Shipping_Controller extends Rest_Controller {
 				}
 
 				break;
-			
+
 			default:
 				break;
 		}
@@ -339,7 +342,7 @@ class Shipping_Controller extends Rest_Controller {
 
 		return $fixed_shipping;
 	}
-	
+
 	private function get_cart_weight( $cart ) {
 		$weight = 0;
 		foreach ( $cart['items'] as $cart_item ) {

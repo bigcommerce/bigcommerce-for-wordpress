@@ -79,6 +79,12 @@ class Shipping_Returns_Page extends Required_Page {
 
 		$post_ids = array_map( 'intval', $post_ids );
 
+		/**
+		 * Filters pages matching page candidates.
+		 *
+		 * @param array  $post_ids Post ids.
+		 * @param string $name     Name.
+		 */
 		$post_ids = (array) apply_filters( 'bigcommerce/pages/matching_page_candidates', $post_ids, static::NAME );
 
 		return $post_ids;

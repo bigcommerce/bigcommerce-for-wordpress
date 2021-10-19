@@ -52,6 +52,11 @@ class Product_Review_Handler implements Form_Handler {
 		$review_request = new ProductReviewPost( [
 			'title'         => sanitize_text_field( $submission['bc-review']['subject'] ),
 			'text'          => sanitize_textarea_field( $submission['bc-review']['content'] ),
+			/**
+			 * Filters review status in form.
+			 *
+			 * @param string $status Status.
+			 */
 			'status'        => apply_filters( 'bigcommerce/form/review/status', 'pending', $submission, $product_id ),
 			'rating'        => intval( $submission['bc-review']['rating'] ),
 			'email'         => sanitize_email( $submission['bc-review']['email'] ),
@@ -68,6 +73,11 @@ class Product_Review_Handler implements Form_Handler {
 			return;
 		}
 
+		/**
+		 * Filters review form created message.
+		 *
+		 * @param string $message Message.
+		 */
 		$message = apply_filters( 'bigcommerce/form/review/created_message', __( 'Thank you for your review! It has been successfully submitted and is pending.', 'bigcommerce' ) );
 		do_action( 'bigcommerce/form/success', $message, $submission, null );
 	}
@@ -115,6 +125,12 @@ class Product_Review_Handler implements Form_Handler {
 			$errors->add( 'content', __( 'Please add comments to your review.', 'bigcommerce' ) );
 		}
 
+		/**
+		 * Filters update review form errors.
+		 *
+		 * @param \WP_Error $errors     WP error.
+		 * @param array     $submission Submitted data.
+		 */
 		$errors = apply_filters( 'bigcommerce/form/review/errors', $errors, $submission );
 
 		return $errors;

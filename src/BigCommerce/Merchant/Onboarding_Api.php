@@ -93,6 +93,11 @@ class Onboarding_Api {
 		$url   = sprintf( '%s/stores/%s/connect', $this->base_url, $store_id );
 		$url   = add_query_arg( [ 'token' => $token ], $url );
 
+		/**
+		 * Filters oauth connector installation url.
+		 *
+		 * @param string $url Url.
+		 */
 		return apply_filters( 'bigcommerce/oauth_connector/installation_url', $url );
 	}
 

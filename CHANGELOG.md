@@ -1,5 +1,107 @@
 # Changelog
 
+## [4.19.0]
+
+### Added
+
+- Added support for BC product create/update/delete webhooks. Turning on the "Enable Webhooks" creates a subscription to product create, update, and delete events, enabling products to be updated in real time rather than only via sync
+
+### Changed
+
+- In order to add more transparency in plugin code and updating the '[Plugin Code Reference](https://bigcommerce.moderntribe.qa/)' site  PHPDoc blocks were updated. Added missing descriptions for classes/methods  and explanation comments in methods body. Please check the list of affected items below
+  - src/BigCommerce/Accounts/Channel_Settings.php
+  - src/BigCommerce/Accounts/Countries.php
+  - src/BigCommerce/Accounts/Customer_Group.php
+  - src/BigCommerce/Accounts/Login.php
+  - src/BigCommerce/Accounts/Nav_Menu.php
+  - src/BigCommerce/Accounts/Password_Reset.php
+  - src/BigCommerce/Accounts/Sub_Nav.php
+  - src/BigCommerce/Accounts/User_Profile_Settings.php
+  - src/BigCommerce/Accounts/Wishlists/Actions/Add_Item.php
+  - src/BigCommerce/Accounts/Wishlists/Actions/Create_Wishlist.php
+  - src/BigCommerce/Accounts/Wishlists/Actions/Delete_Wishlist.php
+  - src/BigCommerce/Accounts/Wishlists/Actions/Edit_Wishlist.php
+  - src/BigCommerce/Accounts/Wishlists/Actions/Remove_Item.php
+  - src/BigCommerce/Accounts/Wishlists/Missing_Wishlist.php
+  - src/BigCommerce/Api/Shipping_Api.php
+  - src/BigCommerce/Api/Store_Api.php
+  - src/BigCommerce/Api/Tax_Class_Api.php
+  - src/BigCommerce/Assets/Admin/JS_Config.php
+  - src/BigCommerce/Assets/Admin/JS_Localization.php
+  - src/BigCommerce/Assets/Theme/JS_Config.php
+  - src/BigCommerce/Assets/Theme/Styles.php
+  - src/BigCommerce/CLI/Documentation/Build_Docs.php
+  - src/BigCommerce/CLI/Documentation/Import_Docs.php
+  - src/BigCommerce/CLI/Import_Products.php
+  - src/BigCommerce/CLI/Resources/Build_Resources.php
+  - src/BigCommerce/Cart/Add_To_Cart.php
+  - src/BigCommerce/Cart/Cart.php
+  - src/BigCommerce/Cart/Cart_Mapper.php
+  - src/BigCommerce/Cart/Cart_Menu_Item.php
+  - src/BigCommerce/Cart/Cart_Recovery.php
+  - src/BigCommerce/Cart/Checkout.php
+  - src/BigCommerce/Checkout/Customer_Login.php
+  - src/BigCommerce/Container/Accounts.php
+  - src/BigCommerce/Container/Analytics.php
+  - src/BigCommerce/Container/Api.php
+  - src/BigCommerce/Container/Merchant.php
+  - src/BigCommerce/Container/Rest.php
+  - src/BigCommerce/Container/Settings.php
+  - src/BigCommerce/Customizer/Styles.php
+  - src/BigCommerce/Forms/Delete_Address_Handler.php
+  - src/BigCommerce/Forms/Product_Review_Handler.php
+  - src/BigCommerce/Forms/Purchase_Gift_Certificate_Handler.php
+  - src/BigCommerce/Forms/Registration_Handler.php
+  - src/BigCommerce/Forms/Update_Address_Handler.php
+  - src/BigCommerce/Forms/Update_Profile_Handler.php
+  - src/BigCommerce/Import/Importers/Products/Product_Builder.php
+  - src/BigCommerce/Import/Importers/Products/Product_Saver.php
+  - src/BigCommerce/Import/Processors/Listing_Fetcher.php
+  - src/BigCommerce/Merchant/Account_Status.php
+  - src/BigCommerce/Merchant/Connect_Account.php
+  - src/BigCommerce/Merchant/Onboarding_Api.php
+  - src/BigCommerce/Pages/Checkout_Complete_Page.php
+  - src/BigCommerce/Pages/Required_Page.php
+  - src/BigCommerce/Pages/Shipping_Returns_Page.php
+  - src/BigCommerce/Plugin.php
+  - src/BigCommerce/Post_Types/Product/Product.php
+  - src/BigCommerce/Post_Types/Product/Query.php
+  - src/BigCommerce/Post_Types/Product/Query_Mapper.php
+  - src/BigCommerce/Proxy/Proxy_Controller.php
+  - src/BigCommerce/Rest/Coupon_Code_Controller.php
+  - src/BigCommerce/Rest/Pricing_Controller.php
+  - src/BigCommerce/Rest/Products_Controller.php
+  - src/BigCommerce/Rest/Shortcode_Controller.php
+  - src/BigCommerce/Settings/Import_Status.php
+  - src/BigCommerce/Settings/Screens/Api_Credentials_Screen.php
+  - src/BigCommerce/Settings/Screens/Onboarding_Complete_Screen.php
+  - src/BigCommerce/Settings/Screens/Welcome_Screen.php
+  - src/BigCommerce/Settings/Sections/Cart.php
+  - src/BigCommerce/Settings/Sections/New_Account_Section.php
+  - src/BigCommerce/Settings/Sections/Troubleshooting_Diagnostics.php
+  - src/BigCommerce/Shortcodes/Product_Reviews.php
+  - src/BigCommerce/Templates/Address_Form.php
+  - src/BigCommerce/Templates/Amp_Cart_Summary.php
+  - src/BigCommerce/Templates/Amp_Cart_items.php
+  - src/BigCommerce/Templates/Controller.php
+  - src/BigCommerce/Templates/Form_Controller.php
+  - src/BigCommerce/Templates/Gift_Certificate_Balance_Response.php
+  - src/BigCommerce/Templates/Gift_Certificate_Form.php
+  - src/BigCommerce/Templates/Order_Summary.php
+  - src/BigCommerce/Templates/Product_Options.php
+  - src/BigCommerce/Templates/Product_Specs.php
+  - src/BigCommerce/Templates/Registration_Form.php
+  - src/BigCommerce/Templates/Review_Form.php
+  - src/BigCommerce/Templates/Wishlist_Product.php
+  - src/BigCommerce/Util/Kses.php
+  - src/BigCommerce/Webhooks/Checkout_Complete_Webhook.php
+  - src/BigCommerce/Webhooks/Product_Inventory_Update_Webhook.php
+  - src/BigCommerce/Webhooks/Product_Update_Webhook.php
+  - src/BigCommerce/Webhooks/Product_Updater.php
+  - src/BigCommerce/Webhooks/Status.php
+  - src/BigCommerce/Webhooks/Webhook.php
+  - src/BigCommerce/Webhooks/Webhook_Versioning.php
+
 ## [4.18.0]
 
 ### Changed
@@ -1525,6 +1627,9 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.19.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.18.0...4.19.0
+[4.18.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.17.1...4.18.0
+[4.17.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.17.0...4.17.1
 [4.17.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.16.0...4.17.0
 [4.16.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.15.1...4.16.0
 [4.15.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.15.0...4.15.1

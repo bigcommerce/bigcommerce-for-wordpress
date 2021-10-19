@@ -6,6 +6,11 @@ namespace BigCommerce\Analytics;
 
 use BigCommerce\Settings\Sections\Analytics;
 
+/**
+ * Class Segment
+ *
+ * Render segment analytics tracking code
+ */
 class Segment {
 	/**
 	 * @return void
@@ -26,6 +31,10 @@ class Segment {
 		<?php
 	}
 
+    /**
+     * Retrieve a list of the analytics settings
+     * @return object
+     */
 	private function get_settings() {
 		$settings = [];
 
@@ -50,6 +59,8 @@ class Segment {
 
 		/**
 		 * Filter the configuration object passed to Segment
+         *
+         * @param array $settings Settings.
 		 */
 		$settings = apply_filters( 'bigcommerce/analytics/segment/settings', $settings );
 		return (object) $settings;

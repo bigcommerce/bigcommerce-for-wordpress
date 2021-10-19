@@ -9,6 +9,11 @@ use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Settings\Sections\Cart as CartSettings;
 
+/**
+ * Class Cart_Recovery
+ *
+ * @package BigCommerce\Cart
+ */
 class Cart_Recovery {
 	const ACTION = 'recover-cart';
 

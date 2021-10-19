@@ -52,6 +52,11 @@ class JS_Localization {
 			],
 		];
 
+		/**
+		 * Filters admin js localization data.
+		 *
+		 * @param array $js_i18n_array Js i18n data.
+		 */
 		return apply_filters( 'bigcommerce/admin/js_localization', $js_i18n_array );
 	}
 

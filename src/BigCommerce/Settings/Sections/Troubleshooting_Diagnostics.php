@@ -74,7 +74,7 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 			Settings_Screen::NAME,
 			self::LOG_ERRORS
 		);
-		
+
 		add_settings_field(
 			self::LOG_ERRORS,
 			esc_html( __( 'Log import errors', 'bigcommerce' ) ),
@@ -429,6 +429,11 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 	 * @return array A list of template overrides in the active theme
 	 */
 	private function get_template_overrides() {
+		/**
+		 * Filters template directory theme.
+		 *
+		 * @param string $theme_override_dir Theme directory.
+		 */
 		$theme_override_dir = apply_filters( 'bigcommerce/template/directory/theme', '', '' );
 
 		$theme_parent_dir_path = trailingslashit( TEMPLATEPATH ) . $theme_override_dir;
@@ -464,7 +469,7 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 	 * @return array A list of template overrides in the active theme with notes
 	 */
 	private function check_template_overrides( $overrides ) {
-		
+
 		$messages = [];
 
 		// Get original template for each override and compare versions.
@@ -517,13 +522,16 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 	 * @return string
 	 */
 	private function get_original_template_path_from_override( $override ) {
+		/**
+		 * This filter is documented in src/BigCommerce/Settings/Sections/Troubleshooting_Diagnostics.php.
+		 */
 		$theme_override_dir = apply_filters( 'bigcommerce/template/directory/theme', '', '' );
 
 		// Get everything after $theme_override_dir in the string.
 		$original_template = substr(
 			$override,
 			strpos( $override, $theme_override_dir ) + strlen( $theme_override_dir ) + 1
-		); 
+		);
 
 		return "{$this->plugin_path}templates/public/{$original_template}";
 	}

@@ -80,6 +80,11 @@ class Onboarding_Complete_Screen extends Onboarding_Screen {
 	}
 
 	private function settings_url() {
+		/**
+		 * Filters settings url.
+		 *
+		 * @param string $settings_url Settings url.
+		 */
 		return apply_filters( 'bigcommerce/settings/settings_url', admin_url() );
 	}
 
@@ -88,10 +93,20 @@ class Onboarding_Complete_Screen extends Onboarding_Screen {
 	}
 
 	private function support_url() {
+		/**
+		 * Filters resources url.
+		 *
+		 * @param string $resources_url Resources url.
+		 */
 		return apply_filters( 'bigcommerce/settings/resources_url', admin_url() );
 	}
 
 	private function extend_url() {
+		/**
+		 * Filters documentation url.
+		 *
+		 * @param string $documentation_url Documentation url.
+		 */
 		return apply_filters( 'bigcommerce/documentation/url', 'https://developer.bigcommerce.com/bigcommerce-for-wordpress/' );
 	}
 

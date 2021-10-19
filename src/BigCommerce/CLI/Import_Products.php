@@ -9,15 +9,36 @@ use BigCommerce\Import\Runner\CLI_Runner;
 use BigCommerce\Import\Runner\Lock;
 use BigCommerce\Import\Import_Type;
 
+/**
+ * Class Import_Products
+ *
+ * Register import products command
+ *
+ * @package BigCommerce\CLI
+ */
 class Import_Products extends Command {
+    /**
+     * Declare command name
+     * @return string
+     */
 	protected function command() {
 		return 'import products';
 	}
 
+    /**
+     * Add a command description
+     *
+     * @return string|void
+     */
 	protected function description() {
 		return __( 'Imports products from the connected BigCommerce store', 'bigcommerce' );
 	}
 
+    /**
+     * Declare command arguments
+     *
+     * @return array[]
+     */
 	protected function arguments() {
 		return [
 			[
@@ -37,13 +58,17 @@ class Import_Products extends Command {
 		];
 	}
 
+    /**
+     * @param $args
+     * @param $assoc_args
+     */
 	public function run( $args, $assoc_args ) {
 
 		if ( ! empty( $assoc_args[ 'force' ] ) ) {
 			add_filter( 'bigcommerce/import/strategy/needs_refresh', '__return_true' );
 			add_filter( 'bigcommerce/import/strategy/term/needs_refresh', '__return_true' );
 		}
-		
+
 		if ( ! empty( $assoc_args[ 'partial' ] ) ) {
 			update_option( Import_Type::IMPORT_TYPE, Import_Type::IMPORT_TYPE_PARTIAL );
 		}
@@ -65,6 +90,11 @@ class Import_Products extends Command {
 		}
 	}
 
+    /**
+     * Add messages to each step of the import process
+     *
+     * @throws \WP_CLI\ExitException
+     */
 	private function hook_messages() {
 		add_action( 'bigcommerce/import/before', function ( $status ) {
 			\WP_CLI::debug( sprintf( __( 'Starting import phase. Status: %s', 'bigcommerce' ), $status ) );

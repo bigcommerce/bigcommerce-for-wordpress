@@ -42,9 +42,19 @@ class Update_Address_Handler implements Form_Handler {
 		}
 
 		if ( empty( $address_id ) ) {
+			/**
+			 * Filters address form created message.
+			 *
+			 * @param string $message Message.
+			 */
 			$message = apply_filters( 'bigcommerce/form/address/created_message', __( 'Address created.', 'bigcommerce' ) );
 			do_action( 'bigcommerce/form/success', $message, $submission, null, [ 'key' => 'address_created' ] );
 		} else {
+			/**
+			 * Filters address form updated message.
+			 *
+			 * @param string $message Message.
+			 */
 			$message = apply_filters( 'bigcommerce/form/address/updated_message', __( 'Address saved.', 'bigcommerce' ) );
 			do_action( 'bigcommerce/form/success', $message, $submission, null, [ 'key' => 'address_saved' ] );
 		}
@@ -102,6 +112,12 @@ class Update_Address_Handler implements Form_Handler {
 			$errors->add( 'country', __( 'Country is required.', 'bigcommerce' ) );
 		}
 
+		/**
+		 * Filters update profile address form errors.
+		 *
+		 * @param \WP_Error $errors     WP error.
+		 * @param array     $submission Submitted data.
+		 */
 		$errors = apply_filters( 'bigcommerce/form/update_address/errors', $errors, $submission );
 
 		return $errors;

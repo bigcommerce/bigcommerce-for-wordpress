@@ -18,6 +18,11 @@ use BigCommerce\Taxonomies\Channel\Channel;
 use BigCommerce\Taxonomies\Channel\Connections;
 use BigCommerce\Util\Cart_Item_Iterator;
 
+/**
+ * Class Cart
+ *
+ * @package BigCommerce\Cart
+ */
 class Cart {
 	const CART_COOKIE  = 'wp-bigcommerce_cart_id';
 	const COUNT_COOKIE = 'wp-bigcommerce_cart_item_count';
@@ -247,6 +252,12 @@ class Cart {
 			return '';
 		}
 		$checkout_url = $redirects['checkout_url'];
+
+		/**
+		 * Filters checkout url.
+		 *
+		 * @param string $checkout_url The URL for checking out with the given cart.
+		 */
 		$checkout_url = apply_filters( 'bigcommerce/checkout/url', $checkout_url );
 
 		return $checkout_url;
@@ -263,6 +274,12 @@ class Cart {
 			return '';
 		}
 		$checkout_url = $redirects['embedded_checkout_url'];
+
+		/**
+		 * Filters checkout url.
+		 *
+		 * @param string $checkout_url The URL for checking out with the given cart.
+		 */
 		$checkout_url = apply_filters( 'bigcommerce/checkout/url', $checkout_url );
 
 		return $checkout_url;

@@ -66,6 +66,9 @@ class Checkout_Complete_Page extends Required_Page {
 
 		$post_ids = array_map( 'intval', $post_ids );
 
+		/**
+		 * This filter is documented in src/BigCommerce/Pages/Shipping_Returns_Page.php.
+		 */
 		$post_ids = (array) apply_filters( 'bigcommerce/pages/matching_page_candidates', $post_ids, static::NAME );
 
 		return $post_ids;

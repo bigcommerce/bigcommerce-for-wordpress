@@ -10,6 +10,11 @@ use BigCommerce\Analytics\Google_Analytics;
 use BigCommerce\Analytics\Segment;
 use Pimple\Container;
 
+/**
+ * Class Analytics
+ *
+ * @package BigCommerce\Container
+ */
 class Analytics extends Provider {
 	const FACEBOOK_PIXEL   = 'analytics.facebook';
 	const GOOGLE_ANALYTICS = 'analytics.google';
@@ -71,7 +76,7 @@ class Analytics extends Provider {
 		add_filter( 'bigcommerce/messages/success/arguments', $this->create_callback( 'add_to_cart_success_tracking_attributes', function ( $args, $data ) use ( $container ) {
 			return $container[ self::ADD_TO_CART ]->set_tracking_attributes_on_success_message( $args, $data );
 		} ), 10, 2 );
-		
+
 		add_filter( 'bigcommerce/button/purchase/attributes', $this->create_callback( 'add_to_cart_button_tracking_attributes', function ( $attributes, $product ) use ( $container ) {
 			return $container[ self::ADD_TO_CART ]->add_tracking_attributes_to_purchase_button( $attributes, $product );
 		} ), 10, 2 );

@@ -9,6 +9,9 @@ namespace BigCommerce\Container;
 
 use BigCommerce\Settings\Sections\Import as Import_Settings;
 use BigCommerce\Webhooks\Checkout_Complete_Webhook;
+use BigCommerce\Webhooks\Product_Create_Webhook;
+use BigCommerce\Webhooks\Product_Creator;
+use BigCommerce\Webhooks\Product_Delete_Webhook;
 use BigCommerce\Webhooks\Product_Inventory_Update_Webhook;
 use BigCommerce\Webhooks\Product_Update_Webhook;
 use BigCommerce\Webhooks\Product_Updater;
@@ -27,8 +30,11 @@ class Webhooks extends Provider {
 	const WEBHOOKS_STATUS                  = 'webhooks.webhooks_status';
 	const WEBHOOKS_LISTENER                = 'webhooks.listener_webhook';
 	const PRODUCT_UPDATE_WEBHOOK           = 'webhooks.product_update_webhook';
+	const PRODUCT_DELETE_WEBHOOK           = 'webhooks.product_delete_webhook';
+	const PRODUCT_CREATE_WEBHOOK           = 'webhooks.product_create_webhook';
 	const PRODUCT_INVENTORY_UPDATE_WEBHOOK = 'webhooks.inventory_update_webhook';
 	const PRODUCT_UPDATER                  = 'webhooks.cron.product_updater';
+	const PRODUCT_CREATOR                  = 'webhooks.cron.product_creator';
 	const CHECKOUT_COMPLETE_WEBHOOK        = 'webhooks.checkout_complete';
 	const WEBHOOKS_VERSIONING              = 'webhooks.version';
 	const WEBHOOKS_CRON_TASKS              = 'webhooks.cron_tasks';
@@ -59,7 +65,9 @@ class Webhooks extends Provider {
 	private function declare_webhooks( Container $container ) {
 		$container[ self::WEBHOOKS ] = function ( Container $container ) {
 			$webhooks = [
+				$container[ self::PRODUCT_CREATE_WEBHOOK ],
 				$container[ self::PRODUCT_UPDATE_WEBHOOK ],
+				$container[ self::PRODUCT_DELETE_WEBHOOK ],
 				$container[ self::PRODUCT_INVENTORY_UPDATE_WEBHOOK ],
 				$container[ self::CHECKOUT_COMPLETE_WEBHOOK ],
 			];
@@ -72,8 +80,16 @@ class Webhooks extends Provider {
 			return apply_filters( 'bigcommerce/webhooks', $webhooks );
 		};
 
+        $container[ self::PRODUCT_CREATE_WEBHOOK ] = function ( Container $container ) {
+            return new Product_Create_Webhook( $container[ Api::FACTORY ]->webhooks() );
+        };
+
 		$container[ self::PRODUCT_UPDATE_WEBHOOK ] = function ( Container $container ) {
 			return new Product_Update_Webhook( $container[ Api::FACTORY ]->webhooks() );
+		};
+
+        $container[ self::PRODUCT_DELETE_WEBHOOK ] = function ( Container $container ) {
+			return new Product_Delete_Webhook( $container[ Api::FACTORY ]->webhooks() );
 		};
 
 		$container[ self::PRODUCT_INVENTORY_UPDATE_WEBHOOK ] = function ( Container $container ) {
@@ -83,6 +99,10 @@ class Webhooks extends Provider {
 		$container[ self::CHECKOUT_COMPLETE_WEBHOOK ] = function ( Container $container ) {
 			return new Checkout_Complete_Webhook( $container[ Api::FACTORY ]->webhooks() );
 		};
+
+        $container[ self::PRODUCT_CREATOR ] = function ( Container $container ) {
+            return new Product_Creator( $container[ Api::FACTORY ]->catalog(), $container[ Api::FACTORY ]->channels() );
+        };
 	}
 
 	private function status( Container $container ) {
@@ -159,6 +179,33 @@ class Webhooks extends Provider {
 			$container[ self::WEBHOOKS_CRON_TASKS ]->set_product_update_cron_task( $params );
 		} ), 10, 1 );
 
+        // Update product inventory webhook cron task
+        add_action( 'bigcommerce/webhooks/product_updated', $this->create_callback( 'check_and_update_product_data_task', function ( $params ) use ( $container ) {
+            $query_params = [
+                'include' => 'variants,custom_fields,images,videos,bulk_pricing_rules,options,modifiers'
+            ];
+
+            $container[ Api::CACHE_HANDLER ]->flush_product_catalog_object_cache($params['product_id'], $query_params);
+            $container[ self::WEBHOOKS_CRON_TASKS ]->set_product_update_cron_task( $params );
+        } ), 10, 1 );
+
+        // Delete product webhook
+        add_action('bigcommerce/webhooks/product_deleted', $this->create_callback('delete_single_product_handler', function ( $params ) use ( $container ) {
+            if ( ! $this->webhooks_enabled() ) {
+                return;
+            }
+            
+            $container[ self::PRODUCT_DELETE_WEBHOOK ]->delete_the_product( $params );
+        } ), 10, 1 );
+
+        // Create product webhook
+        add_action('bigcommerce/webhooks/product_created', $this->create_callback('create_single_product_handler', function ( $params ) use ( $container ) {
+            if ( ! $this->webhooks_enabled() ) {
+                return;
+            }
+
+            $container[self::PRODUCT_CREATOR]->create($params);
+        } ), 10, 1 );
 	}
 
 	private function cron_actions( Container $container ) {
@@ -171,7 +218,7 @@ class Webhooks extends Provider {
 		}
 
 		add_action( Webhook_Cron_Tasks::UPDATE_PRODUCT, $this->create_callback( 'update_product_cron_handler', function ( $product_id ) use ( $container ) {
-			$container[ self::PRODUCT_UPDATER ]->update( $product_id );
+            $container[ self::PRODUCT_UPDATER ]->update( $product_id );
 		} ), 10, 1 );
 	}
 }

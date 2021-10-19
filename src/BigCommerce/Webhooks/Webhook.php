@@ -85,6 +85,12 @@ abstract class Webhook {
 		$result = (array) $this->create( $args );
 
 		if ( empty( $result[ 'id' ] ) ) {
+			/**
+			 * Fires after webhook update failed.
+			 *
+			 * @param Webhook Webhook Webhook class.
+			 * @param array $result Result.
+			 */
 			do_action( 'bigcommerce/webhooks/update_failed', $this, $result );
 		}
 
@@ -141,6 +147,12 @@ abstract class Webhook {
 		$result = (array) $this->api_client->deleteWebhook( $webhook_id );
 
 		if ( empty( $result[ 'id' ] ) ) {
+			/**
+			 * Fires after webhook delete failed.
+			 *
+			 * @param Webhook Webhook Webhook class.
+			 * @param array $result Result.
+			 */
 			do_action( 'bigcommerce/webhooks/delete_failed', $this, $result );
 		}
 

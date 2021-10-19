@@ -62,8 +62,13 @@ class Listing_Fetcher implements Import_Processor {
 		$modified_product_ids = [];
 		$import_type          = get_option( Import_Type::IMPORT_TYPE );
 		if ( $import_type === Import_Type::IMPORT_TYPE_PARTIAL ) {
+			/**
+			 * Filters modified product ids.
+			 *
+			 * @param array $modified_product_ids Product ids.
+			 */
 			$modified_product_ids = apply_filters( 'bigcommerce_modified_product_ids', [] );
-	
+
 			if ( empty( $modified_product_ids ) ) {
 				$status->set_status( Status::FETCHED_LISTINGS . '-' . $this->channel_term->term_id );
 				$this->clear_state();

@@ -104,7 +104,7 @@ class Cart_Mapper {
 		/**
 		 * Filter mapped cart
 		 *
-		 * @param array $cart
+		 * @param array $cart Cart data.
 		 */
 		return apply_filters( 'bigcommerce/cart_mapper/map', $cart );
 	}
@@ -250,7 +250,7 @@ class Cart_Mapper {
 		}
 
 		/**
-		 * This filter is documented in src/BigCommerce/Templates/Controller.php
+		 * This filter is documented in src/BigCommerce/Currency/With_Currency.php.
 		 */
 		return apply_filters( 'bigcommerce/currency/format', sprintf( '¤%0.2f', $value ), $value );
 	}
@@ -350,6 +350,9 @@ class Cart_Mapper {
 		// TODO: name always comes back empty from the API, even if we set it
 		$name     = $item->getName() ?: sprintf(
 			__( '%s Gift Certificate', 'bigcommerce' ),
+			/**
+			 * This filter is documented in src/BigCommerce/Currency/With_Currency.php.
+			 */
 			apply_filters( 'bigcommerce/currency/format', sprintf( '¤%0.2f', $amount ), $amount )
 		);
 		$quantity = $item->getQuantity() ?: 1;

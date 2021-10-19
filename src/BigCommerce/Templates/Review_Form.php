@@ -98,6 +98,11 @@ class Review_Form extends Controller {
 	}
 
 	protected function get_messages() {
+		/**
+		 * Filters forms messages.
+		 *
+		 * @param string $messages Messages.
+		 */
 		return apply_filters( 'bigcommerce/forms/messages', '' );
 	}
 

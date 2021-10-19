@@ -213,6 +213,11 @@ class Settings extends Provider {
 		};
 
 		add_action( 'admin_notices', $this->create_callback( 'credentials_required', function () use ( $container ) {
+			/**
+			 * Filters settings credentials notice for excluded screens.
+			 *
+			 * @param array $excluded_screens
+			 */
 			$excluded = apply_filters( 'bigcommerce/settings/credentials_notice/excluded_screens', [
 				$container[ self::WELCOME_SCREEN ]->get_hook_suffix(),
 				$container[ self::CREATE_SCREEN ]->get_hook_suffix(),

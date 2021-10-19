@@ -212,6 +212,12 @@ class Registration_Handler implements Form_Handler {
 			$errors->add( 'is_spam', __( 'This user registration was flagged as spam. Please try registering again with different information.', 'bigcommerce' ) );
 		}
 
+		/**
+		 * Filters update registration form errors.
+		 *
+		 * @param \WP_Error $errors     WP error.
+		 * @param array     $submission Submitted data.
+		 */
 		$errors = apply_filters( 'bigcommerce/form/registration/errors', $errors, $submission );
 
 		return $errors;
@@ -234,11 +240,11 @@ class Registration_Handler implements Form_Handler {
 		if ( strlen( $password ) < 8 ) {
 			return false;
 		}
-		
+
 		if ( ! preg_match( '/\d/', $password ) ) {
 			return false;
 		}
-		
+
 		$has_punct = false;
 		$has_lower = false;
 		$has_upper = false;

@@ -19,6 +19,11 @@ use BigCommerce\Api_Factory;
 use BigCommerce\Taxonomies\Channel\Connections;
 use Pimple\Container;
 
+/**
+ * Class Accounts
+ *
+ * @package BigCommerce\Container
+ */
 class Accounts extends Provider {
 	const LOGIN            = 'accounts.login';
 	const COUNTRIES        = 'accounts.countries';
@@ -51,6 +56,11 @@ class Accounts extends Provider {
 		$this->channel_settings( $container );
 	}
 
+    /**
+     * Handle login logic methods
+     *
+     * @param Container $container
+     */
 	private function login( Container $container ) {
 		$container[ self::LOGIN ] = function ( Container $container ) {
 			return new Login( $container[ Api::FACTORY ] );
@@ -106,6 +116,11 @@ class Accounts extends Provider {
 		} ), 10, 4 );
 	}
 
+    /**
+     * Register countries container and handle requests for it
+     *
+     * @param Container $container
+     */
 	private function countries( Container $container ) {
 		$container[ self::COUNTRIES ] = function ( Container $container ) {
 			return new Countries( $container[ self::COUNTRIES_PATH ] );
@@ -114,6 +129,11 @@ class Accounts extends Provider {
 		$container[ self::COUNTRIES_PATH ] = function ( Container $container ) {
 			$file = plugin_dir_path( $container['plugin_file'] ) . 'assets/data/countries.json';
 
+			/**
+			 * Filters countries data file.
+			 *
+			 * @param string $file Countries data json file path.
+			 */
 			return apply_filters( 'bigcommerce/countries/data_file', $file );
 		};
 
@@ -127,6 +147,11 @@ class Accounts extends Provider {
 		add_filter( 'bigcommerce/admin/js_config', $countries_js_config, 10, 1 );
 	}
 
+    /**
+     * Handle profile container requests
+     *
+     * @param Container $container
+     */
 	private function profile( Container $container ) {
 		$container[ self::NAV_MENU ] = function ( Container $container ) {
 			return new Nav_Menu();
@@ -158,6 +183,9 @@ class Accounts extends Provider {
 		add_action( 'edit_user_profile_update', $save_profile_settings, 10, 1 );
 	}
 
+    /**
+     * @param Container $container
+     */
 	private function addresses( Container $container ) {
 		$container[ self::DELETE_ADDRESS ] = function ( Container $container ) {
 			return new Delete_Address_Handler();
@@ -167,6 +195,9 @@ class Accounts extends Provider {
 		} ), 10, 0 );
 	}
 
+    /**
+     * @param Container $container
+     */
 	private function customer_groups( Container $container ) {
 		$container[ self::GROUP_PROXY ] = function ( Container $container ) {
 			return new Customer_Group_Proxy();
@@ -176,6 +207,11 @@ class Accounts extends Provider {
 		} ), 10, 2 );
 	}
 
+    /**
+     * Handle wishlists container logic
+     *
+     * @param Container $container
+     */
 	private function wishlists( Container $container ) {
 		$container[ self::PUBLIC_WISHLIST ] = function ( Container $container ) {
 			return new Wishlist_Request_Parser( $container[ Api::FACTORY ]->wishlists() );
@@ -245,6 +281,10 @@ class Accounts extends Provider {
 		//add_action( 'bigcommerce/template=components/products/product-shortcode-single.php/data', $add_item_view_to_product_single, 10, 3 );
 	}
 
+    /**
+     * Handle passwords container and hooks
+     * @param Container $container
+     */
 	private function passwords( Container $container ) {
 		$container[ self::PASSWORD_RESET ] = function ( Container $container ) {
 			return new Password_Reset( $container[ Api::FACTORY ]->customer() );
@@ -258,7 +298,7 @@ class Accounts extends Provider {
 			$container[ self::PASSWORD_RESET ]->sync_password_change_with_bigcommerce( $user, $old_user_data );
 		} ), 10, 2 );
 	}
-	
+
 	private function channel_settings( Container $container ) {
 		$container[ self::CHANNEL_SETTINGS ] = function ( Container $container ) {
 			return new Channel_Settings( new Connections(), $container[ Api::FACTORY ]->customers() );
@@ -267,7 +307,7 @@ class Accounts extends Provider {
 		add_action( 'bigcommerce/sync_global_logins', $this->create_callback( 'sync_global_logins', function () use ( $container ) {
 			$container[ self::CHANNEL_SETTINGS ]->sync_global_logins();
 		} ) );
-						
+
 		add_action( 'bigcommerce/channel/promote', $this->create_callback( 'schedule_global_logins_sync', function () use ( $container ) {
 			$container[ self::CHANNEL_SETTINGS ]->schedule_sync();
 		} ) );

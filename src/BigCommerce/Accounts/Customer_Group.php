@@ -3,6 +3,9 @@
 
 namespace BigCommerce\Accounts;
 
+/**
+ * Class Customer_Group
+ */
 class Customer_Group {
 	/** @var int */
 	private $group_id;
@@ -24,6 +27,12 @@ class Customer_Group {
 	 * @return array
 	 */
 	public function get_info() {
+		/**
+		 * Filters customer group info.
+		 *
+		 * @param array $default_group The default group
+		 * @param int   $group_id      The group id.
+		 */
 		return apply_filters( 'bigcommerce/customer/group_info', $this->get_default_group(), $this->group_id );
 	}
 

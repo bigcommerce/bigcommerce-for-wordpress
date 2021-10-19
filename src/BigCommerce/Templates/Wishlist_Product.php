@@ -10,6 +10,11 @@ use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Condition\Condition;
 use BigCommerce\Taxonomies\Flag\Flag;
 
+/**
+ * Class Wishlist_Product
+ *
+ * Handle product in wishlist image, options
+ */
 class Wishlist_Product extends Controller {
 	const WISHLIST       = 'wishlist';
 	const PRODUCT        = 'product';
@@ -44,6 +49,10 @@ class Wishlist_Product extends Controller {
 		return wp_parse_args( $options, $defaults );
 	}
 
+    /**
+     * Return current product data(price, sku, etc) list
+     * @return array
+     */
 	public function get_data() {
 		/** @var Product $product */
 		$product = $this->options[ self::PRODUCT ];
@@ -68,6 +77,14 @@ class Wishlist_Product extends Controller {
 		return $data;
 	}
 
+    /**
+     * Get product featured image
+     *
+     * @param Product $product
+     * @param $attributes
+     *
+     * @return string
+     */
 	protected function get_featured_image( Product $product, $attributes ) {
 		$quick_view = get_option( \BigCommerce\Customizer\Sections\Product_Archive::QUICK_VIEW, 'yes' );
 		if ( $quick_view === 'no' ) {
@@ -93,6 +110,13 @@ class Wishlist_Product extends Controller {
 		return $quick_view_component->render();
 	}
 
+    /**
+     * Get list of terms names by post id
+     * @param $post_id
+     * @param $taxonomy
+     *
+     * @return array
+     */
 	private function get_terms( $post_id, $taxonomy ) {
 		$terms = get_the_terms( $post_id, $taxonomy );
 

@@ -6,6 +6,11 @@ namespace BigCommerce\Analytics;
 
 use BigCommerce\Settings\Sections\Analytics;
 
+/**
+ * Class Google_Analytics
+ *
+ * Render GA analytics code
+ */
 class Google_Analytics {
 	/**
 	 * @return void

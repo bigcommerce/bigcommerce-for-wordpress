@@ -120,7 +120,7 @@ class Cart extends Settings_Section {
 				'label_for' => 'field-' . $this->checkout_page->get_option_name(),
 			]
 		);
-		
+
 		register_setting(
 			Settings_Screen::NAME,
 			$this->checkout_complete_page->get_option_name()
@@ -171,6 +171,11 @@ class Cart extends Settings_Section {
 
 	public function render_embedded_checkout_field() {
 		$value     = (bool) get_option( self::OPTION_EMBEDDED_CHECKOUT, true );
+		/**
+		 * Filters whether checkout can embed or not.
+		 *
+		 * @param bool $permitted Can embed or not.
+		 */
 		$permitted = (bool) apply_filters( 'bigcommerce/checkout/can_embed', true );
 		$checkbox  = sprintf( '<input id="field-%s" type="checkbox" value="1" class="regular-text code" name="%s" %s %s />', esc_attr( self::OPTION_EMBEDDED_CHECKOUT ), esc_attr( self::OPTION_EMBEDDED_CHECKOUT ), checked( true, $value, false ), disabled( $permitted, false, false ) );
 		if ( $permitted ) {

@@ -8,6 +8,11 @@ use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Templates\Product_Title;
 use BigCommerce\Templates\View_Product_Button;
 
+/**
+ * Class View_Product
+ *
+ * Add analytics events to the permalink and buttons
+ */
 class View_Product {
 	/**
 	 * @param array  $options

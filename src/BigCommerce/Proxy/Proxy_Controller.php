@@ -231,7 +231,7 @@ class Proxy_Controller extends WP_REST_Controller {
 
 		return rest_ensure_response( json_decode( wp_remote_retrieve_body( $response ), true ) );
 	}
-	
+
 	/**
 	 * Add cart line items.
 	 *
@@ -665,6 +665,12 @@ class Proxy_Controller extends WP_REST_Controller {
 		$route = str_replace( '/' . $this->proxy_base . '/', '', $request->get_route() );
 		$route = sprintf( '%s%s', trailingslashit( $this->config['host'] ), $route );
 
+		/**
+		 * Filters proxy request url.
+		 *
+		 * @param string          $route   Request url.
+		 * @param WP_REST_Request $request Request.
+		 */
 		return apply_filters( 'bigcommerce/proxy/request_url', $route, $request );
 	}
 }

@@ -5,9 +5,19 @@ namespace BigCommerce\Accounts\Wishlists\Actions;
 
 use BigCommerce\Pages\Wishlist_Page;
 
+/**
+ * Class Delete_Wishlist
+ *
+ * Handle delete wishlist logic
+ */
 class Delete_Wishlist extends Wishlist_Action {
 	const ACTION = 'delete';
 
+    /**
+     * Delete requested wishlist
+     *
+     * @param $args
+     */
 	public function handle_request( $args ) {
 		$redirect = get_the_permalink( get_option( Wishlist_Page::NAME, 0 ) );
 		try {
@@ -21,6 +31,14 @@ class Delete_Wishlist extends Wishlist_Action {
 		}
 	}
 
+    /**
+     * Validate and sanitize request
+     *
+     * @param array $args
+     * @param array $submission
+     *
+     * @return int[]|string[]
+     */
 	protected function sanitize_request( array $args, array $submission ) {
 		$wishlist_id = reset( $args );
 		if ( empty( $wishlist_id ) || ! is_numeric( $wishlist_id ) ) {

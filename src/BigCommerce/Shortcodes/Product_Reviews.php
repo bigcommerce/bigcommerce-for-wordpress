@@ -88,6 +88,12 @@ class Product_Reviews implements Shortcode {
 			return '';
 		}
 
+		/**
+		 * Filters product reviews REST url.
+		 *
+		 * @param string $base_url URL.
+		 * @param int    $post_id  Post id.
+		 */
 		$base_url = apply_filters( 'bigcommerce/product/reviews/rest_url', '', $post_id );
 
 		$attr = [

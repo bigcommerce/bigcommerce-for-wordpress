@@ -46,6 +46,9 @@ class Registration_Form extends Form_Controller {
 	}
 
 	protected function get_countries_and_states( $current_country ) {
+		/**
+		 * This filter is documented in src/BigCommerce/Templates/Address_Form.php
+		 */
 		$countries = apply_filters( 'bigcommerce/countries/data', [] );
 		foreach ( $countries as $country ) {
 			if ( $country->country == $current_country ) {

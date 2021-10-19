@@ -20,7 +20,7 @@ class Channel_Settings {
 	 * @var Connections
 	 */
 	protected $connections;
-	
+
 	/**
 	 * @var CustomersApi
 	 */
@@ -31,6 +31,11 @@ class Channel_Settings {
 		$this->customers   = $customers;
 	}
 
+    /**
+     * Get current channel id
+     *
+     * @return int
+     */
 	protected function get_channel_id() {
 		if ( ! $this->channel_id ) {
 			try {
@@ -39,13 +44,13 @@ class Channel_Settings {
 					$this->channel_id = (int) get_term_meta( $current_channel->term_id, Channel::CHANNEL_ID, true );
 				}
 			} catch (\Exception $e) {
-				
+
 			}
 		}
 
 		return $this->channel_id;
 	}
-	
+
 	/**
 	 * @return void
 	 * @action bigcommerce/sync_global_logins
@@ -58,10 +63,10 @@ class Channel_Settings {
 			return;
 		}
 
-		
+
 		try {
 			$allow_global_logins = (bool) get_option( Account_Settings::ALLOW_GLOBAL_LOGINS, true );
-			
+
 			$response = $this->customers->updateCustomerSettings( $channel_id, [
 				'allow_global_logins' => $allow_global_logins
 			] );
