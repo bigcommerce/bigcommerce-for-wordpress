@@ -196,6 +196,12 @@ class Shortcode_Controller extends Products_Controller {
 			}
 		}
 
+		/**
+		 * Filters rest shortcode selection.
+		 *
+		 * @param array            $args    Arguments.
+		 * @param \WP_REST_Request $request request.
+		 */
 		return apply_filters( 'bigcommerce/rest/shortcode/selection', $args, $request );
 	}
 
@@ -256,6 +262,12 @@ class Shortcode_Controller extends Products_Controller {
 			$args[ 'recent' ] = 1;
 		}
 
+		/**
+		 * Filters rest shortcode query.
+		 *
+		 * @param array            $args    Arguments.
+		 * @param \WP_REST_Request $request request.
+		 */
 		return apply_filters( 'bigcommerce/rest/shortcode/query', $args, $request );
 	}
 

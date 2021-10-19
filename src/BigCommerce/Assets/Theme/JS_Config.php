@@ -42,6 +42,12 @@ class JS_Config {
 				'currency_code' => get_option( Currency::CURRENCY_CODE, 'USD' ),
 				'logout_url'    => esc_url( wp_logout_url( '/' ) ),
 			];
+
+			/**
+			 * Filters Theme Js config.
+			 *
+			 * @param array $data Theme Js config.
+			 */
 			$this->data = apply_filters( 'bigcommerce/js_config', $this->data );
 		}
 

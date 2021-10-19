@@ -5,6 +5,13 @@ namespace BigCommerce\Webhooks;
 
 use BigCommerce\Api\Webhooks_Api;
 
+/**
+ * Class Status
+ *
+ * Handle webhook status data. Provides diagnostic data and handle webhook subscription
+ *
+ * @package BigCommerce\Webhooks
+ */
 class Status {
 
 	/**
@@ -30,6 +37,7 @@ class Status {
 	}
 
 	/**
+     * Return a list of webhooks for current BC store
 	 * @param array $data
 	 *
 	 * @return array
@@ -39,18 +47,22 @@ class Status {
 	public function diagnostic_data( $data ) {
 		$webhooks = $this->api->listWebhooks();
 
-		// order by scope ASC, is_active DESC, destination ASC
-		usort( $webhooks, function ( $a, $b ) {
-			if ( $a->scope === $b->scope ) {
-				if ( $a->is_active === $b->active ) {
-					return strcmp( $a->destination, $b->destination );
-				}
+		usort( $webhooks,
+            /**
+            * order webhooks by scope ASC, is_active DESC, destination ASC
+            */
+            function ( $a, $b ) {
+                if ( $a->scope === $b->scope ) {
+                    if ( $a->is_active === $b->active ) {
+                        return strcmp( $a->destination, $b->destination );
+                    }
 
-				return $a->is_active ? - 1 : 1;
-			}
+                    return $a->is_active ? - 1 : 1;
+                }
 
-			return strcmp( $a->scope, $b->scope );
-		} );
+                return strcmp( $a->scope, $b->scope );
+		    }
+        );
 
 		$webhook_data = [];
 
@@ -92,6 +104,9 @@ class Status {
 
 		// If we are enabling webhooks, call the existing action.
 		if ( $new_value ) {
+			/**
+			 * This hook is documented in src/BigCommerce/Webhooks/Webhook.php.
+			 */
 			do_action( 'bigcommerce/settings/webhoooks_updated' );
 
 			return;

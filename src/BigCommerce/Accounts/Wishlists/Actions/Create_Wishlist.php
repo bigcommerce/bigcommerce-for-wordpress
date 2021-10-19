@@ -8,6 +8,11 @@ use BigCommerce\Api\v3\Model\WishlistItem;
 use BigCommerce\Api\v3\Model\WishlistRequest;
 use BigCommerce\Pages\Wishlist_Page;
 
+/**
+ * Class Create_Wishlist
+ *
+ * Handle wishlist creation logic
+ */
 class Create_Wishlist extends Wishlist_Action {
 	const ACTION = 'create';
 
@@ -34,6 +39,13 @@ class Create_Wishlist extends Wishlist_Action {
 		}
 	}
 
+    /**
+     * Validate and sanitize create request
+     *
+     * @param array $args
+     * @param array $submission
+     * @return array
+     */
 	protected function sanitize_request( array $args, array $submission ) {
 		$submission = filter_var_array( $submission, [
 			'_wpnonce' => FILTER_SANITIZE_STRING,

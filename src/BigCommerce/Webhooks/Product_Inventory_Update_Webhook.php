@@ -8,13 +8,19 @@
 namespace BigCommerce\Webhooks;
 
 /**
+ * Class Product_Inventory_Update_Webhook
+ *
  * Sets up the webhook that runs on product update.
+ *
+ * @package BigCommerce\Webhooks
  */
 class Product_Inventory_Update_Webhook extends Webhook {
 	const SCOPE  = 'store/product/inventory/*';
 	const NAME   = 'inventory_update';
 
 	/**
+     * Fires when a product inventory webhooks has been received from the BigCommerce store.
+     *
 	 * @param array $request
 	 *
 	 * @return void

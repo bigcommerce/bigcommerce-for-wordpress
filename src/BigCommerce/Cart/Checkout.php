@@ -47,6 +47,10 @@ class Checkout {
 		try {
 			$redirects    = $cart_api->cartsCartIdRedirectUrlsPost( $cart_id )->getData();
 			$checkout_url = $redirects[ 'checkout_url' ];
+
+			/**
+			 * This filter is documented in src/BigCommerce/Cart/Cart.php
+			 */
 			$checkout_url = apply_filters( 'bigcommerce/checkout/url', $checkout_url );
 
 			wp_redirect( $checkout_url, 303 );

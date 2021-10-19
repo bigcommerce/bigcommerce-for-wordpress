@@ -15,6 +15,11 @@ use BigCommerce\Pages\Registration_Page;
 use BigCommerce\Pages\Wishlist_Page;
 use WP_User;
 
+/**
+ * Class Login
+ *
+ * Handle login/lost password logic for the account
+ */
 class Login {
 	const CUSTOMER_ID_META = 'bigcommerce_customer_id';
 
@@ -67,6 +72,7 @@ class Login {
 	}
 
 	/**
+     * Create BC customer from wp user
 	 * @param \WP_User $user
 	 *
 	 * @return int The new customer's ID, 0 on failure
@@ -79,6 +85,12 @@ class Login {
 				'last_name'  => $user->last_name ?: __( 'User', 'bigcommerce' ),
 				'email'      => $user->user_email,
 			];
+
+			/**
+			 * Filters customer create arguments.
+			 *
+			 * @param array $new_customer_data Customer data.
+			 */
 			$new_customer_data = apply_filters( 'bigcommerce/customer/create/args', $new_customer_data );
 
 			$response = $api->createCustomer( $new_customer_data );
@@ -150,6 +162,7 @@ class Login {
 	}
 
 	/**
+     * Get lost password url
 	 * @param string $login_url
 	 * @param string $redirect
 	 *
@@ -179,7 +192,7 @@ class Login {
 	 * If a user exists only on BC, try to sync before reset pasword email is sent.
 	 *
 	 * @param WP_User|false $user_data WP_User object if found, false if the user does not exist.
-	 * @param WP_Error      $errors    A WP_Error object containing any errors generated
+	 * @param \WP_Error      $errors    A WP_Error object containing any errors generated
 	 *                                 by using invalid credentials.
 	 *
 	 * @return \WP_User|false
@@ -256,6 +269,8 @@ class Login {
 	}
 
 	/**
+     * Handle registration url
+     *
 	 * @param string $url
 	 *
 	 * @return string
@@ -420,6 +435,8 @@ class Login {
 	}
 
 	/**
+     * Validate password for accounts
+     *
 	 * @param bool       $match    Whether the passwords match.
 	 * @param string     $password The plaintext password.
 	 * @param string     $hash     The hashed password.
@@ -465,6 +482,13 @@ class Login {
 		}
 	}
 
+    /**
+     * Delete WP user
+     *
+     * @param $user_id
+     *
+     * @param $customer_id
+     */
 	private function delete_user( $user_id, $customer_id ) {
 		/**
 		 * Filter whether to delete WordPress users tied to BigCommerce

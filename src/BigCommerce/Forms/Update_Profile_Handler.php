@@ -75,6 +75,11 @@ class Update_Profile_Handler implements Form_Handler {
 			return;
 		}
 
+		/**
+		 * Filters profile form success message.
+		 *
+		 * @param string $message Profile form success message.
+		 */
 		$message = apply_filters( 'bigcommerce/form/profile/success_message', __( 'Profile updated.', 'bigcommerce' ) );
 		do_action( 'bigcommerce/form/success', $message, $submission, null, [ 'key' => 'profile_updated' ] );
 	}
@@ -134,6 +139,12 @@ class Update_Profile_Handler implements Form_Handler {
 			}
 		}
 
+		/**
+		 * Filters update profile form errors.
+		 *
+		 * @param \WP_Error $errors     WP error.
+		 * @param array     $submission Submitted data.
+		 */
 		$errors = apply_filters( 'bigcommerce/form/update_profile/errors', $errors, $submission );
 
 		return $errors;

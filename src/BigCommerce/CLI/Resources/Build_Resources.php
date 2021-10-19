@@ -40,6 +40,14 @@ class Build_Resources extends Command {
 		];
 	}
 
+    /**
+     * Run resource build process from provided csv file
+     *
+     * @param $args
+     * @param $assoc_args
+     *
+     * @throws WP_CLI\ExitException
+     */
 	public function run( $args, $assoc_args ) {
 		$path = $args[ 0 ];
 		if ( ! file_exists( $path ) || ! is_readable( $path ) ) {

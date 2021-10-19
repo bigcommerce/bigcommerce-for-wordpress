@@ -150,6 +150,9 @@ class Coupon_Code_Controller extends Rest_Controller {
 	}
 
 	private function format_price( $price ) {
+		/**
+		 * This filter is documented in src/BigCommerce/Currency/With_Currency.php.
+		 */
 		return apply_filters( 'bigcommerce/currency/format', sprintf( '¤%0.2f', $price ), $price );
 	}
 

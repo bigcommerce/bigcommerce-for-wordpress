@@ -8,6 +8,11 @@ use BigCommerce\Exceptions\Product_Not_Found_Exception;
 use BigCommerce\Pages\Wishlist_Page;
 use BigCommerce\Post_Types\Product\Product;
 
+/**
+ * Class Remove_Item
+ *
+ * Handle item removing request for wishlist
+ */
 class Remove_Item extends Wishlist_Action {
 	const ACTION = 'remove-item';
 
@@ -47,6 +52,14 @@ class Remove_Item extends Wishlist_Action {
 		}
 	}
 
+    /**
+     * Sanitize and validate request
+     *
+     * @param array $args
+     * @param array $submission
+     *
+     * @return array
+     */
 	protected function sanitize_request( array $args, array $submission ) {
 		$wishlist_id = reset( $args );
 		if ( empty( $wishlist_id ) || ! is_numeric( $wishlist_id ) ) {

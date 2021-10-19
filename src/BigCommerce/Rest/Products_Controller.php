@@ -73,6 +73,12 @@ class Products_Controller extends Rest_Controller {
 		$mapper = new Query_Mapper();
 		$args   = $mapper->map_rest_args_to_query( $request->get_params() );
 
+		/**
+		 * Filters rest products query.
+		 *
+		 * @param array            $args    Arguments.
+		 * @param \WP_REST_Request $request request.
+		 */
 		$query_args = apply_filters( 'bigcommerce/rest/products_query', $args, $request );
 
 		$query_args['post_type']      = Product::NAME;
@@ -370,6 +376,11 @@ class Products_Controller extends Rest_Controller {
 	protected function get_content_object( $post_id ) {
 		$content   = get_post_field( 'post_content', $post_id );
 		$formatted = apply_filters( 'the_content', $content );
+		/**
+		 * Filters rest product content trim words length.
+		 *
+		 * @param int $trimmed_length Length.
+		 */
 		$trimmed   = wp_trim_words( $content, apply_filters( 'bigcommerce/rest/product/content_trim_words_length', 15 ) );
 
 		return [
@@ -413,6 +424,11 @@ class Products_Controller extends Rest_Controller {
 	}
 
 	protected function missing_image( $size ) {
+		/**
+		 * Filters rest missing image data.
+		 *
+		 * @param array $missing_image_data Data.
+		 */
 		return apply_filters( 'bigcommerce/rest/missing_image', [
 			'url'    => '',
 			'width'  => '',
@@ -565,6 +581,11 @@ class Products_Controller extends Rest_Controller {
 			'large',
 			'full',
 		] ) ) );
+		/**
+		 * Filters rest image sizes.
+		 *
+		 * @param array $sizes Sizes.
+		 */
 		$sizes = apply_filters( 'bigcommerce/rest/image_sizes', $sizes );
 		$sizes = array_combine( $sizes, array_map( function ( $size ) {
 			return [

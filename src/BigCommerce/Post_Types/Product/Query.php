@@ -98,7 +98,7 @@ class Query {
 						'compare' => 'EXISTS',
 						'type'    => 'NUMERIC'
 					];
-					
+
 					$meta_query['bigcommerce_id'] = [
 						'key'  => Product::BIGCOMMERCE_ID,
 						'type' => 'NUMERIC'
@@ -128,7 +128,7 @@ class Query {
 					};
 					add_filter( 'posts_orderby', $orderby_filter, 10, 2 );
 					break;
-					
+
 				case Product_Archive::SORT_INVENTORY_COUNT:
 					$meta_query = $query->get( 'meta_query' ) ?: [];
 
@@ -146,7 +146,7 @@ class Query {
 					$query->set( 'meta_query', $meta_query );
 					$query->set( 'orderby', [ 'bigcommerce_inventory_level' => 'DESC', 'bigcommerce_id' => 'DESC' ] );
 					break;
-					
+
 				case Product_Archive::SORT_SKU:
 					$meta_query = $query->get( 'meta_query' ) ?: [];
 
@@ -411,6 +411,12 @@ class Query {
 			$matches = $query->query( $search_query_args );
 		}
 
+		/**
+		 * Filters query search post ids.
+		 *
+		 * @param array  $matches       Post ids.
+		 * @param string $search_phrase Search phrase.
+		 */
 		return apply_filters( 'bigcommerce/query/search_post_ids', array_map( 'intval', $matches ), $search_phrase );
 	}
 }

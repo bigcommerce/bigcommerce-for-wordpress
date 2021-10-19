@@ -243,6 +243,11 @@ class Product_Builder {
 			'variants'  => [],
 		];
 
+		/**
+		 * Filters whether to import product images or not.
+		 *
+		 * @param bool $import_images True or false.
+		 */
 		if ( ! apply_filters( 'bigcommerce/import/product/import_images', true ) ) {
 			return $response;
 		}
@@ -410,11 +415,27 @@ class Product_Builder {
 	}
 
 	private function normalize_sku( $sku ) {
+		/**
+		 * Filters normalized SKU segment's no of chars.
+		 *
+		 * @param int $num_of_characters No of chars.
+		 */
 		$num_of_characters = apply_filters( 'bigcommerce/sku/normalized/segment/num_of_characters', 10 );
 		if ( empty( $sku ) ) {
+			/**
+			 * Filters normalized empty SKU.
+			 *
+			 * @param string $repeated_string empty sku.
+			 */
 			return apply_filters( 'bigcommerce/sku/normalized/empty', str_repeat( 'z', $num_of_characters ) );
 		}
 
+		/**
+		 * Filters SKU normalized.
+		 *
+		 * @param array  $normalized_sku_segments SKU segments.
+		 * @param string $sku                     SKU.
+		 */
 		return apply_filters( 'bigcommerce/sku/normalized', $this->normalize_sku_segments( $this->segment_sku( $sku ), $num_of_characters ), $sku );
 	}
 

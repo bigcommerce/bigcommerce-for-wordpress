@@ -71,7 +71,14 @@ class Address_Form extends Controller {
 	}
 
 	protected function get_countries_and_states( $current_country ) {
-		$countries = $this->options[ self::COUNTRIES ] ?: apply_filters( 'bigcommerce/countries/data', [] );
+		/**
+		 * Filters countries data.
+		 *
+		 * @param array $countries Countries.
+		 */
+		$default_countries = apply_filters( 'bigcommerce/countries/data', [] );
+
+		$countries = $this->options[ self::COUNTRIES ] ?: $default_countries;
 		foreach ( $countries as $country ) {
 			if ( $country->country == $current_country ) {
 				$states = $country->states;

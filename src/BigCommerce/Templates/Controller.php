@@ -206,6 +206,12 @@ abstract class Controller {
 		$classes = apply_filters( 'bigcommerce/template/wrapper/classes', $this->get_wrapper_classes(), $this->template );
 		$classes = array_filter( array_map( 'sanitize_html_class', $classes ) );
 
+		/**
+		 * Filter the HTML tag attributes of the wrapper for a template.
+		 *
+		 * @param string[] $attributes An array of attribute names.
+		 * @param string   $template   The template path.
+		 */
 		$attributes = apply_filters( 'bigcommerce/template/wrapper/attributes', $this->get_wrapper_attributes(), $this->template );
 
 		$attrs = array_map( function ( $key ) use ( $attributes ) {

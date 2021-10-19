@@ -10,6 +10,11 @@ use Bigcommerce\Api\Resources\Address;
 use Bigcommerce\Api\Resources\Order;
 use Bigcommerce\Api\Resources\OrderProduct;
 
+/**
+ * Class Customer
+ *
+ * Handle customer specific data and resources e.g. address, profile, orders amount and other
+ */
 class Customer {
 	const CUSTOMER_ID_META = 'bigcommerce_customer_id';
 
@@ -20,6 +25,7 @@ class Customer {
 	}
 
 	/**
+     * Get customer addresses
 	 * @return array
 	 */
 	public function get_addresses() {
@@ -40,6 +46,13 @@ class Customer {
 		}
 	}
 
+    /**
+     * Delete customer address by address id
+     *
+     * @param $address_id
+     *
+     * @return bool
+     */
 	public function delete_address( $address_id ) {
 		$customer_id = $this->get_customer_id();
 		if ( ! $customer_id ) {
@@ -54,6 +67,13 @@ class Customer {
 		}
 	}
 
+    /**
+     * Create customer address
+     *
+     * @param $address
+     *
+     * @return bool
+     */
 	public function add_address( $address ) {
 		$customer_id = $this->get_customer_id();
 		if ( ! $customer_id ) {
@@ -68,6 +88,14 @@ class Customer {
 		}
 	}
 
+    /**
+     * Update customer address by id
+     *
+     * @param $address_id
+     * @param $address
+     *
+     * @return bool
+     */
 	public function update_address( $address_id, $address ) {
 		$customer_id = $this->get_customer_id();
 		if ( ! $customer_id ) {
@@ -82,6 +110,11 @@ class Customer {
 		}
 	}
 
+    /**
+     * Get amount of orders for the customer
+     *
+     * @return int
+     */
 	public function get_order_count() {
 		$customer_id = $this->get_customer_id();
 		if ( ! $customer_id ) {
@@ -142,6 +175,12 @@ class Customer {
 		}
 	}
 
+    /**
+     * Get customer order details by order id
+     *
+     * @param $order_id
+     * @return array|false
+     */
 	public function get_order_details( $order_id ) {
 		$order = Client::getOrder( $order_id );
 		if ( empty( $order ) || $order->customer_id != $this->get_customer_id() ) {
@@ -156,6 +195,13 @@ class Customer {
 		return $data;
 	}
 
+    /**
+     * Retrieve order products list
+     *
+     * @param $order_id
+     *
+     * @return mixed|void
+     */
 	private function get_order_products( $order_id ) {
 		$products = Client::getOrderProducts( $order_id ) ?: [];
 		$products = array_filter( $products, function ( OrderProduct $product ) {
@@ -165,13 +211,34 @@ class Customer {
 		} );
 		$products = array_map( [ $this, 'flatten_resource' ], $products );
 
+		/**
+		 * Filters order products
+		 *
+		 * @param array    $products Products.
+		 * @param int      $order_id Order ID.
+		 * @param Customer $customer The Customer object.
+		 */
 		return apply_filters( 'bigcommerce/order/products', $products, $order_id, $this );
 	}
 
+    /**
+     * Get order shipping address
+     *
+     * @param $order_id
+     *
+     * @return mixed|void
+     */
 	private function get_order_shipping_addresses( $order_id ) {
 		$addresses = Client::getOrderShippingAddresses( $order_id ) ?: [];
 		$addresses = array_map( [ $this, 'flatten_resource' ], $addresses );
 
+		/**
+		 * Filters order shipping addresses
+		 *
+		 * @param array    $addresses The shipping addresses.
+		 * @param int      $order_id  Order ID.
+		 * @param Customer $customer  The Customer object.
+		 */
 		return apply_filters( 'bigcommerce/order/shipping_addresses', $addresses, $order_id, $this );
 	}
 
@@ -182,6 +249,11 @@ class Customer {
 		return $item;
 	}
 
+    /**
+     * Get customer profile data
+     *
+     * @return array|mixed|void
+     */
 	public function get_profile() {
 		$customer_id = $this->get_customer_id();
 		if ( ! $customer_id ) {
@@ -214,6 +286,12 @@ class Customer {
 		}
 	}
 
+    /**
+     * Update customer profile data
+     * @param $profile
+     *
+     * @return bool
+     */
 	public function update_profile( $profile ) {
 		$customer_id = $this->get_customer_id();
 		if ( ! $customer_id ) {

@@ -23,6 +23,11 @@ class Wishlist_Request_Parser {
 		$this->wishlists = $wishlists;
 	}
 
+    /**
+     * Handle wishlist setup request
+     *
+     * @param \WP $wp
+     */
 	public function setup_wishlist_request( \WP $wp ) {
 		if ( ! $this->is_wishlist_request( $wp ) ) {
 			return;

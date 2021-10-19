@@ -41,7 +41,7 @@ abstract class Required_Page {
 	public function get_content() {
 		return '';
 	}
-	
+
 	/**
 	 * Add page shortcode to the content if missing
 	 *
@@ -205,6 +205,9 @@ abstract class Required_Page {
 
 		$post_ids = array_map( 'intval', $post_ids );
 
+		/**
+		 * This filter is documented in src/BigCommerce/Pages/Shipping_Returns_Page.php.
+		 */
 		$post_ids = (array) apply_filters( 'bigcommerce/pages/matching_page_candidates', $post_ids, static::NAME );
 
 		return $post_ids;
@@ -217,6 +220,12 @@ abstract class Required_Page {
 	 */
 	protected function create_post() {
 		$args = $this->get_post_args();
+		/**
+		 * Filters pages insert post arguments.
+		 *
+		 * @param array  $args Arguments.
+		 * @param string $name Name.
+		 */
 		$args = apply_filters( 'bigcommerce/pages/insert_post_args', $args, static::NAME );
 
 		if ( empty( $args ) ) {

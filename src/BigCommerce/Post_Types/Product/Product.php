@@ -460,6 +460,12 @@ class Product {
 		$cart     = get_option( Cart::OPTION_ENABLE_CART, true );
 		$class    = 'bc-btn bc-btn--form-submit';
 
+		/**
+		 * Filters purchase button attributes.
+		 *
+		 * @param array   $attributes Attributes.
+		 * @param Product $product    Product.
+		 */
 		$attributes = apply_filters( 'bigcommerce/button/purchase/attributes', [], $this );
 		$attributes = implode( ' ', array_map( function ( $attribute, $value ) {
 			$attribute  = sanitize_title_with_dashes( $attribute );
@@ -480,6 +486,13 @@ class Product {
 		}
 		$button = sprintf( '<button class="%s" type="submit" data-js="%d" %s %s>%s</button>', $class, $this->bc_id(), $options, $attributes, $label );
 
+		/**
+		 * Filters purchase button.
+		 *
+		 * @param string $button  Button html.
+		 * @param int    $post_id Post id.
+		 * @param string $label   Label.
+		 */
 		return apply_filters( 'bigcommerce/button/purchase', $button, $this->post_id, $label );
 	}
 
@@ -751,7 +764,7 @@ class Product {
 
 		return self::by_product_meta( 'bigcommerce_id', absint( $product_id ), $channel, $query_args );
 	}
-	
+
 	/**
 	 * Gets a BigCommerce Product SKU and returns matching Product object
 	 *
@@ -771,7 +784,7 @@ class Product {
 
 		return self::by_product_meta( 'bigcommerce_sku', sanitize_text_field( $product_sku ), $channel, $query_args );
 	}
-	
+
 	/**
 	 * Gets a BigCommerce Product by meta
 	 *

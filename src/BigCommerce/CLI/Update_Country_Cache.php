@@ -39,6 +39,12 @@ class Update_Country_Cache extends Command {
 		];
 	}
 
+    /**
+     * @param $args
+     * @param $assoc_args
+     *
+     * @throws \WP_CLI\ExitException
+     */
 	public function run( $args, $assoc_args ) {
 		$output_file = empty( $assoc_args[ 'output' ] ) ? $this->default_output_file : $assoc_args[ 'output' ];
 		if ( ! is_writable( $output_file ) ) {

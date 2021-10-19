@@ -34,6 +34,9 @@ class Gift_Certificate_Balance_Response extends Controller {
 	private function get_balance() {
 		$balance = is_numeric( $this->options[ self::BALANCE ] ) ? $this->options[ self::BALANCE ] : 0;
 
+		/**
+		 * This filter is documented in src/BigCommerce/Currency/With_Currency.php.
+		 */
 		return apply_filters( 'bigcommerce/currency/format', sprintf( '¤%0.2f', $balance ), $balance );
 	}
 

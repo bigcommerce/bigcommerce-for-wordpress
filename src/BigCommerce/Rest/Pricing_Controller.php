@@ -79,6 +79,12 @@ class Pricing_Controller extends Rest_Controller {
 			'currency_code'     => $currency_code,
 			'customer_group_id' => $customer_group,
 		];
+		/**
+		 * Filters pricing request arguments.
+		 *
+		 * @param array            $args    Arguments.
+		 * @param \WP_REST_Request $request Full details about the request.
+		 */
 		$args = apply_filters( 'bigcommerce/pricing/request_args', $args, $request );
 
 		try {

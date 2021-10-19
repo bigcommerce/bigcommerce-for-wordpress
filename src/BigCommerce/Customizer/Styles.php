@@ -44,6 +44,12 @@ class Styles {
 		foreach ( $vars as $key => $value ) {
 			$template = str_replace( sprintf( 'var(--%s)', $key ), $value, $template );
 		}
+
+		/**
+		 * Filters customizer styles css.
+		 *
+		 * @param string $css styles.
+		 */
 		$css = apply_filters( 'bigcommerce/css/customizer_styles', $template );
 
 		return $css;

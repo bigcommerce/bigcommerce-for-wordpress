@@ -51,6 +51,12 @@ class Delete_Address_Handler implements Form_Handler {
 			$errors->add( 'invalid_nonce', __( 'There was an error validating your request. Please try again.', 'bigcommerce' ) );
 		}
 
+		/**
+		 * Filters delete address form errors.
+		 *
+		 * @param \WP_Error $errors     WP error.
+		 * @param array     $submission Submitted data.
+		 */
 		$errors = apply_filters( 'bigcommerce/form/delete_address/errors', $errors, $submission );
 
 		return $errors;

@@ -10,8 +10,15 @@ use BigCommerce\Pages\Orders_Page;
 use BigCommerce\Pages\Wishlist_Page;
 use BigCommerce\Templates\Sub_Nav_Links;
 
+/**
+ * Class Sub_Nav
+ *
+ * Responsible for profile settings rendering and saving
+ */
 class Sub_Nav {
 	/**
+     * Handle subnav visibility above the content
+     *
 	 * @param string $content
 	 *
 	 * @return string
@@ -46,6 +53,11 @@ class Sub_Nav {
 		}
 	}
 
+    /**
+     * Get and render sub nav
+     *
+     * @return string
+     */
 	private function get_subnav() {
 		$component = Sub_Nav_Links::factory( [
 			Sub_Nav_Links::LINKS => $this->get_links(),
@@ -54,6 +66,11 @@ class Sub_Nav {
 		return $component->render();
 	}
 
+    /**
+     * Get sub nav links
+     *
+     * @return mixed|void
+     */
 	private function get_links() {
 		$links = [];
 		foreach ( [ Account_Page::NAME, Orders_Page::NAME, Address_Page::NAME, Wishlist_Page::NAME ] as $option ) {

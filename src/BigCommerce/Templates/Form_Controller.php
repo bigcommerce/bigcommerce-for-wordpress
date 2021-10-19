@@ -15,6 +15,11 @@ abstract class Form_Controller extends Controller {
 			self::DEFAULTS => $this->get_form_defaults(),
 		];
 
+		/**
+		 * Filters form state errors.
+		 *
+		 * @param array|null $error_data Error data.
+		 */
 		$error_data = apply_filters( 'bigcommerce/form/state/errors', null );
 
 		$data[ self::ERRORS ] = $error_data ? $error_data[ 'error' ]->get_error_codes() : [];

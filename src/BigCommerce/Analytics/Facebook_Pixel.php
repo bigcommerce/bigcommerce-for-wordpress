@@ -6,6 +6,11 @@ namespace BigCommerce\Analytics;
 
 use BigCommerce\Settings\Sections\Analytics;
 
+/**
+ * Class Facebook_Pixel
+ *
+ * Render Facebook pixel tracking code
+ */
 class Facebook_Pixel {
 	/**
 	 * @return void

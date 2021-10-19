@@ -141,7 +141,7 @@ class Proxy extends Provider {
 			$this->create_callback(
 				'on_product_updated',
 				function( $product_id ) use ( $container ) {
-					$container[ self::CACHE ]->bust_product_cache( $product_id );
+					$container[ self::CACHE ]->bust_product_cache( $product_id['product_id'] );
 				}
 			)
 		);

@@ -72,10 +72,20 @@ class Connect_Account {
 				add_settings_error( self::CONNECT_ACTION, $response_code, __( 'We encountered an unexpected error creating your account. Please try again.', 'bigcommerce' ) );
 				throw new \RuntimeException();
 			}
+			/**
+			 * Filters onboarding success redirect.
+			 *
+			 * @param string $success_redirect URL.
+			 */
 			$redirect_url = apply_filters( 'bigcommerce/onboarding/success_redirect', admin_url() );
 		} catch ( \RuntimeException $e ) {
 			delete_option( Onboarding_Api::STORE_ID );
 			set_transient( 'settings_errors', get_settings_errors(), 30 );
+			/**
+			 * Filters onboarding error redirect.
+			 *
+			 * @param string $success_redirect URL.
+			 */
 			$redirect_url = apply_filters( 'bigcommerce/onboarding/error_redirect', admin_url() );
 		}
 
