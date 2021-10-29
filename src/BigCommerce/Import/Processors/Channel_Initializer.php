@@ -11,11 +11,14 @@ use BigCommerce\Api\v3\Model\ListingVariant;
 use BigCommerce\Api\v3\Model\Product;
 use BigCommerce\Api\v3\Model\Variant;
 use BigCommerce\Api\v3\ObjectSerializer;
+use BigCommerce\Exceptions\Product_Not_Found_Exception;
+use BigCommerce\Import\Import_Type;
 use BigCommerce\Import\No_Cache_Options;
 use BigCommerce\Import\Runner\Status;
 use BigCommerce\Logging\Error_Log;
 use BigCommerce\Settings\Sections\Import;
 use BigCommerce\Taxonomies\Channel\Channel;
+use \BigCommerce\Post_Types\Product\Product as Product_Post_Type;
 
 /**
  * Class Channel_Initializer
@@ -62,6 +65,30 @@ class Channel_Initializer implements Import_Processor {
 		$this->limit        = $limit;
 	}
 
+	/**
+	 * Check if the product exists
+	 *
+	 * @param $product
+	 * @param $channel_id
+	 *
+	 * @return bool
+	 */
+	private function is_existing_product( $product, $channel_id ): bool {
+		try {
+			$query_args = [ 'post_status' => [ 'publish', 'draft' ] ];
+			Product_Post_Type::by_product_id( $product->getId(), $this->channel_term, $query_args );
+
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Product entity exists. Skipping.', 'bigcommerce' ), [
+					'product_id' => $product->getId(),
+					'channel_id' => $channel_id,
+			] );
+
+			return true;
+		} catch ( Product_Not_Found_Exception $e ) {
+			return false;
+		}
+	}
+
 	public function run() {
 
 		$status = new Status();
@@ -72,6 +99,25 @@ class Channel_Initializer implements Import_Processor {
 			do_action( 'bigcommerce/import/error', __( 'Channel ID is not set. Product import canceled.', 'bigcommerce' ) );
 
 			return;
+		}
+
+		$listing_ids = [];
+		// Get the listings for this channel.
+		if ( $this->multichannel_sync_channel_listings() ) {
+			try {
+				$listings    = $this->channels->listChannelListings( $channel_id );
+				$listing_ids = array_map( function ( Listing $listing ) {
+					return $listing->getProductId();
+				}, $listings->getData() );
+			} catch ( ApiException $e ) {
+				do_action( 'bigcommerce/import/error', $e->getMessage(), [
+					'response' => $e->getResponseBody(),
+					'headers'  => $e->getResponseHeaders(),
+				] );
+				do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [] );
+
+				return;
+			}
 		}
 
 		$page = $this->get_page();
@@ -110,9 +156,28 @@ class Channel_Initializer implements Import_Processor {
 
 		$id_map = $this->get_option( Listing_Fetcher::PRODUCT_LISTING_MAP, [] ) ?: [];
 
-		$listing_requests = array_values( array_filter( array_map( function ( Product $product ) use ( $channel_id, $id_map ) {
+		$import_type = get_option( Import_Type::IMPORT_TYPE );
+
+		$listing_requests = array_values( array_filter( array_map( function ( Product $product ) use ( $channel_id, $id_map, $import_type, $listing_ids ) {
+			/**
+			 * We will skip existing products listing creation for partial import
+			 */
+			if ( $import_type === Import_Type::IMPORT_TYPE_PARTIAL && $this->is_existing_product( $product, $channel_id ) ) {
+				return false;
+			}
+
 			if ( array_key_exists( $product->getId(), $id_map ) && array_key_exists( $this->channel_term->term_id, $id_map[ $product->getId() ] ) ) {
 				do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Product already linked to channel. Skipping.', 'bigcommerce' ), [
+					'product_id' => $product->getId(),
+					'channel_id' => $channel_id,
+				] );
+
+				return false;
+			}
+
+			// Return if this product should not be synced to this channel.
+			if ( $this->multichannel_sync_channel_listings() && ! in_array( $product->getId(), $listing_ids ) ) {
+				do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Product does not belong in this channel. Skipping.', 'bigcommerce' ), [
 					'product_id' => $product->getId(),
 					'channel_id' => $channel_id,
 				] );
@@ -205,5 +270,9 @@ class Channel_Initializer implements Import_Processor {
 
 	private function state_option() {
 		return sprintf( '%s-%d', self::STATE_OPTION, $this->channel_term->term_id );
+	}
+
+	private function multichannel_sync_channel_listings() {
+		return ( Channel::multichannel_enabled() && ! Channel::multichannel_sync_to_all_channels() );
 	}
 }

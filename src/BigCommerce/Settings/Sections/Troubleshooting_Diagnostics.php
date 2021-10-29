@@ -27,6 +27,7 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 	const DIAGNOSTICS_NAME = 'bigcommerce_diagnostics_name';
 	const TEXTBOX_NAME     = 'bigcommerce_diagnostics_output';
 	const LOG_ERRORS       = 'bigcommerce_diagnostics_log_import_errors';
+	const LOG_FILE_SIZE    = 'bigcommerce_diagnostics_log_file_size';
 	const SYNC_SITE_URL    = 'bigcommerce_diagnostics_sync_site_url';
 
 	const AJAX_ACTION               = 'bigcommerce_support_data';
@@ -89,6 +90,27 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 			]
 		);
 
+		register_setting(
+			Settings_Screen::NAME,
+			self::LOG_FILE_SIZE
+		);
+
+		add_settings_field(
+			self::LOG_FILE_SIZE,
+			esc_html( __( 'Log file max size(MB)', 'bigcommerce' ) ),
+			[ $this, 'render_log_file_size', ],
+			Settings_Screen::NAME,
+			self::NAME,
+			[
+				'min'         => 1,
+				'max'         => 25,
+				'type'        => 'number',
+				'option'      => self::LOG_FILE_SIZE,
+				'label'       => esc_html( __( 'Set log file size', 'bigcommerce' ) ),
+				'description' => esc_html( __( 'Set log file max size in MB. If log file exceeds the limit it will be cleaned before new import', 'bigcommerce' ) ),
+			]
+		);
+
 		add_settings_field(
 			self::DIAGNOSTICS_NAME,
 			esc_html( __( 'Troubleshooting Diagnostics', 'bigcommerce' ) ),
@@ -133,6 +155,14 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 		$value    = (bool) get_option( $args[ 'option' ], false );
 		$checkbox = sprintf( '<label for="%2$s"><input type="%1$s" value="1" class="regular-text code" name="%2$s" id="%2$s" %3$s/> %4$s</label>', esc_attr( $args[ 'type' ] ), esc_attr( $args[ 'option' ] ), checked( true, $value, false ), esc_attr( $args[ 'label' ] ) );
 		printf( '%s<p class="description">%s</p>', $checkbox, esc_html( $args[ 'description' ] ) );
+	}
+
+	public function render_log_file_size( $args ) {
+		$value = get_option( $args[ 'option' ], 25 );
+		$min   = isset( $args[ 'min' ] ) ? sprintf( 'min="%d"', $args[ 'min' ] ) : '';
+		$max   = isset( $args[ 'max' ] ) ? sprintf( 'max="%d"', $args[ 'max' ] ) : '';
+		$field = sprintf( '<input type="%1$s" value="%2$s" name="%3$s" id="%3$s" %4$s %5$s />', esc_attr( $args[ 'type' ] ), esc_attr( $value ), esc_attr( $args[ 'option' ] ), $min, $max );
+		printf( '%s<p class="description">%s</p>', $field, esc_html( $args[ 'description' ] ) );
 	}
 
 	/**

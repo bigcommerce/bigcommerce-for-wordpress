@@ -36,6 +36,23 @@ class Channel {
 	}
 
 	/**
+	 * Should product sync be to all channels?
+	 *
+	 * @return bool
+	 */
+	public static function multichannel_sync_to_all_channels() {
+		/**
+		 * Filter whether multi-channel sync should sync to all channels.
+		 * Enabling this feature allows site owners to
+		 * connect to sync products to all channels or
+		 * only the channel it is assigned to.
+		 *
+		 * @param bool $enabled
+		 */
+		return (bool) apply_filters( 'bigcommerce/channels/map-products-to-all-channels', false );
+	}
+
+	/**
 	 * @param int $channel_id
 	 *
 	 * @return \WP_Term
