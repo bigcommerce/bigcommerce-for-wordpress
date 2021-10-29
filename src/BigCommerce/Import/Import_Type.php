@@ -29,7 +29,7 @@ class Import_Type {
 
 	/**
 	 * @return array
-	 * 
+	 *
 	 * @filter bigcommerce_modified_product_ids
 	 */
 	public function fetch_modified_product_ids() {
@@ -58,10 +58,10 @@ class Import_Type {
 
 	/**
 	 * Filter task list for partial imports
-	 * 
+	 *
 	 * @param array $task_list
 	 * @return array
-	 * 
+	 *
 	 * @filter bigcommerce/import/task_list
 	 */
 	public function filter_task_list( $task_list ) {
@@ -77,7 +77,11 @@ class Import_Type {
 				];
 
 				$task_state = $task->get_completion_state();
-				if ( in_array( $task_state, $states ) || strpos( $task_state, Status::FETCHED_LISTINGS ) !== false ) {
+
+				$is_fetched_listings    = strpos( $task_state, Status::FETCHED_LISTINGS ) !== false;
+				$is_initialized_channel = strpos( $task_state, Status::INITIALIZED_CHANNEL ) !== false;
+
+				if ( in_array( $task_state, $states ) || $is_fetched_listings || $is_initialized_channel ) {
 					return true;
 				}
 

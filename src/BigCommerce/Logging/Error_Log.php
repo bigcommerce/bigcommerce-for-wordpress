@@ -3,6 +3,7 @@
 namespace BigCommerce\Logging;
 
 use BigCommerce\Api\v3\Api\CatalogApi;
+use BigCommerce\Settings\Sections\Troubleshooting_Diagnostics;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
@@ -12,14 +13,15 @@ use Monolog\Handler\StreamHandler;
  * @package BigCommerce\Logging
  */
 class Error_Log {
-	const EMERGENCY = 'emergency';
-	const ALERT     = 'alert';
-	const CRITICAL  = 'critical';
-	const ERROR     = 'error';
-	const WARNING   = 'warning';
-	const NOTICE    = 'notice';
-	const INFO      = 'info';
-	const DEBUG     = 'debug';
+	const EMERGENCY    = 'emergency';
+	const ALERT        = 'alert';
+	const CRITICAL     = 'critical';
+	const ERROR        = 'error';
+	const WARNING      = 'warning';
+	const NOTICE       = 'notice';
+	const INFO         = 'info';
+	const DEBUG        = 'debug';
+	const MAX_SIZE     = 25;
 
 	/**
 	 * @var Logger
@@ -167,14 +169,48 @@ HTACCESS;
 	}
 
 	/**
-	 * Delete Log content
+	 * Clean log file if it has size more than set in Troubleshooting_Diagnostics::LOG_FILE_SIZE
 	 */
 	public function truncate_log() {
-		if ( file_exists( $this->log_path ) ) {
-			// Truncate file
-			$file = fopen( $this->log_path, "w" );
-			fclose( $file );
+		if ( ! file_exists( $this->log_path ) ) {
+			return;
 		}
+
+		$log_size = $this->get_log_size_mb();
+		$max_allowed_size = (int) get_option( Troubleshooting_Diagnostics::LOG_FILE_SIZE, self::MAX_SIZE );
+
+		/**
+		 * Exit from function if file size lower than set in settings
+		 */
+		if ( $log_size < $max_allowed_size ) {
+			return;
+		}
+
+		/**
+		 * Clean log file contents
+		 */
+		$file = fopen( $this->log_path, "w" );
+		fclose( $file );
+	}
+
+	/**
+	 * Get log file size in MB
+	 * @return float|int
+	 */
+	public function get_log_size_mb() {
+		if ( ! file_exists( $this->log_path ) ) {
+			return 0;
+		}
+
+		/**
+		 * Get log size in bytes
+		 */
+		$file_size = filesize( $this->log_path );
+
+		/**
+		 * Return the size of log file in MB
+		 */
+		return round( $file_size / 1024 / 1024, 1 );
 	}
 
 

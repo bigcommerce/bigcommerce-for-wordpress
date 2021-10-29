@@ -1,5 +1,19 @@
 # Changelog
 
+## [4.19.1]
+
+### Changed
+- Added ability to set the max file size for the import log. Before each import starts the log size is measured and if the size exceeds the limit it will be truncated. The default log size is 25MB. In order to change defaults go to Setting > Diagnostics. Find and update the 'Log file max size' field
+
+### Fixed
+
+- Fixed the 'New/Updated since last sync' import. The import will pull new products as well as update existing ones. Previously the 'New/Updated since last sync' updated existing products only
+- Added ability to see product sync log errors description on the 'Diagnostic' tab
+- Settings > Diagnostics > Product Sync Log sync statistics are displayed in the table separately for multiple channels
+- Fixed 'Auto' sync behavior with enabled multichannel support. Added a filter bigcommerce/channels/map-products-to-all-channels filter defaulted to false
+  - When multi-channel is enabled and the filter is false, if the Auto sync is enabled, sync imports products that are connected to each channel only.
+  - When that multi-channel is enabled and that filter is true, if the Auto sync is enabled, newly added products to the catalog will be synced to all connected channels.
+
 ## [4.19.0]
 
 ### Added
@@ -1627,6 +1641,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.19.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.19.0...4.19.1
 [4.19.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.18.0...4.19.0
 [4.18.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.17.1...4.18.0
 [4.17.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.17.0...4.17.1
