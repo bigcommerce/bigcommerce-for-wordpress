@@ -185,6 +185,11 @@ class Shipping_Controller extends Rest_Controller {
 			$method['cart_subtotal_raw'] = $cart_subtotal;
 			$method['cart_subtotal']     = $this->format_price( $cart_subtotal );
 
+			$cart_total = $this->cart_total_for_method( $cart_subtotal, $cart );
+
+			$method['cart_total_raw'] = $cart_total;
+			$method['cart_total']     = $this->format_price( $cart_total );
+
 			return $method;
 		}, $methods ) );
 
@@ -226,6 +231,15 @@ class Shipping_Controller extends Rest_Controller {
 		$total = $cart['subtotal']['raw'] + $rate + $method['fixed_surcharge'];
 
 		return $total;
+	}
+
+	private function cart_total_for_method( $subtotal, $cart ) {
+
+		if ( empty( $cart['tax_amount']['raw'] ) ) {
+			return $subtotal;
+		}
+
+		return $subtotal + $cart['tax_amount']['raw'];
 	}
 
 	private function get_method_rate( $method, $cart ) {

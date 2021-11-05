@@ -221,8 +221,11 @@ const getMethods = (e) => {
 const updateShippingCosts = (shippingOption) => {
 	const subtotal = shippingOption.dataset.cartSubtotal;
 	const subtotalContainer = tools.getNodes('.bc-cart-subtotal__amount', false, document, true)[0];
-
 	subtotalContainer.innerText = subtotal;
+
+	const total = shippingOption.dataset.cartTotal;
+	const totalContainer = tools.getNodes('.bc-cart-total__amount', false, document, true)[0];
+	totalContainer.innerText = total;
 };
 
 /**
