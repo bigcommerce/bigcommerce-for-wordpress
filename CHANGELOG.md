@@ -1,18 +1,5 @@
 # Changelog
 
-## [4.20.0]
-
-### Changed
-- Update the cart total when QTY is updated 
-- 'Update total' button click, while shipping calculation, will update the total price
-
-### Fixed
-- Fixed issue when webhooks option is enabled during onboarding process. Check if webhook already exists and return its id instead of trying to recreate it  
-- Fixed error occurring while plugin activation. Problem was caused by handling the property on an empty object
-- Fixed bccustomervisibleterms value issue. Previously WP_Error could be set as transient value and cause issues on the storefront. Currently when error is occured empty value will be saved to transient
-- Fixed the inventory updates via webhook. The inventory level should be updated when it is changed on the BC side whether a product or variant tracking is enabled.
-- Fixed product images switch when the user selects the variant. The corresponding image of the variant will be displayed
-
 ## [4.19.1]
 
 ### Changed
@@ -1654,7 +1641,6 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
-[4.20.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.19.1...4.20.0
 [4.19.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.19.0...4.19.1
 [4.19.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.18.0...4.19.0
 [4.18.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.17.1...4.18.0
