@@ -306,7 +306,7 @@ class Sync_Log {
 		$sync_logs = get_posts( [
 			'post_type'      => self::NAME,
 			'post_status'    => $status,
-			'posts_per_page' => - 1,
+			'posts_per_page' => -1,
 			'fields'         => 'ids',
 		] );
 
