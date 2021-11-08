@@ -5,9 +5,8 @@
  * @package BigCommerce
  *
  * @var array $cart
- * @version 1.0.0
+ * @version 1.1.0
  */
-
 ?>
 <!-- class="bc-cart-subtotal" is required -->
 <div class="bc-cart-subtotal">
@@ -24,3 +23,10 @@
 		<span class="bc-cart-tax__amount"><?php echo esc_html( $cart['tax_amount']['formatted'] ); ?></span>
 	</div>
 <?php } ?>
+
+<!-- class="bc-cart-total" is required -->
+<div class="bc-cart-total">
+	<span class="bc-cart-total__label"><?php echo esc_html( __( 'Cart Total: ', 'bigcommerce' ) ); ?></span>
+	<!-- class="bc-cart-total__amount" is required -->
+	<span class="bc-cart-total__amount"><?php echo esc_html( $cart['cart_amount']['formatted'] ); ?></span>
+</div>

@@ -197,7 +197,10 @@ const showVariantImage = (swiperInstance, swiperNavInstance) => {
 	swiperInstance.appendSlide(slide);
 	swiperInstance.update();
 	swiperInstance.slideTo(swiperInstance.slides.length);
-	swiperNavInstance.slideTo(0);
+
+	if (swiperNavInstance) {
+		swiperNavInstance.slideTo(0);
+	}
 
 	_.delay(() => {
 		trigger({ event: 'bigcommerce/init_slide_zoom', data: { container: slide.querySelector('img') }, native: false });
@@ -224,7 +227,10 @@ const removeVariantImage = (swiperInstance, swiperNavInstance) => {
 	});
 
 	swiperInstance.slideTo(0);
-	swiperNavInstance.slideTo(0);
+
+	if (swiperNavInstance) {
+		swiperNavInstance.slideTo(0);
+	}
 
 	if (!slideIndex) {
 		return;
@@ -256,11 +262,7 @@ const showHideVariantImage = (e, wrapper = '') => {
 	const swiperWrapper = tools.getNodes('bc-gallery-container', false, currentWrapper)[0];
 	const swiperInstance = swiperWrapper.swiper;
 	const swiperNavWrapper = tools.getNodes(`[data-id="${swiperWrapper.dataset.controls}"]`, false, document, true)[0];
-	// Check that the proper thumbnail slider present in the DOM before calling the swiper object.
-	if (!swiperNavWrapper) {
-		return;
-	}
-	const swiperNavInstance = swiperNavWrapper.swiper;
+	const swiperNavInstance = swiperNavWrapper ? swiperNavWrapper.swiper : null;
 
 	// hide the image after each variant request.
 	removeVariantImage(swiperInstance, swiperNavInstance);

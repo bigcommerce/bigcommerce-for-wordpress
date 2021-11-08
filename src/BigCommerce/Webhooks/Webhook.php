@@ -63,12 +63,54 @@ abstract class Webhook {
 	}
 
 	/**
+	 * Check by destination and scope if webhook is already added to BigCommerce.
+	 * Returns the id of the webhook
+	 *
+	 * @return mixed|null
+	 */
+	public function is_webhook_exist() {
+		$webhooks = $this->api_client->listWebhooks();
+
+		$scope = $this->scope();
+		$destination = $this->destination();
+
+		$found_hooks = array_map(function ( $hook ) use ( $scope, $destination ) {
+			$exists = $hook->scope === $scope && $hook->destination === $destination;
+			$is_active = $hook->is_active === true;
+
+			return $exists && $is_active ? $hook->id : false;
+		}, $webhooks );
+
+		if ( empty( $found_hooks ) ) {
+			return null;
+		}
+
+		// Filter out empty values
+		$filtered_result = array_filter( $found_hooks );
+
+		return array_pop( $filtered_result );
+	}
+
+	/**
 	 * Sends a request to the BC API to update a webhook. Creates it if it doesn't exist.
 	 */
 	public function update() {
 
-		// Create a password for authenticating the incoming request from BigCommerce.
+		/**
+		 * Create a password for authenticating the incoming request from BigCommerce.
+		 */
 		$password = $this->generate_password();
+
+		$existing_webhook_id = $this->is_webhook_exist();
+
+		/**
+		 * Check if webhook exists in BigCommerce
+		 */
+		if ( ! empty( $existing_webhook_id ) ) {
+			do_action( 'bigcommerce/webhooks/webhook_updated', intval( $existing_webhook_id ), static::NAME, $this->scope() );
+
+			return $existing_webhook_id;
+		}
 
 		$args = [
 			'headers'     => [ self::AUTH_HEADER => $password ],
