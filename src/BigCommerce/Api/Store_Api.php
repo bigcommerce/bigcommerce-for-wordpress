@@ -133,62 +133,26 @@ class Store_Api extends v2ApiAdapter {
 		}
 	}
 
-	/**
-	 * Check if site wide https option is enabled in BC
-	 *
-	 * @return bool
-	 */
+    /**
+     * Check if site wide https option is enabled in BC
+     * @return false
+     */
 	public function get_sitewidehttps_enabled() {
-		$resource = $this->get_store_resource();
-
-		/**
-		 * get_store_resource() may return false value.
-		 * This will cause an issue when we try to access property on non-object
-		 */
-		$resource = $this->store_resource_exists( $resource, 'features' );
-
-		return ! empty( $resource ) ? $resource->sitewidehttps_enabled : false;
-	}
-
-	/**
-	 * Get store domain
-	 *
-	 * @return bool
-	 */
-	public function get_domain() {
-		$resource = $this->get_store_resource();
-
-		/**
-		 * get_store_resource() may return false value.
-		 * This will cause an issue when we try to access property on non-object
-		 */
-		return $this->store_resource_exists( $resource, 'domain' );
-	}
-
-	/**
-	 * Check whether the provided resource exists
-	 *
-	 * @param $resource
-	 * @param $property
-	 *
-	 * @return bool
-	 */
-	public function store_resource_exists( $resource, $property) {
-		if ( empty( $resource ) ) {
+		try {
+			return $this->getResource('/store')->features->sitewidehttps_enabled;
+		} catch ( \Exception $e ) {
 			return false;
 		}
-
-		return $resource->{$property};
 	}
 
-	/**
-	 * Get store resource
-	 *
-	 * @return false|Resource
-	 */
-	public function get_store_resource() {
+    /**
+     * Get store domain
+     *
+     * @return false
+     */
+	public function get_domain() {
 		try {
-			return $this->getResource( '/store' );
+			return $this->getResource('/store')->domain;
 		} catch ( \Exception $e ) {
 			return false;
 		}

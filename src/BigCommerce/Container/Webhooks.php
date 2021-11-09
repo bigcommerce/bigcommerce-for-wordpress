@@ -176,22 +176,25 @@ class Webhooks extends Provider {
 
 		// Update product inventory webhook cron task
 		add_action( 'bigcommerce/webhooks/product_inventory_updated', $this->create_callback( 'check_and_update_product_inventory_task', function ( $params ) use ( $container ) {
-			$container[ Api::CACHE_HANDLER ]->flush_product_catalog_object_cache( $params['product_id'] );
-			$container[ self::PRODUCT_UPDATER ]->update( $params['product_id'] );
-		} ), 10, 1 );
-
-		// Update product inventory webhook cron task
-		add_action( 'bigcommerce/webhooks/product_updated', $this->create_callback( 'check_and_update_product_data_task', function ( $params ) use ( $container ) {
-			$container[ Api::CACHE_HANDLER ]->flush_product_catalog_object_cache( $params['product_id'] );
 			$container[ self::WEBHOOKS_CRON_TASKS ]->set_product_update_cron_task( $params );
 		} ), 10, 1 );
+
+        // Update product inventory webhook cron task
+        add_action( 'bigcommerce/webhooks/product_updated', $this->create_callback( 'check_and_update_product_data_task', function ( $params ) use ( $container ) {
+            $query_params = [
+                'include' => 'variants,custom_fields,images,videos,bulk_pricing_rules,options,modifiers'
+            ];
+
+            $container[ Api::CACHE_HANDLER ]->flush_product_catalog_object_cache($params['product_id'], $query_params);
+            $container[ self::WEBHOOKS_CRON_TASKS ]->set_product_update_cron_task( $params );
+        } ), 10, 1 );
 
         // Delete product webhook
         add_action('bigcommerce/webhooks/product_deleted', $this->create_callback('delete_single_product_handler', function ( $params ) use ( $container ) {
             if ( ! $this->webhooks_enabled() ) {
                 return;
             }
-
+            
             $container[ self::PRODUCT_DELETE_WEBHOOK ]->delete_the_product( $params );
         } ), 10, 1 );
 

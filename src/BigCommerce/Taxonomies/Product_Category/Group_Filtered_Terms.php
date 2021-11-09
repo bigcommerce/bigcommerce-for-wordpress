@@ -47,13 +47,6 @@ class Group_Filtered_Terms {
 		$visible_terms = $this->get_transient();
 
 		if ( false !== $visible_terms ) {
-			/**
-			 * Prevents situation when previously saved transient has WP_Error instead of value
-			 */
-			if ( is_a( $visible_terms, 'WP_Error' ) ) {
-				return [];
-			}
-
 			return $visible_terms;
 		}
 
@@ -92,15 +85,8 @@ class Group_Filtered_Terms {
 		return true;
 	}
 
-	/**
-	 * Retrieve term ids list
-	 *
-	 * @param $category_ids
-	 *
-	 * @return array
-	 */
-	private function get_local_term_ids( $category_ids ): array {
-		$terms = get_terms( [
+	private function get_local_term_ids( $category_ids ) {
+		return get_terms( [
 			'taxonomy'         => Product_Category::NAME,
 			'hide_empty'       => false,
 			'meta_query'       => [
@@ -113,15 +99,6 @@ class Group_Filtered_Terms {
 			'suppress_filter'  => true,
 			'fields'           => 'ids',
 		] );
-
-		/**
-		 * Prevent situation when we have WP_Error in result and save it in transient cache
-		 */
-		if ( is_a( $terms, 'WP_Error' ) || empty( $terms ) ) {
-			return [];
-		}
-
-		return $terms;
 	}
 
 	private function transient_key() {
