@@ -137,13 +137,17 @@ const updatedCartTotals = (data = {}) => {
 	tools.getNodes('bc-cart', true).forEach((cart) => {
 		const baseAmount = cartData.subtotal.formatted;
 		const subTotal = tools.getNodes('.bc-cart-subtotal__amount', false, cart, true)[0];
-		const taxAmount = cartData.tax_amount.formatted;
 		const taxTotal = tools.getNodes('.bc-cart-tax__amount', false, cart, true)[0];
+		const cartTotal = tools.getNodes('.bc-cart-total__amount', false, cart, true)[0];
 
 		subTotal.textContent = baseAmount;
 
 		if (taxTotal) {
-			taxTotal.textContent = taxAmount;
+			taxTotal.textContent = cartData.tax_amount.formatted;
+		}
+
+		if (cartTotal) {
+			cartTotal.textContent = cartData.cart_amount.formatted;
 		}
 	});
 };
