@@ -48,7 +48,9 @@ abstract class Webhook {
 	 * @return string|bool|null The value, or false or null if filter_input fails.
 	 */
 	public function get_auth_header() {
-		return filter_input( INPUT_SERVER, self::INPUT_AUTH_HEADER, FILTER_UNSAFE_RAW ); // phpcs:ignore
+		// On some envs filter_input(https://bugs.php.net/bug.php?id=49184) may return NULL value even if variable exists
+		// In order to prevent the issue we use filter_var for a $_SERVER variable
+		return filter_var( $_SERVER[ self::INPUT_AUTH_HEADER ], FILTER_UNSAFE_RAW );
 	}
 
 	/**
@@ -107,6 +109,12 @@ abstract class Webhook {
 		 * Check if webhook exists in BigCommerce
 		 */
 		if ( ! empty( $existing_webhook_id ) ) {
+			$args = [
+				'headers' => [ self::AUTH_HEADER => $password ],
+			];
+
+			$this->update_webhook( $existing_webhook_id, $args );
+
 			do_action( 'bigcommerce/webhooks/webhook_updated', intval( $existing_webhook_id ), static::NAME, $this->scope() );
 
 			return $existing_webhook_id;
@@ -159,6 +167,16 @@ abstract class Webhook {
 		do_action( 'bigcommerce/webhooks/webhook_updated', intval( $result[ 'id' ] ), static::NAME, $this->scope() );
 
 		return $result[ 'id' ];
+	}
+
+	/**
+	 * Send API request to update the webhook data
+	 *
+	 * @param $id
+	 * @param $data
+	 */
+	public function update_webhook( $id, $data) {
+		$this->api_client->updateWebhook( $id, $data );
 	}
 
 	public function destination() {

@@ -19,4 +19,8 @@ class Webhooks_Api extends v2ApiAdapter {
 	public function deleteWebhook( $id ) {
 		return call_user_func( [ $this->client_class, 'deleteWebhook' ], $id );
 	}
+
+	public function updateWebhook( $id, $object ) {
+		return call_user_func( [ $this->client_class, 'updateWebhook' ], $id, $object );
+	}
 }
