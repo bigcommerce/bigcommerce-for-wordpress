@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.20.1]
+
+### Fixed
+- Handle legacy PHP filter_input bug which may cause situation with empty auth headers and webhook validation fail
+- Update existing webhooks with new passwords when enabling webhooks in settings.  The update prevents webhook validation issues with old passwords
+
 ## [4.20.0]
 
 ### Changed
@@ -1654,6 +1660,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.20.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.20.0...4.20.1
 [4.20.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.19.1...4.20.0
 [4.19.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.19.0...4.19.1
 [4.19.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.18.0...4.19.0
