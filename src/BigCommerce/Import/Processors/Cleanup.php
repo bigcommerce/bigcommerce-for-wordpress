@@ -4,6 +4,7 @@
 namespace BigCommerce\Import\Processors;
 
 
+use BigCommerce\Accounts\Customer;
 use BigCommerce\Import\Runner\Cron_Runner;
 use BigCommerce\Import\Runner\Status;
 use BigCommerce\Import\Import_Type;
@@ -50,11 +51,26 @@ class Cleanup implements Import_Processor {
 
 		$status->set_status( Status::COMPLETED );
 
+		$this->clean_customer_group_transients();
+
 		wp_unschedule_hook( Cron_Runner::START_CRON );
 		wp_unschedule_hook( Cron_Runner::CONTINUE_CRON );
 
 		$status->rotate_logs(); // must rotate _after_ status set to complete
 
 		do_action( 'bigcommerce/log', Error_Log::INFO, __( 'Import complete', 'bigcommerce' ), [] );
+	}
+
+	/**
+	 * Remove customers group transient cache after sync in order to retrieve fresh groups data
+	 */
+	private function clean_customer_group_transients(): void {
+		$users_ids = get_users( [ 'fields' => 'ID' ] );
+
+		foreach ( $users_ids as $users_id ) {
+			$customer_id   = get_user_option( Customer::CUSTOMER_ID_META, $users_id );
+			$transient_key = sprintf( 'bccustomergroup%d', $customer_id );
+			delete_transient( $transient_key );
+		}
 	}
 }

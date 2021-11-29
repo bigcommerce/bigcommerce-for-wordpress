@@ -90,6 +90,24 @@ class Admin_UI {
 	}
 
 	/**
+	 * Adds an import tooltip to products page
+	 *
+	 * @param array $views
+	 *
+	 * @return array
+	 */
+	public function list_import_tooltip( $views = [] ) {
+		$tooltip_text = esc_html__( 'If you’re not seeing new products synced, please be sure that they’ve been added to your active Channel in BC', 'bigcommerce' );
+
+		$views[ 'bc-import-tooltip' ] = sprintf(
+			'<div class="bc-import-tooltip__mark">?</div><span>%s</span>',
+			$tooltip_text
+		);
+
+		return $views;
+	}
+
+	/**
 	 * Add a link to manage products in BigCommerce to the top
 	 * of the products list table
 	 *

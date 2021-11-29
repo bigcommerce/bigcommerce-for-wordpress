@@ -30,7 +30,7 @@ class Post_Types extends Provider {
 
 	const QUEUE        = 'post_type.queue_task';
 	const QUEUE_CONFIG = 'post_type.queue_task.config';
-	
+
 	const SYNC_LOG        = 'post_type.sync_log';
 	const SYNC_LOG_CONFIG = 'post_type.sync_log.config';
 
@@ -113,6 +113,11 @@ class Post_Types extends Provider {
 		add_filter( 'views_edit-' . Product\Product::NAME, $this->create_callback( 'list_table_import_status', function ( $views ) use ( $container ) {
 			return $container[ self::PRODUCT_ADMIN ]->list_table_import_status( $views );
 		} ), 10, 1 );
+
+		add_filter( 'views_edit-' . Product\Product::NAME, $this->create_callback( 'list_import_tooltip', function ( $views ) use ( $container ) {
+			return $container[ self::PRODUCT_ADMIN ]->list_import_tooltip( $views );
+		} ), 10, 1 );
+
 		add_filter( 'views_edit-' . Product\Product::NAME, $this->create_callback( 'list_table_manage_link', function ( $views ) use ( $container ) {
 			return $container[ self::PRODUCT_ADMIN ]->list_table_manage_link( $views );
 		} ), 2, 1 );
@@ -174,12 +179,12 @@ class Post_Types extends Provider {
 			return new Queue_Task\Config( Queue_Task\Queue_Task::NAME );
 		};
 	}
-	
+
 	private function sync_log( Container $container ) {
 		$container[ self::SYNC_LOG_CONFIG ] = function ( Container $container ) {
 			return new Sync_Log\Config( Sync_Log\Sync_Log::NAME );
 		};
-		
+
 		$container[ self::SYNC_LOG ] = function ( Container $container ) {
 			return new Sync_Log\Sync_Log;
 		};
@@ -191,7 +196,7 @@ class Post_Types extends Provider {
 		add_action( 'bigcommerce/import/error', $this->create_callback( 'sync_log_log_error', function ( $error ) use ( $container ) {
 			$container[ self::SYNC_LOG ]->log_error( $error );
 		} ) );
-		
+
 		add_action( 'bigcommerce/import/logs/rotate', $this->create_callback( 'sync_log_complete_sync', function ( $log ) use ( $container ) {
 			$container[ self::SYNC_LOG ]->complete_sync( $log );
 		} ) );

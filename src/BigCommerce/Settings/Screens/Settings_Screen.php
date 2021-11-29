@@ -65,6 +65,7 @@ class Settings_Screen extends Abstract_Screen {
 		 * Triggered after rendering the last import date in the settings header
 		 */
 		do_action( 'bigcommerce/settings/header/import_status' );
+		printf( '<p class="bc-settings-header__cta-text">%s</p>', esc_html__( 'If you’re not seeing new products synced, please be sure that they’ve been added to your active Channel in BC', 'bigcommerce' ) );
 
 		if ( $last_import_date ) {
 			printf( '<p class="bc-settings-header__cta-text">%s</p>', sprintf(
