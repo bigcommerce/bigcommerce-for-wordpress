@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.21.0]
+
+### Changed
+- Set “New/Updated Since last Sync” as the default selection in the manual product sync on both the Settings page and the Product Archive in the admin.
+
+### Fixed
+- Reflects change of the customer's group after full re-sync process: customer should see product prices according to group settings
+
 ## [4.20.1]
 
 ### Fixed
@@ -1660,6 +1668,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.21.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.20.1...4.21.0
 [4.20.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.20.0...4.20.1
 [4.20.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.19.1...4.20.0
 [4.19.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.19.0...4.19.1

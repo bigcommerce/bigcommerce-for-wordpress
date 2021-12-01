@@ -40,6 +40,46 @@
 	}
 }
 
+.bc-import-tooltip {
+	cursor: pointer;
+
+	&__mark {
+		padding: 0.3rem 0.6rem;
+		border-radius: 50%;
+		border: 1px solid var(--color-bc-black);
+		position: relative;
+		font-weight: 600;
+		font-size: 1rem;
+		display: inline-block;
+	}
+
+	span {
+		font-weight: 600;
+		position: absolute;
+		background-color: var(--color-white);
+		display: none;
+		width: 12rem;
+		font-size: 0.75rem;
+		padding: 0.75rem;
+		color: var(--color-bc-black);
+		white-space: normal;
+		border-radius: 0.25rem;
+		border: 1px solid var(--color-bc-black);
+	}
+
+	&:hover {
+
+		.bc-import-tooltip__mark {
+			color: var(--color-white);
+			background-color: var(--color-bc-black);
+		}
+
+		span {
+			display: block;
+		}
+	}
+}
+
 .bc-settings-header {
 
 	.bc-product-sync-form {

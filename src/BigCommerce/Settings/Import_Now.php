@@ -64,12 +64,12 @@ class Import_Now {
 		 */
 		$import_type_dropdown = [
 			[
-				'name'  => __( 'All Products', 'bigcommerce' ),
-				'value' => Import_Type::IMPORT_TYPE_FULL,
-			],
-			[
 				'name'  => __( 'New/Updated since last sync', 'bigcommerce' ),
 				'value' => Import_Type::IMPORT_TYPE_PARTIAL,
+			],
+			[
+				'name'  => __( 'All Products', 'bigcommerce' ),
+				'value' => Import_Type::IMPORT_TYPE_FULL,
 			],
 		];
 		$import_type_dropdown = implode( '', array_map( function ( $option ) {
