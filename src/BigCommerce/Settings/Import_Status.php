@@ -8,6 +8,7 @@ use BigCommerce\Exceptions\No_Task_Found_Exception;
 use BigCommerce\Import\Runner\Cron_Runner;
 use BigCommerce\Import\Runner\Status;
 use BigCommerce\Import\Task_Manager;
+use BigCommerce\Logging\Error_Log;
 use BigCommerce\Post_Types\Queue_Task\Queue_Task;
 
 /**
@@ -63,8 +64,16 @@ class Import_Status {
 	public function current_status_notice() {
 		try {
 			$current = $this->current_status();
-			if ( $current[ 'message' ] ) {
-				printf( '<div class="notice notice-info bigcommerce-notice bigcommerce-notice__import-status" data-js="bc-import-progress-status"><div class="import-status import-status-current"><i class="bc-icon icon-bc-sync" data-js="bc-import-status-icon"></i> <p class="bc-import-status-message">%s</p></div></div>', $current[ 'message' ] );
+			if ( $current['message'] ) {
+				$notice_classes = 'notice notice-info bigcommerce-notice bigcommerce-notice__import-status';
+
+				if ( ! empty( $current['aborted'] ) ) {
+					$notice_classes .= ' bigcommerce-notice__import-status--warning';
+				}
+
+				$icon_classes = empty( $current['aborted'] ) ? 'bc-icon icon-bc-sync' : 'bc-icon icon-bc-check';
+
+				printf( '<div class="%s" data-js="bc-import-progress-status"><div class="import-status import-status-current"><i class="%s" data-js="bc-import-status-icon"></i> <p class="bc-import-status-message">%s</p></div></div>', $notice_classes, $icon_classes, $current[ 'message' ] );
 			}
 		} catch ( \Exception $e ) {
 			// no notice
@@ -117,7 +126,8 @@ class Import_Status {
 		} catch ( No_Task_Found_Exception $e ) {
 			$completed_steps = 0;
 		}
-		$current_task    = $this->manager->get_task( $current[ 'status' ] );
+
+		$current_task = $this->get_current_task( $current['status'] );
 
 		$total     = (int) get_option( self::IMPORT_TOTAL_PRODUCTS, 0 );
 		$remaining = $this->get_remaining_in_queue();
@@ -127,15 +137,33 @@ class Import_Status {
 		$response = [];
 
 		if ( $current[ 'status' ] === Status::NOT_STARTED ) {
+			$abort_status     = get_option( Abort_Import::ABORT_IMPORT_OPTION, false );
+			$response_message = ( $previous['status'] === Status::FAILED ) ? '' : sprintf( _n( '%s Product Successfully Synced', '%s Products Successfully Synced', $total, 'bigcommerce' ), $total );
+
+			/**
+			 * The purpose is to check that we show correct message when we manually abort the import
+			 */
+			if ( $abort_status || $previous['status'] === Status::ABORTED ) {
+				$response_message = esc_attr__( 'Import is aborted', 'bigcommerce' );
+
+				if ( ! wp_doing_ajax() ) {
+					/**
+					 * Flush abort status option
+					 */
+					delete_option( Abort_Import::ABORT_IMPORT_OPTION );
+				}
+			}
+
 			return [
-				'message'  => '',
+				'message'  => ! $abort_status ? '' : $response_message,
 				'status'   => $current[ 'status' ],
 				'previous' => $previous[ 'status' ],
 				'products' => [
 					'total'     => (int) $total,
 					'completed' => (int) $completed,
-					'status'    => ( $previous[ 'status' ] === Status::FAILED ) ? '' : sprintf( _n( '%s Product Successfully Synced', '%s Products Successfully Synced', $total, 'bigcommerce' ), $total ),
+					'status'    => $response_message,
 				],
+				'aborted'  => $abort_status,
 			];
 		}
 
@@ -144,7 +172,7 @@ class Import_Status {
 				$status_string = sprintf( __( 'Importing products: %d of %d', 'bigcommerce' ), $completed, $total );
 				break;
 			default:
-				$status_string = $current_task->get_description();
+				$status_string = ! empty( $current_task ) ? $current_task->get_description() : '';
 				break;
 		}
 
@@ -172,6 +200,26 @@ class Import_Status {
 		], $response );
 
 		return $response;
+	}
+
+	/**
+	 * Get task by state. Return NULL if task is not found
+	 *
+	 * @param $state
+	 *
+	 * @return \BigCommerce\Import\Task_Definition|null
+	 */
+	private function get_current_task( $state ) {
+		try {
+			return $this->manager->get_task( $state );
+		} catch ( No_Task_Found_Exception $e ) {
+			do_action( 'bigcommerce/log', Error_Log::NOTICE, __( 'No handler found for current import state', 'bigcommerce' ), [
+				'state' => $state,
+			] );
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [] );
+
+			return null;
+		}
 	}
 
 	/**

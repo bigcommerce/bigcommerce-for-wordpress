@@ -25,7 +25,7 @@ class Cleanup implements Import_Processor {
 		$this->batch = $batch;
 	}
 
-	public function run() {
+	public function run( $abort = false ) {
 		$status = new Status();
 		$status->set_status( Status::CLEANING );
 
@@ -49,7 +49,12 @@ class Cleanup implements Import_Processor {
 		delete_option( Product_Data_Fetcher::FILTERED_LISTING_MAP );
 		delete_option( Import_Type::IMPORT_TYPE );
 
-		$status->set_status( Status::COMPLETED );
+		if ( $abort ) {
+			$status->set_status( Status::ABORTED );
+		} else {
+			$status->set_status( Status::COMPLETED );
+		}
+
 
 		$this->clean_customer_group_transients();
 

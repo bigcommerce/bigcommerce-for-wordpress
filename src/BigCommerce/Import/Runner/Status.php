@@ -11,6 +11,7 @@ class Status {
 
 	const NOT_STARTED              = 'not_started';
 	const STARTED                  = 'started';
+	const ABORTED                  = 'aborted';
 	const FETCHING_LISTINGS        = 'fetching_listings';
 	const FETCHED_LISTINGS         = 'fetched_listings';
 	const INITIALIZING_CHANNEL     = 'initializing_channel';

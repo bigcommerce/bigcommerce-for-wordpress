@@ -19,6 +19,7 @@ const state = {
 	syncCompleted: false,
 	syncError: false,
 	pollingDelay: 1000,
+	isAborted: false,
 };
 
 /**
@@ -48,7 +49,13 @@ const importSuccess = (node, icon, response = '') => {
 	messageWrapper.innerHTML = importCloseButton;
 	tools.removeClass(icon, 'icon-bc-sync');
 	tools.addClass(icon, 'icon-bc-check');
-	tools.addClass(el.container, 'bigcommerce-notice__import-status--success');
+
+	if (!state.isAborted) {
+		tools.addClass(el.container, 'bigcommerce-notice__import-status--success');
+	} else {
+		tools.addClass(el.container, 'bigcommerce-notice__import-status--warning');
+	}
+
 	node.textContent = response;
 };
 
@@ -221,6 +228,7 @@ const pollProductSyncWatcher = () => {
 				} else if (data.status === 'not_started') {
 					// The import is done.
 					state.syncCompleted = true;
+					state.isAborted = !!data.aborted;
 					if (data.previous !== 'failed') {
 						// The sync has not failed and still contains a status response.
 						handleStatusMessage(data.products.status);
