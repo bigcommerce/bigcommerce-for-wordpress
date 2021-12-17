@@ -63,7 +63,7 @@ class Unique_Slug_Filter {
 	 */
 	private function get_assigned_channel( $post_id ) {
 		$terms = get_the_terms( $post_id, Channel::NAME );
-		if ( empty( $terms ) ) {
+		if ( empty( $terms ) || is_bool( $terms ) ) {
 			$connections = new Connections();
 			return $connections->current();
 		}

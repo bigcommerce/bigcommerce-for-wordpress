@@ -3,6 +3,7 @@
 
 namespace BigCommerce\Nav_Menu;
 
+use BigCommerce\Customizer\Sections\Product_Category as Customizer;
 use BigCommerce\Post_Types\Product\Product;
 
 class Dynamic_Menu_Items {
@@ -60,7 +61,7 @@ class Dynamic_Menu_Items {
 
 	/**
 	 * Get the top-level terms from the taxonomy as menu items
-	 * 
+	 *
 	 * @param object $item
 	 *
 	 * @return array
@@ -70,30 +71,73 @@ class Dynamic_Menu_Items {
 		if ( ! $taxonomy ) {
 			return [];
 		}
-		$terms = get_terms( [
-			'taxonomy'     => $taxonomy->name,
-			'hide_empty'   => true,
-			'hierarchical' => true,
-			'parent'       => 0,
-			'meta_query' => [
-				[
-					'key'  => 'sort_order',
-					'type' => 'NUMERIC',
-				]
-			],
-			'orderby' => 'sort_order',
-			'order'   => 'ASC',
-		] );
-		$index = 1;
-		$items = array_map( function ( $term ) use ( $item, &$index ) {
-			$term = wp_setup_nav_menu_item( $term );
 
-			$term->menu_item_parent = $item->ID;
-			$term->post_status      = 'publish';
+		$terms                       = $this->get_terms_items( $taxonomy );
+		$should_retrieve_child_items = get_option( Customizer::CHILD_ITEM_SHOW, 'no' ) === 'yes';
+		$items                       = [];
 
-			return $term;
-		}, $terms );
+		if ( ! empty( $terms ) ) {
+			foreach ( $terms as $term ) {
+				$term_taxonomy = $term->taxonomy;
+				$term_id       = $term->term_id;
+
+				$term                   = wp_setup_nav_menu_item( $term );
+				$term->menu_item_parent = $item->ID;
+				$term->post_status      = 'publish';
+
+				$items[] = $term;
+
+				if ( ! $should_retrieve_child_items ) {
+					continue;
+				}
+
+				// Get term children to level 1.
+				$term_children = $this->get_terms_items( $term_taxonomy, $term_id );
+
+				if ( empty( $term_children ) ) {
+					continue;
+				}
+
+				foreach ( $term_children as $child ) {
+					$term_child        = wp_setup_nav_menu_item( $child );
+					$term_child->title = ' - ' . $term_child->title;
+					$term_child->menu_item_parent = $item->ID;
+					$term_child->post_status      = 'publish';
+
+					$items[] = $term_child;
+				}
+			}
+		}
 
 		return $items;
+	}
+
+	/**
+	 * @param     $taxonomy
+	 * @param int $parent
+	 *
+	 * @return array|int[]|string|string[]|\WP_Error|\WP_Term[]
+	 */
+	private function get_terms_items( $taxonomy, int $parent = 0 ) {
+		$terms = get_terms( [
+				'taxonomy'     => is_object( $taxonomy ) ? $taxonomy->name : $taxonomy,
+				'hide_empty'   => true,
+				'hierarchical' => true,
+				'parent'       => $parent,
+				'meta_query'   => [
+						[
+								'key'  => 'sort_order',
+								'type' => 'NUMERIC',
+						],
+				],
+				'orderby'      => 'sort_order',
+				'order'        => 'ASC',
+		] );
+
+		if ( empty( $terms ) || is_wp_error( $terms ) ) {
+			return [];
+		}
+
+		return $terms;
 	}
 }

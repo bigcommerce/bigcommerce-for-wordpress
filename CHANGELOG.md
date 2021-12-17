@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.22.0]
+
+### Added
+- Added ability to enable or disable sub-categories in navigation menu. The option can be changed in Customizer > BigCommerce > Product Category > Menus. Sub categories are hidden from menu by default
+- Added ability to abort import process. In order to do that go to Bigcommerce > Settings > Diagnostics and click on the "Abort Product Import" button
+
+### Fixed
+- Fixed 500 issue on the REST API endpoint for the product review
+- Fixed PHP notice appearance when get_terms return boolean result during category fetching  
+- Added an error handling for situation when import task is missing
+
 ## [4.21.0]
 
 ### Changed
@@ -1668,6 +1679,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.22.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.21.1...4.22.0
 [4.21.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.20.1...4.21.0
 [4.20.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.20.0...4.20.1
 [4.20.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.19.1...4.20.0

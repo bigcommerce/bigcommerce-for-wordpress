@@ -13,6 +13,7 @@ use BigCommerce\Rest\Reviews_Listing_Controller;
 use BigCommerce\Rest\Shortcode_Controller;
 use BigCommerce\Rest\Shipping_Controller;
 use BigCommerce\Rest\Coupon_Code_Controller;
+use BigCommerce\Reviews\Review_Fetcher;
 use Pimple\Container;
 
 class Rest extends Provider {
@@ -142,7 +143,7 @@ class Rest extends Provider {
 		};
 
 		$container[ self::REVIEW_LIST ] = function ( Container $container ) {
-			return new Reviews_Listing_Controller( $container[ self::NAMESPACE_BASE ], $container[ self::VERSION ], $container[ self::REVIEW_LIST_BASE ], $container[ Api::FACTORY ]->catalog() );
+			return new Reviews_Listing_Controller( $container[ self::NAMESPACE_BASE ], $container[ self::VERSION ], $container[ self::REVIEW_LIST_BASE ], $container[ Reviews::FETCHER ] );
 		};
 
 		$container[ self::PRICING_BASE ] = function ( Container $container ) {

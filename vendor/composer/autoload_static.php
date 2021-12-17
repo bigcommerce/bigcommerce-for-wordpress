@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit04e030cd0fce50605a6cc930bca16172
+class ComposerStaticInitda8c61928fecf41b1c48d8dffa06f3a9
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -542,6 +542,7 @@ class ComposerStaticInit04e030cd0fce50605a6cc930bca16172
         'BigCommerce\\Customizer\\Sections\\Checkout' => __DIR__ . '/../..' . '/src/BigCommerce/Customizer/Sections/Checkout.php',
         'BigCommerce\\Customizer\\Sections\\Colors' => __DIR__ . '/../..' . '/src/BigCommerce/Customizer/Sections/Colors.php',
         'BigCommerce\\Customizer\\Sections\\Product_Archive' => __DIR__ . '/../..' . '/src/BigCommerce/Customizer/Sections/Product_Archive.php',
+        'BigCommerce\\Customizer\\Sections\\Product_Category' => __DIR__ . '/../..' . '/src/BigCommerce/Customizer/Sections/Product_Category.php',
         'BigCommerce\\Customizer\\Sections\\Product_Single' => __DIR__ . '/../..' . '/src/BigCommerce/Customizer/Sections/Product_Single.php',
         'BigCommerce\\Customizer\\Styles' => __DIR__ . '/../..' . '/src/BigCommerce/Customizer/Styles.php',
         'BigCommerce\\Editor\\Add_Products_Button' => __DIR__ . '/../..' . '/src/BigCommerce/Editor/Add_Products_Button.php',
@@ -698,6 +699,7 @@ class ComposerStaticInit04e030cd0fce50605a6cc930bca16172
         'BigCommerce\\Schema\\Schema' => __DIR__ . '/../..' . '/src/BigCommerce/Schema/Schema.php',
         'BigCommerce\\Schema\\Table_Maker' => __DIR__ . '/../..' . '/src/BigCommerce/Schema/Table_Maker.php',
         'BigCommerce\\Schema\\User_Roles' => __DIR__ . '/../..' . '/src/BigCommerce/Schema/User_Roles.php',
+        'BigCommerce\\Settings\\Abort_Import' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Abort_Import.php',
         'BigCommerce\\Settings\\Connection_Status' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Connection_Status.php',
         'BigCommerce\\Settings\\Import_Now' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Import_Now.php',
         'BigCommerce\\Settings\\Import_Status' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Import_Status.php',
@@ -1123,10 +1125,10 @@ class ComposerStaticInit04e030cd0fce50605a6cc930bca16172
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit04e030cd0fce50605a6cc930bca16172::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit04e030cd0fce50605a6cc930bca16172::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit04e030cd0fce50605a6cc930bca16172::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit04e030cd0fce50605a6cc930bca16172::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitda8c61928fecf41b1c48d8dffa06f3a9::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitda8c61928fecf41b1c48d8dffa06f3a9::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitda8c61928fecf41b1c48d8dffa06f3a9::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitda8c61928fecf41b1c48d8dffa06f3a9::$classMap;
 
         }, null, ClassLoader::class);
     }

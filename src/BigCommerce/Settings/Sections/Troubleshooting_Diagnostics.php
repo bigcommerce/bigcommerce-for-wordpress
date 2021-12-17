@@ -25,6 +25,7 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 	const NAME             = 'bigcommerce_diagnostics';
 	const DIAGNOSTICS_ID   = 'bigcommerce_diagnostics_id';
 	const DIAGNOSTICS_NAME = 'bigcommerce_diagnostics_name';
+	const ABORT_NAME       = 'bigcommerce_diagnostics_import_abort';
 	const TEXTBOX_NAME     = 'bigcommerce_diagnostics_output';
 	const LOG_ERRORS       = 'bigcommerce_diagnostics_log_import_errors';
 	const LOG_FILE_SIZE    = 'bigcommerce_diagnostics_log_file_size';
@@ -55,6 +56,20 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 			__( 'Diagnostics', 'bigcommerce' ),
 			'__return_false',
 			Settings_Screen::NAME
+		);
+
+		add_settings_field(
+			self::ABORT_NAME,
+			esc_html( __( 'Abort product import', 'bigcommerce' ) ),
+			[ $this, 'render_import_abort', ],
+			Settings_Screen::NAME,
+			self::NAME,
+			[
+					'type'        => 'checkbox',
+					'option'      => self::ABORT_NAME,
+					'label'       => __( 'Abort product import', 'bigcommerce' ),
+					'description' => __( 'Stops product import process', 'bigcommerce' ),
+			]
 		);
 
 		add_settings_field(
@@ -126,6 +141,17 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 		);
 
 
+	}
+
+	/**
+	 * Renders import abort button
+	 *
+	 * @param $args
+	 */
+	public function render_import_abort( $args ) {
+		$url  = add_query_arg( [ 'action' => self::ABORT_NAME, '_wpnonce' => wp_create_nonce( self::ABORT_NAME ) ], admin_url( 'admin-post.php' ) );
+		$link = sprintf( '<a href="%s" class="bc-admin-btn">%s</a>', esc_url( $url ), esc_attr( $args['label'] ) );
+		printf( '%s<p class="description">%s</p>', $link, esc_html( $args['description'] ) );
 	}
 
 	public function render_sync_site_url( $args ) {

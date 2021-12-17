@@ -10,15 +10,16 @@ use BigCommerce\Customizer\Styles;
 use Pimple\Container;
 
 class Theme_Customizer extends Provider {
-	const PANEL_PRIMARY           = 'customizer.panel.primary';
-	const SECTION_BUTTONS         = 'customizer.section.buttons';
-	const SECTION_COLORS          = 'customizer.section.colors';
-	const SECTION_PRODUCT_SINGLE  = 'customizer.section.product_single';
-	const SECTION_PRODUCT_ARCHIVE = 'customizer.section.product_archive';
-	const SECTION_CART            = 'customizer.section.cart';
-	const SECTION_CHECKOUT        = 'customizer.section.checkout';
-	const SECTION_BANNERS         = 'customizer.section.banners';
-	const STYLES                  = 'customizer.styles';
+	const PANEL_PRIMARY              = 'customizer.panel.primary';
+	const SECTION_BUTTONS            = 'customizer.section.buttons';
+	const SECTION_COLORS             = 'customizer.section.colors';
+	const SECTION_PRODUCT_SINGLE     = 'customizer.section.product_single';
+	const SECTION_PRODUCT_ARCHIVE    = 'customizer.section.product_archive';
+	const SECTION_PRODUCT_CATEGORIES = 'customizer.section.product_categories';
+	const SECTION_CART               = 'customizer.section.cart';
+	const SECTION_CHECKOUT           = 'customizer.section.checkout';
+	const SECTION_BANNERS            = 'customizer.section.banners';
+	const STYLES                     = 'customizer.styles';
 
 	public function register( Container $container ) {
 		$container[ self::PANEL_PRIMARY ] = function ( Container $container ) {
@@ -41,6 +42,10 @@ class Theme_Customizer extends Provider {
 			return new Sections\Product_Archive();
 		};
 
+		$container[ self::SECTION_PRODUCT_CATEGORIES ] = function ( Container $container ) {
+			return new Sections\Product_Category();
+		};
+
 		$container[ self::SECTION_CART ] = function ( Container $container ) {
 			return new Sections\Cart();
 		};
@@ -48,7 +53,7 @@ class Theme_Customizer extends Provider {
 		$container[ self::SECTION_CHECKOUT ] = function ( Container $container ) {
 			return new Sections\Checkout();
 		};
-		
+
 		$container[ self::SECTION_BANNERS ] = function ( Container $container ) {
 			return new Sections\Banners();
 		};
@@ -65,6 +70,7 @@ class Theme_Customizer extends Provider {
 			$container[ self::SECTION_COLORS ]->register( $wp_customize );
 			$container[ self::SECTION_PRODUCT_SINGLE ]->register( $wp_customize );
 			$container[ self::SECTION_PRODUCT_ARCHIVE ]->register( $wp_customize );
+			$container[ self::SECTION_PRODUCT_CATEGORIES ]->register( $wp_customize );
 			$container[ self::SECTION_BANNERS ]->register( $wp_customize );
 
 			if ( get_option( \BigCommerce\Settings\Sections\Cart::OPTION_ENABLE_CART, true ) ) {

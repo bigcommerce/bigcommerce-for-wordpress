@@ -96,7 +96,7 @@ class Product {
 
 	public function condition() {
 		$terms = get_the_terms( $this->post_id, Condition::NAME );
-		if ( empty( $terms ) ) {
+		if ( empty( $terms ) || is_bool( $terms ) ) {
 			return '';
 		}
 
@@ -566,8 +566,10 @@ class Product {
 	 * @return string
 	 */
 	public function availability() {
-		$terms = get_the_terms( $this->post_id, Availability::NAME );
-		if ( ! $terms || is_wp_error( $terms ) ) {
+		$terms               = get_the_terms( $this->post_id, Availability::NAME );
+		$terms_empty_boolean = empty( $terms ) || is_bool( $terms );
+
+		if ( $terms_empty_boolean || is_wp_error( $terms ) ) {
 			return Availability::AVAILABLE;
 		}
 
@@ -722,7 +724,7 @@ class Product {
 	 */
 	public function get_channel() {
 		$channels = get_the_terms( $this->post_id(), Channel::NAME );
-		if ( empty( $channels ) ) {
+		if ( empty( $channels ) || is_bool( $channels ) ) {
 			$connections = new Connections();
 
 			return $connections->current();

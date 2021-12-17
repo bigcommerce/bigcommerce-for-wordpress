@@ -8,6 +8,7 @@ use BigCommerce\Import\Runner\Status;
 use BigCommerce\Merchant\Onboarding_Api;
 use BigCommerce\Nav_Menu\Nav_Items_Meta_Box;
 use BigCommerce\Post_Types\Product\Product;
+use BigCommerce\Settings\Abort_Import;
 use BigCommerce\Settings\Connection_Status;
 use BigCommerce\Settings\Import_Now;
 use BigCommerce\Settings\Import_Status;
@@ -78,6 +79,7 @@ class Settings extends Provider {
 	const START_OVER          = 'settings.start_over';
 	const ONBOARDING_PROGRESS = 'settings.onboarding.progress_bar';
 	const SITE_URL_SYNC       = 'settings.site_url_sync';
+	const ABORT_IMPORT        = 'settings.abort_product_import';
 
 	const CONFIG_STATUS              = 'settings.configuration_status';
 	const CONFIG_DISPLAY_MENUS       = 'settings.configuration_display_menus';
@@ -648,6 +650,10 @@ class Settings extends Provider {
 			return new Site_URL_Sync( $container[ Taxonomies::ROUTES ] , $container[ self::SETTINGS_SCREEN ] );
 		};
 
+		$container[ self::ABORT_IMPORT ] = function ( Container $container ) {
+			return new Abort_Import( $container[ self::SETTINGS_SCREEN ] );
+		};
+
 		add_action( 'bigcommerce/settings/register/screen=' . Settings_Screen::NAME, $this->create_callback( 'diagnostics_settings_register', function () use ( $container ) {
 			$container[ self::DIAGNOSTICS_SECTION ]->register_settings_section();
 		} ), 90, 0 );
@@ -662,6 +668,10 @@ class Settings extends Provider {
 
 		add_action( 'admin_post_' . Troubleshooting_Diagnostics::SYNC_SITE_URL, $this->create_callback( 'diagnostics_settings_sync_site_url_action', function () use ( $container ) {
 			$container[ self::SITE_URL_SYNC ]->sync();
+		} ), 10, 0 );
+
+		add_action( 'admin_post_' . Troubleshooting_Diagnostics::ABORT_NAME, $this->create_callback( 'diagnostics_settings_abort_import_action', function () use ( $container ) {
+			$container[ self::ABORT_IMPORT ]->abort( $container['import.cleanup'] );
 		} ), 10, 0 );
 	}
 

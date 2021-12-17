@@ -3,6 +3,7 @@
 
 namespace BigCommerce\Post_Types\Sync_Log;
 
+use BigCommerce\Import\Runner\Status;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Settings\Import_Status;
 use BigCommerce\Taxonomies\Channel\Channel;
@@ -330,6 +331,12 @@ class Sync_Log {
 	 * @return string
 	 */
 	private function get_summary_formatted( $sync_log ) {
+		$status = $sync_log->{self::META_STATUS};
+
+		if ( $status === Status::ABORTED ) {
+			return '';
+		}
+
 		$summary = $sync_log->{self::META_SUMMARY};
 
 		if ( empty( $summary['total'] ) ) {
@@ -368,6 +375,12 @@ class Sync_Log {
 	 * @return string
 	 */
 	private function get_multichannel_summary_formatted( $sync_log ) {
+		$status = $sync_log->{self::META_STATUS};
+
+		if ( $status === Status::ABORTED ) {
+			return '';
+		}
+
 		$multichannel_summary = $sync_log->{self::MULTICHANNEL_SUMMARY};
 
 		$summary = [];

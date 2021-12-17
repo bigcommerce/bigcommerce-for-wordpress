@@ -3,14 +3,13 @@
 namespace BigCommerce\Rest;
 
 use BigCommerce\Post_Types\Product\Product;
-use BigCommerce\Reviews\Review_Fetcher;
 use BigCommerce\Templates\Review_List;
 use BigCommerce\Templates\Review_Single;
 
 class Reviews_Listing_Controller extends Rest_Controller {
 
 	/**
-	 * @var Review_Fetcher
+	 * @var \BigCommerce\Reviews\Review_Fetcher
 	 */
 	private $fetcher;
 
@@ -20,7 +19,7 @@ class Reviews_Listing_Controller extends Rest_Controller {
 	 * @param string         $namespace_base
 	 * @param string         $version
 	 * @param string         $rest_base
-	 * @param Review_Fetcher $fetcher
+	 * @param \BigCommerce\Reviews\Review_Fetcher $fetcher
 	 */
 	public function __construct( $namespace_base, $version, $rest_base, $fetcher ) {
 		parent::__construct( $namespace_base, $version, $rest_base );
@@ -111,15 +110,19 @@ class Reviews_Listing_Controller extends Rest_Controller {
 		$per_page = absint( $attributes['per_page'] ) ?: 12;
 		$wrap     = filter_var( $attributes['wrap'], FILTER_VALIDATE_BOOLEAN );
 
-		if ( $page === 1 && $per_page <= 12 ) {
-			$reviews = $product->get_reviews( $per_page );
-		} else {
-			$reviews = $this->fetcher->fetch( $product->bc_id(), $page, $per_page )['reviews'];
-		}
+		$reviews = $this->fetcher->fetch( $product->bc_id(), $page, $per_page )['reviews'];
+
 		$reviews = array_map( function ( $review ) use ( $product ) {
-			$controller = Review_Single::factory( array_merge( [
-				Review_Single::PRODUCT => $product,
-			], $review ) );
+			$controller = Review_Single::factory( [
+				Review_Single::PRODUCT   => $product,
+				Review_Single::TITLE     => $review->getTitle(),
+				Review_Single::REVIEW_ID => $review->getId(),
+				Review_Single::CONTENT   => $review->getText(),
+				Review_Single::STATUS    => $review->getStatus(),
+				Review_Single::EMAIL     => $review->getEmail(),
+				Review_Single::NAME      => $review->getName(),
+				Review_Single::DATE      => $review->getDateReviewed()->format( 'c' ),
+			] );
 
 			return $controller->render();
 		}, $reviews );
