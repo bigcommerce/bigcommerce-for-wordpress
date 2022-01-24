@@ -18,6 +18,7 @@ class JS_Localization {
 
 		$js_i18n_array = [
 			'operations' => [
+				'loading' => __( 'Loading', 'bigcommerce' ),
 				'query_string_separator' => __( '&', 'bigcommerce' ),
 			],
 			'cart'       => [

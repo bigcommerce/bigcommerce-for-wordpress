@@ -35,14 +35,18 @@ const createSpinLoader = (itemContainer = '') => {
 	}
 
 	const container = tools.closest(itemContainer, '.bc-load-items');
-	const spinner = tools.getNodes('.bc-load-items__loader', false, container, true)[0];
+	const loader = tools.getNodes('.bc-load-items__loader', false, container, true)[0];
 	const spinnerOptions = {
 		opacity: 0.5,
 		scale: 0.5,
 		lines: 12,
 	};
 
-	new Spinner(spinnerOptions).spin(spinner);
+	const spinner = new Spinner(spinnerOptions).spin(loader);
+
+	if (spinner.el) {
+		spinner.el.setAttribute('aria-label', NLS.operations.loading);
+	}
 };
 
 /**

@@ -45,6 +45,7 @@ class JS_Localization {
 				'no_resources_json_data'            => __( 'There was an error retrieving the resources data. Please refresh this page and try again.', 'bigcommerce' ),
 			],
 			'operations' => [
+				'loading'                => __( 'Loading', 'bigcommerce' ),
 				'query_string_separator' => __( '&', 'bigcommerce' ),
 			],
 			'text'       => [

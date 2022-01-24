@@ -50,7 +50,13 @@ abstract class Webhook {
 	public function get_auth_header() {
 		// On some envs filter_input(https://bugs.php.net/bug.php?id=49184) may return NULL value even if variable exists
 		// In order to prevent the issue we use filter_var for a $_SERVER variable
-		return filter_var( $_SERVER[ self::INPUT_AUTH_HEADER ], FILTER_UNSAFE_RAW );
+		// The check with filter_has_var required. In other cases we may produce a PHP notice about missing index
+		// and JSON request can be incorrect
+		if ( isset( $_SERVER[ self::INPUT_AUTH_HEADER ] ) ) {
+			return filter_var( $_SERVER[ self::INPUT_AUTH_HEADER ], FILTER_UNSAFE_RAW );
+		}
+
+		return null;
 	}
 
 	/**
@@ -142,6 +148,8 @@ abstract class Webhook {
 			 * @param array $result Result.
 			 */
 			do_action( 'bigcommerce/webhooks/update_failed', $this, $result );
+
+			return 0;
 		}
 
 		$webhooks            = get_option( self::WEBHOOKS_OPTION, [] );

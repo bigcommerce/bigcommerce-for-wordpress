@@ -1,7 +1,7 @@
 <?php
 
 
-namespace BigCommerce\Webhooks;
+namespace BigCommerce\Webhooks\Product;
 
 use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Api\v3\Api\ChannelsApi;
@@ -21,6 +21,7 @@ use BigCommerce\Taxonomies\Channel\Connections;
  * @package BigCommerce\Webhooks
  */
 class Product_Updater {
+
 	/** @var CatalogApi */
 	private $catalog;
 	/** @var ChannelsApi */

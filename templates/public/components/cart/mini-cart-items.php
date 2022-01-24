@@ -86,7 +86,7 @@ use BigCommerce\Taxonomies\Brand\Brand;
 			$min = ( 0 <= $item['minimum_quantity'] ) ? 1 : $item['minimum_quantity'];
 			?>
 			<label
-					for="bc-cart-item__quantity"
+					for="item-<?php echo esc_attr( $item['id'] ); ?>-quantity"
 					class="u-bc-screen-reader-text"
 			><?php esc_html_e( 'Quantity', 'bigcommerce' ); ?></label>
 
@@ -94,6 +94,7 @@ use BigCommerce\Taxonomies\Brand\Brand;
 			<input
 					type="number"
 					name="bc-cart-item__quantity"
+					id="item-<?php echo esc_attr( $item['id'] ); ?>-quantity"
 					class="bc-cart-item__quantity-input"
 					data-js="bc-cart-item__quantity" data-cart_item_id="<?php echo esc_attr( $item['id'] ); ?>"
 					value="<?php echo intval( $item['quantity'] ); ?>"

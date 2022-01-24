@@ -10,6 +10,7 @@ use BigCommerce\Import\Runner\Status;
 use BigCommerce\Import\Task_Manager;
 use BigCommerce\Logging\Error_Log;
 use BigCommerce\Post_Types\Queue_Task\Queue_Task;
+use BigCommerce\Settings\Sections\Import as Import_Settings;
 
 /**
  * Class Import_Status
@@ -28,6 +29,13 @@ class Import_Status {
 
 	public function __construct( Task_Manager $manager ) {
 		$this->manager = $manager;
+	}
+
+	/**
+	 * @return false|mixed|void
+	 */
+	public static function is_parallel_run_enabled() {
+		return get_option( Import_Settings::RUN_IN_PARALLEL, 0 );
 	}
 
 	/**

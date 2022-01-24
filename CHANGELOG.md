@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.23.0]
+
+### Added
+- In order to speed up the import process running import tasks in parallel was added. The option can be enabled in  Bigcommerce > Settings > Product Sync. Enabling it will add an additional background task runs on listings, channels initialization, and product data fetching.
+- Added support for customer webhooks. The options can be enabled during onboarding process or in Bigcommerce > Settings > Product Sync
+
+### Fixed
+- Perform an additional cleanup before import starts. Optimize cleanup queries in order to reduce server resource consumption
+
 ## [4.22.0]
 
 ### Added
@@ -1679,6 +1688,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.23.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.22.0...4.23.0
 [4.22.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.21.1...4.22.0
 [4.21.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.20.1...4.21.0
 [4.20.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.20.0...4.20.1

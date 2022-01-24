@@ -69,19 +69,19 @@ class Queue_Runner implements Import_Processor {
 				do_action( 'bigcommerce/log', Error_Log::WARNING, __( 'Too many failed attempts to process record, aborting', 'bigcommerce' ), [
 					'record' => $record,
 				] );
-				$this->mark_task_complete( $record->ID );
+				$this->mark_task_complete( $record->ID, $wpdb );
 			} else {
-				$wpdb->update(
-					$wpdb->posts,
-					[ 'menu_order' => $record->menu_order + 1 ],
-					[ 'ID' => $record->ID ],
-					[ '%d' ],
-					[ '%d' ]
+				$wpdb->query(
+					$wpdb->prepare(
+					"UPDATE {$wpdb->posts} SET menu_order = %d WHERE ID = %d",
+						$record->menu_order + 1,
+						$record->ID
+					)
 				);
 
 				try {
 					$this->handle_record( $record, $channels );
-					$this->mark_task_complete( $record->ID );
+					$this->mark_task_complete( $record->ID, $wpdb );
 				} catch ( \Exception $e ) {
 					do_action( 'bigcommerce/log', Error_Log::WARNING, __( 'Exception while handling record', 'bigcommerce' ), [
 						'record_id' => $record->ID,
@@ -234,10 +234,13 @@ class Queue_Runner implements Import_Processor {
 		}
 	}
 
-	private function mark_task_complete( $record_id ) {
-		wp_update_post( [
-			'ID'          => $record_id,
-			'post_status' => 'trash',
-		] );
+	private function mark_task_complete( $record_id, $wpdb ) {
+		$wpdb->query(
+			$wpdb->prepare(
+				"UPDATE {$wpdb->posts} SET post_status = '%s' WHERE ID = %d",
+				'trash',
+				$record_id
+			)
+		);
 	}
 }

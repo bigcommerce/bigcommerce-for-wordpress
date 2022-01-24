@@ -17,10 +17,11 @@ use BigCommerce\Taxonomies\Channel\Connections;
 use Pimple\Container;
 
 class Import extends Provider {
-	const CRON_MONITOR = 'import.cron.monitor';
-	const CRON_RUNNER  = 'import.cron.runner';
-	const LOCK_MONITOR = 'import.lock.monitor';
-	const TIMEOUT      = 'timeout';
+	const CRON_MONITOR    = 'import.cron.monitor';
+	const CRON_RUNNER     = 'import.cron.runner';
+	const PARALLEL_RUNNER = 'import.async.runner';
+	const LOCK_MONITOR    = 'import.lock.monitor';
+	const TIMEOUT         = 'timeout';
 
 	const TASK_MANAGER  = 'import.task_manager';
 	const TASK_LIST     = 'import.task_list';
@@ -72,6 +73,10 @@ class Import extends Provider {
 			return new Runner\Cron_Runner();
 		};
 
+		$container[ self::PARALLEL_RUNNER ] = function ( Container $container ) {
+			return new Runner\AsyncProcessing_Runner();
+		};
+
 		add_action( 'init', $this->create_callback( 'cron_init', function () use ( $container ) {
 			if ( $container[ Settings::CONFIG_STATUS ] >= Settings::STATUS_CHANNEL_CONNECTED ) {
 				$container[ self::CRON_MONITOR ]->check_for_scheduled_crons();
@@ -106,9 +111,12 @@ class Import extends Provider {
 			$container[ self::CRON_RUNNER ]->continue_import();
 		} ), 10, 0 );
 
-		add_action( 'wp_ajax_' . Import_Status::AJAX_ACTION_IMPORT_STATUS, $this->create_callback( 'ajax_continue', function () use ( $container ) {
-			$container[ self::CRON_RUNNER ]->ajax_continue_import();
-		} ), 5, 0 );
+		add_action( Runner\AsyncProcessing_Runner::CONTINUE_IMPORT, $this->create_callback( 'async_import_run', function () use ( $container ) {
+			if ( ! Import_Status::is_parallel_run_enabled() ) {
+				return;
+			}
+			$container[ self::PARALLEL_RUNNER ]->run();
+		} ), 10, 0 );
 	}
 
 	private function process( Container $container ) {
@@ -171,7 +179,7 @@ class Import extends Provider {
 		};
 
 		$container[ self::QUEUE ] = function ( Container $container ) {
-			return new Processors\Queue_Runner( $container[ Api::FACTORY ]->catalog(), $container[ self::BATCH_SIZE ], 10 );
+			return new Processors\Queue_Runner( $container[ Api::FACTORY ]->catalog(), $container[ self::BATCH_SIZE ], 5 );
 		};
 
 		$container[ self::STORE ] = function ( Container $container ) {
@@ -197,6 +205,8 @@ class Import extends Provider {
 
 		$start = $this->create_callback( 'process_start', function () use ( $container ) {
 			$container[ self::START ]->run();
+			// Run pre import cleanup process. Set abort = false, pre_import = true
+			$container[ self::CLEANUP ]->run( false, true );
 		} );
 		add_action( 'bigcommerce/import/start', $start, 10, 0 );
 

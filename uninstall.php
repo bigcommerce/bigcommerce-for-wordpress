@@ -12,7 +12,6 @@ use BigCommerce\Import\Processors\Term_Import;
 use BigCommerce\Import\Processors\Term_Purge;
 use BigCommerce\Import\Runner\Lock;
 use BigCommerce\Import\Runner\Status;
-use BigCommerce\Logging\Error_Log;
 use BigCommerce\Merchant;
 use BigCommerce\Nav_Menu\Nav_Items_Meta_Box;
 use BigCommerce\Pages;
@@ -26,7 +25,6 @@ use BigCommerce\Taxonomies\Flag\Flag;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
 use BigCommerce\Taxonomies\Product_Type\Product_Type;
 use BigCommerce\Taxonomies\Channel\Channel;
-use BigCommerce\Webhooks\Product_Update_Webhook;
 use BigCommerce\Webhooks\Webhook;
 use BigCommerce\Webhooks\Webhook_Versioning;
 
@@ -158,7 +156,7 @@ function delete_options() {
 		Settings\Sections\Cart::OPTION_CART_PAGE_ID,
 		Settings\Sections\Import::OPTION_FREQUENCY,
 		Settings\Sections\Import::OPTION_NEW_PRODUCTS,
-		Settings\Sections\Import::ENABLE_WEBHOOKS,
+		Settings\Sections\Import::ENABLE_PRODUCTS_WEBHOOKS,
 		Settings\Sections\Account_Settings::SUPPORT_EMAIL,
 		Settings\Sections\Account_Settings::REGISTRATION_SPAM_CHECK,
 		Settings\Sections\Account_Settings::ALLOW_GLOBAL_LOGINS,
