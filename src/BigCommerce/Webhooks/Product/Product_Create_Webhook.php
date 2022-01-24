@@ -5,7 +5,9 @@
  * @package BigCommmerce
  */
 
-namespace BigCommerce\Webhooks;
+namespace BigCommerce\Webhooks\Product;
+
+use BigCommerce\Webhooks\Webhook;
 
 /**
  * Class Product_Create_Webhook

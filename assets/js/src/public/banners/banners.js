@@ -40,7 +40,7 @@ const init = () => {
 		}
 
 		// append banner to location
-		banners[banner.location] += bannerContent(banner.content);
+		banners[banner.location] += bannerContent(banner.content, banner.name);
 	});
 
 	const styles = `background-color: ${GLOBALS.BANNERS.bg_color}; color: ${GLOBALS.BANNERS.text_color};`;

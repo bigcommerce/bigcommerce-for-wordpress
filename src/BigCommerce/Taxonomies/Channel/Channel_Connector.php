@@ -64,7 +64,7 @@ class Channel_Connector {
 			do_action( 'bigcommerce/channel/promote', $term );
 		}
 		update_option( Import::OPTION_NEW_PRODUCTS, 1 );
-		update_option( Import::ENABLE_WEBHOOKS, false );
+		update_option( Import::ENABLE_PRODUCTS_WEBHOOKS, false );
 	}
 
 	/**

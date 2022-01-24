@@ -4,6 +4,7 @@
 namespace BigCommerce\Import\Runner;
 
 
+use BigCommerce\Settings\Import_Status;
 use BigCommerce\Settings\Sections\Import;
 
 class Cron_Scheduler {
@@ -31,7 +32,7 @@ class Cron_Scheduler {
 		}
 
 		$last = (int) $previous[ 'timestamp' ];
-		
+
 		switch ( $frequency ) {
 			case Import::FREQUENCY_HOURLY:
 				$offset = HOUR_IN_SECONDS;
@@ -72,5 +73,11 @@ class Cron_Scheduler {
 	 */
 	public function schedule_next_batch() {
 		wp_schedule_single_event( time(), Cron_Runner::CONTINUE_CRON );
+
+		if ( ! Import_Status::is_parallel_run_enabled() ) {
+			return;
+		}
+
+		wp_schedule_single_event( time(), AsyncProcessing_Runner::CONTINUE_IMPORT );
 	}
 }

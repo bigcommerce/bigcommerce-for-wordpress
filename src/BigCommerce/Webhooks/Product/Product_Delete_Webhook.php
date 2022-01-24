@@ -5,10 +5,11 @@
  * @package BigCommmerce
  */
 
-namespace BigCommerce\Webhooks;
+namespace BigCommerce\Webhooks\Product;
 
 use BigCommerce\Import\Importers\Products\Product_Remover;
 use BigCommerce\Taxonomies\Channel\Connections;
+use BigCommerce\Webhooks\Webhook;
 
 /**
  * Class Product_Delete_Webhook
