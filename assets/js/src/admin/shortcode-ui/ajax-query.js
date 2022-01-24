@@ -29,7 +29,11 @@ const createSpinLoader = () => {
 		opacity: 0.5,
 	};
 
-	return new Spinner(options).spin(el.loader);
+	const spinner = new Spinner(options).spin(el.loader);
+
+	if (spinner.el) {
+		spinner.el.setAttribute('aria-label', I18N.operations.loading);
+	}
 };
 
 /**

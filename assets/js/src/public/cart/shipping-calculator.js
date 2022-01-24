@@ -115,7 +115,11 @@ const createSpinner = () => {
 		lines: 12,
 	};
 
-	new Spinner(spinnerOptions).spin(el.spinner);
+	const spinner = new Spinner(spinnerOptions).spin(el.spinner);
+
+	if (spinner.el) {
+		spinner.el.setAttribute('aria-label', NLS.operations.loading);
+	}
 };
 
 /**

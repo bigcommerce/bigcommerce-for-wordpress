@@ -25,24 +25,16 @@ class Cleanup implements Import_Processor {
 		$this->batch = $batch;
 	}
 
-	public function run( $abort = false ) {
+	public function run( $abort = false, $pre_import = false ) {
 		$status = new Status();
 		$status->set_status( Status::CLEANING );
 
-		$query = new \WP_Query();
-		$tasks = $query->query( [
-			'post_type'      => Queue_Task::NAME,
-			'post_status'    => 'trash',
-			'posts_per_page' => $this->batch,
-			'fields'         => 'ids',
-		] );
+		$this->clean_tasks( $pre_import );
 
-		foreach( $tasks as $post_id ) {
-			wp_delete_post( $post_id, true );
-		}
+		if ( $pre_import ) {
+			$status->set_status( Status::STARTED );
 
-		if ( $query->found_posts > count( $tasks ) ) {
-			return; // delete more in the next batch
+			return;
 		}
 
 		delete_option( Listing_Fetcher::PRODUCT_LISTING_MAP );
@@ -64,6 +56,41 @@ class Cleanup implements Import_Processor {
 		$status->rotate_logs(); // must rotate _after_ status set to complete
 
 		do_action( 'bigcommerce/log', Error_Log::INFO, __( 'Import complete', 'bigcommerce' ), [] );
+	}
+
+	/**
+	 * Clean Queue_Task::NAME posts before/after import
+	 *
+	 * @param boolean $pre_import
+	 */
+	private function clean_tasks( $pre_import = false ) {
+		global $wpdb;
+		$sql = "SELECT ID FROM {$wpdb->posts} WHERE post_type ='%s'";
+
+		if ( empty( $pre_import ) ) {
+			$sql           .= " AND post_status = '%s'";
+			$prepared_query = $wpdb->prepare( $sql, Queue_Task::NAME, 'trash' );
+		} else {
+			$prepared_query = $wpdb->prepare( $sql, Queue_Task::NAME );
+		}
+
+		$tasks = $wpdb->get_results( $prepared_query );
+
+		if ( empty( $tasks ) || is_wp_error( $tasks ) ) {
+			do_action( 'bigcommerce/log', Error_Log::INFO, __( 'Clean tasks queue is empty', 'bigcommerce' ), [] );
+
+			if ( is_wp_error( $tasks ) ) {
+				do_action( 'bigcommerce/log', Error_Log::ERROR, __( 'Error is occurred in the cleanup task query', 'bigcommerce' ), [
+					'error' => $tasks,
+				] );
+			}
+
+			return;
+		}
+
+		foreach ( $tasks as $post ) {
+			wp_delete_post( $post->ID, true );
+		}
 	}
 
 	/**

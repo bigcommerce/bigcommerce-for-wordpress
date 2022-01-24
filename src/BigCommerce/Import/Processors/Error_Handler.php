@@ -13,12 +13,12 @@ class Error_Handler implements Import_Processor {
 		/** @var \wpdb $wpdb */
 		global $wpdb;
 
-		$wpdb->update(
-			$wpdb->posts,
-			[ 'post_status' => 'trash', ],
-			[ 'post_type' => Queue_Task::NAME, ],
-			[ '%s' ],
-			[ '%s' ]
+		$wpdb->query(
+			$wpdb->prepare(
+				"UPDATE {$wpdb->posts} SET post_status = '%s' WHERE post_type = '%s'",
+				'trash',
+				Queue_Task::NAME
+			)
 		);
 
 		delete_option( Listing_Fetcher::PRODUCT_LISTING_MAP );

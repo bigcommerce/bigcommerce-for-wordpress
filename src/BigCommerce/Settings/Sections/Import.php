@@ -8,14 +8,17 @@ use BigCommerce\Settings\Screens\Connect_Channel_Screen;
 use BigCommerce\Settings\Screens\Settings_Screen;
 
 class Import extends Settings_Section {
+
 	use Webhooks;
 
-	const NAME                = 'import';
-	const OPTION_FREQUENCY    = 'bigcommerce_import_frequency';
-	const OPTION_NEW_PRODUCTS = 'bigcommerce_import_new_products';
-	const BATCH_SIZE          = 'bigcommerce_import_batch_size';
-	const ENABLE_WEBHOOKS     = 'bigcommerce_import_enable_webhooks';
-	const MAX_CONCURRENT      = 'bigcommerce_import_max_concurrent';
+	const NAME                     = 'import';
+	const OPTION_FREQUENCY         = 'bigcommerce_import_frequency';
+	const OPTION_NEW_PRODUCTS      = 'bigcommerce_import_new_products';
+	const BATCH_SIZE               = 'bigcommerce_import_batch_size';
+	const ENABLE_PRODUCTS_WEBHOOKS = 'bigcommerce_import_enable_webhooks';
+	const ENABLE_CUSTOMER_WEBHOOKS = 'bigcommerce_import_enable_customer_webhooks';
+	const MAX_CONCURRENT           = 'bigcommerce_import_max_concurrent';
+	const RUN_IN_PARALLEL          = 'bigcommerce_parallel_run';
 
 	const FREQUENCY_FIVE    = 'five_minutes';
 	const FREQUENCY_THIRTY  = 'thirty_minutes';
@@ -96,17 +99,34 @@ class Import extends Settings_Section {
 		);
 
 		add_settings_field(
-			self::ENABLE_WEBHOOKS,
-			__( 'Enable Webhooks', 'bigcommerce' ),
-			[ $this, 'enable_webhooks_toggle' ],
+			self::RUN_IN_PARALLEL,
+			__( 'Import Tasks Processing', 'bigcommerce' ),
+			[ $this, 'render_import_tasks_processing' ],
 			Settings_Screen::NAME,
 			self::NAME
 		);
 
-		register_setting(
+		register_setting( Settings_Screen::NAME, self::RUN_IN_PARALLEL );
+
+		add_settings_field(
+			self::ENABLE_PRODUCTS_WEBHOOKS,
+			__( 'Enable Products Webhooks', 'bigcommerce' ),
+			[ $this, 'enable_products_webhooks_toggle' ],
 			Settings_Screen::NAME,
-			self::ENABLE_WEBHOOKS
+			self::NAME
 		);
+
+		register_setting( Settings_Screen::NAME, self::ENABLE_PRODUCTS_WEBHOOKS );
+
+		add_settings_field(
+			self::ENABLE_CUSTOMER_WEBHOOKS,
+			__( 'Enable Customers Webhooks', 'bigcommerce' ),
+			[ $this, 'enable_customer_webhooks_toggle' ],
+			Settings_Screen::NAME,
+			self::NAME
+		);
+
+		register_setting( Settings_Screen::NAME, self::ENABLE_CUSTOMER_WEBHOOKS );
 
 		/* // disabled until we figure out how to implement concurrent processing
 		add_settings_field(
@@ -198,6 +218,25 @@ class Import extends Settings_Section {
 			esc_attr( self::OPTION_NEW_PRODUCTS ),
 			checked( 0, (int) $current, false ),
 			esc_html( __( "No, I'll select which products should be listed on this Channel within BigCommerce", 'bigcommerce' ) )
+		);
+		echo '</fieldset>';
+	}
+
+	public function render_import_tasks_processing() {
+		$current = get_option( Import::RUN_IN_PARALLEL, 0 );
+
+		echo '<fieldset>';
+		printf(
+			'<p><label><input type="radio" name="%s" value="0" %s /> %s</label></p>',
+			esc_attr( Import::RUN_IN_PARALLEL ),
+			checked( 0, (int) $current, false ),
+			esc_html( __( 'Classic import processing. Single process for running import tasks', 'bigcommerce' ) )
+		);
+		printf(
+			'<p><label><input type="radio" name="%s" value="1" %s /> %s</label></p>',
+			esc_attr( Import::RUN_IN_PARALLEL ),
+			checked( 1, (int) $current, false ),
+			esc_html( __( "Import processing in parallel for fetching listings, products, channel initialization", 'bigcommerce' ) )
 		);
 		echo '</fieldset>';
 	}

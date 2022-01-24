@@ -1,6 +1,6 @@
 <?php
 
-namespace BigCommerce\Webhooks;
+namespace BigCommerce\Webhooks\Product;
 
 use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Api\v3\Api\ChannelsApi;
