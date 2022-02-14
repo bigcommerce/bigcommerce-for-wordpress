@@ -75,7 +75,7 @@ class Product_Updater {
 				'response' => $e->getResponseBody(),
 				'headers'  => $e->getResponseHeaders(),
 			] );
-			do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [] );
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [], 'webhooks' );
 		} finally {
 			// unhook the filters we added at the start
 			remove_filter( 'bigcommerce/channel/listing/should_update', $empty, 10 );

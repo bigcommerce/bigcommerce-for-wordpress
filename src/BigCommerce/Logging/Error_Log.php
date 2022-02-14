@@ -22,11 +22,16 @@ class Error_Log {
 	const INFO         = 'info';
 	const DEBUG        = 'debug';
 	const MAX_SIZE     = 25;
-
+	const ALLOWED_LOGS = [
+		'debug',
+		'webhooks'
+	];
 	/**
 	 * @var Logger
 	 */
 	public $log;
+
+	public $webhook_log;
 
 	/**
 	 * @var string This log file path
@@ -34,35 +39,60 @@ class Error_Log {
 	public $log_path;
 
 	/**
+	 * @var string This log webhooks file path
+	 */
+	public $log_folder_path;
+	/**
 	 * Log constructor.
 	 *
 	 * @param string $log_path File system path to the log file
 	 */
-	public function __construct( $log_path ) {
-		$this->log_path = $log_path;
+	public function __construct( $log_path, $log_folder_path ) {
+		$this->log_path        = $log_path;
+		$this->log_folder_path = $log_folder_path;
 	}
 
 	/**
 	 * Set up the import errors log
 	 */
-	public function init_log() {
+	public function init_log( $path = '' ) {
+		if ( empty( $path ) && isset( $this->log ) ) {
+			return;
+		}
+
+		if ( ! empty( $path ) && isset( $this->{$path} ) ) {
+			return;
+		}
+
 		$this->init_log_dir();
 
 		// Format lines as json objects
 		$formatter = apply_filters( 'bigcommerce/logger/formatter', new \Monolog\Formatter\LineFormatter() );
 
 		// Logger message
-		$logger_name  = apply_filters( 'bigcommerce/logger/channel', 'BigCommerce' );
-		$this->log    = new Logger( $logger_name );
+		$logger_name = apply_filters( 'bigcommerce/logger/channel', 'BigCommerce' );
+		if ( empty( $path ) ) {
+			$this->log = new Logger( $logger_name );
+		} else {
+			$this->{$path} = new Logger( $logger_name . '-' . $path );
+		}
+
 		$logger_level = $this->log_level();
 
 		try {
-			$handler = apply_filters( 'bigcommerce/logger/handler', new StreamHandler( $this->log_path, $logger_level ) );
+			$path_to_log = empty( $path ) ? $this->log_path : $this->log_folder_path . $path . '.log';
+			$handler     = apply_filters( 'bigcommerce/logger/handler', new StreamHandler( $path_to_log, $logger_level ) );
 
 			// Logger Handler
 			$handler->setFormatter( $formatter );
 
-			$this->log->pushHandler( $handler );
+			if ( empty( $path ) ) {
+				$this->log->pushHandler( $handler );
+
+				return;
+			}
+
+			$this->{$path}->pushHandler( $handler );
 		} catch ( \Exception $e ) {
 			// log is not writeable
 			error_log( __( 'Unable to initialize import error log', 'bigcommerce' ) );
@@ -125,7 +155,7 @@ class Error_Log {
 		$htaccess_file = fopen( $directory_path . ".htaccess", "a+" );
 
 		$rulles = <<<HTACCESS
-# BigCommerce Plugin Rule  
+# BigCommerce Plugin Rule
 <FilesMatch ".*">
     Order Allow,Deny
     Deny from All
@@ -142,70 +172,109 @@ HTACCESS;
 	 * @return array
 	 */
 	public function get_log_data() {
-		if ( file_exists( $this->log_path ) ) {
-			if ( filesize( $this->log_path ) == 0 ) {
-				return [
-					'message'       => __( 'The log file is empty', 'bigcommerce' ),
-					'log_content'   => '',
-					'log_date_time' => '',
-				];
-			}
-			$log_content            = file_get_contents( $this->log_path );
-			$log_creation_date_time = date( "F-d-Y H:i:s.", filemtime( $this->log_path ) );
+		$result = [
+			'entries' => [],
+		];
 
-			return [
-				'message'       => __( 'ok', 'bigcommerce' ),
-				'log_content'   => $log_content,
-				'log_date_time' => $log_creation_date_time,
-			];
-		} else {
-			return [
-				'message'       => __( 'Log not found -> ' . $this->log_path, 'bigcommerce' ),
-				'log_content'   => '',
-				'log_date_time' => '',
-			];
-
+		if ( ! is_dir( $this->log_folder_path ) ) {
+			return $result;
 		}
+
+		$files = scandir( $this->log_folder_path );
+
+		if ( empty( $files ) ) {
+			return $result;
+		}
+
+		foreach ( $files as $file ) {
+			$file_path = $this->log_folder_path . $file;
+
+			if ( ! is_file( $file_path ) ) {
+				continue;
+			}
+			$name = pathinfo( $file_path, PATHINFO_FILENAME );
+
+			if ( ! in_array( $name, self::ALLOWED_LOGS ) ) {
+				continue;
+			}
+
+			if ( filesize( $file_path ) == 0 ) {
+				$result['entries'][ $name ] = [
+						'message'       => __( 'The log file is empty', 'bigcommerce' ),
+						'log_content'   => '',
+						'log_date_time' => '',
+				];
+				continue;
+			}
+
+			$log_content                = file_get_contents( $file_path );
+			$log_creation_date_time     = date( "F-d-Y H:i:s.", filemtime( $file_path ) );
+			$result['entries'][ $name ] = [
+					'message'       => __( 'ok', 'bigcommerce' ),
+					'log_content'   => $log_content,
+					'log_date_time' => $log_creation_date_time,
+			];
+		}
+
+		return $result;
 	}
 
 	/**
 	 * Clean log file if it has size more than set in Troubleshooting_Diagnostics::LOG_FILE_SIZE
 	 */
 	public function truncate_log() {
-		if ( ! file_exists( $this->log_path ) ) {
+		if ( ! is_dir( $this->log_folder_path ) ) {
 			return;
 		}
 
-		$log_size = $this->get_log_size_mb();
 		$max_allowed_size = (int) get_option( Troubleshooting_Diagnostics::LOG_FILE_SIZE, self::MAX_SIZE );
 
-		/**
-		 * Exit from function if file size lower than set in settings
-		 */
-		if ( $log_size < $max_allowed_size ) {
+		$files = scandir( $this->log_folder_path );
+
+		if ( empty( $files ) ) {
 			return;
 		}
 
-		/**
-		 * Clean log file contents
-		 */
-		$file = fopen( $this->log_path, "w" );
-		fclose( $file );
+		// Truncate logs files by path
+		foreach ( $files as $file ) {
+			$file_path = $this->log_folder_path . $file;
+			if ( ! is_file( $file_path ) ) {
+				continue;
+			}
+			$extension = pathinfo( $file_path, PATHINFO_EXTENSION );
+
+			if ( empty( $extension ) || $extension !== 'log' ) {
+				continue;
+			}
+
+			$log_size = $this->get_log_size_mb( $file_path );
+
+			if ( $log_size < $max_allowed_size ) {
+				continue;
+			}
+
+			/**
+			 * Clean log file contents
+			 */
+			$file = fopen( $file_path, "w" );
+
+			fclose( $file );
+		}
 	}
 
 	/**
 	 * Get log file size in MB
 	 * @return float|int
 	 */
-	public function get_log_size_mb() {
-		if ( ! file_exists( $this->log_path ) ) {
+	public function get_log_size_mb( $path ) {
+		if ( ! file_exists( $path ) ) {
 			return 0;
 		}
 
 		/**
 		 * Get log size in bytes
 		 */
-		$file_size = filesize( $this->log_path );
+		$file_size = filesize( $path );
 
 		/**
 		 * Return the size of log file in MB
@@ -229,55 +298,77 @@ HTACCESS;
 		$this->log( self::WARNING, $message, $context );
 	}
 
-	public function log( $level, $message, $context ) {
-		if ( ! isset( $this->log ) ) {
-			$this->init_log();
-		}
+	public function log( $level, $message, $context, $path = '' ) {
+		$this->init_log( $path );
+
 		if ( ! is_array( $context ) ) {
 			$context = [];
 		}
+
+		$handler = empty( $path ) ? $this->log : $this->{$path};
+
 		switch ( $level ) {
 			case self::EMERGENCY:
-				$this->log->emergency( $message, $context );
+				$handler->emergency( $message, $context );
 				break;
 			case self::ALERT:
-				$this->log->alert( $message, $context );
+				$handler->alert( $message, $context );
 				break;
 			case self::CRITICAL:
-				$this->log->critical( $message, $context );
+				$handler->critical( $message, $context );
 				break;
 			case self::ERROR:
-				$this->log->error( $message, $context );
+				$handler->error( $message, $context );
 				break;
 			case self::WARNING:
-				$this->log->warning( $message, $context );
+				$handler->warning( $message, $context );
 				break;
 			case self::NOTICE:
-				$this->log->notice( $message, $context );
+				$handler->notice( $message, $context );
 				break;
 			case self::INFO:
-				$this->log->info( $message, $context );
+				$handler->info( $message, $context );
 				break;
 			case self::DEBUG:
 			default:
-				$this->log->debug( $message, $context );
+				$handler->debug( $message, $context );
 				break;
 		}
 	}
 
 	public function add_log_to_diagnostics( $diagnostics ) {
-		$logs          = $this->get_log_data();
-		$diagnostics[] = [
-			'label' => __( 'Error Logs', 'bigcommerce' ),
-			'key'   => 'errorlogs',
-			'value' => [
-				[
+		$logs = $this->get_log_data();
+
+		if ( empty( $logs['entries'] ) ) {
+			$diagnostics[] = [
+				'label' => __( 'Error Logs', 'bigcommerce' ),
+				'key'   => 'errorlogs',
+				'value' => [
 					'label' => __( 'Import Logs', 'bigcommerce' ),
 					'key'   => 'importlogs',
-					'value' => $logs[ 'log_content' ],
+					'value' => '',
 				],
-			],
+			];
+
+			return $diagnostics;
+		}
+
+		$result = [
+			'label' => __( 'Error Logs', 'bigcommerce' ),
+			'key'   => 'errorlogs',
+			'value' => [],
 		];
+
+		foreach ( $logs['entries'] as $name => $entry ) {
+			$label             = $name === 'debug' ? __( 'Import Logs', 'bigcommerce' ) : __( sprintf( '%s Logs', ucfirst( $name ) ), 'bigcommerce' );
+			$result['value'][] = [
+				'label' => $label,
+				'key'   => 'importlogs',
+				'value' => $entry['log_content'],
+			];
+		}
+
+		$diagnostics[] = $result;
 
 		return $diagnostics;
 	}

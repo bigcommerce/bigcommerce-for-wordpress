@@ -31,9 +31,9 @@ class Customer_Deleter {
 			require_once( ABSPATH . 'wp-admin/includes/user.php' );
 			wp_delete_user( $user->ID );
 		} catch (\InvalidArgumentException $exception) {
-			do_action( 'bigcommerce/log', Error_Log::INFO, __( 'Wrong customer id', 'bigcommerce' ), [
+			do_action( 'bigcommerce/log', Error_Log::ERROR, __( 'Could not delete the user. Wrong customer id', 'bigcommerce' ), [
 					'customer_id' => $customer_id,
-			] );
+			], 'webhooks' );
 
 			return;
 		}

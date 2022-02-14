@@ -26,6 +26,10 @@ class Customer_Creator {
 		$customer_response = Client::getResource( sprintf( '/customers/%d', $customer_id ) );
 
 		if ( empty( $customer_response ) ) {
+			do_action( 'bigcommerce/log', Error_Log::ERROR, __( 'Customer create webhook failed. Could not get customer details', 'bigcommerce' ), [
+					'customer_id' => $customer_id,
+			], 'webhooks' );
+
 			return false;
 		}
 
@@ -40,7 +44,7 @@ class Customer_Creator {
 			do_action( 'bigcommerce/log', Error_Log::INFO, __( 'User exists, update customer id', 'bigcommerce' ), [
 				'customer_id' => $customer_id,
 				'user_id'     => $matching_user->ID,
-			] );
+			], 'webhooks' );
 
 			return false;
 		}
@@ -50,10 +54,10 @@ class Customer_Creator {
 		$user_id = wp_create_user( $username, $password, $username );
 
 		if ( is_wp_error( $user_id ) ) {
-			do_action( 'bigcommerce/log', Error_Log::INFO, __( 'Could not create a user via webhook', 'bigcommerce' ), [
+			do_action( 'bigcommerce/log', Error_Log::ERROR, __( 'Could not create a user via webhook', 'bigcommerce' ), [
 				'customer_id' => $customer_id,
 				'result'      => $user_id,
-			] );
+			], 'webhooks' );
 
 			return false;
 		}

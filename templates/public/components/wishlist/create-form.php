@@ -9,7 +9,7 @@
 
 ?>
 <div class="bc-wish-list-dialog-content">
-	<h2 class="bc-wish-list-dialog-title"><?php esc_html_e( 'New Wish List', 'bigcommerce' ); ?></h2>
+	<h2 id="bc-wish-list-dialog-title" class="bc-wish-list-dialog-title"><?php esc_html_e( 'New Wish List', 'bigcommerce' ); ?></h2>
 	<p class="bc-wish-list-dialog-description">
 		<?php esc_html_e( 'Give your Wish List a name and set its public visibility.', 'bigcommerce' ); ?>
 	</p>
