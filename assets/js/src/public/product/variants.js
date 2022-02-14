@@ -552,14 +552,6 @@ const initializeUniqueFieldIDs = (options = [], productVariantsID = '') => {
 				radio.setAttribute('id', fieldID);
 			});
 		}
-
-		// Set the same UID for each select field.
-		if (fieldType === 'product-form-option-select') {
-			tools.getNodes('select', true, option, true).forEach((select) => {
-				const fieldID = `${select.getAttribute('id')}[${productVariantsID}]`;
-				select.setAttribute('id', fieldID);
-			});
-		}
 	});
 };
 

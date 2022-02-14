@@ -21,7 +21,11 @@
 $error_class = 'bc-form__control--error'; // REQUIRED
 ?>
 
-<!-- data-js="bc-dynamic-fields" is required -->
+<h2 id="bc-address-form" class="u-bc-visual-hide">
+	<?php esc_html_e( ( empty( $id ) ? 'New Address' : 'Edit Address' ), 'bigcommerce' ); ?>
+</h2>
+
+	<!-- data-js="bc-dynamic-fields" is required -->
 <form action="" enctype="multipart/form-data" method="post" class="bc-form bc-form-2col <?php if ( ! empty( $errors ) ) { echo 'bc-form--has-errors'; } ?>" data-js="bc-dynamic-fields" data-form-type="bc-address-form">
 	<?php wp_nonce_field( 'edit-address' . $id ); ?>
 	<input type="hidden" name="bc-action" value="edit-address" />

@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.24.0]
+
+### Added
+- Added separate logging section for webhooks. The section can be found under Settings -> Diagnostics -> Get Diagnostics. It shows entries from webhooks incoming requests(validation issues, endpoints triggering, webhooks errors)
+
+### Fixed
+- Fixed the customer's cache purging during the import final cleanup. Cache cleanup was moved to a background cron job in order to prevent the import process freeze due to the high amount of customers in the store
+
 ## [4.23.0]
 
 ### Added
@@ -1688,6 +1696,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.23.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.23.0...4.24.0
 [4.23.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.22.0...4.23.0
 [4.22.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.21.1...4.22.0
 [4.21.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.20.1...4.21.0

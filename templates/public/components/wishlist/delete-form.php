@@ -10,7 +10,7 @@ use BigCommerce\Accounts\Wishlists\Wishlist;
 
 ?>
 <div class="bc-wish-list-dialog-content bc-wish-list-dialog-content--delete">
-	<h2 class="bc-wish-list-dialog-title">
+	<h2 id="bc-wish-list-dialog-title" class="bc-wish-list-dialog-title">
 		<?php printf( '%s <br><span class="bc-link">%s</span>?',
 		esc_html( __( 'Are you sure you want to delete your Wish List', 'bigcommerce' ) ),
 		esc_html( $wishlist->name() ) ); ?>

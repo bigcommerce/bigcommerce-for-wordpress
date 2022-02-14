@@ -7,6 +7,7 @@
 
 namespace BigCommerce\Webhooks\Product;
 
+use BigCommerce\Logging\Error_Log;
 use BigCommerce\Webhooks\Webhook;
 
 /**
@@ -29,6 +30,9 @@ class Product_Create_Webhook extends Webhook {
 		 *
 		 * @param int $product_id BigCommerce product ID.
 		 */
+		do_action( 'bigcommerce/log', Error_Log::INFO, __( 'Trigger product creation', 'bigcommerce' ), [
+			'bc_id' => $request['data']['id'],
+		], 'webhooks' );
 		do_action( 'bigcommerce/webhooks/product_created', intval( $request['data']['id'] ) );
 	}
 }

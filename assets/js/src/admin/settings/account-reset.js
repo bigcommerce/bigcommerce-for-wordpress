@@ -9,7 +9,7 @@ import delegate from 'delegate';
 import * as tools from '../.././utils/tools';
 
 const el = {
-	container: tools.getNodes('bc-welcome-start-over-trigger')[0],
+	container: tools.getNodes('bc-welcome-start-over-trigger'),
 };
 
 const instances = {};

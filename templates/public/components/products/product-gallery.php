@@ -79,23 +79,26 @@ $has_zoom = $zoom ? 'bc-product-image-zoom' : '';
 					$index = 0;
 					foreach ( $image_ids as $image_id ) { ?>
 						<!-- class="swiper-slide" and data-js="bc-gallery-thumb-trigger" are required -->
-						<a class="swiper-slide bc-product-gallery__thumb-slide" data-js="bc-gallery-thumb-trigger"
-						   data-index="<?php echo $index++; ?>">
+						<button class="swiper-slide bc-product-gallery__thumb-slide"
+							data-js="bc-gallery-thumb-trigger"
+							data-index="<?php echo $index++; ?>"
+							aria-label="<?php _e( 'mark as featured image', 'stellar' ) ?>"
+						>
 							<img src="<?php echo esc_url( wp_get_attachment_image_url( $image_id, $thumbnail_size ) ); ?>"
-							     alt="<?php echo esc_attr( trim( strip_tags( get_post_meta( $image_id, '_wp_attachment_image_alt', true ) ) ) ); ?>">
-						</a>
+								alt="<?php echo esc_attr( trim( strip_tags( get_post_meta( $image_id, '_wp_attachment_image_alt', true ) ) ) ); ?>"
+							>
+						</button>
 					<?php }
 					foreach ( $youtube_videos as $video ) { ?>
 						<!-- class="swiper-slide bc-product-gallery__thumb-slide--video", data-player-id="<?php esc_attr( $video['id'] ); ?>", and data-js="bc-gallery-thumb-trigger" are required -->
-						<a
-								class="swiper-slide bc-product-gallery__thumb-slide bc-product-gallery__thumb-slide--video"
-								data-js="bc-gallery-thumb-trigger"
-								data-index="<?php echo $index++; ?>"
-								data-player-id="<?php echo esc_attr( $video['id'] ); ?>"
-								title="<?php echo esc_attr( sprintf( __( 'Play %s', 'bigcommerce' ), $video['title'] ) ); ?>"
+						<button class="swiper-slide bc-product-gallery__thumb-slide bc-product-gallery__thumb-slide--video"
+							data-js="bc-gallery-thumb-trigger"
+							data-index="<?php echo $index++; ?>"
+							data-player-id="<?php echo esc_attr( $video['id'] ); ?>"
+							aria-label="<?php echo esc_attr( sprintf( __( 'Play %s', 'bigcommerce' ), $video['title'] ) ); ?>"
 						>
 							<i class="bc-video-play-icon"></i>
-						</a>
+						</button>
 					<?php } ?>
 				</div>
 			</div>

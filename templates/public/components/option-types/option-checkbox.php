@@ -20,18 +20,17 @@
 	</span>
 
 	<div class="bc-product-form__option-field" data-js="product-form-option" data-field="product-form-option-checkbox">
-
 		<label for="option-<?php echo esc_attr( $checkbox_value ); ?>" class="bc-product-option__label">
-			<input type="checkbox" name="option[<?php echo esc_attr( $id ); ?>]"
-						 id="option-<?php echo esc_attr( $checkbox_value ); ?>"
-						 class="bc-product-option__text"
-						 data-js="bc-product-option-field"
-						 data-option-id="<?php echo esc_attr( $id ); ?>"
-						 value="<?php echo esc_attr( $checkbox_value ); ?>"
-						 <?php if ( $required ) { echo 'required="required"'; } ?>
-						 <?php if ( $checked ) { echo 'checked="checked"'; } ?>
-			/>
-
+			<input type="checkbox"
+				name="option[<?php echo esc_attr( $id ); ?>]"
+				id="option-<?php echo esc_attr( $checkbox_value ); ?>"
+				value="<?php echo esc_attr( $checkbox_value ); ?>"
+				class="bc-product-option__text"
+				data-js="bc-product-option-field"
+				data-option-id="<?php echo esc_attr( $id ); ?>"
+				<?php if ( $required ) { echo 'required="required"'; } ?>
+				<?php checked( $checked ); ?>
+			>
 			<span class="bc-product-option__label--checkbox">
 				<span class="bc-product-option__label--title">
 					<?php echo esc_html( $checkbox_label ); ?>
