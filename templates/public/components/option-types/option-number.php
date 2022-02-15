@@ -16,23 +16,22 @@
 
 <div class="bc-product-form__control bc-product-form__control--number">
 
-	<label for="option-<?php echo esc_attr( $id ); ?>" class="bc-form__label bc-product-form__option-label <?php if ( $required ) { echo 'bc-form-control-required'; } ?>">
+	<label class="bc-form__label bc-product-form__option-label <?php if ( $required ) { echo 'bc-form-control-required'; } ?>" for="option-<?php echo esc_attr( $id ); ?>">
 		<?php echo esc_html( $label ); ?>
 	</label>
 
 	<div class="bc-product-form__option-field">
-		<input type="number"
-			name="option[<?php echo esc_attr( $id ); ?>]"
-			id="option-<?php echo esc_attr( $id ); ?>"
-			value="<?php echo esc_attr( $default_value ); ?>"
-			class="bc-product-option__number"
-			data-js="bc-product-option-field"
-			data-option-id="<?php echo esc_attr( $id ); ?>"
-			step="<?php echo esc_attr( $step ); ?>"
-			<?php if ( $required ) { echo 'required="required"'; } ?>
-			<?php if ( $min_value !== null ) { printf( 'min="%s"', esc_attr( $min_value ) ); } ?>
-			<?php if ( $max_value !== null ) { printf( 'max="%s"', esc_attr( $max_value ) ); } ?>
-		>
+		<input type="number" name="option[<?php echo esc_attr( $id ); ?>]"
+		       id="option-<?php echo esc_attr( $id ); ?>"
+		       class="bc-product-option__number"
+		       data-js="bc-product-option-field"
+		       data-option-id="<?php echo esc_attr( $id ); ?>"
+		       step="<?php echo esc_attr( $step ); ?>"
+		       <?php if ( $required ) { echo 'required="required"'; } ?>
+		       <?php if ( $min_value !== null ) { printf( 'min="%s"', esc_attr( $min_value ) ); } ?>
+		       <?php if ( $max_value !== null ) { printf( 'max="%s"', esc_attr( $max_value ) ); } ?>
+		       value="<?php echo esc_attr( $default_value ); ?>"
+		/>
 	</div>
 
 	<?php if ( $min_value && $max_value ) { ?>

@@ -8,7 +8,6 @@
 namespace BigCommerce\Webhooks\Product;
 
 use BigCommerce\Import\Importers\Products\Product_Remover;
-use BigCommerce\Logging\Error_Log;
 use BigCommerce\Taxonomies\Channel\Connections;
 use BigCommerce\Webhooks\Webhook;
 
@@ -32,9 +31,6 @@ class Product_Delete_Webhook extends Webhook {
 		 *
 		 * @param int $product_id BigCommerce product ID.
 		 */
-		do_action( 'bigcommerce/log', Error_Log::INFO, __( 'Trigger product delete webhook', 'bigcommerce' ), [
-				'bc_id' => $request['data']['id'],
-		], 'webhooks' );
 		do_action( 'bigcommerce/webhooks/product_deleted', intval( $request['data']['id'] ) );
 	}
 

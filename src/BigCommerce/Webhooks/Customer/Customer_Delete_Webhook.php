@@ -32,9 +32,6 @@ class Customer_Delete_Webhook extends Webhook {
 		 *
 		 * @param int $customer_id BigCommerce customer ID.
 		 */
-		do_action( 'bigcommerce/log', Error_Log::INFO, __( 'Trigger customer delete webhook', 'bigcommerce' ), [
-				'bc_id' => $request['data']['id'],
-		], 'webhooks' );
 		do_action( 'bigcommerce/webhooks/customer_deleted', intval( $request['data']['id'] ) );
 	}
 
