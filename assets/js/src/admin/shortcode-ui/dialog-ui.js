@@ -156,7 +156,7 @@ const toggleShortcodeUIDialog = (event) => {
 		return;
 	}
 
-	initDialogUI(target, params);
+	initDialogUI([target], params);
 };
 
 const init = () => {
