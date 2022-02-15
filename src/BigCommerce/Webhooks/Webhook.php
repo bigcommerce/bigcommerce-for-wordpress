@@ -8,7 +8,6 @@
 namespace BigCommerce\Webhooks;
 
 use BigCommerce\Api\Webhooks_Api;
-use BigCommerce\Logging\Error_Log;
 
 /**
  * Sets up a webhook in the BigCommerce API to send event-based requests to the WP site.
@@ -150,8 +149,6 @@ abstract class Webhook {
 			 */
 			do_action( 'bigcommerce/webhooks/update_failed', $this, $result );
 
-			do_action( 'bigcommerce/log', Error_Log::ERROR, __( 'Webhook creation is failed', 'bigcommerce' ), [], 'webhooks' );
-
 			return 0;
 		}
 
@@ -225,10 +222,6 @@ abstract class Webhook {
 			 * @param array $result Result.
 			 */
 			do_action( 'bigcommerce/webhooks/delete_failed', $this, $result );
-
-			do_action( 'bigcommerce/log', Error_Log::ERROR, __( 'Delete webhook action is failed', 'bigcommerce' ), [
-					'id' => $webhook_id,
-			], 'webhooks' );
 		}
 
 		/**
@@ -257,10 +250,6 @@ abstract class Webhook {
 		}
 
 		if ( ! $password || $this->generate_password() !== $password ) {
-			do_action( 'bigcommerce/log', Error_Log::ERROR, __( 'Incoming webhook password does not match', 'bigcommerce' ), [
-				'request' => $request,
-			], 'webhooks' );
-
 			return new \WP_Error(
 				static::PASSWORD_ERROR_CODE,
 				__( 'Password header does not match.', 'bigcommerce' )
@@ -268,10 +257,6 @@ abstract class Webhook {
 		}
 
 		if ( ! is_array( $request ) || ! isset( $request[ 'data' ][ 'type' ] ) || ! isset( $request[ 'data' ][ 'id' ] ) ) {
-			do_action( 'bigcommerce/log', Error_Log::ERROR, __( 'Webhook request data is invalid.', 'bigcommerce' ), [
-				'request' => $request,
-			], 'webhooks' );
-
 			return new \WP_Error(
 				static::VALIDATION_ERROR_CODE,
 				__( 'Webhook request data is invalid.', 'bigcommerce' )

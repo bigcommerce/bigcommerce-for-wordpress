@@ -684,20 +684,8 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 		// Validate request nonce
 		$this->validate_ajax_nonce( $_REQUEST );
 
-		$logs = $log->get_log_data();
-
-		if ( empty( $logs['entries'] ) || empty( $logs['entries']['debug'] ) ) {
-			$result = [
-					'message'       => __( 'The log file is empty', 'bigcommerce' ),
-					'log_content'   => '',
-					'log_date_time' => '',
-			];
-
-			wp_send_json( $result );
-		} else {
-			// Send response
-			wp_send_json( $logs['entries']['debug'] );
-		}
+		// Send response
+		wp_send_json( $log->get_log_data() );
 
 		// Just in case
 		wp_die( '', '', [ 'response' => null ] );

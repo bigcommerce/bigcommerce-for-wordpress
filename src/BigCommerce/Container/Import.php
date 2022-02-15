@@ -117,10 +117,6 @@ class Import extends Provider {
 			}
 			$container[ self::PARALLEL_RUNNER ]->run();
 		} ), 10, 0 );
-
-		add_action( Processors\Cleanup::CLEAN_USERS_TRANSIENT, $this->create_callback( 'clean_users_group_transient', function () use ( $container ) {
-			$container[ self::CLEANUP ]->clean_customer_group_transients();
-		} ), 10, 0 );
 	}
 
 	private function process( Container $container ) {

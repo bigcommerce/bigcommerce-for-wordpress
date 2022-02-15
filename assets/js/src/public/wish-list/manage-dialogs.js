@@ -26,7 +26,6 @@ const getOptions = dialogID => ({
 	contentClasses: 'bc-wish-list-dialog-content-wrapper',
 	wrapperClasses: 'bc-wish-list-dialog__wrapper',
 	closeButtonClasses: 'bc-product-quick-view__close-button bc-icon icon-bc-cross',
-	ariaLabelledBy: 'bc-wish-list-dialog-title',
 });
 
 /**

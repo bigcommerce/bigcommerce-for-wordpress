@@ -74,11 +74,11 @@
 			</dl>
 
 			<?php if ( $shipments ) { ?>
-				<div class="bc-order-detail__shipments">
-					<?php foreach ( $shipments as $shipment ) { ?>
-						<?php echo $shipment; ?>
-					<?php } ?>
-				</div>
+			<div class="bc-order-detail__shipments">
+				<?php foreach ( $shipments as $shipment ) { ?>
+					<?php echo $shipment; ?>
+				<?php } ?>
+			</div>
 			<?php } ?>
 		</div>
 

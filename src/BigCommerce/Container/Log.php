@@ -3,6 +3,7 @@
 namespace BigCommerce\Container;
 
 use BigCommerce\Api\v3\Api\CatalogApi;
+use BigCommerce\Import\Runner\Status;
 use BigCommerce\Logging\Error_Log;
 use BigCommerce\Settings\Sections\Troubleshooting_Diagnostics;
 use Pimple\Container;
@@ -10,9 +11,8 @@ use BigCommerce\Logging\Error_Log as Logger;
 
 class Log extends Provider {
 
-	const LOGGER          = 'logger.log';
-	const LOG_PATH        = 'logger.log_path';
-	const LOG_FOLDER_PATH = 'logger.log_folder_path';
+	const LOGGER   = 'logger.log';
+	const LOG_PATH = 'logger.log_path';
 
 	/**
 	 * @param Container $container
@@ -32,19 +32,8 @@ class Log extends Provider {
 			return apply_filters( 'bigcommerce/logger/path', $log_path );
 		};
 
-		$container[ self::LOG_FOLDER_PATH ] = function ( Container $container ) {
-			$log_path = trailingslashit( wp_upload_dir()['basedir'] ) . 'logs/bigcommerce/';
-
-			/**
-			 * Filter the path to the debug logging file
-			 *
-			 * @param string $log_path The full file system path to the log file
-			 */
-			return apply_filters( 'bigcommerce/logger/custom_path', $log_path );
-		};
-
 		$container[ self::LOGGER ] = function ( Container $container ) {
-			return new Logger( $container[ self::LOG_PATH ], $container[ self::LOG_FOLDER_PATH ] );
+			return new Logger( $container[ self::LOG_PATH ] );
 		};
 
 
@@ -62,12 +51,11 @@ class Log extends Provider {
 				return $container[ self::LOGGER ]->add_log_to_diagnostics( $diagnostics );
 			} ), 10, 1 );
 
-			$log = $this->create_callback( 'log', function ( $level = Error_Log::INFO, $message = '', $context = [], $path = '' ) use ( $container ) {
-				$container[ self::LOGGER ]->log( $level, $message, $context, $path );
+			$log = $this->create_callback( 'log', function ( $level = Error_Log::INFO, $message = '', $context = [] ) use ( $container ) {
+				$container[ self::LOGGER ]->log( $level, $message, $context );
 			} );
-			add_action( 'bigcommerce/log', $log, 10, 4 );
+			add_action( 'bigcommerce/log', $log, 10, 3 );
 			add_action( 'bigcommerce/import/log', $log, 10, 3 );
-
 
 			add_action( 'bigcommerce/import/error', $this->create_callback( 'log_import_error', function ( $message, $context = [] ) use ( $container ) {
 				$container[ self::LOGGER ]->log( Error_Log::ERROR, $message, $context );

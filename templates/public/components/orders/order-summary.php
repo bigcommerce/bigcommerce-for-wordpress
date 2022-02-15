@@ -27,27 +27,22 @@
 ?>
 
 <div class="bc-order-card">
-
 	<div class="bc-order__header">
-
 		<div class="bc-order__id">
 			<?php echo esc_html( sprintf( __( 'Order #%d', 'bigcommerce' ), $order_id ) ); ?>
 		</div>
-
 		<div class="bc-order__link">
 			<a href="<?php echo esc_url( $details_url ); ?>"><?php esc_html_e( 'Order Details', 'bigcommerce' ); ?></a>
 		</div>
-
 	</div>
 
 	<div class="bc-order-card__body">
-
 		<div class="bc-order-card__featured-image">
-			<div class="bc-order-card__featured-image-link"><?php echo $image; ?></div>
+			<a class="bc-order-card__featured-image-link"
+				 href="<?php echo esc_url( $details_url ); ?>"><?php echo $image; ?></a>
 		</div>
 
 		<div class="bc-order-card__meta">
-
 			<div class="bc-order-card__meta-inner">
 
 				<div class="bc-order-card__title">
@@ -71,11 +66,8 @@
 				</dl>
 
 			</div>
-
 		</div>
 
 		<div class="bc-order-card__status"><?php echo esc_html( $status ); ?></div>
-
 	</div>
-
 </div>

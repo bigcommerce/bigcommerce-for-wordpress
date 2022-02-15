@@ -35,7 +35,6 @@ const getOptions = dialogID => ({
 	contentClasses: 'bc-account-address-form__content',
 	wrapperClasses: 'bc-account-address-form__wrapper',
 	closeButtonClasses: 'bc-account-address-form__close-button bc-icon icon-bc-cross u-bc-visual-hide',
-	ariaLabelledBy: 'bc-address-form',
 });
 
 /**

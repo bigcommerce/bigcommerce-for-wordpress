@@ -23,10 +23,6 @@ class Customer_Updater {
 		$customer_response = Client::getResource( sprintf( '/customers/%d', $customer_id ) );
 
 		if ( empty( $customer_response ) ) {
-			do_action( 'bigcommerce/log', Error_Log::ERROR, __( 'Customer Update Webhook failed. Could not get customer details ', 'bigcommerce' ), [
-					'customer_id' => $customer_id,
-			], 'webhooks' );
-
 			return false;
 		}
 
@@ -34,9 +30,9 @@ class Customer_Updater {
 		$matching_user = get_user_by( 'email', $username );
 
 		if ( ! $matching_user ) {
-			do_action( 'bigcommerce/log', Error_Log::ERROR, __( 'User not found', 'bigcommerce' ), [
+			do_action( 'bigcommerce/log', Error_Log::INFO, __( 'User not found', 'bigcommerce' ), [
 					'customer_id' => $customer_id,
-			], 'webhooks' );
+			] );
 
 			return false;
 		}
