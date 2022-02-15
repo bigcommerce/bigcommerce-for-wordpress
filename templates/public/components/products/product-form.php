@@ -31,13 +31,14 @@ use BigCommerce\Post_Types\Product\Product;
 
 	<div class="bc-product-form__quantity">
 		<?php if ( $quantity_field_type !== 'hidden' ) { ?>
-		<label class="bc-product-form__quantity-label">
+		<label for="quantity" class="bc-product-form__quantity-label">
 			<span class="bc-product-single__meta-label"><?php esc_html_e( 'Quantity', 'bigcommerce' ); ?>:</span>
 		</label>
 		<?php } ?>
 		<input class="bc-product-form__quantity-input"
 			type="<?php echo esc_attr( $quantity_field_type ); ?>"
 			name="quantity"
+			id="quantity"
 			value="<?php echo absint( $min_quantity ); ?>"
 			min="<?php echo absint( $min_quantity ); ?>"
 			<?php if ( $max_quantity > 0 ) { ?>max="<?php echo absint( $max_quantity ); ?>"<?php } ?>

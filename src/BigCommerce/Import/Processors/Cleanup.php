@@ -13,6 +13,8 @@ use BigCommerce\Post_Types\Queue_Task\Queue_Task;
 
 class Cleanup implements Import_Processor {
 
+	const CLEAN_USERS_TRANSIENT = 'bigcommerce_users_transient_clean';
+
 	/** @var int */
 	private $batch;
 
@@ -48,7 +50,7 @@ class Cleanup implements Import_Processor {
 		}
 
 
-		$this->clean_customer_group_transients();
+		wp_schedule_single_event( time(), self::CLEAN_USERS_TRANSIENT );
 
 		wp_unschedule_hook( Cron_Runner::START_CRON );
 		wp_unschedule_hook( Cron_Runner::CONTINUE_CRON );
@@ -96,7 +98,7 @@ class Cleanup implements Import_Processor {
 	/**
 	 * Remove customers group transient cache after sync in order to retrieve fresh groups data
 	 */
-	private function clean_customer_group_transients(): void {
+	public function clean_customer_group_transients(): void {
 		$users_ids = get_users( [ 'fields' => 'ID' ] );
 
 		foreach ( $users_ids as $users_id ) {

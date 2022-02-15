@@ -42,8 +42,8 @@ class Product_Creator
         $channels    = $connections->active();
 
         if ( empty( $channels ) ) {
-            do_action( 'bigcommerce/import/error', __( 'No channels connected. Product import canceled.', 'bigcommerce' ) );
-
+			do_action( 'bigcommerce/import/error', __( 'No channels connected. Product import canceled.', 'bigcommerce' ) );
+			do_action( 'bigcommerce/log', Error_Log::ERROR, __( 'Webhook product creation failed. No channels connected', 'bigcommerce' ), [], 'webhooks' );
             return;
         }
 
@@ -72,7 +72,7 @@ class Product_Creator
                 'response' => $e->getResponseBody(),
                 'headers'  => $e->getResponseHeaders(),
             ] );
-            do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [] );
+            do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [], 'webhooks' );
         } finally {
             // unhook the filters we added at the start
             remove_filter( 'bigcommerce/channel/listing/should_update', $empty, 10 );
@@ -105,7 +105,7 @@ class Product_Creator
                 'response' => $e->getResponseBody(),
                 'headers'  => $e->getResponseHeaders(),
             ] );
-            do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [] );
+            do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [], 'webhooks' );
 
             return;
         }
