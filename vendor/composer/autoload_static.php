@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit17f92ac08ed2ec42a73f2fc3b23cb155
+class ComposerStaticInitd25bf674a0b6da04ad3d7de50fc9c947
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -507,6 +507,7 @@ class ComposerStaticInit17f92ac08ed2ec42a73f2fc3b23cb155
         'BigCommerce\\Container\\Editor' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Editor.php',
         'BigCommerce\\Container\\Forms' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Forms.php',
         'BigCommerce\\Container\\Gift_Certificates' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Gift_Certificates.php',
+        'BigCommerce\\Container\\Image' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Image.php',
         'BigCommerce\\Container\\Import' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Import.php',
         'BigCommerce\\Container\\Log' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Log.php',
         'BigCommerce\\Container\\Merchant' => __DIR__ . '/../..' . '/src/BigCommerce/Container/Merchant.php',
@@ -726,6 +727,7 @@ class ComposerStaticInit17f92ac08ed2ec42a73f2fc3b23cb155
         'BigCommerce\\Settings\\Sections\\Channels' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Channels.php',
         'BigCommerce\\Settings\\Sections\\Currency' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Currency.php',
         'BigCommerce\\Settings\\Sections\\Gift_Certificates' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Gift_Certificates.php',
+        'BigCommerce\\Settings\\Sections\\Images' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Images.php',
         'BigCommerce\\Settings\\Sections\\Import' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Import.php',
         'BigCommerce\\Settings\\Sections\\Nav_Menu_Options' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/Nav_Menu_Options.php',
         'BigCommerce\\Settings\\Sections\\New_Account_Section' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Sections/New_Account_Section.php',
@@ -789,6 +791,7 @@ class ComposerStaticInit17f92ac08ed2ec42a73f2fc3b23cb155
         'BigCommerce\\Templates\\Amp_Cart_Items' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Amp_Cart_items.php',
         'BigCommerce\\Templates\\Amp_Cart_Summary' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Amp_Cart_Summary.php',
         'BigCommerce\\Templates\\Body_Classes' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Body_Classes.php',
+        'BigCommerce\\Templates\\CDN_Images' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/CDN_Images.php',
         'BigCommerce\\Templates\\Cart' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Cart.php',
         'BigCommerce\\Templates\\Cart_Action_Checkout' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Cart_Action_Checkout.php',
         'BigCommerce\\Templates\\Cart_Action_View' => __DIR__ . '/../..' . '/src/BigCommerce/Templates/Cart_Action_View.php',
@@ -1133,10 +1136,10 @@ class ComposerStaticInit17f92ac08ed2ec42a73f2fc3b23cb155
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit17f92ac08ed2ec42a73f2fc3b23cb155::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit17f92ac08ed2ec42a73f2fc3b23cb155::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit17f92ac08ed2ec42a73f2fc3b23cb155::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit17f92ac08ed2ec42a73f2fc3b23cb155::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitd25bf674a0b6da04ad3d7de50fc9c947::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitd25bf674a0b6da04ad3d7de50fc9c947::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitd25bf674a0b6da04ad3d7de50fc9c947::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitd25bf674a0b6da04ad3d7de50fc9c947::$classMap;
 
         }, null, ClassLoader::class);
     }

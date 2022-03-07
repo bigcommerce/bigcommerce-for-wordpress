@@ -7,6 +7,7 @@ namespace BigCommerce\Templates;
 use BigCommerce\Assets\Theme\Image_Sizes;
 use BigCommerce\Customizer\Sections\Product_Single as Customizer;
 use BigCommerce\Exceptions\Component_Not_Found_Exception;
+use BigCommerce\Import\Image_Importer;
 use BigCommerce\Post_Types\Product\Product;
 
 class Product_Options extends Controller {
@@ -236,6 +237,15 @@ class Product_Options extends Controller {
 
 		if ( ! $image_id ) {
 			return $empty;
+		}
+
+		if ( Image_Importer::should_load_from_cdn() ) {
+			return [
+				'url'    => get_post_meta( $image_id, Image_Importer::SOURCE_URL, true ),
+				'width'  => 370,
+				'height' => 370,
+				'srcset' => null,
+			];
 		}
 
 		$image  = wp_get_attachment_image_src( $image_id, $image_size );

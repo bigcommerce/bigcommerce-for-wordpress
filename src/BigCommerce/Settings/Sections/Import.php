@@ -4,12 +4,13 @@
 namespace BigCommerce\Settings\Sections;
 
 
+use BigCommerce\Import\Image_Importer;
 use BigCommerce\Settings\Screens\Connect_Channel_Screen;
 use BigCommerce\Settings\Screens\Settings_Screen;
 
 class Import extends Settings_Section {
 
-	use Webhooks;
+	use Webhooks, Images;
 
 	const NAME                     = 'import';
 	const OPTION_FREQUENCY         = 'bigcommerce_import_frequency';
@@ -17,6 +18,7 @@ class Import extends Settings_Section {
 	const BATCH_SIZE               = 'bigcommerce_import_batch_size';
 	const ENABLE_PRODUCTS_WEBHOOKS = 'bigcommerce_import_enable_webhooks';
 	const ENABLE_CUSTOMER_WEBHOOKS = 'bigcommerce_import_enable_customer_webhooks';
+	const ENABLE_IMAGE_IMPORT      = 'bigcommerce_import_enable_image_import';
 	const MAX_CONCURRENT           = 'bigcommerce_import_max_concurrent';
 	const RUN_IN_PARALLEL          = 'bigcommerce_parallel_run';
 
@@ -97,6 +99,22 @@ class Import extends Settings_Section {
 			Settings_Screen::NAME,
 			self::BATCH_SIZE
 		);
+
+
+		add_settings_field(
+			self::ENABLE_IMAGE_IMPORT,
+			__( 'Images import', 'bigcommerce' ),
+			[ $this, 'enable_images_import_toggle' ],
+			Settings_Screen::NAME,
+			self::NAME,
+			[
+				'type'   => 'radio',
+				'option' => self::ENABLE_IMAGE_IMPORT,
+				'label'  => __( 'Allow product images import', 'bigcommerce' ),
+			]
+		);
+
+		register_setting( Settings_Screen::NAME, self::ENABLE_IMAGE_IMPORT );
 
 		add_settings_field(
 			self::RUN_IN_PARALLEL,

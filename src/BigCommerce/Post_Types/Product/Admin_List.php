@@ -3,6 +3,7 @@
 namespace BigCommerce\Post_Types\Product;
 
 use BigCommerce\Assets\Theme\Image_Sizes;
+use BigCommerce\Import\Image_Importer;
 use Pimple\Container;
 use Symfony\Component\DomCrawler\Image;
 
@@ -65,9 +66,20 @@ class Admin_List {
 	 * @action manage_bigcommerce_product_posts_custom_column for BC product ID
 	 */
 	public function get_bigcommerce_product_thumbnail_value( $column_name, $post_ID ) {
-		if ( $column_name == self::COLUMN_PRODUCT_THUMB ) {
-			$product_thumbnail = get_the_post_thumbnail( $post_ID, Image_Sizes::BC_THUMB);
-			echo $product_thumbnail ;
+		if ( $column_name !== self::COLUMN_PRODUCT_THUMB ) {
+			return;
 		}
+		if ( Image_Importer::should_load_from_cdn() ) {
+			$thumb_cdn = Product::get_thumb_from_cdn( $post_ID );
+		}
+
+		if ( ! empty( $thumb_cdn ) ) {
+			echo $thumb_cdn;
+
+			return;
+		}
+
+		$product_thumbnail = get_the_post_thumbnail( $post_ID, Image_Sizes::BC_THUMB);
+		echo $product_thumbnail ;
 	}
 }

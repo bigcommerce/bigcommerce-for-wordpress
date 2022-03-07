@@ -15,6 +15,8 @@
  * @version 1.0.0
  */
 
+use BigCommerce\Assets\Theme\Image_Sizes;
+use BigCommerce\Import\Image_Importer;
 use BigCommerce\Post_Types\Product\Product;
 
 $item_count = count( $image_ids ) + count( $youtube_videos );
@@ -39,9 +41,16 @@ $has_zoom = $zoom ? 'bc-product-image-zoom' : '';
 				<?php if ( $item_count > 0 ) {
 					$index = 0;
 					foreach ( $image_ids as $image_id ) {
-						$image_src = wp_get_attachment_image_url( $image_id, $image_size );
-						$image_full = $zoom ? sprintf( 'data-zoom="%s"', wp_get_attachment_image_url( $image_id, $zoom_size ) ) : '';
-						$image_srcset = wp_get_attachment_image_srcset( $image_id, $image_size );
+						if ( ! empty( $cdn_images ) && array_key_exists( $image_id, $cdn_images ) ) {
+							$image_src    = $cdn_images[ $image_id ][ Image_Importer::URL_STD ];
+							$image_full   = $zoom ? sprintf( 'data-zoom="%s"', $cdn_images[ $image_id ][ Image_Importer::URL_ZOOM ] ) : '';
+							$image_srcset = '';
+						} else {
+							$image_src    = wp_get_attachment_image_url( $image_id, $image_size );
+							$image_full   = $zoom ? sprintf( 'data-zoom="%s"', wp_get_attachment_image_url( $image_id, $zoom_size ) ) : '';
+							$image_srcset = wp_get_attachment_image_srcset( $image_id, $image_size );
+						}
+
 						?>
 						<!-- class="swiper-slide" is required -->
 						<div class="swiper-slide bc-product-gallery__image-slide" data-index="<?php echo $index++; ?>">
@@ -62,7 +71,11 @@ $has_zoom = $zoom ? 'bc-product-image-zoom' : '';
 							<?php echo $video['embed_html']; ?>
 						</div>
 					<?php }
-				} else { ?>
+				} elseif ( has_post_thumbnail( $product->post_id() ) ) { ?>
+					<div class="swiper-slide bc-product-gallery__image-slide">
+						<?php echo wp_get_attachment_image( get_post_thumbnail_id( $product->post_id() ), Image_Sizes::BC_MEDIUM ) ?>
+					</div>
+				<?php } else { ?>
 					<div class="swiper-slide bc-product-gallery__image-slide">
 						<?php echo $fallback_image; ?>
 					</div>
@@ -77,15 +90,22 @@ $has_zoom = $zoom ? 'bc-product-image-zoom' : '';
 				<div class="swiper-wrapper bc-product-gallery__thumbs">
 					<?php
 					$index = 0;
-					foreach ( $image_ids as $image_id ) { ?>
+					foreach ( $image_ids as $image_id ) {
+						if ( ! empty( $cdn_images ) && array_key_exists( $image_id, $cdn_images ) ) {
+							$image_src = $cdn_images[ $image_id ][ Image_Importer::URL_THUMB ];
+							$image_alt = '';
+						} else {
+							$image_src = esc_url( wp_get_attachment_image_url( $image_id, $thumbnail_size ) );
+							$image_alt = esc_attr( trim( strip_tags( get_post_meta( $image_id, '_wp_attachment_image_alt', true ) ) ) );
+						}
+						?>
 						<!-- class="swiper-slide" and data-js="bc-gallery-thumb-trigger" are required -->
 						<button class="swiper-slide bc-product-gallery__thumb-slide"
 							data-js="bc-gallery-thumb-trigger"
 							data-index="<?php echo $index++; ?>"
 							aria-label="<?php _e( 'mark as featured image', 'stellar' ) ?>"
 						>
-							<img src="<?php echo esc_url( wp_get_attachment_image_url( $image_id, $thumbnail_size ) ); ?>"
-								alt="<?php echo esc_attr( trim( strip_tags( get_post_meta( $image_id, '_wp_attachment_image_alt', true ) ) ) ); ?>"
+							<img src="<?php echo $image_src; ?>" alt="<?php echo $image_alt; ?>"
 							>
 						</button>
 					<?php }

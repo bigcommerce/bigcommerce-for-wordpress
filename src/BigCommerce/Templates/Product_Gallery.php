@@ -6,9 +6,13 @@ namespace BigCommerce\Templates;
 
 use BigCommerce\Assets\Theme\Image_Sizes;
 use BigCommerce\Customizer\Sections\Product_Single as Customizer;
+use BigCommerce\Import\Image_Importer;
 use BigCommerce\Post_Types\Product\Product;
 
 class Product_Gallery extends Controller {
+
+	use CDN_Images;
+
 	const PRODUCT        = 'product';
 	const IMAGE_IDS      = 'image_ids';
 	const YOUTUBE_VIDEOS = 'youtube_videos';
@@ -17,6 +21,7 @@ class Product_Gallery extends Controller {
 	const THUMBNAIL      = 'thumbnail_size';
 	const ZOOM           = 'zoom';
 	const ZOOM_SIZE      = 'zoom_size';
+	const CDN_IMAGES     = 'cdn_images';
 
 	protected $template        = 'components/products/product-gallery.php';
 	protected $wrapper_tag     = 'div';
@@ -84,9 +89,19 @@ class Product_Gallery extends Controller {
 		/** @var Product $product */
 		$product = $this->options[ self::PRODUCT ];
 
+		$images_ids = $product->get_gallery_ids();
+		$cdn_images = $this->get_images_cdn_url( $images_ids );
+		$thumb_id   = get_post_thumbnail_id( $product->post_id() );
+
+		// We have featured image set locally and we need to include it to existing array
+		if ( ! in_array( $thumb_id, $images_ids ) ) {
+			$images_ids = array_merge( [ $thumb_id ], $images_ids );
+		}
+
 		return [
 			self::PRODUCT        => $product,
-			self::IMAGE_IDS      => $product->get_gallery_ids(),
+			self::IMAGE_IDS      => $images_ids,
+			self::CDN_IMAGES     => $cdn_images,
 			self::YOUTUBE_VIDEOS => $this->get_videos( $product ),
 			self::FALLBACK       => $this->get_fallback(),
 			self::SIZE           => $this->options[ self::SIZE ],

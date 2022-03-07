@@ -4,7 +4,7 @@
 namespace BigCommerce;
 
 class Plugin {
-	const VERSION = '4.24.0';
+	const VERSION = '4.25.0';
 
 	protected static $_instance;
 
@@ -82,6 +82,7 @@ class Plugin {
 		$this->providers[ 'webhooks' ]          = new Container\Webhooks();
 		$this->providers[ 'util' ]              = new Container\Util();
 		$this->providers[ 'banners' ]           = new Container\Banners();
+		$this->providers[ 'images' ]            = new Container\Image();
 
 
 		/**
