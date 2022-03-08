@@ -4,6 +4,7 @@ namespace BigCommerce\Import\Importers\Products;
 
 use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Api\v3\Model;
+use BigCommerce\Import\Image_Importer;
 use BigCommerce\Import\Import_Strategy;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Taxonomies\Availability\Availability;
@@ -204,12 +205,15 @@ abstract class Product_Saver implements Import_Strategy {
 	 * @return void
 	 */
 	protected function save_images( Product_Builder $builder ) {
-		$images = $builder->build_images( $this->post_id );
-		if ( array_key_exists( 'thumbnail', $images ) ) {
+		$images            = $builder->build_images( $this->post_id );
+		$is_local_featured = Image_Importer::has_local_featured_image( $this->post_id );
+
+		if ( array_key_exists( 'thumbnail', $images ) && ! $is_local_featured ) {
 			update_post_meta( $this->post_id, '_thumbnail_id', $images['thumbnail'] );
-		} else {
+		} elseif ( ! $is_local_featured ) {
 			delete_post_meta( $this->post_id, '_thumbnail_id' );
 		}
+
 		if ( array_key_exists( 'gallery', $images ) ) {
 			update_post_meta( $this->post_id, Product::GALLERY_META_KEY, $images['gallery'] );
 		} else {

@@ -6,6 +6,7 @@ namespace BigCommerce\Templates;
 
 use BigCommerce\Assets\Theme\Image_Sizes;
 use BigCommerce\Customizer\Sections;
+use BigCommerce\Import\Image_Importer;
 use BigCommerce\Post_Types\Product\Product;
 
 class Product_Featured_Image extends Controller {
@@ -18,6 +19,8 @@ class Product_Featured_Image extends Controller {
 	protected $template        = 'components/products/product-featured-image.php';
 	protected $wrapper_tag     = 'div';
 	protected $wrapper_classes = [ 'bc-product-card__featured-image' ];
+	protected $cdn_image       = false;
+
 
 	protected function parse_options( array $options ) {
 		$defaults = [
@@ -49,6 +52,12 @@ class Product_Featured_Image extends Controller {
 	}
 
 	protected function get_attachment_id( Product $product ) {
+		if ( Image_Importer::should_load_from_cdn() ) {
+			$this->cdn_image = Product::get_thumb_from_cdn( $product->post_id(), 'html', null );
+
+			return $this->cdn_image;
+		}
+
 		if ( ! empty( $this->options[ self::ATTACHMENT_ID ] ) ) {
 			return absint( $this->options[ self::ATTACHMENT_ID ] );
 		}
@@ -65,6 +74,10 @@ class Product_Featured_Image extends Controller {
 	}
 
 	protected function get_image( $attachment_id ) {
+		if ( $this->cdn_image ) {
+			return $this->cdn_image;
+		}
+
 		if ( $attachment_id ) {
 			return wp_get_attachment_image( $attachment_id, $this->options[ self::SIZE ] );
 		}

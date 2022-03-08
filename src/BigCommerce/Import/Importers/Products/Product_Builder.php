@@ -75,7 +75,7 @@ class Product_Builder {
 	}
 
 	private function get_post_title() {
-		$title = $this->listing->getName() ?: $this->product->getName();
+		$title =  $this->listing->getName() ?: $this->product->getName();
 
 		return $this->sanitize_title( $title );
 	}
@@ -253,6 +253,7 @@ class Product_Builder {
 		}
 
 		$images = $this->product[ 'images' ];
+
 		usort( $images, function ( $a, $b ) {
 			if ( $a[ 'sort_order' ] == $b[ 'sort_order' ] ) {
 				return 0;
@@ -279,12 +280,12 @@ class Product_Builder {
 			if ( ! empty( $existing ) ) {
 				$post_id = reset( $existing );
 			} else {
-				$importer = new Image_Importer( $image[ 'url_zoom' ], $parent_id );
+				$importer = new Image_Importer( $image[ Image_Importer::URL_ZOOM ], $parent_id );
 				$post_id  = $importer->import();
 			}
 			if ( ! empty( $post_id ) ) {
 				update_post_meta( $post_id, 'bigcommerce_id', $image[ 'id' ] );
-				foreach ( [ 'url_zoom', 'url_standard', 'url_thumbnail', 'url_tiny' ] as $key ) {
+				foreach ( [ Image_Importer::URL_ZOOM, Image_Importer::URL_STD, Image_Importer::URL_THUMB, Image_Importer::URL_TINY ] as $key ) {
 					$derivative_url = $image[ $key ];
 					if ( $derivative_url ) {
 						update_post_meta( $post_id, $key, $derivative_url );

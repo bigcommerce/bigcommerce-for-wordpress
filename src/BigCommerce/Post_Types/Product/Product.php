@@ -10,6 +10,7 @@ use BigCommerce\Customizer\Sections\Buttons;
 use BigCommerce\Customizer\Sections\Product_Single;
 use BigCommerce\Exceptions\Channel_Not_Found_Exception;
 use BigCommerce\Exceptions\Product_Not_Found_Exception;
+use BigCommerce\Import\Image_Importer;
 use BigCommerce\Settings\Sections\Cart;
 use BigCommerce\Settings\Sections\Channels;
 use BigCommerce\Taxonomies\Availability\Availability;
@@ -414,6 +415,31 @@ class Product {
 		 * @param int[] $gallery The IDs of images in the gallery
 		 */
 		return apply_filters( 'bigcommerce/product/gallery', $gallery );
+	}
+
+	public static function get_thumb_from_cdn( $post_ID, $format = 'html', $size = '80' ) {
+		$data = get_post_meta( $post_ID, Product::GALLERY_META_KEY, true );
+
+		$gallery = is_array( $data ) ? array_filter( array_map( 'intval', $data ) ) : [];
+
+		if ( empty( $gallery ) ) {
+			return null;
+		}
+
+		if ( $format === 'id' ) {
+			return $gallery[0];
+		}
+
+		$thumb_url = get_post_meta( $gallery[0], Image_Importer::URL_THUMB, true );
+
+		if ( empty( $thumb_url ) ) {
+			return null;
+		}
+
+		$class = 'attachment-thumbnail size-thumbnail wp-post-image';
+		$width = ! empty( $size ) ? sprintf( 'width="%s"', $size ) : '';
+
+		return sprintf( '<img src="%s" class="%s" %s />', $thumb_url, $class, $width );
 	}
 
 	/**

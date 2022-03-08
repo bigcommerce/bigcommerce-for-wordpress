@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.25.0]
+
+### Added
+- Added ability to control images import. It adds the ability to choose between serving images from external CDN, skip import completely, or serving images as usual. In order to do that you should go to Bigcommerce > Settings > Product Sync > Images Import. You are able to choose between 3 options:
+  - Full images import - the default behavior. During the sync with Bigcommerce, each image will be downloaded and stored in WordPress locally. All images will be served from the WordPress environment
+  - Import only images URL - a new option that allows to retrieve only images URIs from Bigcommerce and serve images with that URIs. Images won't be stored in WordPress locally and will be loaded from an external source(Bigcommerce CDN)
+  - Disable images import - completely disable images import. No images won't be added to the WordPress environment during the sync process. Images from Bigcommerce CDN won't be loaded as well. Despite that, you are still able to set a featured image on the product and it will be displayed on the frontend
+
 ## [4.24.0]
 
 ### Added
@@ -1696,7 +1704,8 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
-[4.23.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.23.0...4.24.0
+[4.25.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.24.0...4.25.0
+[4.24.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.23.0...4.24.0
 [4.23.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.22.0...4.23.0
 [4.22.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.21.1...4.22.0
 [4.21.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.20.1...4.21.0
