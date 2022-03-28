@@ -3,6 +3,10 @@
 
 namespace BigCommerce\Container;
 
+use BigCommerce\Api\Api_Scopes_Validator;
+use BigCommerce\Api\Base_Client;
+use BigCommerce\Api\v3\Api\CatalogApi;
+use BigCommerce\Api\v3\Api\ChannelsApi;
 use BigCommerce\Import\Runner\Cron_Runner;
 use BigCommerce\Import\Runner\Status;
 use BigCommerce\Merchant\Onboarding_Api;
@@ -10,6 +14,7 @@ use BigCommerce\Nav_Menu\Nav_Items_Meta_Box;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Settings\Abort_Import;
 use BigCommerce\Settings\Connection_Status;
+use BigCommerce\Settings\Flush_Cache;
 use BigCommerce\Settings\Import_Now;
 use BigCommerce\Settings\Import_Status;
 use BigCommerce\Settings\Onboarding_Progress;
@@ -80,6 +85,7 @@ class Settings extends Provider {
 	const ONBOARDING_PROGRESS = 'settings.onboarding.progress_bar';
 	const SITE_URL_SYNC       = 'settings.site_url_sync';
 	const ABORT_IMPORT        = 'settings.abort_product_import';
+	const FLUSH_CACHE         = 'settings.flush_cache';
 
 	const CONFIG_STATUS              = 'settings.configuration_status';
 	const CONFIG_DISPLAY_MENUS       = 'settings.configuration_display_menus';
@@ -203,6 +209,41 @@ class Settings extends Provider {
 				$container[ self::API_SECTION ]->do_api_settings_updated_action( $new_value, $old_value );
 			}
 		} );
+
+		$pre_update_options_action = $this->create_callback( 'api_credentials_pre_update_action', function ($new_value, $old_value, $option ) use ( $container ) {
+			if ( $old_value === $new_value ) {
+				return $old_value;
+			}
+
+			if ( $old_value === false ) {
+				return $new_value;
+			}
+
+			$config        = $container[ Api::API_CONFIG_RENEWAL ]->renewal_config( $option, $new_value );
+			$client        = new Base_Client( $config );
+			$channels_api  = new ChannelsApi( $client );
+			$api_validator = new Api_Scopes_Validator( $client );
+			$catalog_api   = new CatalogApi( $client );
+
+			try {
+				$api_validator->validate();
+				$channels_api->listChannels()->getData();
+				$catalog_api->catalogSummaryGet();
+				return $new_value;
+			} catch ( \Exception $e ) {
+				add_settings_error( Api_Credentials_Screen::NAME, 'submitted', __( 'Unable to connect to the BigCommerce API. Please re-enter your credentials.', 'bigcommerce' ), 'error' );
+				add_settings_error( Api_Credentials_Screen::NAME, 'submitted', $e->getMessage(), 'error' );
+				$container[ Api::API_CONFIG_RENEWAL ]->renewal_config( $option, $old_value );
+				set_transient( 'settings_errors', get_settings_errors(), 30 );
+				return $old_value;
+			}
+		} );
+
+		add_filter( 'pre_update_option_' . Api_Credentials::OPTION_STORE_URL, $pre_update_options_action, 10, 3 );
+		add_filter( 'pre_update_option_' . Api_Credentials::OPTION_CLIENT_ID, $pre_update_options_action, 10, 3 );
+		add_filter( 'pre_update_option_' . Api_Credentials::OPTION_CLIENT_SECRET, $pre_update_options_action, 10, 3 );
+		add_filter( 'pre_update_option_' . Api_Credentials::OPTION_ACCESS_TOKEN, $pre_update_options_action, 10, 3 );
+
 		add_action( 'update_option_' . Api_Credentials::OPTION_STORE_URL, $update_options_action, 10, 2 );
 		add_action( 'update_option_' . Api_Credentials::OPTION_CLIENT_ID, $update_options_action, 10, 2 );
 		add_action( 'update_option_' . Api_Credentials::OPTION_CLIENT_SECRET, $update_options_action, 10, 2 );
@@ -654,6 +695,10 @@ class Settings extends Provider {
 			return new Abort_Import( $container[ self::SETTINGS_SCREEN ] );
 		};
 
+		$container[ self::FLUSH_CACHE ] = function ( Container $container ) {
+			return new Flush_Cache( $container[ self::SETTINGS_SCREEN ] );
+		};
+
 		add_action( 'bigcommerce/settings/register/screen=' . Settings_Screen::NAME, $this->create_callback( 'diagnostics_settings_register', function () use ( $container ) {
 			$container[ self::DIAGNOSTICS_SECTION ]->register_settings_section();
 		} ), 90, 0 );
@@ -673,6 +718,13 @@ class Settings extends Provider {
 		add_action( 'admin_post_' . Troubleshooting_Diagnostics::ABORT_NAME, $this->create_callback( 'diagnostics_settings_abort_import_action', function () use ( $container ) {
 			$container[ self::ABORT_IMPORT ]->abort( $container['import.cleanup'] );
 		} ), 10, 0 );
+
+		$flush_cache = $this->create_callback( 'diagnostics_settings_handle_cache_flush', function () use ( $container ) {
+			$container[ self::FLUSH_CACHE ]->handle_request();
+		} );
+
+		add_action( 'admin_post_' . Troubleshooting_Diagnostics::FLUSH_USER, $flush_cache, 10, 0 );
+		add_action( 'admin_post_' . Troubleshooting_Diagnostics::FLUSH_PRODUCTS, $flush_cache, 10, 0 );
 	}
 
 	private function resources( Container $container ) {

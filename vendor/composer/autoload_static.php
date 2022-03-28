@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitd25bf674a0b6da04ad3d7de50fc9c947
+class ComposerStaticInit77dce690d2c051bddb4fbede6c678308
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -127,7 +127,9 @@ class ComposerStaticInitd25bf674a0b6da04ad3d7de50fc9c947
         'BigCommerce\\Analytics\\Facebook_Pixel' => __DIR__ . '/../..' . '/src/BigCommerce/Analytics/Facebook_Pixel.php',
         'BigCommerce\\Analytics\\Google_Analytics' => __DIR__ . '/../..' . '/src/BigCommerce/Analytics/Google_Analytics.php',
         'BigCommerce\\Analytics\\Segment' => __DIR__ . '/../..' . '/src/BigCommerce/Analytics/Segment.php',
+        'BigCommerce\\Api\\Api_Config_Renewal' => __DIR__ . '/../..' . '/src/BigCommerce/Api/Api_Config_Renewal.php',
         'BigCommerce\\Api\\Api_Data_Sanitizer' => __DIR__ . '/../..' . '/src/BigCommerce/Api/Api_Data_Sanitizer.php',
+        'BigCommerce\\Api\\Api_Scopes_Validator' => __DIR__ . '/../..' . '/src/BigCommerce/Api/Api_Scopes_Validator.php',
         'BigCommerce\\Api\\Banners_Api' => __DIR__ . '/../..' . '/src/BigCommerce/Api/Banners_Api.php',
         'BigCommerce\\Api\\Base_Client' => __DIR__ . '/../..' . '/src/BigCommerce/Api/Base_Client.php',
         'BigCommerce\\Api\\Caching_Client' => __DIR__ . '/../..' . '/src/BigCommerce/Api/Caching_Client.php',
@@ -703,6 +705,7 @@ class ComposerStaticInitd25bf674a0b6da04ad3d7de50fc9c947
         'BigCommerce\\Schema\\User_Roles' => __DIR__ . '/../..' . '/src/BigCommerce/Schema/User_Roles.php',
         'BigCommerce\\Settings\\Abort_Import' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Abort_Import.php',
         'BigCommerce\\Settings\\Connection_Status' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Connection_Status.php',
+        'BigCommerce\\Settings\\Flush_Cache' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Flush_Cache.php',
         'BigCommerce\\Settings\\Import_Now' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Import_Now.php',
         'BigCommerce\\Settings\\Import_Status' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Import_Status.php',
         'BigCommerce\\Settings\\Onboarding_Progress' => __DIR__ . '/../..' . '/src/BigCommerce/Settings/Onboarding_Progress.php',
@@ -1136,10 +1139,10 @@ class ComposerStaticInitd25bf674a0b6da04ad3d7de50fc9c947
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitd25bf674a0b6da04ad3d7de50fc9c947::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitd25bf674a0b6da04ad3d7de50fc9c947::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitd25bf674a0b6da04ad3d7de50fc9c947::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitd25bf674a0b6da04ad3d7de50fc9c947::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit77dce690d2c051bddb4fbede6c678308::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit77dce690d2c051bddb4fbede6c678308::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit77dce690d2c051bddb4fbede6c678308::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit77dce690d2c051bddb4fbede6c678308::$classMap;
 
         }, null, ClassLoader::class);
     }

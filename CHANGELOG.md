@@ -1,5 +1,23 @@
 # Changelog
 
+## [4.26.0]
+
+### Added
+- Added automatic API scope check during plugin installation. If provided API credentials do not meet the required [criteria](https://developer.bigcommerce.com/bigcommerce-for-wordpress/ZG9jOjIyMDYzNQ-multisite), the plugin installation will be aborted and an error message will be shown
+- Added ability to control customer's group's cache expiration time as well as ability to purge customer and products cache. In order to control or purge the cache go to Bigcommerce -> Settings -> Diagnostics. 
+  - Use the 'Flush Users Cache' button will purge customers' group cache and retrieve fresh data from Bigcommerce API. 
+  - Use the 'User Cache Expiration' option field to set the time for how long the group cache should be stored. 
+  - Use the 'Flush Products Cache' button in order to invalidate products cache 
+  - Please note: if webhooks are enabled the cache will be invalidated automatically
+
+### Changed
+- Update plugin readme 'Tested up to' version
+- Update styles for 'Choose Options' on Twenty Twenty-Two theme
+
+### Fixed
+- Correct label spelling from 'Production Condition Color' to 'Product Condition Color' in Customizer Colors section.
+- Fix image zoom styling on product page for Twenty Twenty-One theme
+
 ## [4.25.0]
 
 ### Added
@@ -1704,6 +1722,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.26.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.25.0...4.26.0
 [4.25.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.24.0...4.25.0
 [4.24.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.23.0...4.24.0
 [4.23.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.22.0...4.23.0

@@ -4,6 +4,8 @@
 namespace BigCommerce\Container;
 
 
+use BigCommerce\Api\Api_Config_Renewal;
+use BigCommerce\Api\Api_Scopes_Validator;
 use BigCommerce\Api\Caching_Client;
 use BigCommerce\Api\Null_Client;
 use BigCommerce\Api\Configuration;
@@ -19,9 +21,11 @@ use Pimple\Container;
  * @package BigCommerce\Container
  */
 class Api extends Provider {
-	const CONFIG_COMPLETE = 'api.configuration.complete';
+	const API_VALID          = 'api.configuration.valid';
+	const API_CONFIG_RENEWAL = 'api.configuration.config';
+	const CONFIG_COMPLETE    = 'api.configuration.complete';
 
-	const CACHE_HANDLER        = 'api.cache_handler';
+	const CACHE_HANDLER = 'api.cache_handler';
 	const CLIENT        = 'api.client';
 	const CONFIG        = 'api.configuration';
 	const CLIENT_ID     = 'api.client_id';
@@ -68,6 +72,10 @@ class Api extends Provider {
 			return apply_filters( 'bigcommerce/api/config', $config );
 		};
 
+		$container[ self::API_CONFIG_RENEWAL ] = function ( Container $container ) {
+			return new Api_Config_Renewal( $container[ self::CONFIG ] );
+		};
+
 		$container[ self::CLIENT_ID ] = function ( Container $container ) {
 			$env = bigcommerce_get_env( 'BIGCOMMERCE_CLIENT_ID' );
 
@@ -107,6 +115,10 @@ class Api extends Provider {
 
 		$container[ self::HEADERS ] = function ( Container $container ) {
 			return new Request_Headers();
+		};
+
+		$container[ self::API_VALID ] = function ( Container $container ) {
+			return new Api_Scopes_Validator( $container[ self::CLIENT ] );
 		};
 
 		$container[ self::CONFIG_COMPLETE ] = function( Container $container ) {

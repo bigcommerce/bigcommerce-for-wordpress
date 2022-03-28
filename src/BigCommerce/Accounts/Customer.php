@@ -9,6 +9,7 @@ use Bigcommerce\Api\Resource;
 use Bigcommerce\Api\Resources\Address;
 use Bigcommerce\Api\Resources\Order;
 use Bigcommerce\Api\Resources\OrderProduct;
+use BigCommerce\Settings\Sections\Troubleshooting_Diagnostics;
 
 /**
  * Class Customer
@@ -346,7 +347,7 @@ class Customer {
 			// Couldn't find in cache, retrieve from the API
 			$profile    = $this->get_profile();
 			$group_id   = isset( $profile['customer_group_id'] ) ? absint( $profile['customer_group_id'] ) : 0;
-			$expiration = HOUR_IN_SECONDS; // TODO: a future webhook to flush this cache when the customer's group changes
+			$expiration = get_option( Troubleshooting_Diagnostics::USERS_TRANSIENT, 12 * HOUR_IN_SECONDS ); // TODO: a future webhook to flush this cache when the customer's group changes
 			if ( $group_id === 0 ) {
 				set_transient( $transient_key, 'zero', $expiration ); // workaround for storing empty values in cache
 			} else {

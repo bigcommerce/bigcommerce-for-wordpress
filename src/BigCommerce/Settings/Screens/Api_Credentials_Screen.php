@@ -3,10 +3,12 @@
 
 namespace BigCommerce\Settings\Screens;
 
-
 use BigCommerce\Api\Base_Client;
+use Bigcommerce\Api\Client;
 use BigCommerce\Api\Configuration;
 use BigCommerce\Api\v3\Api\CatalogApi;
+use BigCommerce\Api\v3\Api\ChannelsApi;
+use BigCommerce\Container\Api;
 use BigCommerce\Container\Settings;
 use BigCommerce\Settings\Sections\Api_Credentials;
 
@@ -71,8 +73,14 @@ class Api_Credentials_Screen extends Onboarding_Screen {
 		if ( filter_input( INPUT_POST, 'option_page', FILTER_SANITIZE_STRING ) !== Api_Credentials_Screen::NAME ) {
 			return;
 		}
+		$host = untrailingslashit( filter_input( INPUT_POST, Api_Credentials::OPTION_STORE_URL, FILTER_SANITIZE_URL ) );
+
+		if ( empty( $host ) ) {
+			$host = untrailingslashit( get_option( Api_Credentials::OPTION_STORE_URL, '' ) );
+		}
+
 		$config = new Configuration();
-		$config->setHost( untrailingslashit( filter_input( INPUT_POST, Api_Credentials::OPTION_STORE_URL, FILTER_SANITIZE_URL ) ) );
+		$config->setHost( $host );
 		$config->setClientId( filter_input( INPUT_POST, Api_Credentials::OPTION_CLIENT_ID, FILTER_SANITIZE_STRING ) );
 		$config->setAccessToken( filter_input( INPUT_POST, Api_Credentials::OPTION_ACCESS_TOKEN, FILTER_SANITIZE_STRING ) );
 		$config->setClientSecret( filter_input( INPUT_POST, Api_Credentials::OPTION_CLIENT_SECRET, FILTER_SANITIZE_STRING ) );
@@ -80,20 +88,45 @@ class Api_Credentials_Screen extends Onboarding_Screen {
 		 * This filter is documented in src/BigCommerce/Container/Api.php.
 		 */
 		$config->setCurlTimeout( apply_filters( 'bigcommerce/api/timeout', 15 ) );
-		$client = new Base_Client( $config );
-		$api = new CatalogApi( $client );
+
+		Client::configure( [
+			'client_id'     => $config->getClientId(),
+			'auth_token'    => $config->getAccessToken(),
+			'client_secret' => $config->getClientSecret(),
+			'store_hash'    => $this->get_store_hash( $config->getHost() ),
+		] );
+
+		$container     = bigcommerce()->container();
+		$client        = new Base_Client( $config );
+		$api           = new CatalogApi( $client );
+		$api_validator = $container[ Api::API_VALID ];
+		$channels_api  = new ChannelsApi( $client );
 
 		try {
+			$api_validator->validate();
+			$channels_api->listChannels()->getData();
 			// throws an exception on any non-2xx response
 			$api->catalogSummaryGet();
 		} catch ( \Exception $e ) {
 			add_settings_error( self::NAME, 'submitted', __( 'Unable to connect to the BigCommerce API. Please re-enter your credentials.', 'bigcommerce' ), 'error' );
+			add_settings_error( self::NAME, 'submitted', $e->getMessage(), 'error' );
 			set_transient( 'settings_errors', get_settings_errors(), 30 );
 
 			// prevent saving of the options
 			wp_safe_redirect( esc_url_raw( add_query_arg( [ 'settings-updated' => 1 ], $this->get_url() ) ), 303 );
 			exit();
 		}
+	}
+
+	public function get_store_hash( $host ) {
+		$url = untrailingslashit( $host );
+
+		preg_match( '#stores/([^\/]+)/#', $url, $matches );
+		if ( empty( $matches[ 1 ] ) ) {
+			return '';
+		}
+
+		return $matches[ 1 ];
 	}
 
 }

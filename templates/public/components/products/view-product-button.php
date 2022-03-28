@@ -14,7 +14,5 @@ use BigCommerce\Post_Types\Product\Product;
 ?>
 
 <div class="bc-product__view-product">
-	<a href="<?php echo esc_url( $permalink ); ?>" class="bc-btn bc-btn--view-product" <?php echo $attributes; ?>>
-		<?php echo esc_html( $label ); ?>
-	</a>
+	<a href="<?php echo esc_url( $permalink ); ?>" class="bc-btn bc-btn--view-product" <?php echo $attributes; ?>><?php echo esc_html( $label ); ?></a>
 </div>
