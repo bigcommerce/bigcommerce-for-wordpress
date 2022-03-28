@@ -121,6 +121,10 @@ class Import extends Provider {
 		add_action( Processors\Cleanup::CLEAN_USERS_TRANSIENT, $this->create_callback( 'clean_users_group_transient', function () use ( $container ) {
 			$container[ self::CLEANUP ]->clean_customer_group_transients();
 		} ), 10, 0 );
+
+		add_action( Processors\Cleanup::CLEAN_PRODUCTS_TRANSIENT, $this->create_callback( 'clean_products_data_transient', function ( $offset ) use ( $container ) {
+			$container[ self::CLEANUP ]->clean_products_transient( $offset );
+		} ), 10, 1 );
 	}
 
 	private function process( Container $container ) {
@@ -195,7 +199,7 @@ class Import extends Provider {
 		};
 
 		$container[ self::CLEANUP ] = function ( Container $container ) {
-			return new Processors\Cleanup( $container[ self::LARGE_BATCH_SIZE ] );
+			return new Processors\Cleanup( $container[ Api::CACHE_HANDLER ], $container[ self::LARGE_BATCH_SIZE ] );
 		};
 
 		$container[ self::ERROR ] = function ( Container $container ) {

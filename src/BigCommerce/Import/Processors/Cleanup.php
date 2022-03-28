@@ -5,26 +5,35 @@ namespace BigCommerce\Import\Processors;
 
 
 use BigCommerce\Accounts\Customer;
+use BigCommerce\Cache\Cache_Handler;
 use BigCommerce\Import\Runner\Cron_Runner;
 use BigCommerce\Import\Runner\Status;
 use BigCommerce\Import\Import_Type;
 use BigCommerce\Logging\Error_Log;
+use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Post_Types\Queue_Task\Queue_Task;
 
 class Cleanup implements Import_Processor {
 
-	const CLEAN_USERS_TRANSIENT = 'bigcommerce_users_transient_clean';
+	const CLEAN_USERS_TRANSIENT    = 'bigcommerce_users_transient_clean';
+	const CLEAN_PRODUCTS_TRANSIENT = 'bigcommerce_products_transient_clean';
 
 	/** @var int */
 	private $batch;
+
+	/**
+	 * @var Cache_Handler
+	 */
+	private $cache_handler;
 
 	/**
 	 * Cleanup constructor.
 	 *
 	 * @param int $batch How many records to clean up per batch
 	 */
-	public function __construct( $batch = 100 ) {
-		$this->batch = $batch;
+	public function __construct( Cache_Handler $cache_handler, $batch = 100 ) {
+		$this->cache_handler = $cache_handler;
+		$this->batch         = $batch;
 	}
 
 	public function run( $abort = false, $pre_import = false ) {
@@ -100,11 +109,42 @@ class Cleanup implements Import_Processor {
 	 */
 	public function clean_customer_group_transients(): void {
 		$users_ids = get_users( [ 'fields' => 'ID' ] );
-
 		foreach ( $users_ids as $users_id ) {
 			$customer_id   = get_user_option( Customer::CUSTOMER_ID_META, $users_id );
 			$transient_key = sprintf( 'bccustomergroup%d', $customer_id );
 			delete_transient( $transient_key );
 		}
+	}
+
+	/**
+	 * Flush products transient cache
+	 *
+	 * @param int $offset
+	 */
+	public function clean_products_transient( $offset = 0 ): void {
+		$posts = get_posts( [
+			'post_type'      => Product::NAME,
+			'posts_per_page' => $this->batch,
+			'offset'         => $offset,
+		] );
+
+		if ( empty( $posts ) ) {
+			return;
+		}
+
+
+		foreach ( $posts as $post ) {
+			$product_id = get_post_meta( $post->ID, Product::BIGCOMMERCE_ID, true ) ?? 0;
+
+			if ( empty( $product_id ) ) {
+				continue;
+			}
+
+			$this->cache_handler->flush_product_catalog_object_cache( $product_id );
+		}
+
+		wp_schedule_single_event( time(), Cleanup::CLEAN_PRODUCTS_TRANSIENT, [
+			'offset' => $offset + $this->batch,
+		] );
 	}
 }

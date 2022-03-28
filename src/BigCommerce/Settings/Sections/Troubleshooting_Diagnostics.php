@@ -26,10 +26,13 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 	const DIAGNOSTICS_ID   = 'bigcommerce_diagnostics_id';
 	const DIAGNOSTICS_NAME = 'bigcommerce_diagnostics_name';
 	const ABORT_NAME       = 'bigcommerce_diagnostics_import_abort';
+	const FLUSH_USER       = 'bigcommerce_diagnostics_cache_user';
+	const FLUSH_PRODUCTS   = 'bigcommerce_diagnostics_cache_products';
 	const TEXTBOX_NAME     = 'bigcommerce_diagnostics_output';
 	const LOG_ERRORS       = 'bigcommerce_diagnostics_log_import_errors';
 	const LOG_FILE_SIZE    = 'bigcommerce_diagnostics_log_file_size';
 	const SYNC_SITE_URL    = 'bigcommerce_diagnostics_sync_site_url';
+	const USERS_TRANSIENT  = 'bigcommerce_users_transient_interval';
 
 	const AJAX_ACTION               = 'bigcommerce_support_data';
 	const AJAX_ACTION_IMPORT_ERRORS = 'bigcommerce_import_errors_log';
@@ -41,8 +44,17 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 	 */
 	protected $plugin_path;
 
+	protected $users_transient_groups = [];
+
 	public function __construct( $plugin_path ) {
-		$this->plugin_path = $plugin_path;
+		$this->plugin_path            = $plugin_path;
+		$this->users_transient_groups = [
+			15 * MINUTE_IN_SECONDS => __( '15 minutes', 'bigcommerce' ),
+			HOUR_IN_SECONDS        => __( '1 hour', 'bigcommerce' ),
+			3 * HOUR_IN_SECONDS    => __( '3 hours', 'bigcommerce' ),
+			12 * HOUR_IN_SECONDS   => __( '12 hours(default)', 'bigcommerce' ),
+			DAY_IN_SECONDS         => __( '24 hours', 'bigcommerce' ),
+		];
 	}
 
 	/*
@@ -69,6 +81,46 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 					'option'      => self::ABORT_NAME,
 					'label'       => __( 'Abort product import', 'bigcommerce' ),
 					'description' => __( 'Stops product import process', 'bigcommerce' ),
+			]
+		);
+
+		add_settings_field(
+			self::FLUSH_USER,
+			esc_html( __( 'User Cache', 'bigcommerce' ) ),
+			[ $this, 'render_flush_cache' ],
+			Settings_Screen::NAME,
+			self::NAME,
+			[
+					'option'      => self::FLUSH_USER,
+					'label'       => __( 'Flush users cache', 'bigcommerce' ),
+					'description' => __( 'Flush users transient cache.', 'bigcommerce' ),
+			]
+		);
+
+		register_setting( Settings_Screen::NAME, self::USERS_TRANSIENT );
+
+		add_settings_field(
+			self::USERS_TRANSIENT,
+			esc_html( __( 'User Cache Expiration', 'bigcommerce' ) ),
+			[ $this, 'render_users_transient_settings' ],
+			Settings_Screen::NAME,
+			self::NAME,
+			[
+				'option' => self::USERS_TRANSIENT,
+				'label'  => __( 'Expires after', 'bigcommerce' ),
+			]
+		);
+
+		add_settings_field(
+			self::FLUSH_PRODUCTS,
+			esc_html( __( 'Products Cache', 'bigcommerce' ) ),
+			[ $this, 'render_flush_cache' ],
+			Settings_Screen::NAME,
+			self::NAME,
+			[
+				'option'      => self::FLUSH_PRODUCTS,
+				'label'       => __( 'Flush products cache', 'bigcommerce' ),
+				'description' => __( 'Flush products transient cache. If product webhooks are enabled, each time a product is added/updated from BC catalog, the WP product cache will be flushed automatically.', 'bigcommerce' ),
 			]
 		);
 
@@ -141,6 +193,31 @@ class Troubleshooting_Diagnostics extends Settings_Section {
 		);
 
 
+	}
+
+	/**
+	 * Renders flush cache buttons
+	 *
+	 * @param $args
+	 */
+	public function render_flush_cache( $args ) {
+		$url  = add_query_arg( [ 'action' => $args['option'], '_wpnonce' => wp_create_nonce( $args['option'] ) ], admin_url( 'admin-post.php' ) );
+		$link = sprintf( '<a href="%s" class="bc-admin-btn">%s</a>', esc_url( $url ), esc_attr( $args['label'] ) );
+		printf( '%s<p class="description">%s</p>', $link, esc_html( $args['description'] ) );
+	}
+
+	/**
+	 * Renders users transient cache settings
+	 *
+	 * @param $args
+	 */
+	public function render_users_transient_settings( $args ) {
+		$value = get_option( $args['option'], 12 * HOUR_IN_SECONDS );
+		printf( '<select id="field-%s" name="%s" data-js="bc-dynamic-state-control" class="regular-text bc-field-choices">', esc_attr( self::USERS_TRANSIENT ), esc_attr( self::USERS_TRANSIENT ) );
+		foreach ( $this->users_transient_groups as $time => $label ) {
+			printf( '<option value="%d" %s>%s</option>', $time, selected( $value, $time, false ), esc_html( $label ) );
+		}
+		echo '</select>';
 	}
 
 	/**

@@ -408,4 +408,10 @@
 		--global--color-background: var(--color-bc-black);
 		--global--color-primary: transparent;
 	}
+
+	/* CASE: image zoom doesn't work properly do to max-width property */
+	.bc-product-gallery__image-slide img {
+		max-width: none;
+		width: 100%;
+	}
 }

@@ -151,7 +151,7 @@ class Colors {
 		] ) );
 		$wp_customize->add_control( new \WP_Customize_Color_Control( $wp_customize, self::CONDITION_COLOR, [
 			'section' => self::NAME,
-			'label'   => __( 'Production Condition Color', 'bigcommerce' ),
+			'label'   => __( 'Product Condition Color', 'bigcommerce' ),
 		] ) );
 
 		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::CONDITION_TEXT, [
