@@ -1,5 +1,10 @@
 # Changelog
 
+## [4.26.1]
+
+### Fixed
+- Increased the Custom Fields values limit and add correct processing for the special characters. If the error occurs on that step import will continue working with the next batch of the products
+
 ## [4.26.0]
 
 ### Added
@@ -1722,6 +1727,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.26.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.26.0...4.26.1
 [4.26.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.25.0...4.26.0
 [4.25.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.24.0...4.25.0
 [4.24.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.23.0...4.24.0
