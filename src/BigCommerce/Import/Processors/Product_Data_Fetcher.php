@@ -79,7 +79,15 @@ class Product_Data_Fetcher implements Import_Processor {
 				'response' => $e->getResponseBody(),
 				'headers'  => $e->getResponseHeaders(),
 			] );
+
 			do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [] );
+
+			return;
+		} catch ( \InvalidArgumentException $e ) {
+			do_action( 'bigcommerce/import/error', $e->getMessage(), [] );
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [] );
+
+			$this->fetch_end( $next, $status );
 
 			return;
 		}
@@ -160,16 +168,22 @@ class Product_Data_Fetcher implements Import_Processor {
 		 */
 		do_action( 'bigcommerce/import/fetched_products', $count, $products_response );
 
+		$this->fetch_end( $next, $status );
+	}
+
+	private function fetch_end( $next, $status ) {
 		$next ++;
 		if ( ! empty( $chunks[ $next ] ) ) {
 			do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Ready for next page of products', 'bigcommerce' ), [
 				'next' => $next,
 			] );
 			$this->set_next( $next );
-		} else {
-			$status->set_status( Status::FETCHED_PRODUCTS );
-			$this->clear_state();
+
+			return;
 		}
+
+		$status->set_status( Status::FETCHED_PRODUCTS );
+		$this->clear_state();
 	}
 
 	private function get_filtered_listing_map() {
