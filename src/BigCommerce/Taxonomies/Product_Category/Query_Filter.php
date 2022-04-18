@@ -40,6 +40,18 @@ class Query_Filter {
 	}
 
 	/**
+	 * Retrieve a list of terms with is_visible = false
+	 *
+	 * @return array
+	 */
+	public function get_non_visible_terms(): array {
+		global $wpdb;
+		$sql = $wpdb->prepare( "SELECT tm.term_id FROM $wpdb->termmeta tm INNER JOIN $wpdb->term_taxonomy tt ON tt.term_id = tm.term_id WHERE tm.meta_key = %s AND tm.meta_value = %d AND tt.taxonomy = %s", 'is_visible', 0, Product_Category::NAME );
+
+		return $wpdb->get_col( $sql );
+	}
+
+	/**
 	 * When retrieving a term that has children, WP will include the children in the archive unless we specifically
 	 * exclude it. This only applies when a group has visibility of a parent term, but not children.
 	 *

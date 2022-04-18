@@ -9,9 +9,16 @@ use BigCommerce\Settings\Sections\Currency;
 use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Flag\Flag;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
+use BigCommerce\Taxonomies\Product_Category\Query_Filter;
 
 class Query {
 	const UNFILTERED_QUERY_FLAG = '_bigcommerce_unfiltered';
+
+	private $query_filter;
+
+	public function __construct( Query_Filter $filter) {
+		$this->query_filter = $filter;
+	}
 
 	/**
 	 * @param \WP_Query $query
@@ -181,7 +188,7 @@ class Query {
 			$in       = $in ?: [ 0 ];
 		}
 		if ( $this->is_product_search( $query ) ) {
-			$search_in = $this->search_to_post_ids( $query->get( 's' ) );
+			$search_in  = $this->search_to_post_ids( $query->get( 's' ) );
 			$query->set( 's', '' ); // set 's' back to the default value so WP doesn't turn it into another search
 			$in = $in ? array_intersect( $in, $search_in ) : $search_in;
 			$in = $in ?: [ 0 ];
@@ -210,6 +217,26 @@ class Query {
 			$post__not_in = array_merge( $post__not_in, $out );
 			$query->set( 'post__not_in', $post__not_in );
 		}
+	}
+
+	private function handle_non_visible_categories(): string {
+		$result = $this->query_filter->get_non_visible_terms();
+
+		if ( empty( $result) || is_wp_error( $result) ) {
+			return '';
+		}
+
+		$categories_exclude = '';
+
+		foreach ( $result as $item ) {
+			$categories_exclude = sprintf( '-%d,', $item );
+		}
+
+		if ( empty( $categories_exclude ) ) {
+			return '';
+		}
+
+		return trim( $categories_exclude, ',' );
 	}
 
 	/**
@@ -396,6 +423,12 @@ class Query {
 				],
 			],
 		];
+
+		$categories = $this->handle_non_visible_categories();
+
+		if ( ! empty( $categories ) ) {
+			$search_query_args['cat'] = $categories;
+		}
 
 		$matches = $query->query( $search_query_args );
 

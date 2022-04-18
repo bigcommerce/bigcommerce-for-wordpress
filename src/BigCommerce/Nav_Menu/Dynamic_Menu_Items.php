@@ -129,6 +129,10 @@ class Dynamic_Menu_Items {
 								'key'  => 'sort_order',
 								'type' => 'NUMERIC',
 						],
+						[
+								'key'   => 'is_visible',
+								'value' => true,
+						],
 				],
 				'orderby'      => 'sort_order',
 				'order'        => 'ASC',

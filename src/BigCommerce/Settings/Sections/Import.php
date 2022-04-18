@@ -244,6 +244,11 @@ class Import extends Settings_Section {
 		$current = get_option( Import::RUN_IN_PARALLEL, 0 );
 
 		echo '<fieldset>';
+		$link = 'https://developer.bigcommerce.com/bigcommerce-for-wordpress/ZG9jOjQ1MjA3MTQ2-creating-reliable-cron-jobs';
+		$learn_more_link = sprintf( '<a href="%s" target="_blank">%s</a>', $link, esc_html( __( 'Learn More', 'bigcommerce' ) ) );
+		echo '<p class="description">';
+		printf( esc_html( __( 'The BigCommerce for WordPress plugin relies on WP-Cron for background tasks to update/sync data from BigCommerce. Configuring a server-side cron can greatly increase performance. %s', 'bigcommerce' ) ), $learn_more_link );
+		echo '</p>';
 		printf(
 			'<p><label><input type="radio" name="%s" value="0" %s /> %s</label></p>',
 			esc_attr( Import::RUN_IN_PARALLEL ),

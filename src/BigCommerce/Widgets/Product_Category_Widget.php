@@ -50,6 +50,12 @@ class Product_Category_Widget extends \WP_Widget {
 			'hierarchical' => $hierarchical,
 			'taxonomy'     => Product_Category::NAME,
 			'echo'         => false,
+			'meta_query'   => [
+				[
+					'key'   => 'is_visible',
+					'value' => true,
+				],
+			]
 		];
 
 		$markup = '';

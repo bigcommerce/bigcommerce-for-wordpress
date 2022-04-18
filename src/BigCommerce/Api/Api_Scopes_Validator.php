@@ -28,7 +28,6 @@ class Api_Scopes_Validator extends v2ApiAdapter {
 		$this->cleanup_scope_check_resource( self::CUSTOMERS_RESOURCE, $customer );
 
 		$resources = [
-			self::MARKETING_RESOURCE,
 			self::ORDERS_RESOURCE,
 			self::PAYMENT_METHODS_RESOURCE,
 		];

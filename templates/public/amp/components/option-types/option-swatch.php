@@ -13,7 +13,7 @@
 <div id="option-<?php echo esc_attr( $id ); ?>" class="bc-product-form__control bc-product-form__control--swatch">
 	<span class="bc-product-form__option-label"><?php echo esc_html( $label ); ?></span>
 
-	<div class="bc-product-form__option-variants--inline" data-js="product-form-option" data-field="product-form-option-radio">
+	<div class="bc-product-form__option-variants bc-product-form__option-variants--inline" data-js="product-form-option" data-field="product-form-option-radio">
 		<?php foreach ( $options as $option ) { ?>
 
 			<input type="radio"
