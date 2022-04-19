@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.27.0]
+
+### Added
+- Added detailed description to the Import Task Processing option in Settings -> Product Sync
+- Respect product variants availability settings: if variant is disabled or not available it will be unselectable and visually marked
+- Add support for category is_visible flag:
+  - Hide disabled category from menu
+  - Redirect from category page to 404 page
+  - Exclude category from search index
+  - Product under category can still be accessed, directly via URL
+
 ## [4.26.1]
 
 ### Fixed
@@ -1727,6 +1738,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.27.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.26.1...4.27.0
 [4.26.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.26.0...4.26.1
 [4.26.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.25.0...4.26.0
 [4.25.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.24.0...4.25.0

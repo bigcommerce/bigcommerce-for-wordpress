@@ -25,12 +25,13 @@ class Term_Ignorer implements Import_Strategy {
 	public function do_import() {
 		/**
 		 * A term has been skipped for import
-		 * 
+		 *
 		 * @param array  $bc_term
 		 * @param string $taxonomy
 		 * @param int    $term_id
 		 */
 		do_action( 'bigcommerce/import/term/skipped', $this->bc_term, $this->taxonomy, $this->term_id );
+		update_term_meta( $this->term_id, 'is_visible', ( int ) $this->bc_term[ 'is_visible' ] );
 
 		return $this->term_id;
 	}

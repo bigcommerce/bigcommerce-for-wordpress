@@ -9,6 +9,7 @@ use BigCommerce\Customizer\Sections\Product_Single as Customizer;
 use BigCommerce\Exceptions\Component_Not_Found_Exception;
 use BigCommerce\Import\Image_Importer;
 use BigCommerce\Post_Types\Product\Product;
+use BigCommerce\Taxonomies\Availability\Availability;
 
 class Product_Options extends Controller {
 	const PRODUCT  = 'product';
@@ -168,15 +169,32 @@ class Product_Options extends Controller {
 				break;
 		}
 
-		$image_size = $this->image_size();
-		$zoom_size  = $this->zoom_size();
-		$variants   = array_map( function ( $variant ) use ( $inventory, $image_size, $zoom_size, $product ) {
+		$image_size   = $this->image_size();
+		$zoom_size    = $this->zoom_size();
+		$availability = $product->availability();
+		$variants     = array_map( function ( $variant ) use ( $inventory, $image_size, $zoom_size, $product, $availability ) {
+			switch ( $availability ) {
+				case Availability::AVAILABLE:
+					// Inventory is empty or variant purchase is disabled
+					$variant_level_out   = empty( $inventory ) && $variant->inventory_level <= 0;
+					$purchasing_disabled = $variant_level_out || (bool) $variant->purchasing_disabled;
+					break;
+				case Availability::DISABLED:
+					$purchasing_disabled = true;
+					break;
+				case Availability::PREORDER:
+				default:
+					$purchasing_disabled = (bool) $variant->purchasing_disabled;
+					break;
+			}
+
+
 			$data = [
 				'variant_id'       => $variant->id,
 				'options'          => $variant->option_values,
 				'option_ids'       => wp_list_pluck( $variant->option_values, 'id' ),
 				'inventory'        => isset( $inventory ) ? $inventory : $variant->inventory_level,
-				'disabled'         => (bool) $variant->purchasing_disabled,
+				'disabled'         => $purchasing_disabled,
 				'disabled_message' => $variant->purchasing_disabled ? $variant->purchasing_disabled_message : '',
 				'sku'              => $variant->sku,
 				'price'            => $variant->calculated_price,

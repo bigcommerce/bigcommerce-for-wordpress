@@ -27,7 +27,12 @@ class Shipping_Api extends v2ApiAdapter {
      * @return float|int
      */
 	public function count_shipping_methods() {
-		$zones = $this->get_zones();
+		try {
+			$zones = $this->get_zones();
+		} catch ( \Exception $exception ) {
+			return 0;
+		}
+
 		if ( ! is_array( $zones ) ) {
 			return 0;
 		}

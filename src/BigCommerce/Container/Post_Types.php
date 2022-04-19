@@ -57,7 +57,7 @@ class Post_Types extends Provider {
 		};
 
 		$container[ self::PRODUCT_QUERY ] = function ( Container $container ) {
-			return new Product\Query();
+			return new Product\Query( $container[ Taxonomies::PRODUCT_CATEGORY_QUERY_FILTER ] );
 		};
 
 		$container[ self::PRODUCT_ADMIN ] = function ( Container $container ) {
@@ -83,6 +83,29 @@ class Post_Types extends Provider {
 		add_filter( 'query_vars', $this->create_callback( 'product_query_vars', function ( $vars ) use ( $container ) {
 			return $container[ self::PRODUCT_QUERY ]->add_query_vars( $vars );
 		} ), 10, 1 );
+
+		add_action( 'pre_handle_404', $this->create_callback( 'handle_non_visible_category', function ( $preempt ) use ( $container ) {
+			if ( ! ( is_category() || is_archive() ) || is_admin() ) {
+				return $preempt;
+			}
+
+			$result = $container[ Taxonomies::PRODUCT_CATEGORY_QUERY_FILTER ]->get_non_visible_terms();
+
+			if ( empty( $result) || is_wp_error($result) ) {
+				return $preempt;
+			}
+
+			if ( ! in_array( get_queried_object_id(), $result ) ) {
+				return $preempt;
+			}
+
+			global $wp_query;
+			$wp_query->set_404();
+			status_header( 404 );
+			nocache_headers();
+
+			return '';
+		} ), 10, 1);
 
 		/**
 		 * Only load the post admin hooks when on the post admin page to avoid interfering where we're not welcome

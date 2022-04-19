@@ -6,6 +6,7 @@ namespace BigCommerce\Templates;
 
 use BigCommerce\Customizer;
 use BigCommerce\Post_Types\Product\Product;
+use BigCommerce\Taxonomies\Product_Category\Product_Category;
 
 class Refinery extends Controller {
 	const QUERY = 'query';
@@ -151,10 +152,22 @@ class Refinery extends Controller {
 				continue;
 			}
 			$tax_object = get_taxonomy( $taxonomy );
-			$terms = get_terms( [
+
+			$args = [
 				'taxonomy'   => $taxonomy,
-				'hide_empty' => true
-			] );
+				'hide_empty' => true,
+			];
+
+			if ( $taxonomy === Product_Category::NAME ) {
+				$args['meta_query'] = [
+					[
+						'key'   => 'is_visible',
+						'value' => true,
+					],
+				];
+			}
+
+			$terms = get_terms( $args );
 
 			$terms_by_parent = [];
 			$choices = [];
