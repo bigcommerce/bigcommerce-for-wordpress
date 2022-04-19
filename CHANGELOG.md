@@ -1,5 +1,10 @@
 # Changelog
 
+## [4.27.1]
+
+### Fixed
+- Fixed the issue with products data fetch that prevented the correct import and allows import of only the first 10 products
+
 ## [4.27.0]
 
 ### Added
@@ -1738,6 +1743,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.27.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.27.0...4.27.1
 [4.27.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.26.1...4.27.0
 [4.26.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.26.0...4.26.1
 [4.26.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.25.0...4.26.0
