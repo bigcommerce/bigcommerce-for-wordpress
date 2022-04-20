@@ -4,7 +4,7 @@
 namespace BigCommerce;
 
 class Plugin {
-	const VERSION = '4.27.0';
+	const VERSION = '4.27.1';
 
 	protected static $_instance;
 
