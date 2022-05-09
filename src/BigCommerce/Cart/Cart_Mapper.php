@@ -90,7 +90,7 @@ class Cart_Mapper {
 		 * then we need to deduct the calulated tax from the subtotal
 		 * as we are displaying the tax separately
 		 */
-		if ( $cart[ 'tax_included' ] ) {
+		if ( $cart[ 'tax_included' ] || $tax_amount < 0 ) {
 			$subtotal = $cart[ 'cart_amount' ][ 'raw' ];
 		} else {
 			$subtotal = $cart[ 'cart_amount' ][ 'raw' ] - $tax_amount;

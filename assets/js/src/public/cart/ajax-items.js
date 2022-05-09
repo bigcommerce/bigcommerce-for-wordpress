@@ -54,9 +54,8 @@ const getItemUpdateQueryString = (input = '') => {
  * @function handleCartState
  * @description check the cart(s) state and disable/enable actions on current status.
  */
-const handleCartState = (e) => {
+const handleCartState = () => {
 	const carts = tools.getNodes('bc-cart', true);
-	const eventMiniCart = e.detail ? e.detail.miniCartID : '';
 
 	if (!carts) {
 		return;
@@ -66,12 +65,7 @@ const handleCartState = (e) => {
 		const itemInputs = tools.getNodes('bc-cart-item__quantity', true, cart);
 		const itemRemoveButtons = tools.getNodes('.bc-cart-item__remove-button', true, cart, true);
 		const checkoutButton = tools.getNodes('proceed-to-checkout', false, cart)[0];
-		const isMiniCart = tools.closest(cart, '[data-js="bc-mini-cart"]');
 		const shippingMethods = tools.getNodes('[data-shipping-field]', true, cart, true);
-
-		if (isMiniCart && isMiniCart.dataset.miniCartId === eventMiniCart) {
-			return;
-		}
 
 		if (cartState.isFetching) {
 			itemInputs.forEach((item) => {
@@ -105,24 +99,6 @@ const handleCartState = (e) => {
 		}
 
 		cart.classList.remove('bc-updating-cart');
-	});
-};
-
-/**
- * @function updateCartItems
- * @description update the cart item total value.
- * @param data {object}
- */
-const updateCartItems = (data = {}) => {
-	tools.getNodes('bc-cart', true).forEach((cart) => {
-		Object.entries(data.items).forEach(([key, value]) => {
-			const id = key;
-			const totalSalePrice = value.total_sale_price.formatted;
-			const itemRow = tools.getNodes(id, false, cart, false)[0];
-			const totalPrice = tools.getNodes('.bc-cart-item-total-price', false, itemRow, true)[0];
-
-			totalPrice.innerHTML = totalSalePrice;
-		});
 	});
 };
 
@@ -173,8 +149,6 @@ const cartItemQtyUpdated = (data = {}) => {
 		return;
 	}
 
-	updateCartItems(data);
-	updatedCartTotals(data);
 	updateMenuQtyTotal(data);
 	handleFlatsomeTheme(data);
 };

@@ -19,7 +19,7 @@ class Lost_Password_Form extends Controller {
 
 	public function get_data() {
 		return [
-			self::FORM_ACTION  => network_site_url( 'wp-login.php?action=lostpassword', 'login_post' ),
+			self::FORM_ACTION  => site_url( 'wp-login.php?action=lostpassword', 'login_post' ),
 			self::LOGIN_URL    => $this->get_login_url(),
 			self::REGISTER_URL => $this->get_register_url(),
 			self::REDIRECT     => $this->get_redirect_url(),

@@ -19,27 +19,30 @@ class Config extends Post_Type_Config {
 	 */
 	public function get_args() {
 		return [
-			'hierarchical'    => false,
-			'menu_icon'       => 'dashicons-bigcommerce',
-			'map_meta_cap'    => true,
-			'supports'        => [ 'title', 'editor', 'thumbnail', 'revisions', 'comments', ],
+			'hierarchical'        => false,
+			'menu_icon'           => 'dashicons-bigcommerce',
+			'map_meta_cap'        => true,
+			'supports'            => [ 'title', 'editor', 'thumbnail', 'revisions', 'comments', ],
 			/**
 			 * Filter the default capability type for editing Product posts.
 			 *
 			 * @param string $capability_type The base capability string
 			 */
-			'capability_type' => apply_filters( 'bigcommerce/post_type/product/capabilities', 'post' ),
-			'capabilities'    => [
+			'capability_type'     => apply_filters( 'bigcommerce/post_type/product/capabilities', 'post' ),
+			'capabilities'        => [
 				'create_posts' => 'do_not_allow',
 			],
-			'public'          => true,
-			'has_archive'     => true,
-			'rewrite'         => [
+			'public'              => true,
+			'has_archive'         => true,
+			'rewrite'             => [
 				'slug'       => $this->get_slug(),
 				'with_front' => false,
 			],
-			'labels'          => $this->get_labels(),
-			'show_in_rest'    => true,
+			'labels'              => $this->get_labels(),
+			'show_in_rest'        => true,
+			'show_in_graphql'     => true,
+			'graphql_single_name' => WPGraph_Product::SINGULAR,
+			'graphql_plural_name' => WPGraph_Product::PLURAL,
 		];
 	}
 

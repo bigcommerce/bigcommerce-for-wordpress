@@ -97,12 +97,6 @@ class Registration_Handler implements Form_Handler {
 		};
 		add_filter( 'bigcommerce/customer/create/args', $profile_filter, 10, 1 );
 
-		wp_signon( [
-			'user_login'    => $profile[ 'email' ],
-			'user_password' => $password,
-			'remember'      => true,
-		] );
-
 		remove_filter( 'bigcommerce/customer/create/args', $profile_filter, 10 );
 
 		$user = new \WP_User( $user_id );
@@ -157,6 +151,17 @@ class Registration_Handler implements Form_Handler {
 		return true;
 	}
 
+	/**
+	 * @param $email
+	 *
+	 * @return bool
+	 */
+	private function is_email_free( $email ): bool {
+		$user = get_user_by( 'login', $email );
+
+		return empty( $user );
+	}
+
 	private function validate_submission( $submission ) {
 		$errors = new \WP_Error();
 
@@ -175,7 +180,10 @@ class Registration_Handler implements Form_Handler {
 			$errors->add( 'email', __( 'Email Address is required.', 'bigcommerce' ) );
 		} elseif ( ! is_email( $submission[ 'bc-register' ][ 'email' ] ) ) {
 			$errors->add( 'email', __( 'Please verify that you have submitted a valid email address.', 'bigcommerce' ) );
+		} elseif ( ! $this->is_email_free( $submission['bc-register']['email'] ) ) {
+			$errors->add( 'email', __( 'Sorry, that email address is already used!', 'bigcommerce' ) );
 		}
+
 		if ( empty( $submission[ 'bc-register' ][ 'new_password' ] ) ) {
 			$errors->add( 'new_password', __( 'Please set your password.', 'bigcommerce' ) );
 		}

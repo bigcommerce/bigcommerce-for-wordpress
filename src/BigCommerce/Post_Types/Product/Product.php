@@ -7,10 +7,13 @@ namespace BigCommerce\Post_Types\Product;
 use BigCommerce\Api\v3\ObjectSerializer;
 use BigCommerce\Currency\With_Currency;
 use BigCommerce\Customizer\Sections\Buttons;
+use BigCommerce\Customizer\Sections\Cart as Cart_Settings;
+use BigCommerce\Customizer\Sections\Cart as CustomizerCart;
 use BigCommerce\Customizer\Sections\Product_Single;
 use BigCommerce\Exceptions\Channel_Not_Found_Exception;
 use BigCommerce\Exceptions\Product_Not_Found_Exception;
 use BigCommerce\Import\Image_Importer;
+use BigCommerce\Import\Processors\Store_Settings;
 use BigCommerce\Settings\Sections\Cart;
 use BigCommerce\Settings\Sections\Channels;
 use BigCommerce\Taxonomies\Availability\Availability;
@@ -55,6 +58,40 @@ class Product {
 
 	public function __construct( $post_id ) {
 		$this->post_id = $post_id;
+	}
+
+	public function get_redirect_product_link() {
+		if ( ! $this->out_of_stock() ) {
+			return '';
+		}
+
+		$product_behaviour = get_option( Store_Settings::PRODUCT_OUT_OF_STOCK, 'do_nothing' );
+
+		if ( $product_behaviour === 'hide_product_and_redirect' ) {
+			$categories = get_the_terms( $this->post_id(), Product_Category::NAME );
+
+			if ( empty( $categories ) ) {
+				return '';
+			}
+
+			return get_term_link( $categories[0], Product_Category::NAME );
+		}
+
+		if ( $product_behaviour === 'hide_product' ) {
+			$setting = get_option( CustomizerCart::EMPTY_CART_LINK, Cart_Settings::LINK_HOME );
+			switch ( $setting ) {
+				case Cart_Settings::LINK_CATALOG:
+					return get_post_type_archive_link( Product::NAME );
+					break;
+				case Cart_Settings::LINK_HOME:
+				default:
+					return home_url( '/' );
+					break;
+			}
+
+		}
+
+		return '';
 	}
 
 	public function __get( $property ) {
@@ -546,6 +583,30 @@ class Product {
 		$date_string = $date ? date_i18n( get_option( 'date_format', 'Y-m-d' ), $date ) : '';
 
 		return sprintf( $message, $date_string );
+	}
+
+	/**
+	 * Get product variant SKU by variant ID. Returns empty string if variant ID is not provided or wrong
+	 *
+	 * @param int $variant_id
+	 *
+	 * @return string
+	 */
+	public function get_variant_sku( $variant_id = 0 ): string {
+		if ( empty( $variant_id ) ) {
+			return '';
+		}
+
+		$data = $this->get_source_data();
+		foreach ( $data->variants as $variant ) {
+			if ( $variant->id !== $variant_id ) {
+				continue;
+			}
+
+			return $variant->sku;
+		}
+
+		return '';
 	}
 
 	public function get_inventory_level( $variant_id = 0 ) {

@@ -8,12 +8,14 @@ use BigCommerce\Api\Store_Api;
 use BigCommerce\Settings\Screens\Settings_Screen;
 
 class Analytics extends Settings_Section {
-	const NAME = 'analytics';
+	const NAME          = 'analytics';
+	const TRACK_BY_HOOK = 'bigcommerce/analytics/track_by';
 
-	const SYNC_ANALYTICS   = 'bigcommerce_sync_analytics';
-	const FACEBOOK_PIXEL   = 'bigcommerce_facebook_pixel_id';
-	const GOOGLE_ANALYTICS = 'bigcommerce_google_analytics_id';
-	const SEGMENT          = 'bigcommerce_segment_key';
+	const SYNC_ANALYTICS    = 'bigcommerce_sync_analytics';
+	const FACEBOOK_PIXEL    = 'bigcommerce_facebook_pixel_id';
+	const GOOGLE_ANALYTICS  = 'bigcommerce_google_analytics_id';
+	const TRACK_PRODUCT_SKU = 'bigcommerce_track_product_sku';
+	const SEGMENT           = 'bigcommerce_segment_key';
 
 	const FACEBOOK_PIXEL_NAME   = 'Facebook Pixel';
 	const GOOGLE_ANALYTICS_NAME = 'Google Analytics';
@@ -57,17 +59,35 @@ class Analytics extends Settings_Section {
 			self::GOOGLE_ANALYTICS
 		);
 
+		register_setting( Settings_Screen::NAME, self::TRACK_PRODUCT_SKU );
+
 
 		add_settings_field(
 			self::SYNC_ANALYTICS,
 			esc_html( __( 'Sync Tracking IDs', 'bigcommerce' ) ),
-			[ $this, 'render_sync_checkbox', ],
+			[ $this, 'render_checkbox', ],
 			Settings_Screen::NAME,
 			self::NAME,
 			[
-				'option'    => self::SYNC_ANALYTICS,
-				'type'      => 'text',
-				'default'   => 1,
+				'option'      => self::SYNC_ANALYTICS,
+				'type'        => 'text',
+				'default'     => 1,
+				'description' => __( 'Disable the sync to set different tracking IDs on different sites connected to your account.', 'bigcommerce' ),
+				'label'       => __( 'Keep analytics tracking IDs in sync with your BigCommerce store settings', 'bigcommerce' ),
+			]
+		);
+
+		add_settings_field(
+			self::TRACK_PRODUCT_SKU,
+			esc_html( __( 'Track SKU Data', 'bigcommerce' ) ),
+			[ $this, 'render_checkbox', ],
+			Settings_Screen::NAME,
+			self::NAME,
+			[
+				'option'  => self::TRACK_PRODUCT_SKU,
+				'type'    => 'text',
+				'default' => 0,
+				'label'   => __( 'Include SKU data in analytics ', 'bigcommerce' ),
 			]
 		);
 		add_settings_field(
@@ -96,18 +116,25 @@ class Analytics extends Settings_Section {
 		);
 	}
 
-	public function render_sync_checkbox( $args ) {
-		$option  = $args[ 'option' ];
-		$default = isset( $args[ 'default' ] ) ? $args[ 'default' ] : '';
-		$value   = (bool) get_option( $option, $default );
+	public function render_checkbox( $args ) {
+		$option      = $args['option'];
+		$label       = $args['label'];
+		$description = $args['description'] ?? '';
+		$default     = $args['default'] ?? '';
+		$value       = (bool) get_option( $option, $default );
+
 		printf(
 			'<label><input id="field-%s" type="checkbox" value="1" class="regular-text code" name="%s" %s /> %s</label>',
 			esc_attr( $option ),
 			esc_attr( $option ),
 			checked( true, $value, false ),
-			esc_html( __( 'Keep analytics tracking IDs in sync with your BigCommerce store settings', 'bigcommerce' ) )
+			esc_html( $label )
 		);
-		printf( '<p class="description">%s</p>', esc_html( __( 'Disable the sync to set different tracking IDs on different sites connected to your account.', 'bigcommerce' ) ) );
+
+		if ( empty( $description ) ) {
+			return;
+		}
+		printf( '<p class="description">%s</p>', esc_html( $description ) );
 	}
 
 	/**
