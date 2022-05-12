@@ -235,7 +235,7 @@ class Shipping_Controller extends Rest_Controller {
 
 	private function cart_total_for_method( $subtotal, $cart ) {
 
-		if ( empty( $cart['tax_amount']['raw'] ) ) {
+		if ( empty( $cart['tax_amount']['raw'] ) || $cart['tax_amount']['raw'] < 0 ) {
 			return $subtotal;
 		}
 

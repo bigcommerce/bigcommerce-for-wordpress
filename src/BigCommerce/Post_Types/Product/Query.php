@@ -5,6 +5,7 @@ namespace BigCommerce\Post_Types\Product;
 
 
 use BigCommerce\Customizer\Sections\Product_Archive;
+use BigCommerce\Import\Processors\Store_Settings;
 use BigCommerce\Settings\Sections\Currency;
 use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Flag\Flag;
@@ -176,6 +177,30 @@ class Query {
 		$bcid_not_in = $this->get_query_var_as_array( $query, 'bigcommerce_id__not_in' );
 		$sku_in      = $this->get_query_var_as_array( $query, 'bigcommerce_sku__in' );
 		$sku_not_in  = $this->get_query_var_as_array( $query, 'bigcommerce_sku__not_in' );
+
+		$product_behaviour = get_option( Store_Settings::PRODUCT_OUT_OF_STOCK, 'do_nothing' );
+
+		if ( ! is_admin() && ! is_single() &&  $query->get( 'bc-sort' ) && $this->is_product_query( $query ) && ( $product_behaviour === 'hide_product_and_accessible' || $product_behaviour === 'hide_product' ) ) {
+			$meta_query = $query->get( 'meta_query' ) ?: [];
+			$tax_query  = $query->get( 'tax_query' ) ?: [];
+			error_log('Inside');
+			error_log(print_r($query, true));
+			$meta_query['bigcommerce_inventory_level_settings'] = [
+				'key'     => Product::INVENTORY_META_KEY,
+				'value'   => 0,
+				'compare' => '>',
+			];
+
+			$tax_query['bigcommerce_out_stock_flage'] = [
+				'taxonomy' => Flag::NAME,
+				'field'    => 'name',
+				'terms'    => Flag::OUT_OF_STOCK,
+				'operator' => 'NOT IN',
+			];
+
+			$query->set( 'meta_query', $meta_query );
+			$query->set( 'tax_query', $tax_query );
+		}
 
 		$in = [];
 		if ( ! empty( $bcid_in ) ) {

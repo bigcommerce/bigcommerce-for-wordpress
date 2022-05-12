@@ -3,7 +3,6 @@
 
 namespace BigCommerce\Container;
 
-use BigCommerce\Api\Api_Scopes_Validator;
 use BigCommerce\Api\Base_Client;
 use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Api\v3\Api\ChannelsApi;
@@ -219,16 +218,15 @@ class Settings extends Provider {
 				return $new_value;
 			}
 
-			$config        = $container[ Api::API_CONFIG_RENEWAL ]->renewal_config( $option, $new_value );
-			$client        = new Base_Client( $config );
-			$channels_api  = new ChannelsApi( $client );
-			$api_validator = new Api_Scopes_Validator( $client );
-			$catalog_api   = new CatalogApi( $client );
+			$config       = $container[ Api::API_CONFIG_RENEWAL ]->renewal_config( $option, $new_value );
+			$client       = new Base_Client( $config );
+			$channels_api = new ChannelsApi( $client );
+			$catalog_api  = new CatalogApi( $client );
 
 			try {
-				$api_validator->validate();
 				$channels_api->listChannels()->getData();
 				$catalog_api->catalogSummaryGet();
+
 				return $new_value;
 			} catch ( \Exception $e ) {
 				add_settings_error( Api_Credentials_Screen::NAME, 'submitted', __( 'Unable to connect to the BigCommerce API. Please re-enter your credentials.', 'bigcommerce' ), 'error' );

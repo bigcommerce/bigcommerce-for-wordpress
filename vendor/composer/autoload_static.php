@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInita17f01c806497ab3b4c001c6cdee5a72
+class ComposerStaticInited3f512bfd6e1537c3269b36b727cd58
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -676,6 +676,8 @@ class ComposerStaticInita17f01c806497ab3b4c001c6cdee5a72
         'BigCommerce\\Post_Types\\Product\\Store_Links' => __DIR__ . '/../..' . '/src/BigCommerce/Post_Types/Product/Store_Links.php',
         'BigCommerce\\Post_Types\\Product\\Unique_Slug_Filter' => __DIR__ . '/../..' . '/src/BigCommerce/Post_Types/Product/Unique_Slug_Filter.php',
         'BigCommerce\\Post_Types\\Product\\Unsupported_Products' => __DIR__ . '/../..' . '/src/BigCommerce/Post_Types/Product/Unsupported_Products.php',
+        'BigCommerce\\Post_Types\\Product\\WPGraph_Config' => __DIR__ . '/../..' . '/src/BigCommerce/Post_Types/Product/WPGraph_Config.php',
+        'BigCommerce\\Post_Types\\Product\\WPGraph_Product' => __DIR__ . '/../..' . '/src/BigCommerce/Post_Types/Product/WPGraph_Product.php',
         'BigCommerce\\Post_Types\\Queue_Task\\Config' => __DIR__ . '/../..' . '/src/BigCommerce/Post_Types/Queue_Task/Config.php',
         'BigCommerce\\Post_Types\\Queue_Task\\Queue_Task' => __DIR__ . '/../..' . '/src/BigCommerce/Post_Types/Queue_Task/Queue_Task.php',
         'BigCommerce\\Post_Types\\Sync_Log\\Config' => __DIR__ . '/../..' . '/src/BigCommerce/Post_Types/Sync_Log/Config.php',
@@ -925,6 +927,7 @@ class ComposerStaticInita17f01c806497ab3b4c001c6cdee5a72
         'BigCommerce\\Webhooks\\Product\\Product_Updater' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Product/Product_Updater.php',
         'BigCommerce\\Webhooks\\Status' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Status.php',
         'BigCommerce\\Webhooks\\Webhook' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Webhook.php',
+        'BigCommerce\\Webhooks\\WebhookTrait' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/WebhookTrait.php',
         'BigCommerce\\Webhooks\\Webhook_Cron_Tasks' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Webhook_Cron_Tasks.php',
         'BigCommerce\\Webhooks\\Webhook_Listener' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Webhook_Listener.php',
         'BigCommerce\\Webhooks\\Webhook_Versioning' => __DIR__ . '/../..' . '/src/BigCommerce/Webhooks/Webhook_Versioning.php',
@@ -1139,10 +1142,10 @@ class ComposerStaticInita17f01c806497ab3b4c001c6cdee5a72
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInita17f01c806497ab3b4c001c6cdee5a72::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInita17f01c806497ab3b4c001c6cdee5a72::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInita17f01c806497ab3b4c001c6cdee5a72::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInita17f01c806497ab3b4c001c6cdee5a72::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInited3f512bfd6e1537c3269b36b727cd58::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInited3f512bfd6e1537c3269b36b727cd58::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInited3f512bfd6e1537c3269b36b727cd58::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInited3f512bfd6e1537c3269b36b727cd58::$classMap;
 
         }, null, ClassLoader::class);
     }

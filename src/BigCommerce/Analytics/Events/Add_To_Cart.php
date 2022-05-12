@@ -4,6 +4,7 @@
 namespace BigCommerce\Analytics\Events;
 
 
+use BigCommerce\Settings\Sections\Analytics;
 use BigCommerce\Templates\Message;
 use BigCommerce\Post_Types\Product\Product;
 
@@ -34,16 +35,19 @@ class Add_To_Cart {
 				'variant_id' => 0,
 			] );
 
+			$track_data = [
+				'cart_id'    => $data['cart_id'],
+				'post_id'    => $data['post_id'],
+				'product_id' => $data['product_id'],
+				'variant_id' => $data['variant_id'],
+				'name'       => get_the_title( $data['post_id'] ),
+			];
+			$track_data = apply_filters( Analytics::TRACK_BY_HOOK, $track_data );
+
 			$args[ Message::ATTRIBUTES ] = array_merge( $args[ Message::ATTRIBUTES ], [
 				'data-tracking-trigger' => 'ready',
 				'data-tracking-event'   => 'add_to_cart_message',
-				'data-tracking-data'    => wp_json_encode( [
-					'cart_id'    => $data['cart_id'],
-					'post_id'    => $data['post_id'],
-					'product_id' => $data['product_id'],
-					'variant_id' => $data['variant_id'],
-					'name'       => get_the_title( $data[ 'post_id' ] ),
-				] ),
+				'data-tracking-data'    => wp_json_encode( $track_data ),
 			] );
 		}
 
@@ -58,14 +62,17 @@ class Add_To_Cart {
 	 * @filter bigcommerce/button/purchase/attributes
 	 */
 	public function add_tracking_attributes_to_purchase_button( $attributes, $product ) {
+		$track_data = [
+			'post_id'    => $product->post_id(),
+			'product_id' => $product->bc_id(),
+			'name'       => get_the_title( $product->post_id() ),
+		];
+		$track_data = apply_filters( Analytics::TRACK_BY_HOOK, $track_data );
+
 		return array_merge( $attributes, [
 			'data-tracking-trigger' => 'ready',
 			'data-tracking-event'   => 'add_to_cart',
-			'data-tracking-data'    => wp_json_encode( [
-				'post_id'    => $product->post_id(),
-				'product_id' => $product->bc_id(),
-				'name'       => get_the_title( $product->post_id() ),
-			] ),
+			'data-tracking-data'    => wp_json_encode( $track_data ),
 		] );
 	}
 }

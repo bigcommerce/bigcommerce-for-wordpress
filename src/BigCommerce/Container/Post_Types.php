@@ -34,6 +34,9 @@ class Post_Types extends Provider {
 	const SYNC_LOG        = 'post_type.sync_log';
 	const SYNC_LOG_CONFIG = 'post_type.sync_log.config';
 
+	const WPGRAPHQL_PRODUCTS = 'bigcommerce.wpgrapql_products';
+	const WPGRAPHQL_CONFIG   = 'bigcommerce.wpgrapql_config';
+
 	public function register( Container $container ) {
 		$this->product( $container );
 		$this->queue( $container );
@@ -43,6 +46,7 @@ class Post_Types extends Provider {
 			$container[ self::PRODUCT_CONFIG ]->register();
 			$container[ self::QUEUE_CONFIG ]->register();
 			$container[ self::SYNC_LOG_CONFIG ]->register();
+			$container[ self::WPGRAPHQL_PRODUCTS ]->register();
 		} ), 1, 0 );
 	}
 
@@ -62,6 +66,14 @@ class Post_Types extends Provider {
 
 		$container[ self::PRODUCT_ADMIN ] = function ( Container $container ) {
 			return new Product\Admin_UI();
+		};
+
+		$container[ self::WPGRAPHQL_CONFIG ] = function ( Container $container ) {
+			return new Product\WPGraph_Config();
+		};
+
+		$container[ self::WPGRAPHQL_PRODUCTS ] = function ( Container $container ) {
+			return new Product\WPGraph_Product( $container[ self::WPGRAPHQL_CONFIG ] );
 		};
 
 		$container[ self::PRODUCT_UNSUPPORTED ] = function ( Container $container ) {
@@ -132,6 +144,23 @@ class Post_Types extends Provider {
 		add_action( 'wp_ajax_inline-save', $load_post_admin_hooks, 0, 0 );
 		add_action( 'load-edit.php', $load_post_admin_hooks, 10, 0 );
 		add_action( 'rest_api_init', $load_post_admin_hooks, 10, 0 );
+
+		add_filter( 'pre_handle_404', $this->create_callback( 'handle_product_out_of_stock_behaviour', function ( $preempt ) use ( $container ) {
+			if ( ! is_product() ) {
+				return $preempt;
+			}
+
+			$product  = new Product\Product( get_queried_object_id() );
+			$redirect = $product->get_redirect_product_link();
+
+			if ( ! empty( $redirect ) ) {
+				wp_safe_redirect( $redirect );
+
+				return;
+			}
+
+			return $preempt;
+		} ), 10, 1);
 
 		add_filter( 'views_edit-' . Product\Product::NAME, $this->create_callback( 'list_table_import_status', function ( $views ) use ( $container ) {
 			return $container[ self::PRODUCT_ADMIN ]->list_table_import_status( $views );

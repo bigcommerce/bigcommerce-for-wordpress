@@ -1,5 +1,35 @@
 # Changelog
 
+## [4.28.0]
+
+### Added
+- Support for WPGraphql plugin queries was added:
+  - `bCProducts` - retrieves a list of Bigcommerce products
+  - `bCProduct`  - retrieves single product data by product ID
+  - `bCCategories` - get the Bigcommerce categories list and their data
+  - `bCCategory` - get Bigcommerce category data by category ID
+  - `bCBrands` - get Bigcommerce brands data list and their data
+  - `bCBrand` - get Bigcommerce brand data by brand ID
+- Support for Bigcommerce out of stock inventory settings(Advanced Settings > Inventory > General Settings). To enable that feature in the plugin go to Customizer > Bigcommerce > Product Catalog > Respect General Inventory Settings. If the option is enabled next actions will be applied to the products:
+  - Do nothing - product will be shown without changes
+  - Redirect to the category page - user will be redirected from product page to product category page if a product is out of stock
+  - Hide product on category page - product can be accessed directly via link but will be hidden from the category page
+  - Hide the product completely - the product will be hidden from the category page and can't be accessible via direct link. 
+
+### Changed 
+- Successful customer registration will not perform auto-login to the WordPress store. Customers should sign in to the store via login page
+- Password reset form after submission will redirect customers to the same site in WordPress network. For example: if customer submits the reset password form on nb.store.com after submission customer still stays on the nb.store.com
+- Pass product SKU in analytics events alongside product ID
+- Synchronize Password option is enabled by default for customers created via webhooks
+
+### Fixed
+- Fixed the scopes issue during on-boarding process that prevented store connection and setup
+- Fixed total and subtotal calculation on the cart when using discounts like "Buy one, get one free"
+- Correct alignments for second address row in Twenty Twenty-Two theme
+- Correct Wishlist size in Twenty Twenty-Two theme
+- Correct coupon code field size on the cart page in Twenty Twenty-Two theme
+- Correct mini-cart "View cart" button size in Twenty Twenty-Two theme
+
 ## [4.27.1]
 
 ### Fixed
@@ -1743,6 +1773,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.28.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.27.1...4.28.0
 [4.27.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.27.0...4.27.1
 [4.27.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.26.1...4.27.0
 [4.26.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.26.0...4.26.1

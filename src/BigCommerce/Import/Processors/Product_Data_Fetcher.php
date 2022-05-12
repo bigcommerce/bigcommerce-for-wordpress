@@ -75,16 +75,16 @@ class Product_Data_Fetcher implements Import_Processor {
 				'limit'   => $this->limit,
 			] );
 		} catch ( ApiException $e ) {
-			do_action( 'bigcommerce/import/error', $e->getMessage(), [
+			do_action( 'bigcommerce/log', Error_Log::ERROR, 'API issue during the products data fetch', [
 				'response' => $e->getResponseBody(),
 				'headers'  => $e->getResponseHeaders(),
 			] );
 
 			do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [] );
-
+			$this->fetch_end( $next, $status, $chunks );
 			return;
 		} catch ( \Exception $e ) {
-			do_action( 'bigcommerce/import/error', $e->getMessage(), [] );
+//			do_action( 'bigcommerce/import/error', $e->getMessage(), [] );
 			do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [] );
 			do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Chunk failed. Finish chunk processing and move to next chunk', 'bigcommerce' ), [
 				'limit' => $this->limit,

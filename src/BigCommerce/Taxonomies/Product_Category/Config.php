@@ -20,19 +20,22 @@ class Config extends Taxonomy_Config {
 	 */
 	public function get_args() {
 		return [
-			'hierarchical'       => true,
-			'public'             => true,
-			'show_ui'            => true,
-			'show_in_nav_menus'  => true,
-			'labels'             => $this->get_labels(),
-			'show_admin_column'  => true,
-			'show_in_quick_edit' => false,
-			'show_in_rest'       => true,
-			'rewrite'            => [
+			'hierarchical'        => true,
+			'public'              => true,
+			'show_ui'             => true,
+			'show_in_nav_menus'   => true,
+			'labels'              => $this->get_labels(),
+			'show_admin_column'   => true,
+			'show_in_quick_edit'  => false,
+			'show_in_rest'        => true,
+			'rewrite'             => [
 				'slug'       => $this->get_slug(),
 				'with_front' => false,
 			],
-			'capabilities'       => $this->get_caps(),
+			'capabilities'        => $this->get_caps(),
+			'show_in_graphql'     => true,
+			'graphql_single_name' => 'BCCategory',
+			'graphql_plural_name' => 'BCCategories',
 		];
 	}
 

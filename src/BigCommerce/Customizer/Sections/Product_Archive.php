@@ -31,13 +31,14 @@ class Product_Archive {
 	const SORT_INVENTORY_COUNT = 'inventory_count';
 	const SORT_SKU             = 'sku';
 
-	const FILTER_CATEGORY  = Product_Category::NAME;
-	const FILTER_BRAND     = Brand::NAME;
-	const PER_PAGE_DEFAULT = 24;
-	const PER_PAGE         = 'bigcommerce_products_per_page';
-	const GRID_COLUMNS     = 'bigcommerce_catalog_grid_columns';
-	const QUICK_VIEW       = 'bigcommerce_enable_quick_view';
-	const SEARCH_FIELD     = 'bigcommerce_catalog_enable_search_field';
+	const FILTER_CATEGORY   = Product_Category::NAME;
+	const FILTER_BRAND      = Brand::NAME;
+	const PER_PAGE_DEFAULT  = 24;
+	const PER_PAGE          = 'bigcommerce_products_per_page';
+	const GRID_COLUMNS      = 'bigcommerce_catalog_grid_columns';
+	const QUICK_VIEW        = 'bigcommerce_enable_quick_view';
+	const SEARCH_FIELD      = 'bigcommerce_catalog_enable_search_field';
+	const GENERAL_INVENTORY = 'bigcommerce_general_inventory_settings';
 
 	/**
 	 * @param \WP_Customize_Manager $wp_customize
@@ -61,7 +62,9 @@ class Product_Archive {
 		$this->per_page( $wp_customize );
 		$this->quick_view( $wp_customize );
 		$this->search_field( $wp_customize );
+		$this->respect_general_inventory_settings( $wp_customize );
 	}
+
 
 	private function title( \WP_Customize_Manager $wp_customize ) {
 		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::ARCHIVE_TITLE, [
@@ -291,7 +294,7 @@ class Product_Archive {
 			],
 		] );
 	}
-	
+
 	private function search_field( \WP_Customize_Manager $wp_customize ) {
 		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::SEARCH_FIELD, [
 			'type'      => 'option',
@@ -303,6 +306,28 @@ class Product_Archive {
 			'type'    => 'radio',
 			'label'   => __( 'Search Field', 'bigcommerce' ),
 			'choices' => [
+				'yes' => __( 'Enabled', 'bigcommerce' ),
+				'no'  => __( 'Disabled', 'bigcommerce' ),
+			],
+		] );
+	}
+
+	private function respect_general_inventory_settings( \WP_Customize_Manager $wp_customize ) {
+		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::GENERAL_INVENTORY, [
+			'type'      => 'option',
+			'default'   => 'no',
+			'transport' => 'refresh',
+		] ) );
+
+		$description = __( 'Manage on Bigcommerce', 'bigcommerce' );
+		$description = sprintf( '<a href="%s" target="_blank">%s</a>', 'https://login.bigcommerce.com/deep-links/manage/settings/inventory', $description );
+
+		$wp_customize->add_control( self::GENERAL_INVENTORY, [
+			'section'     => self::NAME,
+			'type'        => 'radio',
+			'label'       => __( 'Respect General Inventory Settings', 'bigcommerce' ),
+			'description' => $description,
+			'choices'     => [
 				'yes' => __( 'Enabled', 'bigcommerce' ),
 				'no'  => __( 'Disabled', 'bigcommerce' ),
 			],

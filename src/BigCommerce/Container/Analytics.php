@@ -96,6 +96,10 @@ class Analytics extends Provider {
 		add_filter( 'bigcommerce/template=components/products/product-title.php/options', $this->create_callback( 'view_product_title', function( $options, $template ) use ( $container ) {
 			return $container[ self::VIEW_PRODUCT ]->add_tracking_attributes_to_permalink( $options, $template );
 		}), 10, 3 );
+
+		add_filter( \BigCommerce\Settings\Sections\Analytics::TRACK_BY_HOOK, $this->create_callback( 'change_track_by_options', function( $track_data ) use ( $container ) {
+			return $container[ self::VIEW_PRODUCT ]->change_track_data( $track_data );
+		}), 10, 1 );
 	}
 
 }

@@ -1,6 +1,37 @@
 .bc-wp-twenty-twenty-two-theme {
 
-	.bc-btn--view-product {
+	.bc-account-addresses__item {
+		margin: 0;
+	}
+
+	.bc-btn--view-product,
+	.bc-cart-actions__view-button {
 		box-sizing: border-box;
+	}
+
+	.bc-coupon-code-field {
+		padding: 8px 16px;
+		font-weight: 600;
+		line-height: 1.6;
+		font-size: 13px;
+	}
+
+	.bc-manage-wish-list-title {
+		margin-top: 0;
+		font-size: 2rem;
+	}
+
+	.bc-account-addresses__list {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 30px;
+
+		.bc-account-addresses__item {
+			display: grid;
+			max-width: unset;
+			width: unset;
+			grid-template-columns: 1fr;
+			grid-template-rows: 1fr;
+		}
 	}
 }

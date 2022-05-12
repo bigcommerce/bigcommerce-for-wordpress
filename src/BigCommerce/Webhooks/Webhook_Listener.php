@@ -9,6 +9,8 @@ namespace BigCommerce\Webhooks;
  */
 class Webhook_Listener {
 
+	use WebhookTrait;
+
 	/**
 	 * @var Webhook[]
 	 */
@@ -28,9 +30,18 @@ class Webhook_Listener {
 	/**
 	 * @param array $args
 	 */
-	public function handle_request( $args ) {
-		if ( array_key_exists( $args[ 0 ], $this->hooks ) ) {
-			$this->hooks[ $args[ 0 ] ]->receive();
+	public function handle_request( $args ): void {
+		if ( ! array_key_exists( $args[0], $this->hooks ) ) {
+			return;
 		}
+
+		$customer_webhooks_enabled = $this->customer_webhooks_enabled();
+		$product_webhooks_enabled  = $this->product_webhooks_enabled();
+
+		if ( $this->maybe_skip_product_hooks( $args[0], $product_webhooks_enabled ) || $this->maybe_skip_customer_hooks( $args[0], $customer_webhooks_enabled ) ) {
+			return;
+		}
+
+		$this->hooks[ $args[0] ]->receive();
 	}
 }

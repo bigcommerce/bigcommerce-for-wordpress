@@ -4,6 +4,7 @@
 namespace BigCommerce\Import\Processors;
 
 
+use Bigcommerce\Api\Client;
 use BigCommerce\Api\Store_Api;
 use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Import\Runner\Status;
@@ -15,6 +16,13 @@ class Store_Settings implements Import_Processor {
 
 	const DOMAIN = 'bigcommerce_domain';
 
+	const PRODUCT_OUT_OF_STOCK = 'bigcommerce_product_out_of_stock_behavior';
+	const OPTION_OUT_OF_STOCK  = 'bigcommerce_settings_option_out';
+
+	const LEGACY_OPTIONS = [
+		'product_out_of_stock_behavior',
+		'option_out_of_stock_behavior'
+	];
 	/**
 	 * @var Store_Api
 	 */
@@ -67,6 +75,9 @@ class Store_Settings implements Import_Processor {
 					update_option( $key, $value );
 				}
 			}
+
+			$this->process_legacy_inventory_settings();
+
 			do_action( 'bigcommerce/import/fetched_currency', $settings[ Settings\Sections\Currency::CURRENCY_CODE ] );
 			do_action( 'bigcommerce/import/fetched_store_settings', $settings );
 		} catch ( \Exception $e ) {
@@ -75,6 +86,47 @@ class Store_Settings implements Import_Processor {
 		}
 
 		$status->set_status( Status::FETCHED_STORE );
+	}
+
+	/**
+	 * @return false|mixed|\stdClass|string
+	 */
+	private function get_legacy_inventory_settings() {
+		try {
+			$connection = $this->store_api->getConnection();
+
+			return $connection->get( Client::$api_path . '/settings/inventory' );
+		} catch ( \Exception $exception ) {
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Could not retrieve legacy inventory settings', 'bigcommerce' ), [
+				'message' => $exception->getMessage(),
+				'trace'   => $exception->getTraceAsString(),
+			] );
+
+			return new \stdClass();
+		}
+	}
+
+	/**
+	 * Save store inventory settings
+	 */
+	private function process_legacy_inventory_settings() {
+		$settings = $this->get_legacy_inventory_settings();
+
+		if ( empty( $settings ) || ! is_object( $settings ) ) {
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Legacy settings are empty. Continue import', 'bigcommerce' ), [] );
+
+			return;
+		}
+
+		foreach ( $settings as $key => $setting ) {
+			if ( ! in_array( $key, self::LEGACY_OPTIONS ) ) {
+				continue;
+			}
+
+			update_option( sprintf( 'bigcommerce_%s', $key ), $setting );
+		}
+
+		do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Legacy settings saved. Continue import', 'bigcommerce' ), [] );
 	}
 
 	private function sanitize_currency_symbol_position( $position ) {

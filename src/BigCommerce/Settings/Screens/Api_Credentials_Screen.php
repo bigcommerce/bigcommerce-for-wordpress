@@ -4,11 +4,8 @@
 namespace BigCommerce\Settings\Screens;
 
 use BigCommerce\Api\Base_Client;
-use Bigcommerce\Api\Client;
 use BigCommerce\Api\Configuration;
 use BigCommerce\Api\v3\Api\CatalogApi;
-use BigCommerce\Api\v3\Api\ChannelsApi;
-use BigCommerce\Container\Api;
 use BigCommerce\Container\Settings;
 use BigCommerce\Settings\Sections\Api_Credentials;
 
@@ -89,22 +86,13 @@ class Api_Credentials_Screen extends Onboarding_Screen {
 		 */
 		$config->setCurlTimeout( apply_filters( 'bigcommerce/api/timeout', 15 ) );
 
-		Client::configure( [
-			'client_id'     => $config->getClientId(),
-			'auth_token'    => $config->getAccessToken(),
-			'client_secret' => $config->getClientSecret(),
-			'store_hash'    => $this->get_store_hash( $config->getHost() ),
-		] );
-
-		$container     = bigcommerce()->container();
-		$client        = new Base_Client( $config );
-		$api           = new CatalogApi( $client );
-		$api_validator = $container[ Api::API_VALID ];
-		$channels_api  = new ChannelsApi( $client );
+		/**
+		 * We don't need to additional validation there. If we able to get catalog summary then scopes are valid
+		 */
+		$client = new Base_Client( $config );
+		$api    = new CatalogApi( $client );
 
 		try {
-			$api_validator->validate();
-			$channels_api->listChannels()->getData();
 			// throws an exception on any non-2xx response
 			$api->catalogSummaryGet();
 		} catch ( \Exception $e ) {

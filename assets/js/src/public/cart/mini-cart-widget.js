@@ -83,11 +83,6 @@ const loadMiniCarts = (e) => {
 
 			// Loop through available mini carts and update cart HTML
 			Object.values(cartState.instances.carts).forEach((widget) => {
-				// Skip this cart if it is the one that triggered the original event.
-				if (widget.dataset.miniCartId === eventMiniCartID) {
-					return;
-				}
-
 				widget.innerHTML = res.body.rendered;
 				ajaxItems();
 
