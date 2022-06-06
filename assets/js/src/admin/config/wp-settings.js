@@ -11,6 +11,7 @@ export const PRODUCTS_BRAND = wpadmin.brands;
 export const PRODUCTS_SEARCH = wpadmin.search;
 export const PRODUCTS_RECENT = wpadmin.recent;
 export const PRODUCTS_ORDER = wpadmin.sort_order;
+export const IS_HEADLESS = wpadmin.headless;
 export const ADMIN_AJAX = wpadmin.admin_ajax;
 export const ACCOUNT_NONCE = wpadmin.account_rest_nonce;
 export const ACCOUNT_ACTION = wpadmin.account_rest_action;

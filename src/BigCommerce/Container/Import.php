@@ -45,8 +45,12 @@ class Import extends Provider {
 	const STORE            = 'import.store';
 	const CURRENCIES       = 'import.currencies';
 	const CLEANUP          = 'import.cleanup';
+	const PRODUCT_CLEANUP  = 'import.product_cleanup';
+	const IMPORT_STATUS    = 'import.import_status';
 	const ERROR            = 'import.error';
 	const IMPORT_TYPE      = 'import.type';
+
+	const HEADLESS_PROCESSOR = 'headless.processor';
 
 	public function register( Container $container ) {
 		$this->cron( $container );
@@ -122,6 +126,10 @@ class Import extends Provider {
 			$container[ self::CLEANUP ]->clean_customer_group_transients();
 		} ), 10, 0 );
 
+		add_action( Processors\Cleanup::PURGE_PRODUCTS, $this->create_callback( 'purge_bc_deleted_products', function () use ( $container ) {
+			$container[ self::PRODUCT_CLEANUP ]->run();
+		} ), 10, 0 );
+
 		add_action( Processors\Cleanup::CLEAN_PRODUCTS_TRANSIENT, $this->create_callback( 'clean_products_data_transient', function ( $offset ) use ( $container ) {
 			$container[ self::CLEANUP ]->clean_products_transient( $offset );
 		} ), 10, 1 );
@@ -156,6 +164,12 @@ class Import extends Provider {
 
 		$container[ self::CATEGORIES ] = function ( Container $container ) {
 			return new Processors\Category_Import( $container[ Api::FACTORY ]->catalog(), $container[ self::BATCH_SIZE ] );
+		};
+
+		$container[ self::HEADLESS_PROCESSOR ] = function ( Container $container ) {
+			return function ( $channel_term ) use ( $container ) {
+				return new Processors\Headless_Product_Processor( $container[ Api::FACTORY ]->catalog(),  $container[ self::IMPORT_STATUS ], $container[ GraphQL::GRAPHQL_REQUESTOR ], $channel_term, 50 );
+			};
 		};
 
 		$container[ self::BRANDS ] = function ( Container $container ) {
@@ -198,6 +212,10 @@ class Import extends Provider {
 			return new Processors\Currencies( $container[ Api::FACTORY ]->currencies() );
 		};
 
+		$container[ self::PRODUCT_CLEANUP ] = function ( Container $container ) {
+			return new Processors\ProductCleanup( $container[ self::LARGE_BATCH_SIZE ] );
+		};
+
 		$container[ self::CLEANUP ] = function ( Container $container ) {
 			return new Processors\Cleanup( $container[ Api::CACHE_HANDLER ], $container[ self::LARGE_BATCH_SIZE ] );
 		};
@@ -209,6 +227,10 @@ class Import extends Provider {
 		$container[ self::CHANNEL_LIST ] = function ( Container $container ) {
 			$connections = new Connections();
 			return $connections->active();
+		};
+
+		$container[ self::IMPORT_STATUS ] = function ( Container $container ) {
+			return new Runner\Status();
 		};
 
 		$start = $this->create_callback( 'process_start', function () use ( $container ) {
@@ -248,32 +270,41 @@ class Import extends Provider {
 			} ), 26, Runner\Status::UPDATED_BRANDS, [ Runner\Status::UPDATING_BRANDS ], __( 'Updating Brands', 'bigcommerce' ) );
 
 
-			$list[] = new Task_Definition( $this->create_callback( 'resize_images', function () use ( $container ) {
-				$container[ self::RESIZE ]->run();
-			} ), 27, Runner\Status::RESIZED_IMAGES, [ Runner\Status::RESIZING_IMAGES ], __( 'Regenerating Product Images', 'bigcommerce' ) );
+			if ( Import_Type::is_traditional_import() ) {
+				$list[] = new Task_Definition( $this->create_callback( 'resize_images', function () use ( $container ) {
+					$container[ self::RESIZE ]->run();
+				} ), 27, Runner\Status::RESIZED_IMAGES, [ Runner\Status::RESIZING_IMAGES ], __( 'Regenerating Product Images', 'bigcommerce' ) );
 
-			foreach ( $container[ self::CHANNEL_LIST ] as $channel_term ) {
-				$suffix = sprintf( '-%d', $channel_term->term_id );
-				$list[] = new Task_Definition( $this->create_callback( 'process_listings' . $suffix, function () use ( $container, $channel_term ) {
-					$container[ self::LISTINGS ]( $channel_term )->run();
-				} ), 30, Runner\Status::FETCHED_LISTINGS . $suffix, [ Runner\Status::FETCHING_LISTINGS . $suffix ], sprintf( __( 'Fetching existing listings from the BigCommerce API for channel %s', 'bigcommerce' ), esc_html( $channel_term->name ) ) );
+				foreach ( $container[ self::CHANNEL_LIST ] as $channel_term ) {
+					$suffix = sprintf( '-%d', $channel_term->term_id );
+					$list[] = new Task_Definition( $this->create_callback( 'process_listings' . $suffix, function () use ( $container, $channel_term ) {
+						$container[ self::LISTINGS ]( $channel_term )->run();
+					} ), 30, Runner\Status::FETCHED_LISTINGS . $suffix, [ Runner\Status::FETCHING_LISTINGS . $suffix ], sprintf( __( 'Fetching existing listings from the BigCommerce API for channel %s', 'bigcommerce' ), esc_html( $channel_term->name ) ) );
 
-				$list[] = new Task_Definition( $this->create_callback( 'process_channel' . $suffix, function () use ( $container, $channel_term ) {
-					$container[ self::CHANNEL ]( $channel_term )->run();
-				} ), 40, Runner\Status::INITIALIZED_CHANNEL . $suffix, [ Runner\Status::INITIALIZING_CHANNEL . $suffix ], sprintf( __( 'Adding listings to channel %s', 'bigcommerce' ), esc_html( $channel_term->name ) ) );
+					$list[] = new Task_Definition( $this->create_callback( 'process_channel' . $suffix, function () use ( $container, $channel_term ) {
+						$container[ self::CHANNEL ]( $channel_term )->run();
+					} ), 40, Runner\Status::INITIALIZED_CHANNEL . $suffix, [ Runner\Status::INITIALIZING_CHANNEL . $suffix ], sprintf( __( 'Adding listings to channel %s', 'bigcommerce' ), esc_html( $channel_term->name ) ) );
+				}
+
+				$list[] = new Task_Definition( $this->create_callback( 'process_fetch', function () use ( $container, $channel_term ) {
+					$container[ self::PRODUCTS ]->run();
+				} ), 50, Runner\Status::FETCHED_PRODUCTS, [ Runner\Status::FETCHING_PRODUCTS ], __( 'Fetching product data from the BigCommerce API', 'bigcommerce' ) );
+
+				$list[] = new Task_Definition( $this->create_callback( 'process_mark', function () use ( $container, $channel_term ) {
+					$container[ self::MARK ]->run();
+				} ), 60, Runner\Status::MARKED_DELETED_PRODUCTS, [ Runner\Status::MARKING_DELETED_PRODUCTS ], __( 'Identifying posts to remove from WordPress', 'bigcommerce' ) );
+
+				$list[] = new Task_Definition( $this->create_callback( 'process_queue', function () use ( $container ) {
+					$container[ self::QUEUE ]->run();
+				} ), 70, Runner\Status::PROCESSED_QUEUE, [ Runner\Status::PROCESSING_QUEUE ], __( 'Importing products', 'bigcommerce' ) );
+			} else {
+				foreach ( $container[ self::CHANNEL_LIST ] as $channel_term ) {
+					$suffix = sprintf( '-%d', $channel_term->term_id );
+					$list[] = new Task_Definition( $this->create_callback( 'process_headless_products' . $suffix, function () use ( $container, $channel_term ) {
+						$container[ self::HEADLESS_PROCESSOR ]( $channel_term )->run();
+					} ), 30, Runner\Status::FETCHED_PRODUCTS . $suffix, [ Runner\Status::FETCHING_PRODUCTS . $suffix ], sprintf( __( 'Fetching products data from the BigCommerce API for channel %s', 'bigcommerce' ), esc_html( $channel_term->name ) ) );
+				}
 			}
-
-			$list[] = new Task_Definition( $this->create_callback( 'process_fetch', function () use ( $container, $channel_term ) {
-				$container[ self::PRODUCTS ]->run();
-			} ), 50, Runner\Status::FETCHED_PRODUCTS, [ Runner\Status::FETCHING_PRODUCTS ], __( 'Fetching product data from the BigCommerce API', 'bigcommerce' ) );
-
-			$list[] = new Task_Definition( $this->create_callback( 'process_mark', function () use ( $container, $channel_term ) {
-				$container[ self::MARK ]->run();
-			} ), 60, Runner\Status::MARKED_DELETED_PRODUCTS, [ Runner\Status::MARKING_DELETED_PRODUCTS ], __( 'Identifying posts to remove from WordPress', 'bigcommerce' ) );
-
-			$list[] = new Task_Definition( $this->create_callback( 'process_queue', function () use ( $container ) {
-				$container[ self::QUEUE ]->run();
-			} ), 70, Runner\Status::PROCESSED_QUEUE, [ Runner\Status::PROCESSING_QUEUE ], __( 'Importing products', 'bigcommerce' ) );
 
 			$list[] = new Task_Definition( $this->create_callback( 'process_cleanup', function () use ( $container ) {
 				$container[ self::CLEANUP ]->run();

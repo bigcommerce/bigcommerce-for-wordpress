@@ -12,6 +12,7 @@ class Product_Single {
 	const DEFAULT_IMAGE     = 'bigcommerce_default_image_id';
 	const PRICE_DISPLAY     = 'bigcommerce_default_price_display';
 	const INVENTORY_DISPLAY = 'bigcommerce_inventory_display';
+	const VARIANTS_DISABLED = 'bigcommerce_variants_disabled';
 	const GALLERY_SIZE      = 'bigcommerce_gallery_image_size';
 	const ENABLE_ZOOM       = 'bigcommerce_enable_zoom';
 	const SIZE_DEFAULT      = 'default';
@@ -34,6 +35,7 @@ class Product_Single {
 		$this->zoom( $wp_customize );
 		$this->pricing( $wp_customize );
 		$this->inventory( $wp_customize );
+		$this->variants( $wp_customize );
 	}
 
 	private function related( \WP_Customize_Manager $wp_customize ) {
@@ -139,6 +141,23 @@ class Product_Single {
 			'choices' => [
 				'yes' => __( 'Always show inventory', 'bigcommerce' ),
 				'no'  => __( 'Only show low inventory', 'bigcommerce' ),
+			],
+		] );
+	}
+
+	private function variants( \WP_Customize_Manager $wp_customize ) {
+		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::VARIANTS_DISABLED, [
+			'type'      => 'option',
+			'default'   => 'yes',
+			'transport' => 'refresh',
+		] ) );
+		$wp_customize->add_control( self::VARIANTS_DISABLED, [
+			'section' => self::NAME,
+			'type'    => 'radio',
+			'label'   => __( 'Product variants out of stock behavior', 'bigcommerce' ),
+			'choices' => [
+					'yes' => __( 'Disable variants when they are not purchasable or out of stock', 'bigcommerce' ),
+					'no'  => __( 'Do nothing', 'bigcommerce' ),
 			],
 		] );
 	}

@@ -27,8 +27,8 @@ class Product_Rating extends Controller {
 	public function get_data() {
 		/** @var Product $product */
 		$product    = $this->options[ self::PRODUCT ];
-		$sum        = $product->reviews_rating_sum;
-		$count      = $product->reviews_count;
+		$sum        = $product->get_reviews_sum();
+		$count      = $product->get_reviews_count();
 		$percentage = $this->get_percentage( $sum, $count );
 		$stars      = $this->get_stars( $sum, $count );
 		$permalink  = $this->options[ self::LINK ];

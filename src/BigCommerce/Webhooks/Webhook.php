@@ -9,6 +9,7 @@ namespace BigCommerce\Webhooks;
 
 use BigCommerce\Api\Webhooks_Api;
 use BigCommerce\Logging\Error_Log;
+use BigCommerce\Taxonomies\Channel\Connections;
 
 /**
  * Sets up a webhook in the BigCommerce API to send event-based requests to the WP site.
@@ -80,11 +81,11 @@ abstract class Webhook {
 	public function is_webhook_exist() {
 		$webhooks = $this->api_client->listWebhooks();
 
-		$scope = $this->scope();
+		$scope       = $this->scope();
 		$destination = $this->destination();
 
-		$found_hooks = array_map(function ( $hook ) use ( $scope, $destination ) {
-			$exists = $hook->scope === $scope && $hook->destination === $destination;
+		$found_hooks = array_map(static function ( $hook ) use ( $scope, $destination ) {
+			$exists    = $hook->scope === $scope && $hook->destination === $destination;
 			$is_active = $hook->is_active === true;
 
 			return $exists && $is_active ? $hook->id : false;
@@ -267,7 +268,10 @@ abstract class Webhook {
 			);
 		}
 
-		if ( ! is_array( $request ) || ! isset( $request[ 'data' ][ 'type' ] ) || ! isset( $request[ 'data' ][ 'id' ] ) ) {
+		$is_v2_hook_valid      = isset( $request['data']['type'] ) && isset( $request['data']['id'] );
+		$is_webhook_data_valid = $is_v2_hook_valid || isset( $request['data']['product_id'] );
+
+		if ( ! is_array( $request ) || ! $is_webhook_data_valid ) {
 			do_action( 'bigcommerce/log', Error_Log::ERROR, __( 'Webhook request data is invalid.', 'bigcommerce' ), [
 				'request' => $request,
 			], 'webhooks' );

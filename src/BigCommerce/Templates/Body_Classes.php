@@ -4,6 +4,7 @@ namespace BigCommerce\Templates;
 
 use BigCommerce\Assets\Theme\Image_Sizes;
 use BigCommerce\Customizer\Sections\Product_Single as Customizer;
+use BigCommerce\Import\Import_Type;
 use BigCommerce\Post_Types\Product\Product;
 
 class Body_Classes {
@@ -32,14 +33,16 @@ class Body_Classes {
 		$classes[] = sprintf( 'bc-product-%d', $product->bc_id() );
 		$classes[] = sprintf( 'bc-availability-%s', $product->availability() );
 
-		if ( $product->on_sale() ) {
-			$classes[] = 'bc-product-sale';
-		}
-		if ( $product->out_of_stock() ) {
-			$classes[] = 'bc-product-outofstock';
-		}
-		if ( $product->low_inventory() ) {
-			$classes[] = 'bc-product-lowinventory';
+		if ( Import_Type::is_traditional_import() ) {
+			if ( $product->on_sale() ) {
+				$classes[] = 'bc-product-sale';
+			}
+			if ( $product->out_of_stock() ) {
+				$classes[] = 'bc-product-outofstock';
+			}
+			if ( $product->low_inventory() ) {
+				$classes[] = 'bc-product-lowinventory';
+			}
 		}
 
 		return $classes;

@@ -31,4 +31,50 @@ trait CDN_Images {
 		return $cdn_images;
 	}
 
+	public function get_headless_images( $product ) {
+		$images = [];
+
+		$source         = $product->get_source_data();
+		$default_images = [];
+		$main_image     = [];
+		if ( ! empty( $source->images ) ) {
+			foreach ( $source->images as $image ) {
+				if ( $image->is_thumbnail ) {
+					$main_image = [
+						'url' => $image->url_standard,
+						'alt' => $image->description,
+					];
+					continue;
+				}
+				$default_images[] = [
+						'url' => $image->url_zoom,
+						'alt' => $image->description,
+				];
+			}
+		}
+
+		foreach ( $source->variants as $variant ) {
+			$image = $variant->image_url;
+
+			if ( empty( $image ) ) {
+				continue;
+			}
+
+			if ( !empty( $main_image ) && $main_image['url'] === $image) {
+				continue;
+			}
+
+			$images[] = [
+					'url' => $image,
+					'alt' => '',
+			];
+		}
+
+		if ( empty( $main_image ) ) {
+			return array_merge( $default_images, $images );
+		}
+
+		return array_merge( [ $main_image ], $default_images, $images );
+	}
+
 }

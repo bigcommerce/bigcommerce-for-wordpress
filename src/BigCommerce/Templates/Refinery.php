@@ -3,8 +3,8 @@
 
 namespace BigCommerce\Templates;
 
-
 use BigCommerce\Customizer;
+use BigCommerce\Customizer\Sections\Product_Category as CustomizerOption;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
 
@@ -158,7 +158,8 @@ class Refinery extends Controller {
 				'hide_empty' => true,
 			];
 
-			if ( $taxonomy === Product_Category::NAME ) {
+
+			if ( $taxonomy === Product_Category::NAME && get_option( CustomizerOption::CATEGORIES_IS_VISIBLE, 'no' ) === 'yes' ) {
 				$args['meta_query'] = [
 					[
 						'key'   => 'is_visible',

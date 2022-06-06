@@ -89,14 +89,20 @@ class Product_Gallery extends Controller {
 		/** @var Product $product */
 		$product = $this->options[ self::PRODUCT ];
 
-		$images_ids = $product->get_gallery_ids();
-		$cdn_images = $this->get_images_cdn_url( $images_ids );
-		$thumb_id   = get_post_thumbnail_id( $product->post_id() );
+		if ( $product->is_headless() ) {
+			$images_ids = [];
+			$cdn_images = $this->get_headless_images( $product );
+		} else {
+			$images_ids = $product->get_gallery_ids();
+			$cdn_images = $this->get_images_cdn_url( $images_ids );
+			$thumb_id   = get_post_thumbnail_id( $product->post_id() );
 
-		// We have featured image set locally and we need to include it to existing array
-		if ( ! in_array( $thumb_id, $images_ids ) ) {
-			$images_ids = array_merge( [ $thumb_id ], $images_ids );
+			// We have featured image set locally and we need to include it to existing array
+			if ( ! in_array( $thumb_id, $images_ids ) ) {
+				$images_ids = array_merge( [ $thumb_id ], $images_ids );
+			}
 		}
+
 
 		return [
 			self::PRODUCT        => $product,

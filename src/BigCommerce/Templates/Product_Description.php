@@ -26,7 +26,7 @@ class Product_Description extends Controller {
 
 		return [
 			self::PRODUCT => $product,
-			self::CONTENT => $this->get_the_content( $product->post_id() ),
+			self::CONTENT => $product->is_headless() ? $product->get_property('description') : $this->get_the_content( $product->post_id() ),
 		];
 	}
 

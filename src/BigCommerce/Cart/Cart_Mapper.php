@@ -219,6 +219,11 @@ class Cart_Mapper {
 	 */
 	private function get_variant( $variant_id, $product ) {
 		$data = $product->get_source_data();
+
+		if ( class_exists( 'BigCommerceReactTemplates\Plugin' ) ) {
+			return null;
+		}
+
 		foreach ( $data->variants as $variant ) {
 			if ( $variant->id == $variant_id ) {
 				return $variant;

@@ -13,6 +13,7 @@ use BigCommerce\Rest\Reviews_Listing_Controller;
 use BigCommerce\Rest\Shortcode_Controller;
 use BigCommerce\Rest\Shipping_Controller;
 use BigCommerce\Rest\Coupon_Code_Controller;
+use BigCommerce\Rest\Terms_Controller;
 use BigCommerce\Reviews\Review_Fetcher;
 use Pimple\Container;
 
@@ -25,6 +26,9 @@ class Rest extends Provider {
 
 	const PRODUCTS_BASE = 'rest.products_base';
 	const PRODUCTS      = 'rest.products';
+
+	const TERMS_BASE = 'rest.terms_base';
+	const TERMS      = 'rest.terms';
 
 	const SHORTCODE_BASE = 'rest.shortcode_base';
 	const SHORTCODE      = 'rest.shortcode';
@@ -94,6 +98,17 @@ class Rest extends Provider {
 			return new Products_Controller( $container[ self::NAMESPACE_BASE ], $container[ self::VERSION ], $container[ self::PRODUCTS_BASE ] );
 		};
 
+		$container[ self::TERMS_BASE ] = function ( Container $container ) {
+			/**
+			 * Filters REST terms base.
+			 */
+			return apply_filters( 'bigcommerce/rest/products_base', 'terms' );
+		};
+
+		$container[ self::TERMS ] = function ( Container $container ) {
+			return new Terms_Controller( $container[ self::NAMESPACE_BASE ], $container[ self::VERSION ], $container[ self::TERMS_BASE ] );
+		};
+
 		$container[ self::SHORTCODE_BASE ] = function ( Container $container ) {
 			/**
 			 * Filters REST shortcode base.
@@ -143,7 +158,7 @@ class Rest extends Provider {
 		};
 
 		$container[ self::REVIEW_LIST ] = function ( Container $container ) {
-			return new Reviews_Listing_Controller( $container[ self::NAMESPACE_BASE ], $container[ self::VERSION ], $container[ self::REVIEW_LIST_BASE ], $container[ Reviews::FETCHER ] );
+			return new Reviews_Listing_Controller( $container[ self::NAMESPACE_BASE ], $container[ self::VERSION ], $container[ self::REVIEW_LIST_BASE ], $container[ Reviews::FETCHER ], $container[ Api::CACHE_HANDLER ] );
 		};
 
 		$container[ self::PRICING_BASE ] = function ( Container $container ) {
@@ -187,6 +202,7 @@ class Rest extends Provider {
 
 		add_action( 'rest_api_init', $this->create_callback( 'rest_init', function () use ( $container ) {
 			$container[ self::PRODUCTS ]->register_routes();
+			$container[ self::TERMS ]->register_routes();
 			$container[ self::SHORTCODE ]->register_routes();
 			$container[ self::ORDERS_SHORTCODE ]->register_routes();
 			$container[ self::COMPONENT_SHORTCODE ]->register_routes();
@@ -207,6 +223,10 @@ class Rest extends Provider {
 
 		add_filter( 'bigcommerce/js_config', $this->create_callback( 'pricing_js_config', function( $config ) use ( $container ) {
 			return $container[ self::PRICING ]->js_config( $config );
+		}), 10, 1 );
+
+		add_filter( 'bigcommerce/js_config', $this->create_callback( 'products_js_config', function( $config ) use ( $container ) {
+			return $container[ self::PRODUCTS ]->js_config( $config );
 		}), 10, 1 );
 
 		add_filter( 'bigcommerce/js_config', $this->create_callback( 'shipping_js_config', function( $config ) use ( $container ) {
