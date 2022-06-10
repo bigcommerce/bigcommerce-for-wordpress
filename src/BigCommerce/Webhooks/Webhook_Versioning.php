@@ -16,9 +16,6 @@ use BigCommerce\Webhooks\Customer\Customer_Update_Webhook;
  * @package BigCommerce\Webhooks
  */
 class Webhook_Versioning {
-
-	use WebhookTrait;
-
 	const VERSION = 2;
 
 	/**
@@ -54,10 +51,23 @@ class Webhook_Versioning {
 		}
 	}
 
+	private function product_webhooks_enabled() {
+		return get_option( Import::ENABLE_PRODUCTS_WEBHOOKS , 1 );
+	}
+
+	private function customer_webhooks_enabled() {
+		return get_option( Import::ENABLE_CUSTOMER_WEBHOOKS , 1 );
+	}
+
 	/**
 	 * @return void Set new routes whenever any of the route list element gets updated
 	 */
 	private function update_webhooks() {
+		$customer_webhooks         = [
+			Customer_Create_Webhook::NAME,
+			Customer_Update_Webhook::NAME,
+			Customer_Delete_Webhook::NAME,
+		];
 		$customer_webhooks_enabled = $this->customer_webhooks_enabled();
 		$product_webhooks_enabled  = $this->product_webhooks_enabled();
 
@@ -66,7 +76,11 @@ class Webhook_Versioning {
 			 * Check if only product or customer webhooks are enabled
 			 * We don't need to update all webhooks
 			 */
-			if ( $this->maybe_skip_product_hooks( $key, $product_webhooks_enabled ) || $this->maybe_skip_customer_hooks( $key, $customer_webhooks_enabled ) ) {
+			$is_customer_webhook       = in_array( $key, $customer_webhooks );
+			$should_skip_customer_hook = ! $customer_webhooks_enabled && $is_customer_webhook;
+			$should_skip_product_hook  = ! $product_webhooks_enabled && ! $is_customer_webhook;
+
+			if ( $should_skip_customer_hook || $should_skip_product_hook ) {
 				continue;
 			}
 

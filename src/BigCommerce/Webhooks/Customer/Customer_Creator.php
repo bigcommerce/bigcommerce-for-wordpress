@@ -72,8 +72,9 @@ class Customer_Creator {
 		$role = apply_filters( 'bigcommerce/user/default_role', Customer_Role::NAME );
 		$user->set_role( $role );
 
-
-		update_user_meta( $user_id, User_Profile_Settings::SYNC_PASSWORD, true );
+		// We are not able to get password from API. We also can't update it via API. In other case customer won't able to login on BC
+		// Stop User Password Sync
+		update_user_meta( $user_id, User_Profile_Settings::SYNC_PASSWORD, false );
 		update_user_meta( $user_id, 'first_name',  $first_name);
 		update_user_meta( $user_id, 'last_name',  $last_name);
 
