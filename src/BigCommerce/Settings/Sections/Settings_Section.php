@@ -28,15 +28,25 @@ abstract class Settings_Section {
 	 * @return void
 	 */
 	public function render_number_field( $args ) {
-		$option  = $args[ 'option' ];
-		$default = isset( $args[ 'default' ] ) ? $args[ 'default' ] : '';
-		$value   = get_option( $option, $default );
-		$min     = isset( $args[ 'min' ] ) ? sprintf( 'min="%d"', $args[ 'min' ] ) : '';
-		$max     = isset( $args[ 'max' ] ) ? sprintf( 'max="%d"', $args[ 'max' ] ) : '';
-		$step    = isset( $args[ 'step' ] ) ? sprintf( 'step="%s"', filter_var( $args[ 'step' ], FILTER_SANITIZE_NUMBER_FLOAT ) ) : '';
-		printf( '<input id="field-%s" type="number" value="%s" class="code" name="%s" data-lpignore="true" %s %s %s />', esc_attr( $args[ 'option' ] ), esc_attr( $value ), esc_attr( $option ), $min, $max, $step );
+		$option   = $args[ 'option' ];
+		$default  = isset( $args[ 'default' ] ) ? $args[ 'default' ] : '';
+		$value    = get_option( $option, $default );
+		$min      = isset( $args[ 'min' ] ) ? sprintf( 'min="%d"', $args[ 'min' ] ) : '';
+		$max      = isset( $args[ 'max' ] ) ? sprintf( 'max="%d"', $args[ 'max' ] ) : '';
+		$step     = isset( $args[ 'step' ] ) ? sprintf( 'step="%s"', filter_var( $args[ 'step' ], FILTER_SANITIZE_NUMBER_FLOAT ) ) : '';
+
+		printf( '<input id="field-%s" type="number" value="%s" class="code bc-settings-traditional" name="%s" data-lpignore="true" %s %s %s />', esc_attr( $args['option'] ), esc_attr( $value ), esc_attr( $option ), $min, $max, $step );
 		if ( ! empty( $args[ 'description' ] ) ) {
 			printf( '<p class="description">%s</p>', esc_html( $args[ 'description' ] ) );
 		}
+	}
+
+	/**
+	 * Get disabled attribute if headless option is on
+	 *
+	 * @return string
+	 */
+	public function get_disabled_attr_headless(): string {
+		return ( int ) get_option( Import::HEADLESS_FLAG, 0 ) === 1 ? 'disabled' : '';
 	}
 }

@@ -3,6 +3,7 @@
 
 namespace BigCommerce\Container;
 
+use BigCommerce\Customizer\Sections\Product_Category as Customizer;
 use BigCommerce\Post_Types\Product;
 use BigCommerce\Post_Types\Queue_Task;
 use BigCommerce\Post_Types\Sync_Log;
@@ -61,7 +62,7 @@ class Post_Types extends Provider {
 		};
 
 		$container[ self::PRODUCT_QUERY ] = function ( Container $container ) {
-			return new Product\Query( $container[ Taxonomies::PRODUCT_CATEGORY_QUERY_FILTER ] );
+			return new Product\Query( $container[ Api::FACTORY ]->catalog(), $container[ Taxonomies::PRODUCT_CATEGORY_QUERY_FILTER ] );
 		};
 
 		$container[ self::PRODUCT_ADMIN ] = function ( Container $container ) {
@@ -98,6 +99,10 @@ class Post_Types extends Provider {
 
 		add_action( 'pre_handle_404', $this->create_callback( 'handle_non_visible_category', function ( $preempt ) use ( $container ) {
 			if ( ! ( is_category() || is_archive() ) || is_admin() ) {
+				return $preempt;
+			}
+
+			if ( get_option( Customizer::CATEGORIES_IS_VISIBLE, 'no' ) !== 'yes' ) {
 				return $preempt;
 			}
 
@@ -146,7 +151,8 @@ class Post_Types extends Provider {
 		add_action( 'rest_api_init', $load_post_admin_hooks, 10, 0 );
 
 		add_filter( 'pre_handle_404', $this->create_callback( 'handle_product_out_of_stock_behaviour', function ( $preempt ) use ( $container ) {
-			if ( ! is_product() ) {
+			global $wp_query;
+			if ( empty($wp_query->query['post_type']) || $wp_query->query['post_type'] !== Product\Product::NAME || is_admin() ) {
 				return $preempt;
 			}
 

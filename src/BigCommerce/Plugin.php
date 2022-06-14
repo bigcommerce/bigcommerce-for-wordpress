@@ -4,7 +4,7 @@
 namespace BigCommerce;
 
 class Plugin {
-	const VERSION = '4.28.0';
+	const VERSION = '4.29.0';
 
 	protected static $_instance;
 
@@ -71,6 +71,7 @@ class Plugin {
 		$this->providers[ 'post_meta' ]         = new Container\Post_Meta();
 		$this->providers[ 'proxy' ]             = new Container\Proxy();
 		$this->providers[ 'rest' ]              = new Container\Rest();
+		$this->providers[ 'graphql' ]           = new Container\GraphQL();
 		$this->providers[ 'reviews' ]           = new Container\Reviews();
 		$this->providers[ 'rewrites' ]          = new Container\Rewrites();
 		$this->providers[ 'schema' ]            = new Container\Schema();

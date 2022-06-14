@@ -16,7 +16,9 @@ use BigCommerce\Post_Types\Queue_Task\Queue_Task;
 class Cleanup implements Import_Processor {
 
 	const CLEAN_USERS_TRANSIENT    = 'bigcommerce_users_transient_clean';
+	const PURGE_PRODUCTS           = 'bigcommerce_purge_products_headless';
 	const CLEAN_PRODUCTS_TRANSIENT = 'bigcommerce_products_transient_clean';
+	const CLEAN_POSTS_PER_PAGE     = 100;
 
 	/** @var int */
 	private $batch;
@@ -31,7 +33,7 @@ class Cleanup implements Import_Processor {
 	 *
 	 * @param int $batch How many records to clean up per batch
 	 */
-	public function __construct( Cache_Handler $cache_handler, $batch = 100 ) {
+	public function __construct( Cache_Handler $cache_handler, $batch = self::CLEAN_POSTS_PER_PAGE ) {
 		$this->cache_handler = $cache_handler;
 		$this->batch         = $batch;
 	}
@@ -41,6 +43,10 @@ class Cleanup implements Import_Processor {
 		$status->set_status( Status::CLEANING );
 
 		$this->clean_tasks( $pre_import );
+
+		if ( ! Import_Type::is_traditional_import() ) {
+			wp_schedule_single_event( time(), self::PURGE_PRODUCTS );
+		}
 
 		if ( $pre_import ) {
 			$status->set_status( Status::STARTED );
@@ -123,9 +129,9 @@ class Cleanup implements Import_Processor {
 	 */
 	public function clean_products_transient( $offset = 0 ): void {
 		$posts = get_posts( [
-			'post_type'      => Product::NAME,
-			'posts_per_page' => $this->batch,
-			'offset'         => $offset,
+				'post_type'      => Product::NAME,
+				'posts_per_page' => self::CLEAN_POSTS_PER_PAGE,
+				'offset'         => $offset,
 		] );
 
 		if ( empty( $posts ) ) {
@@ -141,10 +147,20 @@ class Cleanup implements Import_Processor {
 			}
 
 			$this->cache_handler->flush_product_catalog_object_cache( $product_id );
+
+			if ( Import_Type::is_traditional_import() ) {
+				continue;
+			}
+
+			delete_transient( sprintf( '%s', Headless_Product_Processor::HEADLESS_CHANNEL ) );
+			delete_transient( sprintf( 'bigcommerce_gql_source%d', $post->ID ) );
+			delete_transient( sprintf( '%s%d', Product::OPTIONS_DATA_TRANSIENT, $post->ID ) );
+			delete_transient( sprintf( '%s%d', Product::BRAND_TRANSIENT, $post->ID ) );
 		}
 
 		wp_schedule_single_event( time(), Cleanup::CLEAN_PRODUCTS_TRANSIENT, [
-			'offset' => $offset + $this->batch,
+				'offset' => $offset + self::CLEAN_POSTS_PER_PAGE,
 		] );
 	}
+
 }

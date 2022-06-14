@@ -339,7 +339,7 @@ const handleSelectedVariant = (product = {}) => {
 	state.maxInventory = product.inventory;
 
 	// Case: product variant has a variant image.
-	if (product.image.url.length > 0) {
+	if (product.image && product.image.url.length > 0) {
 		state.variantImage.url = product.image.url;
 		state.variantImage.zoom = !_.isEmpty(product.zoom.url) ? product.zoom.url : '';
 		state.variantImage.srcset = !_.isEmpty(product.image.srcset) ? product.image.srcset : '';

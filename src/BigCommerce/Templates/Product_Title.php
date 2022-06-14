@@ -54,7 +54,7 @@ class Product_Title extends Controller {
 		$product = $this->options[ self::PRODUCT ];
 		$data    = [
 			self::PRODUCT         => $product,
-			self::TITLE           => get_the_title( $product->post_id() ),
+			self::TITLE           => $product->is_headless() ? $product->get_property('name') : get_the_title( $product->post_id() ),
 			self::CONDITION       => $this->get_condition( $product ),
 			self::INVENTORY       => $this->get_inventory( $product ),
 			self::PERMALINK       => get_the_permalink( $product->post_id() ),

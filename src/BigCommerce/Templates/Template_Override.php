@@ -25,9 +25,10 @@ class Template_Override {
 	public function render_product_single( $post_id ) {
 		$product = new Product( get_the_ID() );
 
-		$single  = Product_Single::factory( [
-			Product_Single::PRODUCT => $product,
+		$single = Product_Single::factory( [
+				Product_Single::PRODUCT => $product,
 		] );
+
 		$wrapper = Page_Wrapper::factory( [
 			Page_Wrapper::CONTENT => $single->render(),
 		] );

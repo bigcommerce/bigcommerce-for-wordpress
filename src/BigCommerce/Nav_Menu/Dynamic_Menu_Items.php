@@ -119,24 +119,29 @@ class Dynamic_Menu_Items {
 	 * @return array|int[]|string|string[]|\WP_Error|\WP_Term[]
 	 */
 	private function get_terms_items( $taxonomy, int $parent = 0 ) {
-		$terms = get_terms( [
-				'taxonomy'     => is_object( $taxonomy ) ? $taxonomy->name : $taxonomy,
-				'hide_empty'   => true,
-				'hierarchical' => true,
-				'parent'       => $parent,
-				'meta_query'   => [
-						[
-								'key'  => 'sort_order',
-								'type' => 'NUMERIC',
-						],
-						[
-								'key'   => 'is_visible',
-								'value' => true,
-						],
+		$args = [
+			'taxonomy'     => is_object( $taxonomy ) ? $taxonomy->name : $taxonomy,
+			'hide_empty'   => true,
+			'hierarchical' => true,
+			'parent'       => $parent,
+			'meta_query'   => [
+				[
+					'key'  => 'sort_order',
+					'type' => 'NUMERIC',
 				],
-				'orderby'      => 'sort_order',
-				'order'        => 'ASC',
-		] );
+			],
+			'orderby'      => 'sort_order',
+			'order'        => 'ASC',
+		];
+
+		if ( get_option( Customizer::CATEGORIES_IS_VISIBLE, 'no' ) === 'yes' ) {
+			$args['meta_query'][] = [
+				'key'   => 'is_visible',
+				'value' => true,
+			];
+		}
+
+		$terms = get_terms( $args );
 
 		if ( empty( $terms ) || is_wp_error( $terms ) ) {
 			return [];

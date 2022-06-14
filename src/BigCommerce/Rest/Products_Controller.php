@@ -3,7 +3,13 @@
 
 namespace BigCommerce\Rest;
 
+use BigCommerce\Api\v3\Api\CatalogApi;
+use BigCommerce\Api\v3\ApiException;
+use BigCommerce\Container\Api;
+use BigCommerce\Container\GraphQL;
 use BigCommerce\Exceptions\Channel_Not_Found_Exception;
+use BigCommerce\Import\Import_Type;
+use BigCommerce\Logging\Error_Log;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Post_Types\Product\Query_Mapper;
 use BigCommerce\Shortcodes;
@@ -12,6 +18,7 @@ use BigCommerce\Taxonomies\Channel\Channel;
 use BigCommerce\Taxonomies\Channel\Connections;
 use BigCommerce\Taxonomies\Flag\Flag;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
+use Pimple\Container;
 use WP_REST_Server;
 
 /**
@@ -61,6 +68,62 @@ class Products_Controller extends Rest_Controller {
 		return true;
 	}
 
+	protected function get_items_headless( $request ) {
+		$container = bigcommerce()->container();
+
+		if ( ! empty( $request['slug'] ) ) {
+			return $this->get_items_graphql( $container, $request );
+		}
+
+		$client  = $container[ Api::CLIENT ];
+		$catalog = new CatalogApi( $client );
+
+		try {
+			$params = [
+					'page'    => $request['page'],
+					'limit'   => $request['per_page'],
+					'include' => [ 'variants', 'custom_fields', 'images', 'bulk_pricing_rules', 'options', 'modifiers' ],
+			];
+
+			if ( ! empty( $request['bigcommerce_brand'] ) ) {
+				$params['brand_id'] = $request['bigcommerce_brand'];
+			}
+
+			if ( ! empty( $request['bigcommerce_category'] ) ) {
+				$params['categories:in'] = $request['bigcommerce_category'];
+			}
+
+			if ( ! empty( $request['bcid'] ) ) {
+				$params['id'] = $request['bcid'];
+			}
+
+			$response = $catalog->getProducts( $params );
+
+			return $this->parse_result( $response, $client );
+		} catch ( ApiException $e ) {
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [ 'request' => $request ], 'rest' );
+
+			$error = new \WP_Error( 'api_error', sprintf(
+				__( 'There was an error retrieving products data. Error message: "%s"', 'bigcommerce' ),
+				$e->getMessage()
+			), [ 'exception' => [ 'message' => $e->getMessage(), 'code' => $e->getCode() ] ] );
+
+			return $error;
+		}
+	}
+
+	private function get_items_graphql(Container $container, $request_data ) {
+		try {
+			return rest_ensure_response( $container[ GraphQL::GRAPHQL_REQUESTOR ]->request_product( $request_data['slug'] ) );
+		} catch ( \Exception $e ) {
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [ 'request' => $request_data ], 'rest' );
+
+			return new \WP_Error( 'api_error', sprintf(
+					__( 'There was an error retrieving product via GQL. Error message: "%s"', 'bigcommerce' ),
+					$e->getMessage()
+			), [ 'exception' => [ 'message' => $e->getMessage(), 'code' => $e->getCode() ] ] );
+		}
+	}
 
 	/**
 	 * Retrieves a collection of products.
@@ -70,8 +133,13 @@ class Products_Controller extends Rest_Controller {
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_items( $request ) {
+		$request_data = $request->get_params();
+
+		if ( ! Import_Type::is_traditional_import() ) {
+			return $this->get_items_headless( $request_data );
+		}
 		$mapper = new Query_Mapper();
-		$args   = $mapper->map_rest_args_to_query( $request->get_params() );
+		$args   = $mapper->map_rest_args_to_query( $request_data );
 
 		/**
 		 * Filters rest products query.
@@ -261,6 +329,12 @@ class Products_Controller extends Rest_Controller {
 			'default'     => 0,
 		];
 
+		$query_params['slug'] = [
+			'description' => __( 'Slug of the term to retrieve product', 'bigcommerce' ),
+			'type'        => 'string',
+			'default'     => '',
+		];
+
 		foreach ( $this->taxonomy_params() as $taxonomy ) {
 			$query_params[ $taxonomy ] = [
 				/* translators: %s: taxonomy name */
@@ -366,6 +440,24 @@ class Products_Controller extends Rest_Controller {
 
 				return '';
 		}
+	}
+
+	/**
+	 * Add data to the JS config to support products requests
+	 *
+	 * @param array $config
+	 *
+	 * @return array
+	 *
+	 * @filter bigcommerce/js_config
+	 */
+	public function js_config( $config ): array {
+		$config['product'] = array_merge( $config['product'], [
+				'api_url'             => $this->get_base_url(),
+				'ajax_products_nonce' => wp_create_nonce( 'wp_rest' ),
+		] );
+
+		return $config;
 	}
 
 	/**

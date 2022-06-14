@@ -11,6 +11,8 @@ import * as tools from '../../utils/tools';
 import { up, down } from '../../utils/dom/slide';
 import parseUrl from '../../utils/data/parse-url';
 import scrollTo from '../../utils/dom/scroll-to';
+import { IS_HEADLESS } from '../config/wp-settings';
+import { ready } from '../../utils/events';
 
 const el = {
 	container: tools.getNodes('.bc-settings-form', false, document, true)[0],
@@ -141,6 +143,28 @@ const initChoices = () => {
 	el.settingSelectChoices = new Choices('.bc-field-choices', options);
 };
 
+const handleNodes = (nodes, display) => {
+	nodes.forEach((node) => {
+		const row = tools.closest(node, 'tr');
+		row.style.display = display;
+	});
+};
+
+const handleSettingsVisibility = (headlessDisplay, traditionalDisplay) => {
+	const headlessNodes = tools.getNodes('.bc-settings-headless', true, el.container, true);
+	const traditionalNodes = tools.getNodes('.bc-settings-traditional', true, el.container, true);
+	handleNodes(headlessNodes, headlessDisplay);
+	handleNodes(traditionalNodes, traditionalDisplay);
+};
+
+const toggleOptions = (event) => {
+	if (event.detail.value === '1') {
+		handleSettingsVisibility('table-row', 'none');
+	} else {
+		handleSettingsVisibility('none', 'table-row');
+	}
+};
+
 const cacheElements = () => {
 	el.settingSections = tools.getNodes('section-toggle', true, el.container);
 	el.settingSelectFields = tools.getNodes('.bc-field-choices', true, el.container, true);
@@ -170,6 +194,8 @@ const bindEvents = () => {
 	if (el.page) {
 		delegate(el.page, '.bc-settings-form', 'keydown', keyboardNavigation);
 	}
+
+	delegate(el.container, '[data-js="bc-import-switch"]', 'change', toggleOptions);
 };
 
 const init = () => {
@@ -196,6 +222,14 @@ const init = () => {
 
 	maybeOpenSections();
 	bindEvents();
+
+	ready(() => {
+		if (IS_HEADLESS) {
+			handleSettingsVisibility('table-row', 'none');
+		} else {
+			handleSettingsVisibility('none', 'table-row');
+		}
+	});
 };
 
 export default init;

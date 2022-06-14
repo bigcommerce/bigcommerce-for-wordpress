@@ -6,6 +6,7 @@ namespace BigCommerce\Assets\Admin;
 
 use BigCommerce\Merchant\Account_Status;
 use BigCommerce\Settings\Import_Status;
+use BigCommerce\Settings\Sections\Import;
 use BigCommerce\Settings\Sections\Troubleshooting_Diagnostics;
 use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Flag\Flag;
@@ -28,6 +29,7 @@ class JS_Config {
 				'categories'                 => Product_Category::NAME,
 				'flags'                      => Flag::NAME,
 				'brands'                     => Brand::NAME,
+				'headless'                   => ( ( int ) get_option( Import::HEADLESS_FLAG, 0 ) === 1 ),
 				'recent'                     => __( 'recent', 'bigcommerce' ),
 				'search'                     => __( 'search', 'bigcommerce' ),
 				'sort_order'                 => __( 'order', 'bigcommerce' ),

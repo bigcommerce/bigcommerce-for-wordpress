@@ -4,13 +4,14 @@
 namespace BigCommerce\Settings\Sections;
 
 
+use BigCommerce\GraphQL\BaseGQL;
 use BigCommerce\Import\Image_Importer;
 use BigCommerce\Settings\Screens\Connect_Channel_Screen;
 use BigCommerce\Settings\Screens\Settings_Screen;
 
 class Import extends Settings_Section {
 
-	use Webhooks, Images;
+	use Webhooks, ImportType, Images;
 
 	const NAME                     = 'import';
 	const OPTION_FREQUENCY         = 'bigcommerce_import_frequency';
@@ -21,6 +22,7 @@ class Import extends Settings_Section {
 	const ENABLE_IMAGE_IMPORT      = 'bigcommerce_import_enable_image_import';
 	const MAX_CONCURRENT           = 'bigcommerce_import_max_concurrent';
 	const RUN_IN_PARALLEL          = 'bigcommerce_parallel_run';
+	const HEADLESS_FLAG            = 'bigcommerce_headless_flag';
 
 	const FREQUENCY_FIVE    = 'five_minutes';
 	const FREQUENCY_THIRTY  = 'thirty_minutes';
@@ -31,12 +33,70 @@ class Import extends Settings_Section {
 	const FREQUENCY_NEVER   = 'never';
 
 	const DEFAULT_FREQUENCY = self::FREQUENCY_FIVE;
+	const PRODUCT_TRANSIENT = 'bigcommerce_products_transient_interval';
+
+	protected $options;
+	protected $product_transient_groups;
+
+	public function __construct() {
+		$this->options = [
+			0 => __( 'Full - Import and store all product data in WP database (default)', 'bigcommerce' ),
+			1 => __( 'Fast - Headless - Import and store minimal product data (beta)', 'bigcommerce' ),
+		];
+
+		$this->product_transient_groups = [
+			MINUTE_IN_SECONDS      => __( '1 minute', 'bigcommerce' ),
+			5 * MINUTE_IN_SECONDS  => __( '5 minutes', 'bigcommerce' ),
+			15 * MINUTE_IN_SECONDS => __( '15 minutes', 'bigcommerce' ),
+			HOUR_IN_SECONDS        => __( '1 hour', 'bigcommerce' ),
+			3 * HOUR_IN_SECONDS    => __( '3 hours', 'bigcommerce' ),
+			12 * HOUR_IN_SECONDS   => __( '12 hours(default)', 'bigcommerce' ),
+			DAY_IN_SECONDS         => __( '24 hours', 'bigcommerce' ),
+		];
+	}
 
 	/**
 	 * @return void
 	 * @action bigcommerce/settings/register/screen= . Settings_Screen::NAME
 	 */
 	public function register_settings_section() {
+		add_settings_field(
+			self::HEADLESS_FLAG,
+			__( 'Product Import', 'bigcommerce' ),
+			[ $this, 'render_headless_flag_import' ],
+			Settings_Screen::NAME,
+			self::NAME
+		);
+		register_setting( Settings_Screen::NAME, self::HEADLESS_FLAG );
+
+		add_settings_field(
+			self::PRODUCT_TRANSIENT,
+			esc_html( __( 'Products Cache Expiration', 'bigcommerce' ) ),
+			[ $this, 'render_products_transient_settings' ],
+			Settings_Screen::NAME,
+			self::NAME,
+			[
+				'option' => self::PRODUCT_TRANSIENT,
+				'label'  => __( 'Expires after', 'bigcommerce' ),
+			]
+		);
+
+		register_setting( Settings_Screen::NAME, self::PRODUCT_TRANSIENT );
+
+		register_setting( Settings_Screen::NAME, BaseGQL::TOKEN_EXPIRATION );
+
+		add_settings_field(
+			BaseGQL::TOKEN_EXPIRATION,
+			esc_html( __( 'Storefront token expiration time', 'bigcommerce' ) ),
+			[ $this, 'render_gql_token_transient_settings' ],
+			Settings_Screen::NAME,
+			self::NAME,
+			[
+				'option' => BaseGQL::TOKEN_EXPIRATION,
+				'label'  => __( 'Expires after', 'bigcommerce' ),
+			],
+		);
+
 		add_settings_section(
 			self::NAME,
 			__( 'Product Sync', 'bigcommerce' ),
@@ -44,10 +104,6 @@ class Import extends Settings_Section {
 			Settings_Screen::NAME
 		);
 
-		add_action( 'bigcommerce/settings/section/before_callback/id=' . self::NAME, [
-			$this,
-			'section_description',
-		], 10, 0 );
 
 		add_settings_field(
 			self::OPTION_FREQUENCY,
@@ -146,6 +202,14 @@ class Import extends Settings_Section {
 
 		register_setting( Settings_Screen::NAME, self::ENABLE_CUSTOMER_WEBHOOKS );
 
+		add_settings_field(
+			self::HEADLESS_FLAG,
+			__( 'Product Import', 'bigcommerce' ),
+			[ $this, 'render_headless_flag_import' ],
+			Settings_Screen::NAME,
+			self::NAME
+		);
+
 		/* // disabled until we figure out how to implement concurrent processing
 		add_settings_field(
 			self::MAX_CONCURRENT,
@@ -209,7 +273,7 @@ class Import extends Settings_Section {
 			self::FREQUENCY_MONTHLY => __( 'Month', 'bigcommerce' ),
 			self::FREQUENCY_NEVER   => __( 'Never', 'bigcommerce' ),
 		];
-
+		$this->section_description();
 		$select = sprintf( '<select id="field-%s" name="%s" class="regular-text bc-field-choices">', esc_attr( self::OPTION_FREQUENCY ), esc_attr( self::OPTION_FREQUENCY ) );
 		foreach ( $options as $key => $label ) {
 			$select .= sprintf( '<option value="%s" %s>%s</option>', esc_attr( $key ), selected( $current, $key, false ), esc_html( $label ) );
@@ -219,12 +283,35 @@ class Import extends Settings_Section {
 		echo $select;
 	}
 
+	/**
+	 * Render GQL token expiration options field
+	 *
+	 * @param $args
+	 */
+	public function render_gql_token_transient_settings( $args ) {
+		printf( '<p class="description"><strong>%s</strong> <br /> %s</p>', esc_html( __( 'For Advanced Users only', 'bigcommerce' ) ), esc_html( __( 'Set expiration time for storefront tokens - how often tokens will be rotated. It does not affect product information retrieve. It is for security purposes only', 'bigcommerce' ) ) );
+		$value = get_option( $args['option'], 12 * HOUR_IN_SECONDS );
+		printf( '<select id="field-%s" name="%s" data-js="bc-dynamic-state-control" class="regular-text bc-field-choices bc-settings-headless">', esc_attr( BaseGQL::TOKEN_EXPIRATION ), esc_attr( BaseGQL::TOKEN_EXPIRATION ) );
+		foreach ( $this->product_transient_groups as $time => $label ) {
+			printf( '<option value="%d" %s>%s</option>', $time, selected( $value, $time, false ), esc_html( $label ) );
+		}
+		printf( '</select>' );
+	}
+
+	public function render_products_transient_settings( $args ) {
+		$value = get_option( $args['option'], 15 * MINUTE_IN_SECONDS );
+		printf( '<select id="field-%s" name="%s" data-js="bc-dynamic-state-control" class="regular-text bc-field-choices bc-settings-headless">', esc_attr( self::PRODUCT_TRANSIENT ), esc_attr( self::PRODUCT_TRANSIENT ) );
+		foreach ( $this->product_transient_groups as $time => $label ) {
+			printf( '<option value="%d" %s>%s</option>', $time, selected( $value, $time, false ), esc_html( $label ) );
+		}
+		printf( '</select>' );
+	}
+
 	public function new_products_toggle() {
 		$current = get_option( self::OPTION_NEW_PRODUCTS, 1 );
 
 		printf( '<p class="description">%s</p>', esc_html( __( 'Would you like the listings in your channel automatically populated?', 'bigcommerce' ) ) );
-
-		echo '<fieldset>';
+		echo '<fieldset class="bc-settings-traditional">';
 		printf(
 			'<p><label><input type="radio" name="%s" value="1" %s /> %s</label></p>',
 			esc_attr( self::OPTION_NEW_PRODUCTS ),
@@ -243,9 +330,10 @@ class Import extends Settings_Section {
 	public function render_import_tasks_processing() {
 		$current = get_option( Import::RUN_IN_PARALLEL, 0 );
 
-		echo '<fieldset>';
-		$link = 'https://developer.bigcommerce.com/bigcommerce-for-wordpress/ZG9jOjQ1MjA3MTQ2-creating-reliable-cron-jobs';
+		echo '<fieldset class="bc-settings-traditional">';
+		$link            = 'https://developer.bigcommerce.com/bigcommerce-for-wordpress/ZG9jOjQ1MjA3MTQ2-creating-reliable-cron-jobs';
 		$learn_more_link = sprintf( '<a href="%s" target="_blank">%s</a>', $link, esc_html( __( 'Learn More', 'bigcommerce' ) ) );
+
 		echo '<p class="description">';
 		printf( esc_html( __( 'The BigCommerce for WordPress plugin relies on WP-Cron for background tasks to update/sync data from BigCommerce. Configuring a server-side cron can greatly increase performance. %s', 'bigcommerce' ) ), $learn_more_link );
 		echo '</p>';
@@ -263,4 +351,5 @@ class Import extends Settings_Section {
 		);
 		echo '</fieldset>';
 	}
+
 }

@@ -5,6 +5,7 @@ namespace BigCommerce\Settings;
 
 
 use BigCommerce\Exceptions\No_Task_Found_Exception;
+use BigCommerce\Import\Import_Type;
 use BigCommerce\Import\Runner\Cron_Runner;
 use BigCommerce\Import\Runner\Status;
 use BigCommerce\Import\Task_Manager;
@@ -160,6 +161,10 @@ class Import_Status {
 					 */
 					delete_option( Abort_Import::ABORT_IMPORT_OPTION );
 				}
+			}
+
+			if ( ! Import_Type::is_traditional_import() ) {
+				$response_message = esc_attr__( 'Import is completed', 'bigcommerce' );
 			}
 
 			return [

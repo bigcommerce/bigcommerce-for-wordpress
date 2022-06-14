@@ -22,6 +22,8 @@ class Status {
 	const MARKED_DELETED_PRODUCTS  = 'marked_deleted_products';
 	const PROCESSING_QUEUE         = 'processing_queue';
 	const PROCESSED_QUEUE          = 'processed_queue';
+	const CLEANING_PRODUCTS        = 'cleaning_products';
+	const CLEANED_PRODUCTS         = 'cleaned_products';
 	const FETCHING_STORE           = 'fetching_store';
 	const FETCHED_STORE            = 'fetched_store';
 	const FETCHING_CURRENCIES      = 'fetching_currencies';

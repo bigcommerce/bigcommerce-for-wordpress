@@ -6,6 +6,7 @@ namespace BigCommerce\Import;
 use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Import\Runner\Status;
+use BigCommerce\Settings\Sections\Import;
 
 class Import_Type {
 
@@ -80,8 +81,9 @@ class Import_Type {
 
 				$is_fetched_listings    = strpos( $task_state, Status::FETCHED_LISTINGS ) !== false;
 				$is_initialized_channel = strpos( $task_state, Status::INITIALIZED_CHANNEL ) !== false;
+				$is_product_fetch       = ! Import_Type::is_traditional_import() && strpos( $task_state, Status::FETCHED_PRODUCTS ) !== false;
 
-				if ( in_array( $task_state, $states ) || $is_fetched_listings || $is_initialized_channel ) {
+				if ( in_array( $task_state, $states ) || $is_fetched_listings || $is_initialized_channel || $is_product_fetch ) {
 					return true;
 				}
 
@@ -102,6 +104,15 @@ class Import_Type {
 		}
 
 		return $task_list;
+	}
+
+	/**
+	 * Check if import is traditional e.g store products on WP side
+	 *
+	 * @return bool
+	 */
+	public static function is_traditional_import(): bool {
+		return ( ( int ) get_option( Import::HEADLESS_FLAG, 0 ) === 0 );
 	}
 
 }

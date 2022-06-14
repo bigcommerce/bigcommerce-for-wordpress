@@ -6,6 +6,7 @@ namespace BigCommerce\Container;
 use BigCommerce\Api\Base_Client;
 use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Api\v3\Api\ChannelsApi;
+use BigCommerce\Import\Processors\Headless;
 use BigCommerce\Import\Runner\Cron_Runner;
 use BigCommerce\Import\Runner\Status;
 use BigCommerce\Merchant\Onboarding_Api;
@@ -85,6 +86,7 @@ class Settings extends Provider {
 	const SITE_URL_SYNC       = 'settings.site_url_sync';
 	const ABORT_IMPORT        = 'settings.abort_product_import';
 	const FLUSH_CACHE         = 'settings.flush_cache';
+	const HEADLESS            = 'settings.headless_processing';
 
 	const CONFIG_STATUS              = 'settings.configuration_status';
 	const CONFIG_DISPLAY_MENUS       = 'settings.configuration_display_menus';
@@ -314,6 +316,10 @@ class Settings extends Provider {
 			return new Cron_Runner();
 		};
 
+		$container[ self::HEADLESS ] = static function ( Container $container ) {
+			return new Headless();
+		};
+
 		add_action( 'bigcommerce/settings/register/screen=' . Settings_Screen::NAME, $this->create_callback( 'import_register', function () use ( $container ) {
 			$container[ self::IMPORT_SECTION ]->register_settings_section();
 		} ), 20, 0 );
@@ -378,6 +384,10 @@ class Settings extends Provider {
 		add_action( 'wp_ajax_' . Import_Status::AJAX_ACTION_IMPORT_STATUS, $this->create_callback( 'import_current_status_message', function () use ( $container ) {
 			$container[ self::IMPORT_STATUS ]->ajax_current_status();
 		} ), 10, 0 );
+
+		add_action( 'update_option_' . Import_Settings::HEADLESS_FLAG, $this->create_callback( 'change_import_behaviour', function ( $old_value, $new_value ) use ( $container ) {
+			$container[ self::HEADLESS ]->maybe_switch_headless( $old_value, $new_value );
+		} ), 10, 2 );
 	}
 
 	private function currency( Container $container ) {

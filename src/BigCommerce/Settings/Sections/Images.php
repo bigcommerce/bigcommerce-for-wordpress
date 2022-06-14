@@ -12,11 +12,10 @@ trait Images {
 	 * @param array $args
 	 */
 	public function enable_images_import_toggle( $args = [] ) {
-		$current = get_option( $args['option'], Image_Importer::FULL_IMAGE_IMPORT );
-		$markup  = '<p><label><input type="%s" name="%s" value="%s" %s /> %s</label></p>';
-
+		$current  = get_option( $args['option'], Image_Importer::FULL_IMAGE_IMPORT );
+		$markup   = '<p><label><input type="%s" name="%s" value="%s" %s /> %s</label></p>';
 		printf( '<p class="description">%s</p>', esc_html( $args['label'] ) );
-		echo '<fieldset>';
+		echo '<fieldset class="bc-settings-traditional">';
 		printf(
 			$markup,
 			$args['type'],

@@ -1,5 +1,15 @@
 # Changelog
 
+## [4.29.0]
+
+### Added
+- Webhook listeners for adding/removing products to the channel. Webhooks can be enabled via Bigcommerce > Settings > Product Sync > Enable products webhooks. Webhook is firing when a product is assigned to a channel or unassigned from it
+- Add the ability to change product variant's out-of-stock behavior. Go to Customizer > Bigcommerce > Product Single > Product variants out of stock behavior. If the option is enabled then out-of-stock variants will be disabled. If it is disabled out-of-stock items can be added to the cart
+- 'Fast' import type(beta) is added. When it is selected during the import will get only products titles, ids, categories, and brands. Other information like prices, images, descriptions and etc, won't be retrieved on import. Instead, the information will be taken directly from Bigcommerce API and will show relevant product data on the fly. Import type can be set from WordPress admin panel > Bigcommerce > Settings > Product Sync > Import Type.
+
+### Changed
+- Categories `is_visible` behavior can be controlled from Customizer. Go to Customizer > Bigcommerce > Product Category > Categories 'is_visible' option. If the option is on the plugin will respect categories visibility set in Bigcommerce admin and will remove hidden categories from the menu and redirect categories pages to the 404 page
+
 ## [4.28.0]
 
 ### Added
@@ -1773,6 +1783,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.29.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.28.0...4.29.0
 [4.28.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.27.1...4.28.0
 [4.27.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.27.0...4.27.1
 [4.27.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.26.1...4.27.0

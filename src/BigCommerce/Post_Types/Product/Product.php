@@ -4,7 +4,10 @@
 namespace BigCommerce\Post_Types\Product;
 
 
+use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api\v3\ObjectSerializer;
+use BigCommerce\Container\Api;
+use BigCommerce\Container\GraphQL;
 use BigCommerce\Currency\With_Currency;
 use BigCommerce\Customizer\Sections\Buttons;
 use BigCommerce\Customizer\Sections\Cart as Cart_Settings;
@@ -12,10 +15,13 @@ use BigCommerce\Customizer\Sections\Cart as CustomizerCart;
 use BigCommerce\Customizer\Sections\Product_Single;
 use BigCommerce\Exceptions\Channel_Not_Found_Exception;
 use BigCommerce\Exceptions\Product_Not_Found_Exception;
+use BigCommerce\Import\Import_Type;
 use BigCommerce\Import\Image_Importer;
+use BigCommerce\Logging\Error_Log;
 use BigCommerce\Import\Processors\Store_Settings;
 use BigCommerce\Settings\Sections\Cart;
 use BigCommerce\Settings\Sections\Channels;
+use BigCommerce\Settings\Sections\Import;
 use BigCommerce\Taxonomies\Availability\Availability;
 use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Channel\Channel;
@@ -30,6 +36,7 @@ class Product {
 	const NAME = 'bigcommerce_product';
 
 	const BIGCOMMERCE_ID            = 'bigcommerce_id';
+	const BRAND_TRANSIENT           = 'bigcommerce_brand_transient';
 	const LISTING_ID                = 'bigcommerce_listing_id';
 	const SKU                       = 'bigcommerce_sku';
 	const SKU_NORMALIZED            = 'bigcommerce_sku_normalized';
@@ -37,6 +44,7 @@ class Product {
 	const LISTING_DATA_META_KEY     = 'bigcommerce_listing_data';
 	const MODIFIER_DATA_META_KEY    = 'bigcommerce_modifier_data';
 	const OPTIONS_DATA_META_KEY     = 'bigcommerce_options_data';
+	const OPTIONS_DATA_TRANSIENT    = 'bigcommerce_options_transient';
 	const CUSTOM_FIELDS_META_KEY    = 'bigcommerce_custom_fields';
 	const REQUIRES_REFRESH_META_KEY = 'bigcommerce_force_refresh';
 	const IMPORTER_VERSION_META_KEY = 'bigcommerce_importer_version';
@@ -55,9 +63,11 @@ class Product {
 
 	private $post_id;
 	private $source_cache;
+	private $is_headless;
 
 	public function __construct( $post_id ) {
-		$this->post_id = $post_id;
+		$this->post_id     = $post_id;
+		$this->is_headless = ! Import_Type::is_traditional_import();
 	}
 
 	public function get_redirect_product_link() {
@@ -98,6 +108,10 @@ class Product {
 		return $this->get_property( $property );
 	}
 
+	public function is_headless() {
+		return $this->is_headless;
+	}
+
 	public function get_property( $property ) {
 		$data = $this->get_source_data();
 		if ( empty( $data ) ) {
@@ -119,10 +133,66 @@ class Product {
 	}
 
 	public function sku() {
+		if ( $this->is_headless() ) {
+			$source = $this->get_source_data();
+
+			return $source->sku ?? null;
+		}
+
 		return $this->get_property( 'sku' );
 	}
 
+	public function get_reviews_sum() {
+		if ( $this->is_headless() ) {
+			$source = $this->get_source_data();
+
+			return ! empty( $source->reviews_rating_sum ) ? $source->reviews_rating_sum : 0;
+		}
+
+		return $this->get_property( 'reviews_rating_sum' );
+	}
+
+	public function get_reviews_count() {
+		if ( $this->is_headless() ) {
+			$source = $this->get_source_data();
+
+			return ! empty( $source->reviews_count ) ? (int) $source->reviews_count : 0;
+		}
+
+		return $this->get_property( 'reviews_count' );
+	}
+
+	private function get_product_cache_expiration() {
+		return get_option( Import::PRODUCT_TRANSIENT, 15 * MINUTE_IN_SECONDS );
+	}
+
 	public function brand() {
+		if ( $this->is_headless() ) {
+			$transient_key = sprintf( '%s%d', self:: BRAND_TRANSIENT, $this->post_id );
+			$transient     = get_transient( $transient_key );
+
+			if ( ! empty( $transient ) ) {
+				return $transient;
+			}
+
+			$source = $this->get_source_data();
+			if ( empty( $source->brand_id ) ) {
+				return '';
+			}
+
+
+			$container   = bigcommerce()->container();
+			$catalog_api = $container[ Api::FACTORY ]->catalog();
+			try {
+				 $name = $catalog_api->getBrandById( $source->brand_id )->getData()->getName();
+				 set_transient( $transient_key, $name, $this->get_product_cache_expiration() );
+
+				 return $name;
+			} catch ( ApiException $exception ) {
+				return '';
+			}
+		}
+
 		$brands = get_the_terms( $this->post_id, Brand::NAME );
 
 		if ( $brands && ! is_wp_error( $brands ) ) {
@@ -146,6 +216,16 @@ class Product {
 	}
 
 	public function on_sale() {
+		if ( $this->is_headless() ) {
+			$source = $this->get_source_data();
+			if ( class_exists( 'BigCommerceReactTemplates\Plugin' ) ) {
+				return false;
+			}
+			$sale = $source->sale_price;
+
+			return ! empty( $sale );
+		}
+
 		return has_term( Flag::SALE, Flag::NAME, $this->post_id );
 	}
 
@@ -236,8 +316,52 @@ class Product {
 		return '';
 	}
 
+	public function get_product_options() {
+		$transient_key = sprintf( '%s%d', self::OPTIONS_DATA_TRANSIENT, $this->post_id );
+		$transient     = get_transient( $transient_key );
+
+		if ( ! empty( $transient ) ) {
+			return $transient;
+		}
+
+		$catalog_api = bigcommerce()->container()[ Api::FACTORY ]->catalog();
+
+		try {
+			$response = $catalog_api->getOptions( $this->bc_id() );
+			$data     = array_map( function ( $object ) {
+				$config        = $object->getConfig();
+				$option_values = $object->getOptionValues();
+				$values        = [];
+				foreach ( $option_values as $option ) {
+					$values[] = $option->get();
+				}
+
+				return [
+					'id'            => $object->getId(),
+					'product_id'    => $object->getProductId(),
+					'display_name'  => $object->getDisplayName(),
+					'type'          => $object->getType(),
+					'sort_order'    => $object->getSortOrder(),
+					'config'        => $config->get(),
+					'option_values' => $values,
+				];
+			}, $response->getData() );
+		} catch ( ApiException $exception ) {
+			return [];
+		}
+
+		set_transient( $transient_key, $data, $this->get_product_cache_expiration() );
+
+		return $data;
+	}
+
 	public function options() {
-		$data = json_decode( get_post_meta( $this->post_id(), self::OPTIONS_DATA_META_KEY, true ), true );
+		if ( $this->is_headless() ) {
+			$data = $this->get_product_options();
+		} else {
+			$data = json_decode( get_post_meta( $this->post_id(), self::OPTIONS_DATA_META_KEY, true ), true );
+		}
+
 		if ( empty( $data ) || ! is_array( $data ) ) {
 			return [];
 		}
@@ -258,11 +382,13 @@ class Product {
 		// filter out option values not present on any of the variants
 		$source          = $this->get_source_data();
 		$variant_options = [];
+
 		foreach ( $source->variants as $variant ) {
 			foreach ( $variant->option_values as $value ) {
 				$variant_options[ $value->option_id ][] = $value->id;
 			}
 		}
+
 		$variant_options = array_map( 'array_unique', $variant_options );
 		$data            = array_map( function ( $option ) use ( $variant_options ) {
 			$valid_values = isset( $variant_options[ $option['id'] ] ) ? $variant_options[ $option['id'] ] : [];
@@ -296,12 +422,63 @@ class Product {
 			return $this->source_cache;
 		}
 
-		$data = get_post_meta( $this->post_id, self::SOURCE_DATA_META_KEY, true );
+		if ( empty( $this->post_id ) ) {
+			return new \stdClass();
+		}
+
+		if ( $this->is_headless ) {
+			$transient_key = sprintf( 'bigcommerce_gql_source%d', $this->post_id );
+			$transient     = get_transient( $transient_key );
+
+			if ( ! empty( $transient ) ) {
+				$this->source_cache = $transient;
+
+				return $transient;
+			}
+
+			// Addon is enabled
+			if ( class_exists( 'BigCommerceReactTemplates\Plugin' ) ) {
+				global $wp_query;
+
+				if ( empty( $wp_query->query['name'] ) ) {
+					return new \stdClass();
+				}
+				$slug      = $wp_query->query['name'];
+				$container = bigcommerce()->container();
+				$data      = $container[ GraphQL::GRAPHQL_REQUESTOR ]->request_product( $slug );
+				$data      = $data->data->site->route->node;
+			} else {
+				$container  = bigcommerce()->container();
+				$api        = $container[ Api::FACTORY ]->catalog();
+				$product_id = get_post_meta( $this->post_id(), self::BIGCOMMERCE_ID, true );
+				try {
+					$product = $api->getProductById( $product_id, [
+							'include' => [ 'variants', 'custom_fields', 'images', 'videos', 'bulk_pricing_rules', 'options', 'modifiers' ],
+					] )->getData();
+
+					$data = $this->json_encode_maybe_from_api( $product );
+					$data = json_decode( $data );
+				} catch ( ApiException $e ) {
+					do_action( 'bigcommerce/import/error', $e->getMessage(), [
+							'response' => $e->getResponseBody(),
+							'headers'  => $e->getResponseHeaders(),
+					] );
+					do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [], 'webhooks' );
+
+					return new \stdClass();
+				}
+			}
+
+			set_transient( $transient_key, $data, $this->get_product_cache_expiration() );
+		} else {
+			$data = json_decode( get_post_meta( $this->post_id, self::SOURCE_DATA_META_KEY, true ) );
+		}
+
 		if ( empty( $data ) ) {
 			return new \stdClass();
 		}
 
-		$this->source_cache = json_decode( $data );
+		$this->source_cache = $data;
 
 		return $this->source_cache;
 	}
@@ -611,6 +788,11 @@ class Product {
 
 	public function get_inventory_level( $variant_id = 0 ) {
 		$data = $this->get_source_data();
+
+		if ( class_exists( 'BigCommerceReactTemplates\Plugin' ) || empty( $this->post_id ) ) {
+			return -1;
+		}
+
 		if ( $data->inventory_tracking == 'none' ) {
 			return - 1;
 		}
@@ -785,6 +967,9 @@ class Product {
 	 * @return int
 	 */
 	public function get_review_count() {
+		if ( $this->is_headless() ) {
+			return $this->get_reviews_count();
+		}
 		return (int) get_post_meta( $this->post_id, self::REVIEWS_APPROVED_META_KEY, true );
 	}
 

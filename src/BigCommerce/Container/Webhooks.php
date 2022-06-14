@@ -15,6 +15,9 @@ use BigCommerce\Webhooks\Customer\Customer_Delete_Webhook;
 use BigCommerce\Webhooks\Customer\Customer_Deleter;
 use BigCommerce\Webhooks\Customer\Customer_Update_Webhook;
 use BigCommerce\Webhooks\Customer\Customer_Updater;
+use BigCommerce\Webhooks\Product\Channels_Assign;
+use BigCommerce\Webhooks\Product\Channels_Management_Webhook;
+use BigCommerce\Webhooks\Product\Channels_UnAssign;
 use BigCommerce\Webhooks\Product\Product_Create_Webhook;
 use BigCommerce\Webhooks\Product\Product_Creator;
 use BigCommerce\Webhooks\Product\Product_Delete_Webhook;
@@ -35,6 +38,7 @@ class Webhooks extends Provider {
 	const WEBHOOKS                         = 'webhooks.webhooks';
 	const WEBHOOKS_STATUS                  = 'webhooks.webhooks_status';
 	const WEBHOOKS_LISTENER                = 'webhooks.listener_webhook';
+	const CHANNELS_HANDLE_WEBHOOK          = 'webhooks.channels_handle_webhook';
 	const PRODUCT_UPDATE_WEBHOOK           = 'webhooks.product_update_webhook';
 	const PRODUCT_DELETE_WEBHOOK           = 'webhooks.product_delete_webhook';
 	const PRODUCT_CREATE_WEBHOOK           = 'webhooks.product_create_webhook';
@@ -44,6 +48,8 @@ class Webhooks extends Provider {
 	const CUSTOMER_DELETE_WEBHOOK          = 'webhooks.customer_delete_webhook';
 	const PRODUCT_UPDATER                  = 'webhooks.cron.product_updater';
 	const PRODUCT_CREATOR                  = 'webhooks.cron.product_creator';
+	const CHANNEL_PRODUCT_ASSIGNED         = 'webhooks.product.channels_assign';
+	const CHANNEL_PRODUCT_UNASSIGNED       = 'webhooks.product.channels_unassign';
 	const CUSTOMER_CREATOR                 = 'webhooks.cron.customer_creator';
 	const CUSTOMER_UPDATER                 = 'webhooks.cron.customer_updater';
 	const CUSTOMER_DELETER                 = 'webhooks.cron.customer_deleter';
@@ -83,6 +89,7 @@ class Webhooks extends Provider {
 		$container[ self::WEBHOOKS ] = function ( Container $container ) {
 			$webhooks = [
 				$container[ self::PRODUCT_CREATE_WEBHOOK ],
+				$container[ self::CHANNELS_HANDLE_WEBHOOK ],
 				$container[ self::PRODUCT_UPDATE_WEBHOOK ],
 				$container[ self::PRODUCT_DELETE_WEBHOOK ],
 				$container[ self::CUSTOMER_CREATE_WEBHOOK ],
@@ -110,6 +117,14 @@ class Webhooks extends Provider {
         $container[ self::PRODUCT_CREATOR ] = function ( Container $container ) {
             return new Product_Creator( $container[ Api::FACTORY ]->catalog(), $container[ Api::FACTORY ]->channels() );
         };
+
+		$container[ self::CHANNEL_PRODUCT_ASSIGNED ] = function ( Container $container ) {
+			return new Channels_Assign( $container[ Api::FACTORY ]->catalog(), $container[ Api::FACTORY ]->channels() );
+		};
+
+		$container[ self::CHANNEL_PRODUCT_UNASSIGNED ] = function ( Container $container ) {
+			return new Channels_UnAssign( $container[ Api::FACTORY ]->catalog(), $container[ Api::FACTORY ]->channels() );
+		};
 
 		$container[ self::CUSTOMER_CREATOR ] = function ( Container $container ) {
 			return new Customer_Creator();
@@ -151,6 +166,10 @@ class Webhooks extends Provider {
 	private function declare_product_webhooks( Container $container ) {
 		$container[ self::PRODUCT_CREATE_WEBHOOK ] = function ( Container $container ) {
 			return new Product_Create_Webhook( $container[ Api::FACTORY ]->webhooks() );
+		};
+
+		$container[ self::CHANNELS_HANDLE_WEBHOOK ] = function ( Container $container ) {
+			return new Channels_Management_Webhook( $container[ Api::FACTORY ]->webhooks() );
 		};
 
 		$container[ self::PRODUCT_UPDATE_WEBHOOK ] = function ( Container $container ) {
@@ -313,6 +332,23 @@ class Webhooks extends Provider {
 
             $container[self::PRODUCT_CREATOR]->create($params);
         } ), 10, 1 );
+
+
+		add_action ( 'bigcommerce/webhooks/product_channel_assigned', $this->create_callback( 'product_channel_was_assigned', function ( $product_id, $channel_id ) use ( $container ) {
+			if ( ! $this->product_webhooks_enabled() ) {
+				return;
+			}
+
+			$container[ self::CHANNEL_PRODUCT_ASSIGNED ]->handle_request( $product_id, $channel_id );
+		} ), 10, 2 );
+
+		add_action ( 'bigcommerce/webhooks/product_channel_unassigned', $this->create_callback( 'product_channel_was_unassigned', function ( $product_id, $channel_id ) use ( $container ) {
+			if ( ! $this->product_webhooks_enabled() ) {
+				return;
+			}
+
+			$container[ self::CHANNEL_PRODUCT_UNASSIGNED ]->handle_request( $product_id, $channel_id );
+		} ), 10, 2 );
 	}
 
 	private function cron_actions( Container $container ) {

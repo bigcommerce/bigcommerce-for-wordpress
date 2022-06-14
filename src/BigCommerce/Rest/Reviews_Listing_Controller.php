@@ -14,6 +14,11 @@ class Reviews_Listing_Controller extends Rest_Controller {
 	private $fetcher;
 
 	/**
+	 * @var \BigCommerce\Cache\Cache_Handler
+	 */
+	private $cache_handler;
+
+	/**
 	 * Rest_Controller constructor.
 	 *
 	 * @param string         $namespace_base
@@ -21,10 +26,11 @@ class Reviews_Listing_Controller extends Rest_Controller {
 	 * @param string         $rest_base
 	 * @param \BigCommerce\Reviews\Review_Fetcher $fetcher
 	 */
-	public function __construct( $namespace_base, $version, $rest_base, $fetcher ) {
+	public function __construct( $namespace_base, $version, $rest_base, $fetcher, $cache_handler ) {
 		parent::__construct( $namespace_base, $version, $rest_base );
 
-		$this->fetcher = $fetcher;
+		$this->fetcher       = $fetcher;
+		$this->cache_handler = $cache_handler;
 	}
 
 
@@ -110,6 +116,10 @@ class Reviews_Listing_Controller extends Rest_Controller {
 		$per_page = absint( $attributes['per_page'] ) ?: 12;
 		$wrap     = filter_var( $attributes['wrap'], FILTER_VALIDATE_BOOLEAN );
 
+		if ( $product->is_headless() ) {
+			wp_cache_set( 'generation_key', md5( microtime( true ) ), 'bigcommerce_api' );
+		}
+
 		$reviews = $this->fetcher->fetch( $product->bc_id(), $page, $per_page )['reviews'];
 
 		$reviews = array_map( function ( $review ) use ( $product ) {
@@ -121,6 +131,7 @@ class Reviews_Listing_Controller extends Rest_Controller {
 				Review_Single::STATUS    => $review->getStatus(),
 				Review_Single::EMAIL     => $review->getEmail(),
 				Review_Single::NAME      => $review->getName(),
+				Review_Single::RATING    => $review->getRating(),
 				Review_Single::DATE      => $review->getDateReviewed()->format( 'c' ),
 			] );
 

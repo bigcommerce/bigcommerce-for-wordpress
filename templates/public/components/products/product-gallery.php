@@ -19,7 +19,13 @@ use BigCommerce\Assets\Theme\Image_Sizes;
 use BigCommerce\Import\Image_Importer;
 use BigCommerce\Post_Types\Product\Product;
 
-$item_count = count( $image_ids ) + count( $youtube_videos );
+$headless = $context['product']->is_headless();
+if ( $headless ) {
+	$item_count = count( $cdn_images );
+} else {
+	$item_count = count( $image_ids ) + count( $youtube_videos );
+}
+
 
 $gallery_classes = $item_count > 1 ? 'swiper-container bc-product-gallery--has-carousel' : 'swiper-container';
 
@@ -40,37 +46,51 @@ $has_zoom = $zoom ? 'bc-product-image-zoom' : '';
 			<div class="swiper-wrapper" data-js="<?php esc_attr_e( $has_zoom ); ?>">
 				<?php if ( $item_count > 0 ) {
 					$index = 0;
-					foreach ( $image_ids as $image_id ) {
-						if ( ! empty( $cdn_images ) && array_key_exists( $image_id, $cdn_images ) ) {
-							$image_src    = $cdn_images[ $image_id ][ Image_Importer::URL_STD ];
-							$image_full   = $zoom ? sprintf( 'data-zoom="%s"', $cdn_images[ $image_id ][ Image_Importer::URL_ZOOM ] ) : '';
-							$image_srcset = '';
-						} else {
-							$image_src    = wp_get_attachment_image_url( $image_id, $image_size );
-							$image_full   = $zoom ? sprintf( 'data-zoom="%s"', wp_get_attachment_image_url( $image_id, $zoom_size ) ) : '';
-							$image_srcset = wp_get_attachment_image_srcset( $image_id, $image_size );
-						}
+					if ( $headless && ! empty( $cdn_images ) ) {
+						foreach ( $cdn_images as $image) {
+							$image_full = $zoom ? sprintf( 'data-zoom="%s"', $image['url'] ) : '';
+							?>
+							<!-- class="swiper-slide" is required -->
+							<div class="swiper-slide bc-product-gallery__image-slide" data-index="<?php echo $index++; ?>">
+								<img
+										src="<?php echo esc_url( $image['url'] ); ?>" <?php echo $image_full; ?>
+										alt="<?php echo esc_attr( trim( strip_tags( $image['alt'] ) ) ); ?>"
+								>
+							</div>
+						<?php }
+					} else {
+						foreach ( $image_ids as $image_id ) {
+							if ( ! empty( $cdn_images ) && array_key_exists( $image_id, $cdn_images ) ) {
+								$image_src    = $cdn_images[ $image_id ][ Image_Importer::URL_STD ];
+								$image_full   = $zoom ? sprintf( 'data-zoom="%s"', $cdn_images[ $image_id ][ Image_Importer::URL_ZOOM ] ) : '';
+								$image_srcset = '';
+							} else {
+								$image_src    = wp_get_attachment_image_url( $image_id, $image_size );
+								$image_full   = $zoom ? sprintf( 'data-zoom="%s"', wp_get_attachment_image_url( $image_id, $zoom_size ) ) : '';
+								$image_srcset = wp_get_attachment_image_srcset( $image_id, $image_size );
+							}
 
-						?>
-						<!-- class="swiper-slide" is required -->
-						<div class="swiper-slide bc-product-gallery__image-slide" data-index="<?php echo $index++; ?>">
-							<img
-									src="<?php echo esc_url( $image_src ); ?>" <?php echo $image_full; ?>
-									alt="<?php echo esc_attr( trim( strip_tags( get_post_meta( $image_id, '_wp_attachment_image_alt', true ) ) ) ); ?>"
-									srcset="<?php echo esc_attr( $image_srcset ); ?>"
+							?>
+							<!-- class="swiper-slide" is required -->
+							<div class="swiper-slide bc-product-gallery__image-slide" data-index="<?php echo $index++; ?>">
+								<img
+										src="<?php echo esc_url( $image_src ); ?>" <?php echo $image_full; ?>
+										alt="<?php echo esc_attr( trim( strip_tags( get_post_meta( $image_id, '_wp_attachment_image_alt', true ) ) ) ); ?>"
+										srcset="<?php echo esc_attr( $image_srcset ); ?>"
+								>
+							</div>
+						<?php }
+						foreach ( $youtube_videos as $video ) { ?>
+							<!-- class="swiper-slide" is required -->
+							<div
+									class="swiper-slide bc-product-gallery__video-slide"
+									data-js="bc-product-video-slide"
+									data-index="<?php echo $index ++; ?>"
 							>
-						</div>
-					<?php }
-					foreach ( $youtube_videos as $video ) { ?>
-						<!-- class="swiper-slide" is required -->
-						<div
-								class="swiper-slide bc-product-gallery__video-slide"
-								data-js="bc-product-video-slide"
-								data-index="<?php echo $index ++; ?>"
-						>
-							<?php echo $video['embed_html']; ?>
-						</div>
-					<?php }
+								<?php echo $video['embed_html']; ?>
+							</div>
+						<?php }
+					}
 				} elseif ( has_post_thumbnail( $product->post_id() ) ) { ?>
 					<div class="swiper-slide bc-product-gallery__image-slide">
 						<?php echo wp_get_attachment_image( get_post_thumbnail_id( $product->post_id() ), Image_Sizes::BC_MEDIUM ) ?>
@@ -90,35 +110,51 @@ $has_zoom = $zoom ? 'bc-product-image-zoom' : '';
 				<div class="swiper-wrapper bc-product-gallery__thumbs">
 					<?php
 					$index = 0;
-					foreach ( $image_ids as $image_id ) {
-						if ( ! empty( $cdn_images ) && array_key_exists( $image_id, $cdn_images ) ) {
-							$image_src = $cdn_images[ $image_id ][ Image_Importer::URL_THUMB ];
-							$image_alt = '';
-						} else {
-							$image_src = esc_url( wp_get_attachment_image_url( $image_id, $thumbnail_size ) );
-							$image_alt = esc_attr( trim( strip_tags( get_post_meta( $image_id, '_wp_attachment_image_alt', true ) ) ) );
-						}
-						?>
-						<!-- class="swiper-slide" and data-js="bc-gallery-thumb-trigger" are required -->
-						<button class="swiper-slide bc-product-gallery__thumb-slide"
-							data-js="bc-gallery-thumb-trigger"
-							data-index="<?php echo $index++; ?>"
-							aria-label="<?php _e( 'mark as featured image', 'stellar' ) ?>"
-						>
-							<img src="<?php echo $image_src; ?>" alt="<?php echo $image_alt; ?>"
+					if ( $headless && ! empty( $cdn_images ) ) {
+						foreach ( $cdn_images as $image) {
+							$image_full = $zoom ? sprintf( 'data-zoom="%s"', $image['url'] ) : '';
+							?>
+							<!-- class="swiper-slide" and data-js="bc-gallery-thumb-trigger" are required -->
+							<button class="swiper-slide bc-product-gallery__thumb-slide"
+								data-js="bc-gallery-thumb-trigger"
+								data-index="<?php echo $index++; ?>"
+								aria-label="<?php _e( 'mark as featured image', 'stellar' ) ?>"
 							>
-						</button>
-					<?php }
-					foreach ( $youtube_videos as $video ) { ?>
-						<!-- class="swiper-slide bc-product-gallery__thumb-slide--video", data-player-id="<?php esc_attr( $video['id'] ); ?>", and data-js="bc-gallery-thumb-trigger" are required -->
-						<button class="swiper-slide bc-product-gallery__thumb-slide bc-product-gallery__thumb-slide--video"
-							data-js="bc-gallery-thumb-trigger"
-							data-index="<?php echo $index++; ?>"
-							data-player-id="<?php echo esc_attr( $video['id'] ); ?>"
-							aria-label="<?php echo esc_attr( sprintf( __( 'Play %s', 'bigcommerce' ), $video['title'] ) ); ?>"
-						>
-							<i class="bc-video-play-icon"></i>
-						</button>
+								<img src="<?php echo $image['url']; ?>" alt="<?php echo $image['alt']; ?>"
+								>
+							</button>
+						<?php }
+					} else {
+						foreach ( $image_ids as $image_id ) {
+							if ( ! empty( $cdn_images ) && array_key_exists( $image_id, $cdn_images ) ) {
+								$image_src = $cdn_images[ $image_id ][ Image_Importer::URL_THUMB ];
+								$image_alt = '';
+							} else {
+								$image_src = esc_url( wp_get_attachment_image_url( $image_id, $thumbnail_size ) );
+								$image_alt = esc_attr( trim( strip_tags( get_post_meta( $image_id, '_wp_attachment_image_alt', true ) ) ) );
+							}
+							?>
+							<!-- class="swiper-slide" and data-js="bc-gallery-thumb-trigger" are required -->
+							<button class="swiper-slide bc-product-gallery__thumb-slide"
+								data-js="bc-gallery-thumb-trigger"
+								data-index="<?php echo $index++; ?>"
+								aria-label="<?php _e( 'mark as featured image', 'stellar' ) ?>"
+							>
+								<img src="<?php echo $image_src; ?>" alt="<?php echo $image_alt; ?>"
+								>
+							</button>
+						<?php }
+						foreach ( $youtube_videos as $video ) { ?>
+							<!-- class="swiper-slide bc-product-gallery__thumb-slide--video", data-player-id="<?php esc_attr( $video['id'] ); ?>", and data-js="bc-gallery-thumb-trigger" are required -->
+							<button class="swiper-slide bc-product-gallery__thumb-slide bc-product-gallery__thumb-slide--video"
+								data-js="bc-gallery-thumb-trigger"
+								data-index="<?php echo $index++; ?>"
+								data-player-id="<?php echo esc_attr( $video['id'] ); ?>"
+								aria-label="<?php echo esc_attr( sprintf( __( 'Play %s', 'bigcommerce' ), $video['title'] ) ); ?>"
+							>
+								<i class="bc-video-play-icon"></i>
+							</button>
+						<?php } ?>
 					<?php } ?>
 				</div>
 			</div>

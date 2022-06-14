@@ -20,27 +20,27 @@ $error_class = 'bc-form__control--error'; // REQUIRED
 		<input type="hidden" name="bc-profile[user_id]" value="<?php echo esc_attr( (int) $user_id ); ?>"/>
 		<label class="bc-form__control bc-form-2col__control bc-form-2col__control--left <?php if ( in_array( 'first_name', $errors ) ) { echo $error_class; } ?>" for="bc-account-profile-firstname">
 			<span class="bc-form__label bc-account-profile__form-label bc-form-control-required"><?php echo esc_html( __( 'First Name', 'bigcommerce' ) ); ?></span>
-			<input type="text" name="bc-profile[first_name]" id="bc-account-profile-firstname" value="<?php echo esc_attr( $first_name ); ?>" data-form-field="bc-form-field-first_name">
+			<input type="text" name="bc-profile[first_name]" id="bc-account-profile-firstname" value="<?php echo esc_attr( $first_name ?? '' ); ?>" data-form-field="bc-form-field-first_name">
 		</label>
 
 		<label class="bc-form__control bc-form-2col__control bc-form-2col__control--right <?php if ( in_array( 'last_name', $errors ) ) { echo $error_class; } ?>" for="bc-account-profile-lastname">
 			<span class="bc-form__label bc-account-profile__form-label bc-form-control-required"><?php echo esc_html( __( 'Last Name', 'bigcommerce' ) ); ?></span>
-			<input type="text" name="bc-profile[last_name]" id="bc-account-profile-lastname" value="<?php echo esc_attr( $last_name ); ?>" data-form-field="bc-form-field-last_name">
+			<input type="text" name="bc-profile[last_name]" id="bc-account-profile-lastname" value="<?php echo esc_attr( $last_name ?? '' ); ?>" data-form-field="bc-form-field-last_name">
 		</label>
 
 		<label class="bc-form__control bc-form-2col__control bc-form-2col__control--left <?php if ( in_array( 'company', $errors ) ) { echo $error_class; } ?>" for="bc-account-profile-company">
 			<span class="bc-form__label bc-account-profile__form-label"><?php echo esc_html( __( 'Company Name', 'bigcommerce' ) ); ?></span>
-			<input type="text" name="bc-profile[company]" id="bc-account-profile-company" value="<?php echo esc_attr( $company ); ?>" data-form-field="bc-form-field-company">
+			<input type="text" name="bc-profile[company]" id="bc-account-profile-company" value="<?php echo esc_attr( $company ?? '' ); ?>" data-form-field="bc-form-field-company">
 		</label>
 
 		<label class="bc-form__control bc-form-2col__control bc-form-2col__control--right <?php if ( in_array( 'phone', $errors ) ) { echo $error_class; } ?>" for="bc-account-profile-phone">
 			<span class="bc-form__label bc-account-profile__form-label"><?php echo esc_html( __( 'Phone Number', 'bigcommerce' ) ); ?></span>
-			<input type="tel" name="bc-profile[phone]" id="bc-account-profile-phone" value="<?php echo esc_attr( $phone ); ?>" data-form-field="bc-form-field-phone">
+			<input type="tel" name="bc-profile[phone]" id="bc-account-profile-phone" value="<?php echo esc_attr( $phone ?? '' ); ?>" data-form-field="bc-form-field-phone">
 		</label>
 
 		<label class="bc-form__control bc-form-2col__control bc-form-2col__control--left <?php if ( in_array( 'email', $errors ) ) { echo $error_class; } ?>" for="bc-account-profile-email">
 			<span class="bc-form__label bc-account-profile__form-label bc-form-control-required"><?php echo esc_html( __( 'Email Address', 'bigcommerce' ) ); ?></span>
-			<input type="email" name="bc-profile[email]" id="bc-account-profile-email" value="<?php echo esc_attr( $email ); ?>" data-form-field="bc-form-field-email">
+			<input type="email" name="bc-profile[email]" id="bc-account-profile-email" value="<?php echo esc_attr( $email ?? '' ); ?>" data-form-field="bc-form-field-email">
 		</label>
 
 		<label class="bc-form__control bc-form-2col__control bc-form-2col__control--right <?php if ( in_array( 'current_password', $errors ) ) { echo $error_class; } ?>" for="bc-account-profile-password">
