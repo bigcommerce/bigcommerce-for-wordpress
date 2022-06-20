@@ -14,6 +14,7 @@ return array(
     'BigCommerce\\Accounts\\Login' => $baseDir . '/src/BigCommerce/Accounts/Login.php',
     'BigCommerce\\Accounts\\Nav_Menu' => $baseDir . '/src/BigCommerce/Accounts/Nav_Menu.php',
     'BigCommerce\\Accounts\\Password_Reset' => $baseDir . '/src/BigCommerce/Accounts/Password_Reset.php',
+    'BigCommerce\\Accounts\\Register' => $baseDir . '/src/BigCommerce/Accounts/Register.php',
     'BigCommerce\\Accounts\\Roles\\Customer' => $baseDir . '/src/BigCommerce/Accounts/Roles/Customer.php',
     'BigCommerce\\Accounts\\Roles\\Role' => $baseDir . '/src/BigCommerce/Accounts/Roles/Role.php',
     'BigCommerce\\Accounts\\Sub_Nav' => $baseDir . '/src/BigCommerce/Accounts/Sub_Nav.php',

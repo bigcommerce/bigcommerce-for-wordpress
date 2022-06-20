@@ -193,15 +193,14 @@ class Query {
 		if ( ! is_admin() && ! is_single() &&  $query->get( 'bc-sort' ) && $this->is_product_query( $query ) && ( $product_behaviour === 'hide_product_and_accessible' || $product_behaviour === 'hide_product' ) ) {
 			$meta_query = $query->get( 'meta_query' ) ?: [];
 			$tax_query  = $query->get( 'tax_query' ) ?: [];
-			error_log('Inside');
-			error_log(print_r($query, true));
+
 			$meta_query['bigcommerce_inventory_level_settings'] = [
 				'key'     => Product::INVENTORY_META_KEY,
 				'value'   => 0,
 				'compare' => '>',
 			];
 
-			$tax_query['bigcommerce_out_stock_flage'] = [
+			$tax_query['bigcommerce_out_stock_flag'] = [
 				'taxonomy' => Flag::NAME,
 				'field'    => 'name',
 				'terms'    => Flag::OUT_OF_STOCK,

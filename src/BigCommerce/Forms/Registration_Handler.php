@@ -5,8 +5,10 @@ namespace BigCommerce\Forms;
 
 
 use BigCommerce\Accounts\Customer;
+use BigCommerce\Accounts\Login;
 use BigCommerce\Accounts\Roles\Customer as Customer_Role;
 use BigCommerce\Accounts\User_Profile_Settings;
+use BigCommerce\Container\Accounts;
 use BigCommerce\Pages\Account_Page;
 use BigCommerce\Compatibility\Spam_Checker;
 use BigCommerce\Settings\Sections\Account_Settings;
@@ -20,8 +22,14 @@ class Registration_Handler implements Form_Handler {
 	 */
 	private $spam_checker;
 
-	public function __construct( Spam_Checker $spam_checker ) {
+	/**
+	 * @var \BigCommerce\Accounts\Login
+	 */
+	private $login;
+
+	public function __construct( Spam_Checker $spam_checker, Login $login ) {
 		$this->spam_checker = $spam_checker;
+		$this->login        = $login;
 	}
 
 	public function handle_request( $submission ) {
@@ -107,8 +115,9 @@ class Registration_Handler implements Form_Handler {
 		// all future password validation will be against the API for this user
 		update_user_meta( $user_id, User_Profile_Settings::SYNC_PASSWORD, true );
 
-		wp_set_current_user( $user_id );
-
+		/** Create customer profile */
+		// TODO: Add connection via V3 and channels
+		$this->login->connect_customer_id( $submission[ 'bc-register' ][ 'email' ], $user );
 		$customer = new Customer( $user_id );
 		$customer->add_address( $address );
 

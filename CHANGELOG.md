@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.30.0]
+
+### Added
+- Allow creating customers from WordPress admin. To add new customer go to wp-admin panel Users -> Add New and create new user with Customer role
+
+### Changed
+- Allow using embedded checkout when cart page is disabled. If embedded checkout is enabled customers will proceed to embedded checkout page
+- Show inventory level according to selected variant instead of show inventory for whole product. Inventory show option can be enabled via Customizer -> Single product -> Inventory Level setting
+
+### Fixed
+- Create customer account on Bigcommerce side during registration process and store customer address
+
 ## [4.29.0]
 
 ### Added
@@ -1783,6 +1795,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.30.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.29.0...4.30.0
 [4.29.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.28.0...4.29.0
 [4.28.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.27.1...4.28.0
 [4.27.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.27.0...4.27.1
