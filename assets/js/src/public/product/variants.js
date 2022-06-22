@@ -445,6 +445,24 @@ const setProductURLParameter = () => {
 };
 
 /**
+ * @function setProductVariantInventory
+ * @description Update inventory level html for selected variant
+ */
+const setProductVariantInventory = () => {
+	if (!state.variantID || !state.sku || !el.singleWrapper || state.singleVariant) {
+		return;
+	}
+
+	const node = tools.getNodes('.bc-product__inventory-number', true, document, true)[0];
+
+	if (!node) {
+		return;
+	}
+
+	node.textContent = state.maxInventory;
+};
+
+/**
  * @function validateTextArea
  * @description Listen for key presses and validate that the text meets the textarea's restrictions.
  * @param e
@@ -526,6 +544,7 @@ const handleSelections = (e, node = '') => {
 	buildSelectionArray(instances.selections[productID], optionsContainer);
 	parseVariants(instances.product[productID], instances.selections[productID]);
 	setProductURLParameter();
+	setProductVariantInventory();
 	setVariantIDHiddenField(formWrapper);
 	setSelectedVariantPrice(metaWrapper);
 	setVariantSKU(metaWrapper);

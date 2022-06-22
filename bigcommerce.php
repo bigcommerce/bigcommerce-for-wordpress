@@ -3,7 +3,7 @@
 Plugin Name:  BigCommerce for WordPress
 Description:  Scale your ecommerce business with WordPress on the front-end and BigCommerce on the back end. Free up server resources from things like catalog management, processing payments, and managing fulfillment logistics.
 Author:       BigCommerce
-Version:      4.29.0
+Version:      4.30.0
 Author URI:   https://www.bigcommerce.com/wordpress
 Requires PHP: 7.4.0
 Text Domain:  bigcommerce

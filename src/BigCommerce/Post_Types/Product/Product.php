@@ -786,6 +786,36 @@ class Product {
 		return '';
 	}
 
+	/**
+	 * Get selected variant id
+	 * @return int
+	 */
+	public function get_selected_variant_id() {
+		$variant_id = (int) filter_input( INPUT_GET, 'variant_id', FILTER_SANITIZE_NUMBER_INT );
+		$sku        = filter_input( INPUT_GET, 'sku', FILTER_SANITIZE_STRING );
+		$data       = $this->get_source_data();
+
+		if ( empty( $data ) || empty( $data->variants ) ) {
+			return 0;
+		}
+
+		$variants = $data->variants;
+
+		if ( ! empty( $sku ) ) {
+			$key = array_search( $sku, array_column( $variants, 'sku' ) );
+
+			if ( $key !== false ) {
+				return $variants[ $key ]->id;
+			}
+		}
+
+		if ( ! empty( $variant_id ) ) {
+			return $variant_id;
+		}
+
+		return 0;
+	}
+
 	public function get_inventory_level( $variant_id = 0 ) {
 		$data = $this->get_source_data();
 

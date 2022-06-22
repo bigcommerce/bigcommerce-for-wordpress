@@ -4,6 +4,8 @@
 namespace BigCommerce\Cart;
 
 use BigCommerce\Api\v3\ApiException;
+use BigCommerce\Pages\Checkout_Page;
+use BigCommerce\Settings\Sections\Cart as Cart_Settings;
 
 /**
  * Class Buy_Now
@@ -24,6 +26,11 @@ class Buy_Now extends Add_To_Cart {
 	 * @return void
 	 */
 	protected function handle_response( $response, Cart $cart, $post_id, $product_id, $variant_id ) {
+		if ( get_option( Cart_Settings::OPTION_EMBEDDED_CHECKOUT, true ) ) {
+			wp_safe_redirect( esc_url( home_url( '/bigcommerce/checkout/' .  $response->getId() ) ), 303 );
+			exit();
+		}
+
 		$checkout_url = $cart->get_checkout_url( $response->getId() );
 		wp_redirect( $checkout_url, 303 );
 		exit();

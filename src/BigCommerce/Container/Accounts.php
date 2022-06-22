@@ -8,6 +8,7 @@ use BigCommerce\Accounts\Countries;
 use BigCommerce\Accounts\Customer_Group_Proxy;
 use BigCommerce\Accounts\Nav_Menu;
 use BigCommerce\Accounts\Password_Reset;
+use BigCommerce\Accounts\Register;
 use BigCommerce\Accounts\Wishlists\Actions as Wishlist_Actions;
 use BigCommerce\Accounts\Wishlists\Add_Item_View;
 use BigCommerce\Accounts\Wishlists\Wishlist_Request_Parser;
@@ -26,6 +27,7 @@ use Pimple\Container;
  */
 class Accounts extends Provider {
 	const LOGIN            = 'accounts.login';
+	const REGISTER         = 'accounts.register';
 	const COUNTRIES        = 'accounts.countries';
 	const COUNTRIES_PATH   = 'accounts.countries.path';
 	const DELETE_ADDRESS   = 'accounts.delete_address';
@@ -64,6 +66,10 @@ class Accounts extends Provider {
 	private function login( Container $container ) {
 		$container[ self::LOGIN ] = function ( Container $container ) {
 			return new Login( $container[ Api::FACTORY ] );
+		};
+
+		$container[ self::REGISTER ] = function ( Container $container ) {
+			return new Register( $container[ Api::FACTORY ], new Connections() );
 		};
 
 		add_action( 'wp_login', $this->create_callback( 'connect_customer_id', function ( $username, $user ) use ( $container ) {
@@ -114,6 +120,10 @@ class Accounts extends Provider {
 
 			return $match;
 		} ), 10, 4 );
+
+		add_action( 'user_register', $this->create_callback( 'create_customer_from_admin', function ( $user_id, $userdata ) use ( $container ) {
+			$container[ self::REGISTER ]->maybe_create_new_customer( $user_id, $userdata );
+		} ), 10, 2 );
 	}
 
     /**

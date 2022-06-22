@@ -14,4 +14,4 @@ use BigCommerce\Post_Types\Product\Product;
 
 ?>
 
-<span class="bc-product__inventory bc-product__<?php echo sanitize_html_class( $status ); ?>">(<?php echo esc_html( $label ); ?>)</span>
+<span class="bc-product__inventory bc-product__<?php echo sanitize_html_class( $status ); ?>">(<?php echo $label ?>)</span>
