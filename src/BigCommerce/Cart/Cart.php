@@ -43,7 +43,7 @@ class Cart {
 	public function get_cart_id() {
 		$cart_id = '';
 		$cookie  = filter_input( INPUT_COOKIE, self::CART_COOKIE, FILTER_SANITIZE_STRING );
-		if ( $cookie ) {
+		if ( $cookie && get_option( Settings\Sections\Cart::OPTION_ENABLE_CART, true ) ) {
 			$cart_id = $cookie;
 		}
 
@@ -107,17 +107,12 @@ class Cart {
 			] );
 		}
 
-		$line_request_data = [
-			'quantity'          => $quantity,
-			'product_id'        => $product_id,
-		];
-
-		if ( ! empty( $option_selections ) ) {
-			$line_request_data['option_selections'] = $option_selections;
-		}
-
 		$request_data->setLineItems( [
-			new LineItemRequestData( $line_request_data ),
+			new LineItemRequestData( [
+				'quantity'          => $quantity,
+				'product_id'        => $product_id,
+				'option_selections' => $option_selections,
+			] ),
 		] );
 		$request_data->setGiftCertificates( [] );
 

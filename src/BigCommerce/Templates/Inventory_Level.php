@@ -57,9 +57,9 @@ class Inventory_Level extends Controller {
 			return __( 'Out of Stock', 'bigcommerce' );
 		}
 
-		$inventory = $product->get_inventory_level( $product->get_selected_variant_id() );
+		$inventory = $product->get_inventory_level();
 
-		return sprintf( __( '<span class="bc-product__inventory-number">%d</span> in Stock', 'bigcommerce' ), $inventory );
+		return sprintf( _n( '%d in Stock', '%d in Stock', $inventory, 'bigcommerce' ), $inventory );
 	}
 
 	private function should_show_inventory( Product $product ) {
