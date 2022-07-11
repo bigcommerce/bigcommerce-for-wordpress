@@ -71,6 +71,7 @@ class Body_Classes {
 			'Veganos'                                   => 'veganos',
 			'Shoptimizer for BigCommerce for WordPress' => 'shoptimizer',
 			'Flatsome'                                  => 'flatsome',
+			'stellar'									=> 'stellar',
 		];
 
 		if ( array_key_exists( $theme_name, $supported_themes ) ) {

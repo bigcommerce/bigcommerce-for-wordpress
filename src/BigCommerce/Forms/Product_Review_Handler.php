@@ -170,7 +170,7 @@ class Product_Review_Handler implements Form_Handler {
 	}
 
 	/**
-	 * If comments are disabled for a product, disable the review form
+	 * Handle reviews form visibility
 	 *
 	 * @param bool $enabled
 	 * @param int  $post_id
@@ -178,11 +178,21 @@ class Product_Review_Handler implements Form_Handler {
 	 * @return bool
 	 * @filter bigcommerce/product/reviews/show_form
 	 */
-	public function disable_reviews_if_comments_disabled( $enabled, $post_id ) {
-		if ( ! $enabled ) {
-			return $enabled; // don't enable it
+	public function toggle_reviews_form_availability( bool $enabled, int $post_id ): bool {
+		$is_comments_allowed_globally = get_option( 'default_comment_status' ) === 'open';
+		$user_should_be_logged_in     = ( int ) get_option( 'comment_registration' ) === 1;
+
+		// If comments are allowed and users can post them without registration
+		if ( $is_comments_allowed_globally && ! $user_should_be_logged_in ) {
+			return comments_open( $post_id );
 		}
 
-		return comments_open( $post_id );
+		// If commenting is enabled for registered users only
+		if ( $is_comments_allowed_globally && $user_should_be_logged_in ) {
+			return is_user_logged_in();
+		}
+
+		// Return default value
+		return $enabled;
 	}
 }

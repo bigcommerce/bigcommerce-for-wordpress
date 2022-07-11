@@ -184,7 +184,7 @@ class Rest extends Provider {
 		};
 
 		$container[ self::SHIPPING ] = function ( Container $container ) {
-			return new Shipping_Controller( $container[ self::NAMESPACE_BASE ], $container[ self::VERSION ], $container[ self::SHIPPING_BASE ], $container[ Api::FACTORY ]->shipping(), $container[ Api::FACTORY ]->cart() );
+			return new Shipping_Controller( $container[ self::NAMESPACE_BASE ], $container[ self::VERSION ], $container[ self::SHIPPING_BASE ], $container[ Api::FACTORY ]->shipping(), $container[ Api::FACTORY ]->cart(), $container[ Api::FACTORY ]->checkout() );
 		};
 
 		$container[ self::COUPON_CODE_BASE ] = function ( Container $container ) {

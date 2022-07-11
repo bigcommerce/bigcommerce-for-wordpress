@@ -68,6 +68,11 @@ export const wpAPIGetShippingZones = URL => request
 export const wpAPIGetShippingMethods = (url, zoneID = '') => request
 	.get(`${url}/${zoneID}/methods/html`);
 
+export const wpAPIShippingEndicia = (url, query) => request
+	.post(`${url}/methods/endicia`)
+	.set('Content-Type', 'application/json')
+	.query(query);
+
 export const wpAPICouponCodes = (couponCodeURL = '', queryObj = {}, couponsNonce = '') => request
 	.post(couponCodeURL)
 	.set('Content-Type', 'application/json')

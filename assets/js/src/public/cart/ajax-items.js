@@ -116,6 +116,19 @@ const updatedCartTotals = (data = {}) => {
 		const taxTotal = tools.getNodes('.bc-cart-tax__amount', false, cart, true)[0];
 		const cartTotal = tools.getNodes('.bc-cart-total__amount', false, cart, true)[0];
 
+		// update item totals
+		if (cartData.items !== undefined) {
+			// eslint-disable-next-line no-restricted-syntax
+			for (const [key, item] of Object.entries(cartData.items)) {
+				const itemNode = tools.getNodes(`.bc-cart-item[data-js="${key}"]`, false, cart, true)[0];
+				const itemTotal = tools.getNodes('.bc-cart-item-total-price', false, itemNode, true)[0];
+
+				if (itemTotal) {
+					itemTotal.innerHTML = item.total_sale_price.formatted !== undefined ? item.total_sale_price.formatted : item.total_price.formatted;
+				}
+			}
+		}
+
 		subTotal.textContent = baseAmount;
 
 		if (taxTotal) {
@@ -150,6 +163,7 @@ const cartItemQtyUpdated = (data = {}) => {
 	}
 
 	updateMenuQtyTotal(data);
+	updatedCartTotals(data);
 	handleFlatsomeTheme(data);
 };
 

@@ -13,6 +13,7 @@ class Product_Single {
 	const PRICE_DISPLAY     = 'bigcommerce_default_price_display';
 	const INVENTORY_DISPLAY = 'bigcommerce_inventory_display';
 	const VARIANTS_DISABLED = 'bigcommerce_variants_disabled';
+	const META_DESC_DISABLE = 'bigcommerce_meta_description_disabled';
 	const GALLERY_SIZE      = 'bigcommerce_gallery_image_size';
 	const ENABLE_ZOOM       = 'bigcommerce_enable_zoom';
 	const SIZE_DEFAULT      = 'default';
@@ -36,6 +37,7 @@ class Product_Single {
 		$this->pricing( $wp_customize );
 		$this->inventory( $wp_customize );
 		$this->variants( $wp_customize );
+		$this->meta_description( $wp_customize );
 	}
 
 	private function related( \WP_Customize_Manager $wp_customize ) {
@@ -158,6 +160,23 @@ class Product_Single {
 			'choices' => [
 					'yes' => __( 'Disable variants when they are not purchasable or out of stock', 'bigcommerce' ),
 					'no'  => __( 'Do nothing', 'bigcommerce' ),
+			],
+		] );
+	}
+
+	protected function meta_description( \WP_Customize_Manager $wp_customize ) {
+		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::META_DESC_DISABLE, [
+			'type'      => 'option',
+			'default'   => 'yes',
+			'transport' => 'refresh',
+		] ) );
+		$wp_customize->add_control( self::META_DESC_DISABLE, [
+			'section' => self::NAME,
+			'type'    => 'radio',
+			'label'   => __( 'Meta Description display', 'bigcommerce' ),
+			'choices' => [
+				'yes' => __( 'Show meta description set in BC admin on product page', 'bigcommerce' ),
+				'no'  => __( 'Disable meta description from BC admin', 'bigcommerce' ),
 			],
 		] );
 	}

@@ -94,7 +94,7 @@ class Forms extends Provider {
 			return $container[ self::REVIEW ]->remove_form_messages_from_post_content( $show, $post_id );
 		} ), 10, 2 );
 		add_filter( 'bigcommerce/product/reviews/show_form', $this->create_callback( 'toggle_review_form', function ( $enabled, $post_id ) use ( $container ) {
-			return $container[ self::REVIEW ]->disable_reviews_if_comments_disabled( $enabled, $post_id );
+			return $container[ self::REVIEW ]->toggle_reviews_form_availability( $enabled, $post_id );
 		} ), 10, 2 );
 	}
 

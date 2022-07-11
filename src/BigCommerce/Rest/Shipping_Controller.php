@@ -2,6 +2,10 @@
 
 namespace BigCommerce\Rest;
 
+use BigCommerce\Api\v3\Api\CheckoutApi;
+use BigCommerce\Api\v3\Model\Consignment;
+use BigCommerce\Api\v3\Model\CreateConsignmentRequest;
+use BigCommerce\Api\v3\Model\SelectedShippingOption;
 use BigCommerce\Cart\Cart_Mapper;
 use BigCommerce\Api\Shipping_Api;
 use BigCommerce\Api\v3\Api\CartApi;
@@ -14,6 +18,7 @@ class Shipping_Controller extends Rest_Controller {
 
 	const SHIPPING_METHOD_TYPE_PERITEM       = 'peritem';
 	const SHIPPING_METHOD_TYPE_FREE          = 'freeshipping';
+	const SHIPPING_METHOD_TYPE_USPS          = 'endicia';
 	const SHIPPING_METHOD_TYPE_WEIGHT_WEIGHT = 'weight';
 	const SHIPPING_METHOD_TYPE_WEIGHT_TOTAL  = 'total';
 
@@ -21,6 +26,11 @@ class Shipping_Controller extends Rest_Controller {
 	 * @var Shipping_Api
 	 */
 	private $shipping_api;
+
+	/**
+	 * @var CheckoutApi
+	 */
+	private $checkout_api;
 
 	/**
 	 * @var CartApi
@@ -36,10 +46,11 @@ class Shipping_Controller extends Rest_Controller {
 	 * @param Shipping_Api $shipping_api
 	 * @param CartApi      $cart_api
 	 */
-	public function __construct( $namespace_base, $version, $rest_base, Shipping_Api $shipping_api, CartApi $cart_api ) {
+	public function __construct( $namespace_base, $version, $rest_base, Shipping_Api $shipping_api, CartApi $cart_api, CheckoutApi $checkout_api ) {
 		parent::__construct( $namespace_base, $version, $rest_base );
 
 		$this->shipping_api = $shipping_api;
+		$this->checkout_api = $checkout_api;
 		$this->cart_api     = $cart_api;
 	}
 
@@ -78,6 +89,32 @@ class Shipping_Controller extends Rest_Controller {
 						'type'    => 'integer',
 						'default' => 0,
 					]
+				],
+			],
+		] );
+
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/methods/endicia', [
+			[
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => [ $this, 'get_endicia_methods' ],
+				'permission_callback' => [ $this, 'get_rendered_item_permissions_check' ],
+				'args'                => [
+					'country' => [
+						'type'    => 'string',
+						'default' => '',
+					],
+					'state' => [
+						'type'    => 'string',
+						'default' => '',
+					],
+					'city' => [
+						'type'    => 'string',
+						'default' => '',
+					],
+					'zip' => [
+						'type'    => 'string',
+						'default' => '',
+					],
 				],
 			],
 		] );
@@ -146,6 +183,76 @@ class Shipping_Controller extends Rest_Controller {
 
 		return $response;
     }
+
+	public function get_endicia_methods( $request ) {
+		$cart = $this->get_cart();
+		try {
+			$line_items = [];
+			foreach ( $cart['items'] as $line ) {
+				$line_items[] = [
+					'item_id'  => $line['id'],
+					'quantity' => $line['quantity'],
+				];
+			}
+			$consignment = new CreateConsignmentRequest( [
+				'shipping_address' => [
+					'country_code'           => $request->get_param( 'country' ),
+					'city'                   => $request->get_param( 'city' ),
+					'state_or_province_code' => strtoupper( $request->get_param( 'state' ) ),
+					'postal_code'            => $request->get_param( 'zip' ),
+				],
+				'line_items'       => $line_items,
+			] );
+
+
+			$result = $this->checkout_api->checkoutsConsignmentsByCheckoutIdPost(
+				$cart['cart_id'],
+				[ $consignment ],
+				[
+					'include' => 'consignments.available_shipping_options'
+				]
+			);
+
+			$consignment = $result->getData()->getConsignments()[0];
+
+			$methods = array_map( function ( SelectedShippingOption $option ) use ( $cart ) {
+				$method = [
+					'id'              => $option->getId(),
+					'name'            => $option->getDescription(),
+					'type'            => $option->getType(),
+					'rate_raw'        => $option->getCost(),
+					'rate'            => $this->format_price( $option->getCost() ),
+					'fixed_surcharge' => 0,
+				];
+
+				$cart_subtotal = $this->cart_subtotal_for_method( $method, $cart );
+
+				$method['cart_subtotal_raw'] = $cart_subtotal;
+				$method['cart_subtotal']     = $this->format_price( $cart_subtotal );
+
+				$cart_total = $this->cart_total_for_method( $cart_subtotal, $cart );
+
+				$method['cart_total_raw'] = $cart_total;
+				$method['cart_total']     = $this->format_price( $cart_total );
+
+				return $method;
+			}, $consignment->getAvailableShippingOptions() );
+
+			$controller = Shipping_Methods::factory( [
+					Shipping_Methods::METHODS => $methods,
+			] );
+
+			$output = $controller->render();
+
+			$response = rest_ensure_response( [
+					'rendered' => $output,
+			] );
+
+			return $response;
+		} catch ( \Throwable $exception ) {
+			return '';
+		}
+	}
 
     /**
 	 * @param \WP_REST_Request $request Full details about the request.

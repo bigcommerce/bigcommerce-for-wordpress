@@ -247,6 +247,7 @@ class Product_Archive {
 			'section' => self::NAME,
 			'label'   => __( 'Grid Columns', 'bigcommerce' ),
 			'type'    => 'select',
+			'description' => $this->get_field_description(),
 			'choices' => array_combine( $range, $range ),
 		] ) );
 	}
@@ -267,15 +268,27 @@ class Product_Archive {
 			},
 			'sanitize_callback' => 'absint',
 		] ) );
+
 		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, self::PER_PAGE, [
 			'section'     => self::NAME,
 			'label'       => __( 'Products per Page', 'bigcommerce' ),
 			'type'        => 'number',
+			'description' => $this->get_field_description(),
 			'input_attrs' => [
 				'min' => min( $range ),
 				'max' => max( $range ),
 			],
 		] ) );
+	}
+
+	public function get_field_description() {
+		if ( ! ( function_exists( 'et_setup_theme' ) || function_exists( 'et_framework_setup' ) ) ) {
+			return '';
+		}
+
+		$description = __( 'Divi framework is enabled. The field value may be overwritten with Divi options. Check Divi builder/theme options in order to set proper values', 'bigcommerce' );
+
+		return sprintf( '<cite class="bc-form__error-message">%s</cite>', $description );
 	}
 
 	private function quick_view( \WP_Customize_Manager $wp_customize ) {
