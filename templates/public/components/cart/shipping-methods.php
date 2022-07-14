@@ -12,6 +12,7 @@
 <ul class="bc-shipping-methods">
 	<?php foreach ( $methods as $key => $method ) : ?>
 		<li class="bc-shipping-method">
+			<?php if ( $method['type'] !== \BigCommerce\Rest\Shipping_Controller::SHIPPING_METHOD_TYPE_USPS ) : ?>
 			<input
 				id="<?php echo esc_attr( "method-{$method['id']}" ); ?>"
 				type="radio"
@@ -43,6 +44,55 @@
 					);
 				?>
 			</label>
+			<?php else : ?>
+				<table>
+					<tr>
+						<td><?php echo __( 'Country', 'bigcommerce' ) ?></td>
+						<td>
+							<select data-js="bc-calc-country" class="bc-calc-country">
+							<?php
+							foreach ($countries as $country) {
+								$selected = $country->country_iso2 === 'US' ? 'selected="selected"' : '';
+								printf( '<option value="%s" %s>%s</option>', $country->country_iso2, $selected, $country->country );
+							}
+							?>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<?php echo __( 'State/province code', 'bigcommerce' ) ?>
+						</td>
+						<td>
+							<input type="text" value="" data-js="bc-calc-state" class="bc-calc-state" />
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<?php echo __( 'Suburb/city', 'bigcommerce' ) ?>
+						</td>
+						<td>
+							<input type="text" value="" data-js="bc-calc-city" class="bc-calc-city" />
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<?php echo __( 'Zip/postcode', 'bigcommerce' ) ?>
+						</td>
+						<td>
+							<input type="text" value="" data-js="bc-calc-zip" class="bc-calc-zip" />
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>
+							<button type="button" data-js="bc-calc-run" class="bc-calc-run">
+								<?php echo __( 'Estimate Shipping', 'bigcommerce' ) ?>
+							</button>
+						</td>
+					</tr>
+				</table>
+			<?php endif; ?>
 		</li>
 	<?php endforeach; ?>
 </ul>

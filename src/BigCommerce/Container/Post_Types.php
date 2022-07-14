@@ -4,6 +4,7 @@
 namespace BigCommerce\Container;
 
 use BigCommerce\Customizer\Sections\Product_Category as Customizer;
+use BigCommerce\Customizer\Sections\Product_Single;
 use BigCommerce\Post_Types\Product;
 use BigCommerce\Post_Types\Queue_Task;
 use BigCommerce\Post_Types\Sync_Log;
@@ -367,6 +368,10 @@ class Post_Types extends Provider {
 			return $container[ self::PRODUCT_SEO ]->filter_document_title( $title_parts );
 		} ), 10, 1 );
 		add_filter( 'wp_head', $this->create_callback( 'product_page_meta_description', function () use ( $container ) {
+			if ( get_option( Product_Single::META_DESC_DISABLE, 'yes' ) !== 'yes' ) {
+				return null;
+			}
+
 			return $container[ self::PRODUCT_SEO ]->print_meta_description();
 		} ), 0, 0 );
 	}

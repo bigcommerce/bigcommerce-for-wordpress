@@ -105,9 +105,14 @@ class Registration_Handler implements Form_Handler {
 		};
 		add_filter( 'bigcommerce/customer/create/args', $profile_filter, 10, 1 );
 
+		$user = new \WP_User( $user_id );
+		/** Create customer profile */
+		// TODO: Add connection via V3 and channels
+		$this->login->connect_customer_id( $submission[ 'bc-register' ][ 'email' ], $user );
+
 		remove_filter( 'bigcommerce/customer/create/args', $profile_filter, 10 );
 
-		$user = new \WP_User( $user_id );
+
 
 		/** This filter is documented in src/BigCommerce/Accounts/Login.php */
 		$role = apply_filters( 'bigcommerce/user/default_role', Customer_Role::NAME );
@@ -115,9 +120,7 @@ class Registration_Handler implements Form_Handler {
 		// all future password validation will be against the API for this user
 		update_user_meta( $user_id, User_Profile_Settings::SYNC_PASSWORD, true );
 
-		/** Create customer profile */
-		// TODO: Add connection via V3 and channels
-		$this->login->connect_customer_id( $submission[ 'bc-register' ][ 'email' ], $user );
+
 		$customer = new Customer( $user_id );
 		$customer->add_address( $address );
 

@@ -1,5 +1,19 @@
 # Changelog
 
+## [4.31.0]
+
+### Added
+- Added real-time shipping calculation with USPS. In order to enable it please go to Bigcommerce admin -> Settings -> Shipping and connect USPS service. Then on WordPress store make a full sync. The real-time shipping calculation will be added as a new option to 'Shipping Calculator' on the Cart page
+- Added ability to hide meta description set in Bigcommerce Admin. By default that option is on. In case you want to change it please go to WordPress Admin -> Customizer -> Bigcommerce -> Product Single and switch behavior in Meta Description section
+- Added a warning notice to Customizer -> Bigcommerce -> Product Catalog. It will be displayed on the 'Grid Columns' and 'Products per page' options when Divi theme is enabled. 
+
+### Changed
+- Allow writing reviews for non-customer users. In order to do that go to Wordpress Admin -> Settings -> Discussion and uncheck 'Users must be registered and logged in to comment' checkbox. If checkbox is checked only logged-in users(customers) can leave a review
+
+### Fixed
+- Fixed issue when cart items change did not update cart totals/subtotals/taxes
+- Customers creation on Bigcommerce Admin with empty details issue resolved.
+
 ## [4.30.0]
 
 ### Added
@@ -1795,6 +1809,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.31.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.30.0...4.31.0
 [4.30.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.29.0...4.30.0
 [4.29.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.28.0...4.29.0
 [4.28.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.27.1...4.28.0

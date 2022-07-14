@@ -10,7 +10,7 @@ import { Spinner } from 'spin.js/spin';
 import { AJAX_CART_UPDATE, HANDLE_CART_STATE, HANDLE_COUPON_CODE } from 'bcConstants/events';
 import { SHIPPING_API_ZONES, SHIPPING_API_METHODS } from 'publicConfig/wp-settings';
 import { NLS } from 'publicConfig/i18n';
-import { wpAPIGetShippingZones, wpAPIGetShippingMethods } from 'utils/ajax';
+import { wpAPIGetShippingZones, wpAPIGetShippingMethods, wpAPIShippingEndicia } from 'utils/ajax';
 import { on, trigger } from 'utils/events';
 
 const el = {
@@ -178,6 +178,56 @@ const getZones = () => {
 /**
  * @function getMethods
  * @description get the shipping methods associated with the selected shipping zone.
+ */
+const getEndicia = () => {
+	cartState.isFetching = true;
+	handleSpinnerState();
+	const country = tools.getNodes('.bc-calc-country', false, document, true)[0].value;
+	const city = tools.getNodes('.bc-calc-city', false, document, true)[0].value;
+	const province = tools.getNodes('.bc-calc-state', false, document, true)[0].value;
+	const zip = tools.getNodes('.bc-calc-zip', false, document, true)[0].value;
+	const query = {
+		country,
+		city,
+		state: province,
+		zip,
+	};
+
+	wpAPIShippingEndicia(SHIPPING_API_METHODS, query)
+		.end((err, res) => {
+			cartState.isFetching = false;
+			handleSpinnerState();
+
+			if (err) {
+				state.hasError = true;
+				handleShippingError();
+				console.error(err);
+				return;
+			}
+			const html = res.body.rendered;
+			const fieldsWrapper = tools.getNodes('.bc-shipping-calculator-fields', false, el.calculator, true)[0];
+			const methods = tools.getNodes('bc-shipping-methods', false, el.calculator)[0];
+
+			if (!fieldsWrapper) {
+				return;
+			}
+
+			// Remove any error messages on success.
+			state.hasError = false;
+			handleShippingError();
+
+			if (methods) {
+				methods.parentNode.removeChild(methods);
+			}
+
+			fieldsWrapper.insertAdjacentHTML('beforeend', html);
+			el.currentSubtotal.innerText = state.subtotal;
+		});
+};
+
+/**
+ * @function getMethods
+ * @description get the shipping methods associated with the selected shipping zone.
  * @param e
  */
 const getMethods = (e) => {
@@ -267,6 +317,7 @@ const bindEvents = () => {
 	delegate(el.calculator, '[data-js="shipping-calculator-toggle"]', 'click', getZones);
 	delegate(el.calculator, '[data-js="bc-shipping-zones"]', 'change', getMethods);
 	delegate(el.calculator, '[data-js="shipping-calculator-update"]', 'click', updateCartPrice);
+	delegate(el.calculator, '[data-js="bc-calc-run"]', 'click', getEndicia);
 	on(document, AJAX_CART_UPDATE, resetShippingCalculator);
 	on(document, HANDLE_COUPON_CODE, resetShippingCalculator);
 };
