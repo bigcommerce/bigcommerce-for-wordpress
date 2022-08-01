@@ -130,8 +130,8 @@ class Import extends Provider {
 			$container[ self::PRODUCT_CLEANUP ]->run();
 		} ), 10, 0 );
 
-		add_action( Processors\Cleanup::CLEAN_PRODUCTS_TRANSIENT, $this->create_callback( 'clean_products_data_transient', function ( $offset ) use ( $container ) {
-			$container[ self::CLEANUP ]->clean_products_transient( $offset );
+		add_action( Processors\Cleanup::CLEAN_PRODUCTS_TRANSIENT, $this->create_callback( 'clean_products_data_transient', function ( $offset = 0, $partially = false ) use ( $container ) {
+			$container[ self::CLEANUP ]->refresh_products_transient( $offset, $partially );
 		} ), 10, 1 );
 	}
 

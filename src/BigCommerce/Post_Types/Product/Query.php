@@ -188,9 +188,9 @@ class Query {
 		$sku_in      = $this->get_query_var_as_array( $query, 'bigcommerce_sku__in' );
 		$sku_not_in  = $this->get_query_var_as_array( $query, 'bigcommerce_sku__not_in' );
 
-		$product_behaviour = get_option( Store_Settings::PRODUCT_OUT_OF_STOCK, 'do_nothing' );
-
-		if ( ! is_admin() && ! is_single() &&  $query->get( 'bc-sort' ) && $this->is_product_query( $query ) && ( $product_behaviour === 'hide_product_and_accessible' || $product_behaviour === 'hide_product' ) ) {
+		$product_behaviour            = get_option( Store_Settings::PRODUCT_OUT_OF_STOCK, 'do_nothing' );
+		$should_respect_main_settings = get_option( Product_Archive::GENERAL_INVENTORY, 'no' ) !== 'no';
+		if ( ! is_admin() && ! is_single() &&  $query->get( 'bc-sort' ) && $this->is_product_query( $query ) && $should_respect_main_settings && ( $product_behaviour === 'hide_product_and_accessible' || $product_behaviour === 'hide_product' ) ) {
 			$meta_query = $query->get( 'meta_query' ) ?: [];
 			$tax_query  = $query->get( 'tax_query' ) ?: [];
 

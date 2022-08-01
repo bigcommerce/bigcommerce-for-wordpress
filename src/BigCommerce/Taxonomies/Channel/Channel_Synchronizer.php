@@ -57,8 +57,6 @@ class Channel_Synchronizer {
 		}
 
 		$request = new UpdateChannelRequest( [
-			'type'     => 'storefront',
-			'platform' => 'wordpress',
 			'name'     => $term->name,
 		] );
 		try {

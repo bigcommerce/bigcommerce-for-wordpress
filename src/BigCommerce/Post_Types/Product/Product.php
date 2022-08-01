@@ -12,6 +12,7 @@ use BigCommerce\Currency\With_Currency;
 use BigCommerce\Customizer\Sections\Buttons;
 use BigCommerce\Customizer\Sections\Cart as Cart_Settings;
 use BigCommerce\Customizer\Sections\Cart as CustomizerCart;
+use BigCommerce\Customizer\Sections\Product_Archive;
 use BigCommerce\Customizer\Sections\Product_Single;
 use BigCommerce\Exceptions\Channel_Not_Found_Exception;
 use BigCommerce\Exceptions\Product_Not_Found_Exception;
@@ -71,7 +72,8 @@ class Product {
 	}
 
 	public function get_redirect_product_link() {
-		if ( ! $this->out_of_stock() ) {
+		$should_respect_main_settings = get_option( Product_Archive::GENERAL_INVENTORY, 'no' ) !== 'no';
+		if ( ! $should_respect_main_settings || ! $this->out_of_stock() ) {
 			return '';
 		}
 
@@ -459,11 +461,11 @@ class Product {
 					$data = $this->json_encode_maybe_from_api( $product );
 					$data = json_decode( $data );
 				} catch ( ApiException $e ) {
-					do_action( 'bigcommerce/import/error', $e->getMessage(), [
+					do_action( 'bigcommerce/import/log', $e->getMessage(), [
 							'response' => $e->getResponseBody(),
 							'headers'  => $e->getResponseHeaders(),
 					] );
-					do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [], 'webhooks' );
+					do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [] );
 
 					return new \stdClass();
 				}

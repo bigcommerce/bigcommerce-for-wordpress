@@ -123,12 +123,43 @@ class GraphQL_Processor extends BaseGQL {
 		return $result;
 	}
 
-	public function get_customer_wishlists( $customer_id = 0 ) {
+	public function get_customer_wishlist( $customer_id, $entityIds, $public = false ) {
+		if ( empty( $customer_id ) || empty( $entityIds ) ) {
+			return [];
+		}
+
+		if ($public) {
+			$query = $this->query[ GraphQL::CUSTOMER_QUERY ]->get_public_wishlist_query();
+		} else {
+			$query = $this->query[ GraphQL::CUSTOMER_QUERY ]->get_wishlist_query();
+		}
+
+		$body  = [
+			'query'     => $query,
+			'variables' => [
+				'entityIds' => $entityIds
+			]
+		];
+
+		$headers                     = $this->get_headers( true );
+		$headers['X-Bc-Customer-Id'] = $customer_id;
+		unset( $headers['Origin'] );
+
+		$result = $this->make_request( $body, $headers );
+
+		if ( ! isset( $result->data ) ) {
+			return [];
+		}
+
+		return $result;
+	}
+
+	public function get_customer_wishlists( $customer_id ) {
 		if ( empty( $customer_id ) ) {
 			return [];
 		}
 
-		$query = $this->query[ GraphQL::CUSTOMER_QUERY ]->get_wishlist_query();
+		$query = $this->query[ GraphQL::CUSTOMER_QUERY ]->get_wishlists_query();
 		$body  = [
 			'query'     => $query,
 			'variables' => [],

@@ -21,10 +21,29 @@ class Headless_Product_Processor {
 	const HEADLESS_PRODUCTS = 'bigcommerce_gql_products_process';
 	const HEADLESS_CHANNEL  = 'bigcommerce_gql_active_channel';
 
+	/**
+	 * @var \BigCommerce\Import\Runner\Status
+	 */
 	private $status;
+
+	/**
+	 * @var \BigCommerce\GraphQL\GraphQL_Processor
+	 */
 	private $requester;
+
+	/**
+	 * @var \WP_Term
+	 */
 	private $channel_term;
+
+	/**
+	 * @var int|mixed
+	 */
 	private $batch;
+
+	/**
+	 * @var \BigCommerce\Api\v3\Api\CatalogApi
+	 */
 	private $api;
 
 	public function __construct( CatalogApi $api, Status $status, GraphQL_Processor $requester, $channel_term, $batch = 50 ) {
@@ -105,14 +124,14 @@ class Headless_Product_Processor {
 	protected function get_bc_slugs( $product_ids ): array {
 		try {
 			$response = $this->api->getProducts( [
-					'id:in'          => [ $product_ids ],
-					'limit'          => 250,
-					'include_fields' => 'custom_url',
+				'id:in'          => [ $product_ids ],
+				'limit'          => 250,
+				'include_fields' => 'custom_url',
 			] );
 		}  catch ( ApiException $e ) {
 			do_action( 'bigcommerce/import/error', $e->getMessage(), [
-					'response' => $e->getResponseBody(),
-					'headers'  => $e->getResponseHeaders(),
+				'response' => $e->getResponseBody(),
+				'headers'  => $e->getResponseHeaders(),
 			] );
 			do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [] );
 
@@ -251,7 +270,7 @@ class Headless_Product_Processor {
 	protected function is_product_exist( $product_id ) {
 		global $wpdb;
 		$query = $wpdb->prepare(
-			"SELECT tpm.post_id FROM tribe_postmeta tpm INNER JOIN `tribe_term_relationships` ttr ON ttr.object_id = tpm.post_id INNER JOIN tribe_term_taxonomy ttt ON ttt.`term_taxonomy_id` = ttr.term_taxonomy_id WHERE ttt.term_id = %d AND tpm.meta_key = %s AND tpm.meta_value = %d",
+			"SELECT tpm.post_id FROM `$wpdb->postmeta` tpm INNER JOIN `$wpdb->term_relationships` ttr ON ttr.object_id = tpm.post_id INNER JOIN `$wpdb->term_taxonomy` ttt ON ttt.`term_taxonomy_id` = ttr.term_taxonomy_id WHERE ttt.term_id = %d AND tpm.meta_key = %s AND tpm.meta_value = %d",
 			$this->channel_term->term_id,
 				Product::BIGCOMMERCE_ID,
 				$product_id
