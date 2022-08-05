@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.32.0]
+
+### Changed
+- Improved products processing by adding pre-caching logic on the product catalog after each "Fast-Headless-Import and store minimal product data option" import. This should reduce the number of queries and the risk of the "too many requests" issue occurring
+- Allow import abort if it is stuck in the 'Completed' status
+
+### Fixed
+- Fixed issue with product duplication during "Fast-Headless-Import and store minimal product data option" import. 
+- Fixed "Respect General Inventory Settings" (Customizer -> Bigcommerce -> Product Catalog) toggle behavior: radio button switch allows disabling or enabling support for the general Bigcommerce out of stock inventory settings
+- Allow renaming channel from Bigcommerce -> Settings -> Channel without errors 
+
 ## [4.31.0]
 
 ### Added
@@ -1809,6 +1820,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.32.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.31.0...4.32.0
 [4.31.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.30.0...4.31.0
 [4.30.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.29.0...4.30.0
 [4.29.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.28.0...4.29.0

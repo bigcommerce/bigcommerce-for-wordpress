@@ -18,7 +18,7 @@ use BigCommerce\Taxonomies\Product_Category\Product_Category;
 class ProductCleanup {
 
 	/**
-	 * Purge products that were deleted on Bigcommerce side
+	 * Purge products that were deleted on Bigcommerce side and refresh existing products cache
 	 */
 	public function run() {
 		$terms = $this->get_terms();
@@ -26,6 +26,11 @@ class ProductCleanup {
 		if ( empty( $terms ) ) {
 			return;
 		}
+
+		wp_schedule_single_event( time(), Cleanup::CLEAN_PRODUCTS_TRANSIENT, [
+			'offset'    => 0,
+			'partially' => true,
+		] );
 
 		foreach ( $terms as $term ) {
 			$existing_products = get_option( $this->get_option_name( $term->term_id ), [] );

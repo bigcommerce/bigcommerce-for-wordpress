@@ -4,6 +4,9 @@
 namespace BigCommerce\Import;
 
 use BigCommerce\Exceptions\No_Task_Found_Exception;
+use BigCommerce\Import\Processors\Term_Import;
+use BigCommerce\Import\Processors\Term_Purge;
+use BigCommerce\Import\Runner\Cron_Runner;
 use BigCommerce\Import\Runner\Status;
 use BigCommerce\Logging\Error_Log;
 
@@ -100,7 +103,32 @@ class Task_Manager {
 			] );
 			do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [] );
 
-			return false;
+			if ( ! Import_Type::is_traditional_import() ) {
+				return false;
+			}
+
+			// Handle not found task loop for traditional import
+			switch ( $state ) {
+				case Status::PURGED_CATEGORIES:
+					delete_option( Term_Purge::STATE_OPTION );
+					$this->run_next( Status::PURGING_BRANDS );
+					break;
+				case Status::UPDATED_BRANDS:
+					delete_option( Term_Import::STATE_OPTION );
+					$this->run_next( Status::RESIZING_IMAGES );
+					break;
+				case Status::COMPLETED:
+					wp_unschedule_hook( Cron_Runner::START_CRON );
+					wp_unschedule_hook( Cron_Runner::CONTINUE_CRON );
+					$status = new Status();
+					$status->set_status( Status::COMPLETED );
+					$status->rotate_logs(); // must rotate _after_ status set to complete
+
+					do_action( 'bigcommerce/log', Error_Log::INFO, __( 'Import complete', 'bigcommerce' ), [] );
+					break;
+				default:
+					return false;
+			}
 		}
 	}
 

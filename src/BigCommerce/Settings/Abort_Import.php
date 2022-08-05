@@ -36,7 +36,7 @@ class Abort_Import {
 
 		$status            = new Status();
 		$current           = $status->current_status();
-		$rejected_statuses = [ Status::NOT_STARTED, Status::FAILED, Status::COMPLETED ];
+		$rejected_statuses = [ Status::NOT_STARTED, Status::FAILED ];
 
 		/**
 		 * We won't run the cleanup if import is not performed, failed or completed
