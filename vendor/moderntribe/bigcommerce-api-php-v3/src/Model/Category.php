@@ -56,7 +56,8 @@ class Category extends CategoryBase implements ArrayAccess
         'default_product_sort' => 'string',
         'image_url' => 'string',
         'custom_url' => '\BigCommerce\Api\v3\Model\CustomUrlCategory',
-        'id' => 'int'
+        'id' => 'int',
+        'category_id' => 'int'
     ];
 
     public static function swaggerTypes()
@@ -83,7 +84,8 @@ class Category extends CategoryBase implements ArrayAccess
         'default_product_sort' => 'default_product_sort',
         'image_url' => 'image_url',
         'custom_url' => 'custom_url',
-        'id' => 'id'
+        'id' => 'id',
+        'category_id' => 'category_id'
     ];
 
     /**
@@ -105,7 +107,8 @@ class Category extends CategoryBase implements ArrayAccess
         'default_product_sort' => 'setDefaultProductSort',
         'image_url' => 'setImageUrl',
         'custom_url' => 'setCustomUrl',
-        'id' => 'setId'
+        'id' => 'setId',
+        'category_id' => 'setCategoryId',
     ];
 
     /**
@@ -127,7 +130,8 @@ class Category extends CategoryBase implements ArrayAccess
         'default_product_sort' => 'getDefaultProductSort',
         'image_url' => 'getImageUrl',
         'custom_url' => 'getCustomUrl',
-        'id' => 'getId'
+        'id' => 'getId',
+        'category_id' => 'getCategoryId'
     ];
 
     public static function attributeMap()
@@ -204,6 +208,7 @@ class Category extends CategoryBase implements ArrayAccess
         $this->container['image_url'] = array_key_exists('image_url', $data) ? $data['image_url'] : null;
         $this->container['custom_url'] = array_key_exists('custom_url', $data) ? $data['custom_url'] : null;
         $this->container['id'] = array_key_exists('id', $data) ? $data['id'] : null;
+        $this->container['category_id'] = array_key_exists('category_id', $data) ? $data['category_id'] : null;
     }
 
     /**
@@ -661,6 +666,27 @@ class Category extends CategoryBase implements ArrayAccess
     {
         return $this->container['id'];
     }
+
+	/**
+	 * Gets category id
+	 * @return int
+	 */
+	public function getCategoryId()
+	{
+		return $this->container['category_id'];
+	}
+
+	/**
+	 * Sets category id
+	 * @param int $id The unique numeric ID of the category; increments sequentially.
+	 * @return $this
+	 */
+	public function setCategoryId($id)
+	{
+		$this->container['category_id'] = $id;
+
+		return $this;
+	}
 
     /**
      * Sets id
