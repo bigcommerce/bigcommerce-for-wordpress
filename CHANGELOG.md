@@ -1,5 +1,10 @@
 # Changelog
 
+## [4.33.0]
+
+### Changed
+- Improved graphql token validation while using 'Fast - Headless' import. The update should handle `GraphQL credentials were missing. No token was sent` issue during import
+
 ## [4.32.0]
 
 ### Changed
@@ -1820,6 +1825,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.33.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.32.0...4.33.0
 [4.32.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.31.0...4.32.0
 [4.31.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.30.0...4.31.0
 [4.30.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.29.0...4.30.0

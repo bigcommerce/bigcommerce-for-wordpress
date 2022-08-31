@@ -1,6 +1,6 @@
 <?php
 /**
- * CustomField
+ * PriceListCollectionAssignmentsResponse
  *
  * @package  BigCommerce\Api\v3
  */
@@ -26,7 +26,7 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-class CustomField extends CustomFieldBase implements ArrayAccess
+class PriceListCollectionAssignmentsResponse implements ArrayAccess
 {
     const DISCRIMINATOR = null;
 
@@ -34,16 +34,15 @@ class CustomField extends CustomFieldBase implements ArrayAccess
       * The original name of the model.
       * @var string
       */
-    protected static $swaggerModelName = 'CustomField';
+    protected static $swaggerModelName = 'PriceListCollectionAssignmentsResponse';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
       * @var string[]
       */
     protected static $swaggerTypes = [
-        'name' => 'string',
-        'value' => 'string',
-        'id' => 'int'
+        'data' => '\BigCommerce\Api\v3\Model\PriceListAssignment[]',
+        'meta' => '\BigCommerce\Api\v3\Model\CollectionMeta'
     ];
 
     public static function swaggerTypes()
@@ -56,9 +55,8 @@ class CustomField extends CustomFieldBase implements ArrayAccess
      * @var string[]
      */
     protected static $attributeMap = [
-        'name' => 'name',
-        'value' => 'value',
-        'id' => 'id'
+        'data' => 'data',
+        'meta' => 'meta'
     ];
 
     /**
@@ -66,9 +64,8 @@ class CustomField extends CustomFieldBase implements ArrayAccess
      * @var string[]
      */
     protected static $setters = [
-        'name' => 'setName',
-        'value' => 'setValue',
-        'id' => 'setId'
+        'data' => 'setData',
+        'meta' => 'setMeta'
     ];
 
     /**
@@ -76,9 +73,8 @@ class CustomField extends CustomFieldBase implements ArrayAccess
      * @var string[]
      */
     protected static $getters = [
-        'name' => 'getName',
-        'value' => 'getValue',
-        'id' => 'getId'
+        'data' => 'getData',
+        'meta' => 'getMeta'
     ];
 
     public static function attributeMap()
@@ -112,9 +108,8 @@ class CustomField extends CustomFieldBase implements ArrayAccess
      */
     public function __construct(array $data = [])
     {
-        $this->container['name'] = array_key_exists('name', $data) ? $data['name'] : null;
-        $this->container['value'] = array_key_exists('value', $data) ? $data['value'] : null;
-        $this->container['id'] = array_key_exists('id', $data) ? $data['id'] : null;
+        $this->container['data'] = array_key_exists('data', $data) ? $data['data'] : null;
+        $this->container['meta'] = array_key_exists('meta', $data) ? $data['meta'] : null;
     }
 
     /**
@@ -134,21 +129,6 @@ class CustomField extends CustomFieldBase implements ArrayAccess
     public function listInvalidProperties()
     {
         $invalid_properties = [];
-        if (strlen($this->container['name']) > 250) {
-            $invalid_properties[] = "invalid value for 'name', the character length must be smaller than or equal to 250.";
-        }
-        if (strlen($this->container['name']) < 1) {
-            $invalid_properties[] = "invalid value for 'name', the character length must be bigger than or equal to 1.";
-        }
-        if (strlen($this->container['value']) > 250) {
-            $invalid_properties[] = "invalid value for 'value', the character length must be smaller than or equal to 250.";
-        }
-        if (strlen($this->container['value']) < 1) {
-            $invalid_properties[] = "invalid value for 'value', the character length must be bigger than or equal to 1.";
-        }
-        if ($this->container['id'] < 1) {
-            $invalid_properties[] = "invalid value for 'id', must be bigger than or equal to 1.";
-        }
         return $invalid_properties;
     }
 
@@ -160,100 +140,48 @@ class CustomField extends CustomFieldBase implements ArrayAccess
      */
     public function valid()
     {
-        if (strlen($this->container['name']) > 250) {
-            return false;
-        }
-        if (strlen($this->container['name']) < 1) {
-            return false;
-        }
-        if (strlen($this->container['value']) > 250) {
-            return false;
-        }
-        if (strlen($this->container['value']) < 1) {
-            return false;
-        }
-        if ($this->container['id'] < 1) {
-            return false;
-        }
         return true;
     }
 
+
     /**
-     * Gets name
-     * @return string
+     * Gets data
+     * @return \BigCommerce\Api\v3\Model\PriceList[]
      */
-    public function getName()
+    public function getData()
     {
-        return $this->container['name'];
+        return $this->container['data'];
     }
 
     /**
-     * Sets name
-     * @param string $name The name of the field, shown on the storefront, orders, etc.
+     * Sets data
+     * @param \BigCommerce\Api\v3\Model\PriceList[] $data
      * @return $this
      */
-    public function setName($name)
+    public function setData($data)
     {
-        if (strlen($name) > 250) {
-            throw new \InvalidArgumentException('invalid length for $name when calling CustomField., must be smaller than or equal to 250.');
-        }
-        if (strlen($name) < 1) {
-            throw new \InvalidArgumentException('invalid length for $name when calling CustomField., must be bigger than or equal to 1.');
-        }
-        $this->container['name'] = $name;
+        $this->container['data'] = $data;
 
         return $this;
     }
 
     /**
-     * Gets value
-     * @return string
+     * Gets meta
+     * @return \BigCommerce\Api\v3\Model\CollectionMeta
      */
-    public function getValue()
+    public function getMeta()
     {
-        return $this->container['value'];
+        return $this->container['meta'];
     }
 
     /**
-     * Sets value
-     * @param string $value The name of the field, shown on the storefront, orders, etc.
+     * Sets meta
+     * @param \BigCommerce\Api\v3\Model\CollectionMeta $meta
      * @return $this
      */
-    public function setValue($value)
+    public function setMeta($meta)
     {
-        if (strlen($value) > 280) {
-            throw new \InvalidArgumentException('invalid length for $value when calling CustomField., must be smaller than or equal to 250.');
-        }
-        if (strlen($value) < 1) {
-            throw new \InvalidArgumentException('invalid length for $value when calling CustomField., must be bigger than or equal to 1.');
-        }
-        $this->container['value'] = $value;
-
-        return $this;
-    }
-
-
-    /**
-     * Gets id
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->container['id'];
-    }
-
-    /**
-     * Sets id
-     * @param int $id The unique numeric ID of the custom field; increments sequentially.
-     * @return $this
-     */
-    public function setId($id)
-    {
-
-        if ($id < 1) {
-            throw new \InvalidArgumentException('invalid value for $id when calling CustomField., must be bigger than or equal to 1.');
-        }
-        $this->container['id'] = $id;
+        $this->container['meta'] = $meta;
 
         return $this;
     }

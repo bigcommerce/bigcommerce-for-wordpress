@@ -1,6 +1,6 @@
 <?php
 /**
- * CustomField
+ * PriceListAssignment
  *
  * @package  BigCommerce\Api\v3
  */
@@ -26,7 +26,7 @@ namespace BigCommerce\Api\v3\Model;
 
 use \ArrayAccess;
 
-class CustomField extends CustomFieldBase implements ArrayAccess
+class PriceListAssignment extends PriceListBase implements ArrayAccess
 {
     const DISCRIMINATOR = null;
 
@@ -34,16 +34,17 @@ class CustomField extends CustomFieldBase implements ArrayAccess
       * The original name of the model.
       * @var string
       */
-    protected static $swaggerModelName = 'CustomField';
+    protected static $swaggerModelName = 'PriceListAssignment';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
       * @var string[]
       */
     protected static $swaggerTypes = [
-        'name' => 'string',
-        'value' => 'string',
-        'id' => 'int'
+        'id' => 'int',
+        'price_list_id' => 'int',
+        'customer_group_id' => 'int',
+        'channel_id' => 'int'
     ];
 
     public static function swaggerTypes()
@@ -56,9 +57,10 @@ class CustomField extends CustomFieldBase implements ArrayAccess
      * @var string[]
      */
     protected static $attributeMap = [
-        'name' => 'name',
-        'value' => 'value',
-        'id' => 'id'
+        'id' => 'id',
+        'price_list_id' => 'price_list_id',
+        'customer_group_id' => 'customer_group_id',
+        'channel_id' => 'channel_id',
     ];
 
     /**
@@ -66,9 +68,10 @@ class CustomField extends CustomFieldBase implements ArrayAccess
      * @var string[]
      */
     protected static $setters = [
-        'name' => 'setName',
-        'value' => 'setValue',
-        'id' => 'setId'
+        'id' => 'setId',
+        'price_list_id' => 'setPriceListId',
+        'channel_id' => 'setChannelId',
+        'customer_group_id' => 'setCustomerGroupId',
     ];
 
     /**
@@ -76,9 +79,10 @@ class CustomField extends CustomFieldBase implements ArrayAccess
      * @var string[]
      */
     protected static $getters = [
-        'name' => 'getName',
-        'value' => 'getValue',
-        'id' => 'getId'
+        'id' => 'getId',
+        'price_list_id' => 'getPriceListId',
+        'channel_id' => 'getChannelId',
+        'customer_group_id' => 'getCustomerGroupId',
     ];
 
     public static function attributeMap()
@@ -112,9 +116,10 @@ class CustomField extends CustomFieldBase implements ArrayAccess
      */
     public function __construct(array $data = [])
     {
-        $this->container['name'] = array_key_exists('name', $data) ? $data['name'] : null;
-        $this->container['value'] = array_key_exists('value', $data) ? $data['value'] : null;
         $this->container['id'] = array_key_exists('id', $data) ? $data['id'] : null;
+        $this->container['price_list_id'] = array_key_exists('price_list_id', $data) ? $data['price_list_id'] : null;
+        $this->container['customer_group_id'] = array_key_exists('customer_group_id', $data) ? $data['customer_group_id'] : null;
+        $this->container['channel_id'] = array_key_exists('channel_id', $data) ? $data['channel_id'] : null;
     }
 
     /**
@@ -134,21 +139,6 @@ class CustomField extends CustomFieldBase implements ArrayAccess
     public function listInvalidProperties()
     {
         $invalid_properties = [];
-        if (strlen($this->container['name']) > 250) {
-            $invalid_properties[] = "invalid value for 'name', the character length must be smaller than or equal to 250.";
-        }
-        if (strlen($this->container['name']) < 1) {
-            $invalid_properties[] = "invalid value for 'name', the character length must be bigger than or equal to 1.";
-        }
-        if (strlen($this->container['value']) > 250) {
-            $invalid_properties[] = "invalid value for 'value', the character length must be smaller than or equal to 250.";
-        }
-        if (strlen($this->container['value']) < 1) {
-            $invalid_properties[] = "invalid value for 'value', the character length must be bigger than or equal to 1.";
-        }
-        if ($this->container['id'] < 1) {
-            $invalid_properties[] = "invalid value for 'id', must be bigger than or equal to 1.";
-        }
         return $invalid_properties;
     }
 
@@ -160,78 +150,8 @@ class CustomField extends CustomFieldBase implements ArrayAccess
      */
     public function valid()
     {
-        if (strlen($this->container['name']) > 250) {
-            return false;
-        }
-        if (strlen($this->container['name']) < 1) {
-            return false;
-        }
-        if (strlen($this->container['value']) > 250) {
-            return false;
-        }
-        if (strlen($this->container['value']) < 1) {
-            return false;
-        }
-        if ($this->container['id'] < 1) {
-            return false;
-        }
         return true;
     }
-
-    /**
-     * Gets name
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->container['name'];
-    }
-
-    /**
-     * Sets name
-     * @param string $name The name of the field, shown on the storefront, orders, etc.
-     * @return $this
-     */
-    public function setName($name)
-    {
-        if (strlen($name) > 250) {
-            throw new \InvalidArgumentException('invalid length for $name when calling CustomField., must be smaller than or equal to 250.');
-        }
-        if (strlen($name) < 1) {
-            throw new \InvalidArgumentException('invalid length for $name when calling CustomField., must be bigger than or equal to 1.');
-        }
-        $this->container['name'] = $name;
-
-        return $this;
-    }
-
-    /**
-     * Gets value
-     * @return string
-     */
-    public function getValue()
-    {
-        return $this->container['value'];
-    }
-
-    /**
-     * Sets value
-     * @param string $value The name of the field, shown on the storefront, orders, etc.
-     * @return $this
-     */
-    public function setValue($value)
-    {
-        if (strlen($value) > 280) {
-            throw new \InvalidArgumentException('invalid length for $value when calling CustomField., must be smaller than or equal to 250.');
-        }
-        if (strlen($value) < 1) {
-            throw new \InvalidArgumentException('invalid length for $value when calling CustomField., must be bigger than or equal to 1.');
-        }
-        $this->container['value'] = $value;
-
-        return $this;
-    }
-
 
     /**
      * Gets id
@@ -244,16 +164,75 @@ class CustomField extends CustomFieldBase implements ArrayAccess
 
     /**
      * Sets id
-     * @param int $id The unique numeric ID of the custom field; increments sequentially.
+     * @param int $id The unique numeric ID of the `Price List`; increments sequentially.
      * @return $this
      */
     public function setId($id)
     {
-
-        if ($id < 1) {
-            throw new \InvalidArgumentException('invalid value for $id when calling CustomField., must be bigger than or equal to 1.');
-        }
         $this->container['id'] = $id;
+
+        return $this;
+    }
+
+    /**
+     * Gets date_created
+     * @return int
+     */
+    public function getPriceListId()
+    {
+        return $this->container['price_list_id'];
+    }
+
+    /**
+     * Sets date_created
+     * @param int
+     * @return $this
+     */
+    public function setPriceListId( $price_list_id )
+    {
+        $this->container['price_list_id'] = $price_list_id;
+
+        return $this;
+    }
+
+    /**
+     * Gets date_modified
+     * @return int
+     */
+    public function getCustomerGroupId()
+    {
+        return $this->container['customer_group_id'];
+    }
+
+    /**
+     * Sets date_modified
+     * @param int
+     * @return $this
+     */
+    public function setCustomerGroupId($customer_group_id)
+    {
+        $this->container['customer_group_id'] = $customer_group_id;
+
+        return $this;
+    }
+
+    /**
+     * Gets date_modified
+     * @return int
+     */
+    public function getChannelId()
+    {
+        return $this->container['channel_id'];
+    }
+
+    /**
+     * Sets date_modified
+     * @param int
+     * @return $this
+     */
+    public function setChannelId($channel_id)
+    {
+        $this->container['channel_id'] = $channel_id;
 
         return $this;
     }

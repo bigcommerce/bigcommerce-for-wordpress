@@ -5,6 +5,7 @@ namespace BigCommerce\GraphQL;
 use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api\v3\Configuration;
 use BigCommerce\Import\Processors\Headless_Product_Processor;
+use BigCommerce\Logging\Error_Log;
 use BigCommerce\Taxonomies\Channel\Channel;
 use BigCommerce\Taxonomies\Channel\Connections;
 
@@ -44,9 +45,12 @@ class BaseGQL {
 		return ( int ) $channel_id;
 	}
 
+	/**
+	 * @return mixed
+	 */
 	protected function get_token() {
 		$this->token = get_site_transient( self::GQL_TOKEN );
-		if ( ! empty( $this->token ) ) {
+		if ( $this->validate_token() ) {
 			return $this->token;
 		}
 
@@ -83,9 +87,9 @@ class BaseGQL {
 			$this->impersonation_token = $response->data->token;
 			set_site_transient( self::GQL_IMPERSONATION_TOKEN, $response->data->token, $expiration );
 		} catch ( \Exception $e ) {
-			do_action( 'bigcommerce/log', __( 'Could not retrieve the token', 'bigcommerce' ), [
+			do_action( 'bigcommerce/log', Error_Log::ERROR, __( 'Could not retrieve the token', 'bigcommerce' ), [
 					'trace' => $e->getTraceAsString(),
-			], 'graphql' );
+			] );
 
 			return;
 		}
@@ -109,9 +113,9 @@ class BaseGQL {
 
 			set_site_transient( self::GQL_TOKEN, $this->token, $expiration );
 		} catch ( \Exception $e ) {
-			do_action( 'bigcommerce/log', __( 'Could not retrieve the token', 'bigcommerce' ), [
+			do_action( 'bigcommerce/log', Error_Log::ERROR, __( 'Could not retrieve the token', 'bigcommerce' ), [
 				'trace' => $e->getTraceAsString(),
-			], 'graphql' );
+			] );
 
 			return;
 		}
@@ -227,6 +231,33 @@ class BaseGQL {
 		}
 
 		return sprintf( 'Bearer %s', $this->get_token() );
+	}
+
+	/**
+	 * Check if token has not expired and has valid cors
+	 *
+	 * @return bool
+	 */
+	protected function validate_token(): bool {
+		if ( empty( $this->token ) ) {
+			return false;
+		}
+
+		$parts = explode( '.', $this->token );
+
+		if ( empty( $parts ) ) {
+			return false;
+		}
+
+		$payload = json_decode( base64_decode( $parts[1] ) );
+		if ( empty( $payload ) ) {
+			return false;
+		}
+
+		$expiration = ( int ) $payload->eat;
+		$is_expired = ( $expiration - time() ) < 0;
+
+		return ! $is_expired && in_array( site_url(), $payload->cors );
 	}
 
 	/**

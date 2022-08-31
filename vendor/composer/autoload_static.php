@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit4d8ca28c413043901cad4e6e13bcb118
+class ComposerStaticInit2576231c7dc0e987480cb9dcebf7e406
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -270,6 +270,7 @@ class ComposerStaticInit4d8ca28c413043901cad4e6e13bcb118
         'BigCommerce\\Api\\v3\\Model\\DetailedErrors' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/DetailedErrors.php',
         'BigCommerce\\Api\\v3\\Model\\ErrorDetail' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/ErrorDetail.php',
         'BigCommerce\\Api\\v3\\Model\\ErrorResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/ErrorResponse.php',
+        'BigCommerce\\Api\\v3\\Model\\GQL_Term_Model' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/GQL_Term_Model.php',
         'BigCommerce\\Api\\v3\\Model\\GiftCertificate' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/GiftCertificate.php',
         'BigCommerce\\Api\\v3\\Model\\GiftWrapping' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/GiftWrapping.php',
         'BigCommerce\\Api\\v3\\Model\\ImageResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/ImageResponse.php',
@@ -343,7 +344,9 @@ class ComposerStaticInit4d8ca28c413043901cad4e6e13bcb118
         'BigCommerce\\Api\\v3\\Model\\PlacementResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/PlacementResponse.php',
         'BigCommerce\\Api\\v3\\Model\\PlacementsCollectionResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/PlacementsCollectionResponse.php',
         'BigCommerce\\Api\\v3\\Model\\PriceList' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/PriceList.php',
+        'BigCommerce\\Api\\v3\\Model\\PriceListAssignment' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/PriceListAssignment.php',
         'BigCommerce\\Api\\v3\\Model\\PriceListBase' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/PriceListBase.php',
+        'BigCommerce\\Api\\v3\\Model\\PriceListCollectionAssignmentsResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/PriceListCollectionAssignmentsResponse.php',
         'BigCommerce\\Api\\v3\\Model\\PriceListCollectionResponse' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/PriceListCollectionResponse.php',
         'BigCommerce\\Api\\v3\\Model\\PriceListPost' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/PriceListPost.php',
         'BigCommerce\\Api\\v3\\Model\\PriceListPut' => __DIR__ . '/..' . '/moderntribe/bigcommerce-api-php-v3/src/Model/PriceListPut.php',
@@ -1160,10 +1163,10 @@ class ComposerStaticInit4d8ca28c413043901cad4e6e13bcb118
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit4d8ca28c413043901cad4e6e13bcb118::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit4d8ca28c413043901cad4e6e13bcb118::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit4d8ca28c413043901cad4e6e13bcb118::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit4d8ca28c413043901cad4e6e13bcb118::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit2576231c7dc0e987480cb9dcebf7e406::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit2576231c7dc0e987480cb9dcebf7e406::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit2576231c7dc0e987480cb9dcebf7e406::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit2576231c7dc0e987480cb9dcebf7e406::$classMap;
 
         }, null, ClassLoader::class);
     }
