@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.34.0]
+
+### Added
+- Added a new option **Pricing nonce field** to Appearance → Customizer → Bigcommerce → Single → Product. The option allows nonce disabling in pricing requests on a single product page. If you use strong cache options that don't provide the ability to refresh page nonce, the disabling nonce option allows performing correct pricing requests.
+- Added new filter `bigcommerce/product/variant_price`. Hook returns the calculated price for the variant and allows price changing per variant. The example usage is adding taxes or some custom calculations to variant price
+
 ## [4.33.0]
 
 ### Changed
@@ -1825,6 +1831,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.34.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.33.0...4.34.0
 [4.33.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.32.0...4.33.0
 [4.32.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.31.0...4.32.0
 [4.31.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.30.0...4.31.0
