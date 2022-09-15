@@ -193,6 +193,8 @@ class Product_Options extends Controller {
 				$purchasing_disabled = (bool) $variant->purchasing_disabled;
 			}
 
+			$price = apply_filters( 'bigcommerce/product/variant_price', $variant->calculated_price, $variant, $product );
+
 			$data = [
 				'variant_id'       => $variant->id,
 				'options'          => $variant->option_values,
@@ -201,8 +203,8 @@ class Product_Options extends Controller {
 				'disabled'         => $purchasing_disabled,
 				'disabled_message' => $variant->purchasing_disabled ? $variant->purchasing_disabled_message : '',
 				'sku'              => $variant->sku,
-				'price'            => $variant->calculated_price,
-				'formatted_price'  => $this->format_currency( $variant->calculated_price ),
+				'price'            => $price,
+				'formatted_price'  => $this->format_currency( $price ),
 				'image'            => $product->is_headless() ? $this->headless_variant_image_data( $variant ) : $this->variant_image_data( $variant->id, $product->post_id(), $image_size ),
 				'zoom'             => [ 'url' => '', 'width' => 0, 'height' => 0 ],
 			];

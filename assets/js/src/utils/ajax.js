@@ -52,15 +52,19 @@ export const wpAdminAjax = (queryObj = {}) => request
 		deadline: 60000, // but allow 1 minute for the file to finish loading.
 	});
 
-export const wpAPIProductPricing = (pricingURL = '', pricingNonce = '', productsObj = {}) => request
-	.post(pricingURL)
-	.set('Content-Type', 'application/json')
-	.set('X-WP-Nonce', pricingNonce)
-	.send(productsObj)
-	.timeout({
-		response: 15000,  // Wait 15 seconds for the server to start sending,
-		deadline: 60000, // but allow 1 minute for the file to finish loading.
-	});
+export const wpAPIProductPricing = (pricingURL = '', pricingNonce = '', productsObj = {}) => {
+	const priceRequest = request
+		.post(pricingURL)
+		.set('Content-Type', 'application/json');
+	if (pricingNonce) {
+		priceRequest.set('X-WP-Nonce', pricingNonce);
+	}
+	return priceRequest.send(productsObj)
+		.timeout({
+			response: 15000,  // Wait 15 seconds for the server to start sending,
+			deadline: 60000, // but allow 1 minute for the file to finish loading.
+		});
+};
 
 export const wpAPIGetShippingZones = URL => request
 	.get(URL);

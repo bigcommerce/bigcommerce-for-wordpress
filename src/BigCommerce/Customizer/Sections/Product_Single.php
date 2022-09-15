@@ -4,20 +4,22 @@
 namespace BigCommerce\Customizer\Sections;
 
 use BigCommerce\Customizer\Panels;
+use BigCommerce\Settings\Sections\Import;
 
 class Product_Single {
 	const NAME = 'bigcommerce_product_single';
 
-	const RELATED_COUNT     = 'bigcommerce_max_related_products';
-	const DEFAULT_IMAGE     = 'bigcommerce_default_image_id';
-	const PRICE_DISPLAY     = 'bigcommerce_default_price_display';
-	const INVENTORY_DISPLAY = 'bigcommerce_inventory_display';
-	const VARIANTS_DISABLED = 'bigcommerce_variants_disabled';
-	const META_DESC_DISABLE = 'bigcommerce_meta_description_disabled';
-	const GALLERY_SIZE      = 'bigcommerce_gallery_image_size';
-	const ENABLE_ZOOM       = 'bigcommerce_enable_zoom';
-	const SIZE_DEFAULT      = 'default';
-	const SIZE_LARGE        = 'large';
+	const RELATED_COUNT      = 'bigcommerce_max_related_products';
+	const DEFAULT_IMAGE      = 'bigcommerce_default_image_id';
+	const PRICE_DISPLAY      = 'bigcommerce_default_price_display';
+	const INVENTORY_DISPLAY  = 'bigcommerce_inventory_display';
+	const VARIANTS_DISABLED  = 'bigcommerce_variants_disabled';
+	const META_DESC_DISABLE  = 'bigcommerce_meta_description_disabled';
+	const GALLERY_SIZE       = 'bigcommerce_gallery_image_size';
+	const ENABLE_ZOOM        = 'bigcommerce_enable_zoom';
+	const ENABLE_PRICE_NONCE = 'bigcommerce_enable_zoom';
+	const SIZE_DEFAULT       = 'default';
+	const SIZE_LARGE         = 'large';
 
 	/**
 	 * @param \WP_Customize_Manager $wp_customize
@@ -35,6 +37,7 @@ class Product_Single {
 		$this->gallery_size( $wp_customize );
 		$this->zoom( $wp_customize );
 		$this->pricing( $wp_customize );
+		$this->pricing_nonce( $wp_customize );
 		$this->inventory( $wp_customize );
 		$this->variants( $wp_customize );
 		$this->meta_description( $wp_customize );
@@ -178,6 +181,33 @@ class Product_Single {
 				'yes' => __( 'Show meta description set in BC admin on product page', 'bigcommerce' ),
 				'no'  => __( 'Disable meta description from BC admin', 'bigcommerce' ),
 			],
+		] );
+	}
+
+	/**
+	 * Register pricing nonce option setting
+	 *
+	 * @param \WP_Customize_Manager $wp_customize
+	 */
+	protected function pricing_nonce( \WP_Customize_Manager $wp_customize ): void {
+		if ( ( int ) get_option( Import::HEADLESS_FLAG, 0 ) !== 1 ) {
+			return;
+		}
+
+		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::ENABLE_PRICE_NONCE, [
+				'type'      => 'option',
+				'default'   => 'yes',
+				'transport' => 'refresh',
+		] ) );
+		$wp_customize->add_control( self::ENABLE_PRICE_NONCE, [
+			'section' => self::NAME,
+			'type'    => 'radio',
+			'label'   => __( 'Pricing nonce field(for advanced use only)', 'bigcommerce' ),
+			'choices' => [
+				'yes' => __( 'Enable pricing nonce', 'bigcommerce' ),
+				'no'  => __( 'Disable pricing nonce', 'bigcommerce' ),
+			],
+			'description' => __( 'Control pricing request option by adding or removing pricing nonce. The feature can be used on heavy cached environments to prevent issues with expired nonce when "Fast - Headless" import is on', 'bigcommerce' ),
 		] );
 	}
 }

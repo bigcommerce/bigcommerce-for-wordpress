@@ -10,8 +10,10 @@ use BigCommerce\Api\v3\Model\ItemPricing;
 use BigCommerce\Api\v3\Model\PricingRequest;
 use BigCommerce\Api\v3\ObjectSerializer;
 use BigCommerce\Currency\With_Currency;
+use BigCommerce\Customizer\Sections\Product_Single;
 use BigCommerce\Exceptions\Channel_Not_Found_Exception;
 use BigCommerce\Settings\Sections\Currency;
+use BigCommerce\Settings\Sections\Import;
 use BigCommerce\Taxonomies\Channel\Channel;
 use BigCommerce\Taxonomies\Channel\Connections;
 
@@ -36,10 +38,22 @@ class Pricing_Controller extends Rest_Controller {
 	public function js_config( $config ) {
 		$config['pricing'] = [
 			'api_url'            => $this->get_base_url(),
-			'ajax_pricing_nonce' => wp_create_nonce( 'wp_rest' ),
+			'ajax_pricing_nonce' => $this->is_nonce_enabled() ? wp_create_nonce( 'wp_rest' ) : false,
 		];
 
 		return $config;
+	}
+
+	/**
+	 * Nonce should always be on non-headless setup or if it is enabled via Customizer
+	 *
+	 * @return bool
+	 */
+	public function is_nonce_enabled(): bool {
+		$is_headless = ( int ) get_option( Import::HEADLESS_FLAG, 0 ) === 1;
+		$is_nonce_on = get_option( Product_Single::ENABLE_PRICE_NONCE, 'yes' ) === 'yes';
+
+		return ! $is_headless || $is_nonce_on;
 	}
 
 	public function register_routes() {
