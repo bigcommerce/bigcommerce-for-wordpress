@@ -1,5 +1,15 @@
 # Changelog
 
+## [4.35.0]
+
+### Added
+- Added subtotal and taxes display on AMP cart template
+- Added ability to change quantity on AMP cart template
+- Display product options(if applicable) on AMP cart template
+
+### Changed
+- Changed customer cache flush logic. Prevent situations when customer group rules don't apply after they have been changed in Bigcommerce Control Panel. To flush customers data go to plugin settings: Bigcommerce → Settings → Diagnostics → Flush users cache
+
 ## [4.34.0]
 
 ### Added
@@ -1831,6 +1841,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.35.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.34.0...4.35.0
 [4.34.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.33.0...4.34.0
 [4.33.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.32.0...4.33.0
 [4.32.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.31.0...4.32.0

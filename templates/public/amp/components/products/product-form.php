@@ -25,7 +25,6 @@ $variant_id_expression = sprintf(
 
 <form action-xhr="<?php echo esc_url( trailingslashit( $product->purchase_url() ) ); ?>" method="post" enctype="multipart/form-data" class="bc-form bc-product-form" target="_top">
 	<?php echo $options; // WPCS: XSS ok. Already escaped data. ?>
-	<?php echo $modifiers; // WPCS: XSS ok. Already escaped data. ?>
 	<div class="bc-product-form__product-message" data-js="bc-product-message"></div>
 	<input type="hidden" name="variant_id" class="variant_id" [value]="<?php echo esc_attr( $variant_id_expression ); ?>">
 	<div class="bc-product-form__quantity">

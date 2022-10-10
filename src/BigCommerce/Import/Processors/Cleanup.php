@@ -115,9 +115,12 @@ class Cleanup implements Import_Processor {
 	public function clean_customer_group_transients(): void {
 		$users_ids = get_users( [ 'fields' => 'ID' ] );
 		foreach ( $users_ids as $users_id ) {
-			$customer_id   = get_user_option( Customer::CUSTOMER_ID_META, $users_id );
+			$customer_id = get_user_option( Customer::CUSTOMER_ID_META, $users_id );
+			$customer    = new Customer( $users_id );
+			delete_transient( sprintf( 'bccustgroupinfo%d', $customer->get_group_id() ) );
 			$transient_key = sprintf( 'bccustomergroup%d', $customer_id );
 			delete_transient( $transient_key );
+			delete_transient( sprintf( 'bccustomervisibleterms%d', $users_id ) );
 		}
 	}
 
