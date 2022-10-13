@@ -116,9 +116,17 @@ class AMP_Cart_Controller extends Proxy_Controller {
 			return rest_ensure_response( null );
 		}
 
+		$query_params = [
+			'include' => [
+				'line_items.physical_items.options',
+				'line_items.digital_items.options',
+				'redirect_urls',
+			],
+		];
+
 		$request = new WP_REST_Request(
 			'GET',
-			sprintf( '/%scarts/%s', trailingslashit( $this->proxy_base ), $cart_id )
+			sprintf( '/%scarts/%s?%s', trailingslashit( $this->proxy_base ), $cart_id, http_build_query( $query_params ) ),
 		);
 
 		$response = rest_do_request( $request );
@@ -136,6 +144,85 @@ class AMP_Cart_Controller extends Proxy_Controller {
 			$data['cart_amount']
 		);
 
+		$data = $this->get_cart_totals( $data );
+
 		return rest_ensure_response( $data );
+	}
+
+	protected function get_cart_totals( $data ) {
+		$cart = [
+			'base_amount'     => [
+				'raw'       => $data['base_amount'],
+				'formatted' => $this->get_formatted_price( $data['base_amount'] ),
+			],
+			'discount_amount' => [
+				'raw'       => $data['discount_amount'],
+				'formatted' => $this->get_formatted_price( $data['discount_amount'] ),
+			],
+			'cart_amount'     => [
+				'raw'       => $data['cart_amount'],
+				'formatted' => $this->get_formatted_price( $data['cart_amount'] ),
+			],
+			'tax_included'    => (bool) $data['tax_included'],
+			'coupons'         => $data['coupons'],
+		];
+
+		$coupons_discount_amount = $this->get_coupons_discount_amount( $data['coupons'] );
+
+		$cart[ 'coupons_discount_amount' ] = [
+			'raw'       => $coupons_discount_amount,
+			'formatted' => $this->get_formatted_price( $coupons_discount_amount ),
+		];
+
+		$tax_amount = $this->calculate_total_tax(
+			$cart[ 'cart_amount' ][ 'raw' ],
+			$cart[ 'discount_amount' ][ 'raw' ],
+			$coupons_discount_amount,
+			$data[ 'items' ]
+		);
+
+		$cart[ 'tax_amount' ] = [
+			'raw'       => $tax_amount,
+			'formatted' => $this->get_formatted_price( $tax_amount ),
+		];
+
+		if ( $data[ 'tax_included' ] || $tax_amount < 0 ) {
+			$subtotal = $cart[ 'cart_amount' ][ 'raw' ];
+		} else {
+			$subtotal = $cart[ 'cart_amount' ][ 'raw' ] - $tax_amount;
+		}
+
+		$cart[ 'subtotal' ] = [
+			'raw'       => $subtotal,
+			'formatted' => $this->get_formatted_price( $subtotal ),
+		];
+
+		return array_merge( $data, $cart );
+	}
+
+	private function get_formatted_price( $value ) {
+		return apply_filters( 'bigcommerce/currency/format', sprintf( '¤%0.2f', $value ), $value );
+	}
+
+	/**
+	 * @param float $cart_amount             The `cart_amount` value for the cart
+	 * @param float $discount_amount         The `discount_amount` value for the cart
+	 * @param float $coupons_discount_amount The `coupons_discount_amount` value for the cart
+	 * @param array $items                   The items in the cart
+	 *
+	 * @return float
+	 */
+	private function calculate_total_tax( $cart_amount, $discount_amount, $coupons_discount_amount, $items ) {
+		$item_sum = array_sum( array_map( function ( $item ) {
+			return isset( $item[ 'sale_price' ] ) ? $item[ 'sale_price' ] * $item['quantity'] : 0;
+		}, $items ) );
+
+		return $cart_amount + $discount_amount + $coupons_discount_amount - $item_sum;
+	}
+
+	private function get_coupons_discount_amount( array $coupons ) {
+		return array_reduce( $coupons, function( $carry, $coupon ) {
+			return $carry + $coupon['discounted_amount'];
+		}, 0 );
 	}
 }

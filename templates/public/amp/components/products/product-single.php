@@ -26,15 +26,7 @@
 			<?php echo $brand; // WPCS: XSS ok. Already escaped data. ?>
 			<?php echo $price; // WPCS: XSS ok. Already escaped data. ?>
 			<?php echo $rating; // WPCS: XSS ok. Already escaped data. ?>
-
-			<?php if ( $sku ) { ?>
-				<span class="bc-product__sku">
-					<span class="bc-product-single__meta-label">
-						<?php esc_html_e( 'SKU:', 'bigcommerce' ); ?>
-					</span>
-					<?php echo esc_html( $sku ); ?>
-				</span>
-			<?php } ?>
+			<?php echo $sku; ?>
 			<?php echo $form; // WPCS: XSS ok. Already escaped data. ?>
 		</div>
 	</section>

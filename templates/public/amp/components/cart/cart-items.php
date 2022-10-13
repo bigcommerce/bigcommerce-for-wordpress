@@ -51,7 +51,7 @@ use BigCommerce\Cart\Cart;
 					method="post"
 					on="submit:AMP.setState({savingItem: true});submit-success:product-list.refresh,subtotal.refresh,AMP.setState({savingItem: false})"
 					>
-					<input type="hidden" name="cartId" value="CLIENT_ID(bigcommerce_cart_id)" data-amp-replace="CLIENT_ID" />
+					<input type="hidden" name="cartId" value="CLIENT_ID(<?php echo Cart::CART_COOKIE; ?>)" data-amp-replace="CLIENT_ID" />
 					<button
 							class="bc-link bc-cart-item__remove-button"
 							type="submit"
@@ -70,10 +70,38 @@ use BigCommerce\Cart\Cart;
 				{{ #brand }}
 					<span class="bc-cart-item__product-brand">{{ brand }}</span>
 				{{ /brand }}
+
+				{{ #options }}
+				<div class="bc-cart-item__product-options">
+					<span class="bc-cart-item__product-option">
+						<span class="bc-cart-item__product-option-label">{{ name }}</span>
+						<span class="bc-cart-item__product-option-value">{{ value }}</span>
+					</span>
+				</div>
+				{{ /options }}
 			</div>
 
 			<div class="bc-cart-item-quantity">
-				{{ quantity }}
+				<form
+					id="item-{{ id }}-quantity"
+					action-xhr="<?php echo esc_url( rest_url( sprintf( '/%s/carts/_cart_id_/items/', $proxy_base ) ) ); ?>{{ id }}?qty=true'"
+					on="submit:AMP.setState({savingItem: true});submit-success:product-list.refresh,subtotal.refresh,AMP.setState({savingItem: false})"
+					method="post"
+				>
+					<input type="hidden" name="product_id" value="{{ product_id }}" />
+					<input type="hidden" name="variant_id" value="{{ variant_id }}" />
+					<input type="hidden" name="cartId" value="CLIENT_ID(<?php echo Cart::CART_COOKIE; ?>)" data-amp-replace="CLIENT_ID" />
+					<input
+						type="number"
+
+						name="quantity"
+						class="bc-cart-item__quantity-input"
+						data-js="bc-cart-item__quantity"
+						value="{{ quantity }}"
+						on="change:item-{{ id }}-quantity.submit"
+						min="1"
+					/>
+				</form>
 			</div>
 
 			<div class="bc-cart-item-total-price">

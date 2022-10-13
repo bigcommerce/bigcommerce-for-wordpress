@@ -333,7 +333,7 @@ class Customer {
 	 * @return int|null
 	 */
 	public function get_group_id() {
-		$customer_id = is_user_logged_in() ? get_user_option( self::CUSTOMER_ID_META, $this->wp_user_id ) : 0;
+		$customer_id = is_user_logged_in() || defined( 'DOING_CRON' ) ? get_user_option( self::CUSTOMER_ID_META, $this->wp_user_id ) : 0;
 		if ( ! $customer_id ) {
 			/**
 			 * This filter is documented in src/BigCommerce/Accounts/Customer.php
