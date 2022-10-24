@@ -18,6 +18,7 @@ class Image_Importer {
 	const URL_STD              = 'url_standard';
 	const URL_THUMB            = 'url_thumbnail';
 	const URL_TINY             = 'url_tiny';
+	const IMAGE_ALT            = 'image_alt';
 	const FULL_IMAGE_IMPORT    = 'bigcommerce_allow_full_image_import';
 	const CDN_IMAGE_IMPORT     = 'bigcommerce_allow_cdn_image_import';
 	const DISABLE_IMAGE_IMPORT = 'bigcommerce_disable_image_import';

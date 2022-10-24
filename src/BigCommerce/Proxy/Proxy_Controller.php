@@ -227,9 +227,17 @@ class Proxy_Controller extends WP_REST_Controller {
 			$args['body'] = wp_json_encode( $body );
 		}
 
-		$response = wp_remote_request( $route, $args );
+		$response      = wp_remote_request( $route, $args );
+		$body_response = json_decode( wp_remote_retrieve_body( $response ), true ) ;
 
-		return rest_ensure_response( json_decode( wp_remote_retrieve_body( $response ), true ) );
+		if ( empty( $body_response ) ) {
+			return rest_ensure_response( [
+				'data' => [],
+				'meta' => []
+			] );
+		}
+
+		return rest_ensure_response( $body_response );
 	}
 
 	/**
