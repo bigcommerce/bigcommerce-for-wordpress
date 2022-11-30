@@ -4,6 +4,7 @@
 
 ### Added
 - Added ability to choose default product image size while ‘Fast Headless’ import is on. You can choose between 2 sizes: standard and thumbnail. Since Bigcommerce API provides standard images without compressing page load speed may reduce. To avoid the such problem you can choose thumbnail size to load in Wordpress customizer: Appearance → Customize → Bigcommerce → Product Single → Image Size(headless)
+- Disables SSL Verification in development environments.
 
 ### Fixed
 - Fixed 'Image Zoom'(Appearance → Customizer → Bigcommerce → Product Single → Image Zoom) option. Allow using image zoom when ‘Fast Headless’ import is on
