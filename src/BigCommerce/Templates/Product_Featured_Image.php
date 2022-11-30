@@ -52,8 +52,10 @@ class Product_Featured_Image extends Controller {
 	}
 
 	protected function get_attachment_id( Product $product ) {
-		if ( Image_Importer::should_load_from_cdn() ) {
-			$this->cdn_image = Product::get_thumb_from_cdn( $product->post_id(), 'html', null );
+		if ( Image_Importer::should_load_from_cdn() || $product->is_headless() ) {
+			$this->cdn_image = $product->is_headless()
+					? $product->get_headless_featured_image( null )
+					: Product::get_thumb_from_cdn( $product->post_id(), 'html', null );
 
 			return $this->cdn_image;
 		}

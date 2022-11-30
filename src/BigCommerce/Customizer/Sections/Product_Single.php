@@ -9,17 +9,20 @@ use BigCommerce\Settings\Sections\Import;
 class Product_Single {
 	const NAME = 'bigcommerce_product_single';
 
-	const RELATED_COUNT      = 'bigcommerce_max_related_products';
-	const DEFAULT_IMAGE      = 'bigcommerce_default_image_id';
-	const PRICE_DISPLAY      = 'bigcommerce_default_price_display';
-	const INVENTORY_DISPLAY  = 'bigcommerce_inventory_display';
-	const VARIANTS_DISABLED  = 'bigcommerce_variants_disabled';
-	const META_DESC_DISABLE  = 'bigcommerce_meta_description_disabled';
-	const GALLERY_SIZE       = 'bigcommerce_gallery_image_size';
-	const ENABLE_ZOOM        = 'bigcommerce_enable_zoom';
-	const ENABLE_PRICE_NONCE = 'bigcommerce_enable_zoom';
-	const SIZE_DEFAULT       = 'default';
-	const SIZE_LARGE         = 'large';
+	const RELATED_COUNT       = 'bigcommerce_max_related_products';
+	const DEFAULT_IMAGE       = 'bigcommerce_default_image_id';
+	const PRICE_DISPLAY       = 'bigcommerce_default_price_display';
+	const INVENTORY_DISPLAY   = 'bigcommerce_inventory_display';
+	const VARIANTS_DISABLED   = 'bigcommerce_variants_disabled';
+	const META_DESC_DISABLE   = 'bigcommerce_meta_description_disabled';
+	const GALLERY_SIZE        = 'bigcommerce_gallery_image_size';
+	const HEADLESS_IMAGE_SIZE = 'bigcommerce_gallery_headless_image_size';
+	const ENABLE_ZOOM         = 'bigcommerce_enable_zoom';
+	const ENABLE_PRICE_NONCE  = 'bigcommerce_enable_price_nonce';
+	const SIZE_DEFAULT        = 'default';
+	const SIZE_LARGE          = 'large';
+	const SIZE_CDN_STD        = 'standard';
+	const SIZE_CDN_THUMB      = 'thumbnail';
 
 	/**
 	 * @param \WP_Customize_Manager $wp_customize
@@ -35,6 +38,7 @@ class Product_Single {
 		$this->related( $wp_customize );
 		$this->default_image( $wp_customize );
 		$this->gallery_size( $wp_customize );
+		$this->headless_cdn_image_size( $wp_customize );
 		$this->zoom( $wp_customize );
 		$this->pricing( $wp_customize );
 		$this->pricing_nonce( $wp_customize );
@@ -94,6 +98,24 @@ class Product_Single {
 				self::SIZE_DEFAULT => __( 'Default', 'bigcommerce' ),
 				self::SIZE_LARGE   => __( 'Large', 'bigcommerce' ),
 			],
+		] );
+	}
+
+	private function headless_cdn_image_size( \WP_Customize_Manager $wp_customize ) {
+		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::HEADLESS_IMAGE_SIZE, [
+			'type'      => 'option',
+			'transport' => 'refresh',
+			'default'   => self::SIZE_CDN_STD,
+		] ) );
+		$wp_customize->add_control( self::HEADLESS_IMAGE_SIZE, [
+			'section'     => self::NAME,
+			'type'        => 'radio',
+			'label'       => __( 'Image Size(headless)', 'bigcommerce' ),
+			'choices'     => [
+				self::SIZE_CDN_STD   => __( 'Standard', 'bigcommerce' ),
+				self::SIZE_CDN_THUMB => __( 'Thumbnail', 'bigcommerce' ),
+			],
+			'description' => __( 'Toggle size of images while headless import is on', 'bigcommerce' ),
 		] );
 	}
 

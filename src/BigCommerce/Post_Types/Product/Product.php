@@ -633,6 +633,36 @@ class Product {
 		return apply_filters( 'bigcommerce/product/gallery', $gallery );
 	}
 
+	/**
+	 * @param string $size
+	 *
+	 * @return string|null
+	 */
+	public function get_headless_featured_image( $size = '80' ) {
+		$source = $this->get_source_data();
+
+		if ( empty( $source->images ) ) {
+			return null;
+		}
+		$is_standard_img = get_option( Product_Single::HEADLESS_IMAGE_SIZE, Product_Single::SIZE_CDN_STD ) === Product_Single::SIZE_CDN_STD;
+
+		if ( ! $is_standard_img ) {
+			$thumb = array_reduce( $source->images, static function( $found, $item ) {
+				return $item->is_thumbnail ? $item : $found;
+			} );
+		}
+
+		if ( empty( $thumb ) ) {
+			$thumb = $source->images[0];
+		}
+
+		$class = 'attachment-thumbnail size-thumbnail wp-post-image';
+		$width = ! empty( $size ) ? sprintf( 'width="%s"', $size ) : '';
+
+		return sprintf( '<img src="%s" class="%s" %s />', $is_standard_img ? $thumb->url_standard : $thumb->url_thumbnail, $class, $width );
+
+	}
+
 	public static function get_thumb_from_cdn( $post_ID, $format = 'html', $size = '80' ) {
 		$data = get_post_meta( $post_ID, Product::GALLERY_META_KEY, true );
 

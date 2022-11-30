@@ -76,7 +76,7 @@ class Pages extends Provider {
 		$container[ self::CHECKOUT_PAGE ] = function ( Container $container ) {
 			return new Checkout_Page();
 		};
-		
+
 		$container[ self::CHECKOUT_COMPLETE_PAGE ] = function ( Container $container ) {
 			return new Checkout_Complete_Page();
 		};
@@ -155,6 +155,6 @@ class Pages extends Provider {
 				}
 			}
 			return $content;
-		} ) );
+		} ), 5, 1 );
 	}
 }

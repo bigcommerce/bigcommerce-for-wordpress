@@ -51,7 +51,7 @@ use BigCommerce\Cart\Cart;
 					method="post"
 					on="submit:AMP.setState({savingItem: true});submit-success:product-list.refresh,subtotal.refresh,AMP.setState({savingItem: false})"
 					>
-					<input type="hidden" name="cartId" value="CLIENT_ID(<?php echo Cart::CART_COOKIE; ?>)" data-amp-replace="CLIENT_ID" />
+					<input type="hidden" name="cartId" value="<?php echo sprintf( 'CLIENT_ID(%s)', Cart::CART_COOKIE ) ?>" data-amp-replace="CLIENT_ID" />
 					<button
 							class="bc-link bc-cart-item__remove-button"
 							type="submit"

@@ -416,7 +416,7 @@ class Cart_Mapper {
 	 */
 	private function calculate_total_tax( $cart_amount, $discount_amount, $coupons_discount_amount, $items ) {
 		$item_sum = array_sum( array_map( function ( $item ) {
-			return isset( $item[ 'total_list_price' ][ 'raw' ] ) ? $item[ 'total_list_price' ][ 'raw' ] : 0;
+			return isset( $item[ 'total_sale_price' ][ 'raw' ] ) ? $item[ 'total_sale_price' ][ 'raw' ] : 0;
 		}, $items ) );
 
 		return $cart_amount + $discount_amount + $coupons_discount_amount - $item_sum;

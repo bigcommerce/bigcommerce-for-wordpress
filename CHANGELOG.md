@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.36.0]
+
+### Added
+- Added ability to choose default product image size while ‘Fast Headless’ import is on. You can choose between 2 sizes: standard and thumbnail. Since Bigcommerce API provides standard images without compressing page load speed may reduce. To avoid the such problem you can choose thumbnail size to load in Wordpress customizer: Appearance → Customize → Bigcommerce → Product Single → Image Size(headless)
+
+### Fixed
+- Fixed 'Image Zoom'(Appearance → Customizer → Bigcommerce → Product Single → Image Zoom) option. Allow using image zoom when ‘Fast Headless’ import is on
+- Fixed compatibility with the Elementor plugin. Do not duplicate shortcodes on required pages, if shortcode is added already on the page
+- Prevent situation when cart shows negative taxes values
+- Fixed AMP cart template issue when you can't delete last item from cart
+
 ## [4.35.0]
 
 ### Added
@@ -1841,6 +1852,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[4.35.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.35.0...4.36.0
 [4.35.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.34.0...4.35.0
 [4.34.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.33.0...4.34.0
 [4.33.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.32.0...4.33.0

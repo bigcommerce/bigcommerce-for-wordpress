@@ -19,17 +19,10 @@ use BigCommerce\Assets\Theme\Image_Sizes;
 use BigCommerce\Import\Image_Importer;
 use BigCommerce\Post_Types\Product\Product;
 
-$headless = $context['product']->is_headless();
-if ( $headless ) {
-	$item_count = count( $cdn_images );
-} else {
-	$item_count = count( $image_ids ) + count( $youtube_videos );
-}
-
-
+$headless        = $context['product']->is_headless();
+$item_count      = $headless ? count( $cdn_images ) : count( $image_ids ) + count( $youtube_videos );
 $gallery_classes = $item_count > 1 ? 'swiper-container bc-product-gallery--has-carousel' : 'swiper-container';
-
-$has_zoom = $zoom ? 'bc-product-image-zoom' : '';
+$has_zoom        = $zoom ? 'bc-product-image-zoom' : '';
 ?>
 
 	<!-- data-js="bc-product-gallery" is required -->
@@ -48,13 +41,13 @@ $has_zoom = $zoom ? 'bc-product-image-zoom' : '';
 					$index = 0;
 					if ( $headless && ! empty( $cdn_images ) ) {
 						foreach ( $cdn_images as $image) {
-							$image_full = $zoom ? sprintf( 'data-zoom="%s"', $image['url'] ) : '';
+							$image_full = $zoom && ! empty( $image[ Image_Importer::URL_ZOOM ]  ) ? sprintf( 'data-zoom="%s"', $image[ Image_Importer::URL_ZOOM ] ) : '';
 							?>
 							<!-- class="swiper-slide" is required -->
 							<div class="swiper-slide bc-product-gallery__image-slide" data-index="<?php echo $index++; ?>">
 								<img
-										src="<?php echo esc_url( $image['url'] ); ?>" <?php echo $image_full; ?>
-										alt="<?php echo esc_attr( trim( strip_tags( $image['alt'] ) ) ); ?>"
+										src="<?php echo esc_url( $image[ Image_Importer::URL_THUMB ] ); ?>" <?php echo $image_full; ?>
+										alt="<?php echo esc_attr( trim( strip_tags( $image[ Image_Importer::IMAGE_ALT ] ) ) ); ?>"
 								>
 							</div>
 						<?php }
@@ -112,7 +105,7 @@ $has_zoom = $zoom ? 'bc-product-image-zoom' : '';
 					$index = 0;
 					if ( $headless && ! empty( $cdn_images ) ) {
 						foreach ( $cdn_images as $image) {
-							$image_full = $zoom ? sprintf( 'data-zoom="%s"', $image['url'] ) : '';
+							$image_full = $zoom && ! empty( $image[ Image_Importer::URL_ZOOM ]  ) ? sprintf( 'data-zoom="%s"', $image[ Image_Importer::URL_ZOOM ] ) : '';
 							?>
 							<!-- class="swiper-slide" and data-js="bc-gallery-thumb-trigger" are required -->
 							<button class="swiper-slide bc-product-gallery__thumb-slide"
@@ -120,7 +113,7 @@ $has_zoom = $zoom ? 'bc-product-image-zoom' : '';
 								data-index="<?php echo $index++; ?>"
 								aria-label="<?php _e( 'mark as featured image', 'stellar' ) ?>"
 							>
-								<img src="<?php echo $image['url']; ?>" alt="<?php echo $image['alt']; ?>"
+								<img src="<?php echo $image[ Image_Importer::URL_THUMB ]; ?>" alt="<?php echo $image[ Image_Importer::IMAGE_ALT ]; ?>"
 								>
 							</button>
 						<?php }
