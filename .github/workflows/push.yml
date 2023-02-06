@@ -7,13 +7,10 @@ jobs:
     name: New Release
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@main
     # See https://github.com/actions/runner/issues/2033
-    - name: Configure Git
-      run: |
-        git config --global --add safe.directory "$GITHUB_WORKSPACE"
     - name: WordPress Plugin Deploy
-      uses: 10up/action-wordpress-plugin-deploy@master
+      uses: 10up/action-wordpress-plugin-deploy@2.2.1
       env:
         SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
         SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
