@@ -81,11 +81,6 @@ class Api_Credentials_Screen extends Onboarding_Screen {
 		$config->setClientId( filter_input( INPUT_POST, Api_Credentials::OPTION_CLIENT_ID, FILTER_SANITIZE_STRING ) );
 		$config->setAccessToken( filter_input( INPUT_POST, Api_Credentials::OPTION_ACCESS_TOKEN, FILTER_SANITIZE_STRING ) );
 		$config->setClientSecret( filter_input( INPUT_POST, Api_Credentials::OPTION_CLIENT_SECRET, FILTER_SANITIZE_STRING ) );
-
-		if (bigcommerce_get_env('WP_ENVIRONMENT_TYPE') === 'development') {
-			$config->setSSLVerification(false);
-		}
-
 		/**
 		 * This filter is documented in src/BigCommerce/Container/Api.php.
 		 */

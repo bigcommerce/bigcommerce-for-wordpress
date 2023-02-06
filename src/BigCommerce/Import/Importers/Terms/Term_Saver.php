@@ -190,7 +190,7 @@ abstract class Term_Saver implements Import_Strategy {
 			$post_id = reset( $existing );
 		} else {
 			$importer = new Image_Importer( $image_url );
-			$post_id  = $importer->import();
+			$post_id  = $importer->import( true );
 		}
 		if ( ! empty( $post_id ) ) {
 			update_term_meta( $this->term_id, 'thumbnail_id', $post_id );
