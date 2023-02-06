@@ -64,10 +64,6 @@ class Api extends Provider {
 			$config->setClientSecret( $container[ self::CLIENT_SECRET ] );
 			$config->setCurlTimeout( $container[ self::TIMEOUT ] );
 
-			if (bigcommerce_get_env('WP_ENVIRONMENT_TYPE') === 'development') {
-				$config->setSSLVerification(false);
-			}
-
 			/**
 			 * Filter the API connection configuration object
 			 *

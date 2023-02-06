@@ -117,6 +117,7 @@ class Task_Manager {
 					delete_option( Term_Import::STATE_OPTION );
 					$this->run_next( Status::RESIZING_IMAGES );
 					break;
+				case Status::NOT_STARTED:
 				case Status::COMPLETED:
 					wp_unschedule_hook( Cron_Runner::START_CRON );
 					wp_unschedule_hook( Cron_Runner::CONTINUE_CRON );

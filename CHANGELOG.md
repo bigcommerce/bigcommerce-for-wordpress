@@ -1,10 +1,17 @@
 # Changelog
 
+## [4.37.0]
+
+### Added
+- Add ability to abort import in any status. This will allow aborting stuck import process on any step and start the new one. To abort import go to Bigcommerce -> Settings -> Diagnostics and click on the Abort button  
+
+### Fixed
+- Fixed headless image import. Prevent situation when categories images were skipped during import.
+
 ## [4.36.0]
 
 ### Added
 - Added ability to choose default product image size while ‘Fast Headless’ import is on. You can choose between 2 sizes: standard and thumbnail. Since Bigcommerce API provides standard images without compressing page load speed may reduce. To avoid the such problem you can choose thumbnail size to load in Wordpress customizer: Appearance → Customize → Bigcommerce → Product Single → Image Size(headless)
-- Disables SSL Verification in development environments.
 
 ### Fixed
 - Fixed 'Image Zoom'(Appearance → Customizer → Bigcommerce → Product Single → Image Zoom) option. Allow using image zoom when ‘Fast Headless’ import is on
@@ -1853,7 +1860,8 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
-[4.35.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.35.0...4.36.0
+[4.37.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.36.0...4.37.0
+[4.36.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.35.0...4.36.0
 [4.35.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.34.0...4.35.0
 [4.34.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.33.0...4.34.0
 [4.33.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.32.0...4.33.0

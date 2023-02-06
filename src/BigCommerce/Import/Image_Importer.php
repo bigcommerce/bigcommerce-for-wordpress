@@ -51,10 +51,15 @@ class Image_Importer {
 		$this->attach_to_post_id = $attach_to_post_id;
 	}
 
-	public function import() {
+	/**
+	 * @param false $is_category
+	 *
+	 * @return false|int|\WP_Error
+	 */
+	public function import( $is_category = false ) {
 		$this->require_files();
 
-		if ( self::should_load_from_cdn() ) {
+		if ( self::should_load_from_cdn() && ! $is_category ) {
 			return $this->process_cdn_items();
 		}
 
