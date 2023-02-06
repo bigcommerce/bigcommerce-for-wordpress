@@ -10,7 +10,7 @@ jobs:
     - uses: actions/checkout@main
     # See https://github.com/actions/runner/issues/2033
     - name: WordPress Plugin Deploy
-      uses: 10up/action-wordpress-plugin-deploy@2.2.1
+      uses: 10up/action-wordpress-plugin-deploy@develop
       env:
         SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
         SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
