@@ -74,4 +74,14 @@ class Channel {
 		}
 		return reset( $channels );
 	}
+
+	public static function is_msf_channel_prop_on( string $prop ): bool {
+		if ( empty( $prop ) ) {
+			return false;
+		}
+		$connections = new Connections();
+		$channel     = $connections->current();
+
+		return ( int ) get_term_meta( $channel->term_id, $prop, true ) === 1;
+	}
 }

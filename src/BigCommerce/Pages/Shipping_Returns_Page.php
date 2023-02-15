@@ -5,13 +5,14 @@ namespace BigCommerce\Pages;
 
 class Shipping_Returns_Page extends Required_Page {
 	const NAME = 'bigcommerce_shipping_returns_page_id';
+	const SLUG = 'shipping-returns';
 
 	protected function get_title() {
 		return _x( 'Shipping & Returns', 'title of the shipping & returns page', 'bigcommerce' );
 	}
 
 	protected function get_slug() {
-		return _x( 'shipping-returns', 'slug of the shipping & returns page', 'bigcommerce' );
+		return _x( self::SLUG, 'slug of the shipping & returns page', 'bigcommerce' );
 	}
 
 	public function get_content() {

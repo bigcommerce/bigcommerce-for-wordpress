@@ -5,10 +5,16 @@ namespace BigCommerce\Templates;
 
 
 use BigCommerce\Customizer\Sections;
+use BigCommerce\Import\Processors\Store_Settings;
+use BigCommerce\Import\Processors\Storefront_Processor;
 use BigCommerce\Post_Types\Product\Product;
+use BigCommerce\Taxonomies\Channel\Channel;
 use BigCommerce\Taxonomies\Flag\Flag;
 
 class Product_Single extends Controller {
+
+	use Product_TemplateTrait;
+
 	const PRODUCT = 'product';
 
 	const IMAGES      = 'images';
@@ -74,32 +80,14 @@ class Product_Single extends Controller {
 		return $component->render();
 	}
 
-	protected function get_price( Product $product ) {
-		if ( has_term( Flag::HIDE_PRICE, Flag::NAME, $product->post_id() ) ) {
-			$component = Product_Hidden_Price::factory( [
-				Product_Hidden_Price::PRODUCT => $product,
-			] );
-		} else {
-			$component = Product_Price::factory( [
-				Product_Price::PRODUCT => $product,
-			] );
+	protected function get_rating( Product $product ) {
+		if ( ! Channel::is_msf_channel_prop_on( Storefront_Processor::SHOW_PRODUCT_RATING ) ) {
+			return '';
 		}
 
-		return $component->render();
-	}
-
-	protected function get_rating( Product $product ) {
 		$component = Product_Rating::factory( [
 			Product_Rating::PRODUCT => $product,
 			Product_Rating::LINK    => get_the_permalink( $product->post_id() ) . '#bc-single-product__reviews',
-		] );
-
-		return $component->render();
-	}
-
-	protected function get_brand( Product $product ) {
-		$component = Product_Brand::factory( [
-			Product_Brand::PRODUCT => $product,
 		] );
 
 		return $component->render();
@@ -115,7 +103,8 @@ class Product_Single extends Controller {
 
 	protected function get_form( Product $product ) {
 		$component = Product_Form::factory( [
-			Product_Form::PRODUCT => $product,
+			Product_Form::PRODUCT      => $product,
+			Product_Form::SHOW_OPTIONS => Channel::is_msf_channel_prop_on( Storefront_Processor::SHOW_ADD_TO_CART_QTY_BOX ),
 		] );
 
 		return $component->render();
@@ -171,13 +160,5 @@ class Product_Single extends Controller {
 
 		$shortcode = sprintf( '[%s post_id="%s"]', \BigCommerce\Shortcodes\Product_Reviews::NAME, $product->post_id() );
 		return do_shortcode( $shortcode );
-	}
-
-	protected function get_sku( Product $product ) {
-		$component = Product_Sku::factory( [
-			Product_Sku::PRODUCT         => $product,
-		] );
-
-		return $component->render();
 	}
 }

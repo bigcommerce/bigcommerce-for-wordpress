@@ -7,13 +7,14 @@ use BigCommerce\Shortcodes;
 
 class Cart_Page extends Required_Page {
 	const NAME = 'bigcommerce_cart_page_id';
+	const SLUG = 'cart';
 
 	protected function get_title() {
 		return _x( 'Cart', 'title of the cart page', 'bigcommerce' );
 	}
 
 	protected function get_slug() {
-		return _x( 'cart', 'slug of the cart page', 'bigcommerce' );
+		return _x( self::SLUG, 'slug of the cart page', 'bigcommerce' );
 	}
 
 	public function get_content() {

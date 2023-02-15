@@ -11,6 +11,7 @@ use BigCommerce\Import\Task_Definition;
 use BigCommerce\Import\Task_Manager;
 use BigCommerce\Import\Import_Type;
 use BigCommerce\Logging\Error_Log;
+use BigCommerce\Manager\Manager;
 use BigCommerce\Settings\Import_Status;
 use BigCommerce\Settings\Sections\Import as Import_Settings;
 use BigCommerce\Taxonomies\Channel\Connections;
@@ -23,13 +24,17 @@ class Import extends Provider {
 	const LOCK_MONITOR    = 'import.lock.monitor';
 	const TIMEOUT         = 'timeout';
 
+	const CUSTOMER_DEFAULT_GROUP   = 'import.customer_default_group';
+	const MSF_STOREFRONT_PROCESSOR = 'import.msf_storefront_processor';
+
 	const TASK_MANAGER  = 'import.task_manager';
 	const TASK_LIST     = 'import.task_list';
 	const CACHE_CLEANUP = 'import.cache_cleanup';
 	const CHANNEL_LIST  = 'import.channel_list';
 
-	const BATCH_SIZE       = 'import.batch_size';
-	const LARGE_BATCH_SIZE = 'import.large_batch_size';
+	const BATCH_SIZE        = 'import.batch_size';
+	const LARGE_BATCH_SIZE  = 'import.large_batch_size';
+	const POST_TASK_MANAGER = 'import.postponed_task_manager';
 
 	const START            = 'import.start';
 	const LISTINGS         = 'import.listings';
@@ -69,6 +74,10 @@ class Import extends Provider {
 			return apply_filters( 'bigcommerce/import/timeout', 5 * MINUTE_IN_SECONDS );
 		};
 
+		$container[ self::POST_TASK_MANAGER ] = function ( Container $container ) {
+			return new Manager();
+		};
+
 		$container[ self::CRON_MONITOR ] = function ( Container $container ) {
 			return new Runner\Cron_Monitor();
 		};
@@ -90,6 +99,14 @@ class Import extends Provider {
 		$container[ self::LOCK_MONITOR ] = function ( Container $container ) {
 			return new Runner\Lock_Monitor( $container[ self::TIMEOUT ] );
 		};
+
+		add_filter( 'cron_schedules', function ( $schedules ) use ( $container ) {
+			return $container[ self::POST_TASK_MANAGER ]->add_interval( $schedules );
+		}, 10, 1 );
+
+		add_action( 'init', function ( $schedules ) use ( $container ) {
+			return $container[ self::POST_TASK_MANAGER ]->maybe_schedule_queue_processor( $schedules );
+		}, 10, 1 );
 
 		add_action( 'init', $this->create_callback( 'lock_expiration', function () use ( $container ) {
 			$container[ self::LOCK_MONITOR ]->check_for_expired_lock();
@@ -133,6 +150,10 @@ class Import extends Provider {
 		add_action( Processors\Cleanup::CLEAN_PRODUCTS_TRANSIENT, $this->create_callback( 'clean_products_data_transient', function ( $offset = 0, $partially = false ) use ( $container ) {
 			$container[ self::CLEANUP ]->refresh_products_transient( $offset, $partially );
 		} ), 10, 1 );
+
+		add_action( Manager::CRON_PROCESSOR, $this->create_callback( 'postponed_task_processing', function () use ( $container ) {
+			$container[ self::POST_TASK_MANAGER ]->run_tasks();
+		} ), 10, 1 );
 	}
 
 	private function process( Container $container ) {
@@ -154,6 +175,14 @@ class Import extends Provider {
 			return new Processors\Start_Import();
 		};
 
+		$container[ self::CUSTOMER_DEFAULT_GROUP ] = function ( Container $container ) {
+			return new Processors\Default_Customer_Group( $container[ Api::FACTORY ]->price_lists() );
+		};
+
+		$container[ self::MSF_STOREFRONT_PROCESSOR ] = function ( Container $container ) {
+			return new Processors\Storefront_Processor( $container[ Api::FACTORY ]->storefront_settings(), new Connections() );
+		};
+
 		$container[ self::PURGE_CATEGORIES ] = function ( Container $container ) {
 			return new Processors\Category_Purge( $container[ Api::FACTORY ]->catalog(), $container[ self::LARGE_BATCH_SIZE ] );
 		};
@@ -163,7 +192,7 @@ class Import extends Provider {
 		};
 
 		$container[ self::CATEGORIES ] = function ( Container $container ) {
-			return new Processors\Category_Import( $container[ Api::FACTORY ]->catalog(), $container[ self::BATCH_SIZE ] );
+			return new Processors\Category_Import( $container[ Api::FACTORY ]->catalog(), $container[ GraphQL::GRAPHQL_REQUESTOR ], $container[ self::BATCH_SIZE ] );
 		};
 
 		$container[ self::HEADLESS_PROCESSOR ] = function ( Container $container ) {
@@ -173,7 +202,7 @@ class Import extends Provider {
 		};
 
 		$container[ self::BRANDS ] = function ( Container $container ) {
-			return new Processors\Brand_Import( $container[ Api::FACTORY ]->catalog(), $container[ self::BATCH_SIZE ] );
+			return new Processors\Brand_Import( $container[ Api::FACTORY ]->catalog(), $container[ GraphQL::GRAPHQL_REQUESTOR ], $container[ self::BATCH_SIZE ] );
 		};
 
 		$container[ self::RESIZE ] = function ( Container $container ) {
@@ -205,11 +234,11 @@ class Import extends Provider {
 		};
 
 		$container[ self::STORE ] = function ( Container $container ) {
-			return new Processors\Store_Settings( $container[ Api::FACTORY ]->store() );
+			return new Processors\Store_Settings( $container[ Api::FACTORY ]->store(), $container[ self::CUSTOMER_DEFAULT_GROUP ], $container[ self::MSF_STOREFRONT_PROCESSOR ] );
 		};
 
 		$container[ self::CURRENCIES ] = function ( Container $container ) {
-			return new Processors\Currencies( $container[ Api::FACTORY ]->currencies() );
+			return new Processors\Currencies( $container[ Api::FACTORY ]->currencies(), $container[ Api::FACTORY ]->currenciesV3(), new Connections() );
 		};
 
 		$container[ self::PRODUCT_CLEANUP ] = function ( Container $container ) {
@@ -286,11 +315,11 @@ class Import extends Provider {
 					} ), 40, Runner\Status::INITIALIZED_CHANNEL . $suffix, [ Runner\Status::INITIALIZING_CHANNEL . $suffix ], sprintf( __( 'Adding listings to channel %s', 'bigcommerce' ), esc_html( $channel_term->name ) ) );
 				}
 
-				$list[] = new Task_Definition( $this->create_callback( 'process_fetch', function () use ( $container, $channel_term ) {
+				$list[] = new Task_Definition( $this->create_callback( 'process_fetch', function () use ( $container ) {
 					$container[ self::PRODUCTS ]->run();
 				} ), 50, Runner\Status::FETCHED_PRODUCTS, [ Runner\Status::FETCHING_PRODUCTS ], __( 'Fetching product data from the BigCommerce API', 'bigcommerce' ) );
 
-				$list[] = new Task_Definition( $this->create_callback( 'process_mark', function () use ( $container, $channel_term ) {
+				$list[] = new Task_Definition( $this->create_callback( 'process_mark', function () use ( $container ) {
 					$container[ self::MARK ]->run();
 				} ), 60, Runner\Status::MARKED_DELETED_PRODUCTS, [ Runner\Status::MARKING_DELETED_PRODUCTS ], __( 'Identifying posts to remove from WordPress', 'bigcommerce' ) );
 

@@ -43,6 +43,17 @@ abstract class Term_Saver implements Import_Strategy {
 		return $this->term_id;
 	}
 
+	public function get_term_bc_id( \ArrayAccess $bc_term ) {
+		if ( ! empty( $bc_term['id'] ) ) {
+			return $bc_term['id'];
+		}
+		if ( ! empty( $bc_term['category_id'] ) ) {
+			return $bc_term['category_id'];
+		}
+
+		return null;
+	}
+
 	abstract protected function save_wp_term( \ArrayAccess $bc_term );
 
 	abstract protected function save_wp_termmeta( \ArrayAccess $bc_term );

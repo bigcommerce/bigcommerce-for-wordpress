@@ -13,6 +13,7 @@ use BigCommerce\Rest\Reviews_Listing_Controller;
 use BigCommerce\Rest\Shortcode_Controller;
 use BigCommerce\Rest\Shipping_Controller;
 use BigCommerce\Rest\Coupon_Code_Controller;
+use BigCommerce\Rest\Storefront_Controller;
 use BigCommerce\Rest\Terms_Controller;
 use BigCommerce\Reviews\Review_Fetcher;
 use Pimple\Container;
@@ -26,6 +27,9 @@ class Rest extends Provider {
 
 	const PRODUCTS_BASE = 'rest.products_base';
 	const PRODUCTS      = 'rest.products';
+
+	const STOREFRONT_BASE = 'rest.storefront_base';
+	const STOREFRONT      = 'rest.storefront';
 
 	const TERMS_BASE = 'rest.terms_base';
 	const TERMS      = 'rest.terms';
@@ -96,6 +100,19 @@ class Rest extends Provider {
 
 		$container[ self::PRODUCTS ] = function ( Container $container ) {
 			return new Products_Controller( $container[ self::NAMESPACE_BASE ], $container[ self::VERSION ], $container[ self::PRODUCTS_BASE ] );
+		};
+
+		$container[ self::STOREFRONT_BASE ] = function ( Container $container ) {
+			/**
+			 * Filters REST products base.
+			 *
+			 * @param string $products Products base.
+			 */
+			return apply_filters( 'bigcommerce/rest/storefront_base', 'storefront' );
+		};
+
+		$container[ self::STOREFRONT ] = function ( Container $container ) {
+			return new Storefront_Controller( $container[ self::NAMESPACE_BASE ], $container[ self::VERSION ], $container[ self::STOREFRONT_BASE ] );
 		};
 
 		$container[ self::TERMS_BASE ] = function ( Container $container ) {
@@ -211,6 +228,7 @@ class Rest extends Provider {
 			$container[ self::PRICING ]->register_routes();
 			$container[ self::SHIPPING ]->register_routes();
 			$container[ self::COUPON_CODE ]->register_routes();
+			$container[ self::STOREFRONT ]->register_routes();
 		} ), 10, 0 );
 
 		add_filter( 'bigcommerce/product/reviews/rest_url', $this->create_callback( 'review_list_rest_url', function ( $url, $post_id ) use ( $container ) {

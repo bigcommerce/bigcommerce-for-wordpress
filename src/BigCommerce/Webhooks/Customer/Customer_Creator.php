@@ -5,7 +5,6 @@ namespace BigCommerce\Webhooks\Customer;
 use BigCommerce\Accounts\Customer;
 use BigCommerce\Accounts\Roles\Customer as Customer_Role;
 use BigCommerce\Accounts\User_Profile_Settings;
-use Bigcommerce\Api\Client;
 use BigCommerce\Logging\Error_Log;
 
 /**
@@ -13,29 +12,25 @@ use BigCommerce\Logging\Error_Log;
  *
  * Handle customer create webhook requests
  */
-class Customer_Creator {
+class Customer_Creator extends Customer_Saver {
 
 	/**
 	 * Create new customer if it doesn't exist
 	 *
-	 * @param $customer_id
+	 * @param int $customer_id
 	 *
-	 * @return false|int|\WP_Error
+	 * @return bool
 	 */
-	public function handle_request( $customer_id ) {
-		$customer_response = Client::getResource( sprintf( '/customers/%d', $customer_id ) );
+	public function handle_request( int $customer_id = 0, array $channel_ids = [] ): bool {
+		$customer_response = $this->get_v3_customer_by_id( $customer_id );
 
 		if ( empty( $customer_response ) ) {
-			do_action( 'bigcommerce/log', Error_Log::ERROR, __( 'Customer create webhook failed. Could not get customer details', 'bigcommerce' ), [
-					'customer_id' => $customer_id,
-			], 'webhooks' );
-
 			return false;
 		}
 
-		$username      = $customer_response->email;
-		$first_name    = $customer_response->first_name;
-		$last_name     = $customer_response->last_name;
+		$username      = $customer_response->getEmail();
+		$first_name    = $customer_response->getFirstName();
+		$last_name     = $customer_response->getLastName();
 		$matching_user = get_user_by( 'email', $username );
 
 		if ( $matching_user ) {
@@ -76,10 +71,11 @@ class Customer_Creator {
 		update_user_meta( $user_id, User_Profile_Settings::SYNC_PASSWORD, true );
 		update_user_meta( $user_id, 'first_name',  $first_name);
 		update_user_meta( $user_id, 'last_name',  $last_name);
+		$this->save_customer_channel_data( $matching_user, $customer_response );
 
 		$this->handle_customer_id_update( $user_id, $customer_id );
 
-		return $user_id;
+		return true;
 	}
 
 	/**

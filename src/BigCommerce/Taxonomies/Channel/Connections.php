@@ -4,6 +4,7 @@
 namespace BigCommerce\Taxonomies\Channel;
 
 use BigCommerce\Exceptions\Channel_Not_Found_Exception;
+use BigCommerce\Logging\Error_Log;
 
 class Connections {
 
@@ -86,5 +87,27 @@ class Connections {
 		}
 
 		return $terms;
+	}
+
+	/**
+	 * @return int|mixed
+	 */
+	public function get_primary_channel_id() {
+		try {
+			$term       = $this->primary();
+			$channel_id = get_term_meta( $term->term_id, Channel::CHANNEL_ID, true );
+
+			if ( empty( $channel_id ) || is_wp_error( $channel_id) ) {
+				return 0;
+			}
+
+			return $channel_id;
+		} catch ( \Throwable $exception ) {
+			do_action( 'bigcommerce/log', Error_Log::ERROR, __( 'Could not retrieve primary channel id', 'bigcommerce' ), [
+				'code'    => $exception->getCode(),
+				'message' => $exception->getMessage(),
+			] );
+			return 0;
+		}
 	}
 }

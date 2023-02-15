@@ -9,13 +9,14 @@ use BigCommerce\Shortcodes;
 class Check_Balance_Page extends Required_Page {
 
 	const NAME = 'bigcommerce_gift_balance_page_id';
+	const SLUG = 'check-balance';
 
 	protected function get_title() {
 		return _x( 'Check Balance', 'title of the gift certificate balance page', 'bigcommerce' );
 	}
 
 	protected function get_slug() {
-		return _x( 'check-balance', 'slug of the gift certificate balance page', 'bigcommerce' );
+		return _x( self::SLUG, 'slug of the gift certificate balance page', 'bigcommerce' );
 	}
 
 	public function get_content() {

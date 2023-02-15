@@ -143,7 +143,7 @@ class Taxonomies extends Provider {
 
 	private function channel( Container $container ) {
 		$this->routes( $container );
-		
+
 		$container[ self::CHANNEL_CONFIG ] = function ( Container $container ) {
 			return new Channel\Config( Channel\Channel::NAME, [ Product::NAME, Queue_Task::NAME ] );
 		};
@@ -153,22 +153,22 @@ class Taxonomies extends Provider {
 		$container[ self::CHANNEL_BC_STATUS ] = function ( Container $container ) {
 			return new Channel\BC_Status();
 		};
-		
+
 		add_action( 'bigcommerce/import/start', function () use ( $container ) {
 			$container[ self::CHANNEL_BC_STATUS ]->maybe_cancel_import();
 		}, 11, 0 );
-		
+
 		add_action( 'admin_notices', function () use ( $container ) {
 			$container[ self::CHANNEL_BC_STATUS ]->admin_notices();
 		} );
-		
+
 		// We need a fresh list of channels on Connect Channel screen and on each import
 		$channel_sync = $this->create_callback( 'channel_sync', function () use ( $container ) {
 			$container[ self::CHANNEL_SYNC ]->sync();
 		} );
 		add_action( 'bigcommerce/settings/before_form/page=' . Connect_Channel_Screen::NAME, $channel_sync, 10, 0 );
 		add_action( 'bigcommerce/import/start', $channel_sync, 10, 0 );
-		
+
 		add_action( 'bigcommerce/settings/before_form/page=' . Settings_Screen::NAME, function () use ( $container ) {
 			$container[ self::CHANNEL_SYNC ]->initial_sync();
 		}, 10, 0 );
@@ -179,7 +179,7 @@ class Taxonomies extends Provider {
 
 
 		$container[ self::CHANNEL_CONNECTOR ] = function ( Container $container ) {
-			return new Channel_Connector( $container[ Api::FACTORY ]->channels() );
+			return new Channel_Connector( $container[ Api::FACTORY ]->channels(), $container[ Api::FACTORY ]->store() );
 		};
 
 		add_action( 'admin_menu', $this->create_callback( 'create_first_channel', function () use ( $container ) {

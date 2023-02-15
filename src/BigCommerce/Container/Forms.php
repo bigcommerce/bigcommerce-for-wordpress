@@ -14,6 +14,7 @@ use BigCommerce\Forms\Registration_Handler;
 use BigCommerce\Forms\Success_Handler;
 use BigCommerce\Forms\Update_Address_Handler;
 use BigCommerce\Forms\Update_Profile_Handler;
+use BigCommerce\Forms\Switch_Currency_Handler;
 use Pimple\Container;
 
 class Forms extends Provider {
@@ -27,6 +28,7 @@ class Forms extends Provider {
 	const SUCCESS          = 'forms.success';
 	const REDIRECTS        = 'forms.redirects';
 	const MESSAGING        = 'forms.messaging';
+	const SWITCH_CURRENCY  = 'forms.switch_currency';
 
 	public function register( Container $container ) {
 
@@ -96,6 +98,13 @@ class Forms extends Provider {
 		add_filter( 'bigcommerce/product/reviews/show_form', $this->create_callback( 'toggle_review_form', function ( $enabled, $post_id ) use ( $container ) {
 			return $container[ self::REVIEW ]->toggle_reviews_form_availability( $enabled, $post_id );
 		} ), 10, 2 );
+
+		$container[ self::SWITCH_CURRENCY ] = function ( Container $container ) {
+			return new Switch_Currency_Handler( $container[ Currency::CURRENCY ], $container[ Api::FACTORY ]->cart() );
+		};
+		add_action( 'bigcommerce/form/action=' . Switch_Currency_Handler::ACTION, $this->create_callback( 'switch_currency', function ( $submission ) use ( $container ) {
+			return $container[ self::SWITCH_CURRENCY ]->handle_request( $submission );
+		} ), 10, 1 );
 	}
 
 	private function errors( Container $container ) {

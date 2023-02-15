@@ -5,7 +5,9 @@ namespace BigCommerce\Templates;
 
 
 use BigCommerce\Customizer\Sections\Buttons;
+use BigCommerce\Import\Processors\Storefront_Processor;
 use BigCommerce\Post_Types\Product\Product;
+use BigCommerce\Taxonomies\Channel\Channel;
 use BigCommerce\Taxonomies\Flag\Flag;
 
 class Product_Card extends Controller {
@@ -102,9 +104,13 @@ class Product_Card extends Controller {
 			return '';
 		}
 		if ( $product->has_options() ) {
+			if ( ! Channel::is_msf_channel_prop_on( Storefront_Processor::SHOW_ADD_TO_CART_QTY_BOX ) ) {
+				return '';
+			}
+
 			$component = View_Product_Button::factory( [
 				View_Product_Button::PRODUCT => $product,
-				View_Product_Button::LABEL   => get_option( Buttons::CHOOSE_OPTIONS, __( 'Choose Options', 'bigcommerce' ) ),
+				View_Product_Button::LABEL   =>  get_option( Buttons::CHOOSE_OPTIONS, __( 'Choose Options', 'bigcommerce' ) ),
 			] );
 		} else {
 			$component = Product_Form::factory( [

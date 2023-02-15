@@ -10,7 +10,7 @@ import { GUTENBERG_PRODUCT_COMPONENTS as BLOCK } from '../../config/gutenberg-se
 import ProductId from './productId';
 import ProductComponentType from './productComponentType';
 
-const { InspectorControls } = wp.editor;
+const { InspectorControls } = wp.blockEditor;
 const { PanelRow, PanelBody, BaseControl } = wp.components;
 const { Component, Fragment } = wp.element;
 

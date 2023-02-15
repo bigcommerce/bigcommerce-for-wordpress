@@ -1,0 +1,29 @@
+query GetBrands(
+  $pageSize: Int!
+  $cursor: String
+) {
+  site {
+    brands(first: $pageSize, after: $cursor) {
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+      edges{
+        node{
+          entityId
+          id
+          name
+          seo {
+            metaDescription
+            pageTitle
+          }
+          path
+          defaultImage {
+            url(width: 320)
+            urlOriginal
+          }
+        }
+      }
+    }
+  }
+}

@@ -14,7 +14,8 @@ use BigCommerce\Settings;
 
 class Store_Settings implements Import_Processor {
 
-	const DOMAIN = 'bigcommerce_domain';
+	const DOMAIN   = 'bigcommerce_domain';
+	const MSF_FLAG = 'bigcommerce_multi_storefront';
 
 	const PRODUCT_OUT_OF_STOCK = 'bigcommerce_product_out_of_stock_behavior';
 	const OPTION_OUT_OF_STOCK  = 'bigcommerce_settings_option_out';
@@ -28,8 +29,20 @@ class Store_Settings implements Import_Processor {
 	 */
 	private $store_api;
 
-	public function __construct( Store_Api $store_api ) {
-		$this->store_api = $store_api;
+	/**
+	 * @var \BigCommerce\Import\Processors\Default_Customer_Group
+	 */
+	private $default_customer_group;
+
+	/**
+	 * @var \BigCommerce\Import\Processors\Storefront_Processor
+	 */
+	private $storefront_processor;
+
+	public function __construct( Store_Api $store_api, Default_Customer_Group $default_customer_group, Storefront_Processor $storefront_processor ) {
+		$this->store_api              = $store_api;
+		$this->default_customer_group = $default_customer_group;
+		$this->storefront_processor   = $storefront_processor;
 	}
 
 	public function run() {
@@ -48,6 +61,7 @@ class Store_Settings implements Import_Processor {
 
 			$settings = [
 				self::DOMAIN                                         => $store->domain,
+				self::MSF_FLAG                                       => $store->features->multi_storefront_enabled,
 				Settings\Sections\Currency::CURRENCY_CODE            => $store->currency,
 				Settings\Sections\Currency::CURRENCY_SYMBOL          => $store->currency_symbol,
 				Settings\Sections\Currency::CURRENCY_SYMBOL_POSITION => $this->sanitize_currency_symbol_position( $store->currency_symbol_location ),
@@ -77,6 +91,12 @@ class Store_Settings implements Import_Processor {
 			}
 
 			$this->process_legacy_inventory_settings();
+
+			// Save default customer group for MSF
+			if ( $store->features->multi_storefront_enabled ) {
+				$this->default_customer_group->run();
+				$this->storefront_processor->run();
+			}
 
 			do_action( 'bigcommerce/import/fetched_currency', $settings[ Settings\Sections\Currency::CURRENCY_CODE ] );
 			do_action( 'bigcommerce/import/fetched_store_settings', $settings );
@@ -208,4 +228,12 @@ class Store_Settings implements Import_Processor {
 		return min( (int) $max_length, 4 );
 	}
 
+	/**
+	 * Is multi storefront is enabled
+	 *
+	 * @return bool
+	 */
+	public static function is_msf_on(): bool {
+		return ( int ) get_option( Store_Settings::MSF_FLAG, 0 ) === 1;
+	}
 }

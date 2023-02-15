@@ -5,7 +5,9 @@ namespace BigCommerce\Templates;
 
 
 use BigCommerce\Customizer\Sections\Buttons;
+use BigCommerce\Import\Processors\Storefront_Processor;
 use BigCommerce\Post_Types\Product\Product;
+use BigCommerce\Taxonomies\Channel\Channel;
 
 class Product_Quick_View extends Product_Shortcode_Single {
 	const PRODUCT = 'product';
@@ -46,7 +48,7 @@ class Product_Quick_View extends Product_Shortcode_Single {
 	protected function get_form( Product $product ) {
 		$component = Product_Form::factory( [
 			Product_Form::PRODUCT      => $product,
-			Product_Form::SHOW_OPTIONS => true,
+			Product_Form::SHOW_OPTIONS => Channel::is_msf_channel_prop_on( Storefront_Processor::SHOW_ADD_TO_CART_QTY_BOX ),
 		] );
 
 		return $component->render();
@@ -64,6 +66,10 @@ class Product_Quick_View extends Product_Shortcode_Single {
 	}
 
 	protected function get_rating( Product $product ) {
+		if ( ! Channel::is_msf_channel_prop_on( Storefront_Processor::SHOW_PRODUCT_RATING ) ) {
+			return '';
+		}
+
 		$component = Product_Rating::factory( [
 			Product_Rating::PRODUCT => $product,
 			Product_Rating::LINK    => get_the_permalink( $product->post_id() ) . '#bc-single-product__reviews',

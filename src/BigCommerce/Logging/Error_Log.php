@@ -24,7 +24,8 @@ class Error_Log {
 	const MAX_SIZE     = 25;
 	const ALLOWED_LOGS = [
 		'debug',
-		'webhooks'
+		'webhooks',
+		'manager'
 	];
 	/**
 	 * @var Logger

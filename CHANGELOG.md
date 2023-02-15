@@ -1,5 +1,17 @@
 # Changelog
 
+## [5.0.0]
+
+### Added
+- Added support for Multi Storefront(MSF) functionality:
+  - Pull products, product categories and brands that belongs to specified channel
+  - Retrieve and save currencies during the import. They can be used in `Currency Switch` widget. You can add widget in Appearance -> Widgets. Just drop widget to registered widget area. After that each user can switch to required currency on the frontend
+  - Apply channel settings(hide prices, hide reviews etc.) set in Bigcommerce Channel Manager to WordPress e-commerce pages. 
+  - Retrieve customer groups existed in Bigcommerce. If it is possible set default customer group for all new customer
+
+### Changed
+- Creation of new channel for MSF stores won't create active channel in Bigcommerce anymore. Instead of that channel with pre-launch status will be created. Usual WordPres pages will be still accessible by regular users. However, any e-commerce pages(checkout, product single page and etc) won't be visible for anyone, except site administrator, and return 404 error. To make it visible please enable webhooks and go to Bigcommerce Channel Manager. Change channel status to active. After that e-commerce pages will become visible for everyone.
+
 ## [4.37.0]
 
 ### Added
@@ -1860,6 +1872,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[5.0.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.37.0...5.0.0
 [4.37.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.36.0...4.37.0
 [4.36.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.35.0...4.36.0
 [4.35.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.34.0...4.35.0

@@ -9,13 +9,17 @@ namespace BigCommerce\Container;
 
 use BigCommerce\Settings\Sections\Import as Import_Settings;
 use BigCommerce\Webhooks\Checkout_Complete_Webhook;
+use BigCommerce\Webhooks\Customer\Customer_Channel_Updater;
+use BigCommerce\Webhooks\Customer\Customer_Channel_Webhook;
 use BigCommerce\Webhooks\Customer\Customer_Create_Webhook;
 use BigCommerce\Webhooks\Customer\Customer_Creator;
 use BigCommerce\Webhooks\Customer\Customer_Delete_Webhook;
 use BigCommerce\Webhooks\Customer\Customer_Deleter;
 use BigCommerce\Webhooks\Customer\Customer_Update_Webhook;
 use BigCommerce\Webhooks\Customer\Customer_Updater;
+use BigCommerce\Webhooks\Product\Channel_Updater;
 use BigCommerce\Webhooks\Product\Channels_Assign;
+use BigCommerce\Webhooks\Product\Channels_Currency_Update;
 use BigCommerce\Webhooks\Product\Channels_Management_Webhook;
 use BigCommerce\Webhooks\Product\Channels_UnAssign;
 use BigCommerce\Webhooks\Product\Product_Create_Webhook;
@@ -50,9 +54,13 @@ class Webhooks extends Provider {
 	const PRODUCT_CREATOR                  = 'webhooks.cron.product_creator';
 	const CHANNEL_PRODUCT_ASSIGNED         = 'webhooks.product.channels_assign';
 	const CHANNEL_PRODUCT_UNASSIGNED       = 'webhooks.product.channels_unassign';
+	const CHANNEL_UPDATER                  = 'webhooks.product.channels_updater';
+	const CHANNEL_CURRENCY_UPDATED         = 'webhooks.channels.currency_updated';
 	const CUSTOMER_CREATOR                 = 'webhooks.cron.customer_creator';
 	const CUSTOMER_UPDATER                 = 'webhooks.cron.customer_updater';
 	const CUSTOMER_DELETER                 = 'webhooks.cron.customer_deleter';
+	const CUSTOMER_CHANNEL_ACCESS_UPDATER  = 'webhooks.cron.customer_channel_access_updater';
+	const CUSTOMER_CHANNEL_ACCESS          = 'webhooks.cron.customer_channel_access';
 	const CHECKOUT_COMPLETE_WEBHOOK        = 'webhooks.checkout_complete';
 	const WEBHOOKS_VERSIONING              = 'webhooks.version';
 	const WEBHOOKS_CRON_TASKS              = 'webhooks.cron_tasks';
@@ -95,6 +103,7 @@ class Webhooks extends Provider {
 				$container[ self::CUSTOMER_CREATE_WEBHOOK ],
 				$container[ self::CUSTOMER_UPDATE_WEBHOOK ],
 				$container[ self::CUSTOMER_DELETE_WEBHOOK ],
+				$container[ self::CUSTOMER_CHANNEL_ACCESS ],
 				$container[ self::PRODUCT_INVENTORY_UPDATE_WEBHOOK ],
 				$container[ self::CHECKOUT_COMPLETE_WEBHOOK ],
 			];
@@ -126,16 +135,28 @@ class Webhooks extends Provider {
 			return new Channels_UnAssign( $container[ Api::FACTORY ]->catalog(), $container[ Api::FACTORY ]->channels() );
 		};
 
+		$container[ self::CHANNEL_CURRENCY_UPDATED ] = function ( Container $container ) {
+			return new Channels_Currency_Update( $container[ Api::FACTORY ]->currencies_v3() );
+		};
+
+		$container[ self::CHANNEL_UPDATER ] = function ( Container $container ) {
+			return new Channel_Updater( $container[ Api::FACTORY ]->catalog(), $container[ Api::FACTORY ]->channels() );
+		};
+
 		$container[ self::CUSTOMER_CREATOR ] = function ( Container $container ) {
-			return new Customer_Creator();
+			return new Customer_Creator( $container[ Api::FACTORY ]->customer() );
 		};
 
 		$container[ self::CUSTOMER_UPDATER ] = function ( Container $container ) {
-			return new Customer_Updater();
+			return new Customer_Updater( $container[ Api::FACTORY ]->customer() );
 		};
 
 		$container[ self::CUSTOMER_DELETER ] = function ( Container $container ) {
-			return new Customer_Deleter();
+			return new Customer_Deleter( $container[ Api::FACTORY ]->customer() );
+		};
+
+		$container[ self::CUSTOMER_CHANNEL_ACCESS_UPDATER ] = function ( Container $container ) {
+			return new Customer_Channel_Updater( $container[ Api::FACTORY ]->customer() );
 		};
 	}
 
@@ -155,6 +176,10 @@ class Webhooks extends Provider {
 
 		$container[ self::CUSTOMER_UPDATE_WEBHOOK ] = function ( Container $container ) {
 			return new Customer_Update_Webhook( $container[ Api::FACTORY ]->webhooks() );
+		};
+
+		$container[ self::CUSTOMER_CHANNEL_ACCESS ] = function ( Container $container ) {
+			return new Customer_Channel_Webhook( $container[ Api::FACTORY ]->webhooks() );
 		};
 	}
 
@@ -281,6 +306,14 @@ class Webhooks extends Provider {
 
 			$container[ self::CUSTOMER_UPDATER ]->handle_request( $customer_id );
 		} ), 10, 1 );
+
+		add_action( Customer_Channel_Webhook::HOOK, $this->create_callback('update_customer_channel_access_webhook_handler', function ( $customer_id, $channels_id ) use ( $container ) {
+			if ( ! $this->customer_webhooks_enabled() ) {
+				return;
+			}
+
+			$container[ self::CUSTOMER_CHANNEL_ACCESS_UPDATER ]->handle_request( $customer_id, $channels_id );
+		} ), 10, 1 );
 	}
 
 	/**
@@ -334,7 +367,7 @@ class Webhooks extends Provider {
         } ), 10, 1 );
 
 
-		add_action ( 'bigcommerce/webhooks/product_channel_assigned', $this->create_callback( 'product_channel_was_assigned', function ( $product_id, $channel_id ) use ( $container ) {
+		add_action ( sprintf('%s_assigned',Channels_Management_Webhook::PRODUCT_CHANNEL_HOOK ), $this->create_callback( 'product_channel_was_assigned', function ( $product_id, $channel_id ) use ( $container ) {
 			if ( ! $this->product_webhooks_enabled() ) {
 				return;
 			}
@@ -342,12 +375,24 @@ class Webhooks extends Provider {
 			$container[ self::CHANNEL_PRODUCT_ASSIGNED ]->handle_request( $product_id, $channel_id );
 		} ), 10, 2 );
 
-		add_action ( 'bigcommerce/webhooks/product_channel_unassigned', $this->create_callback( 'product_channel_was_unassigned', function ( $product_id, $channel_id ) use ( $container ) {
+		add_action ( sprintf( '%s_unassigned', Channels_Management_Webhook::PRODUCT_CHANNEL_HOOK ), $this->create_callback( 'product_channel_was_unassigned', function ( $product_id, $channel_id ) use ( $container ) {
 			if ( ! $this->product_webhooks_enabled() ) {
 				return;
 			}
 
 			$container[ self::CHANNEL_PRODUCT_UNASSIGNED ]->handle_request( $product_id, $channel_id );
+		} ), 10, 2 );
+
+		add_action ( Channels_Management_Webhook::CHANNEL_CURRENCY_UPDATE_HOOK, $this->create_callback( 'channel_currency_was_updated', function ( $channel_id ) use ( $container ) {
+			if ( ! $this->product_webhooks_enabled() ) {
+				return;
+			}
+
+			$container[ self::CHANNEL_CURRENCY_UPDATED ]->handle_request( $channel_id );
+		} ), 10, 2 );
+
+		add_action ( Channels_Management_Webhook::CHANNEL_UPDATED_HOOK, $this->create_callback( 'bc_channel_was_updated', function ( $channel_id ) use ( $container ) {
+			$container[ self::CHANNEL_UPDATER ]->handle_request( $channel_id );
 		} ), 10, 2 );
 	}
 

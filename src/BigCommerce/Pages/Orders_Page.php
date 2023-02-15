@@ -7,13 +7,14 @@ use BigCommerce\Shortcodes;
 
 class Orders_Page extends Required_Page {
 	const NAME = 'bigcommerce_orders_page_id';
+	const SLUG = 'order-history';
 
 	protected function get_title() {
 		return _x( 'Order History', 'title of the orders page', 'bigcommerce' );
 	}
 
 	protected function get_slug() {
-		return _x( 'order-history', 'slug of the orders page', 'bigcommerce' );
+		return _x( self::SLUG, 'slug of the orders page', 'bigcommerce' );
 	}
 
 	public function get_content() {

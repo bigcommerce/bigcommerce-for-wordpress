@@ -5,12 +5,14 @@ namespace BigCommerce\Container;
 
 
 use BigCommerce\Accounts\Roles\Customer;
+use BigCommerce\Schema\Queue_Table;
 use BigCommerce\Schema\Reviews_Table;
 use BigCommerce\Schema\User_Roles;
 use Pimple\Container;
 
 class Schema extends Provider {
 	const TABLE_REVIEWS  = 'schema.table.reviews';
+	const TABLE_QUEUES   = 'schema.table.queue';
 	const ROLE_SCHEMA    = 'schema.roles';
 	const CUSTOMER_ROLE  = 'schema.roles.customer';
 
@@ -24,8 +26,13 @@ class Schema extends Provider {
 			return new Reviews_Table();
 		};
 
+		$container[ self::TABLE_QUEUES ] = function( Container $container ) {
+			return new Queue_Table();
+		};
+
 		add_action( 'plugins_loaded', $this->create_callback( 'tables_plugins_loaded', function () use ( $container ) {
 			$container[ self::TABLE_REVIEWS ]->register_tables();
+			$container[ self::TABLE_QUEUES ]->register_tables();
 		} ), 10, 0 );
 	}
 

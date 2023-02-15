@@ -7,13 +7,14 @@ use BigCommerce\Shortcodes;
 
 class Address_Page extends Required_Page {
 	const NAME = 'bigcommerce_address_page_id';
+	const SLUG = 'addresses';
 
 	protected function get_title() {
 		return _x( 'Addresses', 'title of the addresses page', 'bigcommerce' );
 	}
 
 	protected function get_slug() {
-		return _x( 'addresses', 'slug of the addresses page', 'bigcommerce' );
+		return _x( self::SLUG, 'slug of the addresses page', 'bigcommerce' );
 	}
 
 	public function get_content() {

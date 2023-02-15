@@ -32,7 +32,7 @@ class Customer_Create_Webhook extends Webhook {
 		 * @param int $customer_id BigCommerce customer ID.
 		 */
 		do_action( 'bigcommerce/log', Error_Log::INFO, __( 'Trigger customer create webhook', 'bigcommerce' ), [
-				'bc_id' => $request['data']['id'],
+			'bc_id' => $request['data']['id'],
 		], 'webhooks' );
 		do_action( 'bigcommerce/webhooks/customer_created', intval( $request['data']['id'] ) );
 	}

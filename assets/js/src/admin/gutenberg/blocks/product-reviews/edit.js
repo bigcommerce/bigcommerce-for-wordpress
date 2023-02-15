@@ -7,7 +7,7 @@
 import { GUTENBERG_PRODUCT_REVIEWS as BLOCK } from '../../config/gutenberg-settings';
 import ShortcodeInput from './shortcodeInput';
 
-const { InspectorControls } = wp.editor;
+const { InspectorControls } = wp.blockEditor;
 const { PanelRow, PanelBody, BaseControl } = wp.components;
 const { withInstanceId } = wp.compose;
 const { Fragment } = wp.element;
