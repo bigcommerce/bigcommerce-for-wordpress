@@ -3,6 +3,7 @@
 namespace BigCommerce\Webhooks;
 
 use BigCommerce\Settings\Sections\Import;
+use BigCommerce\Webhooks\Customer\Customer_Channel_Webhook;
 use BigCommerce\Webhooks\Customer\Customer_Create_Webhook;
 use BigCommerce\Webhooks\Customer\Customer_Delete_Webhook;
 use BigCommerce\Webhooks\Customer\Customer_Update_Webhook;
@@ -76,6 +77,7 @@ trait WebhookTrait {
 			Customer_Create_Webhook::NAME,
 			Customer_Update_Webhook::NAME,
 			Customer_Delete_Webhook::NAME,
+			Customer_Channel_Webhook::NAME,
 		];
 	}
 

@@ -8,7 +8,9 @@ use BigCommerce\Accounts\Wishlists\Wishlist as Account_Wishlist;
 use BigCommerce\Api\v3\Api\WishlistsApi;
 use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api\v3\Model\Wishlist as Api_Wishlist;
+use BigCommerce\Import\Processors\Storefront_Processor;
 use BigCommerce\Settings\Sections\Wishlists as Wishlist_Settings;
+use BigCommerce\Taxonomies\Channel\Channel;
 use BigCommerce\Templates\Product_Single;
 use BigCommerce\Templates\Wishlist_Add_Item;
 
@@ -35,7 +37,7 @@ class Add_Item_View {
 	 * @filter bigcommerce/template=components/products/product-single.php/data
 	 */
 	public function filter_product_single_template( $data, $template, $options ) {
-		if ( ! get_option( Wishlist_Settings::ENABLED ) || ! is_user_logged_in() ) {
+		if ( ! Channel::is_msf_channel_prop_on( Storefront_Processor::SHOW_ADD_TO_WISHLIST ) || ! get_option( Wishlist_Settings::ENABLED ) || ! is_user_logged_in() ) {
 			return $data;
 		}
 		$customer    = new Customer( get_current_user_id() );

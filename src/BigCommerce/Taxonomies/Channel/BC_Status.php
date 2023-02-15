@@ -11,20 +11,21 @@ class BC_Status {
 
 	const STATUS = 'bigcommerce_channel_bc_status';
 
-	const STATUS_ACTIVE   = 'active';
-	const STATUS_INACTIVE = 'inactive';
-	const STATUS_DELETED  = 'deleted';
-	const STATUS_ARCHIVED = 'archived';
-	
+	const STATUS_ACTIVE     = 'active';
+	const STATUS_INACTIVE   = 'inactive';
+	const STATUS_DELETED    = 'deleted';
+	const STATUS_ARCHIVED   = 'archived';
+	const STATUS_PRE_LAUNCH = 'prelaunch';
+
 	/**
 	 * Prevent product import for non active status
 	 *
 	 * @return void
-	 * 
+	 *
 	 * @action bigcommerce/import/start
 	 */
 	public function maybe_cancel_import() {
-		if ( ! in_array( $this->get_current_channel_status(), [ self::STATUS_ACTIVE, self::STATUS_INACTIVE ] ) ) {
+		if ( ! in_array( $this->get_current_channel_status(), [ self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_PRE_LAUNCH ] ) ) {
 			do_action( 'bigcommerce/import/error', __( 'Inactive channel. Product import canceled.', 'bigcommerce' ) );
 		}
 	}
@@ -33,7 +34,7 @@ class BC_Status {
 	 * Show admin notices for non active status
 	 *
 	 * @return void
-	 * 
+	 *
 	 * @action admin_notices
 	 */
 	public function admin_notices() {
@@ -57,7 +58,7 @@ class BC_Status {
 				esc_attr( $class ),
 				esc_html( $message ),
 				sprintf( '<a href="%s" target="_blank">%s</a>', esc_url( 'https://login.bigcommerce.com/deep-links/manage/channel-manager/' ), __( 'Manage Channels', 'bigcommerce') )
-			); 
+			);
 		}
 	}
 

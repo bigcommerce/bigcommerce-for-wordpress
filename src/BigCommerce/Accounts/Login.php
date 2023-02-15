@@ -7,12 +7,17 @@ namespace BigCommerce\Accounts;
 use BigCommerce\Accounts\Roles\Customer as Customer_Role;
 use Bigcommerce\Api;
 use BigCommerce\Api_Factory;
+use BigCommerce\Import\Processors\Store_Settings;
 use BigCommerce\Pages\Account_Page;
 use BigCommerce\Pages\Address_Page;
 use BigCommerce\Pages\Login_Page;
 use BigCommerce\Pages\Orders_Page;
 use BigCommerce\Pages\Registration_Page;
 use BigCommerce\Pages\Wishlist_Page;
+use BigCommerce\Settings\Sections\Account_Settings;
+use BigCommerce\Taxonomies\Channel\Channel;
+use BigCommerce\Taxonomies\Channel\Connections;
+use BigCommerce\Webhooks\Customer\Customer_Channel_Updater;
 use WP_User;
 
 /**
@@ -98,6 +103,14 @@ class Login {
 			if ( $response && ! empty( $response->id ) ) {
 				$customer = new Customer( $user->ID );
 				$customer->set_customer_id( $response->id );
+
+				$connections  = new Connections();
+				$channel      = $connections->primary();
+				$channel_id   = get_term_meta( $channel->term_id, Channel::CHANNEL_ID, true );
+				$this->api_factory->customers()->customersPut( [
+						'origin_channel_id' => ( int ) $channel_id,
+						'channels_ids' => [ ( int ) $channel_id ],
+				] );
 
 				return $response->id;
 			}
@@ -381,25 +394,41 @@ class Login {
 			return $user; // don't try to create a new user if we already have one with that email
 		}
 
-		$api = $this->api_factory->customer();
+		$api_v3 = $this->api_factory->customers();
+		$api    = $this->api_factory->customer();
 
 		try {
-			$matches = $api->getCustomers( [
-				'email' => $username,
-			] );
+			$matches = $api_v3->customersGet( [
+				'email:in' => $username,
+			] )->getData();
 
 			if ( empty( $matches ) ) {
 				return $user;
 			}
 
-			/** @var Api\Resources\Customer $customer */
+			/** @var \BigCommerce\Api\v3\Model\Customer $customer */
 			$found_customer = reset( $matches );
 
-			$valid = $api->validatePassword( $found_customer->id, $password );
+			$valid = $api->validatePassword( $found_customer->getId(), $password );
 			if ( ! $valid ) {
 				return new \WP_Error( 'incorrect_password',
 					sprintf(
 						__( 'The password you entered for the email address %s is incorrect.', 'bigcommerce' ),
+						$username
+					)
+				);
+			}
+
+			$connections            = new Connections();
+			$channel                = $connections->primary();
+			$channel_id             = get_term_meta( $channel->term_id, Channel::CHANNEL_ID, true );
+			$is_allow_global_logins = (bool) get_option( Account_Settings::ALLOW_GLOBAL_LOGINS, true ) === true;
+			$is_belong_to_channel   = in_array( $channel_id, ( array ) $found_customer->getChannelIds() );
+			// Do not allow logging in users from another channels on MSF while global login is disabled
+			if ( Store_Settings::is_msf_on() && ! $is_allow_global_logins && ! $is_belong_to_channel ) {
+				return new \WP_Error( 'incorrect_email',
+					sprintf(
+						__( 'The access for %s is prohibited. Please create a new user ot try another one', 'bigcommerce' ),
 						$username
 					)
 				);
@@ -423,9 +452,10 @@ class Login {
 
 			// all future password validation will be against the API for this user
 			update_user_meta( $user_id, User_Profile_Settings::SYNC_PASSWORD, true );
-
+			update_user_meta( $user_id, Customer_Channel_Updater::CUSTOMER_CHANNEL_META, ( array ) $found_customer->getChannelIds() );
+			update_user_meta( $user_id, Customer_Channel_Updater::CUSTOMER_ORIGIN_CHANNEL, $found_customer->getOriginChannelId() );
 			$customer = new Customer( $user_id );
-			$customer->set_customer_id( $found_customer->id );
+			$customer->set_customer_id( $found_customer->getId() );
 
 			return new \WP_User( $user_id );
 

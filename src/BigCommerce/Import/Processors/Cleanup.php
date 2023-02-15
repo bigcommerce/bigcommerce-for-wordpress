@@ -43,6 +43,7 @@ class Cleanup implements Import_Processor {
 		$status->set_status( Status::CLEANING );
 
 		$this->clean_tasks( $pre_import );
+		delete_option( Term_Import::BRANDS_CHECKPOINT );
 
 		if ( $pre_import ) {
 			$status->set_status( Status::STARTED );

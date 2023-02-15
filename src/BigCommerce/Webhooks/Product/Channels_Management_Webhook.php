@@ -17,8 +17,14 @@ use BigCommerce\Webhooks\Webhook;
  */
 class Channels_Management_Webhook extends Webhook {
 
-	const SCOPE = 'store/channel/*';
-	const NAME  = 'bigcommerce_channels';
+	const SCOPE                 = 'store/channel/*';
+	const CHANNEL_UPDATED_SCOPE = 'store/channel/updated';
+	const CHANNEL_UPDATED_HOOK  = 'bigcommerce/webhooks/channel_updated';
+	const NAME                  = 'bigcommerce_channels';
+
+	const PRODUCT_CATEGORY_CHANNEL_HOOK = 'bigcommerce/webhooks/product_category_channel';
+	const PRODUCT_CHANNEL_HOOK          = 'bigcommerce/webhooks/product_channel';
+	const CHANNEL_CURRENCY_UPDATE_HOOK  = 'bigcommerce/webhooks/channel_default_currency_updated';
 
 	/**
 	 * Fires when a change is applied to channels
@@ -37,6 +43,19 @@ class Channels_Management_Webhook extends Webhook {
 		$channel_id = stristr( $scope, '/', true );
 
 		if ( empty( $channel_id ) || ! is_numeric( $channel_id ) ) {
+			// Channel update/create webhook has channel id in data array and does not have it in scopes
+			if ( $request['scope'] === self::CHANNEL_UPDATED_SCOPE ) {
+				do_action( self::CHANNEL_UPDATED_HOOK, intval( $request['data']['id'] ) );
+
+				do_action( 'bigcommerce/log', Error_Log::INFO, __( 'Incoming channel update', 'bigcommerce' ), [
+					'request'    => $request,
+					'channel_id' => $request['data']['id'],
+				], 'webhooks' );
+
+				return;
+			}
+
+
 			do_action( 'bigcommerce/log', Error_Log::ERROR, __( 'Webhook request does not have correct channel id', 'bigcommerce' ), [
 				'request'    => $request,
 				'channel_id' => $channel_id,
@@ -57,11 +76,23 @@ class Channels_Management_Webhook extends Webhook {
 			return;
 		}
 
-		if ( stripos( 'category/product', $scope ) !== false ) {
-			do_action( sprintf( 'bigcommerce/webhooks/product_category_channel_%s', $action ), intval( $request['data']['product_id'] ), $channel_id );
+		$this->handle_channels_webhooks_filters( $request, $scope, ( int ) $channel_id, $action );
+	}
+
+	public function handle_channels_webhooks_filters( array $request, string $scope, int $channel_id, string $action ): void {
+		if ( stripos( 'settings/currency/updated', $scope ) !== false ) {
+			do_action( self::CHANNEL_CURRENCY_UPDATE_HOOK, $channel_id );
+
+			return;
 		}
 
-		do_action( sprintf( 'bigcommerce/webhooks/product_channel_%s', $action ), intval( $request['data']['product_id'] ), $channel_id );
+		if ( stripos( 'category/product', $scope ) !== false ) {
+			do_action( sprintf( '%s_%s', self::PRODUCT_CATEGORY_CHANNEL_HOOK, $action ), intval( $request['data']['product_id'] ), $channel_id );
+
+			return;
+		}
+
+		do_action( sprintf( '%s_%s', self::PRODUCT_CHANNEL_HOOK, $action ), intval( $request['data']['product_id'] ), $channel_id );
 	}
 
 }

@@ -126,7 +126,7 @@ class Channel_Synchronizer {
 
 		// 'platform' => 'wordpress' filter does not work so we filter here instead
 		$data = array_filter( $data, function ( \BigCommerce\Api\v3\Model\Channel $channel ) {
-			return $channel->getPlatform() === 'wordpress';
+			return $channel->getPlatform() === 'wordpress' && ! in_array( $channel->getStatus(), [ 'deleted', 'terminated' ] );
 		} );
 
 		$channels = [];

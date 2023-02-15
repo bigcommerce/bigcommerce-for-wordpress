@@ -5,6 +5,7 @@ namespace BigCommerce\Settings;
 
 
 use BigCommerce\Import\Runner\Cron_Runner;
+use BigCommerce\Manager\Manager;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Settings\Screens\Settings_Screen;
 use BigCommerce\Import\Import_Type;
@@ -139,6 +140,7 @@ class Import_Now {
 			$import_type = filter_input( INPUT_GET, Import_Type::IMPORT_TYPE, FILTER_SANITIZE_STRING );
 
 			update_option( Import_Type::IMPORT_TYPE, $import_type );
+			wp_unschedule_hook( Manager::CRON_PROCESSOR );
 			do_action( Cron_Runner::START_CRON );
 		}
 

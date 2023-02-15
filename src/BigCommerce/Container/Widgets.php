@@ -6,6 +6,7 @@ namespace BigCommerce\Container;
 
 use BigCommerce\Widgets\Mini_Cart_Widget;
 use BigCommerce\Widgets\Product_Category_Widget;
+use BigCommerce\Widgets\Currency_Switcher_Widget;
 use Pimple\Container;
 
 class Widgets extends Provider {
@@ -16,6 +17,7 @@ class Widgets extends Provider {
 			return [
 				Product_Category_Widget::class,
 				Mini_Cart_Widget::class,
+				Currency_Switcher_Widget::class,
 			];
 		};
 

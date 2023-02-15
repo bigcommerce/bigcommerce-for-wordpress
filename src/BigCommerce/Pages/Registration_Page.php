@@ -7,13 +7,14 @@ use BigCommerce\Shortcodes;
 
 class Registration_Page extends Required_Page {
 	const NAME = 'bigcommerce_registration_page_id';
+	const SLUG = 'register';
 
 	protected function get_title() {
 		return _x( 'Register', 'title of the registration page', 'bigcommerce' );
 	}
 
 	protected function get_slug() {
-		return _x( 'register', 'slug of the registration page', 'bigcommerce' );
+		return _x( self::SLUG, 'slug of the registration page', 'bigcommerce' );
 	}
 
 	public function get_content() {
@@ -38,7 +39,7 @@ class Registration_Page extends Required_Page {
 				esc_html( __( 'To enable this page feature, please go to %sGeneral Settings%s and check the box by "Anyone can register"', 'bigcommerce' ) ),
 				sprintf( '<a href="%s">', esc_url( admin_url( 'options-general.php' ) ) ),
 				'</a>'
-				
+
 			)
 		);
 	}

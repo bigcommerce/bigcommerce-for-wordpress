@@ -178,4 +178,52 @@ class GraphQL_Processor extends BaseGQL {
 		return $result;
 	}
 
+	/**
+	 * Retrieve graph QL query from file
+	 * @hook bigcommerce/gql/query_file_path - change file query location path
+	 *
+	 * @param string $file
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
+	public function get_graph_ql_query_from_file( $file = '' ): string {
+		$plugin_path = WP_PLUGIN_DIR . '/bigcommerce/src/BigCommerce/Import/Processors/GQL/%s.graphql';
+		$path = apply_filters( 'bigcommerce/gql/query_file_path', sprintf( $plugin_path, $file ), $file );
+
+		if ( ! file_exists( $path ) ) {
+			throw new \Exception( __( 'Could not retrieve graph QL query: query file is missing. ' . $plugin_path, 422 ) );
+		}
+
+		return file_get_contents( $path );
+	}
+
+	/**
+	 * @return mixed
+	 * @throws \BigCommerce\Api\v3\ApiException
+	 */
+	public function get_category_tree() {
+		return $this->make_request( [
+			'query'     => $this->get_graph_ql_query_from_file( 'category-tree' ),
+			'variables' => [],
+		] );
+	}
+
+	/**
+	 * @param string $cursor
+	 * @param int    $page_size
+	 *
+	 * @return mixed
+	 * @throws \BigCommerce\Api\v3\ApiException
+	 */
+	public function get_brands( $cursor = '', $page_size = 50 ) {
+		return $this->make_request( [
+			'query'     => $this->get_graph_ql_query_from_file( 'brands' ),
+			'variables' => [
+				'pageSize' => $page_size,
+				'cursor'   => $cursor
+			],
+		] );
+	}
+
 }

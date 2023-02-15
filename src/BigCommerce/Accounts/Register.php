@@ -6,6 +6,7 @@ use BigCommerce\Api_Factory;
 use BigCommerce\Logging\Error_Log;
 use BigCommerce\Taxonomies\Channel\Channel;
 use BigCommerce\Taxonomies\Channel\Connections;
+use BigCommerce\Webhooks\Customer\Customer_Channel_Updater;
 
 /**
  * Handles customer creation
@@ -56,6 +57,11 @@ class Register {
 		}
 
 		$this->register_new_customer( $user_id, $userdata );
+
+		$channel    = $this->connections->primary();
+		$channel_id = get_term_meta( $channel->term_id, Channel::CHANNEL_ID, true );
+		update_user_meta( $user_id, Customer_Channel_Updater::CUSTOMER_CHANNEL_META, [ $channel_id] );
+		update_user_meta( $user_id, Customer_Channel_Updater::CUSTOMER_ORIGIN_CHANNEL, $channel_id );
 	}
 
 	/**

@@ -268,20 +268,6 @@ abstract class Webhook {
 			);
 		}
 
-		$is_v2_hook_valid      = isset( $request['data']['type'] ) && isset( $request['data']['id'] );
-		$is_webhook_data_valid = $is_v2_hook_valid || isset( $request['data']['product_id'] );
-
-		if ( ! is_array( $request ) || ! $is_webhook_data_valid ) {
-			do_action( 'bigcommerce/log', Error_Log::ERROR, __( 'Webhook request data is invalid.', 'bigcommerce' ), [
-				'request' => $request,
-			], 'webhooks' );
-
-			return new \WP_Error(
-				static::VALIDATION_ERROR_CODE,
-				__( 'Webhook request data is invalid.', 'bigcommerce' )
-			);
-		}
-
 		return true;
 	}
 

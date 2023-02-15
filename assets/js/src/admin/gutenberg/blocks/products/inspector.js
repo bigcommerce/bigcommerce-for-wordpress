@@ -6,7 +6,7 @@ import { trigger } from '../../../../utils/events';
 import shortcodeState from '../../../config/shortcode-state';
 
 const { Component } = wp.element;
-const { InspectorControls } = wp.editor;
+const { InspectorControls } = wp.blockEditor;
 const { PanelRow, PanelBody, Button } = wp.components;
 
 export default class Inspector extends Component {

@@ -76,6 +76,8 @@ class Product_Data_Fetcher implements Import_Processor {
 			] );
 		} catch ( ApiException $e ) {
 			do_action( 'bigcommerce/log', Error_Log::ERROR, 'API issue during the products data fetch', [
+				'message'  => $e->getCode(),
+				'code'     => $e->getMessage(),
 				'response' => $e->getResponseBody(),
 				'headers'  => $e->getResponseHeaders(),
 			] );

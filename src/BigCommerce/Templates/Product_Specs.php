@@ -4,8 +4,10 @@
 namespace BigCommerce\Templates;
 
 
+use BigCommerce\Import\Processors\Storefront_Processor;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Settings\Sections\Units;
+use BigCommerce\Taxonomies\Channel\Channel;
 
 class Product_Specs extends Controller {
 	const PRODUCT      = 'product';
@@ -48,7 +50,7 @@ class Product_Specs extends Controller {
 		 */
 		$length_unit = apply_filters( 'bigcommerce/units/length', get_option( Units::LENGTH, 'in' ) );
 
-		$weight = $product->weight;
+		$weight = Channel::is_msf_channel_prop_on( Storefront_Processor::SHOW_PRODUCT_WEIGHT ) ? $product->weight : null ;
 		$width  = $product->width;
 		$depth  = $product->depth;
 		$height = $product->height;

@@ -57,7 +57,7 @@ class Scripts {
 		wp_register_script( 'bigcommerce-admin-scripts', $admin_src, [ 'bigcommerce-admin-vendors', 'wp-i18n' ], $this->version, true );
 		wp_register_script( 'bigcommerce-gutenberg-scripts', $gutenberg_src, [
 			'wp-i18n',
-			'wp-editor',
+			'wp-block-editor',
 			'wp-element',
 			'wp-blocks',
 			'wp-plugins',

@@ -4,6 +4,8 @@
 namespace BigCommerce\Import\Runner;
 
 
+use BigCommerce\Manager\Manager;
+
 class Cron_Runner {
 	const START_CRON    = 'bigcommerce_start_import';
 	const CONTINUE_CRON = 'bigcommerce_continue_import';
@@ -68,7 +70,7 @@ class Cron_Runner {
 		try {
 			// in case there's already an event scheduled, remove it
 			wp_unschedule_hook( self::CONTINUE_CRON );
-
+			wp_unschedule_hook( Manager::CRON_PROCESSOR );
 			// Then fire the action that the cron would have fired on the schedule.
 			do_action( self::CONTINUE_CRON );
 

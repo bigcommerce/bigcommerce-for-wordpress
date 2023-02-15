@@ -2,7 +2,9 @@
 
 namespace BigCommerce\Templates;
 
+use BigCommerce\Import\Processors\Storefront_Processor;
 use BigCommerce\Post_Types\Product\Product;
+use BigCommerce\Taxonomies\Channel\Channel;
 
 class Product_Reviews extends Controller {
 	const PRODUCT = 'product';
@@ -50,6 +52,10 @@ class Product_Reviews extends Controller {
 	}
 
 	protected function get_header( Product $product ) {
+		if ( ! Channel::is_msf_channel_prop_on( Storefront_Processor::SHOW_PRODUCT_RATING ) ) {
+			return '';
+		}
+
 		$component = Product_Rating::factory( [
 			Product_Rating::PRODUCT => $product,
 		], 'components/reviews/product-rating-header.php' );

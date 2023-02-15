@@ -3,12 +3,15 @@
 Plugin Name:  BigCommerce for WordPress
 Description:  Scale your ecommerce business with WordPress on the front-end and BigCommerce on the back end. Free up server resources from things like catalog management, processing payments, and managing fulfillment logistics.
 Author:       BigCommerce
-Version:      4.37.0
+Version:      5.0.0
 Author URI:   https://www.bigcommerce.com/wordpress
 Requires PHP: 7.4.0
 Text Domain:  bigcommerce
 License:      GPLv2 or later
 */
+
+use BigCommerce\Pages\Login_Page;
+use BigCommerce\Taxonomies\Channel\BC_Status;
 
 define( 'BIGCOMMERCE_PHP_MINIMUM_VERSION', '7.0' );
 define( 'BIGCOMMERCE_PHP_OPTIMAL_VERSION', '7.4' );
@@ -43,14 +46,17 @@ add_action( 'plugins_loaded', 'bigcommerce_init', 2, 0 );
  */
 function bigcommerce_init() {
 	// Don't load on frontend for non-active channel status
-	if ( ! defined( 'WP_CLI' )
-		&& ! is_admin()
-		&& bigcommerce_get_primary_channel_status() !== null
-		&& bigcommerce_get_primary_channel_status() !== \BigCommerce\Taxonomies\Channel\BC_Status::STATUS_ACTIVE
-	) {
+	$channel_status = bigcommerce_get_primary_channel_status();
+	$is_front_page  = ! defined( 'WP_CLI' ) && ! is_admin() && $channel_status !== null;
+	// Don't load on frontend for non-active channel status
+	if ( $is_front_page && ! in_array( $channel_status, [ BC_Status::STATUS_ACTIVE, BC_Status::STATUS_PRE_LAUNCH ] ) ) {
 		return;
 	}
 
+	if ( ! defined( 'DOING_CRON' ) && $is_front_page && $channel_status === BC_Status::STATUS_PRE_LAUNCH && ! current_user_can( 'publish_posts' ) ) {
+		handle_404_redirect_in_prelaunch();
+		return;
+	}
 	$container = new \Pimple\Container( [ 'plugin_file' => __FILE__ ] );
 	$plugin    = \BigCommerce\Plugin::instance( $container );
 	$plugin->init();
@@ -64,6 +70,41 @@ function bigcommerce_init() {
 	do_action( 'bigcommerce/init', $plugin, $container );
 
 	return $plugin;
+}
+
+function handle_404_redirect_in_prelaunch() {
+	// We have to do that here because we don't initialize the plugin in case of prelaunch status
+	add_filter( 'pre_handle_404', function ( $preempt ) {
+		if ( is_admin() || ! ( is_page() && is_main_query() ) ) {
+			return $preempt;
+		}
+
+		$plugin_pages = [
+			\BigCommerce\Pages\Account_Page::SLUG,
+			\BigCommerce\Pages\Address_Page::SLUG,
+			\BigCommerce\Pages\Cart_Page::SLUG,
+			\BigCommerce\Pages\Check_Balance_Page::SLUG,
+			\BigCommerce\Pages\Checkout_Complete_Page::SLUG,
+			\BigCommerce\Pages\Checkout_Page::SLUG,
+			\BigCommerce\Pages\Login_Page::SLUG,
+			\BigCommerce\Pages\Gift_Certificate_Page::SLUG,
+			\BigCommerce\Pages\Orders_Page::SLUG,
+			\BigCommerce\Pages\Registration_Page::SLUG,
+			\BigCommerce\Pages\Shipping_Returns_Page::SLUG,
+			\BigCommerce\Pages\Wishlist_Page::SLUG
+		];
+
+		if ( ! in_array( get_queried_object()->post_name, $plugin_pages ) ) {
+			return $preempt;
+		}
+
+		global $wp_query;
+		$wp_query->set_404();
+		status_header( 404 );
+		nocache_headers();
+
+		return '';
+	}, 10, 1 );
 }
 
 function bigcommerce() {
@@ -100,7 +141,7 @@ function bigcommerce_get_env( $key ) {
 function bigcommerce_get_primary_channel_status() {
 	$cache_key = 'bigcommerce_primary_channel_status';
 	$status    = wp_cache_get( $cache_key );
-	if ( $status === false ) {
+	if ( empty( $status ) ) {
 		global $wpdb;
 
 		$sql = "SELECT tm.meta_value
@@ -110,7 +151,7 @@ function bigcommerce_get_primary_channel_status() {
 
 		$status = $wpdb->get_var( $wpdb->prepare(
 			$sql,
-			\BigCommerce\Taxonomies\Channel\BC_Status::STATUS,
+			BC_Status::STATUS,
 			\BigCommerce\Taxonomies\Channel\Channel::STATUS,
 			\BigCommerce\Taxonomies\Channel\Channel::STATUS_PRIMARY
 		) );

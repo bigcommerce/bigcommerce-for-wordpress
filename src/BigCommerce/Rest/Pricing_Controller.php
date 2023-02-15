@@ -85,7 +85,7 @@ class Pricing_Controller extends Rest_Controller {
 		 * @param int|null The customer group ID
 		 */
 		$customer_group = apply_filters( 'bigcommerce/pricing/customer_group_id', $customer->get_group_id() );
-		$currency_code  = get_option( Currency::CURRENCY_CODE, 'USD' );
+		$currency_code  = apply_filters( 'bigcommerce/currency/code', 'USD' );
 
 		$args = [
 			'items'             => $this->filter_empty_options( $request->get_param( 'items' ) ?: [] ),

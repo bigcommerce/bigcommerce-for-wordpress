@@ -9,7 +9,11 @@ use Bigcommerce\Api\Resource;
 use Bigcommerce\Api\Resources\Address;
 use Bigcommerce\Api\Resources\Order;
 use Bigcommerce\Api\Resources\OrderProduct;
+use BigCommerce\Import\Processors\Default_Customer_Group;
+use BigCommerce\Logging\Error_Log;
 use BigCommerce\Settings\Sections\Troubleshooting_Diagnostics;
+use BigCommerce\Taxonomies\Channel\Channel;
+use BigCommerce\Taxonomies\Channel\Connections;
 
 /**
  * Class Customer
@@ -335,10 +339,12 @@ class Customer {
 	public function get_group_id() {
 		$customer_id = is_user_logged_in() || defined( 'DOING_CRON' ) ? get_user_option( self::CUSTOMER_ID_META, $this->wp_user_id ) : 0;
 		if ( ! $customer_id ) {
+			$default_guest_group = $this->get_guests_default_group();
+			$default_guest_group = ! empty( $default_guest_group ) ? reset( $default_guest_group ) : null;
 			/**
 			 * This filter is documented in src/BigCommerce/Accounts/Customer.php
 			 */
-			return apply_filters( 'bigcommerce/customer/group_id', null, $this );
+			return apply_filters( 'bigcommerce/customer/group_id', $default_guest_group ?: null, $this );
 		}
 		$transient_key = sprintf( 'bccustomergroup%d', $customer_id );
 		$group_id      = get_transient( $transient_key );
@@ -349,14 +355,17 @@ class Customer {
 			$group_id   = isset( $profile['customer_group_id'] ) ? absint( $profile['customer_group_id'] ) : 0;
 			$expiration = get_option( Troubleshooting_Diagnostics::USERS_TRANSIENT, 12 * HOUR_IN_SECONDS ); // TODO: a future webhook to flush this cache when the customer's group changes
 			if ( $group_id === 0 ) {
-				set_transient( $transient_key, 'zero', $expiration ); // workaround for storing empty values in cache
+				$default_group = get_option( Default_Customer_Group::DEFAULT_GROUP, 0 );
+				$value = $default_group ?: 'zero';
+
+				set_transient( $transient_key, $value, $expiration ); // workaround for storing empty values in cache
 			} else {
 				set_transient( $transient_key, $group_id, $expiration );
 			}
 		}
 
 		if ( $group_id === 'zero' ) {
-			$group_id = 0;
+			$group_id = get_option( Default_Customer_Group::DEFAULT_GROUP, 0 );
 		}
 
 		/**
@@ -368,6 +377,34 @@ class Customer {
 		$group_id = apply_filters( 'bigcommerce/customer/group_id', $group_id, $this );
 
 		return absint( $group_id );
+	}
+
+	/**
+	 * @return array|null
+	 */
+	public function get_guests_default_group() {
+		$args  = [
+			'is_group_for_guests' => true,
+		];
+		$query = '?' . http_build_query( $args );
+
+		$customer_groups = Client::getCustomerGroups( $query );
+
+		if ( empty( $customer_groups ) ) {
+			do_action( 'bigcommerce/log', Error_Log::INFO, __( 'Customer groups are empty', 'bigcommerce' ), [] );
+			return null;
+		}
+		$connections = new Connections();
+		$channel     = $connections->current();
+		$channel_id  = get_term_meta( $channel->term_id, Channel::CHANNEL_ID, true );
+		return array_filter( array_map( function ( $group ) use ( $channel_id ) {
+			// Exit if group is not default
+			if ( ( int ) $group->channel_id !== ( int ) $channel_id ) {
+				return;
+			}
+
+			return $group->id;
+		}, $customer_groups ) );
 	}
 
 	/**

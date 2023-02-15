@@ -48,7 +48,7 @@ class Term_Strategy_Factory {
 			'meta_query' => [
 				[
 					'key'     => 'bigcommerce_id',
-					'value'   => $this->bc_term[ 'id' ],
+					'value'   => $this->bc_term[ 'id' ] ?: $this->bc_term['category_id'],
 					'compare' => '=',
 				],
 			],

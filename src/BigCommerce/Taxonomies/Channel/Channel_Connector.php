@@ -4,6 +4,7 @@
 namespace BigCommerce\Taxonomies\Channel;
 
 
+use BigCommerce\Api\Store_Api;
 use BigCommerce\Api\v3\Api\ChannelsApi;
 use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api\v3\Model\Channel as ApiChannel;
@@ -24,8 +25,14 @@ class Channel_Connector {
 	 */
 	private $channels;
 
-	public function __construct( ChannelsApi $channels_api ) {
-		$this->channels = $channels_api;
+	/**
+	 * @var Store_Api
+	 */
+	private $store_api;
+
+	public function __construct( ChannelsApi $channels_api, Store_Api $store_api ) {
+		$this->channels  = $channels_api;
+		$this->store_api = $store_api;
 	}
 
 	public function create_first_channel() {
@@ -75,11 +82,23 @@ class Channel_Connector {
 	 * @return int The ID of the WordPress term connected to that channel ID
 	 */
 	private function create_channel( $name ) {
-		$request = new CreateChannelRequest( [
+		$args = [
 			'type'     => 'storefront',
 			'platform' => 'wordpress',
 			'name'     => $name,
-		] );
+		];
+
+		try {
+			$store = $this->store_api->getStore();
+
+			if ( $store->features->multi_storefront_enabled ) {
+				$args['status'] = 'prelaunch';
+			}
+		} catch ( \Exception $exception ) {
+			// do nothing just continue channel creation
+		}
+
+		$request = new CreateChannelRequest( $args );
 		try {
 			$response = $this->channels->createChannel( $request );
 		} catch ( ApiException $e ) {

@@ -73,7 +73,13 @@ const parseCountryObject = (selectedCountry = '', stateControlContainer = '') =>
 const storeInitialFieldStates = () => {
 	const countryControl = tools.getNodes('bc-dynamic-country-select')[0];
 	const stateControl = tools.getNodes('bc-dynamic-state-control')[0];
-	const stateFieldType = stateControl.tagName.toLowerCase();
+	let stateFieldType = '';
+
+	if (!stateControl || !countryControl) {
+		return;
+	}
+
+	stateFieldType = stateControl.tagName.toLowerCase();
 
 	if (stateFieldType === 'select') {
 		countryState.initialStateValue = stateControl.options[stateControl.selectedIndex].value;

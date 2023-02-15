@@ -9,13 +9,14 @@ use BigCommerce\Shortcodes;
 class Gift_Certificate_Page extends Required_Page {
 
 	const NAME = 'bigcommerce_gift_certificate_page_id';
+	const SLUG = 'gift-certificate';
 
 	protected function get_title() {
 		return _x( 'Purchase Gift Certificate', 'title of the gift certificate page', 'bigcommerce' );
 	}
 
 	protected function get_slug() {
-		return _x( 'gift-certificate', 'slug of the gift certificate page', 'bigcommerce' );
+		return _x( self::SLUG, 'slug of the gift certificate page', 'bigcommerce' );
 	}
 
 	public function get_content() {

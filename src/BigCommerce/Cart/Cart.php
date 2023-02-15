@@ -302,6 +302,27 @@ class Cart {
 	}
 
 	private function get_currency() {
-		return get_option( Settings\Sections\Currency::CURRENCY_CODE, 'USD' );
+		return apply_filters( 'bigcommerce/currency/code', 'USD' );
+	}
+
+	public function delete_cart() {
+		$cart_id = $this->get_cart_id();
+		if ( empty( $cart_id ) ) {
+			return;
+		}
+		try {
+			$this->api->cartsCartIdDelete( $cart_id );
+			if ( isset( $_COOKIE[ self::CART_COOKIE ] ) ) {
+				unset( $_COOKIE[ self::CART_COOKIE ] );
+				setcookie( self::CART_COOKIE, '', time() - 3600, '/' ); // empty value and old timestamp
+			}
+			if ( isset( $_COOKIE[ self::COUNT_COOKIE ] ) ) {
+				unset( $_COOKIE[ self::COUNT_COOKIE ] );
+				setcookie( self::COUNT_COOKIE, '', time() - 3600, '/' ); // empty value and old timestamp
+			}
+		} catch ( ApiException $e ) {
+
+		}
+		
 	}
 }

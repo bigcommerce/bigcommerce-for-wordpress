@@ -13,7 +13,10 @@ use BigCommerce\Api\Shipping_Api;
 use BigCommerce\Api\Banners_Api;
 use BigCommerce\Api\Store_Api;
 use BigCommerce\Api\Tax_Class_Api;
+use BigCommerce\Api\v3\Api\CurrencyApi;
+use BigCommerce\Api\v3\Api\PriceListsApi;
 use BigCommerce\Api\v3\Api\PricingApi;
+use BigCommerce\Api\v3\Api\SettingsApi;
 use BigCommerce\Api\v3\Api\WishlistsApi;
 use BigCommerce\Api\Webhooks_Api;
 use BigCommerce\Api\v3\Api\CartApi;
@@ -64,6 +67,10 @@ class Api_Factory {
 		return new CatalogApi( $this->api_client );
 	}
 
+	public function storefront_settings() {
+		return new SettingsApi( $this->api_client );
+	}
+
 	/**
 	 * @return ChannelsApi
 	 */
@@ -104,6 +111,13 @@ class Api_Factory {
 	 */
 	public function pricing() {
 		return new PricingApi( $this->api_client );
+	}
+
+	/**
+	 * @return \BigCommerce\Api\v3\Api\PriceListsApi
+	 */
+	public function price_lists() {
+		return new PriceListsApi( $this->api_client );
 	}
 
 	/**
@@ -175,7 +189,14 @@ class Api_Factory {
 	public function currencies() {
 		return new Currencies_Api( $this->api_client );
 	}
-	
+
+	/**
+	 * @return \BigCommerce\Api\v3\Api\CurrencyApi
+	 */
+	public function currenciesV3() {
+		return new CurrencyApi( $this->api_client );
+	}
+
 	/**
 	 * @return CheckoutApi
 	 */

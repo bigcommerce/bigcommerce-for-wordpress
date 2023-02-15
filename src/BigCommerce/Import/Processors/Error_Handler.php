@@ -22,6 +22,7 @@ class Error_Handler implements Import_Processor {
 		);
 
 		delete_option( Listing_Fetcher::PRODUCT_LISTING_MAP );
+		delete_option( Term_Import::BRANDS_CHECKPOINT );
 		delete_option( Product_Data_Fetcher::FILTERED_LISTING_MAP );
 
 		$status = new Status();

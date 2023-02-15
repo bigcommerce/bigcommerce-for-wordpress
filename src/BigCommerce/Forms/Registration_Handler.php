@@ -9,9 +9,14 @@ use BigCommerce\Accounts\Login;
 use BigCommerce\Accounts\Roles\Customer as Customer_Role;
 use BigCommerce\Accounts\User_Profile_Settings;
 use BigCommerce\Container\Accounts;
+use BigCommerce\Import\Processors\Default_Customer_Group;
+use BigCommerce\Import\Processors\Store_Settings;
 use BigCommerce\Pages\Account_Page;
 use BigCommerce\Compatibility\Spam_Checker;
 use BigCommerce\Settings\Sections\Account_Settings;
+use BigCommerce\Taxonomies\Channel\Channel;
+use BigCommerce\Taxonomies\Channel\Connections;
+use BigCommerce\Webhooks\Customer\Customer_Channel_Updater;
 
 class Registration_Handler implements Form_Handler {
 
@@ -89,17 +94,21 @@ class Registration_Handler implements Form_Handler {
 			return;
 		}
 
-
+		$default_group = get_option( Default_Customer_Group::DEFAULT_GROUP, 0 );
 		/**
 		 * Log the user in, automatically connecting the user with BigCommerce
 		 * and setting up the profile with the submitted data
 		 *
 		 * @see \BigCommerce\Accounts\Login::connect_customer_id()
 		 */
-		$profile_filter = function ( $data ) use ( $profile, $password ) {
+		$profile_filter = function ( $data ) use ( $profile, $password, $default_group ) {
 			$data = $profile;
 
 			$data[ '_authentication' ][ 'password' ] = $password;
+
+			if ( Store_Settings::is_msf_on() && ! empty( $default_group ) ) {
+				$data['customer_group_id'] = $default_group;
+			}
 
 			return $data;
 		};
@@ -119,7 +128,11 @@ class Registration_Handler implements Form_Handler {
 		$user->set_role( $role );
 		// all future password validation will be against the API for this user
 		update_user_meta( $user_id, User_Profile_Settings::SYNC_PASSWORD, true );
-
+		$channels   = new Connections();
+		$channel    = $channels->current();
+		$channel_id = get_term_meta( $channel->term_id, Channel::CHANNEL_ID, true );
+		update_user_meta( $user_id, Customer_Channel_Updater::CUSTOMER_CHANNEL_META, [ $channel_id ] );
+		update_user_meta( $user_id, Customer_Channel_Updater::CUSTOMER_ORIGIN_CHANNEL, $channel_id );
 
 		$customer = new Customer( $user_id );
 		$customer->add_address( $address );

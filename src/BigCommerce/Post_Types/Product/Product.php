@@ -18,6 +18,7 @@ use BigCommerce\Exceptions\Channel_Not_Found_Exception;
 use BigCommerce\Exceptions\Product_Not_Found_Exception;
 use BigCommerce\Import\Import_Type;
 use BigCommerce\Import\Image_Importer;
+use BigCommerce\Import\Processors\Storefront_Processor;
 use BigCommerce\Logging\Error_Log;
 use BigCommerce\Import\Processors\Store_Settings;
 use BigCommerce\Settings\Sections\Cart;
@@ -727,6 +728,10 @@ class Product {
 	}
 
 	public function purchase_button() {
+		if ( is_archive() && ! Channel::is_msf_channel_prop_on( Storefront_Processor::SHOW_PRODUCT_ADD_TO_CART_LINK ) ) {
+			return apply_filters( 'bigcommerce/button/purchase', '', $this->post_id, '' );
+		}
+
 		$options  = $this->has_options() || $this->out_of_stock() ? 'disabled="disabled"' : '';
 		$preorder = $this->availability() === Availability::PREORDER;
 		$cart     = get_option( Cart::OPTION_ENABLE_CART, true );
@@ -897,6 +902,9 @@ class Product {
 	 * @return string
 	 */
 	public function availability() {
+		if ( $this->is_headless() ) {
+			return $this->get_property( 'availability' );
+		}
 		$terms               = get_the_terms( $this->post_id, Availability::NAME );
 		$terms_empty_boolean = empty( $terms ) || is_bool( $terms );
 
@@ -920,6 +928,11 @@ class Product {
 		$availabilty = $this->availability();
 		if ( $availabilty === Availability::DISABLED ) {
 			return false;
+		}
+
+		$source = $this->get_source_data();
+		if ( $source->availability === Availability::PREORDER ) {
+			return true;
 		}
 
 		return ! $this->out_of_stock( $variant_id );

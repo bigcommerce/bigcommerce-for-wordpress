@@ -7,13 +7,14 @@ use BigCommerce\Shortcodes;
 
 class Checkout_Complete_Page extends Required_Page {
 	const NAME = 'bigcommerce_checkout_complete_page_id';
+	const SLUG = 'checkout-complete';
 
 	protected function get_title() {
 		return _x( 'Checkout Complete', 'title of the checkout complete page', 'bigcommerce' );
 	}
 
 	protected function get_slug() {
-		return _x( 'checkout-complete', 'slug of the checkout complete page', 'bigcommerce' );
+		return _x( self::SLUG, 'slug of the checkout complete page', 'bigcommerce' );
 	}
 
 	public function get_content() {
