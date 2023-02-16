@@ -91,19 +91,20 @@ class Storefront_Processor {
 		] );
 		try {
 			$response = $this->api->getStorefrontProduct( $channel_id );
+
 			$entries  = [
-				self::SHOW_PRODUCT_PRICE            => ( int ) $response->data->show_product_price,
-				self::SHOW_PRODUCT_SKU              => ( int ) $response->data->show_product_sku,
-				self::SHOW_PRODUCT_WEIGHT           => ( int ) $response->data->show_product_weight,
-				self::SHOW_PRODUCT_BRAND            => ( int ) $response->data->show_product_brand,
-				self::SHOW_PRODUCT_SHIPPING         => ( int ) $response->data->show_product_shipping,
-				self::SHOW_PRODUCT_RATING           => ( int ) $response->data->show_product_rating,
-				self::SHOW_PRODUCT_ADD_TO_CART_LINK => ( int ) $response->data->show_add_to_cart_link,
+				self::SHOW_PRODUCT_PRICE            => ! is_null( $response->data->show_product_price ) ? ( int ) $response->data->show_product_price : '',
+				self::SHOW_PRODUCT_SKU              => ! is_null( $response->data->show_product_sku ) ? ( int ) $response->data->show_product_sku : '',
+				self::SHOW_PRODUCT_WEIGHT           => ! is_null( $response->data->show_product_weight ) ? ( int ) $response->data->show_product_weight : '',
+				self::SHOW_PRODUCT_BRAND            => ! is_null( $response->data->show_product_brand ) ? ( int ) $response->data->show_product_brand : '',
+				self::SHOW_PRODUCT_SHIPPING         => ! is_null( $response->data->show_product_shipping ) ? ( int ) $response->data->show_product_shipping : '',
+				self::SHOW_PRODUCT_RATING           => ! is_null( $response->data->show_product_rating ) ? ( int ) $response->data->show_product_rating : '',
+				self::SHOW_PRODUCT_ADD_TO_CART_LINK => ! is_null( $response->data->show_add_to_cart_link ) ? ( int ) $response->data->show_add_to_cart_link : '',
 				self::DEFAULT_PREORDER_MESSAGE      => $response->data->default_preorder_message,
 				self::SHOW_BREADCRUMBS_PRODUCT_PAGE => $response->data->show_breadcrumbs_product_pages,
-				self::SHOW_ADD_TO_CART_QTY_BOX      => ( int ) $response->data->show_add_to_cart_qty_box,
-				self::SHOW_ADD_TO_WISHLIST          => ( int ) $response->data->show_add_to_wishlist,
-				self::HIDE_PRICE_FROM_GUESTS        => ( int ) $response->data->hide_price_from_guests,
+				self::SHOW_ADD_TO_CART_QTY_BOX      => ! is_null( $response->data->show_add_to_cart_qty_box ) ? ( int ) $response->data->show_add_to_cart_qty_box : '',
+				self::SHOW_ADD_TO_WISHLIST          => ! is_null( $response->data->show_add_to_wishlist ) ? ( int ) $response->data->show_add_to_wishlist : '',
+				self::HIDE_PRICE_FROM_GUESTS        => ! is_null( $response->data->hide_price_from_guests ) ? ( int ) $response->data->hide_price_from_guests : '',
 			];
 		} catch ( \Throwable $exception ) {
 			do_action( 'bigcommerce/log', Error_Log::ERROR, __( 'Could not get storefront product settings', 'bigcommerce' ), [
