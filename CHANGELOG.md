@@ -1,5 +1,10 @@
 # Changelog
 
+## [5.0.1]
+
+### Fixed
+- Fixed situation when product options, price, reviews are hidden because global settings for channel are used. Product display settings can be changed in Bigcommerce Channel Manager under `Store Settings` -> `Product Display`. 
+
 ## [5.0.0]
 
 ### Added
@@ -1872,6 +1877,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[5.0.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/5.0.0...5.0.1
 [5.0.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.37.0...5.0.0
 [4.37.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.36.0...4.37.0
 [4.36.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.35.0...4.36.0

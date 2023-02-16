@@ -82,6 +82,13 @@ class Channel {
 		$connections = new Connections();
 		$channel     = $connections->current();
 
-		return ( int ) get_term_meta( $channel->term_id, $prop, true ) === 1;
+		$meta = get_term_meta( $channel->term_id, $prop, true );
+
+		// Option doesn't exist
+		if ( $meta === '' ) {
+			return true;
+		}
+
+		return ( int ) $meta === 1;
 	}
 }
