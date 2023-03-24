@@ -69,10 +69,11 @@ class Products_Controller extends Rest_Controller {
 	}
 
 	protected function get_items_headless( $request ) {
-		$container = bigcommerce()->container();
+		$container    = bigcommerce()->container();
+		$request_data = $request->get_params();
 
-		if ( ! empty( $request['slug'] ) ) {
-			return $this->get_items_graphql( $container, $request );
+		if ( ! empty( $request_data['slug'] ) ) {
+			return $this->get_items_graphql( $container, $request_data );
 		}
 
 		$client  = $container[ Api::CLIENT ];
@@ -80,28 +81,55 @@ class Products_Controller extends Rest_Controller {
 
 		try {
 			$params = [
-					'page'    => $request['page'],
-					'limit'   => $request['per_page'],
-					'include' => [ 'variants', 'custom_fields', 'images', 'bulk_pricing_rules', 'options', 'modifiers' ],
+				'page'    => $request_data['page'],
+				'limit'   => $request_data['per_page'],
+				'include' => [ 'variants', 'custom_fields', 'images', 'bulk_pricing_rules', 'options', 'modifiers' ],
 			];
 
-			if ( ! empty( $request['bigcommerce_brand'] ) ) {
-				$params['brand_id'] = $request['bigcommerce_brand'];
+			if ( ! empty( $request_data['bigcommerce_brand'] ) ) {
+				$params['brand_id'] = $this->get_term_bc_id( $request_data['bigcommerce_brand'] );
 			}
 
-			if ( ! empty( $request['bigcommerce_category'] ) ) {
-				$params['categories:in'] = $request['bigcommerce_category'];
+			if ( ! empty( $request_data['bigcommerce_flag'] ) )  {
+				$term_ids = $request_data['bigcommerce_flag'];
+
+
+				foreach ( $term_ids as $id ) {
+					$flag = get_term( $id, Flag::NAME );
+
+					if ( empty( $flag ) || is_wp_error( $flag ) ) {
+						continue;
+					}
+
+					if ( $flag->name === Flag::FEATURED ) {
+						$params['is_featured'] = 1;
+					}
+				}
+
 			}
 
-			if ( ! empty( $request['bcid'] ) ) {
-				$params['id'] = $request['bcid'];
+			if ( ! empty( $request_data['bigcommerce_category'] ) ) {
+				$params['categories:in'] = $this->get_term_bc_id( $request_data['bigcommerce_category'] );
+			}
+
+			if ( ! empty( $request_data['bcid'] ) ) {
+				$params['id'] = $request_data['bcid'];
+			}
+
+			if ( ! empty( $request_data['search'] ) ) {
+				$params['keyword'] = $request_data['search'];
 			}
 
 			$response = $catalog->getProducts( $params );
 
-			return $this->parse_result( $response, $client );
+			$result = $this->parse_result( $response, $client, false );
+			if ( empty( $result ) ) {
+				return rest_ensure_response( [] );
+			}
+
+			return $this->convert_to_wp_response( $request, $result );
 		} catch ( ApiException $e ) {
-			do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [ 'request' => $request ], 'rest' );
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [ 'request' => $request_data ], 'rest' );
 
 			$error = new \WP_Error( 'api_error', sprintf(
 				__( 'There was an error retrieving products data. Error message: "%s"', 'bigcommerce' ),
@@ -110,6 +138,110 @@ class Products_Controller extends Rest_Controller {
 
 			return $error;
 		}
+	}
+
+	private function convert_to_wp_response( $request,  $result ) {
+		$mapper = new Query_Mapper();
+		$args   = $mapper->map_rest_args_to_query( $request->get_params() );
+
+		// We don't have required data in WP db. Instead, we will use result from remote
+		if ( ! empty( $args['s'] ) ) {
+			unset( $args['s'] );
+		}
+		$args['bigcommerce_id__in'] = [];
+
+		array_walk( $result, function ( $item ) use ( &$args ) {
+			if ( empty( $item ) ) {
+				return;
+			}
+
+			$args['bigcommerce_id__in'][] = $item->id;
+		} );
+
+		$args['post_type']      = Product::NAME;
+		$args['post_status']    = 'publish';
+		$args['posts_per_page'] = 12;
+		if ( ! empty( $args['bigcommerce_id__in'] ) ) {
+			$args['posts_per_page'] = - 1;
+		}
+
+		$posts_query  = new \WP_Query();
+		$query_result = $posts_query->query( $args );
+		$posts        = [];
+
+		foreach ( $query_result as $post_id ) {
+			$bcid = get_post_meta( $post_id, Product::BIGCOMMERCE_ID, true );
+			$data = $this->prepare_item_for_response( get_post( $post_id ), $request );
+			// ensure that we only have one result per BCID, no matter how many channels it's in
+			$posts[ $bcid ] = $this->prepare_response_for_collection( $data );
+		}
+
+		return $this->retrieve_rest_response( $posts, $request, $args, $posts_query, null, true );
+	}
+
+	/**
+	 * @param      $posts
+	 * @param      $request
+	 * @param      $query_args
+	 * @param      $posts_query
+	 * @param null $channel_filter
+	 * @param bool $always_fetch
+	 *
+	 * @return \WP_Error|\WP_HTTP_Response|\WP_REST_Response
+	 */
+	private function retrieve_rest_response( $posts, $request, $query_args, $posts_query, $channel_filter = null, $always_fetch = false ) {
+		$page        = (int) $query_args['paged'];
+		$total_posts = $posts_query->found_posts;
+
+		if ( $total_posts < 1 ) {
+			// Out-of-bounds, run the query again without LIMIT for total count.
+			unset( $query_args['paged'] );
+
+			$count_query = new \WP_Query();
+			$count_query->query( $query_args );
+			$total_posts = $count_query->found_posts;
+		}
+
+		if ( $channel_filter ) {
+			remove_action( 'pre_get_posts', $channel_filter, 9 );
+		}
+
+		if ( $posts_query->query_vars['posts_per_page'] === - 1 ) {
+			$max_pages = 1;
+		} else {
+			$max_pages = ceil( $total_posts / (int) $posts_query->query_vars['posts_per_page'] );
+		}
+
+		if ( $page > $max_pages && $total_posts > 0 && ! $always_fetch ) {
+			return new \WP_Error( 'rest_post_invalid_page_number', __( 'The page number requested is larger than the number of pages available.', 'bigcommerce' ), [ 'status' => 400 ] );
+		}
+
+		$response = rest_ensure_response( array_values( $posts ) );
+
+		$response->header( 'X-WP-Total', (int) $total_posts );
+		$response->header( 'X-WP-TotalPages', (int) $max_pages );
+
+		$request_params = $request->get_query_params();
+		$base           = add_query_arg( $request_params, rest_url( sprintf( '%s/%s', $this->namespace, $this->rest_base ) ) );
+
+		if ( $page > 1 ) {
+			$prev_page = $page - 1;
+
+			if ( $prev_page > $max_pages ) {
+				$prev_page = $max_pages;
+			}
+
+			$prev_link = add_query_arg( 'page', $prev_page, $base );
+			$response->link_header( 'prev', $prev_link );
+		}
+		if ( $max_pages > $page || $always_fetch ) {
+			$next_page = $page + 1;
+			$next_link = add_query_arg( 'page', $next_page, $base );
+
+			$response->link_header( 'next', $next_link );
+		}
+
+		return $response;
 	}
 
 	private function get_items_graphql(Container $container, $request_data ) {
@@ -136,7 +268,7 @@ class Products_Controller extends Rest_Controller {
 		$request_data = $request->get_params();
 
 		if ( ! Import_Type::is_traditional_import() ) {
-			return $this->get_items_headless( $request_data );
+			return $this->get_items_headless( $request );
 		}
 		$mapper = new Query_Mapper();
 		$args   = $mapper->map_rest_args_to_query( $request_data );
@@ -170,57 +302,11 @@ class Products_Controller extends Rest_Controller {
 			// ensure that we only have one result per BCID, no matter how many channels it's in
 			$posts[ $bcid ] = $this->prepare_response_for_collection( $data );
 		}
+		do_action( 'bigcommerce/log', Error_Log::ERROR, __( 'Product debug', 'bigcommerce' ), [
+			'args'  => $query_args,
+		] );
 
-		$page        = (int) $query_args['paged'];
-		$total_posts = $posts_query->found_posts;
-
-		if ( $total_posts < 1 ) {
-			// Out-of-bounds, run the query again without LIMIT for total count.
-			unset( $query_args['paged'] );
-
-			$count_query = new \WP_Query();
-			$count_query->query( $query_args );
-			$total_posts = $count_query->found_posts;
-		}
-
-		remove_action( 'pre_get_posts', $channel_filter, 9 );
-
-		if ( $posts_query->query_vars['posts_per_page'] === - 1 ) {
-			$max_pages = 1;
-		} else {
-			$max_pages = ceil( $total_posts / (int) $posts_query->query_vars['posts_per_page'] );
-		}
-
-		if ( $page > $max_pages && $total_posts > 0 ) {
-			return new \WP_Error( 'rest_post_invalid_page_number', __( 'The page number requested is larger than the number of pages available.', 'bigcommerce' ), [ 'status' => 400 ] );
-		}
-
-		$response = rest_ensure_response( array_values( $posts ) );
-
-		$response->header( 'X-WP-Total', (int) $total_posts );
-		$response->header( 'X-WP-TotalPages', (int) $max_pages );
-
-		$request_params = $request->get_query_params();
-		$base           = add_query_arg( $request_params, rest_url( sprintf( '%s/%s', $this->namespace, $this->rest_base ) ) );
-
-		if ( $page > 1 ) {
-			$prev_page = $page - 1;
-
-			if ( $prev_page > $max_pages ) {
-				$prev_page = $max_pages;
-			}
-
-			$prev_link = add_query_arg( 'page', $prev_page, $base );
-			$response->link_header( 'prev', $prev_link );
-		}
-		if ( $max_pages > $page ) {
-			$next_page = $page + 1;
-			$next_link = add_query_arg( 'page', $next_page, $base );
-
-			$response->link_header( 'next', $next_link );
-		}
-
-		return $response;
+		return $this->retrieve_rest_response( $posts, $request, $query_args, $posts_query, $channel_filter );
 	}
 
 	/**
@@ -717,6 +803,20 @@ class Products_Controller extends Rest_Controller {
 				'context'     => [ 'view', 'edit', 'embed' ],
 			],
 		];
+	}
+
+	private function get_term_bc_id( $data ) {
+		$bc_ids = [];
+		foreach ( $data as $id ) {
+			$bc_id = get_term_meta( $id, 'bigcommerce_id', true );
+			if ( empty( $bc_id ) ) {
+				continue;
+			}
+
+			$bc_ids[] = $bc_id;
+		}
+
+		return $bc_ids;
 	}
 
 }

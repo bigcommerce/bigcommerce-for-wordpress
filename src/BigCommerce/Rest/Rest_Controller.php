@@ -31,12 +31,16 @@ class Rest_Controller extends \WP_REST_Controller {
 		return rest_url() . $this->namespace . '/' . $this->rest_base;
 	}
 
-	protected function parse_result( $response, $client ) {
+	protected function parse_result( $response, $client, $rest_response = true ) {
 		$result['data'] = json_decode( '[' . $client->getSerializer()->serializeCollection( $response->getData(), 'multi' ) . ']' );
 		$result['meta'] = json_decode( '[' . $response->getMeta()->__toString() . ']' );
 
 		if ( ! empty( $result['meta'] ) ) {
 			$result['meta'] = $result['meta'][0];
+		}
+
+		if ( ! $rest_response ) {
+			return $result['data'];
 		}
 
 		return rest_ensure_response( $result );

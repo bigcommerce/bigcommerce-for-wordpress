@@ -11,6 +11,7 @@
  * @var array          $channels
  */
 
+use BigCommerce\Import\Import_Type;
 use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Channel\Channel;
 use BigCommerce\Taxonomies\Flag\Flag;
@@ -33,16 +34,18 @@ use BigCommerce\Taxonomies\Product_Category\Product_Category;
 	} ?>
 
 	<ul class="bc-shortcode-ui__query-builder-list" data-js="bcqb-list">
-		<li class="bc-shortcode-ui__query-builder-list-item">
-			<a
-				href="#"
-				class="bc-shortcode-ui__query-builder-anchor"
-				data-key="recent"
-				data-value="1"
-				data-slug="<?php esc_html_e( 'recent', 'bigcommerce' ); ?>"
-				data-depth="0"
-			><?php esc_html_e( 'Recent', 'bigcommerce' ); ?></a>
-		</li>
+		<?php if ( Import_Type::is_traditional_import() ) : ?>
+			<li class="bc-shortcode-ui__query-builder-list-item">
+				<a
+					href="#"
+					class="bc-shortcode-ui__query-builder-anchor"
+					data-key="recent"
+					data-value="1"
+					data-slug="<?php esc_html_e( 'recent', 'bigcommerce' ); ?>"
+					data-depth="0"
+				><?php esc_html_e( 'Recent', 'bigcommerce' ); ?></a>
+			</li>
+		<?php endif; ?>
 		<?php if ( $featured ) { ?>
 			<li class="bc-shortcode-ui__query-builder-list-item">
 				<a

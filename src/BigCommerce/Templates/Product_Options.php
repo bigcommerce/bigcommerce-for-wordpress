@@ -235,6 +235,9 @@ class Product_Options extends Controller {
 			case Customizer::SIZE_LARGE:
 				$size = Image_Sizes::BC_EXTRA_MEDIUM;
 				break;
+			case Customizer::SIZE_ORIGINAL:
+				$size = 'full';
+				break;
 			case Customizer::SIZE_DEFAULT:
 			default:
 				$size = Image_Sizes::BC_MEDIUM;

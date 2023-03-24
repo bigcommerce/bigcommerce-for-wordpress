@@ -6,11 +6,14 @@ namespace BigCommerce\Import\Processors;
 
 use Bigcommerce\Api\Client;
 use BigCommerce\Api\Store_Api;
+use BigCommerce\Api\v3\Api\SettingsApi;
 use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Import\Runner\Status;
 use BigCommerce\Logging\Error_Log;
 use BigCommerce\Post_Types\Product\Product;
 use BigCommerce\Settings;
+use BigCommerce\Taxonomies\Channel\Channel;
+use BigCommerce\Taxonomies\Channel\Connections;
 
 class Store_Settings implements Import_Processor {
 
@@ -39,8 +42,14 @@ class Store_Settings implements Import_Processor {
 	 */
 	private $storefront_processor;
 
-	public function __construct( Store_Api $store_api, Default_Customer_Group $default_customer_group, Storefront_Processor $storefront_processor ) {
+	/**
+	 * @var \BigCommerce\Api\v3\Api\SettingsApi
+	 */
+	private $api_v3;
+
+	public function __construct( Store_Api $store_api, Default_Customer_Group $default_customer_group, Storefront_Processor $storefront_processor, SettingsApi $api ) {
 		$this->store_api              = $store_api;
+		$this->api_v3                 = $api;
 		$this->default_customer_group = $default_customer_group;
 		$this->storefront_processor   = $storefront_processor;
 	}
@@ -75,9 +84,16 @@ class Store_Settings implements Import_Processor {
 			];
 
 			if ( get_option( Settings\Sections\Analytics::SYNC_ANALYTICS, 1 ) ) {
-				$analytics                                                 = $this->store_api->get_analytics_settings();
-				$settings[ Settings\Sections\Analytics::FACEBOOK_PIXEL ]   = $this->extract_facebook_pixel_id( $analytics );
-				$settings[ Settings\Sections\Analytics::GOOGLE_ANALYTICS ] = $this->extract_google_analytics_id( $analytics );
+				$connections  = new Connections();
+				$channel      = $connections->current();
+				$analytics    = $this->api_v3->getStoreAnalyticsSettings( (int) get_term_meta( $channel->term_id, Channel::CHANNEL_ID, true ));
+
+				if ( ! empty( $analytics->data ) ) {
+					$analytics                                                  = json_decode( json_encode( $analytics->data ), true );
+					$settings[ Settings\Sections\Analytics::FACEBOOK_PIXEL ]   = $this->extract_facebook_pixel_id( $analytics );
+					$settings[ Settings\Sections\Analytics::GOOGLE_ANALYTICS ] = $this->extract_google_analytics_id( $analytics );
+				}
+
 			}
 
 			do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Retrieved store settings', 'bigcommerce' ), [

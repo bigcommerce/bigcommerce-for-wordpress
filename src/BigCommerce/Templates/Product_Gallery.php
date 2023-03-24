@@ -42,6 +42,9 @@ class Product_Gallery extends Controller {
 			case Customizer::SIZE_LARGE:
 				$size = Image_Sizes::BC_EXTRA_MEDIUM;
 				break;
+			case Customizer::SIZE_ORIGINAL:
+				$size = Image_Sizes::BC_CATEGORY_IMAGE;
+				break;
 			case Customizer::SIZE_DEFAULT:
 			default:
 				$size = Image_Sizes::BC_MEDIUM;
@@ -61,6 +64,9 @@ class Product_Gallery extends Controller {
 		switch ( get_option( Customizer::GALLERY_SIZE, Customizer::SIZE_DEFAULT ) ) {
 			case Customizer::SIZE_LARGE:
 				$size = Image_Sizes::BC_THUMB_LARGE;
+				break;
+			case Customizer::SIZE_ORIGINAL:
+				$size = 'full';
 				break;
 			case Customizer::SIZE_DEFAULT:
 			default:

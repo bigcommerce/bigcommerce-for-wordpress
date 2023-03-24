@@ -1,5 +1,17 @@
 # Changelog
 
+## [5.0.2]
+
+### Added
+- Add ability to use original image proportion on product single page. Go to Apperance → Bigcommerce → Product Single and change image size to original.
+
+### Changed
+- Show variant SKU if product SKU is not added or missing
+
+### Fixed
+- Prevent import fail on Analytics Settings retrieval due to outdated API use
+- Fix search issue with product widget block while using fast(headless) import. Allow searching by SKU, name 
+
 ## [5.0.1]
 
 ### Fixed
@@ -1877,6 +1889,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[5.0.2]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/5.0.1...5.0.2
 [5.0.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/5.0.0...5.0.1
 [5.0.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.37.0...5.0.0
 [4.37.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.36.0...4.37.0

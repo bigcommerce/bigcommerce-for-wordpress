@@ -234,7 +234,7 @@ class Import extends Provider {
 		};
 
 		$container[ self::STORE ] = function ( Container $container ) {
-			return new Processors\Store_Settings( $container[ Api::FACTORY ]->store(), $container[ self::CUSTOMER_DEFAULT_GROUP ], $container[ self::MSF_STOREFRONT_PROCESSOR ] );
+			return new Processors\Store_Settings( $container[ Api::FACTORY ]->store(), $container[ self::CUSTOMER_DEFAULT_GROUP ], $container[ self::MSF_STOREFRONT_PROCESSOR ], $container[ Api::FACTORY ]->storefront_settings() );
 		};
 
 		$container[ self::CURRENCIES ] = function ( Container $container ) {

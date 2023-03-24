@@ -136,7 +136,28 @@ class Import_Status {
 			$completed_steps = 0;
 		}
 
-		$current_task = $this->get_current_task( $current['status'] );
+		try {
+			$current_task = $this->get_current_task( $current['status'] );
+		} catch ( \Throwable $exception ) {
+			$current_task = null;
+			$import_stuck = true;
+		}
+
+		if ( isset( $import_stuck ) ) {
+			$response_message = esc_attr__( 'Import has been stuck. Please abort current import and try again. Enable plugin logs and check any potential issues there', 'bigcommerce' );
+			return [
+				'message'  => $response_message,
+				'status'   => $current[ 'status' ],
+				'previous' => Status::FAILED,
+				'products' => [
+					'total'     => 0,
+					'completed' => 0,
+					'status'    => $response_message,
+				],
+				'aborted'  => true,
+			];
+		}
+
 
 		$total     = (int) get_option( self::IMPORT_TOTAL_PRODUCTS, 0 );
 		$remaining = $this->get_remaining_in_queue();
@@ -229,7 +250,11 @@ class Import_Status {
 			do_action( 'bigcommerce/log', Error_Log::NOTICE, __( 'No handler found for current import state', 'bigcommerce' ), [
 				'state' => $state,
 			] );
-			do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [] );
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Could not process the task', 'bigcommerce' ), [
+				'code'    => $e->getCode(),
+				'message' => $e->getMessage(),
+				'trace'   => $e->getTraceAsString(),
+			] );
 
 			return null;
 		}

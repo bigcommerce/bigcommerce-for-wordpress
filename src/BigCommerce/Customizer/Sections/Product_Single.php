@@ -21,6 +21,7 @@ class Product_Single {
 	const ENABLE_PRICE_NONCE  = 'bigcommerce_enable_price_nonce';
 	const SIZE_DEFAULT        = 'default';
 	const SIZE_LARGE          = 'large';
+	const SIZE_ORIGINAL       = 'original';
 	const SIZE_CDN_STD        = 'standard';
 	const SIZE_CDN_THUMB      = 'thumbnail';
 
@@ -95,8 +96,9 @@ class Product_Single {
 			'type'        => 'radio',
 			'label'       => __( 'Image Gallery Size', 'bigcommerce' ),
 			'choices'     => [
-				self::SIZE_DEFAULT => __( 'Default', 'bigcommerce' ),
-				self::SIZE_LARGE   => __( 'Large', 'bigcommerce' ),
+				self::SIZE_DEFAULT  => __( 'Default', 'bigcommerce' ),
+				self::SIZE_LARGE    => __( 'Large', 'bigcommerce' ),
+				self::SIZE_ORIGINAL => __( 'Original', 'bigcommerce' ),
 			],
 		] );
 	}
