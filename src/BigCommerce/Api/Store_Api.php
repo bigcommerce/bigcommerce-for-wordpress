@@ -101,10 +101,14 @@ class Store_Api extends v2ApiAdapter {
 	public function get_analytics_settings() {
 		try {
 			$settings = $this->getCollection( '/settings/analytics' );
+
+			if ( empty( $settings ) ) {
+				return [];
+			}
 			$settings = array_map( function ( Resource $resource ) {
 				return get_object_vars( $resource->getUpdateFields() );
 			}, $settings );
-		} catch ( \Exception $e ) {
+		} catch ( \Throwable $e ) {
 			$settings = [];
 		}
 

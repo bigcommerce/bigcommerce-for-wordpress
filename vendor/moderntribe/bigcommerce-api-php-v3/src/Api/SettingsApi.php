@@ -110,6 +110,12 @@ class SettingsApi
         return $response;
     }
 
+	public function getStoreAnalyticsSettings( $channel_id = 0 ) {
+		list( $response ) = $this->getStorefrontHttpInfo( '/settings/analytics', $channel_id );
+
+		return $response;
+	}
+
     /**
      * @param int $channel_id
      * @param array $data

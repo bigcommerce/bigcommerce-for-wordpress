@@ -440,7 +440,7 @@ class Settings extends Provider {
 
 	private function analytics( Container $container ) {
 		$container[ self::ANALYTICS_SECTION ] = function ( Container $container ) {
-			return new Analytics_Settings( $container[ Api::FACTORY ]->store() );
+			return new Analytics_Settings( $container[ Api::FACTORY ]->store(), $container[ Api::FACTORY ]->storefront_settings() );
 		};
 
 		add_action( 'bigcommerce/settings/register/screen=' . Settings_Screen::NAME, $this->create_callback( 'analytics_settings_register', function () use ( $container ) {

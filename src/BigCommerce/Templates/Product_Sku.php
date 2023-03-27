@@ -26,7 +26,28 @@ class Product_Sku extends Controller {
 
 		return [
 			self::PRODUCT => $product,
-			self::SKU     => $product->sku(),
+			self::SKU     => $this->get_sku( $product ),
 		];
+	}
+
+	/**
+	 * @param \BigCommerce\Post_Types\Product\Product $product
+	 *
+	 * @return string
+	 */
+	private function get_sku( Product $product ) {
+		$sku = $product->sku();
+
+		if ( ! empty( $sku ) ) {
+			return $sku;
+		}
+
+		$data = $product->get_source_data();
+
+		if ( empty( $data->variants ) ) {
+			return '';
+		}
+
+		return $data->variants[0]->sku ?? '';
 	}
 }

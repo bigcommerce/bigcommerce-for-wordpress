@@ -5,7 +5,10 @@ namespace BigCommerce\Settings\Sections;
 
 
 use BigCommerce\Api\Store_Api;
+use BigCommerce\Api\v3\Api\SettingsApi;
 use BigCommerce\Settings\Screens\Settings_Screen;
+use BigCommerce\Taxonomies\Channel\Channel;
+use BigCommerce\Taxonomies\Channel\Connections;
 
 class Analytics extends Settings_Section {
 	const NAME          = 'analytics';
@@ -25,8 +28,14 @@ class Analytics extends Settings_Section {
 	 */
 	private $api;
 
-	public function __construct( Store_Api $api ) {
-		$this->api = $api;
+	/**
+	 * @var SettingsApi
+	 */
+	private $api_v3;
+
+	public function __construct( Store_Api $api, SettingsApi $api_v3 ) {
+		$this->api    = $api;
+		$this->api_v3 = $api_v3;
 	}
 
 	/**
@@ -148,7 +157,16 @@ class Analytics extends Settings_Section {
 		if ( $old_value == $new_value || ! get_option( self::SYNC_ANALYTICS, 1 ) ) {
 			return;
 		}
-		$settings = $this->api->get_analytics_settings();
+		$connections = new Connections();
+		$channel     = $connections->current();
+		$settings    = $this->api_v3->getStoreAnalyticsSettings( (int) get_term_meta( $channel->term_id, Channel::CHANNEL_ID, true ) );
+
+		if ( empty( $settings ) || empty( $settings->data ) ) {
+			return;
+		}
+
+		$settings = json_decode( json_encode( $settings->data ), true );
+
 		foreach ( $settings as &$account ) {
 			if ( $account['name'] == self::FACEBOOK_PIXEL_NAME ) {
 				$account['code']    = $new_value;
@@ -172,7 +190,16 @@ class Analytics extends Settings_Section {
 		if ( $old_value == $new_value || ! get_option( self::SYNC_ANALYTICS, 1 ) ) {
 			return;
 		}
-		$settings = $this->api->get_analytics_settings();
+		$connections = new Connections();
+		$channel     = $connections->current();
+		$settings    = $this->api_v3->getStoreAnalyticsSettings( (int) get_term_meta( $channel->term_id, Channel::CHANNEL_ID, true ) );
+
+		if ( empty( $settings ) || empty( $settings->data ) ) {
+			return;
+		}
+
+		$settings = json_decode( json_encode( $settings->data ), true );
+
 		foreach ( $settings as &$account ) {
 			if ( $account['name'] == self::GOOGLE_ANALYTICS_NAME ) {
 				if ( strpos( $account['code'], 'script' ) === false ) {

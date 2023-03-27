@@ -5,6 +5,7 @@ namespace BigCommerce\Editor;
 
 use BigCommerce\Customizer\Sections\Product_Archive;
 use BigCommerce\Exceptions\Channel_Not_Found_Exception;
+use BigCommerce\Import\Import_Type;
 use BigCommerce\Rest\Products_Controller;
 use BigCommerce\Rest\Shortcode_Controller;
 use BigCommerce\Taxonomies\Brand\Brand;
@@ -104,7 +105,7 @@ class Editor_Dialog_Template {
 
 		return $this->render_template( 'query-builder.php', [
 			'featured'   => $featured,
-			'sale'       => $sale,
+			'sale'       => Import_Type::is_traditional_import() && $sale,
 			'brands'     => $brand_choices,
 			'categories' => $category_choices,
 			'channels'   => $channels,
