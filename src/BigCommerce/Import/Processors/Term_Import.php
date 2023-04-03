@@ -86,6 +86,10 @@ abstract class Term_Import implements Import_Processor {
 			$rest_fallback = true;
 
 			if ( empty( $terms ) ) {
+				do_action( 'bigcommerce/log', Error_Log::DEBUG, sprintf( __( 'Could not find terms for %s. Wrapping up step and go to the next one', 'bigcommerce' ), $this->taxonomy() ), [] );
+				$status->set_status( $this->completed_state() );
+				$this->clear_state();
+
 				return;
 			}
 		}

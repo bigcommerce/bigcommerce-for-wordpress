@@ -1,5 +1,10 @@
 # Changelog
 
+## [5.0.3]
+
+### Fixed
+- Resolved issue with categories and brands import, preventing infinite loop import on such steps
+
 ## [5.0.2]
 
 ### Added
@@ -1889,6 +1894,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[5.0.3]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/5.0.2...5.0.3
 [5.0.2]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/5.0.1...5.0.2
 [5.0.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/5.0.0...5.0.1
 [5.0.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/4.37.0...5.0.0
