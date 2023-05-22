@@ -12,6 +12,8 @@ use BigCommerce\Taxonomies\Product_Category\Product_Category;
 class Category_Import extends Term_Import {
 	use CategoriesTrees;
 
+	public const CATEGORY_DEFAULT_TREE = 'bigcommerce_category_default_tree';
+
 	protected function taxonomy() {
 		return Product_Category::NAME;
 	}
