@@ -1,0 +1,51 @@
+{
+    "name": "moderntribe/bigcommerce",
+    "description": "BigCommerce for WordPress",
+    "type": "wordpress-plugin",
+    "license": "GPLv2",
+    "config": {
+        "platform": {
+            "php": "8.1"
+        },
+        "vendor-dir": "vendor",
+        "sort-packages": true,
+        "preferred-install": {
+            "*": "dist"
+        },
+        "allow-plugins": {
+            "kylekatarnls/update-helper": true
+        }
+    },
+    "require": {
+        "bigcommerce/api": "3.1.0",
+        "moderntribe/bigcommerce-api-php-v3": "2.3.4",
+        "monolog/monolog": "1.24.0",
+        "pimple/pimple": "3.2.3",
+        "vlucas/phpdotenv": "2.4.0"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:moderntribe/bigcommerce-api-php-v3.git",
+            "no-api": true
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:bordoni/phpass.git"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "BigCommerce\\": "src/BigCommerce"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "BigCommerce\\": "tests/integration/BigCommerce"
+        }
+    },
+    "require-dev": {
+        "league/csv": "^8.2",
+        "lucatume/wp-browser": "^3.1"
+    }
+}
