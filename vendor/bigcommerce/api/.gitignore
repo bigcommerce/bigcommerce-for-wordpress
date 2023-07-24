@@ -1,0 +1,10 @@
+vendor
+composer.lock
+*.sh
+script/*
+
+# Testing
+/phpunit.xml
+/build
+/test/reports
+.env
