@@ -57,9 +57,20 @@ class Category_Import extends Term_Import {
 	 * @throws \BigCommerce\Api\v3\ApiException
 	 */
 	public function get_source_data( $cursor = ''): array {
-		$result = $this->gql_processor->get_category_tree();
+		try {
+			$result = $this->gql_processor->get_category_tree();
 
-		return $this->handle_graph_ql_response( $result );
+			return $this->handle_graph_ql_response( $result );
+		} catch ( \Throwable $e ) {
+			do_action( 'bigcommerce/import/error', $e->getMessage(), [
+				'response' => $e->getResponseBody(),
+				'headers'  => $e->getResponseHeaders(),
+			] );
+
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [] );
+
+			return null;
+		}
 	}
 
 	protected function parse_gql_term( $term = null ): array {

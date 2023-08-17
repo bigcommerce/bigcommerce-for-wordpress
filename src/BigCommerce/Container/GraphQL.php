@@ -2,6 +2,8 @@
 
 namespace BigCommerce\Container;
 
+use BigCommerce\GraphQL\Brands_Query;
+use BigCommerce\GraphQL\Category_Tree_Query;
 use BigCommerce\GraphQL\Customer_Query;
 use BigCommerce\GraphQL\GraphQL_Processor;
 use BigCommerce\GraphQL\Product_Query;
@@ -17,6 +19,8 @@ class GraphQL extends Provider {
 	const REVIEWS_QUERY     = 'bigcommerce.graphql_query_reviews';
 	const TERMS_QUERY       = 'bigcommerce.graphql_query_terms';
 	const CUSTOMER_QUERY    = 'bigcommerce.graphql_query_customer';
+	const CATEGORY_TREE_QUERY    = 'bigcommerce.graphql_query_category_tree';
+	const BRANDS_QUERY    = 'bigcommerce.graphql_query_brands';
 
 	/**
 	 * @inheritDoc
@@ -28,6 +32,8 @@ class GraphQL extends Provider {
 				self::TERMS_QUERY    => new Terms_Query(),
 				self::REVIEWS_QUERY  => new Reviews_Query(),
 				self::CUSTOMER_QUERY => new Customer_Query(),
+				self::CATEGORY_TREE_QUERY => new Category_Tree_Query(),
+				self::BRANDS_QUERY => new Brands_Query(),
 			];
 		};
 
