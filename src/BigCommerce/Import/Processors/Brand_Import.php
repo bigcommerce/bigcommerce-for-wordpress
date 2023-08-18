@@ -46,7 +46,7 @@ class Brand_Import extends Term_Import {
 
 		if ( is_string( $response ) ) {
 			// Get next portion of brands
-			$this->get_source_data( $response );
+			return $this->get_source_data( $response );
 		}
 
 		return array_merge( $response, $this->get_option( self::BRANDS_CHECKPOINT, [] ) );
@@ -77,9 +77,9 @@ class Brand_Import extends Term_Import {
 
 			return $this->batch;
 		} catch ( \Throwable $e ) {
-			do_action( 'bigcommerce/import/error', $e->getMessage(), [
-					'response' => $e->getResponseBody(),
-					'headers'  => $e->getResponseHeaders(),
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getMessage(), [
+					'response' => method_exists( $e, 'getResponseBody' ) ? $e->getResponseBody() : $e->getTraceAsString(),
+					'headers'  => method_exists( $e, 'getResponseHeaders' ) ? $e->getResponseHeaders() : '',
 			] );
 
 			do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [] );
