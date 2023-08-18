@@ -1,5 +1,10 @@
 # Changelog
 
+## [5.0.4]
+
+### Fixed
+- Fix import stuck problem on step 6 - Updating Brands
+
 ## [5.0.3]
 
 ### Fixed
@@ -1894,6 +1899,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[5.0.4]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/5.0.3...5.0.4
 [5.0.3]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/5.0.2...5.0.3
 [5.0.2]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/5.0.1...5.0.2
 [5.0.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/5.0.0...5.0.1

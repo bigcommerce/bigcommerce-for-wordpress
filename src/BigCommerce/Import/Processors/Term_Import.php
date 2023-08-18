@@ -11,6 +11,7 @@ use BigCommerce\Import\No_Cache_Options;
 use BigCommerce\Import\Runner\Status;
 use BigCommerce\Logging\Error_Log;
 use BigCommerce\Taxonomies\Brand\Brand;
+use BigCommerce\Taxonomies\Product_Category\Product_Category;
 
 abstract class Term_Import implements Import_Processor {
 	use No_Cache_Options;
@@ -76,22 +77,27 @@ abstract class Term_Import implements Import_Processor {
 
 		try {
 			$terms = $this->get_source_data();
+			// Fallback to old categories pull
+			if ( empty( $terms ) && $this->taxonomy() === Product_Category::NAME ) {
+				$terms         = $this->get_fallback_terms();
+				$rest_fallback = true;
+			}
 		} catch ( \Throwable $e ) {
-			do_action( 'bigcommerce/log', $e->getMessage(), [
-				'response' => $e->getResponseBody(),
-				'headers'  => $e->getResponseHeaders(),
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getMessage(), [
+				'response' => method_exists( $e, 'getResponseBody' ) ? $e->getResponseBody() : $e->getTraceAsString(),
+				'headers'  => method_exists( $e, 'getResponseHeaders' ) ? $e->getResponseHeaders() : '',
 			] );
 
 			$terms         = $this->get_fallback_terms();
 			$rest_fallback = true;
+		}
 
-			if ( empty( $terms ) ) {
-				do_action( 'bigcommerce/log', Error_Log::DEBUG, sprintf( __( 'Could not find terms for %s. Wrapping up step and go to the next one', 'bigcommerce' ), $this->taxonomy() ), [] );
-				$status->set_status( $this->completed_state() );
-				$this->clear_state();
+		if ( empty( $terms ) ) {
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, sprintf( __( 'Could not find terms for %s. Wrapping up step and go to the next one', 'bigcommerce' ), $this->taxonomy() ), [] );
+			$status->set_status( $this->completed_state() );
+			$this->clear_state();
 
-				return;
-			}
+			return;
 		}
 
 		// Allow more HTML in term descriptions than WP default
