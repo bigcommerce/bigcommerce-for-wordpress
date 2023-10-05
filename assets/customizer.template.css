@@ -56,6 +56,11 @@ a.bc-btn--inverse:focus {
 	color: var(--availability-color);
 }
 
+button.bc-product-quick-view__close-button,
+button.bc-product-quick-view__close-button {
+	color: var(--icon-color);
+}
+
 .bc-product-flag--grey {
 	color: var(--condition-text);
 	background-color: var(--condition-color);

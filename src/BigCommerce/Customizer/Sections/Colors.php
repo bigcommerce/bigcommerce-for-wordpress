@@ -24,6 +24,7 @@ class Colors {
 	const TEXT_LIGHT          = 'light';
 
 	const BUTTON_COLOR       = 'bigcommerce_button_color';
+	const ICON_COLOR         = 'bigcommerce_icon_color';
 	const BUTTON_TEXT        = 'bigcommerce_button_text_color';
 	const SALE_COLOR         = 'bigcommerce_sale_color';
 	const SALE_TEXT          = 'bigcommerce_sale_text_color';
@@ -81,6 +82,17 @@ class Colors {
 		$wp_customize->add_control( new \WP_Customize_Color_Control( $wp_customize, self::BUTTON_COLOR, [
 			'section' => self::NAME,
 			'label'   => __( 'Button Color', 'bigcommerce' ),
+		] ) );
+
+		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::ICON_COLOR, [
+			'type'              => 'theme_mod',
+			'default'           => self::COLOR_BC_BLACK,
+			'transport'         => 'refresh',
+			'sanitize_callback' => 'sanitize_hex_color',
+		] ) );
+		$wp_customize->add_control( new \WP_Customize_Color_Control( $wp_customize, self::ICON_COLOR, [
+			'section' => self::NAME,
+			'label'   => __( 'Close Icon Color', 'bigcommerce' ),
 		] ) );
 
 		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::BUTTON_TEXT, [

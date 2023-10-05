@@ -32,6 +32,7 @@ class Styles {
 
 		$vars = [
 			'button-color'       => $this->button_color(),
+			'icon-color'         => $this->icon_color(),
 			'button-text'        => $this->button_text(),
 			'sale-color'         => $this->sale_color(),
 			'sale-text'          => $this->sale_text(),
@@ -63,7 +64,7 @@ class Styles {
 		$css = $this->get_styles();
 
 		if ( ! empty( $css ) ) {
-			echo "\n<style type='text/css'>\n", $css, "\n</style>\n"; // WPCS: XSS okay. CSS is clean.
+			echo "\n<style type='text/css' id='bigcommerce-styles-inline'>\n", $css, "\n</style>\n"; // WPCS: XSS okay. CSS is clean.
 		}
 	}
 
@@ -90,6 +91,10 @@ class Styles {
 		$color = sanitize_hex_color( get_theme_mod( Colors::BUTTON_COLOR, Colors::COLOR_BC_BLUE ) );
 
 		return $color ?: Colors::COLOR_BC_BLUE;
+	}
+
+	private function icon_color() {
+		return sanitize_hex_color( get_theme_mod( Colors::ICON_COLOR, Colors::COLOR_BC_BLACK ) );
 	}
 
 	private function button_text() {
