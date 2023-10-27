@@ -13,8 +13,7 @@
             "*": "dist"
         },
         "allow-plugins": {
-            "kylekatarnls/update-helper": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "kylekatarnls/update-helper": true
         }
     },
     "require": {
@@ -47,7 +46,6 @@
     },
     "require-dev": {
         "league/csv": "^8.2",
-        "lucatume/wp-browser": "^3.1",
-        "wp-coding-standards/wpcs": "^3.0"
+        "lucatume/wp-browser": "^3.1"
     }
 }
