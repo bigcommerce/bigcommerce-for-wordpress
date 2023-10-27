@@ -634,7 +634,7 @@ class Cart_Controller extends Rest_Controller {
 							__( 'The unformatted value', 'bigcommerce' ),
 							'type' => 'string',
 						],
-						'formattted' => [
+						'formatted' => [
 							__( 'The unformatted value', 'bigcommerce' ),
 							'type' => 'string',
 						],
@@ -650,7 +650,7 @@ class Cart_Controller extends Rest_Controller {
 							__( 'The unformatted value', 'bigcommerce' ),
 							'type' => 'string',
 						],
-						'formattted' => [
+						'formatted' => [
 							__( 'The unformatted value', 'bigcommerce' ),
 							'type' => 'string',
 						],
@@ -666,7 +666,7 @@ class Cart_Controller extends Rest_Controller {
 							__( 'The unformatted value', 'bigcommerce' ),
 							'type' => 'string',
 						],
-						'formattted' => [
+						'formatted' => [
 							__( 'The unformatted value', 'bigcommerce' ),
 							'type' => 'string',
 						],
@@ -730,7 +730,7 @@ class Cart_Controller extends Rest_Controller {
 										__( 'The unformatted value', 'bigcommerce' ),
 										'type' => 'string',
 									],
-									'formattted' => [
+									'formatted' => [
 										__( 'The unformatted value', 'bigcommerce' ),
 										'type' => 'string',
 									],
@@ -746,7 +746,7 @@ class Cart_Controller extends Rest_Controller {
 										__( 'The unformatted value', 'bigcommerce' ),
 										'type' => 'string',
 									],
-									'formattted' => [
+									'formatted' => [
 										__( 'The unformatted value', 'bigcommerce' ),
 										'type' => 'string',
 									],
@@ -762,7 +762,7 @@ class Cart_Controller extends Rest_Controller {
 										__( 'The unformatted value', 'bigcommerce' ),
 										'type' => 'string',
 									],
-									'formattted' => [
+									'formatted' => [
 										__( 'The unformatted value', 'bigcommerce' ),
 										'type' => 'string',
 									],
@@ -778,7 +778,7 @@ class Cart_Controller extends Rest_Controller {
 										__( 'The unformatted value', 'bigcommerce' ),
 										'type' => 'string',
 									],
-									'formattted' => [
+									'formatted' => [
 										__( 'The unformatted value', 'bigcommerce' ),
 										'type' => 'string',
 									],

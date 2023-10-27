@@ -202,7 +202,7 @@ class Login {
 
 
 	/**
-	 * If a user exists only on BC, try to sync before reset pasword email is sent.
+	 * If a user exists only on BC, try to sync before reset password email is sent.
 	 *
 	 * @param WP_User|false $user_data WP_User object if found, false if the user does not exist.
 	 * @param \WP_Error      $errors    A WP_Error object containing any errors generated
@@ -428,7 +428,7 @@ class Login {
 			if ( Store_Settings::is_msf_on() && ! $is_allow_global_logins && ! $is_belong_to_channel ) {
 				return new \WP_Error( 'incorrect_email',
 					sprintf(
-						__( 'The access for %s is prohibited. Please create a new user ot try another one', 'bigcommerce' ),
+						__( 'The access for %s is prohibited. Please create a new user or try another one', 'bigcommerce' ),
 						$username
 					)
 				);

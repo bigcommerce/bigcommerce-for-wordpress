@@ -43,7 +43,7 @@ class Segment {
 			$settings[ 'Google Analytics' ] = [
 				'enhancedEcommerce' => true,
 				'includeSearch'     => true,
-				'nonInteration'     => false,
+				'nonIntegration'    => false,
 				'sendUserId'        => true,
 				'trackingId'        => $google,
 			];

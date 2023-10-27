@@ -243,7 +243,7 @@ your customers. Proceed at your own risk.*
 
 The `bigcommerce/init` action fires after the plugin has completed initializing all of
 it service providers and hooked them into WordPress. It passes two arguments: the primary
-plugin controller (an instance of the `BigCommerce\Plugin` class) and the depenency
+plugin controller (an instance of the `BigCommerce\Plugin` class) and the dependency
 injection container itself. The former is also available at any time after initialization
 by calling the function `bigcommerce()`.
 

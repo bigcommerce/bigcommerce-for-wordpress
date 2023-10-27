@@ -8,7 +8,7 @@
 const scrollTo = (opts) => {
 	const options = Object.assign({
 		auto: false,
-		auto_coefficent: 2.5,
+		auto_coefficient: 2.5,
 		afterScroll() {
 		},
 
@@ -27,9 +27,9 @@ const scrollTo = (opts) => {
 			htmlPosition = jQuery('html').scrollTop();
 
 			if (position > htmlPosition) {
-				options.duration = (position - htmlPosition) / options.auto_coefficent;
+				options.duration = (position - htmlPosition) / options.auto_coefficient;
 			} else {
-				options.duration = (htmlPosition - position) / options.auto_coefficent;
+				options.duration = (htmlPosition - position) / options.auto_coefficient;
 			}
 		}
 
