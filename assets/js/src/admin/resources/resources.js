@@ -25,7 +25,7 @@ const tabInstances = {
 };
 
 const scrollToOptions = {
-	auto_coefficent: 2.5,
+	auto_coefficient: 2.5,
 	duration: 500,
 	easing: 'linear',
 	offset: -WP_ADMIN_BAR_HEIGHT + -60,
@@ -176,7 +176,7 @@ const setActivePaginationButton = (e, button) => {
 
 /**
  * @function resetPaginationButtons
- * @description Reset all the active states fo any existing pagination buttons.
+ * @description Reset all the active states for any existing pagination buttons.
  * @param contentContainer
  */
 const resetPaginationButtons = (contentContainer = '') => {

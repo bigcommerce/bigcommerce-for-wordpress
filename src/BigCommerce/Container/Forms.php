@@ -21,7 +21,7 @@ class Forms extends Provider {
 	const DELETE_ADDRESS   = 'forms.delete_address';
 	const REGISTER         = 'forms.register';
 	const REVIEW           = 'forms.review';
-	const UPDATE_ADDRESS   = 'forms.udpate_address';
+	const UPDATE_ADDRESS   = 'forms.update_address';
 	const UPDATE_PROFILE   = 'forms.update_profile';
 	const GIFT_CERTIFICATE = 'forms.purchase_gift_certificate';
 	const ERRORS           = 'forms.errors';

@@ -1247,7 +1247,7 @@
 	margin-top: 20px;
 }
 .bc-diagnostics-data,
-.bc-setings-diagnostics-wrapper {
+.bc-settings-diagnostics-wrapper {
 	margin-top: 10px;
 	padding: 20px 0;
 }
@@ -1850,7 +1850,7 @@ p.bc-welcome__account-reset-message {
 	.bc-welcome__account-reset-close-button:focus {
 	opacity: 1;
 }
-/* Stroe Type (Blogging or Full Featured) */
+/* Store Type (Blogging or Full Featured) */
 .bc-settings-bigcommerce_store_type .bc-connect__header {
 	margin-bottom: 30px;
 }

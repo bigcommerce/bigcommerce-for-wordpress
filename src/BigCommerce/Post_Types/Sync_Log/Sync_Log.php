@@ -22,7 +22,7 @@ class Sync_Log {
 	// We need to know if multichannel was active during this log session.
 	const MULTICHANNEL_ACTIVE = 'multichannel_active';
 
-	// Track the sync_id so we don't have to get_posts mulitple times.
+	// Track the sync_id so we don't have to get_posts multiple times.
 	private $sync_id = 0;
 
 	/**

@@ -18,13 +18,13 @@ export const wpAPIShortcodeBuilder = (queryString = '') => request
 	.get(SHORTCODE_ENDPOINT)
 	.query(queryString);
 
-export const wpAPICartUpdate = (cartURL, querySrting = '') => request
+export const wpAPICartUpdate = (cartURL, queryString = '') => request
 	.put(cartURL)
-	.query(querySrting);
+	.query(queryString);
 
-export const wpAPIAddToCartAjax = (cartURL, querySrting = '') => request
+export const wpAPIAddToCartAjax = (cartURL, queryString = '') => request
 	.post(cartURL)
-	.query(querySrting)
+	.query(queryString)
 	.timeout({
 		response: 15000,  // Wait 15 seconds for the server to start sending,
 		deadline: 60000, // but allow 1 minute for the file to finish loading.

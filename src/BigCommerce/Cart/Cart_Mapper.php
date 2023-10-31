@@ -87,7 +87,7 @@ class Cart_Mapper {
 
 		/**
 		 * If tax is not already included in item prices
-		 * then we need to deduct the calulated tax from the subtotal
+		 * then we need to deduct the calculated tax from the subtotal
 		 * as we are displaying the tax separately
 		 */
 		if ( $cart[ 'tax_included' ] || $tax_amount < 0 ) {

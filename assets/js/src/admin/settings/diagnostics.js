@@ -26,7 +26,7 @@ const state = {
 const getPluginDiagnostics = (target) => {
 	const targetCell = target.delegateTarget ? tools.closest(target.delegateTarget, 'td') : target.querySelector('td');
 	const loader = tools.getNodes('.bc-admin-diagnostics-loader', false, targetCell, true)[0];
-	const activeWrapper = tools.getNodes('.bc-setings-diagnostics-wrapper', false, targetCell, true)[0];
+	const activeWrapper = tools.getNodes('.bc-settings-diagnostics-wrapper', false, targetCell, true)[0];
 	const getDiagnosticsWrapper = tools.closest(target.delegateTarget, '.bc-diagnostics-data');
 
 	state.isFetching = true;
@@ -39,7 +39,7 @@ const getPluginDiagnostics = (target) => {
 	wpAdminAjax({ action: DIAGNOSTICS_ACTION, _wpnonce: DIAGNOSTICS_NONCE })
 		.end((err, res) => {
 			const wrapper = document.createElement('div');
-			wrapper.classList.add('bc-setings-diagnostics-wrapper');
+			wrapper.classList.add('bc-settings-diagnostics-wrapper');
 
 			state.isFetching = false;
 			loader.classList.remove('is-active');

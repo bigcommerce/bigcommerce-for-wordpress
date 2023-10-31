@@ -8,7 +8,7 @@
 
 ## Installation
 
-Clone the BigCommerce and WP Parser respositories into your WordPress plugins directory
+Clone the BigCommerce and WP Parser repositories into your WordPress plugins directory
 
 ```
 cd wp-content/plugins/
