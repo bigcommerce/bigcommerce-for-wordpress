@@ -179,7 +179,7 @@ class Colors {
 		] ) );
 		$wp_customize->add_control( new \WP_Customize_Color_Control( $wp_customize, self::BANNER_COLOR, [
 			'section' => self::NAME,
-			'label'   => __( 'Banner Background Color', 'bigcommerce' ),
+			'label'   => __( 'Banner Backgound Color', 'bigcommerce' ),
 		] ) );
 
 		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::BANNER_TEXT, [

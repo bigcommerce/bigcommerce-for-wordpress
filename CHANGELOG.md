@@ -1,5 +1,10 @@
 # Changelog
 
+## [5.0.6]
+
+### Changed
+- Update plugin readme `tested up` version
+
 ## [5.0.5]
 
 ### Changed
@@ -18,7 +23,7 @@
 ## [5.0.2]
 
 ### Added
-- Add ability to use original image proportion on product single page. Go to Appearance → Bigcommerce → Product Single and change image size to original.
+- Add ability to use original image proportion on product single page. Go to Apperance → Bigcommerce → Product Single and change image size to original.
 
 ### Changed
 - Show variant SKU if product SKU is not added or missing
@@ -259,7 +264,7 @@
 ### Fixed
 - Fixed issue when webhooks option is enabled during onboarding process. Check if webhook already exists and return its id instead of trying to recreate it  
 - Fixed error occurring while plugin activation. Problem was caused by handling the property on an empty object
-- Fixed bccustomervisibleterms value issue. Previously WP_Error could be set as transient value and cause issues on the storefront. Currently when error is occurred empty value will be saved to transient
+- Fixed bccustomervisibleterms value issue. Previously WP_Error could be set as transient value and cause issues on the storefront. Currently when error is occured empty value will be saved to transient
 - Fixed the inventory updates via webhook. The inventory level should be updated when it is changed on the BC side whether a product or variant tracking is enabled.
 - Fixed product images switch when the user selects the variant. The corresponding image of the variant will be displayed
 
@@ -556,7 +561,7 @@
 - Added support for Gift Certificate themes drop-down
 
 ### Fixed
-- Fixed an error when printing a failed import time message in the Settings panel
+- Fixed an erorr when printing a failed import time message in the Settings panel
 
 
 ## [4.6.0]
@@ -871,7 +876,7 @@
 - Added the ability to sort products arbitrarily in the products shortcode. By setting
   the `sort` parameter to `post__in`, the order of the IDs in the `id` parameter will
   be maintained in the query results.
-- Added body classes to front end templates with product ID and availability, and flags for
+- Added body classes to front end templates with product ID and availabilty, and flags for
   sale, out of stock, and low inventory products.
 
 ### Changed
@@ -1580,7 +1585,7 @@
 - Fixed the check for an expired import lock when running an import via ajax.
 - Fixed arguments to Channel Listings API requests to ensure that all products
   are returned even with larger batch sizes.
-- Fixed a fatal error when initializing an import on PHP 7.0+.
+- Fixed a fatal error when intializing an import on PHP 7.0+.
 
 
 ## [1.5.0]
@@ -1819,7 +1824,7 @@
 - Reorganized JS modules and structure for easier readability.
 - Added a new indicator in the Gutenberg products block to let the user know if they chose filters that produce no results.
 - Added support for displaying estimated tax amounts in the cart.
-- Refactored Analytics data tags to utilize Segment Analytics.js script.
+- Refactored Analytics data tags to utilize Segment Analtyics.js script.
 - Improved focus pointer UX elements when editing the product block.
 - Rendered redesigned panels in Settings UI.
 - Refactored settings screen registration and rendering.
@@ -1904,6 +1909,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[5.0.5]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/5.0.5...5.0.6
 [5.0.5]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/5.0.4...5.0.5
 [5.0.4]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/5.0.3...5.0.4
 [5.0.3]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/5.0.2...5.0.3

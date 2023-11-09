@@ -156,7 +156,7 @@ class Cart {
 
 		// Add to the existing cart
 		if ( $cart_id ) {
-			/* @throws ApiException if the request fails */
+			/* @throws ApiException if the request failes */
 			$cart_response = $this->api->cartsCartIdItemsPost( $cart_id, $request );
 			$cart = $cart_response->getData();
 		} else { // either there was no cart ID passed, or the cart no longer exists, so build a new cart

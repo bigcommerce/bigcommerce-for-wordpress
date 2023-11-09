@@ -2,7 +2,7 @@
 /**
  * This container provider adds a WordPress proxy layer on top of the BigCommerce API.
  *
- * @package BigCommerce
+ * @package BigCommere
  */
 
 namespace BigCommerce\Container;
@@ -52,7 +52,7 @@ class Proxy extends Provider {
 	}
 
 	/**
-	 * Sets up the endpoint container.
+	 * Sets up the endpoint contianer.
 	 *
 	 * @param Container $container The Container instance.
 	 */
@@ -97,7 +97,7 @@ class Proxy extends Provider {
 		/**
 		 * Filters whether to use the proxy cache.
 		 *
-		 * @param bool Default true.
+		 * @param bool Defaul true.
 		 */
 		$use_cache = apply_filters( 'bigcommerce/proxy/use_cache', true );
 

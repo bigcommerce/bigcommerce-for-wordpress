@@ -925,8 +925,8 @@ class Product {
 	 * @return bool If the product is out of stock
 	 */
 	public function is_purchasable( $variant_id = 0 ) {
-		$availability = $this->availability();
-		if ( $availability === Availability::DISABLED ) {
+		$availabilty = $this->availability();
+		if ( $availabilty === Availability::DISABLED ) {
 			return false;
 		}
 

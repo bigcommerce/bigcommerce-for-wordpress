@@ -1,0 +1,235 @@
+@import "variables";
+
+@font-face {
+  font-family: '#{$icomoon-font-family}';
+  src:
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff2?6ndycy') format('woff2'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?6ndycy') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?6ndycy') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?6ndycy##{$icomoon-font-family}') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+.bc-icon {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: '#{$icomoon-font-family}' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-bc-bigcommerce_diagnostics {
+  &:before {
+    content: $icon-bc-bigcommerce_diagnostics; 
+  }
+}
+.icon-bc-channel_select {
+  &:before {
+    content: $icon-bc-channel_select; 
+  }
+}
+.icon-bc-channel {
+  &:before {
+    content: $icon-bc-channel; 
+  }
+}
+.icon-bc-credentials {
+  &:before {
+    content: $icon-bc-credentials; 
+  }
+}
+.icon-bc-sync {
+  &:before {
+    content: $icon-bc-sync; 
+  }
+}
+.icon-bc-accounts {
+  &:before {
+    content: $icon-bc-accounts; 
+  }
+}
+.icon-bc-analytics {
+  &:before {
+    content: $icon-bc-analytics; 
+  }
+}
+.icon-bc-cart {
+  &:before {
+    content: $icon-bc-cart; 
+  }
+}
+.icon-bc-currency {
+  &:before {
+    content: $icon-bc-currency; 
+  }
+}
+.icon-bc-gift_certificates {
+  &:before {
+    content: $icon-bc-gift_certificates; 
+  }
+}
+.icon-bc-import {
+  &:before {
+    content: $icon-bc-import; 
+  }
+}
+.icon-bc-order_confirmation {
+  &:before {
+    content: $icon-bc-order_confirmation; 
+  }
+}
+.icon-bc-product_reviews {
+  &:before {
+    content: $icon-bc-product_reviews; 
+  }
+}
+.icon-bc-shipping_returns {
+  &:before {
+    content: $icon-bc-shipping_returns; 
+  }
+}
+.icon-bc-b-logo {
+  &:before {
+    content: $icon-bc-b-logo; 
+  }
+}
+.dashicons-bigcommerce {
+  &:before {
+    content: $dashicons-bigcommerce; 
+  }
+}
+.icon-bc-arrow-solid {
+  &:before {
+    content: $icon-bc-arrow-solid; 
+  }
+}
+.icon-bc-selected {
+  &:before {
+    content: $icon-bc-selected; 
+  }
+}
+.icon-bc-arrow-toggle {
+  &:before {
+    content: $icon-bc-arrow-toggle; 
+  }
+}
+.icon-bc-undo {
+  &:before {
+    content: $icon-bc-undo; 
+  }
+}
+.icon-bc-tag {
+  &:before {
+    content: $icon-bc-tag; 
+  }
+}
+.icon-bc-grid {
+  &:before {
+    content: $icon-bc-grid; 
+  }
+}
+.icon-bc-gear {
+  &:before {
+    content: $icon-bc-gear; 
+  }
+}
+.icon-bc-store-front {
+  &:before {
+    content: $icon-bc-store-front; 
+  }
+}
+.icon-bc-customize {
+  &:before {
+    content: $icon-bc-customize; 
+  }
+}
+.icon-bc-authenticate {
+  &:before {
+    content: $icon-bc-authenticate; 
+  }
+}
+.icon-bc-next_steps {
+  &:before {
+    content: $icon-bc-next_steps; 
+  }
+}
+.icon-bc-dollar-sign {
+  &:before {
+    content: $icon-bc-dollar-sign; 
+  }
+}
+.icon-bc-arrow-left {
+  &:before {
+    content: $icon-bc-arrow-left; 
+  }
+}
+.icon-bc-arrow-right {
+  &:before {
+    content: $icon-bc-arrow-right; 
+  }
+}
+.icon-bc-arrow-up {
+  &:before {
+    content: $icon-bc-arrow-up; 
+  }
+}
+.icon-bc-arrow-down {
+  &:before {
+    content: $icon-bc-arrow-down; 
+  }
+}
+.icon-bc-plus {
+  &:before {
+    content: $icon-bc-plus; 
+  }
+}
+.icon-bc-minus {
+  &:before {
+    content: $icon-bc-minus; 
+  }
+}
+.icon-bc-check {
+  &:before {
+    content: $icon-bc-check; 
+  }
+}
+.icon-bc-cross {
+  &:before {
+    content: $icon-bc-cross; 
+  }
+}
+.icon-bc-search {
+  &:before {
+    content: $icon-bc-search; 
+  }
+}
+.icon-bc-chevron-down {
+  &:before {
+    content: $icon-bc-chevron-down; 
+  }
+}
+.icon-bc-chevron-left {
+  &:before {
+    content: $icon-bc-chevron-left; 
+  }
+}
+.icon-bc-chevron-right {
+  &:before {
+    content: $icon-bc-chevron-right; 
+  }
+}
+.icon-bc-chevron-up {
+  &:before {
+    content: $icon-bc-chevron-up; 
+  }
+}
+

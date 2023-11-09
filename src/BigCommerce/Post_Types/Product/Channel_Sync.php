@@ -12,7 +12,7 @@ use BigCommerce\Settings\Sections\Channels;
 /**
  * Class Channel_Sync
  *
- * Synchronizes changes to the Product state with the BigCommerce Channel
+ * Synchonizes changes to the Product state with the BigCommerce Channel
  */
 class Channel_Sync {
 

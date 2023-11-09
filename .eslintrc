@@ -1,0 +1,67 @@
+{
+  "parser": "babel-eslint",
+  "extends": [
+    "airbnb",
+    "plugin:import/errors",
+    "plugin:import/warnings"
+  ],
+  "plugins": [
+    "react"
+  ],
+  "settings": {
+    "import/ignore": [
+      "node_modules",
+      "\\.(html|json|properties)$"
+    ],
+    "import/resolver": {
+      "webpack": {
+        "config": "webpack.config.js"
+      }
+    }
+  },
+  "rules": {
+    "eqeqeq": [2, "allow-null"],
+    "func-names": 0,
+    "import/extensions": 0,
+    "import/no-unresolved": 0,
+    "import/no-named-as-default": 0,
+    "import/prefer-default-export": 0,
+    "import/no-extraneous-dependencies": 0,
+    "no-useless-escape": 0,
+    "no-tabs": 0,
+    "indent": [
+      "error",
+      "tab"
+    ],
+    "new-cap": 0,
+    "no-console": 0,
+    "no-plusplus": 0,
+    "no-undef": 0,
+    "global-require": 0,
+    "class-methods-use-this": 0,
+    "no-multi-spaces": [2, {"exceptions": {"VariableDeclarator": true}}],
+    "no-param-reassign": [2, {"props": false}],
+    "no-script-url": 0,
+    "no-use-before-define": [2, "nofunc"],
+    "quote-props": [2, "consistent-as-needed"],
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off",
+    "react/jsx-indent": [2, "tab"],
+    "react/jsx-indent-props": [2, "tab"],
+    "react/jsx-no-bind": [2, {
+      "ignoreRefs": false,
+      "allowArrowFunctions": false,
+      "allowBind": false
+    }],
+    "react/forbid-prop-types": 0,
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "space-before-function-paren": 0,
+    "linebreak-style": 0,
+    "spaced-comment": 0,
+    "max-len": [
+      "error",
+      250,
+      4
+    ]
+  }
+}
