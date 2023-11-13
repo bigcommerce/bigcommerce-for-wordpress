@@ -21,7 +21,7 @@ class Cart_Items extends Controller {
 			/**
 			 * Filter the image size used for cart item image
 			 *
-			 * @param string $size The image size to use
+			 * @param string $IMAGE_SIZE The image size to use
 			 */
 			self::IMAGE_SIZE => apply_filters( 'bigcommerce/template/cart_items_image/size', Image_Sizes::BC_SMALL ),
 		];
