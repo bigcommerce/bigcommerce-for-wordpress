@@ -1,5 +1,10 @@
 # Changelog
 
+## [5.0.6]
+
+### Changed
+- Update plugin readme `tested up` version
+
 ## [5.0.5]
 
 ### Changed
@@ -1904,6 +1909,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[5.0.5]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/5.0.5...5.0.6
 [5.0.5]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/5.0.4...5.0.5
 [5.0.4]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/5.0.3...5.0.4
 [5.0.3]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/5.0.2...5.0.3

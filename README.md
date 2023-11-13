@@ -13,6 +13,12 @@ As with any WordPress plugin, upload the plugin ZIP file to the
 * SSL
 * The PHP intl extension will enable better currency formatting
 
+### Assets build
+
+* Run `nvm use`
+* Run `yarn install`
+* Run `grunt build` for production and `grunt` for development
+
 ### Settings
 
 Find the BigCommerce settings screen at BigCommerce -> Settings in the WordPress
