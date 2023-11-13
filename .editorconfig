@@ -1,0 +1,174 @@
+root = true
+
+# Base styles from WordPress Coding Standards
+# https://github.com/WordPress/wordpress-develop/blob/master/.editorconfig
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.yml]
+indent_style = space
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
+
+# Indentation override for all JS under theme directory
+[wp-content/themes/core/**/*.js]
+indent_style = tab
+spaces_within_imports = true
+
+# Matches the exact files either package.json or .travis.yml
+[{package.json,.travis.yml}]
+indent_style = space
+indent_size = 2
+
+# Indentation override for all CSS under theme directory
+[wp-content/themes/core/**/**/*.pcss]
+indent_style = tab
+
+[*.json]
+indent_style = space
+tab_width = 4
+
+[*.php]
+indent_style = tab
+ij_formatter_off_tag = @formatter:off
+ij_formatter_on_tag = @formatter:on
+ij_formatter_tags_enabled = false
+ij_php_align_assignments = true
+ij_php_align_class_constants = true
+ij_php_align_group_field_declarations = false
+ij_php_align_inline_comments = false
+ij_php_align_key_value_pairs = true
+ij_php_align_multiline_array_initializer_expression = true
+ij_php_align_phpdoc_comments = true
+ij_php_align_phpdoc_param_names = true
+ij_smart_tabs = true
+ij_php_array_initializer_new_line_after_left_brace = true
+ij_php_array_initializer_right_brace_on_new_line = true
+ij_php_array_initializer_wrap = on_every_item
+ij_php_blank_lines_after_class_header = 0
+ij_php_blank_lines_after_function = 1
+ij_php_blank_lines_after_imports = 1
+ij_php_blank_lines_after_opening_tag = 0
+ij_php_blank_lines_after_package = 0
+ij_php_blank_lines_around_class = 1
+ij_php_blank_lines_around_constants = 0
+ij_php_blank_lines_around_field = 0
+ij_php_blank_lines_around_method = 1
+ij_php_blank_lines_before_class_end = 0
+ij_php_blank_lines_before_imports = 1
+ij_php_blank_lines_before_method_body = 0
+ij_php_blank_lines_before_package = 1
+ij_php_blank_lines_before_return_statement = 1
+ij_php_block_brace_style = end_of_line
+ij_php_class_brace_style = end_of_line
+ij_php_comma_after_last_array_element = true
+ij_php_concat_spaces = true
+ij_php_do_while_brace_force = always
+ij_php_else_on_new_line = false
+ij_php_fields_default_visibility = private
+ij_php_finally_on_new_line = false
+ij_php_for_brace_force = always
+ij_php_force_short_declaration_array_style = true
+ij_php_group_use_wrap = on_every_item
+ij_php_if_brace_force = always
+ij_php_import_sorting = alphabetic
+ij_php_indent_break_from_case = true
+ij_php_indent_case_from_switch = true
+ij_php_indent_code_in_php_tags = false
+ij_php_keep_blank_lines_after_lbrace = 1
+ij_php_keep_blank_lines_before_right_brace = 1
+ij_php_keep_blank_lines_in_code = 2
+ij_php_keep_blank_lines_in_declarations = 2
+ij_php_keep_indents_on_empty_lines = false
+ij_php_keep_line_breaks = true
+ij_php_keep_rparen_and_lbrace_on_one_line = true
+ij_php_keep_simple_methods_in_one_line = false
+ij_php_lambda_brace_style = end_of_line
+ij_php_lower_case_boolean_const = true
+ij_php_lower_case_null_const = true
+ij_php_method_brace_style = end_of_line
+ij_php_namespace_brace_style = 1
+ij_php_phpdoc_blank_line_before_tags = true
+ij_php_phpdoc_blank_lines_around_parameters = true
+ij_php_phpdoc_keep_blank_lines = true
+ij_php_phpdoc_param_spaces_between_name_and_description = 1
+ij_php_phpdoc_param_spaces_between_tag_and_type = 1
+ij_php_phpdoc_param_spaces_between_type_and_name = 1
+ij_php_phpdoc_use_fqcn = true
+ij_php_phpdoc_wrap_long_lines = true
+ij_php_space_after_colon = true
+ij_php_space_after_colon_in_return_type = true
+ij_php_space_after_comma = true
+ij_php_space_after_for_semicolon = true
+ij_php_space_after_quest = true
+ij_php_space_after_type_cast = true
+ij_php_space_after_unary_not = true
+ij_php_space_before_array_initializer_left_brace = false
+ij_php_space_before_catch_keyword = true
+ij_php_space_before_catch_left_brace = true
+ij_php_space_before_catch_parentheses = true
+ij_php_space_before_class_left_brace = true
+ij_php_space_before_closure_left_parenthesis = true
+ij_php_space_before_colon = true
+ij_php_space_before_colon_in_return_type = false
+ij_php_space_before_comma = false
+ij_php_space_before_do_left_brace = true
+ij_php_space_before_else_keyword = true
+ij_php_space_before_else_left_brace = true
+ij_php_space_before_finally_keyword = true
+ij_php_space_before_finally_left_brace = true
+ij_php_space_before_for_left_brace = true
+ij_php_space_before_for_parentheses = true
+ij_php_space_before_for_semicolon = false
+ij_php_space_before_if_left_brace = true
+ij_php_space_before_if_parentheses = true
+ij_php_space_before_method_call_parentheses = false
+ij_php_space_before_method_left_brace = true
+ij_php_space_before_method_parentheses = false
+ij_php_space_before_quest = true
+ij_php_space_before_switch_left_brace = true
+ij_php_space_before_switch_parentheses = true
+ij_php_space_before_try_left_brace = true
+ij_php_space_before_unary_not = true
+ij_php_space_before_while_keyword = true
+ij_php_space_before_while_left_brace = true
+ij_php_space_before_while_parentheses = true
+ij_php_space_between_ternary_quest_and_colon = false
+ij_php_spaces_around_additive_operators = true
+ij_php_spaces_around_arrow = false
+ij_php_spaces_around_assignment_in_declare = false
+ij_php_spaces_around_assignment_operators = true
+ij_php_spaces_around_bitwise_operators = true
+ij_php_spaces_around_equality_operators = true
+ij_php_spaces_around_logical_operators = true
+ij_php_spaces_around_multiplicative_operators = true
+ij_php_spaces_around_null_coalesce_operator = true
+ij_php_spaces_around_relational_operators = true
+ij_php_spaces_around_shift_operators = true
+ij_php_spaces_around_unary_operator = true
+ij_php_spaces_around_var_within_brackets = true
+ij_php_spaces_within_array_initializer_braces = true
+ij_php_spaces_within_brackets = false
+ij_php_spaces_within_catch_parentheses = true
+ij_php_spaces_within_for_parentheses = true
+ij_php_spaces_within_if_parentheses = true
+ij_php_spaces_within_method_call_parentheses = true
+ij_php_spaces_within_method_parentheses = true
+ij_php_spaces_within_parentheses = true
+ij_php_spaces_within_short_echo_tags = true
+ij_php_spaces_within_switch_parentheses = true
+ij_php_spaces_within_while_parentheses = true
+ij_php_special_else_if_treatment = true
+ij_php_ternary_operation_signs_on_next_line = false
+ij_php_ternary_operation_wrap = off
+ij_php_upper_case_boolean_const = false
+ij_php_upper_case_null_const = false
+ij_php_variable_naming_style = snake_case
+ij_php_while_brace_force = always
+ij_php_while_on_new_line = false
