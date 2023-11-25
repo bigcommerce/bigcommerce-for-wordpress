@@ -138,6 +138,6 @@ if ( ! function_exists( 'woocommerce_reset_loop' ) ) {
 
 if ( ! function_exists( 'wc_get_page_id' ) ) {
 	function wc_get_page_id() {
-		return '';
+		return -1;
 	}
 }
