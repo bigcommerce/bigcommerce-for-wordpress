@@ -153,7 +153,7 @@ class Error_Log {
 	 * @param $directory_path
 	 */
 	private function write_htaccess( $directory_path ) {
-		$htaccess_file = fopen( $directory_path . ".htaccess", "a+" );
+		$htaccess_file = fopen( $directory_path . "/.htaccess", "a+" );
 
 		$rulles = <<<HTACCESS
 # BigCommerce Plugin Rule
