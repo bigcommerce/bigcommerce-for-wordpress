@@ -1,5 +1,10 @@
 # Changelog
 
+## [5.0.8]
+
+### Changed
+- Update plugin readme `tested up` version
+
 ## [5.0.7]
 
 ### Fixed
