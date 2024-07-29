@@ -29,11 +29,57 @@ class Category_Import extends Term_Import {
 		// If GraphQL failed we are trying to fallback with REST API
 		try {
 			if ( Store_Settings::is_msf_on() ) {
-				$data = $this->get_msf_categories( $this->catalog_api );
 
-				if ( ! empty( $data ) ) {
-					return $data->getData();
+				/* loop though all categories and return $allCategories */
+				$allCategories = [];
+				$currentPage = 1;
+				$totalPages = 1;
+
+				do {
+
+					$params['page'] = $currentPage;
+
+					$data = $this->get_msf_categories( $this->catalog_api, $params);
+
+					if ( ! empty( $data ) ) {
+
+						$currentData = $data->getData();
+
+						if (is_array($currentData) && !empty($currentData)) {
+							$allCategories = array_merge($allCategories, $currentData);
+						} else {
+							do_action('bigcommerce/log', Error_Log::WARNING, __('Current data is not an array or is empty.', 'bigcommerce'), []);
+						}
+
+						if ( method_exists( $data, 'getMeta' ) ){
+							$meta = $data->getMeta();
+							if ( isset( $meta['pagination']['current_page'] ) && isset( $meta['pagination']['total_pages'] ) ) {
+								$currentPage = $meta['pagination']['current_page'];
+								$totalPages  = $meta['pagination']['total_pages'];
+							} else {
+								do_action( 'bigcommerce/log', Error_Log::WARNING, __( 'Pagination information is missing in the response meta.', 'bigcommerce' ), [] );
+								break; // Exit the loop
+							}
+						} else {
+							do_action('bigcommerce/log', Error_Log::WARNING, __('getMeta method does not exist on the data object.', 'bigcommerce'), []);
+							break; // Exit the loop
+						}
+					} else {
+						do_action('bigcommerce/log', Error_Log::WARNING, __('No data returned from get_msf_categories.', 'bigcommerce'), []);
+						break; // Exit the loop
+					}
+
+					do_action( 'bigcommerce/log', Error_Log::INFO, __( "Category import Page $currentPage of $totalPages", 'bigcommerce' ), [] );
+					$currentPage ++;
+
+				} while ( $currentPage <= $totalPages );
+
+				do_action( 'bigcommerce/log', Error_Log::INFO, __( "Total categories found: ".count($allCategories) , 'bigcommerce' ), [] );
+
+				if ( ! empty( $allCategories ) ) {
+					return $allCategories;
 				}
+
 			}
 
 			return $this->catalog_api->getCategoriesBatch()->getData();
