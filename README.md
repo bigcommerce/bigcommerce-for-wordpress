@@ -12,6 +12,7 @@ As with any WordPress plugin, upload the plugin ZIP file to the
 * WordPress: 5.8+
 * SSL
 * The PHP intl extension will enable better currency formatting
+* Support for tmpfile() function in php.ini
 
 ### Assets build
 
@@ -85,6 +86,10 @@ canonical using the dropdowns in this settings section.
 
 The "Support Email" field will be used to give customers an address to contact you
 with questions about orders.
+
+**Updating Account Information:** In order to update account information, including a users
+password and have it syncronize to BigCommerce you will need to ensure you have global 
+PHP tmpfile() function enabled. Please not this can be disabled on some hosting providers.
 
 ### Theme Customizer
 
