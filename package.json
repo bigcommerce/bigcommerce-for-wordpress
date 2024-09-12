@@ -40,7 +40,7 @@
     "js-cookie": "^2.2.0",
     "lazysizes": "^4.0.0-rc3",
     "load-grunt-tasks": "^3.5.2",
-    "lodash": "^4.17.12",
+    "lodash": "^4.17.21",
     "mt-a11y-dialog": "^5.2.0",
     "spin.js": "^3.1.0",
     "superagent": "^3.8.2",
