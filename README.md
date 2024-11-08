@@ -203,6 +203,34 @@ registration is enabled, it will also give a link to the registration page.
 `[bigcommerce_shipping_address_list]` - A list of the customer's shipping addresses, and
 forms to add, remove, or update addresses.
 
+## WP-CLI Commands
+
+The BigCommerce for WordPress plugin includes several WP-CLI commands to help manage your store and work with products. All of the commands are subcommands of `bigcommerce`.
+
+### `bigcommerce countries update`
+
+Update the cache of countries and states in `countries.json`.
+
+### `bigcommerce docs build <file>`
+
+Builds plugin documentation. `<file>` refers to a specific JSON file in the WordPress install to export the documentation to. Requires [WP Parser](https://github.com/WordPress/phpdoc-parser) to build documentation.
+
+### `bigcommerce docs import <file>>`
+
+Imports plugin documentation from a JSON file (`<file>`).
+
+### `bigcommerce import products`
+
+Imports products from the connected BigCommerce store.
+
+### `bigcommerce resources build <file> [--pretty]`
+
+Builds plugin resources JSON from a CSV file. `<file>` refers to the CSV file with resource data to import. The `--pretty` flag will format the JSON output for readability.
+
+### `bigcommerce dev reset-plugin`
+
+Resets the database options for the plugin to bring you back to the beginning of the account onboarding flow. Primarily used for development purposes. **Note:** This command does not delete any products that may have been imported from your BigCommerce store.
+
 ## Template Overrides
 
 All templates that render on the front end are found in the `templates/public` directory. To
