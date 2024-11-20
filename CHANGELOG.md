@@ -1,5 +1,15 @@
 # Changelog
 
+## [5.1.1]
+
+### Changed
+- Updated JS dependencies
+- Added CLI commands to the README
+- Update plugin readme `tested up` version
+
+### Fixed
+- Fix wc_get_page_id return type
+
 ## [5.1.0]
 
 ### Changed
@@ -1924,6 +1934,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[5.1.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/5.1.0...5.1.1
 [5.1.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/5.0.8...5.1.0
 [5.0.8]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/5.0.7...5.0.8
 [5.0.7]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/5.0.6...5.0.7
