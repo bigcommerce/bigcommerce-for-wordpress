@@ -2,7 +2,7 @@
 Contributors: bigcommerce, moderntribe, jbrinley, becomevocal, vincentlistrani, jbirthler, kdiplas, iliabaum, joshliston, nickioa, fernando22, mr_speer, geoffgraham, yuenvision, xwp, karenpwhite, mlkilderkin, ericbher, karmatosed, lukecarbis
 Tags: ecommerce, online store, sell online, storefront, retail, online shop, bigcommerce, big commerce, e-commerce, physical products, buy buttons, commerce, shopping cart, checkout, cart, shop, headless commerce, shipping, payments, fulfillment
 Requires at least: 5.2
-Tested up to: 6.6
+Tested up to: 6.7
 Stable tag: 5.1.0
 Requires PHP: 7.4.0
 License: GPLv2 or later
