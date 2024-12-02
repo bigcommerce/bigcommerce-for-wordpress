@@ -99,7 +99,6 @@ class Channel_Select extends Settings_Section {
 			$name = parse_url( home_url(), PHP_URL_HOST );
 		}
 		$name = str_replace( '.', '-', $name );
-		$name = preg_replace( '/[^A-Za-z0-9\-_\s]/', '', $name );
 		return trim( $name );
 	}
 
