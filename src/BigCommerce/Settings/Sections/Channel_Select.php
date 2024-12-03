@@ -31,7 +31,7 @@ class Channel_Select extends Settings_Section {
 		register_setting(
 			Connect_Channel_Screen::NAME,
 			self::NEW_NAME,
-			'__return_false'
+			[ 'sanitize_callback' => [ $this, 'sanitize_channel_name' ] ]
 		);
 
 		add_settings_field(
@@ -51,7 +51,7 @@ class Channel_Select extends Settings_Section {
 			[
 				'type'    => 'text',
 				'option'  => self::NEW_NAME,
-				'default' => parse_url( home_url(), PHP_URL_HOST ),
+				'default' => $this->sanitize_channel_name( parse_url( home_url(), PHP_URL_HOST ) ),
 				'class'   => 'bc-create-channel-wrapper',
 			]
 		);
@@ -86,5 +86,32 @@ class Channel_Select extends Settings_Section {
 		}, $terms );
 
 		return $list;
+	}
+
+	/**
+	 * Sanitize the channel name before saving or using
+	 *
+	 * @param string $name The channel name to sanitize
+	 * @return string The sanitized channel name
+	 */
+	public function sanitize_channel_name( $name ) {
+		if ( empty( $name ) ) {
+			$name = parse_url( home_url(), PHP_URL_HOST );
+		}
+		$name = str_replace( '.', '-', $name );
+		return trim( $name );
+	}
+
+	/**
+	 * Override parent render_field to ensure channel name is sanitized
+	 */
+	public function render_field( $args ) {
+		if ($args['option'] === self::NEW_NAME) {
+			$args['default'] = $this->sanitize_channel_name($args['default']);
+			if (isset($_POST[self::NEW_NAME])) {
+				$_POST[self::NEW_NAME] = $this->sanitize_channel_name($_POST[self::NEW_NAME]);
+			}
+		}
+		parent::render_field($args);
 	}
 }
