@@ -1178,7 +1178,17 @@ class Product {
 
 		$args = array_merge( $args, $query_args );
 
-		$posts = get_posts( $args );
+		$cache_key = sprintf('product_meta_%s_%s', $meta_key, $meta_value);
+
+		if ( $channel ) {
+			$cache_key .= '_' . $channel->term_id;
+		}
+
+		$posts = wp_cache_get($cache_key);
+		if (!$posts) {
+			$posts = get_posts( $args );
+			wp_cache_set($cache_key, $posts, '', 3600);
+		}
 
 		if ( empty( $posts ) ) {
 			throw new Product_Not_Found_Exception( sprintf( __( 'No product found matching %s %s', 'bigcommerce' ), strtoupper( $meta_key ), $meta_value ) );
