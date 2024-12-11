@@ -5,7 +5,6 @@ namespace BigCommerce\Accounts;
 
 
 use BigCommerce\Accounts\Roles\Customer as Customer_Role;
-use Bigcommerce\Api;
 use BigCommerce\Api_Factory;
 use BigCommerce\Import\Processors\Store_Settings;
 use BigCommerce\Pages\Account_Page;

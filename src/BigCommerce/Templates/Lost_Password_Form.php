@@ -53,10 +53,16 @@ class Lost_Password_Form extends Controller {
 		}
 		switch ( $_GET[ 'bc-message' ] ) {
 			case 'empty_username':
+				$message = Message::factory( [
+					Message::CONTENT => __( 'Please enter an email address.', 'bigcommerce' ),
+					Message::TYPE    => Message::ERROR,
+				] );
+
+				return $message->render();
 			case 'invalid_email':
 				$message = Message::factory( [
-					Message::CONTENT => __( 'Please enter a valid email address.', 'bigcommerce' ),
-					Message::TYPE    => Message::ERROR,
+					Message::CONTENT => __( 'Check your email for the reset link.', 'bigcommerce' ),
+					Message::TYPE    => Message::NOTICE,
 				] );
 
 				return $message->render();
