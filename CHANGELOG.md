@@ -1,5 +1,10 @@
 # Changelog
 
+## [5.1.2]
+
+### Fixed
+- Updated auth screen messaging to comply with OWASP guidelines.
+
 ## [5.1.1]
 
 ### Changed
@@ -1934,6 +1939,7 @@
   in fact, reset postdata, so far as Gutenberg 3.2.0 is concerned.
 
 
+[5.1.2]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/5.1.1...5.1.2
 [5.1.1]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/5.1.0...5.1.1
 [5.1.0]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/5.0.8...5.1.0
 [5.0.8]: https://github.com/bigcommerce/bigcommerce-for-wordpress/compare/5.0.7...5.0.8
