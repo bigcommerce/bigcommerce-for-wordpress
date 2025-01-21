@@ -7,6 +7,14 @@ namespace BigCommerce\Import\Runner;
 use BigCommerce\Settings\Import_Status;
 use BigCommerce\Settings\Sections\Import;
 
+/**
+ * Handles scheduling of import tasks using WordPress cron system.
+ * 
+ * This class is responsible for managing the timing and frequency of BigCommerce
+ * product imports. It handles both the scheduling of new import cycles based on
+ * configured frequency settings and the scheduling of individual batch processes
+ * within an ongoing import.
+ */
 class Cron_Scheduler {
 	/**
 	 * Schedule a cron to start the next import
