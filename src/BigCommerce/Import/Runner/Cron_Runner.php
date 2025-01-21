@@ -6,6 +6,9 @@ namespace BigCommerce\Import\Runner;
 
 use BigCommerce\Manager\Manager;
 
+/**
+ * Handles the scheduling and execution of BigCommerce import processes via WordPress cron.
+ */
 class Cron_Runner {
 	const START_CRON    = 'bigcommerce_start_import';
 	const CONTINUE_CRON = 'bigcommerce_continue_import';
