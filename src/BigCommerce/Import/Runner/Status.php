@@ -6,6 +6,16 @@ namespace BigCommerce\Import\Runner;
 
 use BigCommerce\Import\No_Cache_Options;
 
+ /**
+ * Manages the import process status tracking and logging system for BigCommerce imports.
+ * This class maintains two logs: current and previous import statuses, storing timestamps
+ * and state transitions throughout the import process. It uses WordPress options to persist
+ * the status information without caching.
+ *
+ * The class defines various status constants representing different stages of the import
+ * process, from initialization to completion, including product fetching, category updates,
+ * brand management, and image processing.
+ */
 class Status {
 	use No_Cache_Options;
 
