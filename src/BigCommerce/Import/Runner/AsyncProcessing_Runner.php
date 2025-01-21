@@ -5,6 +5,15 @@ namespace BigCommerce\Import\Runner;
 
 use BigCommerce\Logging\Error_Log;
 
+/**
+ * Handles asynchronous processing for BigCommerce import operations.
+ * 
+ * This class manages parallel processing of time-consuming import tasks
+ * such as fetching listings, initializing channels, and product fetching.
+ * It implements locking mechanisms to prevent concurrent processing conflicts
+ * and validates processing status to ensure only allowed operations run in parallel.
+ *
+ */
 class AsyncProcessing_Runner {
 
 	const CONTINUE_IMPORT = 'bigcommerce_async_import_continue';
