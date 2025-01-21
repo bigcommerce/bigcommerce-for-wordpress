@@ -6,6 +6,12 @@ namespace BigCommerce\Import\Runner;
 
 use BigCommerce\Import\No_Cache_Options;
 
+ /**
+ * Manages a lock mechanism for the BigCommerce import process using WordPress options.
+ * The lock is implemented as a timestamp to prevent concurrent import operations
+ * from running simultaneously.
+ *
+ */
 class Lock {
 	use No_Cache_Options;
 
