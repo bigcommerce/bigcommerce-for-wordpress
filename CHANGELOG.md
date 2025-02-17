@@ -320,7 +320,7 @@
 
 ### Changed
 
-- In order to add more transparency in plugin code and updating the '[Plugin Code Reference](https://bigcommerce.moderntribe.qa/)' site  PHPDoc blocks were updated. Added missing descriptions for classes/methods  and explanation comments in methods body. Please check the list of affected items below
+- In order to add more transparency in plugin code and updating the '[Plugin Code Reference](https://bc-wordpress-reference.vercel.app/)' site  PHPDoc blocks were updated. Added missing descriptions for classes/methods  and explanation comments in methods body. Please check the list of affected items below
   - src/BigCommerce/Accounts/Channel_Settings.php
   - src/BigCommerce/Accounts/Countries.php
   - src/BigCommerce/Accounts/Customer_Group.php
