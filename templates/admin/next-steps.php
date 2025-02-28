@@ -1,43 +1,42 @@
 <?php
 /**
- * Template to display next onboarding steps on the settings screen
+ * Template to display next onboarding steps on the settings screen (Open Source Version)
  *
  * @var array $required
  * @var array $optional
  * @var bool $new_account
  */
 
-printf( '<div class="bc-complete__next-steps-header"><i class="bc-icon icon-bc-authenticate"></i><h2 class="bc-next-step-heading">%s</h2><p class="bc-complete__new-account-email">%s</p></div>',
-	$new_account ? __( 'Authenticate and Confirm your BigCommerce Account', 'bigcommerce' ) : __( 'Next Steps', 'bigcommerce' ),
-	$new_account ? __( 'Check your email for a link to confirm your account.', 'bigcommerce' ) : __( 'Complete the steps below to optimize your BigCommerce for WordPress experience.', 'bigcommerce' )
+printf( '<div class="complete__next-steps-header"><i class="icon icon-authenticate"></i><h2 class="next-step-heading">%s</h2><p class="complete__new-account-email">%s</p></div>',
+	$new_account ? __( 'Authenticate and Confirm your Open Source Account', 'opensource' ) : __( 'Next Steps', 'opensource' ),
+	$new_account ? __( 'Check your email for a link to confirm your account.', 'opensource' ) : __( 'Complete the steps below to optimize your Open Source Plugin experience.', 'opensource' )
 );
 
 if ( ! empty( $required ) ) {
-	printf( '<h3 class="bc-next-steps__section-title">%s</h3>', esc_html( __( 'Required Steps', 'bigcommerce' ) ) );
+	printf( '<h3 class="next-steps__section-title">%s</h3>', esc_html( __( 'Required Steps', 'opensource' ) ) );
 	foreach ( $required as $key => $step ) {
-		printf( '<div class="bc-next-step-wrapper bc-required-step %s">', sanitize_html_class( 'bc-next-step--' . $key ) );
-		printf( '<div class="bc-next-step-status-wrapper">' );
-		printf( '<i class="bc-icon %s"></i> <span class="bc-next-step-incomplete">%s</span>', sanitize_html_class( 'icon-bc-' . $step['icon'] ), esc_html( __( 'Incomplete', 'bigcommerce' ) ) );
+		printf( '<div class="next-step-wrapper required-step %s">', sanitize_html_class( 'next-step--' . $key ) );
+		printf( '<div class="next-step-status-wrapper">' );
+		printf( '<i class="icon %s"></i> <span class="next-step-incomplete">%s</span>', sanitize_html_class( 'icon-' . $step['icon'] ), esc_html( __( 'Incomplete', 'opensource' ) ) );
 		printf( '</div>' );
-		printf( '<h3 class="h2 bc-next-step-heading">%s</h3>', esc_html( $step['heading'] ) );
+		printf( '<h3 class="h2 next-step-heading">%s</h3>', esc_html( $step['heading'] ) );
 		if ( ! empty( $step['url'] ) && ! empty( $step['label'] ) ) {
-			printf( '<a href="%s" class="bc-next-step-cta" target="_blank" rel="noopener">%s</a>', esc_url( $step['url'] ), esc_html( $step['label'] ) );
+			printf( '<a href="%s" class="next-step-cta" target="_blank" rel="noopener">%s</a>', esc_url( $step['url'] ), esc_html( $step['label'] ) );
 		}
 		echo '</div>';
 	}
 }
 
-
 if ( ! empty( $optional ) ) {
-	printf( '<h3 class="bc-next-steps__section-title">%s</h3>', esc_html( __( 'Optional Steps', 'bigcommerce' ) ) );
+	printf( '<h3 class="next-steps__section-title">%s</h3>', esc_html( __( 'Optional Steps', 'opensource' ) ) );
 	foreach ( $optional as $key => $step ) {
-		printf( '<div class="bc-next-step-wrapper bc-optional-step %s">', sanitize_html_class( 'bc-next-step--' . $key ) );
-		printf( '<div class="bc-next-step-status-wrapper">' );
-		printf( '<i class="bc-icon %s"></i> <span class="bc-next-step-incomplete">%s</span>', sanitize_html_class( 'icon-bc-' . $step['icon'] ), esc_html( __( 'Incomplete', 'bigcommerce' ) ) );
+		printf( '<div class="next-step-wrapper optional-step %s">', sanitize_html_class( 'next-step--' . $key ) );
+		printf( '<div class="next-step-status-wrapper">' );
+		printf( '<i class="icon %s"></i> <span class="next-step-incomplete">%s</span>', sanitize_html_class( 'icon-' . $step['icon'] ), esc_html( __( 'Incomplete', 'opensource' ) ) );
 		printf( '</div>' );
-		printf( '<h3 class="h2 bc-next-step-heading">%s</h3>', esc_html( $step['heading'] ) );
+		printf( '<h3 class="h2 next-step-heading">%s</h3>', esc_html( $step['heading'] ) );
 		if ( ! empty( $step['url'] ) && ! empty( $step['label'] ) ) {
-			printf( '<a href="%s" class="bc-next-step-cta" target="_blank" rel="noopener">%s</a>', esc_url( $step['url'] ), esc_html( $step['label'] ) );
+			printf( '<a href="%s" class="next-step-cta" target="_blank" rel="noopener">%s</a>', esc_url( $step['url'] ), esc_html( $step['label'] ) );
 		}
 		echo '</div>';
 	}
