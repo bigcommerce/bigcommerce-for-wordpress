@@ -1,4 +1,5 @@
 # BigCommerce for WordPress
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/bigcommerce/bigcommerce-for-wordpress)
 
 ## Plugin Setup
 
