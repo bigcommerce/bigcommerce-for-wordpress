@@ -21,31 +21,53 @@ use BigCommerce\Taxonomies\Channel\Channel;
 use \BigCommerce\Post_Types\Product\Product as Product_Post_Type;
 
 /**
- * Class Channel_Initializer
+ * Initializes a channel by linking it to the full product catalog.
+ * This process involves checking for existing products, skipping already linked products,
+ * retrieving product listings, and adding new products to the channel.
+ * The class also manages pagination for large product catalogs, ensuring that products
+ * are processed in batches based on the set limit.
  *
- * Populates an empty channel with the full product catalog
+ * @package BigCommerce\Import\Processors
  */
 class Channel_Initializer implements Import_Processor {
 	use No_Cache_Options;
 
+	/**
+	 * The option key used to store the state of the BigCommerce channel initialization.
+	 * This key is used to track the progress of importing products into the specified channel.
+	 *
+	 * @var string
+	 */
 	const STATE_OPTION = 'bigcommerce_import_channel_init_state';
 
 	/**
+	 * The ChannelsApi instance used to interact with the BigCommerce Channels API.
+	 * This API allows for managing channel-specific product listings and other channel-related operations.
+	 *
 	 * @var ChannelsApi
 	 */
 	private $channels;
 
 	/**
+	 * The CatalogApi instance used to interact with the BigCommerce Catalog API.
+	 * This API allows for retrieving product details, variants, and managing the product catalog.
+	 *
 	 * @var CatalogApi
 	 */
 	private $catalog;
 
 	/**
+	 * The maximum number of product IDs to fetch per request.
+	 * This value is used to limit the number of products retrieved during product imports.
+	 *
 	 * @var int
 	 */
 	private $limit;
 
 	/**
+	 * The WordPress term associated with the channel.
+	 * This term represents the channel in the WordPress taxonomy and is used for associating products with the specific channel.
+	 *
 	 * @var \WP_Term
 	 */
 	private $channel_term;
@@ -53,10 +75,12 @@ class Channel_Initializer implements Import_Processor {
 	/**
 	 * Channel_Initializer constructor.
 	 *
-	 * @param ChannelsApi $channels
-	 * @param CatalogApi  $catalog
-	 * @param \WP_Term    $channel_term
-	 * @param int         $limit Number of product IDs to fetch per request
+	 * Initializes the Channel_Initializer class with the given parameters.
+	 *
+	 * @param ChannelsApi $channels     The API object for managing channels.
+	 * @param CatalogApi  $catalog      The API object for managing the product catalog.
+	 * @param \WP_Term    $channel_term The WordPress term representing the channel.
+	 * @param int         $limit        The number of products to process per request (default 100).
 	 */
 	public function __construct( ChannelsApi $channels, CatalogApi $catalog, \WP_Term $channel_term, $limit = 100 ) {
 		$this->channels     = $channels;
@@ -89,6 +113,11 @@ class Channel_Initializer implements Import_Processor {
 		}
 	}
 
+	/**
+	 * Executes the channel initialization process.
+	 * This includes retrieving products, checking their status, and adding them to the channel.
+	 * Handles pagination for large product catalogs.
+	 */
 	public function run() {
 
 		$status = new Status();

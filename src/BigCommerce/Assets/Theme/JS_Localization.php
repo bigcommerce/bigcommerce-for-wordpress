@@ -5,13 +5,21 @@ namespace BigCommerce\Assets\Theme;
 
 use BigCommerce\Templates\Cart_Empty;
 
+/**
+ * Handles the localization of JavaScript strings for the theme. This class generates an array of text
+ * strings used in JavaScript, which can be filtered and sanitized before being passed to the frontend.
+ *
+ * @package BigCommerce\Assets\Theme
+ */
 class JS_Localization {
 	/**
-	 * stores all text strings needed in the admin scripts.js file
+	 * Generates the localization data for JavaScript.
 	 *
-	 * The code below is an example of structure. Check the readme js section for more info on how to use.
+	 * This method returns an array of text strings that are used in various parts of the frontend,
+	 * including cart messages, account actions, and error handling. The strings are internationalized
+	 * and can be filtered using WordPress hooks.
 	 *
-	 * @return array
+	 * @return array The localization data for JavaScript.
 	 */
 	public function get_data() {
 		$empty_cart_data = Cart_Empty::factory()->get_data();

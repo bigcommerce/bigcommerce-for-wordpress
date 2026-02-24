@@ -14,36 +14,44 @@ use BigCommerce\Import\Importers\Products\Product_Ignorer;
 use BigCommerce\Import\Importers\Products\Product_Updater;
 use BigCommerce\Post_Types\Product\Product;
 
+/**
+ * Factory class for determining the appropriate import strategy for a product.
+ * This class decides whether to create, ignore, or update a product based on its existence and freshness.
+ */
 class Product_Strategy_Factory {
 	/**
-	 * @var Model\Product
+	 * @var Model\Product $product The product data from BigCommerce API
 	 */
 	private $product;
+
 	/**
-	 * @var Model\Listing
+	 * @var Model\Listing $listing The channel listing data from BigCommerce API
 	 */
 	private $listing;
+
 	/**
-	 * @var CatalogApi
+	 * @var CatalogApi $catalog The Catalog API instance
 	 */
 	private $catalog;
+
 	/**
-	 * @var string
+	 * @var string $version The version of the importer
 	 */
 	private $version;
+
 	/**
-	 * @var \WP_Term
+	 * @var \WP_Term $channel_term The channel term for the product import
 	 */
 	private $channel_term;
 
 	/**
 	 * Product_Strategy_Factory constructor.
 	 *
-	 * @param Model\Product $product
-	 * @param Model\Listing $listing
-	 * @param \WP_Term      $channel_term
-	 * @param CatalogApi    $catalog
-	 * @param string        $version
+	 * @param Model\Product $product The product data from BigCommerce API
+	 * @param Model\Listing $listing The channel listing data from BigCommerce API
+	 * @param \WP_Term $channel_term The channel term for the product import
+	 * @param CatalogApi $catalog The Catalog API instance
+	 * @param string $version The version of the importer
 	 */
 	public function __construct( Model\Product $product, Model\Listing $listing, \WP_Term $channel_term, CatalogApi $catalog, $version ) {
 		$this->product      = $product;
@@ -54,7 +62,9 @@ class Product_Strategy_Factory {
 	}
 
 	/**
-	 * @return Import_Strategy
+	 * Returns the appropriate import strategy based on the product and channel data.
+	 *
+	 * @return Import_Strategy The import strategy (either Product_Creator, Product_Ignorer, or Product_Updater)
 	 */
 	public function get_strategy() {
 		$matching_post_id = $this->get_matching_post();

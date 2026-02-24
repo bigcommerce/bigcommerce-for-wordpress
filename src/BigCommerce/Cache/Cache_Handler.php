@@ -5,25 +5,54 @@ namespace BigCommerce\Cache;
 /**
  * Cache_Handler class
  *
- * Flushes catalog api WP_Object_Cache data
+ * Responsible for flushing the catalog API WP_Object_Cache to ensure that product information is up-to-date
+ * from the BigCommerce catalog.
+ *
+ * @package BigCommerce\Cache
  */
 class Cache_Handler
 {
+	/**
+	 * The catalog API path for products.
+	 *
+	 * @var string
+	 */
 	private $catalog_path = '/catalog/products/';
 
+	/**
+	 * The default HTTP header parameters used for API requests.
+	 *
+	 * @var array
+	 */
 	private $header_params = [
 		'Accept'       => 'application/json',
 		'Content-Type' => 'application/json',
 	];
 
+	/**
+	 * The type of response expected from the API for product requests.
+	 *
+	 * @var string
+	 */
 	private $product_response_type = '\BigCommerce\Api\v3\Model\ProductResponse';
+
+	/**
+	 * The group key used in WordPress object caching for BigCommerce API data.
+	 *
+	 * @var string
+	 */
 	private $group_key             = 'bigcommerce_api';
 
 	/**
-	 * Flush WP_Object_Cache for catalog API in order to get up-to-date product info from BC catalog
+	 * Flushes the WordPress object cache for the product catalog.
 	 *
-	 * @param $product_id
-	 * @param array $query_params
+	 * This method ensures that the cache is cleared for the specified product, allowing fresh product information
+	 * to be retrieved from the BigCommerce catalog.
+	 *
+	 * @param int   $product_id   The ID of the product to flush the cache for.
+	 * @param array $query_params Optional query parameters to customize the cache key.
+	 *
+	 * @return void
 	 */
 	public function flush_product_catalog_object_cache( $product_id, array $query_params = [] ): void {
 		$default_params = [
@@ -37,12 +66,14 @@ class Cache_Handler
 	}
 
 	/**
-	 * Build a cache key
+	 * Builds a serialized cache key for a product based on product ID and query parameters.
 	 *
-	 * @param $product_id
-	 * @param array $query_params
+	 * This method generates a unique cache key used to store and retrieve the product's data from the cache.
 	 *
-	 * @return string
+	 * @param int   $product_id   The ID of the product.
+	 * @param array $query_params Optional query parameters to customize the cache key.
+	 *
+	 * @return string The generated cache key.
 	 */
 	private function build_serialized_key( $product_id, array $query_params = [] ): string {
 		$args = [

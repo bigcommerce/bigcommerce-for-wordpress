@@ -8,18 +8,25 @@ use BigCommerce\Api\v3\ApiException;
 /**
  * Class Reset_Listing
  *
- * Resets listing data to defaults, thereby reconnecting its title
- * and description to the base product
+ * Resets listing data to defaults, reconnecting its title
+ * and description to the base product.
+ *
+ * @package BigCommerce\Post_Types\Product
  */
 class Reset_Listing {
+	/**
+	 * The action identifier for resetting the listing.
+	 * @var string
+	 */
 	const ACTION = 'reset-listing';
 
 	/**
-	 * @param array    $actions
-	 * @param \WP_Post $post
+	 * Adds a custom action link to the post row actions for products.
 	 *
-	 * @return array
-	 * @filter post_row_actions
+	 * @param array    $actions The current post row actions.
+	 * @param \WP_Post $post    The post object.
+	 *
+	 * @return array Modified post row actions.
 	 */
 	public function add_row_action( $actions, $post ) {
 		if ( get_post_type( $post ) !== Product::NAME ) {
@@ -37,12 +44,11 @@ class Reset_Listing {
 	}
 
 	/**
-	 * Check the product's listing data to see if it overrides
-	 * any of the base product fields
+	 * Checks if the product listing overrides base product fields.
 	 *
-	 * @param \WP_Post $post
+	 * @param \WP_Post $post The product post.
 	 *
-	 * @return bool
+	 * @return bool True if overrides exist, false otherwise.
 	 */
 	public function has_overrides( \WP_Post $post ) {
 		$product = new Product( $post->ID );
@@ -57,6 +63,13 @@ class Reset_Listing {
 		return true;
 	}
 
+	/**
+	 * Generates the URL for resetting a product listing.
+	 *
+	 * @param \WP_Post $post The product post.
+	 *
+	 * @return string The reset URL.
+	 */
 	public function get_reset_url( \WP_Post $post ) {
 		$url = add_query_arg( [
 			'action'      => self::ACTION,
@@ -70,8 +83,11 @@ class Reset_Listing {
 	}
 
 	/**
+	 * Handles the reset listing request.
+	 *
+	 * Validates the request, resets the listing, and redirects the user.
+	 *
 	 * @return void
-	 * @action admin_post_ . self::ACTIOn
 	 */
 	public function handle_request() {
 		$post_id = filter_input( INPUT_GET, 'post_id', FILTER_SANITIZE_NUMBER_INT );

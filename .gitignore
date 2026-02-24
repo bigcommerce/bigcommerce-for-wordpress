@@ -19,6 +19,10 @@ pimple.json
 .scssc
 /node_modules/
 phpdoc.json
+vendor/*
+.phpdoc/*
+docs/*
+composer.phar
 
 # Packages #
 ############

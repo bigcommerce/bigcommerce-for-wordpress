@@ -8,60 +8,67 @@ use BigCommerce\CLI\Command;
 use WP_CLI;
 
 /**
- * Class Build_Docs
- *
  * Register build docs command and related functionality
  *
  * @package BigCommerce\CLI\Documentation
  */
 class Build_Docs extends Command {
-	private $plugin_dir;
-
-	public function __construct( $plugin_dir ) {
-		$this->plugin_dir = $plugin_dir;
-	}
-
     /**
-     * Declare command name
-     *
-     * @return string
+     * @var string The directory path of the plugin being documented.
      */
-	protected function command() {
-		return 'docs build';
-	}
+    private $plugin_dir;
 
     /**
-     * Provide a command description
+     * Constructor for the Build_Docs class.
      *
-     * @return string|void
+     * @param string $plugin_dir Directory path of the plugin.
      */
-	protected function description() {
-		return __( 'Builds plugin documentation', 'bigcommerce' );
-	}
+    public function __construct( $plugin_dir ) {
+        $this->plugin_dir = $plugin_dir;
+    }
 
     /**
-     * Declare command arguments
+     * Declare command name.
      *
-     * @return array[]
+     * @return string The CLI command name.
      */
-	protected function arguments() {
-		return [
-			[
-				'type'        => 'positional',
-				'name'        => 'file',
-				'optional'    => false,
-				'description' => __( 'Path to the JSON file to export', 'bigcommerce' ),
-			],
-		];
-	}
+    protected function command() {
+        return 'docs build';
+    }
 
     /**
-     * Get files data and write it to provided file
+     * Provide a command description.
      *
-     * @param $args
-     * @param $assoc_args
+     * @return string|void The CLI command description.
+     */
+    protected function description() {
+        return __( 'Builds plugin documentation', 'bigcommerce' );
+    }
+
+    /**
+     * Declare command arguments.
      *
-     * @throws WP_CLI\ExitException
+     * @return array[] List of command arguments.
+     */
+    protected function arguments() {
+        return [
+            [
+                'type'        => 'positional',
+                'name'        => 'file',
+                'optional'    => false,
+                'description' => __( 'Path to the JSON file to export', 'bigcommerce' ),
+            ],
+        ];
+    }
+
+    /**
+     * Get files data and write it to the provided file.
+     *
+     * @param array $args Positional arguments passed to the command.
+     * @param array $assoc_args Associative arguments passed to the command.
+     *
+     * @throws WP_CLI\ExitException If there is an issue during execution.
+     * @return void
      */
 	public function run( $args, $assoc_args ) {
 		if ( ! function_exists( '\WP_Parser\parse_files' ) ) {

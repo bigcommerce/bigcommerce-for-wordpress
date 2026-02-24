@@ -36,35 +36,176 @@ use BigCommerce\Webhooks\Webhook_Versioning;
 use Pimple\Container;
 
 /**
- * Provider for webhooks
+ * Provider for handling BigCommerce webhooks.
+ *
+ * This class sets up webhook-related constants, services, and handlers 
+ * to process webhook requests, manage their lifecycle, and integrate
+ * with BigCommerce APIs.
+ *
+ * @package BigCommerce\Container
  */
 class Webhooks extends Provider {
+
+	/**
+	 * Base identifier for webhooks.
+	 * @var string
+	 */
 	const WEBHOOKS                         = 'webhooks.webhooks';
+
+	/**
+	 * Status of webhook enablement or disablement.
+	 * @var string
+	 */
 	const WEBHOOKS_STATUS                  = 'webhooks.webhooks_status';
+
+	/**
+	 * Listener for handling incoming webhook payloads.
+	 * @var string
+	 */
 	const WEBHOOKS_LISTENER                = 'webhooks.listener_webhook';
+
+	/**
+	 * General handler for channel webhooks.
+	 * @var string
+	 */
 	const CHANNELS_HANDLE_WEBHOOK          = 'webhooks.channels_handle_webhook';
+
+	/**
+	 * Updates product information.
+	 * @var string
+	 */
 	const PRODUCT_UPDATE_WEBHOOK           = 'webhooks.product_update_webhook';
+
+	/**
+	 * Deletes product data.
+	 * @var string
+	 */
 	const PRODUCT_DELETE_WEBHOOK           = 'webhooks.product_delete_webhook';
+
+	/**
+	 * Creates new product entries.
+	 * @var string
+	 */
 	const PRODUCT_CREATE_WEBHOOK           = 'webhooks.product_create_webhook';
+
+	/**
+	 * Updates product inventory.
+	 * @var string
+	 */
 	const PRODUCT_INVENTORY_UPDATE_WEBHOOK = 'webhooks.inventory_update_webhook';
+
+	/**
+	 * Creates new customer entries.
+	 * @var string
+	 */
 	const CUSTOMER_CREATE_WEBHOOK          = 'webhooks.customer_create_webhook';
+
+	/**
+	 * Updates customer details.
+	 * @var string
+	 */
 	const CUSTOMER_UPDATE_WEBHOOK          = 'webhooks.customer_update_webhook';
+
+	/**
+	 * Deletes customer records.
+	 * @var string
+	 */
 	const CUSTOMER_DELETE_WEBHOOK          = 'webhooks.customer_delete_webhook';
+
+	/**
+	 * Cron-based product updater.
+	 * @var string
+	 */
 	const PRODUCT_UPDATER                  = 'webhooks.cron.product_updater';
+
+	/**
+	 * Cron-based product creator.
+	 * @var string
+	 */
 	const PRODUCT_CREATOR                  = 'webhooks.cron.product_creator';
+
+	/**
+	 * Assigns a product to a channel.
+	 * @var string
+	 */
 	const CHANNEL_PRODUCT_ASSIGNED         = 'webhooks.product.channels_assign';
+
+	/**
+	 * Unassigns a product from a channel.
+	 * @var string
+	 */
 	const CHANNEL_PRODUCT_UNASSIGNED       = 'webhooks.product.channels_unassign';
+
+	/**
+	 * Updates channel details.
+	 * @var string
+	 */
 	const CHANNEL_UPDATER                  = 'webhooks.product.channels_updater';
+
+	/**
+	 * Updates currency configuration for channels.
+	 * @var string
+	 */
 	const CHANNEL_CURRENCY_UPDATED         = 'webhooks.channels.currency_updated';
+
+	/**
+	 * Cron-based customer creator.
+	 * @var string
+	 */
 	const CUSTOMER_CREATOR                 = 'webhooks.cron.customer_creator';
+
+	/**
+	 * Cron-based customer updater.
+	 * @var string
+	 */
 	const CUSTOMER_UPDATER                 = 'webhooks.cron.customer_updater';
+
+	/**
+	 * Cron-based customer deleter.
+	 * @var string
+	 */
 	const CUSTOMER_DELETER                 = 'webhooks.cron.customer_deleter';
+
+	/**
+	 * Updates customer channel access.
+	 * @var string
+	 */
 	const CUSTOMER_CHANNEL_ACCESS_UPDATER  = 'webhooks.cron.customer_channel_access_updater';
+
+	/**
+	 * Handles customer access per channel.
+	 * @var string
+	 */
 	const CUSTOMER_CHANNEL_ACCESS          = 'webhooks.cron.customer_channel_access';
+
+	/**
+	 * Triggered when a checkout process is completed.
+	 * @var string
+	 */
 	const CHECKOUT_COMPLETE_WEBHOOK        = 'webhooks.checkout_complete';
+
+	/**
+	 * Versioning logic for webhooks.
+	 * @var string
+	 */
 	const WEBHOOKS_VERSIONING              = 'webhooks.version';
+
+	/**
+	 * Cron tasks associated with webhooks.
+	 * @var string
+	 */
 	const WEBHOOKS_CRON_TASKS              = 'webhooks.cron_tasks';
 
+	/**
+	 * Registers services related to webhooks in the container.
+	 *
+	 * Sets up webhook declarations, their statuses, and actions 
+	 * for processing and managing webhook events.
+	 *
+	 * @param Container $container The Pimple container instance.
+	 *
+	 * @return void
+	 */
 	public function register( Container $container ) {
 		$this->declare_webhooks( $container );
 		$this->status( $container );
@@ -269,7 +410,6 @@ class Webhooks extends Provider {
 			return;
 		}
 
-		// Listener for all webhook actions
 		add_action( 'bigcommerce/action_endpoint/webhook', $this->create_callback( 'webhook_listener', function ( $args ) use ( $container ) {
 			$container[ self::WEBHOOKS_LISTENER ]->handle_request( $args );
 		} ), 10, 1 );
@@ -280,7 +420,6 @@ class Webhooks extends Provider {
 			return;
 		}
 
-		// Delete customer webhook
 		add_action('bigcommerce/webhooks/customer_deleted', $this->create_callback('delete_customer_webhook_handler', function ( $params ) use ( $container ) {
 			if ( ! $this->customer_webhooks_enabled() ) {
 				return;
@@ -289,7 +428,6 @@ class Webhooks extends Provider {
 			$container[ self::CUSTOMER_DELETER ]->handle_request( $params );
 		} ), 10, 1 );
 
-		// Create customer webhook
 		add_action('bigcommerce/webhooks/customer_created', $this->create_callback('create_customer_webhook_handler', function ( $customer_id ) use ( $container ) {
 			if ( ! $this->customer_webhooks_enabled() ) {
 				return;
@@ -298,7 +436,6 @@ class Webhooks extends Provider {
 			$container[ self::CUSTOMER_CREATOR ]->handle_request( $customer_id );
 		} ), 10, 1 );
 
-		// Update customer webhook
 		add_action('bigcommerce/webhooks/customer_updated', $this->create_callback('update_customer_webhook_handler', function ( $customer_id ) use ( $container ) {
 			if ( ! $this->customer_webhooks_enabled() ) {
 				return;
@@ -328,7 +465,6 @@ class Webhooks extends Provider {
 			return;
 		}
 
-		// Update product inventory webhook cron task
 		add_action( 'bigcommerce/webhooks/product_inventory_updated', $this->create_callback( 'check_and_update_product_inventory_task', function ( $params ) use ( $container ) {
 			if ( ! $this->product_webhooks_enabled() ) {
 				return;
@@ -338,7 +474,6 @@ class Webhooks extends Provider {
 			$container[ self::PRODUCT_UPDATER ]->update( $params['product_id'] );
 		} ), 10, 1 );
 
-		// Update product inventory webhook cron task
 		add_action( 'bigcommerce/webhooks/product_updated', $this->create_callback( 'check_and_update_product_data_task', function ( $params ) use ( $container ) {
 			if ( ! $this->product_webhooks_enabled() ) {
 				return;
@@ -348,7 +483,6 @@ class Webhooks extends Provider {
 			$container[ self::WEBHOOKS_CRON_TASKS ]->set_product_update_cron_task( $params );
 		} ), 10, 1 );
 
-        // Delete product webhook
         add_action('bigcommerce/webhooks/product_deleted', $this->create_callback('delete_single_product_handler', function ( $params ) use ( $container ) {
             if ( ! $this->product_webhooks_enabled() ) {
                 return;
@@ -357,7 +491,6 @@ class Webhooks extends Provider {
             $container[ self::PRODUCT_DELETE_WEBHOOK ]->delete_the_product( $params );
         } ), 10, 1 );
 
-        // Create product webhook
         add_action('bigcommerce/webhooks/product_created', $this->create_callback('create_single_product_handler', function ( $params ) use ( $container ) {
             if ( ! $this->product_webhooks_enabled() ) {
                 return;
@@ -365,7 +498,6 @@ class Webhooks extends Provider {
 
             $container[self::PRODUCT_CREATOR]->create($params);
         } ), 10, 1 );
-
 
 		add_action ( sprintf('%s_assigned',Channels_Management_Webhook::PRODUCT_CHANNEL_HOOK ), $this->create_callback( 'product_channel_was_assigned', function ( $product_id, $channel_id ) use ( $container ) {
 			if ( ! $this->product_webhooks_enabled() ) {

@@ -79,7 +79,12 @@ class Start_Over {
 		foreach ( $connected as $channel ) {
 			update_post_meta( $channel->term_id, Channel::STATUS, Channel::STATUS_DISCONNECTED );
 		}
-
+		/**
+		 * Filters the URL to reset onboarding progress.
+		 *
+		 * @param string $url The default URL for resetting onboarding.
+		 * @return string The modified URL.
+		 */
 		$redirect = apply_filters( 'bigcommerce/onboarding/reset', admin_url() );
 		wp_safe_redirect( $redirect, 303 );
 		exit();

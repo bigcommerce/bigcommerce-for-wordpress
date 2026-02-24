@@ -8,15 +8,51 @@ use BigCommerce\Settings\Sections\Troubleshooting_Diagnostics;
 use Pimple\Container;
 use BigCommerce\Logging\Error_Log as Logger;
 
+/**
+ * This class is responsible for setting up logging functionality in the BigCommerce container.
+ * It registers services for logging, defines constants for log paths, and handles log-related actions 
+ * during the BigCommerce import process, such as logging errors and diagnostics.
+ *
+ * @package BigCommerce\Container
+ */
 class Log extends Provider {
 
+    /**
+     * Constant for the logger service.
+     *
+     * This constant defines the key used to retrieve the logger instance from the container.
+     *
+     * @var string
+     */
 	const LOGGER          = 'logger.log';
+
+    /**
+     * Constant for the log file path.
+     *
+     * This constant defines the key used to retrieve the log file path from the container.
+     *
+     * @var string
+     */
 	const LOG_PATH        = 'logger.log_path';
+
+    /**
+     * Constant for the log folder path.
+     *
+     * This constant defines the key used to retrieve the log folder path from the container.
+     *
+     * @var string
+     */
 	const LOG_FOLDER_PATH = 'logger.log_folder_path';
 
-	/**
-	 * @param Container $container
-	 */
+    /**
+     * Registers logging-related services and actions in the container.
+     *
+     * This method sets up the necessary services for logging, such as the log file path, 
+     * log folder path, and logger instance. It also registers various actions and filters 
+     * for logging during the BigCommerce import process.
+     *
+     * @param Container $container The container instance used to register the services.
+     */
 	public function register( Container $container ) {
 		$container[ self::LOG_PATH ] = function ( Container $container ) {
 			$log_path = bigcommerce_get_env( 'BIGCOMMERCE_DEBUG_LOG' );
@@ -53,7 +89,7 @@ class Log extends Provider {
 			add_action( 'bigcommerce/import/start', $this->create_callback( 'truncate_log', function () use ( $container ) {
 				$container[ self::LOGGER ]->truncate_log();
 			} ), 9, 0 );
-
+			
 			add_action( 'bigcommerce/import/product/error', $this->create_callback( 'log_product_import_error', function ( $product_id, CatalogApi $catalog_api, \Exception $exception ) use ( $container ) {
 				$container[ self::LOGGER ]->log_product_import_error( $product_id, $catalog_api, $exception );
 			} ), 10, 3 );
@@ -65,9 +101,10 @@ class Log extends Provider {
 			$log = $this->create_callback( 'log', function ( $level = Error_Log::INFO, $message = '', $context = [], $path = '' ) use ( $container ) {
 				$container[ self::LOGGER ]->log( $level, $message, $context, $path );
 			} );
-			add_action( 'bigcommerce/log', $log, 10, 4 );
-			add_action( 'bigcommerce/import/log', $log, 10, 3 );
 
+			add_action( 'bigcommerce/log', $log, 10, 4 );
+
+			add_action( 'bigcommerce/import/log', $log, 10, 3 );
 
 			add_action( 'bigcommerce/import/error', $this->create_callback( 'log_import_error', function ( $message, $context = [] ) use ( $container ) {
 				$container[ self::LOGGER ]->log( Error_Log::ERROR, $message, $context );

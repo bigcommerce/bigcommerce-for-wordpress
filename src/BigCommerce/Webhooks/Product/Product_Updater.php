@@ -16,9 +16,15 @@ use BigCommerce\Taxonomies\Channel\Connections;
 /**
  * Class Product_Updater
  *
- * Responsible for product update process.
+ * Handles the process of updating products in BigCommerce through webhooks.
  *
- * @package BigCommerce\Webhooks
+ * This class is responsible for managing the re-import and update of product data
+ * when triggered by a webhook. It interacts with the BigCommerce Catalog and Channels APIs
+ * to retrieve and update product details while ensuring that listing updates or deletions
+ * are temporarily disabled during the process. Additionally, it ensures that updates are
+ * applied to all active channels for a product.
+ *
+ * @package BigCommerce\Webhooks\Product
  */
 class Product_Updater {
 
@@ -27,6 +33,15 @@ class Product_Updater {
 	/** @var ChannelsApi */
 	private $channels;
 
+	/**
+	 * Product_Updater constructor.
+	 *
+	 * Initializes the Product_Updater class with the necessary dependencies to 
+	 * interact with BigCommerce Catalog and Channels APIs.
+	 *
+	 * @param CatalogApi  $catalog  The Catalog API instance for interacting with product data.
+	 * @param ChannelsApi $channels The Channels API instance for managing channel-related operations.
+	 */
 	public function __construct( CatalogApi $catalog, ChannelsApi $channels ) {
 		$this->catalog  = $catalog;
 		$this->channels = $channels;
@@ -35,10 +50,16 @@ class Product_Updater {
 	/**
 	 * Re-import a previously imported product.
 	 *
-	 * @param int $product_id
+	 * This method handles updating a product based on the given BigCommerce product ID.
+	 * It ensures all active channels are updated and skips the update if no channels are active.
+	 * Applies temporary filters to prevent unintended listing updates or deletions during the process.
 	 *
+	 * @param int $product_id BigCommerce product ID to update.
+	 * 
 	 * @return void
-	 * @action Webhook_Cron_Tasks::UPDATE_PRODUCT
+	 *
+	 * @action Webhook_Cron_Tasks::UPDATE_PRODUCT Triggered when the product update task is processed.
+	 * @throws ApiException If the API request for product data fails.
 	 */
 	public function update( $product_id ) {
 		$connections = new Connections();
@@ -60,6 +81,7 @@ class Product_Updater {
 			$empty = function () {
 				return false;
 			};
+
 			add_filter( 'bigcommerce/channel/listing/should_update', $empty, 10, 0 );
 			add_filter( 'bigcommerce/channel/listing/should_delete', $empty, 10, 0 );
 

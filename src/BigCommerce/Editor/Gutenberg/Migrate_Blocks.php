@@ -5,25 +5,26 @@ namespace BigCommerce\Editor\Gutenberg;
 use BigCommerce\Shortcodes;
 
 /**
- * Class Migrate_Blocks
+ * Handles the migration of shortcodes to Gutenberg blocks in the editor. When a post is loaded in the 
+ * Gutenberg editor, this class manages the transition from legacy shortcodes to dynamic blocks 
+ * specific to the BigCommerce platform.
  *
- * When loading a post in the Gutenberg editor, migrate shortcodes
- * from this plugin to blocks
+ * It provides methods to determine which editor (Gutenberg or Classic) is being used and 
+ * applies the necessary filters to migrate content.
  */
 class Migrate_Blocks {
 
-	/**
-	 * If Gutenberg will be replacing the editor,
-	 * set up additional hooks to filter the post
-	 * content.
-	 *
-	 * @param bool     $passthrough
-	 * @param \WP_Post $post
-	 *
-	 * @return bool
-	 * @see    gutenberg_init()
-	 * @filter replace_editor 9
-	 */
+    /**
+     * Checks if the Gutenberg editor will be used to edit the post, and sets up appropriate hooks
+     * for filtering the post content if Gutenberg is the active editor.
+     *
+     * @param bool     $passthrough Indicates whether to bypass the migration (used by other filters).
+     * @param \WP_Post $post The post object being edited.
+     *
+     * @return bool The filtered passthrough value, which determines whether to proceed with the content migration.
+     * @see    gutenberg_init()
+     * @filter replace_editor 9
+     */
 	public function check_if_gutenberg_editor( $passthrough, $post ) {
 		// Duplicate the conditions from gutenberg_init
 		if ( ! function_exists( 'gutenberg_can_edit_post' ) ) {
@@ -49,18 +50,17 @@ class Migrate_Blocks {
 	}
 
 
-	/**
-	 * If Gutenberg will NOT be replacing the editor,
-	 * set up additional hooks to filter the post
-	 * content.
-	 *
-	 * @param bool     $passthrough
-	 * @param \WP_Post $post
-	 *
-	 * @return bool
-	 * @see    gutenberg_init()
-	 * @filter replace_editor 11
-	 */
+    /**
+     * Checks if the Classic editor will be used to edit the post, and sets up appropriate hooks
+     * for filtering the post content if the Classic editor is active.
+     *
+     * @param bool     $passthrough Indicates whether to bypass the migration (used by other filters).
+     * @param \WP_Post $post The post object being edited.
+     *
+     * @return bool The filtered passthrough value, which determines whether to proceed with the content migration.
+     * @see    gutenberg_init()
+     * @filter replace_editor 11
+     */
 	public function check_if_classic_editor( $passthrough, $post ) {
 		if ( $passthrough ) {
 			return $passthrough; // gutenberg is in charge
@@ -99,21 +99,17 @@ class Migrate_Blocks {
 	}
 
 
-	/**
-	 * Filters the post data for a response.
-	 *
-	 * The dynamic portion of the hook name, `$this->post_type`, refers to the post type slug.
-	 *
-	 * @since  4.7.0
-	 *
-	 * @param \WP_REST_Response $response The response object.
-	 * @param \WP_Post          $post     Post object.
-	 * @param \WP_REST_Request  $request  Request object.
-	 *
-	 * @return \WP_REST_Response
-	 *
-	 * @filter 'rest_prepare_' . $post->post_type
-	 */
+    /**
+     * Filters the REST API response for the post, ensuring that blocks are properly migrated 
+     * when the post content is fetched via the REST API.
+     *
+     * @param \WP_REST_Response $response The response object containing the post data.
+     * @param \WP_Post          $post The post object being fetched.
+     * @param \WP_REST_Request  $request The REST request object.
+     *
+     * @return \WP_REST_Response The modified response object with migrated content.
+     * @filter 'rest_prepare_' . $post->post_type
+     */
 	public function filter_post_rest_response( $response, $post, $request ) {
 		$data = $response->get_data();
 		if ( array_key_exists( 'content', $data ) && array_key_exists( 'raw', $data[ 'content' ] ) ) {

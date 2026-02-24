@@ -3,18 +3,25 @@
 
 namespace BigCommerce\Compatibility;
 
-
+/**
+ * Provides compatibility functionality to override WooCommerce page templates.
+ * This class handles the removal of WooCommerce-specific templates from the page template hierarchy.
+ *
+ * @package BigCommerce
+ * @subpackage Compatibility
+ */
 class Template_Compatibility {
 	/**
-	 * If a theme has a page template that assumes WooCommerce
-	 * functions will be available (e.g., a page-cart.php),
-	 * remove that template from the hierarchy.
+	 * Overrides the page template for WooCommerce pages that assume WooCommerce functions will be available.
 	 *
-	 * @param string $template
-	 * @param string $type
-	 * @param array  $templates
+	 * If a theme has a page template (e.g., `page-cart.php`) that relies on WooCommerce functions, 
+	 * this method will remove that template from the hierarchy to prevent errors if WooCommerce is not present.
 	 *
-	 * @return string
+	 * @param string $template The current template being used for the page.
+	 * @param string $type The type of template being overridden.
+	 * @param array  $templates List of available templates in the hierarchy.
+	 *
+	 * @return string The modified template, or the original template if no changes were made.
 	 * @filter page_template
 	 */
 	public function override_page_template( $template, $type, $templates ) {

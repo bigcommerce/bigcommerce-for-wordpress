@@ -174,6 +174,9 @@ class Import_Now {
 		if ( ! $this->on_products_list_table() ) {
 			return;
 		}
+		/**
+		 * Displays the current import status notice in the product list table.
+		 */
 		do_action( 'bigcommerce/settings/import/product_list_table_notice' );
 	}
 	/**

@@ -5,12 +5,21 @@ namespace BigCommerce\Cart;
 use BigCommerce\Pages\Cart_Page;
 use BigCommerce\Pages\Checkout_Page;
 
+/**
+ * Manages the configuration and display logic for the mini-cart widget in BigCommerce.
+ */
 class Mini_Cart {
 
 	/**
-	 * @param array $config
+	 * Adds mini-cart configuration to the global JavaScript configuration array.
 	 *
-	 * @return array
+	 * This method appends the `mini_cart` configuration to the provided configuration array. 
+	 * It determines whether the mini-cart widget is enabled and passes this value.
+	 *
+	 * @param array $config The existing JavaScript configuration array.
+	 *
+	 * @return array The modified configuration array with mini-cart settings.
+	 *
 	 * @filter bigcommerce/js_config
 	 */
 	public function add_mini_cart_config( $config ) {

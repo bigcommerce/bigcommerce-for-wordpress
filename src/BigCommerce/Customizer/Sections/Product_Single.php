@@ -6,30 +6,114 @@ namespace BigCommerce\Customizer\Sections;
 use BigCommerce\Customizer\Panels;
 use BigCommerce\Settings\Sections\Import;
 
+/**
+ * Handles settings and constants related to the single product page in the BigCommerce integration.
+ * It defines various constants used for customization of product display, such as meta descriptions, gallery settings, pricing, and more.
+ */
 class Product_Single {
+	/**
+	 * The name of the product single page.
+	 * @var string
+	 */
 	const NAME = 'bigcommerce_product_single';
 
-	const RELATED_COUNT       = 'bigcommerce_max_related_products';
-	const DEFAULT_IMAGE       = 'bigcommerce_default_image_id';
-	const PRICE_DISPLAY       = 'bigcommerce_default_price_display';
-	const INVENTORY_DISPLAY   = 'bigcommerce_inventory_display';
-	const VARIANTS_DISABLED   = 'bigcommerce_variants_disabled';
-	const META_DESC_DISABLE   = 'bigcommerce_meta_description_disabled';
-	const GALLERY_SIZE        = 'bigcommerce_gallery_image_size';
-	const HEADLESS_IMAGE_SIZE = 'bigcommerce_gallery_headless_image_size';
-	const ENABLE_ZOOM         = 'bigcommerce_enable_zoom';
-	const ENABLE_PRICE_NONCE  = 'bigcommerce_enable_price_nonce';
-	const SIZE_DEFAULT        = 'default';
-	const SIZE_LARGE          = 'large';
-	const SIZE_ORIGINAL       = 'original';
-	const SIZE_CDN_STD        = 'standard';
-	const SIZE_CDN_THUMB      = 'thumbnail';
+	/**
+	 * The maximum number of related products to display.
+	 * @var string
+	 */
+	const RELATED_COUNT = 'bigcommerce_max_related_products';
 
 	/**
-	 * @param \WP_Customize_Manager $wp_customize
-	 *
-	 * @return void
+	 * The default image ID for the product.
+	 * @var string
 	 */
+	const DEFAULT_IMAGE = 'bigcommerce_default_image_id';
+
+	/**
+	 * The default price display option for the product.
+	 * @var string
+	 */
+	const PRICE_DISPLAY = 'bigcommerce_default_price_display';
+
+	/**
+	 * The inventory display setting for the product.
+	 * @var string
+	 */
+	const INVENTORY_DISPLAY = 'bigcommerce_inventory_display';
+
+	/**
+	 * The setting for whether variants are disabled for the product.
+	 * @var string
+	 */
+	const VARIANTS_DISABLED = 'bigcommerce_variants_disabled';
+
+	/**
+	 * The setting for whether the meta description is disabled.
+	 * @var string
+	 */
+	const META_DESC_DISABLE = 'bigcommerce_meta_description_disabled';
+
+	/**
+	 * The image size for the product gallery.
+	 * @var string
+	 */
+	const GALLERY_SIZE = 'bigcommerce_gallery_image_size';
+
+	/**
+	 * The image size for the gallery when in headless mode.
+	 * @var string
+	 */
+	const HEADLESS_IMAGE_SIZE = 'bigcommerce_gallery_headless_image_size';
+
+	/**
+	 * The setting for enabling zoom functionality on product images.
+	 * @var string
+	 */
+	const ENABLE_ZOOM = 'bigcommerce_enable_zoom';
+
+	/**
+	 * The setting for enabling pricing nonce field.
+	 * @var string
+	 */
+	const ENABLE_PRICE_NONCE = 'bigcommerce_enable_price_nonce';
+
+	/**
+	 * The default image size.
+	 * @var string
+	 */
+	const SIZE_DEFAULT = 'default';
+
+	/**
+	 * The large image size.
+	 * @var string
+	 */
+	const SIZE_LARGE = 'large';
+
+	/**
+	 * The original image size.
+	 * @var string
+	 */
+	const SIZE_ORIGINAL = 'original';
+
+	/**
+	 * The standard image size for the CDN.
+	 * @var string
+	 */
+	const SIZE_CDN_STD = 'standard';
+
+	/**
+	 * The thumbnail image size for the CDN.
+	 * @var string
+	 */
+	const SIZE_CDN_THUMB = 'thumbnail';
+
+    /**
+     * Registers all customization options under the product single section.
+     *
+     * @param \WP_Customize_Manager $wp_customize The WordPress customizer instance.
+     *
+     * @return void
+     */
 	public function register( $wp_customize ) {
 		$wp_customize->add_section( new \WP_Customize_Section( $wp_customize, self::NAME, [
 			'title' => __( 'Product Single', 'bigcommerce' ),
@@ -190,7 +274,13 @@ class Product_Single {
 			],
 		] );
 	}
-
+	/**
+	 * Adds the meta description display setting and control.
+	 *
+	 * @param \WP_Customize_Manager $wp_customize Customizer manager instance.
+	 * 
+	 * @return void
+	 */
 	protected function meta_description( \WP_Customize_Manager $wp_customize ) {
 		$wp_customize->add_setting( new \WP_Customize_Setting( $wp_customize, self::META_DESC_DISABLE, [
 			'type'      => 'option',
@@ -209,9 +299,12 @@ class Product_Single {
 	}
 
 	/**
-	 * Register pricing nonce option setting
+	 * Registers the pricing nonce field option setting and control.
+	 * Only enabled when the headless flag is set.
 	 *
-	 * @param \WP_Customize_Manager $wp_customize
+	 * @param \WP_Customize_Manager $wp_customize Customizer manager instance.
+	 * 
+	 * @return void
 	 */
 	protected function pricing_nonce( \WP_Customize_Manager $wp_customize ): void {
 		if ( ( int ) get_option( Import::HEADLESS_FLAG, 0 ) !== 1 ) {

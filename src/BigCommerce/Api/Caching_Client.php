@@ -7,35 +7,45 @@ namespace BigCommerce\Api;
 use BigCommerce\Api\v3\ObjectSerializer;
 
 /**
- * Class Caching_Client
+ * Implements a short-term caching mechanism around API requests to reduce redundant calls, 
+ * particularly useful for operations like cart handling. The cache is invalidated after 
+ * any write operation to ensure data consistency.
  *
- * Wraps a short-term cache around API requests.
- * This avoids making the same request (especially
- * for the cart) over and over.
- *
- * The cache is flushed every time a write operation
- * occurs.
+ * @package BigCommerce\Api
  */
 class Caching_Client extends Base_Client {
-	/** @var string */
-	private $cache_group = 'bigcommerce_api';
-	/** @var string */
-	private $generation_key = '';
 
-	/**
-	 * Make the HTTP call (Sync)
-	 *
-	 * @param string $resourcePath path to method endpoint
-	 * @param string $method       method to call
-	 * @param array  $queryParams  parameters to be place in query URL
-	 * @param array  $postData     parameters to be placed in POST body
-	 * @param array  $headerParams parameters to be place in request header
-	 * @param string $responseType expected response type of the endpoint
-	 * @param string $endpointPath path to method endpoint before expanding parameters
-	 *
-	 * @throws \BigCommerce\Api\v3\ApiException on a non 2xx response
-	 * @return array
-	 */
+    /**
+     * Cache group identifier for WordPress caching.
+     *
+     * @var string
+     */
+    private $cache_group = 'bigcommerce_api';
+
+    /**
+     * Cache generation key for versioning.
+     *
+     * @var string
+     */
+    private $generation_key = '';
+
+    /**
+     * Perform an API call, utilizing caching for read operations.
+     *
+     * If the operation is a write, the cache generation key is updated to invalidate previous cache.
+     * For read operations, the cache is checked first before making an API request.
+     *
+     * @param string $resourcePath Path to the API endpoint.
+     * @param string $method HTTP method (e.g., GET, POST).
+     * @param array $queryParams Query parameters for the request.
+     * @param array $postData Data to include in the POST body.
+     * @param array $headerParams Headers to include in the request.
+     * @param string|null $responseType Expected response type (optional).
+     * @param string|null $endpointPath Endpoint path before parameter expansion (optional).
+     *
+     * @throws \BigCommerce\Api\v3\ApiException If a non-2xx response is received.
+     * @return array Response data from the API or cache.
+     */
 	public function callApi( $resourcePath, $method, $queryParams, $postData, $headerParams, $responseType = null, $endpointPath = null ) {
 		if ( $this->is_write_operation( $resourcePath, $method, $queryParams, $postData ) ) {
 			// any write operation increments the cache key

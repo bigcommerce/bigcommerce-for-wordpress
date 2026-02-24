@@ -13,10 +13,33 @@ use BigCommerce\Logging\Error_Log;
 use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
 
+/**
+ * Abstract class for processing term imports.
+ *
+ * This class provides common functionality for importing terms into WordPress.
+ * It interacts with BigCommerce's API and uses GraphQL data for creating or updating terms.
+ */
 abstract class Term_Import implements Import_Processor {
 	use No_Cache_Options;
 
+	/**
+	 * The option name used to store the import state for terms.
+	 *
+	 * This constant defines the key under which the term import state
+	 * is stored in the options table.
+	 *
+	 * @var string
+	 */
 	const STATE_OPTION      = 'bigcommerce_import_terms_state';
+
+	/**
+	 * The option name used to store the import checkpoint for brands.
+	 *
+	 * This constant defines the key under which the import progress for
+	 * brands is stored, allowing resumption of the import process.
+	 *
+	 * @var string
+	 */
 	const BRANDS_CHECKPOINT = 'bigcommerce_import_brands_checkpoint';
 
 	/**
@@ -35,10 +58,11 @@ abstract class Term_Import implements Import_Processor {
 	public $batch_size;
 
 	/**
-	 * Category_Import constructor.
+	 * Constructor for the Term_Import class.
 	 *
-	 * @param CatalogApi $catalog_api
-	 * @param int        $batch_size
+	 * @param CatalogApi       $catalog_api   Instance of the Catalog API client.
+	 * @param GraphQL_Processor $gql_processor Instance of the GraphQL processor.
+	 * @param int              $batch_size    Number of terms to process in a single batch.
 	 */
 	public function __construct( CatalogApi $catalog_api, GraphQL_Processor $gql_processor, $batch_size ) {
 		$this->catalog_api = $catalog_api;
@@ -47,22 +71,41 @@ abstract class Term_Import implements Import_Processor {
 	}
 
 	/**
-	 * @return string The name of the taxonomy to update
+	 * Get the name of the taxonomy being updated.
+	 *
+	 * @return string The taxonomy name.
 	 */
 	abstract protected function taxonomy();
 
+	/**
+	 * Get fallback terms in case the main source data is unavailable.
+	 *
+	 * @return array An array of fallback terms.
+	 */
 	abstract protected function get_fallback_terms();
 
 	/**
-	 * @return string The name of the state to set while the import is running
+	 * Get the state name to set while the import is running.
+	 *
+	 * @return string The running state name.
 	 */
 	abstract protected function running_state();
 
 	/**
-	 * @return string The name of the state to set when the import is complete
+	 * Get the state name to set when the import is complete.
+	 *
+	 * @return string The completed state name.
 	 */
 	abstract protected function completed_state();
 
+	/**
+	 * Execute the term import process.
+	 *
+	 * This method fetches terms from the source, processes them, and updates
+	 * the import status as it progresses.
+	 *
+	 * @return void
+	 */
 	public function run() {
 		$status = new Status();
 		$status->set_status( $this->running_state() );
@@ -120,6 +163,14 @@ abstract class Term_Import implements Import_Processor {
 		$this->clear_state();
 	}
 
+	/**
+	 * Process and import a single term.
+	 *
+	 * @param \StdClass $term    The term object to import.
+	 * @param bool      $fallback Whether to use fallback data for this import.
+	 *
+	 * @return void
+	 */
 	protected function do_term_import( $term, $fallback = false ) {
 		if ( ! $fallback ) {
 			$parsed = $this->parse_gql_term( $term );
@@ -139,17 +190,21 @@ abstract class Term_Import implements Import_Processor {
 
 
 	/**
-	 * @param string $cursor
+	 * Fetch term data from the source.
 	 *
-	 * @return array The API response object
-	 * @throws ApiException
+	 * @param string $cursor Optional. A cursor for paginated results.
+	 *
+	 * @return array The API response object.
+	 * @throws ApiException If the API request fails.
 	 */
 	abstract public function get_source_data( $cursor = '' );
 
 	/**
-	 * @param \StdClass $term
+	 * Parse a GraphQL term object into an array format.
 	 *
-	 * @return array
+	 * @param \StdClass|null $term The GraphQL term object.
+	 *
+	 * @return array The parsed term data.
 	 */
 	abstract protected function parse_gql_term( $term = null ): array;
 
@@ -171,11 +226,11 @@ abstract class Term_Import implements Import_Processor {
 	}
 
 	/**
-	 * Parse GraphQL response. If Brands have more than 1 page return cursor to continue
+	 * Parse a GraphQL response and handle pagination if necessary.
 	 *
-	 * @param string $raw_response
+	 * @param string $raw_response The raw GraphQL response.
 	 *
-	 * @return array|mixed
+	 * @return array|mixed Parsed term data or a cursor for the next page of results.
 	 */
 	protected function handle_graph_ql_response( $raw_response = '' ) {
 		if ( empty( $raw_response ) || empty( $raw_response->data->site ) ) {
@@ -198,6 +253,11 @@ abstract class Term_Import implements Import_Processor {
 		}
 	}
 
+	/**
+	 * Get the current page for the import process.
+	 *
+	 * @return int The current page number.
+	 */
 	protected function get_page() {
 		$state = $this->get_state();
 		if ( ! array_key_exists( $this->taxonomy(), $state ) ) {
@@ -207,6 +267,13 @@ abstract class Term_Import implements Import_Processor {
 		return $state[ $this->taxonomy() ];
 	}
 
+	/**
+	 * Set the current page for the import process.
+	 *
+	 * @param int $page The page number to set.
+	 *
+	 * @return void
+	 */
 	protected function set_page( $page ) {
 		$state                      = $this->get_state();
 		$state[ $this->taxonomy() ] = (int) $page;

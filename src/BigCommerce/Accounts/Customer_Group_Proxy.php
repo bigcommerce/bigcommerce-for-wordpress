@@ -8,22 +8,28 @@ use Bigcommerce\Api\Client;
 /**
  * Class Customer_Group_Proxy
  *
- * Adds a caching proxy in front of requests for customer group info
+ * Adds a caching proxy in front of requests for customer group information.
  */
 class Customer_Group_Proxy {
 
 	/**
-	 * @param array $info
-	 * @param int   $id
+	 * Filter and merge additional customer group info.
 	 *
-	 * @return array
-	 * @filter bigcommerce/customer/group_info
+	 * This method checks if the customer group information is available in the cache;
+	 * if not, it fetches it from the API and caches it. The result is merged with the existing
+	 * group information before being returned.
+	 *
+	 * @param array $info The existing customer group information.
+	 * @param int   $id   The ID of the customer group.
+	 *
+	 * @return array The merged customer group information.
+	 * @filter bigcommerce/customer/group_info Filter applied to the customer group info before returning.
 	 */
 	public function filter_group_info( $info, $id ) {
 		$data = $this->fetch_from_cache( $id ) ?: $this->fetch_from_api( $id );
 
 		if ( empty( $data ) ) {
-			return $info; // nothing to add
+			return $info; // No additional data to merge
 		}
 
 		return array_merge( $info, $data );
@@ -58,7 +64,7 @@ class Customer_Group_Proxy {
 		$info = wp_json_encode( $info );
 		$this->set_cache( $info, $group_id );
 
-		return json_decode( $info, true ); // doing the encode/decode for consistency with the output from cache
+		return json_decode( $info, true ); // Ensuring consistency with cached data format
 	}
 
 	private function set_cache( $info, $group_id ) {
@@ -66,8 +72,8 @@ class Customer_Group_Proxy {
 		/**
 		 * Filter the duration of the group info cache.
 		 *
-		 * @param int $expiration Time until expiration, in seconds
-		 * @param int $group_id   The ID of the group being cached
+		 * @param int $expiration Time until expiration, in seconds.
+		 * @param int $group_id   The ID of the group being cached.
 		 */
 		$expiration = apply_filters( 'bigcommerce/customer/group_info_cache_expiration', HOUR_IN_SECONDS, $group_id );
 

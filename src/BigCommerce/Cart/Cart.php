@@ -19,26 +19,36 @@ use BigCommerce\Taxonomies\Channel\Connections;
 use BigCommerce\Util\Cart_Item_Iterator;
 
 /**
- * Class Cart
- *
+ * Handles cart operations such as adding line items, managing cookies, and interacting with the BigCommerce API.
+ * 
  * @package BigCommerce\Cart
  */
 class Cart {
+	/** @var string The name of the cookie storing the cart ID */
 	const CART_COOKIE  = 'wp-bigcommerce_cart_id';
+	/** @var string The name of the cookie storing the cart item count */
 	const COUNT_COOKIE = 'wp-bigcommerce_cart_item_count';
-	/**
-	 * @var CartApi
-	 */
+
+	/** @var CartApi The BigCommerce Cart API instance */
 	private $api;
 
+	/**
+	 * Cart constructor.
+	 *
+	 * Initializes the Cart class with the given CartApi instance.
+	 *
+	 * @param CartApi $api The BigCommerce Cart API instance.
+	 */
 	public function __construct( CartApi $api ) {
 		$this->api = $api;
 	}
 
 	/**
-	 * Get the cart ID from the cookie
+	 * Get the cart ID from the cookie.
 	 *
-	 * @return string
+	 * Retrieves the cart ID from the cookie and applies any relevant filters.
+	 *
+	 * @return string The cart ID.
 	 */
 	public function get_cart_id() {
 		$cart_id = '';
@@ -48,25 +58,27 @@ class Cart {
 		}
 
 		/**
-		 * Filter the cart ID to use for the current request
+		 * Filter the cart ID to use for the current request.
 		 *
-		 * @param string $cart_id
+		 * @param string $cart_id The current cart ID.
 		 */
 		return apply_filters( 'bigcommerce/cart/cart_id', $cart_id );
 	}
 
 	/**
-	 * Set the cookie that contains the cart ID
+	 * Set the cookie that contains the cart ID.
 	 *
-	 * @param string $cart_id
+	 * Sets a cookie with the given cart ID, applying filters to determine the cookie's lifetime.
+	 *
+	 * @param string $cart_id The cart ID to set in the cookie.
 	 *
 	 * @return void
 	 */
 	public function set_cart_id( $cart_id ) {
 		/**
-		 * Filter how long the cart cookie should persist
+		 * Filter how long the cart cookie should persist.
 		 *
-		 * @param int $lifetime The cookie lifespan in seconds
+		 * @param int $lifetime The cookie lifespan in seconds.
 		 */
 		$cookie_life = apply_filters( 'bigcommerce/cart/cookie_lifetime', 30 * DAY_IN_SECONDS );
 		$secure      = ( 'https' === parse_url( home_url(), PHP_URL_SCHEME ) );
@@ -75,13 +87,18 @@ class Cart {
 	}
 
 	/**
-	 * @param int   $product_id The BigCommerce ID of the product
-	 * @param array $options    All options and modifiers for the line item
-	 * @param int   $quantity   How many to add to the cart
-	 * @param array $modifiers  Deprecated in 1.7.0, all values should be passed in $options
+	 * Add a line item to the cart.
 	 *
-	 * @return \BigCommerce\Api\v3\Model\Cart
-	 * @throws ApiException
+	 * Adds a product to the cart with the specified options, quantity, and modifiers.
+	 * The function handles both options and modifiers and sends the data to BigCommerce.
+	 *
+	 * @param int   $product_id The BigCommerce ID of the product.
+	 * @param array $options    All options and modifiers for the line item.
+	 * @param int   $quantity   How many to add to the cart.
+	 * @param array $modifiers  Deprecated in 1.7.0, all values should be passed in $options.
+	 *
+	 * @return \BigCommerce\Api\v3\Model\Cart The updated cart after adding the line item.
+	 * @throws ApiException If an error occurs while interacting with the BigCommerce API.
 	 */
 	public function add_line_item( $product_id, $options = [], $quantity = 1, $modifiers = [] ) {
 		$request_data      = new CartRequestData();
@@ -125,10 +142,14 @@ class Cart {
 	}
 
 	/**
-	 * @param $certificate
+	 * Add a gift certificate to the cart.
 	 *
-	 * @return \BigCommerce\Api\v3\Model\Cart
-	 * @throws ApiException
+	 * Adds a gift certificate to the cart, sending the data to BigCommerce for processing.
+	 *
+	 * @param $certificate The gift certificate data to be added to the cart.
+	 *
+	 * @return \BigCommerce\Api\v3\Model\Cart The updated cart after adding the gift certificate.
+	 * @throws ApiException If an error occurs while interacting with the BigCommerce API.
 	 */
 	public function add_gift_certificate( $certificate ) {
 		$request_data = new CartRequestData();
@@ -193,6 +214,13 @@ class Cart {
 		] )->getData();
 	}
 
+	/**
+	 * Sanitize the cart ID by ensuring the cart still exists
+	 *
+	 * @param string $cart_id The cart ID to sanitize
+	 *
+	 * @return string The sanitized cart ID or an empty string if not valid
+	 */
 	public function sanitize_cart_id( $cart_id ) {
 		if ( $cart_id ) {
 			try {
@@ -224,6 +252,11 @@ class Cart {
 		$_COOKIE[ self::COUNT_COOKIE ] = $count;
 	}
 
+	/**
+	 * Get the URL to the cart page
+	 *
+	 * @return string The URL to the cart page
+	 */
 	public function get_cart_url() {
 		$cart_page_id = get_option( Settings\Sections\Cart::OPTION_CART_PAGE_ID, 0 );
 		if ( empty( $cart_page_id ) ) {
@@ -242,6 +275,8 @@ class Cart {
 	}
 
 	/**
+	 * Get the checkout URL for the given cart ID
+	 *
 	 * @param string $cart_id The ID of the user's cart. Defaults to the ID found in the cart cookie
 	 *
 	 * @return string The URL for checking out with the given cart
@@ -268,6 +303,13 @@ class Cart {
 		return $checkout_url;
 	}
 
+	/**
+	 * Get the embedded checkout URL for the given cart ID
+	 *
+	 * @param string $cart_id The ID of the user's cart. Defaults to the ID found in the cart cookie
+	 *
+	 * @return string The URL for the embedded checkout with the given cart
+	 */
 	public function get_embedded_checkout_url( $cart_id ) {
 		$cart_id = $cart_id ?: $this->get_cart_id();
 		if ( empty( $cart_id ) ) {
@@ -302,9 +344,22 @@ class Cart {
 	}
 
 	private function get_currency() {
+		/**
+		 * Filters the currency code.
+		 *
+		 * This filter allows modification of the currency code being used. It returns
+		 * the current currency code based on the configured currency.
+		 *
+		 * @return string The currency code.
+		 */
 		return apply_filters( 'bigcommerce/currency/code', 'USD' );
 	}
 
+	/**
+	 * Delete the cart by its ID
+	 *
+	 * @return void
+	 */
 	public function delete_cart() {
 		$cart_id = $this->get_cart_id();
 		if ( empty( $cart_id ) ) {

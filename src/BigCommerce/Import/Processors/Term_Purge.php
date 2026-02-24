@@ -17,6 +17,11 @@ use BigCommerce\Logging\Error_Log;
 abstract class Term_Purge implements Import_Processor {
 	use No_Cache_Options;
 
+	/**
+	 * Option name for storing the term purge state in WordPress options table.
+	 * 
+	 * @var string STATE_OPTION
+	 */
 	const STATE_OPTION = 'bigcommerce_purge_terms_state';
 
 	/**
@@ -41,20 +46,34 @@ abstract class Term_Purge implements Import_Processor {
 	}
 
 	/**
-	 * @return string The name of the taxonomy to update
+	 * Gets the WordPress taxonomy identifier that this purge processor handles.
+	 * @return string The taxonomy name (e.g., 'product_category', 'product_brand').
 	 */
 	abstract protected function taxonomy();
 
 	/**
-	 * @return string The name of the state to set while the import is running
+	 * Gets the status identifier for when this term purge process is running.
+	 * @return string The status identifier for the running state.
 	 */
 	abstract protected function running_state();
 
 	/**
-	 * @return string The name of the state to set when the import is complete
+	 * Gets the status identifier for when this term purge process is completed.
+	 * @return string The status identifier for the completed state.
 	 */
 	abstract protected function completed_state();
 
+	/**
+	 * Executes the term purge process.
+	 * 
+	 * This method handles the deletion of WordPress terms that no longer exist in BigCommerce.
+	 * It processes terms in batches, comparing local terms with remote BigCommerce data.
+	 * The process tracks its state to support pagination and can be resumed if interrupted.
+	 * 
+	 * @return void
+	 * 
+	 * @throws \BigCommerce\Api\v3\ApiException If there's an error communicating with the BigCommerce API.
+	 */
 	public function run() {
 		$status = new Status();
 		$status->set_status( $this->running_state() );
@@ -73,6 +92,14 @@ abstract class Term_Purge implements Import_Processor {
 			$local_terms  = $this->get_local_term_ids( $page );
 			$remote_terms = $this->get_remote_term_ids( $local_terms );
 		} catch ( ApiException $e ) {
+			/**
+			 * Action to log import errors during the BigCommerce import process.
+			 *
+			 * This action is triggered when there is an error during the import process. It logs the error message and context for further analysis.
+			 *
+			 * @param string $message The error message to be logged.
+			 * @param array $context Additional context for the error.
+			 */
 			do_action( 'bigcommerce/import/error', $e->getMessage(), [
 				'response' => $e->getResponseBody(),
 				'headers'  => $e->getResponseHeaders(),

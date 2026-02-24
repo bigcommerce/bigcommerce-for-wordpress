@@ -6,24 +6,43 @@ namespace BigCommerce\Customizer;
 
 use BigCommerce\Customizer\Sections\Colors;
 
+/**
+ * This class handles the customization of CSS styles for BigCommerce components.
+ * It loads and manipulates a CSS template file and outputs dynamic styles based on theme settings.
+ */
 class Styles {
 
+	/**
+	 * Path to the CSS template file.
+	 * @var string
+	 */
 	private $template_file;
 
+	/**
+	 * The color black from the Colors class.
+	 * @var string
+	 */
 	private $black = Colors::COLOR_BC_BLACK;
+
+	/**
+	 * The color white.
+	 * @var string
+	 */
 	private $white = '#fff';
 
 	/**
 	 * Styles constructor.
 	 *
-	 * @param string $template_file Path to the CSS template file
+	 * @param string $template_file Path to the CSS template file.
 	 */
 	public function __construct( $template_file ) {
 		$this->template_file = $template_file;
 	}
 
 	/**
-	 * @return string
+	 * Retrieves the styles by replacing CSS variables with values from the theme customization.
+	 *
+	 * @return string The generated CSS styles.
 	 */
 	public function get_styles() {
 		if ( ! $this->using_plugin_css() ) {
@@ -46,9 +65,9 @@ class Styles {
 		}
 
 		/**
-		 * Filters customizer styles css.
+		 * Filters customizer styles CSS.
 		 *
-		 * @param string $css styles.
+		 * @param string $css The styles.
 		 */
 		$css = apply_filters( 'bigcommerce/css/customizer_styles', $template );
 
@@ -56,6 +75,8 @@ class Styles {
 	}
 
 	/**
+	 * Prints the generated styles within a `<style>` tag in the head.
+	 *
 	 * @return void
 	 * @action wp_head
 	 */
@@ -68,6 +89,8 @@ class Styles {
 	}
 
 	/**
+	 * Prints the generated styles directly (without `<style>` tags) in the head.
+	 *
 	 * @return void
 	 * @action wp_head
 	 */

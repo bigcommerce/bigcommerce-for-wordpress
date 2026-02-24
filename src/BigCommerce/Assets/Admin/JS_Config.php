@@ -12,15 +12,38 @@ use BigCommerce\Taxonomies\Brand\Brand;
 use BigCommerce\Taxonomies\Flag\Flag;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
 
+
+/**
+ * Handles the configuration for JavaScript assets in the BigCommerce admin.
+ * This includes paths to images and icons, as well as various settings related
+ * to product categories, flags, brands, and AJAX actions used in the admin interface.
+ *
+ * @package BigCommerce\Assets\Admin
+ */
 class JS_Config {
 	private $data;
 	private $gutenberg;
 	private $directory;
 
+    /**
+     * Constructor
+     *
+     * Initializes the JS_Config object with a specified asset directory.
+     *
+     * @param string $asset_directory The directory containing the assets.
+     */
 	public function __construct( $asset_directory ) {
 		$this->directory = trailingslashit( $asset_directory );
 	}
 
+    /**
+     * Get JS configuration data
+     *
+     * Retrieves the JavaScript configuration data, including paths for images and icons,
+     * as well as other relevant settings such as product categories and AJAX actions.
+     *
+     * @return array The JavaScript configuration data.
+     */
 	public function get_data() {
 		if ( ! isset( $this->data ) ) {
 			$this->data = [
@@ -46,6 +69,8 @@ class JS_Config {
 			/**
 			 * Filters admin js config object.
 			 *
+			 * Allows modification of the JS configuration data before it is returned.
+			 *
 			 * @param array $data Js config data.
 			 */
 			$this->data = apply_filters( 'bigcommerce/admin/js_config', $this->data );
@@ -54,12 +79,21 @@ class JS_Config {
 		return $this->data;
 	}
 
+    /**
+     * Get Gutenberg JS configuration data
+     *
+     * Retrieves the Gutenberg-specific JavaScript configuration data.
+     *
+     * @return array The Gutenberg JavaScript configuration data.
+     */
 	public function get_gutenberg_data() {
 		if ( ! isset( $this->gutenberg ) ) {
 			$this->gutenberg = [];
 
 			/**
 			 * Filters gutenberg js config data.
+			 *
+			 * Allows modification of the Gutenberg-specific JS configuration data.
 			 *
 			 * @param array $gutenberg Js config data.
 			 */

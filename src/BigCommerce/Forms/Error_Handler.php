@@ -3,13 +3,23 @@
 
 namespace BigCommerce\Forms;
 
-
+/**
+ * Handles form error management, including storing and retrieving errors for redirection.
+ */
 class Error_Handler {
+	/**
+	 * The query parameter used to pass error information.
+	 *
+	 * @var string
+	 */
 	const PARAM = 'bc-error';
 
 	/**
-	 * @param \WP_Error $errors
-	 * @param array     $submission
+	 * Handle form errors by storing them in a transient and redirecting to the error page.
+	 *
+	 * @param \WP_Error $errors The WP_Error object containing the error details.
+	 * @param array     $submission The form submission data.
+	 * @param string    $redirect The URL to redirect to after processing the error.
 	 *
 	 * @return void
 	 * @action bigcommerce/form/error
@@ -30,13 +40,20 @@ class Error_Handler {
 			self::PARAM => $key,
 		], $url );
 
+		/**
+		 * Fires when a form is about to redirect due to an error.
+		 *
+		 * @param string $url The URL to redirect to, with error parameters added.
+		 */
 		do_action( 'bigcommerce/form/redirect', $url );
 	}
 
 	/**
-	 * @param \WP_Error|null $data
+	 * Retrieve any errors stored in the transient for the current user.
 	 *
-	 * @return \WP_Error|null
+	 * @param \WP_Error|null $data Existing error data to potentially override.
+	 *
+	 * @return \WP_Error|null The error data, or null if no errors exist.
 	 * @filter bigcommerce/form/messages/error
 	 */
 	public function get_errors( $data ) {

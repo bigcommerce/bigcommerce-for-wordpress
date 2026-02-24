@@ -4,13 +4,32 @@ namespace BigCommerce\Compatibility\Akismet;
 
 use BigCommerce\Compatibility\Spam_Checker;
 
+/**
+ * This class implements the Spam_Checker interface and uses the Akismet API to determine if a submission is considered spam.
+ * It checks submissions against the Akismet service based on the provided details such as user IP, email, name, and referrer.
+ *
+ * The `is_spam` method makes an HTTP request to the Akismet API, and if the submission is flagged as spam, it updates the Akismet spam count.
+ * The Akismet API key must be set in WordPress options for the class to function.
+ *
+ * Usage:
+ *        $akismet = new Akismet();
+ *        $result = $akismet->is_spam( $submission );
+ *
+ * @package BigCommerce
+ * @subpackage Compatibility
+ */
 class Akismet implements Spam_Checker {
 
     /**
-	 * @param array $submission
-	 *
-	 * @return boolean
-	 */
+     * Checks whether a submission is flagged as spam by the Akismet service.
+     *
+     * This method sends the submission details to Akismet's API for spam checking. If the submission is flagged as spam, 
+     * the spam count in WordPress options is updated. It returns `true` if the submission is spam, otherwise `false`.
+     *
+     * @param array $submission An associative array containing the submission data, including first name, last name, email, etc.
+     *
+     * @return bool Returns `true` if the submission is spam, otherwise `false`.
+     */
 	public function is_spam( array $submission ) {
         if ( ! function_exists( 'akismet_init' ) ) {
             return false;

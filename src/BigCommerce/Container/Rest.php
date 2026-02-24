@@ -18,45 +18,196 @@ use BigCommerce\Rest\Terms_Controller;
 use BigCommerce\Reviews\Review_Fetcher;
 use Pimple\Container;
 
+/**
+ * Provides RESTful controllers and endpoints for BigCommerce integration.
+ *
+ * @package BigCommerce\Container
+ */
 class Rest extends Provider {
+	/**
+	 * The base namespace for REST API routes.
+	 *
+	 * @var string
+	 */
 	const NAMESPACE_BASE = 'rest.namespace';
-	const VERSION        = 'rest.version';
 
+	/**
+	 * The version of the REST API.
+	 *
+	 * @var string
+	 */
+	const VERSION = 'rest.version';
+
+	/**
+	 * The base route for the cart API.
+	 *
+	 * @var string
+	 */
 	const CART_BASE = 'rest.cart_base';
-	const CART      = 'rest.cart';
 
+	/**
+	 * The cart API identifier.
+	 *
+	 * @var string
+	 */
+	const CART = 'rest.cart';
+
+	/**
+	 * The base route for the products API.
+	 *
+	 * @var string
+	 */
 	const PRODUCTS_BASE = 'rest.products_base';
-	const PRODUCTS      = 'rest.products';
 
+	/**
+	 * The products API identifier.
+	 *
+	 * @var string
+	 */
+	const PRODUCTS = 'rest.products';
+
+	/**
+	 * The base route for the storefront API.
+	 *
+	 * @var string
+	 */
 	const STOREFRONT_BASE = 'rest.storefront_base';
-	const STOREFRONT      = 'rest.storefront';
 
+	/**
+	 * The storefront API identifier.
+	 *
+	 * @var string
+	 */
+	const STOREFRONT = 'rest.storefront';
+
+	/**
+	 * The base route for the terms API.
+	 *
+	 * @var string
+	 */
 	const TERMS_BASE = 'rest.terms_base';
-	const TERMS      = 'rest.terms';
 
+	/**
+	 * The terms API identifier.
+	 *
+	 * @var string
+	 */
+	const TERMS = 'rest.terms';
+
+	/**
+	 * The base route for the shortcode API.
+	 *
+	 * @var string
+	 */
 	const SHORTCODE_BASE = 'rest.shortcode_base';
-	const SHORTCODE      = 'rest.shortcode';
 
+	/**
+	 * The shortcode API identifier.
+	 *
+	 * @var string
+	 */
+	const SHORTCODE = 'rest.shortcode';
+
+	/**
+	 * The base route for the orders shortcode API.
+	 *
+	 * @var string
+	 */
 	const ORDERS_SHORTCODE_BASE = 'rest.orders_shortcode_base';
-	const ORDERS_SHORTCODE      = 'rest.orders_shortcode';
 
+	/**
+	 * The orders shortcode API identifier.
+	 *
+	 * @var string
+	 */
+	const ORDERS_SHORTCODE = 'rest.orders_shortcode';
+
+	/**
+	 * The base route for the product component shortcode API.
+	 *
+	 * @var string
+	 */
 	const COMPONENT_SHORTCODE_BASE = 'rest.product_component_shortcode_base';
-	const COMPONENT_SHORTCODE      = 'rest.product_component_shortcode';
 
+	/**
+	 * The product component shortcode API identifier.
+	 *
+	 * @var string
+	 */
+	const COMPONENT_SHORTCODE = 'rest.product_component_shortcode';
+
+	/**
+	 * The base route for the review list API.
+	 *
+	 * @var string
+	 */
 	const REVIEW_LIST_BASE = 'rest.review_list_base';
-	const REVIEW_LIST      = 'rest.review_list';
 
+	/**
+	 * The review list API identifier.
+	 *
+	 * @var string
+	 */
+	const REVIEW_LIST = 'rest.review_list';
+
+	/**
+	 * The base route for the pricing API.
+	 *
+	 * @var string
+	 */
 	const PRICING_BASE = 'rest.pricing_base';
-	const PRICING      = 'rest.pricing';
 
+	/**
+	 * The pricing API identifier.
+	 *
+	 * @var string
+	 */
+	const PRICING = 'rest.pricing';
+
+	/**
+	 * The base route for the shipping API.
+	 *
+	 * @var string
+	 */
 	const SHIPPING_BASE = 'rest.shipping_base';
-	const SHIPPING      = 'rest.shipping';
 
+	/**
+	 * The shipping API identifier.
+	 *
+	 * @var string
+	 */
+	const SHIPPING = 'rest.shipping';
+
+	/**
+	 * The base route for the coupon code API.
+	 *
+	 * @var string
+	 */
 	const COUPON_CODE_BASE = 'rest.coupon_code_base';
-	const COUPON_CODE      = 'rest.coupon_code';
 
+	/**
+	 * The coupon code API identifier.
+	 *
+	 * @var string
+	 */
+	const COUPON_CODE = 'rest.coupon_code';	
+
+	/**
+	 * The version of the REST API used by the container. It is referenced when setting up the
+	 * `VERSION` service in the container, ensuring that the API version can be applied to the various API endpoints
+	 * and controllers.
+	 *
+	 * @var string
+	 */
 	private $version = 1;
 
+	/**
+	 * Registers services and controllers in the container and sets up REST API hooks.
+	 *
+	 * @param Container $container The dependency injection container instance.
+	 *
+	 * @return void
+	 */
 	public function register( Container $container ) {
 		$container[ self::NAMESPACE_BASE ] = function ( Container $container ) {
 			/**

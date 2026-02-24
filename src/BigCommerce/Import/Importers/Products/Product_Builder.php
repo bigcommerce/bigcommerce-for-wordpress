@@ -24,34 +24,43 @@ use BigCommerce\Taxonomies\Flag\Flag;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
 use BigCommerce\Taxonomies\Product_Type\Product_Type;
 
+/**
+ * Responsible for constructing product-related data structures
+ * during the import process for BigCommerce products.
+ *
+ * @package BigCommerce\Import\Importers\Products
+ */
 class Product_Builder {
 	use Api_Data_Sanitizer;
 
-	/**
-	 * @var Model\Product
-	 */
-	private $product;
-	/**
-	 * @var Model\Listing
-	 */
-	private $listing;
-	/**
-	 * @var CatalogApi
-	 */
-	private $catalog;
-	/**
-	 * @var \WP_Term
-	 */
-	private $channel_term;
+    /**
+     * @var Model\Product The product model being imported.
+     */
+    private $product;
 
-	/**
-	 * Product_Builder constructor.
-	 *
-	 * @param Model\Product $product
-	 * @param Model\Listing $listing
-	 * @param \WP_Term      $channel_term
-	 * @param CatalogApi    $api
-	 */
+    /**
+     * @var Model\Listing The listing associated with the product.
+     */
+    private $listing;
+
+    /**
+     * @var CatalogApi The catalog API for BigCommerce.
+     */
+    private $catalog;
+
+    /**
+     * @var \WP_Term The channel term associated with the product.
+     */
+    private $channel_term;
+
+    /**
+     * Product_Builder constructor.
+     *
+     * @param Model\Product $product The product to import.
+     * @param Model\Listing $listing The listing for the product.
+     * @param \WP_Term $channel_term The term representing the channel.
+     * @param CatalogApi $api The BigCommerce catalog API instance.
+     */
 	public function __construct( Model\Product $product, Model\Listing $listing, \WP_Term $channel_term, CatalogApi $api ) {
 		$this->product = $product;
 		$this->catalog = $api;
@@ -59,6 +68,11 @@ class Product_Builder {
 		$this->channel_term = $channel_term;
 	}
 
+    /**
+     * Builds the post array for creating/updating the WordPress post.
+     *
+     * @return array The post data array.
+     */
 	public function build_post_array() {
 		$created = $this->product[ 'date_created' ];
 		$data    = [
@@ -160,6 +174,11 @@ class Product_Builder {
 		return apply_filters( 'bigcommerce/import/product/menu_order', $sort_order, $this->product );
 	}
 
+    /**
+     * Builds an array representing the product data.
+     *
+     * @return array The product data array.
+     */
 	public function build_product_array() {
 		$data = [
 			'bc_id'              => $this->sanitize_int( $this->product[ 'id' ] ),
@@ -185,6 +204,11 @@ class Product_Builder {
 		return $data;
 	}
 
+	/**
+	 * Builds variants for the product using sanitized data.
+	 *
+	 * @return array The array of variant data.
+	 */
 	public function build_variants() {
 		$bc_id = $this->product[ 'id' ];
 
@@ -211,6 +235,11 @@ class Product_Builder {
 		}, (array) $this->product[ 'variants' ] );
 	}
 
+	/**
+	 * Builds taxonomy terms for the product.
+	 *
+	 * @return array The taxonomy terms associated with the product.
+	 */
 	public function build_taxonomy_terms() {
 		$terms = [];
 
@@ -229,9 +258,10 @@ class Product_Builder {
 	}
 
 	/**
-	 * @param int $parent_id The post that will be set as the attachment parent
+	 * Builds product images and associates them with a post parent.
 	 *
-	 * @return array
+	 * @param int $parent_id The post that will be set as the attachment parent.
+	 * @return array The response containing thumbnails, galleries, and variant image mappings.
 	 */
 	public function build_images( $parent_id ) {
 		/** @var \wpdb $wpdb */
@@ -396,6 +426,27 @@ class Product_Builder {
 		return [];
 	}
 
+	/**
+	 * Builds and returns an array of metadata for a product post.
+	 *
+	 * This function generates metadata for a product by extracting and processing
+	 * various attributes such as ID, SKU, ratings, inventory, pricing, and more.
+	 * The metadata can be used for storing additional information in the database.
+	 *
+	 * @return array Associative array containing product metadata with keys:
+	 *               - `Product::IMPORTER_VERSION_META_KEY` (string): Importer version.
+	 *               - `Product::BIGCOMMERCE_ID` (int): BigCommerce product ID.
+	 *               - `Product::SKU` (string): Product SKU.
+	 *               - `Product::SKU_NORMALIZED` (string): Normalized product SKU.
+	 *               - `Product::RATING_META_KEY` (float): Average product rating.
+	 *               - `Product::REVIEW_COUNT_META_KEY` (int): Number of product reviews.
+	 *               - `Product::RATING_SUM_META_KEY` (int): Sum of product ratings.
+	 *               - `Product::SALES_META_KEY` (int): Total product sales.
+	 *               - `Product::PRICE_META_KEY` (float): Product calculated price.
+	 *               - `Product::INVENTORY_META_KEY` (int): Inventory level.
+	 *               - `Product::PRICE_RANGE_META_KEY` (array): Price range information.
+	 *               - `Product::DATA_HASH_META_KEY` (string): Hash of product and listing data.
+	 */
 	public function build_post_meta() {
 		$meta = [];
 
@@ -544,6 +595,18 @@ class Product_Builder {
 		return $ranges;
 	}
 
+	/**
+	 * Generates a hash for a product and listing.
+	 *
+	 * This function serializes and combines the provided product and listing data,
+	 * then computes an MD5 hash. It is used to create a unique identifier
+	 * representing the state of the product and listing.
+	 *
+	 * @param Model\Product $product The product model to hash.
+	 * @param Model\Listing $listing The listing model to hash.
+	 * 
+	 * @return string MD5 hash of the combined product and listing data.
+	 */
 	public static function hash( Model\Product $product, Model\Listing $listing ) {
 		$product_string = wp_json_encode( ObjectSerializer::sanitizeForSerialization( $product ) );
 		$listing_string = wp_json_encode( ObjectSerializer::sanitizeForSerialization( $listing ) );

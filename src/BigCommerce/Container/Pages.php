@@ -1,8 +1,6 @@
 <?php
 
-
 namespace BigCommerce\Container;
-
 
 use BigCommerce\Pages\Account_Page;
 use BigCommerce\Pages\Address_Page;
@@ -22,139 +20,232 @@ use BigCommerce\Settings\Sections\Gift_Certificates as Gift_Certificate_Settings
 use BigCommerce\Settings\Sections\Wishlists as Wishlist_Settings;
 use Pimple\Container;
 
+/**
+ * Provides page-related services and ensures required pages exist for BigCommerce integration.
+ */
 class Pages extends Provider {
-	const REQUIRED_PAGES = 'pages.required_pages';
+    /**
+     * Identifier for required pages collection.
+     *
+     * @var string
+     */
+    const REQUIRED_PAGES = 'pages.required_pages';
 
-	const CART_PAGE              = 'pages.cart';
-	const CHECKOUT_PAGE          = 'pages.checkout';
-	const CHECKOUT_COMPLETE_PAGE = 'pages.checkout.complete';
-	const LOGIN_PAGE             = 'pages.login';
-	const REGISTRATION_PAGE      = 'pages.register';
-	const ACCOUNT_PAGE           = 'pages.account';
-	const ADDRESS_PAGE           = 'pages.address';
-	const ORDERS_PAGE            = 'pages.orders';
-	const GIFT_PURCHACE          = 'pages.gift_certificate.purchase';
-	const GIFT_BALANCE           = 'pages.gift_certificate.balance';
-	const SHIPPING_PAGE          = 'pages.shipping_returns';
-	const WISHLIST_USER          = 'pages.wishlist.user';
-	const WISHLIST_PUBLIC        = 'pages.wishlist.public';
+    /**
+     * Identifier for the cart page.
+     *
+     * @var string
+     */
+    const CART_PAGE = 'pages.cart';
 
-	public function register( Container $container ) {
-		$container[ self::REQUIRED_PAGES ] = function ( Container $container ) {
-			$pages = [
-				$container[ self::LOGIN_PAGE ],
-				$container[ self::ACCOUNT_PAGE ],
-				$container[ self::ADDRESS_PAGE ],
-				$container[ self::ORDERS_PAGE ],
-				$container[ self::SHIPPING_PAGE ],
-				$container[ self::CHECKOUT_COMPLETE_PAGE ],
-			];
-			if ( ( (bool) get_option( Cart_Settings::OPTION_ENABLE_CART, true ) ) === true ) {
-				$pages[] = $container[ self::CART_PAGE ];
-			}
-			if ( ( (bool) get_option( Cart_Settings::OPTION_EMBEDDED_CHECKOUT, true ) ) === true ) {
-				$pages[] = $container[ self::CHECKOUT_PAGE ];
-			}
-			if ( ( (bool) get_option( Gift_Certificate_Settings::OPTION_ENABLE, true ) ) === true ) {
-				$pages[] = $container[ self::GIFT_PURCHACE ];
-				$pages[] = $container[ self::GIFT_BALANCE ];
-			}
-			if ( get_option( 'users_can_register' ) ) {
-				$pages[] = $container[ self::REGISTRATION_PAGE ];
-			}
-			if ( get_option( Wishlist_Settings::ENABLED ) ) {
-				$pages[] = $container[ self::WISHLIST_USER ];
-			}
+    /**
+     * Identifier for the checkout page.
+     *
+     * @var string
+     */
+    const CHECKOUT_PAGE = 'pages.checkout';
 
-			return $pages;
-		};
+    /**
+     * Identifier for the checkout complete page.
+     *
+     * @var string
+     */
+    const CHECKOUT_COMPLETE_PAGE = 'pages.checkout.complete';
 
-		$container[ self::CART_PAGE ] = function ( Container $container ) {
-			return new Cart_Page();
-		};
+    /**
+     * Identifier for the login page.
+     *
+     * @var string
+     */
+    const LOGIN_PAGE = 'pages.login';
 
-		$container[ self::CHECKOUT_PAGE ] = function ( Container $container ) {
-			return new Checkout_Page();
-		};
+    /**
+     * Identifier for the registration page.
+     *
+     * @var string
+     */
+    const REGISTRATION_PAGE = 'pages.register';
 
-		$container[ self::CHECKOUT_COMPLETE_PAGE ] = function ( Container $container ) {
-			return new Checkout_Complete_Page();
-		};
+    /**
+     * Identifier for the account page.
+     *
+     * @var string
+     */
+    const ACCOUNT_PAGE = 'pages.account';
 
-		$container[ self::LOGIN_PAGE ] = function ( Container $container ) {
-			return new Login_Page();
-		};
+    /**
+     * Identifier for the address page.
+     *
+     * @var string
+     */
+    const ADDRESS_PAGE = 'pages.address';
 
-		$container[ self::REGISTRATION_PAGE ] = function ( Container $container ) {
-			return new Registration_Page();
-		};
+    /**
+     * Identifier for the orders page.
+     *
+     * @var string
+     */
+    const ORDERS_PAGE = 'pages.orders';
 
-		$container[ self::ACCOUNT_PAGE ] = function ( Container $container ) {
-			return new Account_Page();
-		};
+    /**
+     * Identifier for purchasing gift certificates.
+     *
+     * @var string
+     */
+    const GIFT_PURCHACE = 'pages.gift_certificate.purchase';
 
-		$container[ self::ADDRESS_PAGE ] = function ( Container $container ) {
-			return new Address_Page();
-		};
+    /**
+     * Identifier for checking gift certificate balance.
+     *
+     * @var string
+     */
+    const GIFT_BALANCE = 'pages.gift_certificate.balance';
 
-		$container[ self::ORDERS_PAGE ] = function ( Container $container ) {
-			return new Orders_Page();
-		};
+    /**
+     * Identifier for the shipping and returns page.
+     *
+     * @var string
+     */
+    const SHIPPING_PAGE = 'pages.shipping_returns';
 
-		$container[ self::GIFT_PURCHACE ] = function ( Container $container ) {
-			return new Gift_Certificate_Page();
-		};
+    /**
+     * Identifier for the user's wishlist page.
+     *
+     * @var string
+     */
+    const WISHLIST_USER = 'pages.wishlist.user';
 
-		$container[ self::GIFT_BALANCE ] = function ( Container $container ) {
-			return new Check_Balance_Page();
-		};
+    /**
+     * Identifier for the public wishlist page.
+     *
+     * @var string
+     */
+    const WISHLIST_PUBLIC = 'pages.wishlist.public';
 
-		$container[ self::SHIPPING_PAGE ] = function ( Container $container ) {
-			return new Shipping_Returns_Page();
-		};
+    /**
+     * Registers page-related services into the Pimple container.
+     *
+     * @param Container $container The dependency injection container.
+     * @return void
+     */
+    public function register( Container $container ) {
+        $container[ self::REQUIRED_PAGES ] = function ( Container $container ) {
+            $pages = [
+                $container[ self::LOGIN_PAGE ],
+                $container[ self::ACCOUNT_PAGE ],
+                $container[ self::ADDRESS_PAGE ],
+                $container[ self::ORDERS_PAGE ],
+                $container[ self::SHIPPING_PAGE ],
+                $container[ self::CHECKOUT_COMPLETE_PAGE ],
+            ];
 
-		$container[ self::WISHLIST_USER ] = function( Container $container ) {
-			return new Wishlist_Page();
-		};
+            if ( ( (bool) get_option( Cart_Settings::OPTION_ENABLE_CART, true ) ) === true ) {
+                $pages[] = $container[ self::CART_PAGE ];
+            }
+            if ( ( (bool) get_option( Cart_Settings::OPTION_EMBEDDED_CHECKOUT, true ) ) === true ) {
+                $pages[] = $container[ self::CHECKOUT_PAGE ];
+            }
+            if ( ( (bool) get_option( Gift_Certificate_Settings::OPTION_ENABLE, true ) ) === true ) {
+                $pages[] = $container[ self::GIFT_PURCHACE ];
+                $pages[] = $container[ self::GIFT_BALANCE ];
+            }
+            if ( get_option( 'users_can_register' ) ) {
+                $pages[] = $container[ self::REGISTRATION_PAGE ];
+            }
+            if ( get_option( Wishlist_Settings::ENABLED ) ) {
+                $pages[] = $container[ self::WISHLIST_USER ];
+            }
 
-		add_action( 'admin_init', $this->create_callback( 'create_pages', function () use ( $container ) {
-			foreach ( $container[ self::REQUIRED_PAGES ] as $page ) {
-				/** @var Required_Page $page */
-				$page->ensure_page_exists();
-			}
-		} ), 10, 0 );
+            return $pages;
+        };
 
-		$clear_options = $this->create_callback( 'clear_options', function ( $post_id ) use ( $container ) {
-			foreach ( $container[ self::REQUIRED_PAGES ] as $page ) {
-				/** @var Required_Page $page */
-				$page->clear_option_on_delete( $post_id );
-			}
-		} );
-		add_action( 'trashed_post', $clear_options, 10, 1 );
-		add_action( 'deleted_post', $clear_options, 10, 1 );
+        // Define individual page services with corresponding classes
+        $container[ self::CART_PAGE ] = function ( Container $container ) {
+            return new Cart_Page();
+        };
 
-		add_action( 'display_post_states', $this->create_callback( 'post_states', function ( $post_states, $post ) use ( $container ) {
+        $container[ self::CHECKOUT_PAGE ] = function ( Container $container ) {
+            return new Checkout_Page();
+        };
 
-			foreach ( $container[ self::REQUIRED_PAGES ] as $page ) {
-				/** @var Required_Page $page */
-				$post_states = $page->add_post_state( $post_states, $post );
-			}
+        $container[ self::CHECKOUT_COMPLETE_PAGE ] = function ( Container $container ) {
+            return new Checkout_Complete_Page();
+        };
 
-			return $post_states;
-		} ), 10, 2 );
+        $container[ self::LOGIN_PAGE ] = function ( Container $container ) {
+            return new Login_Page();
+        };
 
-		add_action( 'bigcommerce/settings/accounts/after_page_field/page=' . Registration_Page::NAME, $this->create_callback( 'enable_registration_notice', function () use ( $container ) {
-			$container[ self::REGISTRATION_PAGE ]->enable_registration_notice();
-		} ), 10, 0 );
+        $container[ self::REGISTRATION_PAGE ] = function ( Container $container ) {
+            return new Registration_Page();
+        };
 
-		add_action( 'the_content', $this->create_callback( 'page_content', function ( $content ) use ( $container ) {
-			if ( is_page() && in_the_loop() && is_main_query() ) {
-				foreach ( $container[ self::REQUIRED_PAGES ] as $page ) {
-					/** @var Required_Page $page */
-					$content = $page->filter_content( get_the_ID(), $content );
-				}
-			}
-			return $content;
-		} ), 5, 1 );
-	}
+        $container[ self::ACCOUNT_PAGE ] = function ( Container $container ) {
+            return new Account_Page();
+        };
+
+        $container[ self::ADDRESS_PAGE ] = function ( Container $container ) {
+            return new Address_Page();
+        };
+
+        $container[ self::ORDERS_PAGE ] = function ( Container $container ) {
+            return new Orders_Page();
+        };
+
+        $container[ self::GIFT_PURCHACE ] = function ( Container $container ) {
+            return new Gift_Certificate_Page();
+        };
+
+        $container[ self::GIFT_BALANCE ] = function ( Container $container ) {
+            return new Check_Balance_Page();
+        };
+
+        $container[ self::SHIPPING_PAGE ] = function ( Container $container ) {
+            return new Shipping_Returns_Page();
+        };
+
+        $container[ self::WISHLIST_USER ] = function ( Container $container ) {
+            return new Wishlist_Page();
+        };
+
+        add_action( 'admin_init', $this->create_callback( 'create_pages', function () use ( $container ) {
+            foreach ( $container[ self::REQUIRED_PAGES ] as $page ) {
+                /** @var Required_Page $page */
+                $page->ensure_page_exists();
+            }
+        } ), 10, 0 );
+
+        $clear_options = $this->create_callback( 'clear_options', function ( $post_id ) use ( $container ) {
+            foreach ( $container[ self::REQUIRED_PAGES ] as $page ) {
+                /** @var Required_Page $page */
+                $page->clear_option_on_delete( $post_id );
+            }
+        } );
+
+        add_action( 'trashed_post', $clear_options, 10, 1 );
+
+        add_action( 'deleted_post', $clear_options, 10, 1 );
+
+        add_action( 'display_post_states', $this->create_callback( 'post_states', function ( $post_states, $post ) use ( $container ) {
+            foreach ( $container[ self::REQUIRED_PAGES ] as $page ) {
+                /** @var Required_Page $page */
+                $post_states = $page->add_post_state( $post_states, $post );
+            }
+            return $post_states;
+        } ), 10, 2 );
+
+        add_action( 'bigcommerce/settings/accounts/after_page_field/page=' . Registration_Page::NAME, $this->create_callback( 'enable_registration_notice', function () use ( $container ) {
+            $container[ self::REGISTRATION_PAGE ]->enable_registration_notice();
+        } ), 10, 0 );
+
+        add_action( 'the_content', $this->create_callback( 'page_content', function ( $content ) use ( $container ) {
+            if ( is_page() && in_the_loop() && is_main_query() ) {
+                foreach ( $container[ self::REQUIRED_PAGES ] as $page ) {
+                    /** @var Required_Page $page */
+                    $content = $page->filter_content( get_the_ID(), $content );
+                }
+            }
+            return $content;
+        } ), 5, 1 );
+    }
 }

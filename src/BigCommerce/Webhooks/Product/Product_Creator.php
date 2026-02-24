@@ -15,9 +15,10 @@ use BigCommerce\Taxonomies\Channel\Channel;
 use BigCommerce\Taxonomies\Channel\Connections;
 
 /**
- * Class Product_Creator
+ * Handles the creation of a new product from BigCommerce via webhooks.
+ * This includes fetching product data, managing channel connections, and triggering imports.
  *
- * Import new single product from Bigcommerce
+ * @package BigCommerce\Webhooks\Product
  */
 class Product_Creator
 {
@@ -27,15 +28,28 @@ class Product_Creator
     /** @var ChannelsApi */
     private $channels;
 
+    /**
+     * Product_Creator constructor.
+     *
+     * Initializes API clients for catalog and channel operations.
+     *
+     * @param CatalogApi  $catalog  Catalog API client.
+     * @param ChannelsApi $channels Channels API client.
+     */
     public function __construct( CatalogApi $catalog, ChannelsApi $channels ) {
         $this->catalog  = $catalog;
         $this->channels = $channels;
     }
 
     /**
-     * Handle product creation logic
+     * Creates a new product in BigCommerce.
      *
-     * @param $product_id
+     * Handles the entire product creation process, including:
+     * - Fetching the product from the BigCommerce catalog.
+     * - Verifying active channels for product listing.
+     * - Initiating product import workflows.
+     *
+     * @param int $product_id The ID of the product to create.
      */
     public function create( $product_id ) {
         $connections = new Connections();
@@ -57,6 +71,7 @@ class Product_Creator
             $empty = function () {
                 return false;
             };
+            
             add_filter( 'bigcommerce/channel/listing/should_update', $empty, 10, 0 );
             add_filter( 'bigcommerce/channel/listing/should_delete', $empty, 10, 0 );
 

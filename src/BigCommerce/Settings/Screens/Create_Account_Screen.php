@@ -76,9 +76,30 @@ class Create_Account_Screen extends Onboarding_Screen {
 		update_option( self::SUBMITTED_DATA, $submission, false );
 
 		$errors = new \WP_Error();
+		/**
+		 * Validates the request for creating a new BigCommerce account.
+		 *
+		 * This action is triggered when a request is made to create a new account. It validates
+		 * the submission data and checks for any errors before processing the request.
+		 *
+		 * @param array $submission The submitted data from the account creation form.
+		 * @param array $errors     The array of validation errors, if any.
+		 * @return void
+		 */
 		do_action( 'bigcommerce/create_account/validate_request', $submission, $errors );
 		$this->handle_errors( $errors );
 
+        /**
+         * Action to handle the submission of account creation requests.
+         *
+         * This action processes data submitted for account creation, logs errors,
+         * and invokes the Create_Account service to handle the request.
+         *
+         * @param array $data Submitted data for account creation.
+         * @param array $errors An array of errors, if any, encountered during submission.
+         * @return void
+         * @throws \Exception If an error occurs during account creation.
+         */
 		do_action( 'bigcommerce/create_account/submit_request', $submission[ New_Account_Section::STORE_INFO ], $errors );
 		$this->handle_errors( $errors );
 

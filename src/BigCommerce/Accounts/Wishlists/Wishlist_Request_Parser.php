@@ -10,23 +10,48 @@ use BigCommerce\Post_Types\Product\Product;
 /**
  * Class Wishlist_Request_Parser
  *
- * Filters the product archive to show items in a wishlist
+ * This class parses and processes wishlist-related requests, such as filtering 
+ * the product archive to display wishlist items. It integrates with the BigCommerce 
+ * Wishlists API to fetch and handle wishlist data and applies necessary filters 
+ * and actions to the WordPress environment.
+ *
+ * @package BigCommerce\Accounts\Wishlists
  */
 class Wishlist_Request_Parser {
+
+    /**
+     * Query parameter for the wishlist identifier.
+     *
+     * @var string
+     */
 	const LIST_PARAM  = 'list';
+
+    /**
+     * Query parameter for the wishlist token.
+     *
+     * @var string
+     */
 	const TOKEN_PARAM = 'token';
 
 	/** @var WishlistsApi */
 	private $wishlists;
 
+    /**
+     * Constructor for Wishlist_Request_Parser.
+     *
+     * @param WishlistsApi $wishlists The Wishlists API instance for fetching wishlist data.
+     */
 	public function __construct( WishlistsApi $wishlists ) {
 		$this->wishlists = $wishlists;
 	}
 
     /**
-     * Handle wishlist setup request
+     * Setup the wishlist request.
      *
-     * @param \WP $wp
+     * Determines whether the current request is a wishlist request. If so, it fetches the 
+     * wishlist data and applies appropriate actions and filters to render the wishlist.
+     *
+     * @param \WP $wp The WordPress request object.
      */
 	public function setup_wishlist_request( \WP $wp ) {
 		if ( ! $this->is_wishlist_request( $wp ) ) {

@@ -9,21 +9,56 @@ use BigCommerce\Cart\Cart;
 use BigCommerce\Pages;
 use BigCommerce\Settings;
 
+/**
+ * Handles the submission and processing of gift certificate purchase forms.
+ * 
+ * @package BigCommerce\Forms
+ */
 class Purchase_Gift_Certificate_Handler implements Form_Handler {
 
+	/**
+	 * The action string used to identify the gift certificate purchase form.
+	 *
+	 * @var string
+	 */
 	const ACTION = 'gift-purchase';
 
-	private $minimum = 1.0;
-	private $maximum = 1000.0;
 	/**
+	 * Minimum amount for a gift certificate.
+	 *
+	 * @var float
+	 */
+	private $minimum = 1.0;
+
+	/**
+	 * Maximum amount for a gift certificate.
+	 *
+	 * @var float
+	 */
+	private $maximum = 1000.0;
+
+	/**
+	 * The CartApi instance used to interact with the cart and perform cart-related operations.
+	 *
 	 * @var CartApi
 	 */
 	private $api;
 
+	/**
+	 * Purchase_Gift_Certificate_Handler constructor.
+	 *
+	 * @param CartApi $api The Cart API instance.
+	 */
 	public function __construct( CartApi $api ) {
 		$this->api = $api;
 	}
 
+	/**
+	 * Handle the gift certificate purchase request.
+	 *
+	 * @param array $submission The submitted form data.
+	 * @return void
+	 */
 	public function handle_request( $submission ) {
 
 		if ( ! $this->should_handle_request( $submission ) ) {

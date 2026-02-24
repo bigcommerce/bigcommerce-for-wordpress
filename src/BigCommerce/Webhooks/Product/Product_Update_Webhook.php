@@ -35,6 +35,11 @@ class Product_Update_Webhook extends Webhook {
 		do_action( 'bigcommerce/log', Error_Log::INFO, __( 'Trigger product update webhook', 'bigcommerce' ), [
 				'bc_id' => $request['data']['id'],
 		], 'webhooks' );
+		/**
+		 * Handles the "product updated" webhook event.
+		 * 
+		 * @param array $params The parameters of the updated product, including product ID.
+		 */
 		do_action( 'bigcommerce/webhooks/product_updated', ['product_id' => intval( $request['data']['id'] )] );
 	}
 }

@@ -16,7 +16,18 @@ use BigCommerce\Taxonomies\Flag\Flag;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
 use BigCommerce\Taxonomies\Product_Category\Query_Filter;
 
+/**
+ * Handles custom BigCommerce product queries in WordPress.
+ *
+ * This class integrates with WordPress query modifications to support BigCommerce-specific
+ * filters, sorting, and customization for product archives and search results.
+ */
 class Query {
+	/**
+	 * Flag to bypass custom filtering of queries.
+	 *
+	 * Queries with this flag set are not subject to BigCommerce-specific filtering.
+	 */
 	const UNFILTERED_QUERY_FLAG = '_bigcommerce_unfiltered';
 
 	private $query_filter;
@@ -26,16 +37,28 @@ class Query {
 	 */
 	private $catalog_api;
 
+	/**
+	 * Query constructor.
+	 *
+	 * Initializes the query with the required Catalog API and filter instance.
+	 *
+	 * @param CatalogApi   $catalog_api Instance of the BigCommerce Catalog API.
+	 * @param Query_Filter $filter      Query filter for handling visibility and customizations.
+	 */
 	public function __construct( CatalogApi $catalog_api, Query_Filter $filter) {
 		$this->query_filter = $filter;
 		$this->catalog_api  = $catalog_api;
 	}
 
 	/**
-	 * @param \WP_Query $query
+	 * Modifies WordPress queries to integrate BigCommerce-specific logic.
 	 *
+	 * This method applies custom sorting, filtering, and metadata adjustments to WordPress queries
+	 * based on BigCommerce product data and settings. It respects WordPress's native query vars
+	 * while introducing new ones like `bc-sort` for enhanced customization.
+	 *
+	 * @param \WP_Query $query The WordPress query instance to modify.
 	 * @return void
-	 * @action pre_get_posts
 	 */
 	public function filter_queries( \WP_Query $query ) {
 		if ( $query->get( self::UNFILTERED_QUERY_FLAG ) ) {
@@ -144,6 +167,7 @@ class Query {
 
 						return "FIELD({$alias}.meta_value," . implode( ',', array_map( 'absint', $query->query_vars['bigcommerce_id__in'] ) ) . ')';
 					};
+
 					add_filter( 'posts_orderby', $orderby_filter, 10, 2 );
 					break;
 
@@ -288,16 +312,12 @@ class Query {
 	}
 
 	/**
-	 * Remove empty query vars from request vars
+	 * Removes empty query variables from the request vars to prevent unintended behavior. 
+	 * For example, it prevents WordPress from interpreting empty s= parameters (left from product archive filters) as a search page request.
 	 *
-	 * The main purpose here is to avoid WP thinking
-	 * we're on a search page because the product
-	 * archive filters left a "s=" in the URL.
-	 *
-	 * @param array $vars
-	 *
-	 * @return array
-	 * @filter request
+	 * @param array $vars Associative array of query variables.
+	 * 
+	 * @return array Filtered array of query variables.
 	 */
 	public function filter_empty_query_vars( $vars ) {
 		foreach ( [ 's', 'bc-sort', Brand::NAME, Product_Category::NAME ] as $query_var ) {
@@ -310,10 +330,14 @@ class Query {
 	}
 
 	/**
-	 * @param array $vars
+	 * Add custom query vars to WordPress.
 	 *
-	 * @return array
-	 * @filter query_vars
+	 * This ensures custom query variables, such as 'bc-sort',
+	 * are recognized and not removed during request parsing.
+	 *
+	 * @param array $vars The list of query vars recognized by WordPress.
+	 *
+	 * @return array Updated list of query vars.
 	 */
 	public function add_query_vars( $vars ) {
 		$vars[] = 'bc-sort';

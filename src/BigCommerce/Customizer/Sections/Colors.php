@@ -6,38 +6,164 @@ namespace BigCommerce\Customizer\Sections;
 
 use BigCommerce\Customizer\Panels;
 
+/**
+ * Handles the customization constants for colors and themes in the BigCommerce plugin.
+ */
 class Colors {
-	const NAME = 'bigcommerce_colors';
+    /**
+     * Section name for the WordPress Customizer.
+     * 
+     * @var string
+     */
+    const NAME = 'bigcommerce_colors';
 
-	const CSS = 'bigcommerce_use_css';
+    /**
+     * Setting for enabling or disabling plugin CSS.
+     * 
+     * @var string
+     */
+    const CSS = 'bigcommerce_use_css';
 
-	const CSS_FULL = 'default';
-	const CSS_OFF  = 'disabled';
+    /**
+     * Use plugin styles for the theme.
+     * 
+     * @var string
+     */
+    const CSS_FULL = 'default';
 
-	const COLOR_BC_BLUE       = '#5273f4';
-	const COLOR_BC_GREEN      = '#65c68c';
-	const COLOR_BC_LIGHT_GREY = '#e0e3e9';
-	const COLOR_BC_BLACK      = '#34313f';
-	const COLOR_BANNER_GREY   = '#757575';
-	const COLOR_WHITE         = '#ffffff';
-	const TEXT_DARK           = 'dark';
-	const TEXT_LIGHT          = 'light';
+    /**
+     * Disable plugin styles and rely on custom CSS.
+     * 
+     * @var string
+     */
+    const CSS_OFF = 'disabled';
 
-	const BUTTON_COLOR       = 'bigcommerce_button_color';
-	const BUTTON_TEXT        = 'bigcommerce_button_text_color';
-	const SALE_COLOR         = 'bigcommerce_sale_color';
-	const SALE_TEXT          = 'bigcommerce_sale_text_color';
-	const AVAILABILITY_COLOR = 'bigcommerce_availability_color';
-	const CONDITION_COLOR    = 'bigcommerce_condition_color';
-	const CONDITION_TEXT     = 'bigcommerce_condition_text_color';
-	const BANNER_COLOR       = 'bigcommerce_banner_color';
-	const BANNER_TEXT        = 'bigcommerce_banner_text_color';
+    /**
+     * Default blue color for BigCommerce.
+     * 
+     * @var string
+     */
+    const COLOR_BC_BLUE = '#5273f4';
 
-	/**
-	 * @param \WP_Customize_Manager $wp_customize
-	 *
-	 * @return void
-	 */
+    /**
+     * Default green color for success or positive indicators.
+     * 
+     * @var string
+     */
+    const COLOR_BC_GREEN = '#65c68c';
+
+    /**
+     * Light grey color for neutral elements.
+     * 
+     * @var string
+     */
+    const COLOR_BC_LIGHT_GREY = '#e0e3e9';
+
+    /**
+     * Black color for text or dark themes.
+     * 
+     * @var string
+     */
+    const COLOR_BC_BLACK = '#34313f';
+
+    /**
+     * Grey color for banners or muted elements.
+     * 
+     * @var string
+     */
+    const COLOR_BANNER_GREY = '#757575';
+
+    /**
+     * White color for backgrounds or light themes.
+     * 
+     * @var string
+     */
+    const COLOR_WHITE = '#ffffff';
+
+    /**
+     * Dark text option for contrast with light backgrounds.
+     * 
+     * @var string
+     */
+    const TEXT_DARK = 'dark';
+
+    /**
+     * Light text option for contrast with dark backgrounds.
+     * 
+     * @var string
+     */
+    const TEXT_LIGHT = 'light';
+
+    /**
+     * Setting for the button background color.
+     * 
+     * @var string
+     */
+    const BUTTON_COLOR = 'bigcommerce_button_color';
+
+    /**
+     * Setting for the button text color.
+     * 
+     * @var string
+     */
+    const BUTTON_TEXT = 'bigcommerce_button_text_color';
+
+    /**
+     * Setting for the sale price color.
+     * 
+     * @var string
+     */
+    const SALE_COLOR = 'bigcommerce_sale_color';
+
+    /**
+     * Setting for the sale icon text color.
+     * 
+     * @var string
+     */
+    const SALE_TEXT = 'bigcommerce_sale_text_color';
+
+    /**
+     * Setting for the product availability color.
+     * 
+     * @var string
+     */
+    const AVAILABILITY_COLOR = 'bigcommerce_availability_color';
+
+    /**
+     * Setting for the product condition color.
+     * 
+     * @var string
+     */
+    const CONDITION_COLOR = 'bigcommerce_condition_color';
+
+    /**
+     * Setting for the product condition text color.
+     * 
+     * @var string
+     */
+    const CONDITION_TEXT = 'bigcommerce_condition_text_color';
+
+    /**
+     * Setting for the banner background color.
+     * 
+     * @var string
+     */
+    const BANNER_COLOR = 'bigcommerce_banner_color';
+
+    /**
+     * Setting for the banner text color.
+     * 
+     * @var string
+     */
+    const BANNER_TEXT = 'bigcommerce_banner_text_color';
+
+    /**
+     * Registers the Colors section and related settings in the WordPress Customizer.
+     *
+     * @param \WP_Customize_Manager $wp_customize Instance of the WordPress Customizer.
+     *
+     * @return void
+     */
 	public function register( $wp_customize ) {
 		$wp_customize->add_section( new \WP_Customize_Section( $wp_customize, self::NAME, [
 			'title' => __( 'Colors & Theme', 'bigcommerce' ),

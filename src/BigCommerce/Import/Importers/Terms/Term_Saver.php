@@ -7,20 +7,48 @@ use BigCommerce\Import\Import_Strategy;
 use BigCommerce\Import\Image_Importer;
 use BigCommerce\Import\Processors\Category_Import;
 
+/**
+ * Provides functionality for saving terms into WordPress, including term data, term metadata,
+ * and term images. This class implements the Import_Strategy interface, allowing it to be used
+ * within an import process. It contains methods for handling terms in BigCommerce and saving them
+ * in WordPress.
+ */
 abstract class Term_Saver implements Import_Strategy {
 
-	const DATA_HASH_META_KEY        = 'bigcommerce_data_hash';
+	/**
+	 * Constant for the term data hash meta key.
+	 */
+	const DATA_HASH_META_KEY = 'bigcommerce_data_hash';
+
+	/**
+	 * Constant for the importer version meta key.
+	 */
 	const IMPORTER_VERSION_META_KEY = 'bigcommerce_importer_version';
 
-	/** @var \ArrayAccess */
+	/**
+	 * @var \ArrayAccess The BigCommerce term data.
+	 */
 	protected $bc_term;
 
-	/** @var string */
+	/**
+	 * @var string The taxonomy the term belongs to.
+	 */
 	protected $taxonomy;
 
-	/** @var int */
+	/**
+	 * @var int The term ID in WordPress.
+	 */
 	protected $term_id;
 
+	/**
+	 * Term_Saver constructor.
+	 *
+	 * Initializes the Term_Saver with the provided BigCommerce term, taxonomy, and optional term ID.
+	 *
+	 * @param \ArrayAccess $bc_term The BigCommerce term data.
+	 * @param string       $taxonomy The taxonomy the term belongs to.
+	 * @param int          $term_id  The term ID in WordPress (default is 0).
+	 */
 	public function __construct( \ArrayAccess $bc_term, $taxonomy, $term_id = 0 ) {
 		$this->bc_term  = $bc_term;
 		$this->taxonomy = $taxonomy;
@@ -28,9 +56,9 @@ abstract class Term_Saver implements Import_Strategy {
 	}
 
 	/**
-	 * Import the Term into WordPress
+	 * Imports the term into WordPress, saving term data, term metadata, and images.
 	 *
-	 * @return int The imported term ID
+	 * @return int The imported term ID.
 	 */
 	public function do_import() {
 		$this->term_id = $this->save_wp_term( $this->bc_term );
@@ -43,6 +71,13 @@ abstract class Term_Saver implements Import_Strategy {
 		return $this->term_id;
 	}
 
+	/**
+	 * Returns the BigCommerce ID of the term.
+	 *
+	 * @param \ArrayAccess $bc_term The BigCommerce term data.
+	 * 
+	 * @return int|null The BigCommerce ID or category ID.
+	 */
 	public function get_term_bc_id( \ArrayAccess $bc_term ) {
 		if ( ! empty( $bc_term['id'] ) ) {
 			return $bc_term['id'];
@@ -54,28 +89,39 @@ abstract class Term_Saver implements Import_Strategy {
 		return null;
 	}
 
+	/**
+	 * Saves the term in WordPress.
+	 *
+	 * @param \ArrayAccess $bc_term The BigCommerce term data.
+	 *
+	 * @return int The ID of the created or updated term.
+	 */
 	abstract protected function save_wp_term( \ArrayAccess $bc_term );
 
+	/**
+	 * Saves the term metadata in WordPress.
+	 *
+	 * @param \ArrayAccess $bc_term The BigCommerce term data.
+	 */
 	abstract protected function save_wp_termmeta( \ArrayAccess $bc_term );
 
 	/**
-	 * Get the name of the term
+	 * Returns the name of the term, sanitized for WordPress.
 	 *
-	 * @param \ArrayAccess $bc_term
+	 * @param \ArrayAccess $bc_term The BigCommerce term data.
 	 *
-	 * @return string
+	 * @return string The sanitized term name.
 	 */
 	protected function term_name( \ArrayAccess $bc_term ) {
 		return $this->sanitize_string( $bc_term['name'] );
 	}
 
 	/**
-	 * Get the slug for the term. This is derived from the
-	 * `custom_url` property of the term if present.
+	 * Returns the slug for the term, either from the custom URL or generated from the name.
 	 *
-	 * @param \ArrayAccess $bc_term
+	 * @param \ArrayAccess $bc_term The BigCommerce term data.
 	 *
-	 * @return string
+	 * @return string The term slug.
 	 */
 	protected function term_slug( \ArrayAccess $bc_term ) {
 		$custom_url = $bc_term['custom_url'] ?: [ 'url' => '', 'is_customized' => false ];
@@ -106,6 +152,13 @@ abstract class Term_Saver implements Import_Strategy {
 		return $slug;
 	}
 
+	/**
+	 * Sanitizes an integer value.
+	 *
+	 * @param mixed $value The value to sanitize.
+	 *
+	 * @return int The sanitized integer value.
+	 */
 	protected function sanitize_int( $value ) {
 		if ( is_scalar( $value ) ) {
 			return (int) $value;
@@ -114,6 +167,13 @@ abstract class Term_Saver implements Import_Strategy {
 		return 0;
 	}
 
+	/**
+	 * Sanitizes a string value.
+	 *
+	 * @param mixed $value The value to sanitize.
+	 *
+	 * @return string The sanitized string value.
+	 */
 	protected function sanitize_string( $value ) {
 		if ( is_scalar( $value ) ) {
 			return (string) $value;
@@ -123,9 +183,11 @@ abstract class Term_Saver implements Import_Strategy {
 	}
 
 	/**
-	 * @param \ArrayAccess $bc_term
+	 * Returns the arguments for the term, including the slug, description, and parent ID.
 	 *
-	 * @return array
+	 * @param \ArrayAccess $bc_term The BigCommerce term data.
+	 *
+	 * @return array The arguments for the term.
 	 */
 	protected function get_term_args( \ArrayAccess $bc_term ) {
 		// Wp uses wp_filter_kses to sanitize html from the term description
@@ -138,11 +200,11 @@ abstract class Term_Saver implements Import_Strategy {
 	}
 
 	/**
-	 * Find a previously imported term that should be set as the parent term
+	 * Determines the parent term ID for the given BigCommerce term.
 	 *
-	 * @param \ArrayAccess $bc_term
+	 * @param \ArrayAccess $bc_term The BigCommerce term data.
 	 *
-	 * @return int
+	 * @return int The parent term ID.
 	 */
 	protected function determine_parent_term_id( \ArrayAccess $bc_term ) {
 		$bc_id = isset( $bc_term['parent_id'] ) ? $this->sanitize_int( $bc_term['parent_id'] ) : 0;
@@ -165,6 +227,15 @@ abstract class Term_Saver implements Import_Strategy {
 		if ( ! empty( $terms ) ) {
 			return (int) reset( $terms )->term_id;
 		} else {
+			/**
+			 * Filter category data before importing.
+			 *
+			 * This filter modifies the category data based on the BigCommerce category ID.
+			 *
+			 * @param array $data The original category data.
+			 * @param int   $bc_category_id The BigCommerce category ID.
+			 * @param array $data The filtered category data after applying the filter.
+			 */
 			$parent_term = apply_filters( 'bigcommerce/import/term/data', false, $bc_id );
 
 			if ( ! empty( $parent_term ) ) {
@@ -180,6 +251,11 @@ abstract class Term_Saver implements Import_Strategy {
 		return 0;
 	}
 
+	/**
+	 * Imports the image for the term, either by finding an existing image or importing a new one.
+	 *
+	 * @param \ArrayAccess $bc_term The BigCommerce term data.
+	 */
 	protected function import_image( \ArrayAccess $bc_term ) {
 		$image_url = $bc_term[ 'image_url' ];
 
@@ -210,6 +286,13 @@ abstract class Term_Saver implements Import_Strategy {
 		}
 	}
 
+	/**
+	 * Calculates a hash for the given term data.
+	 *
+	 * @param \ArrayAccess $bc_term The BigCommerce term data.
+	 *
+	 * @return string The calculated hash.
+	 */
 	public static function hash( $bc_term ) {
 		return md5( $bc_term );
 	}

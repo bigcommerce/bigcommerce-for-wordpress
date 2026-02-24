@@ -3,16 +3,25 @@
 
 namespace BigCommerce\Api;
 
-
+/**
+ * Provides methods for interacting with the Payments API in BigCommerce.
+ * Includes functionality to retrieve payment methods and count them with optional filters.
+ *
+ * @package BigCommerce\Api
+ * @extends v2ApiAdapter
+ */
 class Payments_Api extends v2ApiAdapter {
 
 	/**
-	 * A temporary workaround because the API does not return a consistent
-	 * data type for the /payments/methods endpoint
+	 * Retrieve the count of available payment methods.
 	 *
-	 * @param bool $include_test_mode
+	 * This method counts payment methods returned from the `/payments/methods` endpoint.
+	 * It includes a workaround for inconsistent data types in the API response.
 	 *
-	 * @return bool
+	 * @param bool $include_test_mode Whether to include methods in test mode in the count.
+	 *                                Defaults to `false`, which excludes test mode methods.
+	 *
+	 * @return int|bool The number of payment methods, or `false` if the API response is empty or invalid.
 	 */
 	public function get_payment_methods_count( $include_test_mode = false ) {
 		$connection = $this->getConnection();
@@ -34,6 +43,13 @@ class Payments_Api extends v2ApiAdapter {
 		return count( $response );
 	}
 
+	/**
+	 * Retrieve all available payment methods.
+	 *
+	 * This method fetches the collection of payment methods from the `/payments/methods` endpoint.
+	 *
+	 * @return array An array of payment method resources.
+	 */
 	public function get_payment_methods() {
 		return $this->getCollection( '/payments/methods' );
 	}

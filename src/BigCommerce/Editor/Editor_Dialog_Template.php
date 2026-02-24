@@ -13,23 +13,34 @@ use BigCommerce\Taxonomies\Channel\Connections;
 use BigCommerce\Taxonomies\Flag\Flag;
 use BigCommerce\Taxonomies\Product_Category\Product_Category;
 
+/**
+ * A class that handles rendering the editor dialog template with product filtering options.
+ */
 class Editor_Dialog_Template {
 
 	/** @var string Path to the templates/public directory */
 	private $template_dir;
 
+	/** @var bool Flag to prevent rendering the dialog multiple times */
 	private $rendered = false;
 
+	/**
+	 * Editor_Dialog_Template constructor.
+	 *
+	 * @param string $template_dir Path to the templates/public directory.
+	 */
 	public function __construct( $template_dir ) {
 		$this->template_dir = trailingslashit( $template_dir );
 	}
 
 	/**
-	 * @param array                $config
-	 * @param Products_Controller  $products_controller
-	 * @param Shortcode_Controller $shortcode_controller
+	 * Modify the configuration for the editor dialog.
 	 *
-	 * @return array
+	 * @param array                $config Configuration array.
+	 * @param Products_Controller  $products_controller The products controller instance.
+	 * @param Shortcode_Controller $shortcode_controller The shortcode controller instance.
+	 *
+	 * @return array Modified configuration.
 	 * @filter bigcommerce/admin/js_config
 	 */
 	public function js_config( $config, Products_Controller $products_controller, Shortcode_Controller $shortcode_controller ) {
@@ -42,11 +53,12 @@ class Editor_Dialog_Template {
 	}
 
 	/**
-	 * Wrap the dialog template rendering so that it only occurs once.
-	 * Gutenberg will load it earlier if it's enabled. We don't want
-	 * a duplicated in the footer.
+	 * Renders the editor dialog template only once to avoid duplication.
+	 * 
+	 * Gutenberg will load it earlier if enabled. We want to ensure it doesn't 
+	 * get duplicated in the footer.
 	 *
-	 * @return string
+	 * @return string Rendered dialog HTML.
 	 * @action admin_print_footer_scripts
 	 * @action enqueue_block_editor_assets
 	 */
@@ -59,6 +71,11 @@ class Editor_Dialog_Template {
 		return $this->render_dialog();
 	}
 
+	/**
+	 * Renders the full dialog content.
+	 *
+	 * @return string Rendered dialog HTML.
+	 */
 	public function render_dialog() {
 		return $this->render_template( 'admin-dialog.php', [
 			'query_builder_sidebar'  => $this->query_builder(),

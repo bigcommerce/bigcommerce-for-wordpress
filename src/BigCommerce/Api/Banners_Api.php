@@ -6,13 +6,35 @@ namespace BigCommerce\Api;
 /**
  * Class Banners_Api
  *
- * Get banners data from banners v2 api collection
+ * Retrieves banner data from the Banners v2 API collection. This class allows you 
+ * to fetch banners and their associated details, such as name, content, location, 
+ * and visibility.
  *
  * @package BigCommerce\Api
  */
 class Banners_Api extends v2ApiAdapter {
 
-	public function get_banners() {
+    /**
+     * Fetches a list of banners from the Banners v2 API.
+     *
+     * This method retrieves the banners collection from the API and maps each banner 
+     * to a simplified array format containing its relevant data such as ID, name, content, 
+     * item ID, location, creation date, visibility, and more.
+     *
+     * @return array Returns an array of banners with the following keys:
+     *               - 'id' (int)
+     *               - 'name' (string)
+     *               - 'content' (string)
+     *               - 'page' (string)
+     *               - 'item_id' (int)
+     *               - 'location' (string)
+     *               - 'date_created' (int)
+     *               - 'date_type' (string)
+     *               - 'date_from' (int)
+     *               - 'date_to' (int)
+     *               - 'visible' (bool)
+     */
+    public function get_banners() {
         return array_map( function ( $banner ) {
             return [
                 'id'           => (int) $banner->id,
@@ -29,6 +51,5 @@ class Banners_Api extends v2ApiAdapter {
             ];
 
         }, $this->getCollection( '/banners' ) ?: [] );
-	}
-
+    }
 }

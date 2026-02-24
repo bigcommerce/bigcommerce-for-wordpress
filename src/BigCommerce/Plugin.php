@@ -126,7 +126,7 @@ class Plugin {
 		/**
 		 * Filters the credentials set
 		 *
-		 * @param boolean false
+		 * @param boolean $set false
 		 */
 		return apply_filters( 'bigcommerce/plugin/credentials_set', false );
 	}

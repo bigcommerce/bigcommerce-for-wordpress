@@ -9,13 +9,35 @@ use BigCommerce\Pages\Wishlist_Page;
 use BigCommerce\Post_Types\Product\Product;
 
 /**
- * Class Remove_Item
+ * Handles the logic for removing an item from a customer's wishlist.
  *
- * Handle item removing request for wishlist
+ * This class processes the request to remove a specific product from a wishlist. 
+ * It ensures that the provided wishlist and product IDs are valid, removes the item from the wishlist, 
+ * and returns a success or error message accordingly.
+ *
+ * @package BigCommerce\Accounts\Wishlists\Actions
  */
 class Remove_Item extends Wishlist_Action {
+	/**
+	 * The action identifier for removing an item from a wishlist.
+	 *
+	 * This constant is used to identify the specific action for removing an item from the wishlist.
+	 *
+	 * @var string
+	 */
 	const ACTION = 'remove-item';
 
+    /**
+     * Handles the request to remove a product from a specific wishlist.
+     *
+     * This method validates the request, retrieves the wishlist and product details, 
+     * and removes the product from the wishlist if it exists. A success or failure message is returned 
+     * based on the result of the operation.
+     *
+     * @param array $args The arguments from the request.
+     * 
+     * @return void
+     */
 	public function handle_request( $args ) {
 		$redirect = get_the_permalink( get_option( Wishlist_Page::NAME, 0 ) );
 		try {
@@ -46,19 +68,41 @@ class Remove_Item extends Wishlist_Action {
 				$message = __( 'Item removed from Wish List', 'bigcommerce' );
 			}
 
+			/**
+			 * Trigger success message after removing item from wishlist.
+			 *
+			 * @param string $message Success message to display
+			 * @param array $submission The submitted form data
+			 * @param string $redirect The URL to redirect to
+			 * @param array $data Additional data
+			 */
 			do_action( 'bigcommerce/form/success', $message, $submission, $redirect, [] );
 		} catch ( \Exception $e ) {
+			/**
+			 * Trigger error message if removing item from wishlist fails.
+			 *
+			 * @param \WP_Error $error The error object
+			 * @param array $submission The submitted form data
+			 * @param string $redirect The URL to redirect to
+			 * @param array $data Additional data
+			 */
 			do_action( 'bigcommerce/form/error', new \WP_Error( $e->getCode(), $e->getMessage() ), $_POST, $redirect, [] );
 		}
 	}
 
     /**
-     * Sanitize and validate request
+     * Sanitizes and validates the request to remove an item from a wishlist.
      *
-     * @param array $args
-     * @param array $submission
+     * This method ensures the wishlist ID and product ID are valid, sanitizes the request data, 
+     * and verifies the nonce to prevent unauthorized requests. It returns the validated data or throws 
+     * an exception if the data is invalid.
      *
-     * @return array
+     * @param array $args The arguments from the request.
+     * @param array $submission The request data to be validated.
+     * 
+     * @return array The sanitized and validated request data.
+     * 
+     * @throws \InvalidArgumentException If the wishlist ID or product ID is invalid, or if the nonce is incorrect.
      */
 	protected function sanitize_request( array $args, array $submission ) {
 		$wishlist_id = reset( $args );

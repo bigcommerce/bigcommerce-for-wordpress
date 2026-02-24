@@ -3,155 +3,216 @@
 
 namespace BigCommerce\CLI\Resources;
 
+/**
+ * Class Resource
+ *
+ * Represents a resource with various properties such as URL, name, description, thumbnails, categories, and external status.
+ * Implements the JsonSerializable interface to allow conversion to JSON.
+ *
+ * @package BigCommerce\CLI\Resources
+ */
 class Resource implements \JsonSerializable {
-	private $url             = '';
-	private $name            = '';
-	private $description     = '';
-	private $thumbnail       = '';
-	private $hires_thumbnail = '';
-	private $external        = true;
-	private $categories      = [];
+    
+    /**
+     * @var string URL of the resource.
+     */
+    private $url = '';
 
-	/**
-	 * @return string
-	 */
-	public function get_url() {
-		return $this->url;
-	}
+    /**
+     * @var string Name of the resource.
+     */
+    private $name = '';
 
-	/**
-	 * @param string $url
-	 *
-	 * @return Resource
-	 */
-	public function set_url( $url ) {
-		$this->url = $url;
+    /**
+     * @var string Description of the resource.
+     */
+    private $description = '';
 
-		return $this;
-	}
+    /**
+     * @var string Thumbnail image URL of the resource.
+     */
+    private $thumbnail = '';
 
-	/**
-	 * @return string
-	 */
-	public function get_name() {
-		return $this->name;
-	}
+    /**
+     * @var string High-resolution thumbnail image URL of the resource.
+     */
+    private $hires_thumbnail = '';
 
-	/**
-	 * @param string $name
-	 *
-	 * @return Resource
-	 */
-	public function set_name( $name ) {
-		$this->name = $name;
+    /**
+     * @var bool Whether the resource is external or not.
+     */
+    private $external = true;
 
-		return $this;
-	}
+    /**
+     * @var string[] List of categories associated with the resource.
+     */
+    private $categories = [];
 
-	/**
-	 * @return string
-	 */
-	public function get_description() {
-		return $this->description;
-	}
+    /**
+     * Get the URL of the resource.
+     *
+     * @return string The URL of the resource.
+     */
+    public function get_url() {
+        return $this->url;
+    }
 
-	/**
-	 * @param string $description
-	 *
-	 * @return Resource
-	 */
-	public function set_description( $description ) {
-		$this->description = $description;
+    /**
+     * Set the URL of the resource.
+     *
+     * @param string $url The URL of the resource.
+     * @return Resource The current instance of the resource.
+     */
+    public function set_url( $url ) {
+        $this->url = $url;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function get_thumbnail() {
-		return $this->thumbnail;
-	}
+    /**
+     * Get the name of the resource.
+     *
+     * @return string The name of the resource.
+     */
+    public function get_name() {
+        return $this->name;
+    }
 
-	/**
-	 * @param string $thumbnail
-	 *
-	 * @return Resource
-	 */
-	public function set_thumbnail( $thumbnail ) {
-		$this->thumbnail = $thumbnail;
+    /**
+     * Set the name of the resource.
+     *
+     * @param string $name The name of the resource.
+     * @return Resource The current instance of the resource.
+     */
+    public function set_name( $name ) {
+        $this->name = $name;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function get_hires_thumbnail() {
-		return $this->hires_thumbnail;
-	}
+    /**
+     * Get the description of the resource.
+     *
+     * @return string The description of the resource.
+     */
+    public function get_description() {
+        return $this->description;
+    }
 
-	/**
-	 * @param string $hires_thumbnail
-	 *
-	 * @return Resource
-	 */
-	public function set_hires_thumbnail( $hires_thumbnail ) {
-		$this->hires_thumbnail = $hires_thumbnail;
+    /**
+     * Set the description of the resource.
+     *
+     * @param string $description The description of the resource.
+     * @return Resource The current instance of the resource.
+     */
+    public function set_description( $description ) {
+        $this->description = $description;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * @return bool
-	 */
-	public function get_external() {
-		return $this->external;
-	}
+    /**
+     * Get the thumbnail URL of the resource.
+     *
+     * @return string The thumbnail URL of the resource.
+     */
+    public function get_thumbnail() {
+        return $this->thumbnail;
+    }
 
-	/**
-	 * @param bool $external
-	 *
-	 * @return Resource
-	 */
-	public function set_external( $external ) {
-		$this->external = $external;
+    /**
+     * Set the thumbnail URL of the resource.
+     *
+     * @param string $thumbnail The thumbnail URL of the resource.
+     * @return Resource The current instance of the resource.
+     */
+    public function set_thumbnail( $thumbnail ) {
+        $this->thumbnail = $thumbnail;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * @return array
-	 */
-	public function get_categories() {
-		return $this->categories;
-	}
+    /**
+     * Get the high-resolution thumbnail URL of the resource.
+     *
+     * @return string The high-resolution thumbnail URL of the resource.
+     */
+    public function get_hires_thumbnail() {
+        return $this->hires_thumbnail;
+    }
 
-	/**
-	 * @param string[] $categories
-	 *
-	 * @return Resource
-	 */
-	public function set_categories( array $categories ) {
-		$this->categories = $categories;
+    /**
+     * Set the high-resolution thumbnail URL of the resource.
+     *
+     * @param string $hires_thumbnail The high-resolution thumbnail URL of the resource.
+     * @return Resource The current instance of the resource.
+     */
+    public function set_hires_thumbnail( $hires_thumbnail ) {
+        $this->hires_thumbnail = $hires_thumbnail;
 
-		return $this;
-	}
+        return $this;
+    }
 
+    /**
+     * Get the external status of the resource.
+     *
+     * @return bool Whether the resource is external or not.
+     */
+    public function get_external() {
+        return $this->external;
+    }
 
-	public function jsonSerialize() {
-		return [
-			'name'        => $this->get_name(),
-			'description' => $this->get_description(),
-			'thumbnail'   => [
-				'small' => $this->get_thumbnail(),
-				'large' => $this->get_hires_thumbnail(),
-			],
-			'url'         => $this->get_url(),
-			'categories'  => $this->get_categories(),
-			'isExternal'  => (bool) $this->get_external(),
-		];
-	}
+    /**
+     * Set the external status of the resource.
+     *
+     * @param bool $external Whether the resource is external or not.
+     * @return Resource The current instance of the resource.
+     */
+    public function set_external( $external ) {
+        $this->external = $external;
+
+        return $this;
+    }
+
+    /**
+     * Get the categories associated with the resource.
+     *
+     * @return string[] The list of categories associated with the resource.
+     */
+    public function get_categories() {
+        return $this->categories;
+    }
+
+    /**
+     * Set the categories associated with the resource.
+     *
+     * @param string[] $categories The list of categories to associate with the resource.
+     * @return Resource The current instance of the resource.
+     */
+    public function set_categories( array $categories ) {
+        $this->categories = $categories;
+
+        return $this;
+    }
+
+    /**
+     * Specify data to be serialized to JSON.
+     *
+     * @return array Data representing the object for JSON encoding.
+     */
+    public function jsonSerialize() {
+        return [
+            'name'        => $this->get_name(),
+            'description' => $this->get_description(),
+            'thumbnail'   => [
+                'small' => $this->get_thumbnail(),
+                'large' => $this->get_hires_thumbnail(),
+            ],
+            'url'         => $this->get_url(),
+            'categories'  => $this->get_categories(),
+            'isExternal'  => (bool) $this->get_external(),
+        ];
+    }
 
 
 }

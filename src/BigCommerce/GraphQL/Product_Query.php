@@ -3,12 +3,20 @@
 namespace BigCommerce\GraphQL;
 
 /**
- * @class Product_Query
- *
- * Handle product query data and fragments
+ * Handle product query data and fragments.
+ * 
+ * This class provides methods to fetch paginated product data, individual product details, and various product-related information
+ * through fragments and query construction.
  */
 class Product_Query {
 
+	/**
+	 * Get paginated products query.
+	 *
+	 * This method constructs a GraphQL query to retrieve a paginated list of products.
+	 *
+	 * @return string The GraphQL query string for paginated products.
+	 */
 	public function get_paginated_products_query() {
 		return 'query paginateProducts(
 			$pageSize: Int!
@@ -43,6 +51,13 @@ class Product_Query {
 		}';
 	}
 
+	/**
+	 * Get full paginated product request query with locale.
+	 *
+	 * This method constructs a GraphQL query to retrieve a paginated list of products, including locale information.
+	 *
+	 * @return string The full GraphQL query string for paginated products with locale.
+	 */
 	public function get_product_paginated_request_full() {
 		return 'query paginateProducts(
 			$pageSize: Int!
@@ -67,6 +82,13 @@ class Product_Query {
 		}' . $this->get_product_info_fragment();
 	}
 
+	/**
+	 * Get product query for a specific product by path.
+	 *
+	 * This method constructs a GraphQL query to retrieve a single product based on its path.
+	 *
+	 * @return string The GraphQL query string for fetching a specific product by path.
+	 */
 	public function get_product_query() {
 		return 'query getProduct(
 			$hasLocale: Boolean = false
@@ -82,6 +104,13 @@ class Product_Query {
 		}' . $this->get_product_info_fragment();
 	}
 
+	/**
+	 * Get the product fragment used in queries.
+	 *
+	 * This method provides a fragment that defines the structure of a product object in GraphQL queries.
+	 *
+	 * @return string The GraphQL fragment for product details.
+	 */
 	public function get_product_fragment() {
 		return '__typename
 	      ... on Product {
@@ -124,9 +153,11 @@ class Product_Query {
 	}
 
 	/**
-	 * Return product info query fragment
+	 * Return product info query fragment.
 	 *
-	 * @return string
+	 * This method returns the GraphQL fragment that includes product information like name, SKU, and pricing.
+	 *
+	 * @return string The GraphQL fragment for product info.
 	 */
 	public function get_product_info_fragment(): string {
 		return 'fragment productInfo on Product {
@@ -336,6 +367,13 @@ class Product_Query {
         ' . $this->get_checkbox_option_fragment();
 	}
 
+	/**
+	 * Get product prices fragment.
+	 *
+	 * This method returns a fragment that defines the pricing structure for products in GraphQL queries.
+	 *
+	 * @return string The GraphQL fragment for product prices.
+	 */
 	public function get_product_prices_fragment(): string {
 		return 'fragment productPrices on Prices {
 		    price {
@@ -357,6 +395,13 @@ class Product_Query {
 		}';
 	}
 
+	/**
+	 * Get multiple choice options fragment.
+	 *
+	 * This method returns a fragment defining multiple choice options available for the product in GraphQL queries.
+	 *
+	 * @return string The GraphQL fragment for multiple choice options.
+	 */
 	public function get_multiple_choice_options_fragment(): string {
 		return 'fragment multipleChoiceOption on MultipleChoiceOption {
 			values {
@@ -375,6 +420,13 @@ class Product_Query {
 		' . $this->get_product_picklist_fragment();
 	}
 
+	/**
+	 * Get swatch options fragment.
+	 *
+	 * This method returns a fragment that defines the swatch options available for the product.
+	 *
+	 * @return string The GraphQL fragment for swatch options.
+	 */
 	public function get_swatch_options_fragment(): string {
 		return 'fragment swatchOption on SwatchOptionValue {
 			isDefault
@@ -382,15 +434,29 @@ class Product_Query {
 		}';
 	}
 
+	/**
+	 * Get product picklist fragment.
+	 *
+	 * This method returns a fragment that defines the product picklist options available for the product.
+	 *
+	 * @return string The GraphQL fragment for product picklist options.
+	 */
 	public function get_product_picklist_fragment(): string {
 		return 'fragment productPickListOption on ProductPickListOptionValue {
 	        productId
-	    }';
+		}';
 	}
 
+	/**
+	 * Get checkbox option fragment.
+	 *
+	 * This method returns a fragment that defines the checkbox options available for the product.
+	 *
+	 * @return string The GraphQL fragment for checkbox options.
+	 */
 	public function get_checkbox_option_fragment(): string {
 		return 'fragment checkboxOption on CheckboxOption {
-		    checkedByDefault
+			checkedByDefault
 		}';
 	}
 

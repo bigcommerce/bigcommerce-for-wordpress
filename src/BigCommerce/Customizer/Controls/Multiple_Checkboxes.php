@@ -6,11 +6,24 @@ namespace BigCommerce\Customizer\Controls;
 /**
  * Class Multiple_Checkboxes
  *
- * A customizer control that renders as a list of checkboxes
+ * A customizer control that renders as a list of checkboxes.
  */
 class Multiple_Checkboxes extends \WP_Customize_Control {
-	public $type = 'checkbox-multiple';
+    /**
+     * The control type.
+     *
+     * @var string
+     */
+    public $type = 'checkbox-multiple';
 
+    /**
+     * Render the content of the control.
+     *
+     * Outputs the label, description, and checkboxes for the control along with a hidden field 
+     * to store the selected values for the Customizer API.
+     *
+     * @return void
+     */
 	public function render_content() {
 		if ( empty( $this->choices ) ) {
 			return;

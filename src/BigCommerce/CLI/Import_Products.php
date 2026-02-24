@@ -1,8 +1,6 @@
 <?php
 
-
 namespace BigCommerce\CLI;
-
 
 use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Import\Runner\CLI_Runner;
@@ -10,16 +8,17 @@ use BigCommerce\Import\Runner\Lock;
 use BigCommerce\Import\Import_Type;
 
 /**
- * Class Import_Products
+ * Handles the import process for products from BigCommerce.
  *
- * Register import products command
+ * This class defines a WP-CLI command to import products from a connected BigCommerce store. It provides functionality for full or partial imports, the option to force a refresh of products, and hooks for tracking the progress of the import. Additionally, it manages logging for the import process and allows for managing product data through various stages of the import.
  *
- * @package BigCommerce\CLI
+ * @package BigCommerce
+ * @subpackage CLI
  */
 class Import_Products extends Command {
     /**
      * Declare command name
-     * @return string
+     * @return string The command name for importing products.
      */
 	protected function command() {
 		return 'import products';
@@ -28,7 +27,7 @@ class Import_Products extends Command {
     /**
      * Add a command description
      *
-     * @return string|void
+     * @return string|void A description of the import products command.
      */
 	protected function description() {
 		return __( 'Imports products from the connected BigCommerce store', 'bigcommerce' );
@@ -37,7 +36,7 @@ class Import_Products extends Command {
     /**
      * Declare command arguments
      *
-     * @return array[]
+     * @return array[] Command arguments for the import products command.
      */
 	protected function arguments() {
 		return [
@@ -59,8 +58,11 @@ class Import_Products extends Command {
 	}
 
     /**
-     * @param $args
-     * @param $assoc_args
+     * Execute the import process.
+     *
+     * @param array $args Arguments passed to the command.
+     * @param array $assoc_args Associated arguments, such as flags.
+     * @return void
      */
 	public function run( $args, $assoc_args ) {
 

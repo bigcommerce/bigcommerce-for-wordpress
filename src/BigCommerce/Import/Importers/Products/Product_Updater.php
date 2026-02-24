@@ -6,8 +6,20 @@ use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Api\v3\Model;
 use BigCommerce\Import\Importers\Products\Product_Builder;
 
+/**
+ * Handles updating of products during the import process. It extends the Product_Saver class and overrides 
+ * the send_notifications method to send notifications when a product is updated.
+ */
 class Product_Updater extends Product_Saver {
 
+	/**
+	 * Sends notifications after a product has been updated.
+	 *
+	 * This method triggers a WordPress action to notify other parts of the system that a product has been updated 
+	 * by the import process. It then calls the parent class's send_notifications method.
+	 *
+	 * @return void
+	 */
 	protected function send_notifications() {
 		/**
 		 * A product has been updated by the import process

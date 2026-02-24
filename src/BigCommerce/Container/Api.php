@@ -16,25 +16,102 @@ use BigCommerce\Settings\Sections\Api_Credentials;
 use Pimple\Container;
 
 /**
- * Class API
+ * Manages the registration and configuration of the BigCommerce API client and related services.
+ * Registers various services such as API client, cache handler, and configuration.
  *
  * @package BigCommerce\Container
  */
 class Api extends Provider {
-	const API_VALID          = 'api.configuration.valid';
-	const API_CONFIG_RENEWAL = 'api.configuration.config';
-	const CONFIG_COMPLETE    = 'api.configuration.complete';
+	/**
+	 * Constant representing the valid API configuration state.
+	 *
+	 * @var string
+	 */
+	const API_VALID = 'api.configuration.valid';
 
+	/**
+	 * Constant representing the API configuration renewal service.
+	 *
+	 * @var string
+	 */
+	const API_CONFIG_RENEWAL = 'api.configuration.config';
+
+	/**
+	 * Constant representing the completion state of the API configuration.
+	 *
+	 * @var string
+	 */
+	const CONFIG_COMPLETE = 'api.configuration.complete';
+
+	/**
+	 * Constant representing the cache handler service.
+	 *
+	 * @var string
+	 */
 	const CACHE_HANDLER = 'api.cache_handler';
-	const CLIENT        = 'api.client';
-	const CONFIG        = 'api.configuration';
-	const CLIENT_ID     = 'api.client_id';
+
+	/**
+	 * Constant representing the API client service.
+	 *
+	 * @var string
+	 */
+	const CLIENT = 'api.client';
+
+	/**
+	 * Constant representing the API configuration service.
+	 *
+	 * @var string
+	 */
+	const CONFIG = 'api.configuration';
+
+	/**
+	 * Constant representing the API client ID service.
+	 *
+	 * @var string
+	 */
+	const CLIENT_ID = 'api.client_id';
+
+	/**
+	 * Constant representing the API client secret service.
+	 *
+	 * @var string
+	 */
 	const CLIENT_SECRET = 'api.client_secret';
-	const ACCESS_TOKEN  = 'api.access_token';
-	const HOST          = 'api.host';
-	const FACTORY       = 'api.factory';
-	const TIMEOUT       = 'api.timeout';
-	const HEADERS       = 'api.headers';
+
+	/**
+	 * Constant representing the API access token service.
+	 *
+	 * @var string
+	 */
+	const ACCESS_TOKEN = 'api.access_token';
+
+	/**
+	 * Constant representing the API host service.
+	 *
+	 * @var string
+	 */
+	const HOST = 'api.host';
+
+	/**
+	 * Constant representing the API factory service.
+	 *
+	 * @var string
+	 */
+	const FACTORY = 'api.factory';
+
+	/**
+	 * Constant representing the API timeout configuration.
+	 *
+	 * @var string
+	 */
+	const TIMEOUT = 'api.timeout';
+
+	/**
+	 * Constant representing the API request headers service.
+	 *
+	 * @var string
+	 */
+	const HEADERS = 'api.headers';
 
     /**
      * Register api client container

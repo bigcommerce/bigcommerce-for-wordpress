@@ -7,17 +7,34 @@ use BigCommerce\Api\v3\Model\WishlistRequest;
 use BigCommerce\Pages\Wishlist_Page;
 
 /**
- * Class Edit_Wishlist
+ * Handles the logic for editing a wishlist.
  *
- * Handle wishlist edit
+ * This class processes the request to update the details of an existing wishlist for a customer. 
+ * It validates the provided wishlist ID, updates the wishlist's name and public status, and redirects 
+ * the user to the updated wishlist. It also triggers success or error actions based on the operation result.
+ *
+ * @package BigCommerce\Accounts\Wishlists\Actions
  */
 class Edit_Wishlist extends Wishlist_Action {
+	/**
+	 * The action identifier for editing a wishlist.
+	 *
+	 * This constant is used to identify the specific action for editing a wishlist.
+	 *
+	 * @var string
+	 */
 	const ACTION = 'edit';
 
     /**
-     * Update single wishlist
+     * Handles the request to edit a specific wishlist.
      *
-     * @param $args
+     * This method validates the request, retrieves the wishlist using the provided ID, 
+     * updates the wishlist with the new details, and redirects the user to the updated wishlist.
+     * It triggers success or failure actions based on the outcome of the operation.
+     *
+     * @param array $args The arguments from the request.
+     * 
+     * @return void
      */
 	public function handle_request( $args ) {
 		$redirect = get_the_permalink( get_option( Wishlist_Page::NAME, 0 ) );
@@ -34,18 +51,41 @@ class Edit_Wishlist extends Wishlist_Action {
 			] );
 			$this->wishlists->updateWishlist( $submission['id'], $request );
 
+			/**
+			 * Trigger success message after updating wishlist.
+			 *
+			 * @param string $message Success message to display
+			 * @param array $submission The submitted form data
+			 * @param string $redirect The URL to redirect to
+			 * @param array $data Additional data
+			 */
 			do_action( 'bigcommerce/form/success', __( 'Wish List updated', 'bigcommerce' ), $submission, $redirect, [] );
 		} catch ( \Exception $e ) {
+			/**
+			 * Trigger error message if updating wishlist fails.
+			 *
+			 * @param \WP_Error $error The error object
+			 * @param array $submission The submitted form data
+			 * @param string $redirect The URL to redirect to
+			 * @param array $data Additional data
+			 */
 			do_action( 'bigcommerce/form/error', new \WP_Error( $e->getCode(), $e->getMessage() ), $_POST, $redirect, [] );
 		}
 	}
 
     /**
-     * Validate and cleanup request
-     * @param array $args
-     * @param array $submission
+     * Validates and sanitizes the request to edit a wishlist.
      *
-     * @return array
+     * This method processes the submission data, ensuring the wishlist ID is valid, sanitizing
+     * the request for security, and validating the provided wishlist name. It throws exceptions 
+     * for invalid or missing data and returns a sanitized array of the request data.
+     *
+     * @param array $args The arguments from the request.
+     * @param array $submission The submission data from the request.
+     * 
+     * @return array The sanitized request data, including the wishlist ID, name, and public status.
+     * 
+     * @throws \InvalidArgumentException If the request is missing required fields or contains invalid data.
      */
 	protected function sanitize_request( array $args, array $submission ) {
 		$wishlist_id = reset( $args );

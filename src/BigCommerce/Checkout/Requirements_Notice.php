@@ -9,29 +9,36 @@ use BigCommerce\Settings\Screens\Onboarding_Complete_Screen;
 use BigCommerce\Settings\Screens\Settings_Screen;
 
 /**
- * Class Requirements_Notice
- *
  * Shows a notice if the required configuration for checkout is not complete
  */
 class Requirements_Notice {
-	const REFRESH = 'bigcommerce_checkout_requirements_refresh';
+    /**
+     * Action for refreshing the checkout requirements status cache.
+	 * @var string
+     */
+    const REFRESH = 'bigcommerce_checkout_requirements_refresh';
 
-	/**
-	 * @var Setup_Status
-	 */
-	private $status;
+    /**
+     * @var Setup_Status Handles the setup status for the BigCommerce store.
+     */
+    private $status;
 
-	public function __construct( Setup_Status $status ) {
-		$this->status = $status;
-	}
+    /**
+     * Constructor to initialize the setup status.
+     *
+     * @param Setup_Status $status Instance of Setup_Status to manage the store's setup status.
+     */
+    public function __construct( Setup_Status $status ) {
+        $this->status = $status;
+    }
 
-	/**
-	 * Checks the BigCommerce API to verify that checkout requirements
-	 * have been met.
-	 *
-	 * @return void
-	 * @action admin_notices
-	 */
+    /**
+     * Checks the BigCommerce API to verify that checkout requirements
+     * have been met. Displays admin notices if requirements are not satisfied.
+     *
+     * @return void
+     * @action admin_notices
+     */
 	public function check_requirements() {
 		$status  = $this->status->get_current_status();
 		$notices = [];
@@ -101,12 +108,12 @@ class Requirements_Notice {
 		return admin_url( 'edit.php?post_type=' . Product::NAME . '&page=' . Settings_Screen::NAME );
 	}
 
-	/**
-	 * Admin post handler to refresh the checkout requirements status cache
-	 *
-	 * @return void
-	 * @action admin_post_ . self::REFRESH
-	 */
+    /**
+     * Admin post handler to refresh the checkout requirements status cache.
+     *
+     * @return void
+     * @action admin_post_ . self::REFRESH
+     */
 	public function refresh_status() {
 		check_admin_referer( self::REFRESH );
 
@@ -141,27 +148,29 @@ class Requirements_Notice {
 		return $url;
 	}
 
-	/**
-	 * Disable embedded checkout if SSL is not supported
-	 *
-	 * @param int|bool $option
-	 *
-	 * @return int|bool
-	 * @filter pre_option_ . Cart::OPTION_EMBEDDED_CHECKOUT
-	 */
-	public function filter_embedded_checkout( $option ) {
-		if ( ! $this->can_enable_embedded_checkout() ) {
-			return 0; // not `false`, because WP would ignore it
-		}
+    /**
+     * Disables embedded checkout if SSL is not supported.
+     *
+     * @param int|bool $option Current option value.
+     *
+     * @return int|bool Modified option value.
+     * @filter pre_option_ . Cart::OPTION_EMBEDDED_CHECKOUT
+     */
+    public function filter_embedded_checkout( $option ) {
+        if ( ! $this->can_enable_embedded_checkout() ) {
+            return 0; // not `false`, because WP would ignore it
+        }
 
-		return $option;
-	}
+        return $option;
+    }
 
-	/**
-	 * @return bool
-	 * @filter bigcommerce/checkout/can_embed
-	 */
-	public function can_enable_embedded_checkout() {
-		return (bool) $this->status->is_ssl();
-	}
+    /**
+     * Determines if embedded checkout can be enabled.
+     *
+     * @return bool True if SSL is supported, false otherwise.
+     * @filter bigcommerce/checkout/can_embed
+     */
+    public function can_enable_embedded_checkout() {
+        return (bool) $this->status->is_ssl();
+    }
 }

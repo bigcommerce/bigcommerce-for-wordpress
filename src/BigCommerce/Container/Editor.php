@@ -12,17 +12,57 @@ use BigCommerce\Settings\Sections\Gift_Certificates as Gift_Certificate_Settings
 use BigCommerce\Settings\Sections\Wishlists as Wishlist_Settings;
 
 /**
- * Class Editor
+ * Loads behavior relevant to the admin post editor, including rendering custom buttons,
+ * templates, and Gutenberg blocks within the WordPress admin interface. It also handles 
+ * the integration of the Gutenberg editor with BigCommerce blocks and assets.
  *
- * Load behavior relevant to the admin post editor
+ * @package BigCommerce\Container
  */
 class Editor extends Provider {
-	const SHORTCODE_BUTTON  = 'admin.shortcode_button';
-	const UI_DIALOG         = 'admin.ui_dialog';
-	const GUTENBERG_BLOCKS  = 'gutenberg.blocks';
-	const GUTENBERG_MIGRATE = 'gutenberg.migrate';
-	const STYLES            = 'gutenberg.styles';
+    /**
+     * Constant for the shortcode button identifier.
+     *
+     * @var string
+     */
+    const SHORTCODE_BUTTON  = 'admin.shortcode_button';
 
+    /**
+     * Constant for the UI dialog identifier.
+     *
+     * @var string
+     */
+    const UI_DIALOG         = 'admin.ui_dialog';
+
+    /**
+     * Constant for the Gutenberg blocks identifier.
+     *
+     * @var string
+     */
+    const GUTENBERG_BLOCKS  = 'gutenberg.blocks';
+
+    /**
+     * Constant for the Gutenberg migration identifier.
+     *
+     * @var string
+     */
+    const GUTENBERG_MIGRATE = 'gutenberg.migrate';
+
+    /**
+     * Constant for the styles identifier.
+     *
+     * @var string
+     */
+    const STYLES            = 'gutenberg.styles';
+
+    /**
+     * Registers the necessary components for the editor, including buttons, dialog templates,
+     * and Gutenberg blocks.
+     *
+     * This function initializes and sets up the custom behavior for the WordPress admin post 
+     * editor, integrating custom buttons and templates for a more enhanced editing experience.
+     *
+     * @param Container $container The dependency injection container.
+     */
 	public function register( Container $container ) {
 		$this->render_button( $container );
 		$this->render_dialog_template( $container );
@@ -49,6 +89,7 @@ class Editor extends Provider {
 		$render_callback = $this->create_callback( 'render_editor_dialog_template', function () use ( $container ) {
 			echo $container[ self::UI_DIALOG ]->render_dialog_once();
 		} );
+
 		add_action( 'enqueue_block_editor_assets', $this->create_callback( 'block_editor_enqueue_dialog_template', function() use ( $container, $render_callback ) {
 			$current_screen = get_current_screen();
 			
@@ -58,10 +99,11 @@ class Editor extends Provider {
 
 			if ( did_action( 'admin_enqueue_scripts' ) ) { // if the Gutenberg plugin is enabled, the action will already be called
 				$render_callback();
-			} else { // if using the Block Editor in WP core, no HTML has been rendered, so delay the output
+			} else {
 				add_action( 'admin_enqueue_scripts', $render_callback, 10, 0 );
 			}
 		}), 10, 0 );
+
 		add_action( 'admin_print_footer_scripts', $render_callback, 10, 0 ); // if the block editor is disabled, print scripts in the footer
 
 		add_filter( 'bigcommerce/admin/js_config', $this->create_callback( 'editor_dialog_js_config', function ( $config ) use ( $container ) {

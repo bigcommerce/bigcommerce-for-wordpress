@@ -54,6 +54,14 @@ class Currency_Switcher_Widget extends \WP_Widget {
 
 		$currencies = get_option( Currency_Settings::ENABLED_CURRENCIES, [] );
 		$component  = Currency_Switcher_Form::factory([
+			/**
+			 * Filters the list of enabled currencies for the current channel.
+			 *
+			 * This filter returns a list of currencies that are enabled for the current channel,
+			 * allowing for dynamic adjustment based on context.
+			 *
+			 * @return array The list of enabled currencies.
+			 */
 			Currency_Switcher_Form::ENABLED_CURRENCIES => apply_filters( 'bigcommerce/currency/enabled', $currencies ),
 			Currency_Switcher_Form::SELECTED_CURRENCY  => apply_filters( 'bigcommerce/currency/code', 'USD' ),
 		]);

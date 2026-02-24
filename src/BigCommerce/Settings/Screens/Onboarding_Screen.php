@@ -15,6 +15,13 @@ abstract class Onboarding_Screen extends Abstract_Screen {
 
 	protected function progress_bar() {
 		ob_start();
+		/**
+		 * Registers a callback to render the onboarding progress bar on the 'bigcommerce/settings/onboarding/progress' hook.
+		 *
+		 * @param  callable $progress_bar The callback function to render the progress bar.
+		 * @param  int      $priority     The priority at which the callback should be executed. Defaults to 10.
+		 * @param  int      $accepted_args The number of arguments the callback accepts. Defaults to 0.
+		 */
 		do_action( 'bigcommerce/settings/onboarding/progress' );
 		return ob_get_clean();
 	}

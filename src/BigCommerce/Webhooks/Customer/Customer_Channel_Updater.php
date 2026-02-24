@@ -16,7 +16,18 @@ use BigCommerce\Taxonomies\Channel\Connections;
  */
 class Customer_Channel_Updater extends Customer_Saver {
 
-	const CUSTOMER_CHANNEL_META   = 'bigcommerce_customer_channel_meta';
+	/**
+	 * Meta key for storing customer channel metadata
+	 *
+	 * @var string
+	 */
+	const CUSTOMER_CHANNEL_META = 'bigcommerce_customer_channel_meta';
+
+	/**
+	 * Meta key for storing the customer's original channel
+	 *
+	 * @var string
+	 */
 	const CUSTOMER_ORIGIN_CHANNEL = 'bigcommerce_customer_origin_channel';
 
 	/**

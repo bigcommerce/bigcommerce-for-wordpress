@@ -7,23 +7,74 @@ namespace BigCommerce\Settings\Screens;
 use BigCommerce\Container\Settings;
 use BigCommerce\Post_Types\Product\Product;
 
+/**
+ * Abstract base class for managing plugin settings screens.
+ * 
+ * This abstract class provides a foundation for settings screens in the WordPress admin.
+ * It defines common properties such as the hook suffix, capability, and asset URL, 
+ * along with the constant `NAME` which should be defined in concrete subclasses.
+ * Concrete subclasses should implement their specific logic for rendering the screen 
+ * and handling settings.
+ * 
+ * @package YourPlugin
+ */
 abstract class Abstract_Screen {
-	const NAME = '';
+    
+    /**
+     * The name identifier for the screen.
+     * 
+     * This constant should be defined in concrete subclasses to uniquely identify the screen.
+     * It may be used for routing, redirection, or referencing the screen in other parts of the plugin.
+     * 
+     * @var string
+     */
+    const NAME = '';
+    
+    /**
+     * The hook suffix for the settings page.
+     * 
+     * This property stores the hook suffix that is used to identify the settings page.
+     * It is typically populated during screen setup to enable specific functionality or rendering.
+     * 
+     * @var string
+     */
+    protected $hook_suffix = '';
 
-	protected $hook_suffix = '';
+    /**
+     * The required capability to access the settings page.
+     * 
+     * This property defines the required capability to access the settings page.
+     * By default, it's set to `manage_options`, which allows administrators to access the page.
+     * 
+     * @var string
+     */
+    protected $capability = 'manage_options';
 
-	protected $capability = 'manage_options';
+    /**
+     * The configuration status of the settings screen.
+     * 
+     * This property holds the status of the settings screen configuration.
+     * By default, it is set to `STATUS_NEW` from the `Settings` class.
+     * 
+     * @var string
+     */
+    protected $configuration_status = Settings::STATUS_NEW;
 
-	protected $configuration_status = Settings::STATUS_NEW;
-
-	/** @var string URL to the plugin's assets directory */
-	protected $assets_url = '';
+    /**
+     * URL to the plugin's assets directory.
+     * 
+     * This property stores the URL to the plugin's assets directory, such as images, stylesheets,
+     * and scripts. It is used to reference assets from the plugin's folder within the admin interface.
+     * 
+     * @var string
+     */
+    protected $assets_url = '';
 
 	/**
 	 * Abstract_Screen constructor.
 	 *
-	 * @param int    $configuration_status A flag indicating if the current stage in the setup process
-	 * @param string $assets_url           Path to the plugin assets directory
+	 * @param int    $configuration_status A flag indicating if the current stage in the setup process.
+	 * @param string $assets_url           Path to the plugin assets directory.
 	 */
 	public function __construct( $configuration_status, $assets_url ) {
 		if ( empty( static::NAME ) ) {
@@ -34,15 +85,30 @@ abstract class Abstract_Screen {
 	}
 
 	/**
-	 * @return string The title to render for the page
+	 * Gets the title to render for the page.
+	 *
+	 * @return string The title to render for the page.
 	 */
 	abstract protected function get_page_title();
 
 	/**
-	 * @return string The title to show in the admin menu for the page
+	 * Gets the title to show in the admin menu for the page.
+	 *
+	 * @return string The title to show in the admin menu for the page.
 	 */
 	abstract protected function get_menu_title();
 
+	/**
+	 * Retrieves the header HTML for the settings page.
+	 *
+	 * This method generates the header for the settings page, including the page title wrapped
+	 * in an `<h1>` tag. If the title is empty, it returns an empty string.
+	 * 
+	 * The title is obtained by calling the `get_page_title()` method, and additional content
+	 * may be prepended to the title using the `before_title()` method.
+	 *
+	 * @return string The HTML markup for the header, or an empty string if no title is provided.
+	 */
 	protected function get_header() {
 		$title = $this->get_page_title();
 		if ( empty( $title ) ) {
@@ -52,6 +118,15 @@ abstract class Abstract_Screen {
 		return $this->before_title() . sprintf( '<h1>%s</h1>', $this->get_page_title() );
 	}
 
+	/**
+	 * Generates the markup before the page title.
+	 *
+	 * This method outputs a placeholder to indicate where notices should be placed
+	 * within the WordPress admin header. It also fires the `bigcommerce/settings/before_title/page={NAME}`
+	 * action hook, allowing other components to hook into this point and potentially add additional content.
+	 *
+	 * @return string The HTML markup for the section before the title.
+	 */
 	protected function before_title() {
 		$before = '<div class="wp-header-end"></div>'; // placeholder to tell WP where to put notices
 		ob_start();
@@ -59,17 +134,28 @@ abstract class Abstract_Screen {
 		return $before . ob_get_clean();
 	}
 
+	/**
+	 * Gets the hook suffix for the settings page.
+	 *
+	 * @return string The hook suffix for the settings page.
+	 */
 	public function get_hook_suffix() {
 		return $this->hook_suffix;
 	}
 
+	/**
+	 * Gets the URL for the settings page.
+	 *
+	 * @return string The URL for the settings page.
+	 */
 	public function get_url() {
 		return add_query_arg( [ 'page' => static::NAME, 'post_type' => Product::NAME ], admin_url( 'edit.php' ) );
 	}
 
 	/**
+	 * Registers the settings page in the WordPress admin menu.
+	 *
 	 * @return void
-	 * @action admin_menu
 	 */
 	public function register_settings_page() {
 		if ( ! $this->should_register() ) {
@@ -98,15 +184,30 @@ abstract class Abstract_Screen {
 		do_action( 'bigcommerce/settings/register/screen=' . static::NAME, $this->hook_suffix, static::NAME );
 	}
 
+	/**
+	 * Gets the capability required to view the settings page.
+	 *
+	 * @return string The capability required to view the settings page.
+	 */
 	public function get_capability() {
 		return $this->capability;
 	}
 
+	/**
+	 * Retrieves the parent slug for the settings page.
+	 *
+	 * This method generates the parent URL slug for the settings page by formatting the URL
+	 * with the post type constant from the `Product` class.
+	 *
+	 * @return string The formatted parent slug for the settings page.
+	 */
 	protected function parent_slug() {
 		return sprintf( 'edit.php?post_type=%s', Product::NAME );
 	}
 
 	/**
+	 * Renders the settings page.
+	 *
 	 * @return void
 	 */
 	public function render_settings_page() {
@@ -125,14 +226,19 @@ abstract class Abstract_Screen {
 	}
 
 	/**
-	 * Renders the onboarding progress bar for the current screen
+	 * Renders the onboarding progress bar for the current screen.
 	 *
-	 * @return string
+	 * @return string The HTML markup for the progress bar.
 	 */
 	protected function progress_bar() {
 		return '';
 	}
 
+	/**
+	 * Starts the form for the settings page.
+	 *
+	 * @return void
+	 */
 	protected function start_form() {
 		printf( '<form action="%1$s" method="post" class="bc-settings-form bc-settings-form--%2$s" data-js="%2$s">', esc_url( $this->form_action_url() ), static::NAME );
 		/**
@@ -144,6 +250,11 @@ abstract class Abstract_Screen {
 		do_action( 'bigcommerce/settings/after_start_form/page=' . static::NAME, $this->hook_suffix );
 	}
 
+	/**
+	 * Ends the form for the settings page.
+	 *
+	 * @return void
+	 */
 	protected function end_form() {
 		/**
 		 * Triggered before the closing </form> tag on the settings screen form finishes rendering.
@@ -156,16 +267,16 @@ abstract class Abstract_Screen {
 	}
 
 	/**
-	 * Get the URL to which the form will submit
+	 * Gets the URL to which the form will submit.
 	 *
-	 * @return string
+	 * @return string The form action URL.
 	 */
 	protected function form_action_url() {
 		return admin_url( 'options.php' );
 	}
 
 	/**
-	 * Render the hidden settings fields for the form
+	 * Renders the hidden settings fields for the form.
 	 *
 	 * @return void
 	 */
@@ -173,12 +284,22 @@ abstract class Abstract_Screen {
 		settings_fields( static::NAME );
 	}
 
+	/**
+	 * Renders the submit button for the settings form.
+	 *
+	 * @return void
+	 */
 	protected function submit_button() {
 		echo '<div class="bc-plugin-page-header">';
 		submit_button();
 		echo '</div>';
 	}
 
+	/**
+	 * Renders content before the settings form starts.
+	 *
+	 * @return void
+	 */
 	protected function before_form() {
 		/**
 		 * Triggered before the settings screen form starts to render.
@@ -189,6 +310,11 @@ abstract class Abstract_Screen {
 		do_action( 'bigcommerce/settings/before_form/page=' . static::NAME, $this->hook_suffix );
 	}
 
+	/**
+	 * Renders content after the settings form finishes.
+	 *
+	 * @return void
+	 */
 	protected function after_form() {
 		/**
 		 * Triggered after the settings screen form finishes rendering.
@@ -200,10 +326,9 @@ abstract class Abstract_Screen {
 	}
 
 	/**
-	 * Replacement for do_settings_sections() that provides greater
-	 * control over formatting
+	 * Renders the settings sections for the settings page.
 	 *
-	 * @param string $page
+	 * @param string $page The settings page.
 	 *
 	 * @return void
 	 */
@@ -243,10 +368,10 @@ abstract class Abstract_Screen {
 	}
 
 	/**
-	 * Render the header for the settings section
+	 * Renders the header for the settings section.
 	 *
-	 * @param array  $section
-	 * @param string $page
+	 * @param array  $section The settings section.
+	 * @param string $page The settings page.
 	 *
 	 * @return void
 	 */
@@ -277,10 +402,10 @@ abstract class Abstract_Screen {
 	}
 
 	/**
-	 * Render the body for the settings section
+	 * Renders the body for the settings section.
 	 *
-	 * @param array  $section
-	 * @param string $page
+	 * @param array  $section The settings section.
+	 * @param string $page The settings page.
 	 *
 	 * @return void
 	 */
@@ -338,15 +463,35 @@ abstract class Abstract_Screen {
 		echo '</div></div>'; // bc-settings-section__body, bc-settings-section__target
 	}
 
+	/**
+	 * Sets up a redirect for unregistered screens in the admin menu.
+	 * 
+	 * This method ensures that if the current screen is not registered, 
+	 * a redirection is set up to trigger the `bigcommerce/settings/unregistered_screen` action.
+	 * It is only called if the global `plugin_page` matches the screen's NAME constant.
+	 * 
+	 * @return void
+	 */
 	protected function setup_unregistered_redirect() {
 		if ( $GLOBALS[ 'plugin_page' ] !== static::NAME ) {
 			return; // nothing to worry about
 		}
+
 		add_action( 'admin_menu', function () {
+			/**
+			 * Redirects to the appropriate screen when an unregistered screen is encountered.
+			 *
+			 * @param string $unregistered_screen The name of the unregistered screen.
+			 */
 			do_action( 'bigcommerce/settings/unregistered_screen', static::NAME );
 		}, 10000, 0 );
 	}
 
+	/**
+	 * Redirects to the current settings screen.
+	 *
+	 * @return void
+	 */
 	public function redirect_to_screen() {
 		$url = $this->get_url();
 		if ( ! empty( $_GET[ 'settings-updated' ] ) ) {
@@ -357,15 +502,21 @@ abstract class Abstract_Screen {
 	}
 
 	/**
-	 * Indicates if this screen should be registered, given the
-	 * current state of the WordPress installation.
+	 * Indicates if this screen should be registered, given the current state of the WordPress installation.
 	 *
-	 * @return bool
+	 * @return bool True if the screen should be registered, false otherwise.
 	 */
 	public function should_register() {
 		return true;
 	}
 
+	/**
+	 * Sets the body class for the admin page.
+	 *
+	 * @param string $classes The existing body classes.
+	 *
+	 * @return string The modified body classes.
+	 */
 	public function set_admin_body_class( $classes = '' ) {
 		$screen = get_current_screen();
 		if ( $screen->id === $this->get_hook_suffix() ) {
@@ -375,6 +526,11 @@ abstract class Abstract_Screen {
 		return $classes;
 	}
 
+	/**
+	 * Gets the class for the admin body.
+	 *
+	 * @return string The admin body class.
+	 */
 	protected function get_admin_body_class() {
 		return 'bigcommerce-settings-page';
 	}

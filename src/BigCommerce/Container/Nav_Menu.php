@@ -8,17 +8,49 @@ use BigCommerce\Nav_Menu\Nav_Items_Customizer;
 use BigCommerce\Nav_Menu\Nav_Items_Meta_Box;
 use Pimple\Container;
 
+/**
+ * Provides dependencies and behaviors for navigation menus.
+ */
 class Nav_Menu extends Provider {
+    /**
+     * Navigation items dependency identifier.
+     * 
+     * @var string
+     */
 	const ITEMS      = 'navigation.items';
+
+    /**
+     * Navigation metabox dependency identifier.
+     * 
+     * @var string
+     */
 	const METABOX    = 'navigation.metabox';
+
+    /**
+     * Navigation customizer dependency identifier.
+     * 
+     * @var string
+     */
 	const CUSTOMIZER = 'navigation.customizer';
 
+    /**
+     * Registers dependencies with the container.
+     *
+     * @param Container $container The dependency injection container.
+     * @return void
+     */
 	public function register( Container $container ) {
 		$this->menu_items( $container );
 		$this->metabox( $container );
 		$this->customizer( $container );
 	}
 
+    /**
+     * Registers dynamic menu items dependency and hooks.
+     *
+     * @param Container $container The dependency injection container.
+     * @return void
+     */
 	private function menu_items( Container $container ) {
 		$container[ self::ITEMS ] = function ( Container $container ) {
 			return new Dynamic_Menu_Items();
@@ -33,6 +65,12 @@ class Nav_Menu extends Provider {
 		} ), 20, 3 );
 	}
 
+    /**
+     * Registers navigation metabox dependency and hooks.
+     *
+     * @param Container $container The dependency injection container.
+     * @return void
+     */
 	private function metabox( Container $container ) {
 		$container[ self::METABOX ] = function ( Container $container ) {
 			return new Nav_Items_Meta_Box();
@@ -47,10 +85,17 @@ class Nav_Menu extends Provider {
 		} ), 0, 0 );
 	}
 
+    /**
+     * Registers navigation customizer dependency and hooks.
+     *
+     * @param Container $container The dependency injection container.
+     * @return void
+     */
 	private function customizer( Container $container ) {
 		$container[ self::CUSTOMIZER ] = function ( Container $container ) {
 			return new Nav_Items_Customizer();
 		};
+
 		add_filter( 'customize_nav_menu_available_item_types', $this->create_callback( 'register_customizer_item_type', function ( $types ) use ( $container ) {
 			return $container[ self::CUSTOMIZER ]->register_item_type( $types );
 		} ), 10, 1 );

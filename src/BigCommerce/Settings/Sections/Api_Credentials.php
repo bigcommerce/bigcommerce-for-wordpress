@@ -28,6 +28,11 @@ class Api_Credentials extends Settings_Section {
 			self::NAME,
 			__( 'API Credentials', 'bigcommerce' ),
 			function ( $section ) {
+				/**
+				 * Renders API credentials description for the credentials section.
+				 *
+				 * @param array $container Dependency injection container.
+				 */
 				do_action( 'bigcommerce/settings/render/credentials', $section );
 			},
 			$screen

@@ -6,16 +6,27 @@ namespace BigCommerce\Api;
 use BigCommerce\Api\v3\ApiException;
 
 /**
- * Class Marketing_Api
+ * Provides methods for interacting with marketing-related resources in BigCommerce,
+ * including gift certificates.
  *
- * @method array getGiftCertificates( $filter = [] )
+ * @method array getGiftCertificates( array $filter = [] ) Retrieve a list of gift certificates with optional filtering.
+ *
+ * @package BigCommerce\Api
+ * @extends v2ApiAdapter
  */
 class Marketing_Api extends v2ApiAdapter {
+	
 	/**
-	 * @param $code
+	 * Retrieve a gift certificate by its code.
 	 *
-	 * @return Resource
-	 * @throws ApiException when the Gift Certificate cannot be retrieved
+	 * Searches for a gift certificate matching the given code and returns the resource if found.
+	 * Throws an exception if no matching gift certificate is found.
+	 *
+	 * @param string $code The gift certificate code to search for.
+	 *
+	 * @return Resource The gift certificate resource object.
+	 *
+	 * @throws ApiException If no gift certificate matches the provided code, or if the API call fails.
 	 */
 	public function get_gift_certificate_by_code( $code ) {
 		$response = $this->getGiftCertificates( [

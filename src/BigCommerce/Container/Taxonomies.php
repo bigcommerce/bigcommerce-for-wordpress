@@ -27,89 +27,208 @@ use BigCommerce\Taxonomies\Product_Category;
 use BigCommerce\Taxonomies\Product_Type;
 use Pimple\Container;
 
+/**
+ * This class is responsible for managing and registering taxonomies for BigCommerce integration. It defines constants for various taxonomies and handles their configuration and filtering via WordPress hooks.
+ * 
+ * @package BigCommerce\Container
+ */
 class Taxonomies extends Provider {
-	const PRODUCT_CATEGORY                      = 'taxonomy.product_category';
-	const PRODUCT_CATEGORY_CONFIG               = 'taxonomy.product_category.config';
-	const PRODUCT_CATEGORY_GROUP_FILTERED_TERMS = 'taxonomy.product_category.group_filtered_terms';
-	const PRODUCT_CATEGORY_QUERY_FILTER         = 'taxonomy.product_category.query_filter';
 
-	const BRAND        = 'taxonomy.brand';
-	const BRAND_CONFIG = 'taxonomy.brand.config';
+    /**
+     * Constant for Product Category taxonomy.
+	 * @var string
+     */
+    const PRODUCT_CATEGORY = 'taxonomy.product_category';
 
-	const AVAILABILITY        = 'taxonomy.availability';
-	const AVAILABILITY_CONFIG = 'taxonomy.availability.config';
+    /**
+     * Constant for Product Category configuration.
+	 * @var string
+     */
+    const PRODUCT_CATEGORY_CONFIG = 'taxonomy.product_category.config';
 
-	const CONDITION        = 'taxonomy.condition';
-	const CONDITION_CONFIG = 'taxonomy.condition.config';
+    /**
+     * Constant for Product Category group filtered terms.
+	 * @var string
+     */
+    const PRODUCT_CATEGORY_GROUP_FILTERED_TERMS = 'taxonomy.product_category.group_filtered_terms';
 
-	const PRODUCT_TYPE        = 'taxonomy.product_type';
-	const PRODUCT_TYPE_CONFIG = 'taxonomy.product_type.config';
+    /**
+     * Constant for Product Category query filter.
+	 * @var string
+     */
+    const PRODUCT_CATEGORY_QUERY_FILTER = 'taxonomy.product_category.query_filter';
 
-	const FLAG        = 'taxonomy.flag';
-	const FLAG_CONFIG = 'taxonomy.flag.config';
+    /**
+     * Constant for Brand taxonomy.
+	 * @var string
+     */
+    const BRAND = 'taxonomy.brand';
 
-	const CHANNEL                 = 'taxonomy.channel';
-	const CHANNEL_CONFIG          = 'taxonomy.channel.config';
-	const CHANNEL_SYNC            = 'taxonomy.channel.sync';
-	const CHANNEL_CONNECTOR       = 'taxonomy.channel.connector';
-	const CHANNEL_ADMIN_FILTER    = 'taxonomy.channel.admin_products_filter';
-	const CHANNEL_QUERY_FILTER    = 'taxonomy.channel.query_filter';
-	const CHANNEL_CURRENCY_FILTER = 'taxonomy.channel.currency_filter';
-	const CHANNEL_BC_STATUS       = 'taxonomy.channel.bc_status';
+    /**
+     * Constant for Brand configuration.
+	 * @var string
+     */
+    const BRAND_CONFIG = 'taxonomy.brand.config';
 
-	const ROUTES = 'taxonomy.channel.routes';
+    /**
+     * Constant for Availability taxonomy.
+	 * @var string
+     */
+    const AVAILABILITY = 'taxonomy.availability';
 
-	public function register( Container $container ) {
-		$this->product_category( $container );
-		$this->brand( $container );
-		$this->availability( $container );
-		$this->condition( $container );
-		$this->product_type( $container );
-		$this->flag( $container );
-		$this->channel( $container );
+    /**
+     * Constant for Availability configuration.
+	 * @var string
+     */
+    const AVAILABILITY_CONFIG = 'taxonomy.availability.config';
 
-		add_action( 'init', $this->create_callback( 'register', function () use ( $container ) {
-			$container[ self::PRODUCT_CATEGORY_CONFIG ]->register();
-			$container[ self::BRAND_CONFIG ]->register();
-			$container[ self::AVAILABILITY_CONFIG ]->register();
-			$container[ self::CONDITION_CONFIG ]->register();
-			$container[ self::PRODUCT_TYPE_CONFIG ]->register();
-			$container[ self::FLAG_CONFIG ]->register();
-			$container[ self::CHANNEL_CONFIG ]->register();
-		} ), 0, 0 );
-	}
+    /**
+     * Constant for Condition taxonomy.
+	 * @var string
+     */
+    const CONDITION = 'taxonomy.condition';
 
-	private function product_category( Container $container ) {
-		$container[ self::PRODUCT_CATEGORY_CONFIG ] = function ( Container $container ) {
-			return new Product_Category\Config( Product_Category\Product_Category::NAME, [ Product::NAME ] );
-		};
+    /**
+     * Constant for Condition configuration.
+	 * @var string
+     */
+    const CONDITION_CONFIG = 'taxonomy.condition.config';
 
-		$container[ self::PRODUCT_CATEGORY_GROUP_FILTERED_TERMS ] = function ( Container $container ) {
-			return new Product_Category\Group_Filtered_Terms();
-		};
+    /**
+     * Constant for Product Type taxonomy.
+	 * @var string
+     */
+    const PRODUCT_TYPE = 'taxonomy.product_type';
 
-		$container[ self::PRODUCT_CATEGORY_QUERY_FILTER ] = function () use ( $container ) {
-			return new Product_Category\Query_Filter( $container[ self::PRODUCT_CATEGORY_GROUP_FILTERED_TERMS ] );
-		};
+    /**
+     * Constant for Product Type configuration.
+	 * @var string
+     */
+    const PRODUCT_TYPE_CONFIG = 'taxonomy.product_type.config';
 
-		add_filter( 'get_terms_args', $this->create_callback( 'exclude_product_categories_by_group', function ( $args, $taxonomies ) use ( $container ) {
-			if ( ! is_admin() ) {
-				$args = $container[ self::PRODUCT_CATEGORY_GROUP_FILTERED_TERMS ]->exclude_hidden_terms( $args, $taxonomies );
-			}
+    /**
+     * Constant for Flag taxonomy.
+	 * @var string
+     */
+    const FLAG = 'taxonomy.flag';
 
-			return $args;
-		} ), 10, 3 );
+    /**
+     * Constant for Flag configuration.
+	 * @var string
+     */
+    const FLAG_CONFIG = 'taxonomy.flag.config';
 
-		add_action( 'pre_get_posts', $this->create_callback( 'filter_query_by_product_category', function ( $query ) use ( $container ) {
-			if ( ! is_admin() ) {
-				$container[ self::PRODUCT_CATEGORY_QUERY_FILTER ]->apply( $query );
-			}
-		} ), 10, 1 );
+    /**
+     * Constant for Channel taxonomy.
+	 * @var string
+     */
+    const CHANNEL = 'taxonomy.channel';
 
-		add_action( 'parse_tax_query', $this->create_callback( 'hide_children_by_default', function ( $query ) use ( $container ) {
-			$container[ self::PRODUCT_CATEGORY_QUERY_FILTER ]->maybe_hide_children( $query );
-		} ), 10, 1 );
-	}
+    /**
+     * Constant for Channel configuration.
+	 * @var string
+     */
+    const CHANNEL_CONFIG = 'taxonomy.channel.config';
+
+    /**
+     * Constant for Channel synchronization.
+	 * @var string
+     */
+    const CHANNEL_SYNC = 'taxonomy.channel.sync';
+
+    /**
+     * Constant for Channel connector.
+	 * @var string
+     */
+    const CHANNEL_CONNECTOR = 'taxonomy.channel.connector';
+
+    /**
+     * Constant for Channel admin filter.
+	 * @var string
+     */
+    const CHANNEL_ADMIN_FILTER = 'taxonomy.channel.admin_products_filter';
+
+    /**
+     * Constant for Channel query filter.
+	 * @var string
+     */
+    const CHANNEL_QUERY_FILTER = 'taxonomy.channel.query_filter';
+
+    /**
+     * Constant for Channel currency filter.
+	 * @var string
+     */
+    const CHANNEL_CURRENCY_FILTER = 'taxonomy.channel.currency_filter';
+
+    /**
+     * Constant for Channel BigCommerce status.
+	 * @var string
+     */
+    const CHANNEL_BC_STATUS = 'taxonomy.channel.bc_status';
+
+    /**
+     * Constant for Routes related to Channel.
+	 * @var string
+     */
+    const ROUTES = 'taxonomy.channel.routes';
+
+
+    /**
+     * Registers all taxonomies and related actions and filters.
+     *
+     * @param Container $container The container object.
+     */
+    public function register( Container $container ) {
+        $this->product_category( $container );
+        $this->brand( $container );
+        $this->availability( $container );
+        $this->condition( $container );
+        $this->product_type( $container );
+        $this->flag( $container );
+        $this->channel( $container );
+
+        add_action( 'init', $this->create_callback( 'register', function () use ( $container ) {
+            $container[ self::PRODUCT_CATEGORY_CONFIG ]->register();
+            $container[ self::BRAND_CONFIG ]->register();
+            $container[ self::AVAILABILITY_CONFIG ]->register();
+            $container[ self::CONDITION_CONFIG ]->register();
+            $container[ self::PRODUCT_TYPE_CONFIG ]->register();
+            $container[ self::FLAG_CONFIG ]->register();
+            $container[ self::CHANNEL_CONFIG ]->register();
+        } ), 0, 0 );
+    }
+
+    private function product_category( Container $container ) {
+        $container[ self::PRODUCT_CATEGORY_CONFIG ] = function ( Container $container ) {
+            return new Product_Category\Config( Product_Category\Product_Category::NAME, [ Product::NAME ] );
+        };
+
+        $container[ self::PRODUCT_CATEGORY_GROUP_FILTERED_TERMS ] = function ( Container $container ) {
+            return new Product_Category\Group_Filtered_Terms();
+        };
+
+        $container[ self::PRODUCT_CATEGORY_QUERY_FILTER ] = function () use ( $container ) {
+            return new Product_Category\Query_Filter( $container[ self::PRODUCT_CATEGORY_GROUP_FILTERED_TERMS ] );
+        };
+
+        add_filter( 'get_terms_args', $this->create_callback( 'exclude_product_categories_by_group', function ( $args, $taxonomies ) use ( $container ) {
+            if ( ! is_admin() ) {
+                $args = $container[ self::PRODUCT_CATEGORY_GROUP_FILTERED_TERMS ]->exclude_hidden_terms( $args, $taxonomies );
+            }
+
+            return $args;
+        } ), 10, 3 );
+
+        add_action( 'pre_get_posts', $this->create_callback( 'filter_query_by_product_category', function ( $query ) use ( $container ) {
+            if ( ! is_admin() ) {
+                $container[ self::PRODUCT_CATEGORY_QUERY_FILTER ]->apply( $query );
+            }
+        } ), 10, 1 );
+
+        add_action( 'parse_tax_query', $this->create_callback( 'hide_children_by_default', function ( $query ) use ( $container ) {
+            $container[ self::PRODUCT_CATEGORY_QUERY_FILTER ]->maybe_hide_children( $query );
+        } ), 10, 1 );
+    }
 
 	private function brand( Container $container ) {
 		$container[ self::BRAND_CONFIG ] = function ( Container $container ) {
@@ -166,9 +285,10 @@ class Taxonomies extends Provider {
 		$channel_sync = $this->create_callback( 'channel_sync', function () use ( $container ) {
 			$container[ self::CHANNEL_SYNC ]->sync();
 		} );
+
+
 		add_action( 'bigcommerce/settings/before_form/page=' . Connect_Channel_Screen::NAME, $channel_sync, 10, 0 );
 		add_action( 'bigcommerce/import/start', $channel_sync, 10, 0 );
-
 		add_action( 'bigcommerce/settings/before_form/page=' . Settings_Screen::NAME, function () use ( $container ) {
 			$container[ self::CHANNEL_SYNC ]->initial_sync();
 		}, 10, 0 );
@@ -208,11 +328,13 @@ class Taxonomies extends Provider {
 		$container[ self::CHANNEL_ADMIN_FILTER ] = function ( Container $container ) {
 			return new Channel\Admin_Products_Filter();
 		};
+
 		add_action( 'load-edit.php', $this->create_callback( 'init_list_table_hooks', function () use ( $container ) {
 			if ( Channel\Channel::multichannel_enabled() ) {
 				add_filter( 'restrict_manage_posts', $this->create_callback( 'products_admin_channel_select', function ( $post_type, $which ) use ( $container ) {
 					$container[ self::CHANNEL_ADMIN_FILTER ]->display_channel_select( $post_type, $which );
 				} ), 10, 2 );
+
 				add_filter( 'parse_request', $this->create_callback( 'parse_products_admin_request', function ( \WP $wp ) use ( $container ) {
 					$container[ self::CHANNEL_ADMIN_FILTER ]->filter_list_table_request( $wp );
 				} ), 10, 1 );
@@ -222,6 +344,7 @@ class Taxonomies extends Provider {
 		$container[ self::CHANNEL_QUERY_FILTER ] = function ( Container $container ) {
 			return new Channel\Query_Filter();
 		};
+
 		add_action( 'pre_get_posts', $this->create_callback( 'filter_query_by_channel', function ( $query ) use ( $container ) {
 			if ( ! is_admin() && Channel\Channel::multichannel_enabled() ) {
 				$container[ self::CHANNEL_QUERY_FILTER ]->apply( $query );
@@ -231,6 +354,7 @@ class Taxonomies extends Provider {
 		$container[ self::CHANNEL_CURRENCY_FILTER ] = function ( Container $container ) {
 			return new Channel\Currency_Filter();
 		};
+
 		add_action( 'pre_option_' . \BigCommerce\Settings\Sections\Currency::CURRENCY_CODE, $this->create_callback( 'filter_channel_currency', function ( $currency_code ) use ( $container ) {
 			return $container[ self::CHANNEL_CURRENCY_FILTER ]->filter_currency( $currency_code );
 		} ), 5, 1 );
@@ -240,6 +364,7 @@ class Taxonomies extends Provider {
 		$container[ self::ROUTES ] = function ( Container $container ) {
 			return new Channel\Routes( $container[ Api::FACTORY ]->sites(), $container[ Api::FACTORY ]->channels() );
 		};
+
 		add_action( 'bigcommerce/channel/updated_channel_id', $this->create_callback( 'set_routes_for_channel', function ( $channel_id ) use ( $container ) {
 			$container[ self::ROUTES ]->set_routes( $channel_id );
 		} ), 10, 1 );
@@ -271,18 +396,14 @@ class Taxonomies extends Provider {
 		add_action( 'update_option_' . Product_Archive::BRAND_SLUG, $route_changed, 10, 0 );
 		add_action( 'add_option_' . Product_Archive::BRAND_SLUG, $route_changed, 10, 0 );
 		add_action( 'bigcommerce/channel/connection_changed', $route_changed );
-
-		//for when site is updated
 		add_action( 'update_option_home', $this->create_callback( 'update_site_home', function () use ( $container ) {
 			$container[ self::ROUTES ]->update_site_home();
 		} ), 10, 0 );
 
-		//for when route assigned pages changed permalink
 		add_action( 'post_updated', $this->create_callback( 'update_route_permalink', function ( $post_id, $new_post, $old_post ) use ( $container ) {
 			$container[ self::ROUTES ]->update_route_permalink( $post_id, $new_post, $old_post );
 		} ), 10, 3 );
 
-		// check that we're updated when an import runs
 		add_action( 'bigcommerce/import/fetched_store_settings', $this->create_callback( 'check_and_update_routes_version', function () use ( $container ) {
 			$container[ self::ROUTES ]->maybe_update_routes();
 		} ), 10, 0 );

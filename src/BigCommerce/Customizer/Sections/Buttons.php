@@ -6,21 +6,62 @@ namespace BigCommerce\Customizer\Sections;
 
 use BigCommerce\Customizer\Panels;
 
+/**
+ * A customizer section that handles button label settings for various BigCommerce buttons in the WordPress Customizer.
+ */
 class Buttons {
-	const NAME = 'bigcommerce_buttons';
+    /**
+     * The identifier for the buttons section.
+	 * @var string
+     */
+    const NAME = 'bigcommerce_buttons';
 
-	const ADD_TO_CART      = 'bigcommerce_add_to_cart_button_label';
-	const PREORDER_TO_CART = 'bigcommerce_preorder_add_to_cart_button_label';
-	const BUY_NOW          = 'bigcommerce_buy_now_button_label';
-	const PREORDER_NOW     = 'bigcommerce_preorder_now_button_label';
-	const CHOOSE_OPTIONS   = 'bigcommerce_choose_options_button_label';
-	const VIEW_PRODUCT     = 'bigcommerce_view_product_button_label';
+    /**
+     * The setting for the "Add to Cart" button label.
+	 * @var string
+     */
+    const ADD_TO_CART      = 'bigcommerce_add_to_cart_button_label';
 
-	/**
-	 * @param \WP_Customize_Manager $wp_customize
-	 *
-	 * @return void
-	 */
+    /**
+     * The setting for the "Preorder Add to Cart" button label.
+	 * @var string
+     */
+    const PREORDER_TO_CART = 'bigcommerce_preorder_add_to_cart_button_label';
+
+    /**
+     * The setting for the "Buy Now" button label.
+	 * @var string
+     */
+    const BUY_NOW          = 'bigcommerce_buy_now_button_label';
+
+    /**
+     * The setting for the "Preorder Now" button label.
+	 * @var string
+     */
+    const PREORDER_NOW     = 'bigcommerce_preorder_now_button_label';
+
+    /**
+     * The setting for the "Choose Options" button label.
+	 * @var string
+     */
+    const CHOOSE_OPTIONS   = 'bigcommerce_choose_options_button_label';
+
+    /**
+     * The setting for the "View Product" button label.
+	 * @var string
+     */
+    const VIEW_PRODUCT     = 'bigcommerce_view_product_button_label';
+
+    /**
+     * Registers the buttons section and related controls in the WordPress Customizer.
+     *
+     * This method adds the buttons section and sets up controls for various button labels,
+     * such as "Add to Cart," "Buy Now," and others.
+     *
+     * @param \WP_Customize_Manager $wp_customize The WordPress Customizer manager instance.
+     *
+     * @return void
+     */
 	public function register( $wp_customize ) {
 		$wp_customize->add_section( new \WP_Customize_Section( $wp_customize, self::NAME, [
 			'title' => __( 'Buttons', 'bigcommerce' ),

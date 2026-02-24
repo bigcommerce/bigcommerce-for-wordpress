@@ -15,35 +15,42 @@ use BigCommerce\Taxonomies\Channel\Channel;
 use BigCommerce\Taxonomies\Channel\Connections;
 
 /**
- * Class Customer_Login
- *
- * Handle customer login logic on checkout
+ * Handles customer login logic during the checkout process.
  *
  * @package BigCommerce\Checkout
  */
 class Customer_Login {
 	/**
-	 * @var Onboarding_Api
+	 * @var Onboarding_Api API for merchant onboarding processes.
 	 */
 	private $onboarding;
 
 	/**
-	 * @var Store_Api
+	 * @var Store_Api API for interacting with the store.
 	 */
 	private $store;
 
+	/**
+	 * Constructor for the `Customer_Login` class.
+	 *
+	 * @param Onboarding_Api $onboarding API instance for onboarding.
+	 * @param Store_Api      $store      API instance for store interactions.
+	 */
 	public function __construct( Onboarding_Api $onboarding, Store_Api $store ) {
 		$this->onboarding = $onboarding;
 		$this->store = $store;
 	}
 
-
 	/**
-     * Get new login token for the customer
-     *
-	 * @param string $checkout_url
+	 * Generate a new login token for the customer and update the checkout URL.
 	 *
-	 * @return string
+	 * Depending on whether the store is created through the onboarding process
+	 * or uses custom API credentials, it generates a login token for the customer.
+	 *
+	 * @param string $checkout_url The original checkout URL.
+	 *
+	 * @return string The updated checkout URL with the login token appended.
+	 *
 	 * @filter bigcommerce/checkout/url
 	 */
 	public function set_login_token_for_checkout( $checkout_url ) {

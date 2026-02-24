@@ -7,41 +7,111 @@ use BigCommerce\Settings\Sections\Cart;
 use BigCommerce\Shortcodes;
 
 /**
- * Class Product_Components
- *
- * A block to display a given products components
+ * A block to display a given product's components.
  */
 class Product_Components extends Shortcode_Block {
-	const NAME        = 'bigcommerce/product-components';
-	const IMAGE       = 'image';
-	const SKU         = 'sku';
-	const TITLE       = 'title';
+	/**
+	 * The name of the block.
+	 *
+	 * @var string
+	 */
+	const NAME = 'bigcommerce/product-components';
+
+	/**
+	 * The image component key.
+	 *
+	 * @var string
+	 */
+	const IMAGE = 'image';
+
+	/**
+	 * The SKU component key.
+	 *
+	 * @var string
+	 */
+	const SKU = 'sku';
+
+	/**
+	 * The title component key.
+	 *
+	 * @var string
+	 */
+	const TITLE = 'title';
+
+	/**
+	 * The description component key.
+	 *
+	 * @var string
+	 */
 	const DESCRIPTION = 'description';
+
+	/**
+	 * The add-to-cart component key.
+	 *
+	 * @var string
+	 */
 	const ADD_TO_CART = 'add_to_cart';
 
-	protected $icon      = 'star-filled';
+	/**
+	 * The block's icon.
+	 *
+	 * @var string
+	 */
+	protected $icon = 'star-filled';
+
+	/**
+	 * The shortcode used for this block.
+	 *
+	 * @var string
+	 */
 	protected $shortcode = Shortcodes\Product_Components::NAME;
 
 	/** @var Product_Component_Shortcode_Controller */
 	private $shortcode_rest_controller;
 
+	/**
+	 * Constructor to initialize the block with assets URL and shortcode controller.
+	 *
+	 * @param string $assets_url
+	 * @param Product_Component_Shortcode_Controller $shortcode_controller
+	 */
 	public function __construct( $assets_url, Product_Component_Shortcode_Controller $shortcode_controller ) {
 		parent::__construct( $assets_url );
 		$this->shortcode_rest_controller = $shortcode_controller;
 	}
 
+	/**
+	 * Returns the block's title.
+	 *
+	 * @return string The block's title.
+	 */
 	protected function title() {
 		return __( 'BigCommerce Product Components', 'bigcommerce' );
 	}
 
+	/**
+	 * Returns the HTML title for the block.
+	 *
+	 * @return string The HTML title.
+	 */
 	protected function html_title() {
 		return __( 'Product Components', 'bigcommerce' );
 	}
 
+	/**
+	 * Returns the URL of the image associated with the block.
+	 *
+	 * @return string The image URL.
+	 */
 	protected function html_image() {
 		return $this->image_url( 'Gutenberg-Block_Register-Form.png' );
 	}
 
+	/**
+	 * Returns an array of keywords related to the block.
+	 *
+	 * @return array The block's keywords.
+	 */
 	protected function keywords() {
 		$keywords   = parent::keywords();
 		$keywords[] = __( 'components', 'bigcommerce' );
@@ -50,7 +120,9 @@ class Product_Components extends Shortcode_Block {
 	}
 
 	/**
-	 * @return array
+	 * Returns the JavaScript configuration for the block.
+	 *
+	 * @return array The JavaScript configuration.
 	 */
 	public function js_config() {
 		$config              = parent::js_config();
@@ -90,6 +162,11 @@ class Product_Components extends Shortcode_Block {
 		return $config;
 	}
 
+	/**
+	 * Returns the attributes for the block.
+	 *
+	 * @return array The block's attributes.
+	 */
 	protected function attributes() {
 		return [
 			'shortcode'     => [
@@ -104,6 +181,11 @@ class Product_Components extends Shortcode_Block {
 		];
 	}
 
+	/**
+	 * Returns the preview URL for the block.
+	 *
+	 * @return string The preview URL.
+	 */
 	protected function get_preview_url() {
 		return $this->shortcode_rest_controller->get_base_url() . '/preview';
 	}

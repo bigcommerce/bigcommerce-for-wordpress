@@ -6,10 +6,25 @@ namespace BigCommerce\Forms;
 
 use BigCommerce\Accounts\Customer;
 
+/**
+ * Handles the profile update form submission process.
+ *
+ * @package BigCommerce\Forms
+ */
 class Update_Profile_Handler implements Form_Handler {
 
-	const ACTION = 'edit-profile';
+    /**
+     * The action identifier for the form submission.
+     */
+    const ACTION = 'edit-profile';
 
+    /**
+     * Handles the form submission for updating the user profile.
+     *
+     * @param array $submission The submitted form data.
+     *
+     * @return void
+     */
 	public function handle_request( $submission ) {
 		if ( ! $this->should_handle_request( $submission ) ) {
 			return;

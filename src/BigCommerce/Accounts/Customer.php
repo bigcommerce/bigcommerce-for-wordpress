@@ -16,22 +16,40 @@ use BigCommerce\Taxonomies\Channel\Channel;
 use BigCommerce\Taxonomies\Channel\Connections;
 
 /**
- * Class Customer
+ * Handles customer-specific data and resources such as customer addresses, profiles, orders, and related functionalities.
  *
- * Handle customer specific data and resources e.g. address, profile, orders amount and other
+ * This class interacts with the BigCommerce API to fetch and manage data for customers associated with WordPress users.
  */
 class Customer {
+	/**
+	 * Constant for customer ID meta key.
+	 *
+	 * @var string
+	 */
 	const CUSTOMER_ID_META = 'bigcommerce_customer_id';
 
+	/**
+	 * The WordPress user ID associated with the customer.
+	 *
+	 * @var int
+	 */
 	private $wp_user_id = 0;
 
+	/**
+	 * Customer constructor.
+	 *
+	 * @param int $wp_user_id The WordPress user ID associated with the customer.
+	 */
 	public function __construct( $wp_user_id ) {
 		$this->wp_user_id = $wp_user_id;
 	}
 
 	/**
-     * Get customer addresses
-	 * @return array
+	 * Get customer addresses.
+	 *
+	 * Fetches all the addresses associated with the customer.
+	 *
+	 * @return array An array of addresses associated with the customer.
 	 */
 	public function get_addresses() {
 		$customer_id = $this->get_customer_id();
@@ -51,13 +69,15 @@ class Customer {
 		}
 	}
 
-    /**
-     * Delete customer address by address id
-     *
-     * @param $address_id
-     *
-     * @return bool
-     */
+	/**
+	 * Delete a customer's address by address ID.
+	 *
+	 * Deletes the address associated with the provided address ID for the customer.
+	 *
+	 * @param int $address_id The ID of the address to be deleted.
+	 *
+	 * @return bool Returns true if the address was successfully deleted, false otherwise.
+	 */
 	public function delete_address( $address_id ) {
 		$customer_id = $this->get_customer_id();
 		if ( ! $customer_id ) {
@@ -72,13 +92,15 @@ class Customer {
 		}
 	}
 
-    /**
-     * Create customer address
-     *
-     * @param $address
-     *
-     * @return bool
-     */
+	/**
+	 * Add a new address for the customer.
+	 *
+	 * Adds a new address to the customer's account.
+	 *
+	 * @param array $address The address data to be added.
+	 *
+	 * @return bool Returns true if the address was successfully added, false otherwise.
+	 */
 	public function add_address( $address ) {
 		$customer_id = $this->get_customer_id();
 		if ( ! $customer_id ) {
@@ -93,14 +115,16 @@ class Customer {
 		}
 	}
 
-    /**
-     * Update customer address by id
-     *
-     * @param $address_id
-     * @param $address
-     *
-     * @return bool
-     */
+	/**
+	 * Update a customer's address by address ID.
+	 *
+	 * Updates an existing address based on the provided address ID.
+	 *
+	 * @param int   $address_id The ID of the address to be updated.
+	 * @param array $address    The updated address data.
+	 *
+	 * @return bool Returns true if the address was successfully updated, false otherwise.
+	 */
 	public function update_address( $address_id, $address ) {
 		$customer_id = $this->get_customer_id();
 		if ( ! $customer_id ) {
@@ -115,11 +139,13 @@ class Customer {
 		}
 	}
 
-    /**
-     * Get amount of orders for the customer
-     *
-     * @return int
-     */
+	/**
+	 * Get the number of orders for the customer.
+	 *
+	 * Returns the total count of orders placed by the customer.
+	 *
+	 * @return int The number of orders associated with the customer.
+	 */
 	public function get_order_count() {
 		$customer_id = $this->get_customer_id();
 		if ( ! $customer_id ) {
@@ -137,19 +163,16 @@ class Customer {
 	}
 
 	/**
-	 * Get the most recent orders on the account. Each will include
-	 * at least one product (useful for finding featured images),
-	 * but is not guaranteed to include all.
+	 * Get the most recent orders of the customer.
 	 *
-	 * WARNING: This function is heavy on API calls. One call for the
-	 * order list, plus another for each order in the list.
+	 * Returns a list of the most recent orders for the customer, each including at least one product.
+	 * Note that this function makes multiple API calls and should be optimized for scalability in the future.
 	 *
-	 * @param int $page
-	 * @param int $limit
+	 * @param int $page  The page number of results.
+	 * @param int $limit The number of results per page.
 	 *
-	 * @return array
-	 * @todo Optimize for scalability
-	 *
+	 * @return array A list of the most recent orders of the customer.
+	 * @todo Optimize for scalability.
 	 */
 	public function get_orders( $page = 1, $limit = 12 ) {
 		$customer_id = $this->get_customer_id();
@@ -180,12 +203,15 @@ class Customer {
 		}
 	}
 
-    /**
-     * Get customer order details by order id
-     *
-     * @param $order_id
-     * @return array|false
-     */
+	/**
+	 * Get detailed information for a specific customer order.
+	 *
+	 * Fetches detailed information about the specified order, including products and shipping addresses.
+	 *
+	 * @param int $order_id The ID of the order to retrieve.
+	 *
+	 * @return array|false An array of order details or false if the order is not found.
+	 */
 	public function get_order_details( $order_id ) {
 		$order = Client::getOrder( $order_id );
 		if ( empty( $order ) || $order->customer_id != $this->get_customer_id() ) {
@@ -254,11 +280,14 @@ class Customer {
 		return $item;
 	}
 
-    /**
-     * Get customer profile data
-     *
-     * @return array|mixed|void
-     */
+
+	/**
+	 * Get the profile data of the customer.
+	 *
+	 * Returns the customer's profile information, including fields like name, email, and customer group.
+	 *
+	 * @return array An array of customer profile data.
+	 */
 	public function get_profile() {
 		$customer_id = $this->get_customer_id();
 		if ( ! $customer_id ) {
@@ -291,12 +320,13 @@ class Customer {
 		}
 	}
 
-    /**
-     * Update customer profile data
-     * @param $profile
-     *
-     * @return bool
-     */
+	/**
+	 * Update the profile data of the customer.
+	 *
+	 * @param array $profile The profile data to update.
+	 *
+	 * @return bool Returns true if the profile was successfully updated, false otherwise.
+	 */
 	public function update_profile( $profile ) {
 		$customer_id = $this->get_customer_id();
 		if ( ! $customer_id ) {
@@ -312,7 +342,9 @@ class Customer {
 	}
 
 	/**
-	 * @return int The ID of the customer account linked to this user
+	 * Get the customer ID linked to the current WordPress user.
+	 *
+	 * @return int The customer ID associated with the WordPress user.
 	 */
 	public function get_customer_id() {
 		$customer_id = get_user_option( self::CUSTOMER_ID_META, $this->wp_user_id );
@@ -321,9 +353,9 @@ class Customer {
 	}
 
 	/**
-	 * @param int $customer_id The customer ID to link to this user
+	 * Set the customer ID linked to the current WordPress user.
 	 *
-	 * @return void
+	 * @param int $customer_id The customer ID to link to the WordPress user.
 	 */
 	public function set_customer_id( $customer_id ) {
 		update_user_option( $this->wp_user_id, self::CUSTOMER_ID_META, $customer_id );
@@ -331,10 +363,8 @@ class Customer {
 
 	/**
 	 * Get the customer group ID assigned to the user.
-	 * Value will be fetched from cache if available,
-	 * otherwise from the API.
 	 *
-	 * @return int|null
+	 * @return int|null The group ID of the customer, or null if the user is a guest.
 	 */
 	public function get_group_id() {
 		$customer_id = is_user_logged_in() || defined( 'DOING_CRON' ) ? get_user_option( self::CUSTOMER_ID_META, $this->wp_user_id ) : 0;
@@ -380,7 +410,9 @@ class Customer {
 	}
 
 	/**
-	 * @return array|null
+	 * Get the default group for guest users.
+	 *
+	 * @return array|null An array of default customer group IDs for guests, or null if none are found.
 	 */
 	public function get_guests_default_group() {
 		$args  = [
@@ -391,6 +423,13 @@ class Customer {
 		$customer_groups = Client::getCustomerGroups( $query );
 
 		if ( empty( $customer_groups ) ) {
+			/**
+			 * Log information about empty customer groups.
+			 *
+			 * @param string $level The log level (INFO)
+			 * @param string $message The log message
+			 * @param array $context Additional context data
+			 */
 			do_action( 'bigcommerce/log', Error_Log::INFO, __( 'Customer groups are empty', 'bigcommerce' ), [] );
 			return null;
 		}
@@ -408,9 +447,9 @@ class Customer {
 	}
 
 	/**
-	 * Get the customer group associated with this customer
+	 * Get the customer group for the current customer.
 	 *
-	 * @return Customer_Group
+	 * @return Customer_Group The customer group object associated with the customer.
 	 */
 	public function get_group() {
 		return new Customer_Group( $this->get_group_id() );

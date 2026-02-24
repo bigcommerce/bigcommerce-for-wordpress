@@ -7,12 +7,19 @@ namespace BigCommerce\Forms;
 use BigCommerce\Templates\Message;
 use BigCommerce\Templates\Message_Group;
 
+/**
+ * Handles rendering of messages (success or error) above forms or within form submissions.
+ */
 class Messages {
 
 	/**
-	 * @param string $content
+	 * Renders messages above the content.
 	 *
-	 * @return string The content with messages prepended
+	 * This method filters whether to show the error/success messages above the content of the form.
+	 *
+	 * @param string $content The original content.
+	 *
+	 * @return string The content with messages prepended.
 	 * @filter the_content 5
 	 */
 	public function render_messages_above_content( $content ) {
@@ -28,8 +35,8 @@ class Messages {
 		 * Filter whether to show error/success messages above forms. If disabled,
 		 * the theme or plugin should show them elsewhere.
 		 *
-		 * @param bool $show    true to show messages, false to disable them
-		 * @param int  $post_id The ID of the current post
+		 * @param bool $show    true to show messages, false to disable them.
+		 * @param int  $post_id The ID of the current post.
 		 */
 		if ( ! apply_filters( 'bigcommerce/forms/show_messages', true, $post_id ) ) {
 			return $content;
@@ -38,7 +45,7 @@ class Messages {
 		/**
 		 * Filter the feedback messages that will be rendered.
 		 *
-		 * @param string $messages The rendered messages
+		 * @param string $messages The rendered messages.
 		 */
 		$messages = apply_filters( 'bigcommerce/forms/messages', '' );
 
@@ -46,9 +53,11 @@ class Messages {
 	}
 
 	/**
-	 * Render form messages
+	 * Renders the error or success messages for the form submission.
 	 *
-	 * @return string
+	 * This method checks for stored error or success messages and renders them if available.
+	 *
+	 * @return string The rendered error or success messages.
 	 */
 	public function render_messages() {
 		$bc_error = filter_var_array( $_REQUEST, [ Error_Handler::PARAM => FILTER_SANITIZE_STRING ] );
@@ -82,8 +91,8 @@ class Messages {
 		 * Filter whether to show error messages above forms. If disabled,
 		 * the theme or plugin should show them elsewhere.
 		 *
-		 * @param bool  $show true to show messages, false to disable them
-		 * @param array $data Data for the error messages
+		 * @param bool  $show true to show messages, false to disable them.
+		 * @param array $data Data for the error messages.
 		 */
 		if ( ! apply_filters( 'bigcommerce/forms/show_error_messages', true, $data ) ) {
 			return '';
@@ -124,8 +133,8 @@ class Messages {
 		 * Filter whether to show success messages above forms. If disabled,
 		 * the theme or plugin should show them elsewhere.
 		 *
-		 * @param bool  $show true to show messages, false to disable them
-		 * @param array $data Data for the success message
+		 * @param bool  $show true to show messages, false to disable them.
+		 * @param array $data Data for the success message.
 		 */
 		if ( ! apply_filters( 'bigcommerce/forms/show_success_messages', true, $data ) ) {
 			return '';
@@ -139,10 +148,10 @@ class Messages {
 		];
 
 		/**
-		 * Filter the arguments passed to the success message template
+		 * Filter the arguments passed to the success message template.
 		 *
-		 * @param array $args The arguments that will be passed
-		 * @param array $data The data that was stored with the message
+		 * @param array $args The arguments that will be passed.
+		 * @param array $data The data that was stored with the message.
 		 */
 		$args = apply_filters( 'bigcommerce/messages/success/arguments', $args, $data );
 

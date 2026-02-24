@@ -7,25 +7,25 @@ namespace BigCommerce\Api;
 use Firebase\JWT\JWT;
 
 /**
- * Class Store_Api
- *
- * Handle retrieving information about store from APIv2
+ * Handle retrieving information about the store from APIv2.
  *
  * @package BigCommerce\Api
  */
 class Store_Api extends v2ApiAdapter {
 
     /**
-     * Get customr login token by id
+     * Get customer login token by ID.
      *
-     * @param $id
-     * @param string $redirectUrl
-     * @param string $requestIp
-     * @param int $channel_id
+     * This method generates a JWT token to allow a customer to log in. The token can
+     * be used to authenticate the customer in future API requests.
      *
-     * @return string
+     * @param int    $id           The ID of the customer.
+     * @param string $redirectUrl  Optional URL to redirect the customer after login.
+     * @param string $requestIp    Optional IP address of the requestor.
+     * @param int    $channel_id   Optional channel ID for the customer login.
      *
-     * @throws \Exception
+     * @return string The generated JWT login token.
+     * @throws \Exception If the client secret is missing or other errors occur.
      */
 	public function getCustomerLoginToken( $id, $redirectUrl = '', $requestIp = '', $channel_id = 0 ) {
 		$config     = $this->apiClient->getConfig();
@@ -94,9 +94,11 @@ class Store_Api extends v2ApiAdapter {
 	}
 
     /**
-     * Return the list of store analytics settings
+     * Return the list of store analytics settings.
      *
-     * @return array|array[]
+     * This method retrieves the store's analytics settings, such as tracking options.
+     *
+     * @return array The store's analytics settings.
      */
 	public function get_analytics_settings() {
 		try {
@@ -116,12 +118,15 @@ class Store_Api extends v2ApiAdapter {
 	}
 
     /**
-     * Update store analytics setting by id
+     * Update store analytics setting by ID.
      *
-     * @param $id
-     * @param array $settings
+     * This method updates the analytics settings for a given store using the provided
+     * settings array.
      *
-     * @return bool
+     * @param int   $id       The ID of the analytics setting to update.
+     * @param array $settings The new settings for the store.
+     *
+     * @return bool True if the update was successful, false otherwise.
      */
 	public function update_analytics_settings( $id, array $settings ) {
 		try {
@@ -137,11 +142,13 @@ class Store_Api extends v2ApiAdapter {
 		}
 	}
 
-	/**
-	 * Check if site wide https option is enabled in BC
-	 *
-	 * @return bool
-	 */
+    /**
+     * Check if site-wide HTTPS option is enabled in BigCommerce.
+     *
+     * This method checks if the site-wide HTTPS option is enabled for the store.
+     *
+     * @return bool True if HTTPS is enabled, false otherwise.
+     */
 	public function get_sitewidehttps_enabled() {
 		$resource = $this->get_store_resource();
 
@@ -154,11 +161,13 @@ class Store_Api extends v2ApiAdapter {
 		return ! empty( $resource ) ? $resource->sitewidehttps_enabled : false;
 	}
 
-	/**
-	 * Get store domain
-	 *
-	 * @return bool
-	 */
+    /**
+     * Get store domain.
+     *
+     * This method retrieves the domain name associated with the store.
+     *
+     * @return bool The domain name of the store if available, otherwise false.
+     */
 	public function get_domain() {
 		$resource = $this->get_store_resource();
 
@@ -169,14 +178,16 @@ class Store_Api extends v2ApiAdapter {
 		return $this->store_resource_exists( $resource, 'domain' );
 	}
 
-	/**
-	 * Check whether the provided resource exists
-	 *
-	 * @param $resource
-	 * @param $property
-	 *
-	 * @return bool
-	 */
+    /**
+     * Check whether the provided resource exists.
+     *
+     * This method checks if a specific property exists in a given resource.
+     *
+     * @param mixed  $resource The resource object to check.
+     * @param string $property The property name to check for.
+     *
+     * @return bool True if the property exists in the resource, false otherwise.
+     */
 	public function store_resource_exists( $resource, $property) {
 		if ( empty( $resource ) ) {
 			return false;
@@ -185,11 +196,13 @@ class Store_Api extends v2ApiAdapter {
 		return $resource->{$property};
 	}
 
-	/**
-	 * Get store resource
-	 *
-	 * @return false|Resource
-	 */
+    /**
+     * Get store resource.
+     *
+     * This method retrieves the store resource containing details about the store.
+     *
+     * @return false|Resource The store resource, or false if an error occurs.
+     */
 	public function get_store_resource() {
 		try {
 			return $this->getResource( '/store' );

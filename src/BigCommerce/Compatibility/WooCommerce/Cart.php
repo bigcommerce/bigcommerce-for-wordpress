@@ -7,19 +7,45 @@ use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api\v3\Api\CartApi;
 use BigCommerce\Cart\Cart_Mapper;
 
+/**
+ * This class handles the interaction between the WooCommerce cart and BigCommerce's cart API.
+ * It retrieves cart information, including the cart subtotal, and maps it to a WooCommerce-compatible format.
+ *
+ * @package BigCommerce
+ * @subpackage Compatibility\WooCommerce
+ */
 class Cart {
 
+	/**
+	 * The count of items in the cart.
+	 *
+	 * @var int
+	 */
 	public $cart_contents_count = 0;
 
-	/** @var CartApi */
+	/** 
+	 * The instance of BigCommerce CartApi for interacting with the BigCommerce cart.
+	 *
+	 * @var CartApi
+	 */
 	private $bc_cart_api;
 
+	/**
+	 * Cart constructor.
+	 *
+	 * @param CartApi $bc_cart_api The BigCommerce CartApi instance used to interact with the BigCommerce cart.
+	 */
 	public function __construct( CartApi $bc_cart_api )
 	{
 		$this->bc_cart_api         = $bc_cart_api;
 		$this->cart_contents_count = filter_input( INPUT_COOKIE, BC_Cart::COUNT_COOKIE, FILTER_SANITIZE_NUMBER_INT ) ?: 0;
 	}
 
+	/**
+	 * Get the subtotal for the current cart.
+	 *
+	 * @return string|int The formatted subtotal of the cart or 0 if the cart amount is unavailable.
+	 */
 	public function get_cart_subtotal() {
 		$bc_cart = $this->get_bc_cart();
 		

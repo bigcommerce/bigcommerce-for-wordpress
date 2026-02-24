@@ -1,9 +1,4 @@
 <?php
-/**
- * Class Amp
- *
- * @package BigCommerce
- */
 
 namespace BigCommerce\Container;
 
@@ -19,18 +14,85 @@ use BigCommerce\Customizer\Styles;
 use BigCommerce\Amp\Amp_Cart_Menu_Item;
 
 /**
- * Class Amp
+ * This class integrates AMP (Accelerated Mobile Pages) functionality into the BigCommerce platform.
+ * It registers necessary services and handles template overrides, assets, and customization for AMP compatibility.
+ * The class also provides hooks and filters for customizing the AMP-specific behavior of templates, assets, and menus.
+ * 
+ * The AMP class manages the AMP checkout redirect, template override initialization, and integration with 
+ * BigCommerce's storefront rendering system to ensure AMP-compatible pages.
+ * 
+ * @package BigCommerce
+ * @subpackage AMP
  */
 class Amp extends Provider {
+	/**
+	 * The template override identifier for AMP templates.
+	 * This constant is used to access the service responsible for overriding AMP templates within the application.
+	 * @var string
+	 */
 	const TEMPLATE_OVERRIDE  = 'amp.template_override';
+
+	/**
+	 * The template directory identifier for AMP templates.
+	 * This constant is used to access the service that specifies the AMP template directory.
+	 * @var string
+	 */
 	const TEMPLATE_DIRECTORY = 'amp.template_directory';
+
+	/**
+	 * The factory override identifier for AMP controller factories.
+	 * This constant is used to access the service that provides the custom controller factory for AMP controllers.
+	 * @var string
+	 */
 	const FACTORY_OVERRIDE   = 'amp.controller_factory_override';
+
+	/**
+	 * The assets identifier for AMP assets.
+	 * This constant is used to access the service responsible for managing AMP-specific assets.
+	 * @var string
+	 */
 	const ASSETS             = 'amp.assets';
+
+	/**
+	 * The customizer styles identifier for AMP.
+	 * This constant is used to access the service that handles custom styles for AMP customization.
+	 * @var string
+	 */
 	const CUSTOMIZER_STYLES  = 'amp.customize_styles';
+
+	/**
+	 * The overrides identifier for AMP-related overrides.
+	 * This constant is used to access the service responsible for applying AMP-specific overrides to content and templates.
+	 * @var string
+	 */
 	const OVERRIDES          = 'amp.overrides';
+
+	/**
+	 * The classic AMP mode identifier.
+	 * This constant is used to access the service that enables or handles the classic AMP mode for templates.
+	 * @var string
+	 */
 	const CLASSIC            = 'amp.classic';
+
+	/**
+	 * The AMP cart identifier.
+	 * This constant is used to access the service that handles AMP cart functionality, including interactions with the cart.
+	 * @var string
+	 */
 	const AMP_CART           = 'amp.amp_cart';
+
+	/**
+	 * The menu item identifier for AMP cart menu item.
+	 * This constant is used to access the service that adds AMP-specific functionality to the cart menu item.
+	 * @var string
+	 */
 	const MENU_ITEM          = 'amp.cart_menu_item';
+
+	/**
+	 * The AMP admin notices identifier.
+	 * This constant is used to access the service that handles AMP-specific admin notices within the application.
+	 * @var string
+	 */
 	const AMP_ADMIN_NOTICES  = 'amp.notices';
 
 	/**

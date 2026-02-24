@@ -11,6 +11,18 @@ use BigCommerce\Settings\Sections\Account_Settings;
 use BigCommerce\Taxonomies\Channel\Channel;
 use BigCommerce\Taxonomies\Channel\Connections;
 
+/**
+ * Abstract class for handling BigCommerce customer webhook operations.
+ * 
+ * Provides base functionality for saving, updating, and managing customer data
+ * between BigCommerce and WordPress, including channel-aware operations and
+ * customer data synchronization.
+ *
+ * @since [VERSION]
+ * @package BigCommerce\Webhooks\Customer
+ * 
+ * @property CustomersApi $customers_api BigCommerce Customers API client instance
+ */
 abstract class Customer_Saver {
 
 	/**

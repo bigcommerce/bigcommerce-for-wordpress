@@ -6,6 +6,9 @@ namespace BigCommerce\Import\Runner;
 
 use BigCommerce\Manager\Manager;
 
+/**
+ * Handles the scheduling and execution of BigCommerce import processes via WordPress cron.
+ */
 class Cron_Runner {
 	const START_CRON    = 'bigcommerce_start_import';
 	const CONTINUE_CRON = 'bigcommerce_continue_import';
@@ -27,6 +30,9 @@ class Cron_Runner {
 		}
 
 		$lock->set_lock();
+		/**
+		 * This action is triggered at the start of the BigCommerce import process. It clears or truncates the log file to ensure that old logs do not interfere with the new import process.
+		 */
 		do_action( 'bigcommerce/import/start' );
 		$this->schedule_next();
 		$lock->release_lock();
@@ -49,8 +55,23 @@ class Cron_Runner {
 			return; // another process has claimed it
 		}
 		$lock->set_lock();
+		/**
+		 * Hook before the import starts.
+		 *
+		 * @param string $status Current status of the import.
+		 */	
 		do_action( 'bigcommerce/import/before', $current[ 'status' ] );
+		/**
+		 * Hook to run the import process.
+		 *
+		 * @param string $status Current status of the import.
+		 */
 		do_action( 'bigcommerce/import/run', $current[ 'status' ] );
+		/**
+		 * Hook after the import finishes.
+		 *
+		 * @param string $status Current status of the import.
+		 */
 		do_action( 'bigcommerce/import/after', $current[ 'status' ] );
 		$this->schedule_next();
 		$lock->release_lock();

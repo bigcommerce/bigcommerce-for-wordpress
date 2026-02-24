@@ -5,16 +5,21 @@ namespace BigCommerce\Amp;
 /**
  * Class Classic
  *
- * Specific customizations for the classic AMP mode.
+ * Provides customizations for the classic AMP mode, including
+ * registering specific menus for AMP compatibility.
  *
  * @package BigCommerce\Amp
  */
 class Classic {
 
-	/**
-	 * Register the AMP Header menu.
-	 */
-	public function register_amp_menu() {
-		register_nav_menu( 'amp-menu', 'AMP Hamburger Menu' );
-	}
+    /**
+     * Registers the AMP Header menu.
+     *
+     * This menu is used for the AMP hamburger menu in classic AMP mode.
+     *
+     * @return void
+     */
+    public function register_amp_menu() {
+        register_nav_menu( 'amp-menu', 'AMP Hamburger Menu' );
+    }
 }

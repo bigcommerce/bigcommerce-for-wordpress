@@ -3,21 +3,34 @@
 
 namespace BigCommerce\Api;
 
+/**
+ * A placeholder API client that disables API calls.
+ * This class is typically used when API configuration is missing or incomplete.
+ * 
+ * Attempts to make API calls using this client will throw an exception.
+ *
+ * @package BigCommerce\Api
+ * @extends Base_Client
+ */
 class Null_Client extends Base_Client {
 
 	/**
-	 * (Doesn't) make the HTTP call (Sync)
+	 * Attempt to make an API call.
 	 *
-	 * @param string $resourcePath path to method endpoint
-	 * @param string $method       method to call
-	 * @param array  $queryParams  parameters to be place in query URL
-	 * @param array  $postData     parameters to be placed in POST body
-	 * @param array  $headerParams parameters to be place in request header
-	 * @param string $responseType expected response type of the endpoint
-	 * @param string $endpointPath path to method endpoint before expanding parameters
+	 * This method always throws an exception because the client is configured to prevent API calls.
+	 * It is intended to signal that required API configuration settings are missing.
 	 *
-	 * @throws \BigCommerce\Api\v3\ApiException on a non 2xx response
-	 * @return mixed
+	 * @param string $resourcePath Path to the API method endpoint.
+	 * @param string $method       HTTP method to use for the request (e.g., GET, POST).
+	 * @param array  $queryParams  Parameters to include in the query string of the URL.
+	 * @param array  $postData     Parameters to include in the body of the request.
+	 * @param array  $headerParams Headers to include in the request.
+	 * @param string|null $responseType The expected response type (optional).
+	 * @param string|null $endpointPath The original endpoint path before parameter substitution (optional).
+	 *
+	 * @throws ConfigurationRequiredException Always thrown with a message indicating missing settings.
+	 *
+	 * @return mixed This method does not return a value; it always throws an exception.
 	 */
 	public function callApi( $resourcePath, $method, $queryParams, $postData, $headerParams, $responseType = null, $endpointPath = null ) {
 		throw new ConfigurationRequiredException( __( 'Unable to connect to BigCommerce API. Missing required settings', 'bigcommerce' ) );

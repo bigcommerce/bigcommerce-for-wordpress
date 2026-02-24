@@ -113,11 +113,24 @@ class Store_Settings implements Import_Processor {
 				$this->default_customer_group->run();
 				$this->storefront_processor->run();
 			}
-
+			/**
+			 * Hook after fetching currency code.
+			 *
+			 * @param string $currency_code The fetched currency code.
+			 */
 			do_action( 'bigcommerce/import/fetched_currency', $settings[ Settings\Sections\Currency::CURRENCY_CODE ] );
+			/**
+			 * Checks and updates routes after fetching store settings during an import.
+			 *
+			 * Triggers the `maybe_update_routes` method of the `Routes` class to ensure routes are updated
+			 * after store settings are fetched during the import process.
+			 */
 			do_action( 'bigcommerce/import/fetched_store_settings', $settings );
 		} catch ( \Exception $e ) {
 			// if anything fails here, leave it be and let the user configure currency settings
+			/**
+			 * Hook when store settings cannot be fetched.
+			 */
 			do_action( 'bigcommerce/import/could_not_fetch_store_settings' );
 		}
 

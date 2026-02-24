@@ -6,6 +6,12 @@ namespace BigCommerce\Assets\Theme;
 
 use BigCommerce\Pages\Checkout_Page;
 
+/**
+ * Manages the enqueuing of JavaScript files for the theme. It handles the inclusion of asset files,
+ * conditional script loading based on page type, and localization of JavaScript data.
+ *
+ * @package BigCommerce\Assets\Theme
+ */
 class Scripts {
 	/**
 	 * @var string Path to the plugin assets directory
@@ -27,6 +33,16 @@ class Scripts {
 	 */
 	private $localization;
 
+	/**
+	 * Scripts constructor.
+	 *
+	 * Initializes the Scripts class with the asset directory, version, and necessary dependencies.
+	 *
+	 * @param string $asset_directory The path to the plugin assets directory.
+	 * @param string $version The version of the asset build.
+	 * @param JS_Config $config The JS_Config object for configuration data.
+	 * @param JS_Localization $localization The JS_Localization object for localized strings.
+	 */
 	public function __construct( $asset_directory, $version, JS_Config $config, JS_Localization $localization ) {
 		$this->directory    = trailingslashit( $asset_directory );
 		$this->version      = $version;
@@ -35,7 +51,11 @@ class Scripts {
 	}
 
 	/**
-	 * Enqueue scripts
+	 * Enqueues JavaScript files for the frontend.
+	 *
+	 * This method registers and enqueues the necessary JavaScript files for the theme, including
+	 * manifest, vendor, and plugin scripts. It also conditionally loads the BigCommerce checkout SDK
+	 * if the current page is the checkout page.
 	 *
 	 * @action wp_enqueue_scripts
 	 */

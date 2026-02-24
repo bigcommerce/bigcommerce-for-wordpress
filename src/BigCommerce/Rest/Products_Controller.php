@@ -40,6 +40,12 @@ use WP_REST_Server;
  *  - order: sort results by title. Valid values are 'asc' or 'desc' (case sensitive), defaults to 'asc'.
  */
 class Products_Controller extends Rest_Controller {
+
+    /**
+     * Registers the REST routes for products.
+     *
+     * @return void
+     */
 	public function register_routes() {
 		register_rest_route( $this->namespace, '/' . $this->products_query_route_path(), [
 			[
@@ -56,18 +62,25 @@ class Products_Controller extends Rest_Controller {
 		return $this->rest_base;
 	}
 
-	/**
-	 * Checks if a given request has access to read products.
-	 *
-	 * @param  \WP_REST_Request $request Full details about the request.
-	 *
-	 * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
-	 */
+    /**
+     * Checks if a given request has access to read products.
+     *
+     * @param  \WP_REST_Request $request Full details about the request.
+     *
+     * @return true|\WP_Error True if the request has read access, WP_Error object otherwise.
+     */
 	public function get_items_permissions_check( $request ) {
 		// no access checks for now
 		return true;
 	}
 
+    /**
+     * Retrieves a collection of products for headless mode.
+     *
+     * @param \WP_REST_Request $request The request object.
+     *
+     * @return \WP_REST_Response|\WP_Error The response object or error.
+     */
 	protected function get_items_headless( $request ) {
 		$container    = bigcommerce()->container();
 		$request_data = $request->get_params();
@@ -257,13 +270,13 @@ class Products_Controller extends Rest_Controller {
 		}
 	}
 
-	/**
-	 * Retrieves a collection of products.
-	 *
-	 * @param \WP_REST_Request $request Full details about the request.
-	 *
-	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
-	 */
+    /**
+     * Retrieves a collection of products.
+     *
+     * @param \WP_REST_Request $request Full details about the request.
+     *
+     * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
+     */
 	public function get_items( $request ) {
 		$request_data = $request->get_params();
 
@@ -289,6 +302,7 @@ class Products_Controller extends Rest_Controller {
 		}
 
 		$channel_filter = $this->get_channel_filter( $request->get_param( Channel::NAME ) );
+
 		add_action( 'pre_get_posts', $channel_filter, 9, 1 ); // run before Query_Filter::set_tax_query()
 
 		$posts_query  = new \WP_Query();
@@ -378,6 +392,14 @@ class Products_Controller extends Rest_Controller {
 		return $filter;
 	}
 
+	/**
+	 * Retrieves the query parameters for the collection.
+	 *
+	 * This function extends the default collection parameters to include product-specific filters such 
+	 * as sorting order, BigCommerce ID, recent updates, and channel-specific filters.
+	 *
+	 * @return array The query parameters for retrieving a collection of products.
+	 */
 	public function get_collection_params() {
 		$query_params = parent::get_collection_params();
 		foreach ( Shortcodes\Products::default_attributes() as $key => $default ) {
@@ -451,10 +473,14 @@ class Products_Controller extends Rest_Controller {
 	/**
 	 * Prepares a single product output for response.
 	 *
-	 * @param \WP_Post         $post    Post object.
-	 * @param \WP_REST_Request $request Request object.
+	 * This function prepares a product (identified by a post ID) to be included in a REST API response. 
+	 * It gathers necessary product data based on the schema and adds additional fields before returning 
+	 * the response.
 	 *
-	 * @return \WP_REST_Response Response object.
+	 * @param \WP_Post         $post    Post object representing the product.
+	 * @param \WP_REST_Request $request The request object containing additional parameters.
+	 *
+	 * @return \WP_REST_Response Response object containing the product data.
 	 */
 	public function prepare_item_for_response( $post, $request ) {
 		$backup_post     = isset( $GLOBALS['post'] ) ? $GLOBALS['post'] : null;
@@ -529,13 +555,15 @@ class Products_Controller extends Rest_Controller {
 	}
 
 	/**
-	 * Add data to the JS config to support products requests
+	 * Add data to the JS config to support product requests.
 	 *
-	 * @param array $config
+	 * This function merges product-related data such as the API URL and an AJAX nonce
+	 * into the existing JS configuration array, enabling the front-end to make
+	 * product-related requests.
 	 *
-	 * @return array
+	 * @param array $config The current JavaScript configuration.
 	 *
-	 * @filter bigcommerce/js_config
+	 * @return array Modified JavaScript configuration with product-related data.
 	 */
 	public function js_config( $config ): array {
 		$config['product'] = array_merge( $config['product'], [
@@ -547,12 +575,24 @@ class Products_Controller extends Rest_Controller {
 	}
 
 	/**
-	 * @param int $post_id
+	 * Get the structured content object for a specific post.
 	 *
-	 * @return array The structured content array
+	 * This function retrieves the raw content of a post and formats it according to
+	 * WordPress content filters. It also trims the content to a specified length.
+	 *
+	 * @param int $post_id The ID of the post for which to retrieve the content.
+	 *
+	 * @return array An array containing the raw, formatted, and trimmed content of the post.
 	 */
 	protected function get_content_object( $post_id ) {
 		$content   = get_post_field( 'post_content', $post_id );
+		/**
+		 * Filters the content to render messages above the main content.
+		 *
+		 * @param string $content The post content.
+		 *
+		 * @return string The modified content with rendered messages.
+		 */
 		$formatted = apply_filters( 'the_content', $content );
 		/**
 		 * Filters rest product content trim words length.
@@ -569,12 +609,15 @@ class Products_Controller extends Rest_Controller {
 	}
 
 	/**
-	 * Get the URLs for the attachment in all requested sizes
+	 * Get the URLs for the attachment in all requested sizes.
 	 *
-	 * @param int   $attachment_id
-	 * @param array $schema
+	 * This function returns the image URLs for all sizes specified in the schema for
+	 * a given attachment ID.
 	 *
-	 * @return array
+	 * @param int   $attachment_id The ID of the attachment.
+	 * @param array $schema The schema that defines the image sizes.
+	 *
+	 * @return array An associative array containing image URLs for each size.
 	 */
 	protected function get_image_urls( $attachment_id, $schema ) {
 		$sizes = [];
@@ -601,6 +644,16 @@ class Products_Controller extends Rest_Controller {
 		return $sizes;
 	}
 
+	/**
+	 * Return missing image data for a given size.
+	 *
+	 * This function provides a default response for a missing image for a specified
+	 * size. It can be filtered using the `bigcommerce/rest/missing_image` filter.
+	 *
+	 * @param string $size The size of the image for which data is missing.
+	 *
+	 * @return array The missing image data, including URL, width, and height.
+	 */
 	protected function missing_image( $size ) {
 		/**
 		 * Filters rest missing image data.
@@ -615,12 +668,15 @@ class Products_Controller extends Rest_Controller {
 	}
 
 	/**
-	 * Get the terms for the product
+	 * Get the terms for a product's taxonomy.
 	 *
-	 * @param int    $post_id
-	 * @param string $taxonomy
+	 * This function retrieves the terms associated with a product for a specified
+	 * taxonomy and formats them into an array.
 	 *
-	 * @return array
+	 * @param int    $post_id The ID of the post (product).
+	 * @param string $taxonomy The taxonomy for which terms are to be retrieved.
+	 *
+	 * @return array An array of terms associated with the given taxonomy for the product.
 	 */
 	protected function get_taxonomy_properties( $post_id, $taxonomy ) {
 		$terms = get_the_terms( $post_id, $taxonomy );
@@ -641,7 +697,11 @@ class Products_Controller extends Rest_Controller {
 	/**
 	 * Retrieves the response's schema, conforming to JSON Schema.
 	 *
-	 * @return array Item schema data.
+	 * This function generates a JSON schema representing the structure of a product
+	 * object, including fields like `post_id`, `bigcommerce_id`, `date`, and custom
+	 * taxonomy terms. The schema can be used for validation and data modeling.
+	 *
+	 * @return array Item schema data, conforming to the JSON Schema specification.
 	 */
 	public function get_item_schema() {
 

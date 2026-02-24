@@ -7,14 +7,23 @@ use BigCommerce\Api\v3\Model\CategoryCollectionResponse;
 use BigCommerce\Taxonomies\Channel\Channel;
 use BigCommerce\Taxonomies\Channel\Connections;
 
+/**
+ * This trait provides methods for working with BigCommerce category trees.
+ * It includes functionality to fetch categories within a specific category tree.
+ */
 trait CategoriesTrees {
 
 	/**
-	 * @param \BigCommerce\Api\v3\Api\CatalogApi $api
-	 * @param array                              $include_fields
+	 * Get the categories in the MSF category tree.
 	 *
-	 * @return \BigCommerce\Api\v3\Model\CategoryCollectionResponse|array
-	 * @throws \BigCommerce\Api\v3\ApiException
+	 * This method retrieves categories within the MSF category tree by fetching the tree ID,
+	 * then requesting a batch of categories from the BigCommerce API.
+	 *
+	 * @param \BigCommerce\Api\v3\Api\CatalogApi $api The BigCommerce Catalog API instance.
+	 * @param array                              $params Additional parameters for the category query (optional).
+	 *
+	 * @return \BigCommerce\Api\v3\Model\CategoryCollectionResponse|array A collection of categories or an empty array.
+	 * @throws \BigCommerce\Api\v3\ApiException Throws an exception if the API request fails.
 	 */
 	public function get_msf_categories( CatalogApi $api, array $params = [] ) {
 		$trees = $this->get_trees( $api );
@@ -37,10 +46,16 @@ trait CategoriesTrees {
 	}
 
 	/**
-	 * @param \BigCommerce\Api\v3\Api\CatalogApi $api
+	 * Get all category trees associated with a given channel.
 	 *
-	 * @return array
-	 * @throws \BigCommerce\Api\v3\ApiException
+	 * This method fetches category trees from BigCommerce by retrieving the channel ID
+	 * associated with the primary connection and querying the BigCommerce API for
+	 * available category trees.
+	 *
+	 * @param \BigCommerce\Api\v3\Api\CatalogApi $api The BigCommerce Catalog API instance.
+	 *
+	 * @return array An array of category trees.
+	 * @throws \BigCommerce\Api\v3\ApiException Throws an exception if the API request fails.
 	 */
 	public function get_trees( CatalogApi $api ): array {
 		$connections = new Connections();

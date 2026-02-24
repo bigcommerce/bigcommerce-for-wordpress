@@ -38,6 +38,11 @@ class Product_Inventory_Update_Webhook extends Webhook {
 		do_action( 'bigcommerce/log', Error_Log::INFO, __( 'Trigger inventory update webhook', 'bigcommerce' ), [
 				'product_id' => $product_id,
 		], 'webhooks' );
+		/**
+		 * Handles the "product inventory updated" webhook event.
+		 * 
+		 * @param array $params Parameters for the updated product, including product ID.
+		 */
 		do_action( 'bigcommerce/webhooks/product_inventory_updated',   ['product_id' => $product_id]  );
 	}
 }

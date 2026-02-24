@@ -10,19 +10,41 @@ use BigCommerce\Settings\Sections\Currency;
 use BigCommerce\Templates;
 use BigCommerce\Templates\Order_Summary;
 
+/**
+ * Provides a shortcode to display the order history for logged-in users.
+ * Handles rendering both the order history list and individual order details.
+ */
 class Order_History implements Shortcode {
 
+	/**
+	 * The name of the shortcode for order history.
+	 * @var string
+	 */
 	const NAME = 'bigcommerce_order_history';
 
+	/**
+	 * Query argument key for specifying the order ID.
+	 * @var string
+	 */
 	const ORDER_ID_QUERY_ARG = 'order_id';
 
 	/** @var Orders_Shortcode_Controller */
 	private $rest_controller;
 
+	/**
+	 * Constructor for the Order_History class.
+	 *
+	 * @param Orders_Shortcode_Controller $rest_controller The REST controller used for AJAX requests.
+	 */
 	public function __construct( $rest_controller ) {
 		$this->rest_controller = $rest_controller;
 	}
 
+	/**
+	 * Get the default attributes for the order history shortcode.
+	 *
+	 * @return array Default attributes including pagination, per-page limits, and AJAX settings.
+	 */
 	public static function default_attributes() {
 		return [
 			'paged'    => 1, // 1 to enable pagination
@@ -31,6 +53,14 @@ class Order_History implements Shortcode {
 		];
 	}
 
+	/**
+	 * Render the order history or order details based on the attributes and query parameters.
+	 *
+	 * @param array $attr     Shortcode attributes.
+	 * @param mixed $instance The current instance (not used).
+	 *
+	 * @return string The rendered HTML output or an empty string for unauthorized users.
+	 */
 	public function render( $attr, $instance ) {
 		if ( ! is_user_logged_in() ) {
 			return '';
@@ -99,7 +129,7 @@ class Order_History implements Shortcode {
 			$component = Order_Summary::factory( [
 				Order_Summary::ORDER => $order,
 			] );
-
+			
 			add_filter( 'pre_option_' . Currency::CURRENCY_CODE, $currency_filter, 100, 1 );
 			$orders[]  = $component->render();
 			remove_filter( 'pre_option_' . Currency::CURRENCY_CODE, $currency_filter, 100 );

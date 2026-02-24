@@ -1,12 +1,19 @@
 <?php
 
-
 namespace BigCommerce\Assets\Admin;
 
-
+/**
+ * Class JS_Localization
+ *
+ * Provides the localization strings needed for the admin JavaScript files. 
+ * These strings include messages, button labels, and error messages that are 
+ * used in the admin UI and are available for translation.
+ *
+ * @package BigCommerce\Assets\Admin
+ */
 class JS_Localization {
 	/**
-	 * stores all text strings needed in the admin scripts.js file
+	 * Stores all text strings needed in the admin scripts.js file
 	 *
 	 * The code below is an example of structure. Check the readme js section for more info on how to use.
 	 *
@@ -56,6 +63,8 @@ class JS_Localization {
 		/**
 		 * Filters admin js localization data.
 		 *
+		 * Allows modification of the JS localization data before it is returned.
+		 *
 		 * @param array $js_i18n_array Js i18n data.
 		 */
 		return apply_filters( 'bigcommerce/admin/js_localization', $js_i18n_array );
@@ -64,9 +73,9 @@ class JS_Localization {
 	/**
 	 * Recursively sanitize all the strings with wp_kses
 	 *
-	 * @param string[]|string $strings
+	 * @param string[]|string $strings The strings to sanitize.
 	 *
-	 * @return array|string
+	 * @return array|string The sanitized strings.
 	 */
 	private function kses_strings( $strings ) {
 		if ( is_array( $strings ) ) {

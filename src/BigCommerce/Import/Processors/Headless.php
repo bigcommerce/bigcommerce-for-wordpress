@@ -25,6 +25,11 @@ class Headless {
 			return;
 		}
 		update_option( Import_Type::IMPORT_TYPE, Import_Type::IMPORT_TYPE_FULL );
+		/**
+		 * Begins the import process when the `Runner\Cron_Runner::START_CRON` action is triggered.
+		 *
+		 * @return void
+		 */
 		do_action( Cron_Runner::START_CRON );
 	}
 

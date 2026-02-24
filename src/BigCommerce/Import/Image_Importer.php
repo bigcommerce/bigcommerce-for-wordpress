@@ -65,6 +65,17 @@ class Image_Importer {
 
 		$tmp = download_url( $this->image_url );
 		if ( is_wp_error( $tmp ) ) {
+			/**
+			 * Action to log messages during the BigCommerce logging process.
+			 *
+			 * This action is triggered when a log entry needs to be created. It logs the message, context, level, and path to the log file.
+			 *
+			 * @param string $level The log level (e.g., INFO, ERROR).
+			 * @param string $message The log message to be recorded.
+			 * @param array $context Additional context for the log entry.
+			 * @param string $path The path where the log is being written.
+			 * @return void
+			 */
 			do_action( 'bigcommerce/import/log', Error_Log::NOTICE, __( 'Failed to download image', 'bigcommerce' ), [
 				'url'   => $this->image_url,
 				'error' => $tmp->get_error_messages(),

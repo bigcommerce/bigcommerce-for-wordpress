@@ -146,7 +146,7 @@ class Account_Settings extends Settings_Section {
 		if ( $old_value === $new_value ) {
 			return;
 		}
-
+		/** Sync global logins with BigCommerce */
 		do_action( 'bigcommerce/sync_global_logins' );
 	}
 

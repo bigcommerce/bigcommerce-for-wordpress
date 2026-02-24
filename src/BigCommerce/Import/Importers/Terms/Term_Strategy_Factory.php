@@ -5,22 +5,35 @@ namespace BigCommerce\Import\Importers\Terms;
 
 use BigCommerce\Import\Import_Strategy;
 
+/**
+ * A factory class that determines the appropriate strategy for handling term imports,
+ * such as creating, updating, or ignoring a term based on its existing data in WordPress.
+ */
 class Term_Strategy_Factory {
-	/** @var \ArrayAccess */
+	/** @var \ArrayAccess The BigCommerce term data. */
 	private $bc_term;
-	/** @var string */
+
+	/** @var string The taxonomy associated with the term. */
 	private $taxonomy;
 
+	/**
+	 * Term_Strategy_Factory constructor.
+	 *
+	 * Initializes the Term_Strategy_Factory with the provided BigCommerce term data and taxonomy.
+	 *
+	 * @param \ArrayAccess $bc_term The BigCommerce term data.
+	 * @param string       $taxonomy The taxonomy for the term.
+	 */
 	public function __construct( \ArrayAccess $bc_term, $taxonomy ) {
 		$this->bc_term  = $bc_term;
 		$this->taxonomy = $taxonomy;
 	}
 
 	/**
-	 * Identify the strategy for handling the term import based on
-	 * the existing data in WP
+	 * Identifies the appropriate strategy for handling the term import based on existing data in WordPress.
+	 * The strategy is selected based on whether the term exists and whether it needs to be updated.
 	 *
-	 * @return Import_Strategy
+	 * @return Import_Strategy The selected strategy for handling the term import.
 	 */
 	public function get_strategy() {
 		$matching_term_id = $this->get_matching_term();

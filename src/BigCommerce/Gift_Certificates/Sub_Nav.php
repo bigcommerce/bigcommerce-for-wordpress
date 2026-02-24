@@ -7,13 +7,26 @@ namespace BigCommerce\Gift_Certificates;
 use BigCommerce\Pages;
 use BigCommerce\Templates\Sub_Nav_Links;
 
+/**
+ * This class is responsible for adding a sub-navigation menu to the gift certificate and balance check pages.
+ * The sub-navigation is dynamically rendered above the page content based on certain conditions.
+ * 
+ * It listens for the `the_content` filter to insert the sub-navigation at the beginning of the page content.
+ * The sub-navigation links are fetched from the Gift Certificate and Balance Check pages, and their display 
+ * can be customized via filters.
+ * 
+ * @package BigCommerce\Gift_Certificates
+ */
 class Sub_Nav {
-	/**
-	 * @param string $content
-	 *
-	 * @return string
-	 * @filter the_content
-	 */
+    /**
+     * Filters the content of the page to add a sub-navigation menu above the content on gift certificate pages.
+     *
+     * @param string $content The content of the page.
+     * 
+     * @return string The content with the sub-navigation added if the page is a gift certificate page.
+     * 
+     * @filter the_content
+     */
 	public function add_subnav_above_content( $content ) {
 		if ( ! is_singular() ) {
 			return $content;
