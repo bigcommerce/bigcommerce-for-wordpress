@@ -6,6 +6,7 @@ namespace BigCommerce\Post_Types\Product;
 use BigCommerce\Api\v3\Api\ChannelsApi;
 use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api\v3\Model\Listing;
+use BigCommerce\Api\v3\Model\ListingVariant;
 use BigCommerce\Api\v3\Model\UpdateListingRequest;
 use BigCommerce\Settings\Sections\Channels;
 
@@ -74,15 +75,17 @@ class Channel_Sync {
 			return;
 		}
 
+		$state = $this->get_listing_state( $post_id, $listing );
+
 		$update_request = new UpdateListingRequest( [
 			'channel_id'    => $channel_id,
 			'listing_id'    => $listing_id,
 			'product_id'    => (int) $listing->getProductId(),
-			'state'         => $this->get_listing_state( $post_id, $listing ),
+			'state'         => $state,
 			'name'          => $this->get_listing_title( $post_id, $listing ),
 			'description'   => $this->get_listing_description( $post_id, $listing ),
 			'external_id'   => $listing->getExternalId(),
-			'variants'      => $listing->getVariants(),
+			'variants'      => $this->sync_variant_states( $state, $listing ),
 		] );
 
 		try {
@@ -151,6 +154,36 @@ class Channel_Sync {
 		 * @param Listing $listing The listing from BigCommerce that will be updated
 		 */
 		return apply_filters( 'bigcommerce/channel/listing/state', $state, $post_id, $listing );
+	}
+
+	/**
+	 * Keep variant listing states in step with the parent listing state.
+	 *
+	 * The parent (group) state is derived from the product's post status in
+	 * {@see get_listing_state()}. Previously the variants were pushed back
+	 * unchanged, so hiding a product set the parent to `disabled` while its
+	 * variants stayed `active`, a parent/variant mismatch that hides the product
+	 * from integrations reading the group state. When the product is hidden we
+	 * force the variants to `disabled` as well; for every other state the variants
+	 * are left untouched so per-variant purchasing state is preserved.
+	 *
+	 * @param string  $state   The state being set on the parent listing
+	 * @param Listing $listing The listing fetched from BigCommerce
+	 *
+	 * @return ListingVariant[]
+	 */
+	private function sync_variant_states( $state, Listing $listing ) {
+		// Keep the variants in lockstep with the parent listing state in BOTH
+		// directions. Channel_Sync fires on a product-level change, where the
+		// product's visibility is the governing signal, so enabling visibility
+		// must flip the whole listing (group + variants) to active and disabling
+		// must flip it all to disabled; never leave the group and its variants
+		// out of step.
+		return array_map( function ( ListingVariant $variant ) use ( $state ) {
+			$variant->setState( $state );
+
+			return $variant;
+		}, $listing->getVariants() );
 	}
 
 	private function get_listing_title( $post_id, Listing $listing ) {

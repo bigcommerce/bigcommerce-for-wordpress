@@ -10,6 +10,7 @@ use BigCommerce\Api\v3\Model\Listing;
 use BigCommerce\Api\v3\Model\ListingVariant;
 use BigCommerce\Api\v3\Model\Product;
 use BigCommerce\Api\v3\Model\Variant;
+use BigCommerce\Api\v3\Model\UpdateListingRequest;
 use BigCommerce\Api\v3\ObjectSerializer;
 use BigCommerce\Exceptions\Product_Not_Found_Exception;
 use BigCommerce\Import\Import_Type;
@@ -158,7 +159,13 @@ class Channel_Initializer implements Import_Processor {
 
 		$import_type = get_option( Import_Type::IMPORT_TYPE );
 
-		$listing_requests = array_values( array_filter( array_map( function ( Product $product ) use ( $channel_id, $id_map, $import_type, $listing_ids ) {
+		// Listing updates for products already linked to this channel whose listing
+		// state no longer matches the product's visibility. Keeps the channel
+		// listing in sync when visibility is toggled after the listing already
+		// exists, instead of leaving it stuck at its creation-time state.
+		$update_requests = [];
+
+		$listing_requests = array_values( array_filter( array_map( function ( Product $product ) use ( $channel_id, $id_map, $import_type, $listing_ids, &$update_requests ) {
 			/**
 			 * We will skip existing products listing creation for partial import
 			 */
@@ -167,10 +174,30 @@ class Channel_Initializer implements Import_Processor {
 			}
 
 			if ( array_key_exists( $product->getId(), $id_map ) && array_key_exists( $this->channel_term->term_id, $id_map[ $product->getId() ] ) ) {
-				do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Product already linked to channel. Skipping.', 'bigcommerce' ), [
-					'product_id' => $product->getId(),
-					'channel_id' => $channel_id,
-				] );
+				// Already linked: don't re-create it, but reconcile the existing
+				// listing's state with the product's current visibility so that
+				// enabling (or disabling) visibility after the listing exists is
+				// pushed to the channel. Without this the group listing state
+				// stays stuck at whatever it was at creation.
+				$stored        = json_decode( (string) $id_map[ $product->getId() ][ $this->channel_term->term_id ] );
+				$desired_state = $product->getIsVisible() ? 'active' : 'disabled';
+
+				if ( is_object( $stored ) && ! empty( $stored->listing_id ) && ( $stored->state ?? null ) !== $desired_state ) {
+					$update_requests[] = new UpdateListingRequest( [
+						'channel_id'  => (int) $channel_id,
+						'listing_id'  => (int) $stored->listing_id,
+						'product_id'  => (int) $product->getId(),
+						'state'       => $desired_state,
+						'external_id' => isset( $stored->external_id ) ? $stored->external_id : null,
+						'variants'    => array_map( function ( Variant $variant ) use ( $product ) {
+							return new ListingVariant( [
+								'product_id' => (int) $product->getId(),
+								'variant_id' => (int) $variant->getId(),
+								'state'      => ( ! $product->getIsVisible() || $variant->getPurchasingDisabled() ) ? 'disabled' : 'active',
+							] );
+						}, $product->getVariants() ),
+					] );
+				}
 
 				return false;
 			}
@@ -195,12 +222,50 @@ class Channel_Initializer implements Import_Processor {
 					return new ListingVariant( [
 						'product_id' => (int) $product->getId(),
 						'variant_id' => (int) $variant->getId(),
-						'state'      => $variant->getPurchasingDisabled() ? 'disabled' : 'active',
+						// A variant is disabled when the product is hidden OR the
+						// variant itself is not purchasable. Deriving the group
+						// state from is_visible while deriving the variant state
+						// only from purchasing_disabled let a hidden-but-purchasable
+						// product be listed with a `disabled` parent and `active`
+						// variants; gating on visibility too keeps the group and
+						// its variants consistent.
+						'state'      => ( ! $product->getIsVisible() || $variant->getPurchasingDisabled() ) ? 'disabled' : 'active',
 					] );
 				}, $product->getVariants() ),
 			] );
 		}, $response->getData() ) ) );
 
+
+		// Reconcile existing listings first, independently of new-listing creation,
+		// so a create failure can't block visibility updates to already-linked
+		// products.
+		if ( ! empty( $update_requests ) ) {
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Reconciling listing states with product visibility', 'bigcommerce' ), [
+				'count' => count( $update_requests ),
+			] );
+			try {
+				$this->channels->updateChannelListings( $channel_id, $update_requests );
+				// Refresh the stored state so we don't re-send the same update on
+				// the next import run.
+				foreach ( $update_requests as $request ) {
+					$pid = $request->getProductId();
+					if ( isset( $id_map[ $pid ][ $this->channel_term->term_id ] ) ) {
+						$stored = json_decode( (string) $id_map[ $pid ][ $this->channel_term->term_id ] );
+						if ( is_object( $stored ) ) {
+							$stored->state = $request->getState();
+							$id_map[ $pid ][ $this->channel_term->term_id ] = wp_json_encode( $stored );
+						}
+					}
+				}
+				$this->update_option( Listing_Fetcher::PRODUCT_LISTING_MAP, $id_map, false );
+			} catch ( ApiException $e ) {
+				do_action( 'bigcommerce/import/error', $e->getMessage(), [
+					'response' => $e->getResponseBody(),
+					'headers'  => $e->getResponseHeaders(),
+				] );
+				do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [] );
+			}
+		}
 
 		if ( ! empty( $listing_requests ) ) {
 			do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Adding products to channel', 'bigcommerce' ), [
