@@ -3,6 +3,7 @@
 
 namespace BigCommerce\Post_Types\Product;
 
+use BigCommerce\Api\v3\Api\CatalogApi;
 use BigCommerce\Api\v3\Api\ChannelsApi;
 use BigCommerce\Api\v3\ApiException;
 use BigCommerce\Api\v3\Model\Listing;
@@ -22,8 +23,14 @@ class Channel_Sync {
 	 */
 	private $channels;
 
-	public function __construct( ChannelsApi $channels ) {
+	/**
+	 * @var CatalogApi
+	 */
+	private $catalog;
+
+	public function __construct( ChannelsApi $channels, CatalogApi $catalog ) {
 		$this->channels = $channels;
+		$this->catalog  = $catalog;
 	}
 
 	/**
@@ -159,13 +166,10 @@ class Channel_Sync {
 	/**
 	 * Keep variant listing states consistent with the parent listing state.
 	 *
-	 * The parent (group) state is derived from the product's post status in
-	 * {@see get_listing_state()}. When the parent is not `active` (hidden, pending,
-	 * trashed, ...) force every variant to `disabled` so the whole listing is dark;
-	 * this also avoids pushing an odd parent state (e.g. a filtered value, or one
-	 * not valid for a variant) onto the variants. When the parent is `active`,
-	 * leave each variant untouched so per-variant purchasing state (a variant the
-	 * merchant disabled) is preserved rather than silently re-enabled.
+	 * When the parent is not `active`, force every variant to `disabled` so the
+	 * whole listing is dark. When the parent is `active`, set each variant
+	 * `active` except the ones the merchant disabled purchasing on in the
+	 * catalog, which is the source of truth for per-variant purchasing state.
 	 *
 	 * @param string  $state   The state being set on the parent listing
 	 * @param Listing $listing The listing fetched from BigCommerce
@@ -175,15 +179,55 @@ class Channel_Sync {
 	private function sync_variant_states( $state, Listing $listing ) {
 		$variants = $listing->getVariants();
 
-		if ( 'active' === $state ) {
-			return $variants;
+		if ( 'active' !== $state ) {
+			return array_map( function ( ListingVariant $variant ) {
+				$variant->setState( 'disabled' );
+
+				return $variant;
+			}, $variants );
 		}
 
-		return array_map( function ( ListingVariant $variant ) {
-			$variant->setState( 'disabled' );
+		$purchasing = $this->get_variant_purchasing_map( (int) $listing->getProductId() );
+
+		return array_map( function ( ListingVariant $variant ) use ( $purchasing ) {
+			$disabled = ! empty( $purchasing[ (int) $variant->getVariantId() ] );
+			$variant->setState( $disabled ? 'disabled' : 'active' );
 
 			return $variant;
 		}, $variants );
+	}
+
+	/**
+	 * Map of catalog variant id => purchasing_disabled for a product. On an API
+	 * failure returns an empty map, so variants default to `active` for a visible
+	 * product rather than staying stuck `disabled`.
+	 *
+	 * @param int $product_id The BigCommerce catalog product id
+	 *
+	 * @return array<int,bool>
+	 */
+	private function get_variant_purchasing_map( $product_id ) {
+		$map = [];
+
+		try {
+			$variants = $this->catalog->getVariantsByProductId( $product_id )->getData();
+		} catch ( ApiException $e ) {
+			/**
+			 * Error triggered when fetching catalog variants fails
+			 *
+			 * @param int          $product_id
+			 * @param ApiException $e
+			 */
+			do_action( 'bigcommerce/channel/error/could_not_fetch_variants', $product_id, $e );
+
+			return $map;
+		}
+
+		foreach ( $variants as $variant ) {
+			$map[ (int) $variant->getId() ] = (bool) $variant->getPurchasingDisabled();
+		}
+
+		return $map;
 	}
 
 	private function get_listing_title( $post_id, Listing $listing ) {
