@@ -90,6 +90,88 @@ class Channel_Initializer implements Import_Processor {
 		}
 	}
 
+	/**
+	 * Build a request that reconciles an already-linked listing's state with the
+	 * product's current visibility, or null when the stored listing already
+	 * matches (so no needless write is sent).
+	 *
+	 * The group state follows the product's storefront visibility. Each variant
+	 * state follows visibility too, then the variant's own purchasing flag: a
+	 * variant is disabled when the product is hidden OR that variant is not
+	 * purchasable, otherwise active — the same rule the create path uses, so an
+	 * existing listing ends up identical to a freshly created one.
+	 *
+	 * The stored listing's variants are iterated (not the catalog product's), so
+	 * the listing's variant membership and each variant's external_id are
+	 * preserved and no variants are added that aren't already on the listing. The
+	 * stored name/description/external_id are passed through unchanged so a
+	 * reconcile never clobbers values Channel_Sync pushed.
+	 *
+	 * @param Product $product    The catalog product being imported.
+	 * @param mixed   $stored     The decoded PRODUCT_LISTING_MAP entry for this listing.
+	 * @param int     $channel_id The BigCommerce channel id.
+	 *
+	 * @return UpdateListingRequest|null
+	 */
+	private function build_reconcile_request( Product $product, $stored, $channel_id ) {
+		if ( ! is_object( $stored ) || empty( $stored->listing_id ) ) {
+			return null;
+		}
+
+		$is_visible  = (bool) $product->getIsVisible();
+		$group_state = $is_visible ? 'active' : 'disabled';
+
+		// Per-variant purchasing flags from the catalog, keyed by variant id.
+		$purchasing = [];
+		foreach ( (array) $product->getVariants() as $variant ) {
+			$purchasing[ (int) $variant->getId() ] = (bool) $variant->getPurchasingDisabled();
+		}
+
+		$stored_variants = ( isset( $stored->variants ) && is_array( $stored->variants ) ) ? $stored->variants : [];
+		$variants        = [];
+		$variant_changed = false;
+
+		foreach ( $stored_variants as $stored_variant ) {
+			$variant_id = (int) ( $stored_variant->variant_id ?? 0 );
+			$current    = $stored_variant->state ?? null;
+
+			if ( array_key_exists( $variant_id, $purchasing ) ) {
+				$variant_state = ( ! $is_visible || $purchasing[ $variant_id ] ) ? 'disabled' : 'active';
+			} else {
+				// Variant not in the catalog response; leave its state untouched.
+				$variant_state = $current;
+			}
+
+			if ( $variant_state !== $current ) {
+				$variant_changed = true;
+			}
+
+			$variants[] = new ListingVariant( [
+				'product_id'  => (int) $product->getId(),
+				'variant_id'  => $variant_id,
+				'external_id' => $stored_variant->external_id ?? null,
+				'state'       => $variant_state,
+			] );
+		}
+
+		$group_changed = ( $stored->state ?? null ) !== $group_state;
+
+		if ( ! $group_changed && ! $variant_changed ) {
+			return null;
+		}
+
+		return new UpdateListingRequest( [
+			'channel_id'  => $channel_id,
+			'listing_id'  => (int) $stored->listing_id,
+			'product_id'  => (int) $product->getId(),
+			'state'       => $group_state,
+			'name'        => $stored->name ?? null,
+			'description' => $stored->description ?? null,
+			'external_id' => $stored->external_id ?? null,
+			'variants'    => $variants,
+		] );
+	}
+
 	public function run() {
 
 		$status = new Status();
@@ -166,39 +248,24 @@ class Channel_Initializer implements Import_Processor {
 		$update_requests = [];
 
 		$listing_requests = array_values( array_filter( array_map( function ( Product $product ) use ( $channel_id, $id_map, $import_type, $listing_ids, &$update_requests ) {
+			// Already linked to this channel: reconcile the existing listing's
+			// state with the product's current visibility instead of re-creating
+			// it. Handled before the partial-import early return below so that a
+			// partial import ("Import Now") also pushes visibility changes.
+			if ( array_key_exists( $product->getId(), $id_map ) && array_key_exists( $this->channel_term->term_id, $id_map[ $product->getId() ] ) ) {
+				$stored  = json_decode( (string) $id_map[ $product->getId() ][ $this->channel_term->term_id ] );
+				$request = $this->build_reconcile_request( $product, $stored, (int) $channel_id );
+				if ( $request ) {
+					$update_requests[] = $request;
+				}
+
+				return false;
+			}
+
 			/**
 			 * We will skip existing products listing creation for partial import
 			 */
 			if ( $import_type === Import_Type::IMPORT_TYPE_PARTIAL && $this->is_existing_product( $product, $channel_id ) ) {
-				return false;
-			}
-
-			if ( array_key_exists( $product->getId(), $id_map ) && array_key_exists( $this->channel_term->term_id, $id_map[ $product->getId() ] ) ) {
-				// Already linked: don't re-create it, but reconcile the existing
-				// listing's state with the product's current visibility so that
-				// enabling (or disabling) visibility after the listing exists is
-				// pushed to the channel. Without this the group listing state
-				// stays stuck at whatever it was at creation.
-				$stored        = json_decode( (string) $id_map[ $product->getId() ][ $this->channel_term->term_id ] );
-				$desired_state = $product->getIsVisible() ? 'active' : 'disabled';
-
-				if ( is_object( $stored ) && ! empty( $stored->listing_id ) && ( $stored->state ?? null ) !== $desired_state ) {
-					$update_requests[] = new UpdateListingRequest( [
-						'channel_id'  => (int) $channel_id,
-						'listing_id'  => (int) $stored->listing_id,
-						'product_id'  => (int) $product->getId(),
-						'state'       => $desired_state,
-						'external_id' => isset( $stored->external_id ) ? $stored->external_id : null,
-						'variants'    => array_map( function ( Variant $variant ) use ( $product ) {
-							return new ListingVariant( [
-								'product_id' => (int) $product->getId(),
-								'variant_id' => (int) $variant->getId(),
-								'state'      => ( ! $product->getIsVisible() || $variant->getPurchasingDisabled() ) ? 'disabled' : 'active',
-							] );
-						}, $product->getVariants() ),
-					] );
-				}
-
 				return false;
 			}
 
@@ -245,25 +312,16 @@ class Channel_Initializer implements Import_Processor {
 			] );
 			try {
 				$this->channels->updateChannelListings( $channel_id, $update_requests );
-				// Refresh the stored state so we don't re-send the same update on
-				// the next import run.
-				foreach ( $update_requests as $request ) {
-					$pid = $request->getProductId();
-					if ( isset( $id_map[ $pid ][ $this->channel_term->term_id ] ) ) {
-						$stored = json_decode( (string) $id_map[ $pid ][ $this->channel_term->term_id ] );
-						if ( is_object( $stored ) ) {
-							$stored->state = $request->getState();
-							$id_map[ $pid ][ $this->channel_term->term_id ] = wp_json_encode( $stored );
-						}
-					}
-				}
-				$this->update_option( Listing_Fetcher::PRODUCT_LISTING_MAP, $id_map, false );
 			} catch ( ApiException $e ) {
-				do_action( 'bigcommerce/import/error', $e->getMessage(), [
+				// A reconcile failure must not fail the whole import: firing
+				// bigcommerce/import/error would trash the queue, delete the
+				// listing map and mark the import as failed. Log a warning and
+				// continue; Listing_Fetcher refreshes the stored state on the
+				// next run, so the reconcile is retried then.
+				do_action( 'bigcommerce/log', Error_Log::WARNING, sprintf( __( 'Could not reconcile listing states with product visibility: %s', 'bigcommerce' ), $e->getMessage() ), [
 					'response' => $e->getResponseBody(),
 					'headers'  => $e->getResponseHeaders(),
 				] );
-				do_action( 'bigcommerce/log', Error_Log::DEBUG, $e->getTraceAsString(), [] );
 			}
 		}
 

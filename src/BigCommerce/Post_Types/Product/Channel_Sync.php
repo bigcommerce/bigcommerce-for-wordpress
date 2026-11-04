@@ -157,15 +157,15 @@ class Channel_Sync {
 	}
 
 	/**
-	 * Keep variant listing states in step with the parent listing state.
+	 * Keep variant listing states consistent with the parent listing state.
 	 *
 	 * The parent (group) state is derived from the product's post status in
-	 * {@see get_listing_state()}. Previously the variants were pushed back
-	 * unchanged, so hiding a product set the parent to `disabled` while its
-	 * variants stayed `active`, a parent/variant mismatch that hides the product
-	 * from integrations reading the group state. When the product is hidden we
-	 * force the variants to `disabled` as well; for every other state the variants
-	 * are left untouched so per-variant purchasing state is preserved.
+	 * {@see get_listing_state()}. When the parent is not `active` (hidden, pending,
+	 * trashed, ...) force every variant to `disabled` so the whole listing is dark;
+	 * this also avoids pushing an odd parent state (e.g. a filtered value, or one
+	 * not valid for a variant) onto the variants. When the parent is `active`,
+	 * leave each variant untouched so per-variant purchasing state (a variant the
+	 * merchant disabled) is preserved rather than silently re-enabled.
 	 *
 	 * @param string  $state   The state being set on the parent listing
 	 * @param Listing $listing The listing fetched from BigCommerce
@@ -173,17 +173,17 @@ class Channel_Sync {
 	 * @return ListingVariant[]
 	 */
 	private function sync_variant_states( $state, Listing $listing ) {
-		// Keep the variants in lockstep with the parent listing state in BOTH
-		// directions. Channel_Sync fires on a product-level change, where the
-		// product's visibility is the governing signal, so enabling visibility
-		// must flip the whole listing (group + variants) to active and disabling
-		// must flip it all to disabled; never leave the group and its variants
-		// out of step.
-		return array_map( function ( ListingVariant $variant ) use ( $state ) {
-			$variant->setState( $state );
+		$variants = $listing->getVariants();
+
+		if ( 'active' === $state ) {
+			return $variants;
+		}
+
+		return array_map( function ( ListingVariant $variant ) {
+			$variant->setState( 'disabled' );
 
 			return $variant;
-		}, $listing->getVariants() );
+		}, $variants );
 	}
 
 	private function get_listing_title( $post_id, Listing $listing ) {
