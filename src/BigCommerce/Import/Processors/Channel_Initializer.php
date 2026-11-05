@@ -10,6 +10,7 @@ use BigCommerce\Api\v3\Model\Listing;
 use BigCommerce\Api\v3\Model\ListingVariant;
 use BigCommerce\Api\v3\Model\Product;
 use BigCommerce\Api\v3\Model\Variant;
+use BigCommerce\Api\v3\Model\UpdateListingRequest;
 use BigCommerce\Api\v3\ObjectSerializer;
 use BigCommerce\Exceptions\Product_Not_Found_Exception;
 use BigCommerce\Import\Import_Type;
@@ -89,6 +90,99 @@ class Channel_Initializer implements Import_Processor {
 		}
 	}
 
+	/**
+	 * Build a request reconciling an already-linked listing's state with the
+	 * product's current visibility, or null when nothing needs to change.
+	 *
+	 * The catalog is the source of truth: the group follows the product's
+	 * visibility and each variant is disabled when the product is hidden or that
+	 * variant is not purchasable in the catalog (matching the create path), so a
+	 * variant state set directly on the channel listing is intentionally
+	 * overridden. Stored variants are iterated to keep the listing's membership.
+	 *
+	 * @param Product $product    The catalog product being imported.
+	 * @param mixed   $stored     The decoded PRODUCT_LISTING_MAP entry for this listing.
+	 * @param int     $channel_id The BigCommerce channel id.
+	 *
+	 * @return UpdateListingRequest|null
+	 */
+	private function build_reconcile_request( Product $product, $stored, $channel_id ) {
+		if ( ! is_object( $stored ) || empty( $stored->listing_id ) ) {
+			return null;
+		}
+
+		$is_visible  = (bool) $product->getIsVisible();
+		$group_state = $is_visible ? 'active' : 'disabled';
+
+		$purchasing = [];
+		foreach ( (array) $product->getVariants() as $variant ) {
+			$purchasing[ (int) $variant->getId() ] = (bool) $variant->getPurchasingDisabled();
+		}
+
+		$stored_variants = ( isset( $stored->variants ) && is_array( $stored->variants ) ) ? $stored->variants : [];
+		$variants        = [];
+		$variant_changed = false;
+
+		foreach ( $stored_variants as $stored_variant ) {
+			$variant_id = (int) ( $stored_variant->variant_id ?? 0 );
+			if ( $variant_id <= 0 ) {
+				do_action( 'bigcommerce/log', Error_Log::WARNING, __( 'Skipping stored listing variant with no variant id during reconcile', 'bigcommerce' ), [
+					'product_id' => (int) $product->getId(),
+				] );
+				continue;
+			}
+
+			$current = $stored_variant->state ?? null;
+			if ( array_key_exists( $variant_id, $purchasing ) ) {
+				$variant_state = ( ! $is_visible || $purchasing[ $variant_id ] ) ? 'disabled' : 'active';
+			} else {
+				$variant_state = $current;
+			}
+
+			if ( $variant_state !== $current ) {
+				$variant_changed = true;
+			}
+
+			$variant_data = [
+				'product_id' => (int) $product->getId(),
+				'variant_id' => $variant_id,
+				'state'      => $variant_state,
+			];
+			if ( isset( $stored_variant->external_id ) ) {
+				$variant_data['external_id'] = $stored_variant->external_id;
+			}
+			$variants[] = new ListingVariant( $variant_data );
+		}
+
+		// Without usable variants, skip the reconcile rather than send an empty
+		// variant list the API could treat as "remove all variants".
+		if ( empty( $variants ) ) {
+			return null;
+		}
+
+		$group_changed = ( $stored->state ?? null ) !== $group_state;
+		if ( ! $group_changed && ! $variant_changed ) {
+			return null;
+		}
+
+		$data = [
+			'channel_id' => $channel_id,
+			'listing_id' => (int) $stored->listing_id,
+			'product_id' => (int) $product->getId(),
+			'state'      => $group_state,
+			'variants'   => $variants,
+		];
+		// Pass through existing listing metadata only when present, so a reconcile
+		// never sends a stale or empty value for it.
+		foreach ( [ 'name', 'description', 'external_id' ] as $field ) {
+			if ( isset( $stored->$field ) ) {
+				$data[ $field ] = $stored->$field;
+			}
+		}
+
+		return new UpdateListingRequest( $data );
+	}
+
 	public function run() {
 
 		$status = new Status();
@@ -158,20 +252,27 @@ class Channel_Initializer implements Import_Processor {
 
 		$import_type = get_option( Import_Type::IMPORT_TYPE );
 
-		$listing_requests = array_values( array_filter( array_map( function ( Product $product ) use ( $channel_id, $id_map, $import_type, $listing_ids ) {
+		// State updates for already-linked listings whose state no longer matches
+		// the product's visibility.
+		$update_requests = [];
+
+		$listing_requests = array_values( array_filter( array_map( function ( Product $product ) use ( $channel_id, $id_map, $import_type, $listing_ids, &$update_requests ) {
+			// Reconcile already-linked listings before the partial-import early
+			// return below, so a partial import also pushes visibility changes.
+			if ( array_key_exists( $product->getId(), $id_map ) && array_key_exists( $this->channel_term->term_id, $id_map[ $product->getId() ] ) ) {
+				$stored  = json_decode( (string) $id_map[ $product->getId() ][ $this->channel_term->term_id ] );
+				$request = $this->build_reconcile_request( $product, $stored, (int) $channel_id );
+				if ( $request ) {
+					$update_requests[] = $request;
+				}
+
+				return false;
+			}
+
 			/**
 			 * We will skip existing products listing creation for partial import
 			 */
 			if ( $import_type === Import_Type::IMPORT_TYPE_PARTIAL && $this->is_existing_product( $product, $channel_id ) ) {
-				return false;
-			}
-
-			if ( array_key_exists( $product->getId(), $id_map ) && array_key_exists( $this->channel_term->term_id, $id_map[ $product->getId() ] ) ) {
-				do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Product already linked to channel. Skipping.', 'bigcommerce' ), [
-					'product_id' => $product->getId(),
-					'channel_id' => $channel_id,
-				] );
-
 				return false;
 			}
 
@@ -195,12 +296,36 @@ class Channel_Initializer implements Import_Processor {
 					return new ListingVariant( [
 						'product_id' => (int) $product->getId(),
 						'variant_id' => (int) $variant->getId(),
-						'state'      => $variant->getPurchasingDisabled() ? 'disabled' : 'active',
+						// Disabled when the product is hidden or the variant is not
+						// purchasable, so the group and its variants stay consistent.
+						'state'      => ( ! $product->getIsVisible() || $variant->getPurchasingDisabled() ) ? 'disabled' : 'active',
 					] );
 				}, $product->getVariants() ),
 			] );
 		}, $response->getData() ) ) );
 
+
+		// Reconcile existing listings first, independently of new-listing creation,
+		// so a create failure can't block visibility updates to already-linked
+		// products.
+		if ( ! empty( $update_requests ) ) {
+			do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Reconciling listing states with product visibility', 'bigcommerce' ), [
+				'count' => count( $update_requests ),
+			] );
+			try {
+				$this->channels->updateChannelListings( $channel_id, $update_requests );
+			} catch ( ApiException $e ) {
+				// A reconcile failure must not fail the whole import: firing
+				// bigcommerce/import/error would trash the queue, delete the
+				// listing map and mark the import as failed. Log a warning and
+				// continue; Listing_Fetcher refreshes the stored state on the
+				// next run, so the reconcile is retried then.
+				do_action( 'bigcommerce/log', Error_Log::WARNING, sprintf( __( 'Could not reconcile listing states with product visibility: %s', 'bigcommerce' ), $e->getMessage() ), [
+					'response' => $e->getResponseBody(),
+					'headers'  => $e->getResponseHeaders(),
+				] );
+			}
+		}
 
 		if ( ! empty( $listing_requests ) ) {
 			do_action( 'bigcommerce/log', Error_Log::DEBUG, __( 'Adding products to channel', 'bigcommerce' ), [

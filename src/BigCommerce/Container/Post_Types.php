@@ -327,7 +327,7 @@ class Post_Types extends Provider {
 
 	private function channel_sync( Container $container ) {
 		$container[ self::CHANNEL_SYNC ] = function ( Container $container ) {
-			return new Product\Channel_Sync( $container[ Api::FACTORY ]->channels() );
+			return new Product\Channel_Sync( $container[ Api::FACTORY ]->channels(), $container[ Api::FACTORY ]->catalog() );
 		};
 
 		add_action( 'save_post', $this->create_callback( 'sync_to_channel', function ( $post_id, $post ) use ( $container ) {
