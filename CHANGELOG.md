@@ -1,5 +1,17 @@
 # Changelog
 
+## [5.1.3]
+
+### Fixed
+- Channel listing state now stays in sync with a product's "Visible on
+  Storefront" setting. A product that was hidden when first listed could be
+  published with a disabled parent listing but active variants, and
+  re-enabling visibility afterward did not republish the listing. Toggling
+  visibility now updates the whole listing — group and variants —
+  consistently (active when visible, disabled when hidden), while preserving
+  any variant the merchant disabled purchasing on. Existing mismatched
+  listings self-correct on the next scheduled import.
+
 ## [5.1.2]
 
 ### Fixed
